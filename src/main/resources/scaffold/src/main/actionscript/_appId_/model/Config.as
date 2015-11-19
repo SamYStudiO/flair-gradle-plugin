@@ -11,15 +11,21 @@ package _appId_.model
 		 *
 		 */
 		public static var FIRST_SCREEN_PATH : String = EnumScreen.HOME;
-		CONFIG::DEV /**
+
+		/**
 		 *
-		 */ public static var SERVER_BASE : String = "";
-		CONFIG::PREPROD /**
+		 */
+		CONFIG::DEV public static var SERVER_BASE : String = "";
+
+		/**
 		 *
-		 */ public static var SERVER_BASE : String = "";
-		CONFIG::PROD /**
+		 */
+		CONFIG::PREPROD public static var SERVER_BASE : String = "";
+
+		/**
 		 *
-		 */ public static var SERVER_BASE : String = "";
+		 */
+		CONFIG::PROD public static var SERVER_BASE : String = "";
 
 		/**
 		 * @private
