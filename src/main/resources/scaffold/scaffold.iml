@@ -15,11 +15,11 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_18.0" />
+          <sdk name="flex_sdk_4.6_air_19.0" />
         </dependencies>
         <compiler-options>
           <map>
-            <entry key="compiler.define" value="CONFIG::DEBUG&#9;true" />
+            <entry key="compiler.define" value="CONFIG::DEBUG&#9;true&#10;CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false" />
           </map>
         </compiler-options>
         <packaging-air-desktop />
@@ -34,7 +34,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="flex_sdk_4.6_air_18.0" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="flex_sdk_4.6_air_19.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="as3_libs" level="project" />
     <orderEntry type="module-library" exported="">
