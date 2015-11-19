@@ -1,0 +1,18 @@
+group "com.flair"
+version "0.1-beta"
+
+apply plugin: "groovy"
+apply plugin: "maven"
+
+dependencies {
+	compile gradleApi()
+}
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository( url: uri( "C:/Users/SamYStudiO/.m2/repository" ) )
+		}
+	}
+}
+

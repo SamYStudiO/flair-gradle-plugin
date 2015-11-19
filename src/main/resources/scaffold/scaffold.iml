@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="scaffold">
+    <configurations>
+      <configuration name="scaffold" target-platform="Mobile" pure-as="true" output-type="Library" output-file="scaffold.swc" output-folder="$MODULE_DIR$/../../../../build/production/scaffold" skip-build="true">
+        <dependencies target-player="18.0">
+          <entries>
+            <entry library-id="998d201e-a767-43df-9d4a-d8688f92c69e">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="4d204c1e-cb96-43b5-a137-034c6cfb1cc6">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="4fa72767-47e3-49ae-9f57-f6d7373fd4ae">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="flex_sdk_4.6_air_18.0" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.define" value="CONFIG::DEBUG&#9;true" />
+          </map>
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="flex_sdk_4.6_air_18.0" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="as3_libs" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="998d201e-a767-43df-9d4a-d8688f92c69e" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs_ane" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs_ane" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="4d204c1e-cb96-43b5-a137-034c6cfb1cc6" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs_as" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="4fa72767-47e3-49ae-9f57-f6d7373fd4ae" />
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/libs_swc" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/libs_swc" recursive="false" />
+      </library>
+    </orderEntry>
+  </component>
+</module>
