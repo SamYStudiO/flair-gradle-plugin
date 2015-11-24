@@ -20,30 +20,49 @@ class Scaffold extends DefaultTask
 		String appId = project.flair.appId
 		String moduleName = project.flair.moduleName
 
-		if( appId.isEmpty() ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
-		if( project.file( moduleName ).exists() ) throw new Exception( "Scaffold already done." )
+		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
+		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
 
-		String s = appId.replace( ".", File.separator )
+		String s = appId.replace( "." , File.separator )
 
 		project.copy {
-			from project.zipTree( getClass().getProtectionDomain().getCodeSource().getLocation().toExternalForm() )
-			into project.getRootDir()
+			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
+			into project.getRootDir( )
 
 			filter {
-				it.replace( "\${appId}", appId )
-						.replace( "_appId_", appId )
-						.replace( "\${projectName}", project.name )
+				it.replace( "\${appId}" , appId )
+						.replace( "_appId_" , appId )
+						.replace( "\${projectName}" , project.name )
+						.replace( "\${moduleName}" , moduleName )
 			}
 
 			include "scaffold/**"
-			exclude "**/*.iml"
 		}
+
+
 
 		project.copy {
 			from "scaffold/src/main/actionscript/_appId_"
 			into "scaffold/src/main/actionscript/${ s }"
 		}
-		println( project.file( "scaffold" ).renameTo( moduleName ) )
-		println( project.file( "app/src/main/actionscript/_appId_" ).deleteDir() )
+
+		project.file( "scaffold" ).renameTo( moduleName )
+		project.file( "app/src/main/actionscript/_appId_" ).deleteDir( )
+
+		project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
+
+		project.copy {
+			from "${ moduleName }/libraries"
+			into ".idea/libraries"
+		}
+
+		project.file( "${ moduleName }/libraries" ).deleteDir( )
+
+		project.copy {
+			from "${ moduleName }/modules.xml"
+			into ".idea/"
+		}
+
+		project.file( "${ moduleName }/modules.xml" ).delete( )
 	}
 }

@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.6.0</string>
+        <string>3.7.1</string>
         <key>fileName</key>
-        <string>W:/Projects/skeleton/src/main/resources/assets/global.tps</string>
+        <string>W:/Projects/flair/src/main/resources/scaffold/src/main/resources/assets/global.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -89,9 +89,9 @@
                 <key>maxTextureSize</key>
                 <QSize>
                     <key>width</key>
-                    <int>-1</int>
+                    <int>4096</int>
                     <key>height</key>
-                    <int>-1</int>
+                    <int>4096</int>
                 </QSize>
             </struct>
         </array>
@@ -106,7 +106,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../{v}/global{n}.png</filename>
+        <filename>../resources_common/{v}/global{n}.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -213,7 +213,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../{v}/global{n}.xml</filename>
+                <filename>../resources_common/{v}/global{n}.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -255,7 +255,9 @@
             <enum type="SpriteSettings::PivotPoint">Center</enum>
         </struct>
         <key>fileList</key>
-        <array/>
+        <array>
+            <filename>global</filename>
+        </array>
         <key>ignoreFileList</key>
         <array/>
         <key>replaceList</key>
@@ -266,5 +268,15 @@
         <uint>1</uint>
         <key>commonDivisorY</key>
         <uint>1</uint>
+        <key>packNormalMaps</key>
+        <false/>
+        <key>autodetectNormalMaps</key>
+        <true/>
+        <key>normalMapFilter</key>
+        <string></string>
+        <key>normalMapSuffix</key>
+        <string></string>
+        <key>normalMapSheetFileName</key>
+        <filename></filename>
     </struct>
 </data>

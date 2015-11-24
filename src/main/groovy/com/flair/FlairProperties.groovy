@@ -5,7 +5,11 @@ package com.flair
  */
 class FlairProperties
 {
-	String appId = ""
+	public String appId = ""
 
-	String moduleName = "app"
+	public String moduleName = "app"
+
+	public String versionHuntingURL = ""
+
+	public String versionHuntingID = "app"
 }

@@ -22,10 +22,14 @@ package _appId_
 	import myLogger.DEFAULT_LOGGER;
 	import myLogger.debug;
 
-	import starling.core.Starling;
-	import starling.events.Event;
+	import org.gestouch.core.Gestouch;
+	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
+	import org.gestouch.extensions.starling.StarlingTouchHitTester;
+	import org.gestouch.input.NativeInputAdapter;
 
-	${gestouchSelectedImport}
+	import starling.core.Starling;
+	import starling.display.DisplayObject;
+	import starling.events.Event;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
@@ -42,10 +46,10 @@ package _appId_
 		 */
 		public function AMain()
 		{
-			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE, _init, false, 0, true );
+			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE , _init , false , 0 , true );
 
-			addEventListener( flash.events.Event.ACTIVATE, _activated, false, 0, true );
-			addEventListener( flash.events.Event.DEACTIVATE, _deactivated, false, 0, true );
+			addEventListener( flash.events.Event.ACTIVATE , _activated , false , 0 , true );
+			addEventListener( flash.events.Event.DEACTIVATE , _deactivated , false , 0 , true );
 		}
 
 		/**
@@ -97,15 +101,18 @@ package _appId_
 			Starling.multitouchEnabled = true;
 			Starling.handleLostContext = true;
 
-			STARLING = new Starling( StarlingMain, stage, null, null, Context3DRenderMode.AUTO, "auto" );
+			STARLING = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
 			STARLING.showStats = Boolean( CONFIG::DEBUG );
 			STARLING.simulateMultitouch = Boolean( CONFIG::DEBUG );
 			STARLING.enableErrorChecking = Boolean( CONFIG::DEBUG );
 			STARLING_STAGE = STARLING.stage;
 
-			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE, _starlingContextCreated );
-			STARLING.addEventListener( starling.events.Event.ROOT_CREATED, _starlingRootCreated );
-			${gestouchSelected}
+			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _starlingContextCreated );
+			STARLING.addEventListener( starling.events.Event.ROOT_CREATED , _starlingRootCreated );
+
+			Gestouch.inputAdapter = new NativeInputAdapter( STAGE );
+			Gestouch.addDisplayListAdapter( DisplayObject , new StarlingDisplayListAdapter() );
+			Gestouch.addTouchHitTester( new StarlingTouchHitTester( STARLING ) , -1 );
 
 			if( _isActivated ) STARLING.start();
 		}
@@ -150,7 +157,7 @@ package _appId_
 			_initSplashScreen();
 			_initStarling();
 
-			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE, _init );
+			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
 		}
 
 		/**
@@ -158,9 +165,9 @@ package _appId_
 		 */
 		protected function _starlingContextCreated( e : starling.events.Event ) : void
 		{
-			debug( this, "_starlingContextCreated" );
+			debug( this , "_starlingContextCreated" );
 
-			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE, _starlingContextCreated );
+			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _starlingContextCreated );
 		}
 
 		/**
@@ -168,15 +175,15 @@ package _appId_
 		 */
 		protected function _starlingRootCreated( e : starling.events.Event ) : void
 		{
-			debug( this, "_starlingRootCreated" );
+			debug( this , "_starlingRootCreated" );
 
-			STAGE.addEventListener( flash.events.Event.RESIZE, _stageResized, false, int.MAX_VALUE );
+			STAGE.addEventListener( flash.events.Event.RESIZE , _stageResized , false , int.MAX_VALUE );
 			_stageResized();
 
 			if( STARLING_MAIN.isReady ) _mainReady();
 			else STARLING_MAIN.assetsComplete.add( _mainReady );
 
-			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED, _starlingRootCreated );
+			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED , _starlingRootCreated );
 		}
 
 		/**
@@ -192,9 +199,9 @@ package _appId_
 			STARLING_STAGE.stageWidth = stageWidth;
 			STARLING_STAGE.stageHeight = stageHeight;
 
-			STARLING.viewPort = new Rectangle( 0, 0, stageWidth, stageHeight );
+			STARLING.viewPort = new Rectangle( 0 , 0 , stageWidth , stageHeight );
 
-			STARLING_MAIN.setSize( stageWidth, stageHeight );
+			STARLING_MAIN.setSize( stageWidth , stageHeight );
 		}
 	}
 }
