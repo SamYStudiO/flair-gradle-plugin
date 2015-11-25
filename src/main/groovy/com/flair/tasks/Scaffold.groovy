@@ -27,29 +27,42 @@ public class Scaffold extends DefaultTask
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
+			//from project.zipTree( f )
 			into project.getRootDir( )
 
+			//rename( /scaffold.iml/ , "${ moduleName }.iml" )
+
+			include "scaffold/**"
+		}
+
+		File imlFile = project.file( "/scaffold/scaffold.iml" )
+		String imlContent = project.file( "/scaffold/scaffold.iml" ).getText( )
+
+		imlContent = imlContent.replace( "\${appId}" , appId )
+				.replace( "_appId_" , appId )
+				.replace( "\${projectName}" , project.name )
+				.replace( "\${moduleName}" , moduleName )
+
+		project.file( "/scaffold/${ moduleName }.iml" ).write( imlContent )
+		imlFile.delete( )
+
+		project.copy {
+			from "scaffold/src/main/actionscript/_appId_"
+			into "scaffold/src/main/actionscript/${ s }"
+
 			filter {
+				println( )
 				it.replace( "\${appId}" , appId )
 						.replace( "_appId_" , appId )
 						.replace( "\${projectName}" , project.name )
 						.replace( "\${moduleName}" , moduleName )
 			}
-
-			include "scaffold/**"
-		}
-
-
-
-		project.copy {
-			from "scaffold/src/main/actionscript/_appId_"
-			into "scaffold/src/main/actionscript/${ s }"
 		}
 
 		project.file( "scaffold" ).renameTo( moduleName )
 		project.file( "app/src/main/actionscript/_appId_" ).deleteDir( )
 
-		project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
+		//project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
 
 		project.copy {
 			from "${ moduleName }/libraries"
@@ -61,6 +74,13 @@ public class Scaffold extends DefaultTask
 		project.copy {
 			from "${ moduleName }/modules.xml"
 			into ".idea/"
+
+			filter {
+				println( )
+				it.replace( "\${appId}" , appId )
+						.replace( "\${projectName}" , project.name )
+						.replace( "\${moduleName}" , moduleName )
+			}
 		}
 
 		project.file( "${ moduleName }/modules.xml" ).delete( )
