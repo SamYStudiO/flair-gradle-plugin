@@ -6,7 +6,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 08/11/2015.
  */
-class Scaffold extends DefaultTask
+public class Scaffold extends DefaultTask
 {
 	public Scaffold()
 	{

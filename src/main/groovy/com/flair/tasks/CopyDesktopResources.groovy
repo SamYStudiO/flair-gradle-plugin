@@ -6,7 +6,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-class CopyDesktopResources extends DefaultTask
+public class CopyDesktopResources extends DefaultTask
 {
 	public CopyDesktopResources()
 	{

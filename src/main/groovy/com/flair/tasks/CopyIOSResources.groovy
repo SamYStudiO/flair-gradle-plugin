@@ -6,7 +6,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-class CopyIOSResources extends DefaultTask
+public class CopyIOSResources extends DefaultTask
 {
 	public CopyIOSResources()
 	{

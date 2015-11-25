@@ -6,7 +6,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-class CopyAndroidResources extends DefaultTask
+public class CopyAndroidResources extends DefaultTask
 {
 	public CopyAndroidResources()
 	{

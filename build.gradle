@@ -1,11 +1,16 @@
 group "com.flair"
 version "0.1-beta"
 
+repositories {
+	mavenCentral( )
+}
+
 apply plugin: "groovy"
 apply plugin: "maven"
 
 dependencies {
-	compile gradleApi()
+	compile gradleApi( )
+	compile group: "org.codehaus.groovy.modules.http-builder" , name: "http-builder" , version: "0.7.1"
 }
 
 uploadArchives {
@@ -15,4 +20,5 @@ uploadArchives {
 		}
 	}
 }
+
 
