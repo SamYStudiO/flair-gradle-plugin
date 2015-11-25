@@ -173,7 +173,7 @@ package _appId_.utils
 		 */
 		public function startListeningForChange() : void
 		{
-			STAGE.addEventListener( Event.ENTER_FRAME, _monitorOrientation );
+			STAGE.addEventListener( Event.ENTER_FRAME , _monitorOrientation );
 		}
 
 		/**
@@ -181,7 +181,7 @@ package _appId_.utils
 		 */
 		public function stopListeningForChange() : void
 		{
-			STAGE.removeEventListener( Event.ENTER_FRAME, _monitorOrientation );
+			STAGE.removeEventListener( Event.ENTER_FRAME , _monitorOrientation );
 		}
 
 		/**
@@ -227,17 +227,17 @@ package _appId_.utils
 				if( orientation == StageOrientation.ROTATED_LEFT )
 				{
 					_deviceVSStageMatrix.rotate( Math.PI / 2 );
-					_deviceVSStageMatrix.translate( 1, 0 );
+					_deviceVSStageMatrix.translate( 1 , 0 );
 				}
 				else if( orientation == StageOrientation.ROTATED_RIGHT )
 				{
 					_deviceVSStageMatrix.rotate( -Math.PI / 2 );
-					_deviceVSStageMatrix.translate( 0, 1 );
+					_deviceVSStageMatrix.translate( 0 , 1 );
 				}
 				else if( orientation == StageOrientation.UPSIDE_DOWN )
 				{
 					_deviceVSStageMatrix.rotate( Math.PI );
-					_deviceVSStageMatrix.translate( 1, 1 );
+					_deviceVSStageMatrix.translate( 1 , 1 );
 				}
 			}
 
@@ -249,7 +249,7 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		private const _orientations : Array = [ StageOrientation.DEFAULT, StageOrientation.ROTATED_LEFT, StageOrientation.UPSIDE_DOWN, StageOrientation.ROTATED_RIGHT ];
+		private const _orientations : Array = [ StageOrientation.DEFAULT , StageOrientation.ROTATED_LEFT , StageOrientation.UPSIDE_DOWN , StageOrientation.ROTATED_RIGHT ];
 	}
 }
 

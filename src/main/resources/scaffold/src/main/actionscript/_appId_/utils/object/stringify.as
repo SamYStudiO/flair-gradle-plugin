@@ -13,7 +13,7 @@ package _appId_.utils.object
 		var ref : Dictionary = new Dictionary( true );
 		ref[ "___id___" ] = -1;
 
-		function _stringify( o : Object, tab : String = "  " ) : String
+		function _stringify( o : Object , tab : String = "  " ) : String
 		{
 			if( ref[ o ] == undefined )
 				ref[ o ] = "#" + ( ++ref[ "___id___" ] );
@@ -45,7 +45,7 @@ package _appId_.utils.object
 						s += tab + "- " + prop + " : " + className + " = " + XMLList( value ).toXMLString().split( "\n" ).join( "" ) + "\n";
 						break;
 					default :
-						if( ref[ value ] == undefined ) s += tab + "- " + prop + " : " + className + " = " + _stringify( value, tab + "  " );
+						if( ref[ value ] == undefined ) s += tab + "- " + prop + " : " + className + " = " + _stringify( value , tab + "  " );
 						else s += tab + "- " + prop + " : " + className + " = { " + ref[ value ] + " }\n";
 						break;
 				}

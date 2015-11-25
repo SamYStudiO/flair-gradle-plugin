@@ -77,7 +77,7 @@ package _appId_.transitions
 		 * The function passed to the <code>transition</code> property of the
 		 * <code>ScreenNavigator</code>.
 		 */
-		protected function onTransition( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 		{
 			if( this._activeTransition )
 			{
@@ -165,8 +165,8 @@ package _appId_.transitions
 
 			this._savedOtherTarget = oldScreen;
 
-			this._activeTransition = new Tween( newScreen, this.duration, this.ease );
-			this._activeTransition.animate( "x", 0 );
+			this._activeTransition = new Tween( newScreen , this.duration , this.ease );
+			this._activeTransition.animate( "x" , 0 );
 			this._activeTransition.delay = this.delay;
 			this._activeTransition.onUpdate = activeTransition_onUpdate;
 			this._activeTransition.onComplete = activeTransition_onComplete;

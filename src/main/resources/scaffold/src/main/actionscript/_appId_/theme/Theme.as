@@ -45,7 +45,7 @@ package _appId_.theme
 		 */
 		protected static function __popUpOverlayFactory() : DisplayObject
 		{
-			var q : Quad = new Quad( 100, 100, 0x000000 );
+			var q : Quad = new Quad( 100 , 100 , 0x000000 );
 			q.alpha = .8;
 
 			return q;
@@ -55,34 +55,32 @@ package _appId_.theme
 		 * @private
 		 */
 		protected var _mockupPhoneSmallerSide : uint = 1440;
+
 		/**
 		 * @private
 		 */
 		protected var _mockupPhoneLargerSide : uint = 2560;
+
 		/**
 		 * @private
 		 */
-		protected var _mockupPhoneDpi : uint = 500;
-		/**
-		 * @private
-		 */
-		protected var _mockupPhoneDpiBucketID : String = DpiBucket.XXHDPI;
+		protected var _mockupPhoneDpi : uint = 560;
+
 		/**
 		 * @private
 		 */
 		protected var _mockupTabletSmallerSide : uint = 1600;
+
 		/**
 		 * @private
 		 */
 		protected var _mockupTabletLargerSide : uint = 2560;
+
 		/**
 		 * @private
 		 */
-		protected var _mockupTabletDpi : uint = 300;
-		/**
-		 * @private
-		 */
-		protected var _mockupTabletDpiBucketID : String = DpiBucket.XHDPI;
+		protected var _mockupTabletDpi : uint = 280;
+
 		/**
 		 * @private
 		 */
@@ -128,7 +126,7 @@ package _appId_.theme
 		{
 			DeviceCapabilities.tabletScreenMinimumInches = 5.5;
 
-			var f : File = File.applicationDirectory.resolvePath( DeviceInfos.isIOS() ? "" : "assets/medias" );
+			var f : File = File.applicationDirectory.resolvePath( "resources" );
 			var dpi : uint = CONFIG::ANDROID ? Capabilities.screenDPI : Capabilities.screenDPI * .95;
 			var allowed4096Textures : Boolean = STARLING.profile != Context3DProfile.BASELINE && STARLING.profile != Context3DProfile.BASELINE_CONSTRAINED;
 			var minBucket4096TextureDpi : uint = getBucketDpi( _minBucket4096Texture ) || uint.MAX_VALUE;
@@ -136,52 +134,52 @@ package _appId_.theme
 			switch( true )
 			{
 				case true :
-					if( f.resolvePath( DpiBucket.LDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 120 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.LDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 120 ) )
 					{
 						dpiBucketID = DpiBucket.LDPI;
 						if( dpi <= 120 ) break;
 					}
 				case true :
-					if( f.resolvePath( DpiBucket.MDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 160 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.MDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 160 ) )
 					{
 						dpiBucketID = DpiBucket.MDPI;
 						if( dpi <= 160 ) break;
 					}
 				case true :
-					if( f.resolvePath( DpiBucket.HDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 240 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.HDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 240 ) )
 					{
 						dpiBucketID = DpiBucket.HDPI;
 						if( dpi <= 240 ) break;
 					}
 				case true :
-					if( f.resolvePath( DpiBucket.XHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 320 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.XHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 320 ) )
 					{
 						dpiBucketID = DpiBucket.XHDPI;
 						if( dpi <= 320 ) break;
 					}
 				case true :
-					if( f.resolvePath( DpiBucket.XXHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 480 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.XXHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 480 ) )
 					{
 						dpiBucketID = DpiBucket.XXHDPI;
 						if( dpi <= 480 ) break;
 					}
 				case true :
-					if( f.resolvePath( DpiBucket.XXXHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 640 ) )
+					if( f.resolvePath( "drawable-" + DpiBucket.XXXHDPI ).exists && ( allowed4096Textures || minBucket4096TextureDpi > 640 ) )
 					{
 						dpiBucketID = DpiBucket.XXXHDPI;
 						if( dpi <= 640 ) break;
 					}
 			}
 
-			var mockupDpiBucketID : String = DeviceCapabilities.isPhone( STAGE ) ? _mockupPhoneDpiBucketID : _mockupTabletDpiBucketID;
+			var mockupDeviceDpi : uint = DeviceCapabilities.isPhone( STAGE ) ? _mockupPhoneDpi : _mockupTabletDpi;
+			var mockupDpiBucketID : String = DeviceCapabilities.isPhone( STAGE ) ? getDpiBucket( _mockupPhoneDpi ) : getDpiBucket( _mockupTabletDpi );
 			var mockupDeviceSmallerSide : uint = DeviceCapabilities.isPhone( STAGE ) ? _mockupPhoneSmallerSide : _mockupTabletSmallerSide;
 			var mockupDeviceLargerSide : uint = DeviceCapabilities.isPhone( STAGE ) ? _mockupPhoneLargerSide : _mockupTabletLargerSide;
-			var mockupDeviceDpi : uint = DeviceCapabilities.isPhone( STAGE ) ? _mockupPhoneDpi : _mockupTabletDpi;
 
 			var w : Number = DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
 			var h : Number = DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
-			var currentDeviceSmallerSide : uint = Math.min( w, h );
-			var currentDeviceLargerSide : uint = Math.max( w, h );
+			var currentDeviceSmallerSide : uint = Math.min( w , h );
+			var currentDeviceLargerSide : uint = Math.max( w , h );
 
 			var mockupBucketDpi : uint = getBucketDpi( mockupDpiBucketID );
 			var currentBucketDpi : uint = getBucketDpi( dpiBucketID );
@@ -192,7 +190,7 @@ package _appId_.theme
 
 			var smallerSideScale : Number = currentDeviceSmallerSide / ( mockupDeviceSmallerSide * dpiScale );
 			var largerSideScale : Number = currentDeviceLargerSide / ( mockupDeviceLargerSide * dpiScale );
-			var pixelScale : Number = Math.min( smallerSideScale, largerSideScale );
+			var pixelScale : Number = Math.min( smallerSideScale , largerSideScale );
 
 			dpiScale *= pixelScale;
 			assetScale *= pixelScale;

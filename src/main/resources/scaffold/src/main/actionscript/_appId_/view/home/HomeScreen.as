@@ -24,7 +24,7 @@ package _appId_.view.home
 		{
 			super();
 
-			debug( this, "Home" );
+			debug( this , "Home" );
 		}
 
 		/**

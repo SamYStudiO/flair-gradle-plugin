@@ -31,7 +31,7 @@ package _appId_.utils
 		 * @param round A Boolean that indicates if value is rounded.
 		 * @return The number of milliseconds according specified arguments.
 		 */
-		public static function getMilliseconds( milliseconds : Number, overflow : Boolean = false, round : Boolean = false ) : Number
+		public static function getMilliseconds( milliseconds : Number , overflow : Boolean = false , round : Boolean = false ) : Number
 		{
 			var n : Number = overflow ? milliseconds : milliseconds % 1000;
 
@@ -45,7 +45,7 @@ package _appId_.utils
 		 * @param round A Boolean that indicates if value is rounded.
 		 * @return The number of seconds according specified arguments.
 		 */
-		public static function getSeconds( milliseconds : Number, overflow : Boolean = false, round : Boolean = false ) : Number
+		public static function getSeconds( milliseconds : Number , overflow : Boolean = false , round : Boolean = false ) : Number
 		{
 			var n : Number = overflow ? milliseconds / 1000 : milliseconds / 1000 % 60;
 
@@ -59,7 +59,7 @@ package _appId_.utils
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of minutes according specified arguments.
 		 */
-		public static function getMinutes( milliseconds : Number, overflow : Boolean = false, round : Boolean = false ) : Number
+		public static function getMinutes( milliseconds : Number , overflow : Boolean = false , round : Boolean = false ) : Number
 		{
 			var n : Number = overflow ? milliseconds / 60000 : milliseconds / 60000 % 60;
 
@@ -73,7 +73,7 @@ package _appId_.utils
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of hours according specified arguments.
 		 */
-		public static function getHours( milliseconds : Number, overflow : Boolean = false, round : Boolean = false ) : Number
+		public static function getHours( milliseconds : Number , overflow : Boolean = false , round : Boolean = false ) : Number
 		{
 			var n : Number = overflow ? milliseconds / 3600000 : milliseconds / 3600000 % 24;
 
@@ -87,7 +87,7 @@ package _appId_.utils
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of days according specified arguments.
 		 */
-		public static function getDays( milliseconds : Number, overflow : Boolean = false, round : Boolean = false ) : Number
+		public static function getDays( milliseconds : Number , overflow : Boolean = false , round : Boolean = false ) : Number
 		{
 			var n : Number = overflow ? milliseconds / 86400000 : milliseconds / 86400000 % 7;
 
@@ -100,7 +100,7 @@ package _appId_.utils
 		 * @param round A Boolean that indicates if value is rounded.
 		 * @return The number of weeks according specified arguments.
 		 */
-		public static function getWeeks( milliseconds : Number, round : Boolean = false ) : Number
+		public static function getWeeks( milliseconds : Number , round : Boolean = false ) : Number
 		{
 			return round ? Math.floor( milliseconds / 604800000 ) : Math.floor( milliseconds / 604800000 );
 		}
@@ -112,12 +112,12 @@ package _appId_.utils
 		 * @param escapeChar A Char to used to esape format patterns.
 		 * @return The Number converted to a string representation.
 		 */
-		public static function format( milliseconds : Number, format : String, round : Boolean = false, overflowPatterns : Array = null, escapeChar : String = "@" ) : String
+		public static function format( milliseconds : Number , format : String , round : Boolean = false , overflowPatterns : Array = null , escapeChar : String = "@" ) : String
 		{
 			var i : uint = 0;
 			var l : uint = format.length;
 			var result : String = "";
-			var patterns : Array = __getPatterns( format, escapeChar );
+			var patterns : Array = __getPatterns( format , escapeChar );
 
 			while( i < l )
 			{
@@ -133,7 +133,7 @@ package _appId_.utils
 
 				while( format.charAt( ++i ) == char && i < l ) pattern += char;
 
-				result += __convertPattern( pattern, Math.round( milliseconds ), round ? patterns[ patterns.length - 1 ] : null, overflowPatterns || [ patterns[ 0 ] ] );
+				result += __convertPattern( pattern , Math.round( milliseconds ) , round ? patterns[ patterns.length - 1 ] : null , overflowPatterns || [ patterns[ 0 ] ] );
 			}
 
 			return result;
@@ -146,7 +146,7 @@ package _appId_.utils
 		 * @param caseSensitive A boolean that indicates if format is case sensitive.
 		 * @return The milliseconds Number from string representation. If conversion is impossible the value is NaN.
 		 */
-		public static function getTimeFrom( from : String, format : String, caseSensitive : Boolean = false ) : Number
+		public static function getTimeFrom( from : String , format : String , caseSensitive : Boolean = false ) : Number
 		{
 			var i : uint = 0;
 			var l : uint = format.length;
@@ -169,35 +169,35 @@ package _appId_.utils
 				switch( pattern )
 				{
 					case "ww" :
-						w = int( from.substr( searchIndex, 2 ) );
+						w = int( from.substr( searchIndex , 2 ) );
 						searchIndex += 2;
 						break;
 					case "dd" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						d = int( str );
 						if( d < 0 || d > 6 || str.length != 2 ) return NaN;
 						searchIndex += 2;
 						break;
 					case "hh" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						h = int( str );
 						if( h < 0 || h > 23 || str.length != 2 ) return NaN;
 						searchIndex += 2;
 						break;
 					case "mm" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						mi = int( str );
 						if( mi < 0 || mi > 59 || str.length != 2 ) return NaN;
 						searchIndex += 2;
 						break;
 					case "SS" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						s = int( str );
 						if( s < 0 || s > 59 || str.length != 2 ) return NaN;
 						searchIndex += 2;
 						break;
 					case "ss" :
-						str = from.substr( searchIndex, 3 );
+						str = from.substr( searchIndex , 3 );
 						ms = int( str );
 						if( ms < 0 || ms > 999 || str.length != 3 ) return NaN;
 						searchIndex += 3;
@@ -205,11 +205,11 @@ package _appId_.utils
 					default    :
 						if( caseSensitive )
 						{
-							if( from.substr( searchIndex, pattern.length ) != pattern ) return NaN;
+							if( from.substr( searchIndex , pattern.length ) != pattern ) return NaN;
 						}
 						else
 						{
-							if( from.substr( searchIndex, pattern.length ).toLowerCase() != pattern.toLowerCase() ) return NaN;
+							if( from.substr( searchIndex , pattern.length ).toLowerCase() != pattern.toLowerCase() ) return NaN;
 						}
 						searchIndex += pattern.length;
 						break;
@@ -225,7 +225,7 @@ package _appId_.utils
 		/**
 		 * @private
 		 */
-		protected static function __getPatterns( format : String, escapeChar : String = "@" ) : Array
+		protected static function __getPatterns( format : String , escapeChar : String = "@" ) : Array
 		{
 			var i : uint = 0;
 			var l : uint = format.length;
@@ -249,7 +249,7 @@ package _appId_.utils
 
 				while( !isPattern && pattern.length > 1 )
 				{
-					pattern = pattern.substr( 0, pattern.length - 1 );
+					pattern = pattern.substr( 0 , pattern.length - 1 );
 					isPattern = __PATTERNS.indexOf( pattern ) >= 0;
 					--i;
 				}
@@ -263,7 +263,7 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		private static function __convertPattern( pattern : String, milliseconds : Number, roundPattern : String = null, overflowPatterns : Array = null ) : String
+		private static function __convertPattern( pattern : String , milliseconds : Number , roundPattern : String = null , overflowPatterns : Array = null ) : String
 		{
 			switch( true )
 			{
@@ -272,28 +272,28 @@ package _appId_.utils
 				case pattern == "ww"    :
 					return digitFormat( getWeeks( milliseconds ) );
 				case pattern == "d"        :
-					return String( getDays( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return String( getDays( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "dd"    :
-					return digitFormat( getDays( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return digitFormat( getDays( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "h"        :
-					return String( getHours( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return String( getHours( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "hh"    :
-					return digitFormat( getHours( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return digitFormat( getHours( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "m"        :
-					return String( getMinutes( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return String( getMinutes( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "mm"    :
-					return digitFormat( getMinutes( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return digitFormat( getMinutes( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "S"        :
-					return String( getSeconds( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return String( getSeconds( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "SS"    :
-					return digitFormat( getSeconds( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return digitFormat( getSeconds( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "s"        :
-					return String( getMilliseconds( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ) );
+					return String( getMilliseconds( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) );
 				case pattern == "ss"    :
-					return digitFormat( getMilliseconds( milliseconds, overflowPatterns.indexOf( pattern ) >= 0, roundPattern == pattern ), 3 );
+					return digitFormat( getMilliseconds( milliseconds , overflowPatterns.indexOf( pattern ) >= 0 , roundPattern == pattern ) , 3 );
 				default                    :
 					var l : uint = pattern.length;
-					return l > 1 ? __convertPattern( pattern.substr( 0, l - 1 ), milliseconds, roundPattern, overflowPatterns ) + pattern.substr( l - 1 ) : pattern;
+					return l > 1 ? __convertPattern( pattern.substr( 0 , l - 1 ) , milliseconds , roundPattern , overflowPatterns ) + pattern.substr( l - 1 ) : pattern;
 			}
 		}
 
@@ -308,6 +308,6 @@ package _appId_.utils
 		/**
 		 * @private
 		 */
-		protected static const __PATTERNS : Array = [ "w", "ww", "d", "dd", "h", "hh", "m", "mm", "S", "SS", "s", "ss" ];
+		protected static const __PATTERNS : Array = [ "w" , "ww" , "d" , "dd" , "h" , "hh" , "m" , "mm" , "S" , "SS" , "s" , "ss" ];
 	}
 }

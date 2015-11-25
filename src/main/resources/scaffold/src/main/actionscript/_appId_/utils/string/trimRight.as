@@ -7,7 +7,7 @@ package _appId_.utils.string
 	{
 		while( isWhitespace( s.charAt( s.length - 1 ) ) )
 		{
-			s = s.substr( 0, s.length - 1 );
+			s = s.substr( 0 , s.length - 1 );
 		}
 
 		return s;

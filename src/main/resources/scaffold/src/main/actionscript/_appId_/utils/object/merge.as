@@ -3,7 +3,7 @@ package _appId_.utils.object
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function merge( fromObject : Object, toObject : Object, overwrite : Boolean = true, excludeProperties : * = null ) : Object
+	public function merge( fromObject : Object , toObject : Object , overwrite : Boolean = true , excludeProperties : * = null ) : Object
 	{
 		toObject = toObject == null ? {} : toObject;
 

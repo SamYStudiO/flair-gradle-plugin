@@ -9,11 +9,11 @@ package _appId_.utils
 	/**
 	 * Dispatched at each Timer interval.
 	 */
-	[Event(name="timer", type="flash.events.TimerEvent")]
+	[Event(name="timer" , type="flash.events.TimerEvent")]
 	/**
 	 * Dispatched when timer reach repeatCount property. If repeat is 0 this event is never dispatched, Timer need to be stopped manualy.
 	 */
-	[Event(name="timerComplete", type="flash.events.TimerEvent")]
+	[Event(name="timerComplete" , type="flash.events.TimerEvent")]
 	/**
 	 * Timer class is equivalent to flash.utils.Timer class but is syncronize with system clock in order to make easier countdown.
 	 * Even if processor is slow down, each intervals are always the same.
@@ -130,7 +130,7 @@ package _appId_.utils
 		 * @param repeatCount The repeat count before Timer stop automatically.
 		 * @param startNow A Boolean that indicates if Timer must start immediatly.
 		 */
-		public function Timer( delay : uint = 0, repeatCount : uint = 0, startNow : Boolean = false )
+		public function Timer( delay : uint = 0 , repeatCount : uint = 0 , startNow : Boolean = false )
 		{
 			_delay = delay;
 			_repeatCount = repeatCount;
@@ -150,7 +150,7 @@ package _appId_.utils
 			_offset = 0;
 
 			_frameListener = new Shape();
-			_frameListener.addEventListener( Event.ENTER_FRAME, _enterFrame, false, 0, true );
+			_frameListener.addEventListener( Event.ENTER_FRAME , _enterFrame , false , 0 , true );
 		}
 
 		/**
@@ -160,7 +160,7 @@ package _appId_.utils
 		{
 			if( !running ) return;
 
-			_frameListener.removeEventListener( Event.ENTER_FRAME, _enterFrame );
+			_frameListener.removeEventListener( Event.ENTER_FRAME , _enterFrame );
 			_frameListener = null;
 
 			_offset = getTimer() - _startTimer;
@@ -175,7 +175,7 @@ package _appId_.utils
 
 			if( _frameListener == null ) return;
 
-			_frameListener.removeEventListener( Event.ENTER_FRAME, _enterFrame );
+			_frameListener.removeEventListener( Event.ENTER_FRAME , _enterFrame );
 			_frameListener = null;
 		}
 

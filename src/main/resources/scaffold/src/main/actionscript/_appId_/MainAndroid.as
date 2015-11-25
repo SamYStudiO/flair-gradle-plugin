@@ -2,7 +2,6 @@ package _appId_
 {
 	import _appId_.actors.ORIENTATION_MANAGER;
 	import _appId_.actors.STAGE;
-	import _appId_.utils.DeviceInfos;
 
 	import feathers.system.DeviceCapabilities;
 	import feathers.utils.display.calculateScaleRatioToFit;
@@ -13,10 +12,11 @@ package _appId_
 
 	import net.samystudio.density.Density;
 
-	[SWF(width='1080', height='1920', frameRate='60', backgroundColor='0xffffff')]
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
-	 */ public class MainAndroid extends AMainMobile
+	 */
+	[SWF(width='1080' , height='1920' , frameRate='60' , backgroundColor='0xffffff')]
+	public class MainAndroid extends AMainMobile
 	{
 		/**
 		 *
@@ -35,8 +35,8 @@ package _appId_
 			var stageWidth : Number = STAGE.fullScreenWidth;
 			var stageHeight : Number = STAGE.fullScreenHeight;
 
-			var max : Number = Math.max( stageWidth, stageHeight );
-			var min : Number = Math.min( stageWidth, stageHeight );
+			var max : Number = Math.max( stageWidth , stageHeight );
+			var min : Number = Math.min( stageWidth , stageHeight );
 			var pixels : Number = stageWidth * stageHeight;
 			var n : Number = max / min;
 
@@ -70,8 +70,7 @@ package _appId_
 		 */
 		protected override function _init( e : InvokeEvent ) : void
 		{
-			if( DeviceInfos.isDesktop() ) DeviceCapabilities.dpi = uint( e.arguments );
-			else if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
+			if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
 			super._init( e );
 		}
@@ -86,7 +85,7 @@ package _appId_
 			var w : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.fullScreenWidth : STAGE.fullScreenHeight;
 			var h : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.fullScreenHeight : STAGE.fullScreenWidth;
 
-			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width, _splashScreenPortrait.height, w, h );
+			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
 			_splashScreenPortrait.scaleX = _splashScreenPortrait.scaleY = scale;
 			_splashScreenPortrait.x = Math.round( ( w - _splashScreenPortrait.width ) / 2 );
@@ -103,7 +102,7 @@ package _appId_
 			var w : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.fullScreenWidth : STAGE.fullScreenHeight;
 			var h : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.fullScreenHeight : STAGE.fullScreenWidth;
 
-			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width, _splashScreenLandscape.height, w, h );
+			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 
 			_splashScreenLandscape.scaleX = _splashScreenLandscape.scaleY = scale;
 			_splashScreenLandscape.x = Math.round( ( w - _splashScreenLandscape.width ) / 2 );

@@ -23,7 +23,7 @@ package _appId_.utils
 		 * @param clazz One or sevarals Class to test.
 		 * @return true if object inherit or implement one of the Class passed in arguments.
 		 */
-		public static function isEither( o : *, ...clazz ) : Boolean
+		public static function isEither( o : * , ...clazz ) : Boolean
 		{
 			var l : uint = clazz.length;
 
@@ -41,7 +41,7 @@ package _appId_.utils
 		 * @param applicationDomain An alternative application domain when search for definition.
 		 * @return The Class definition.
 		 */
-		public static function getClassByName( definition : String, applicationDomain : ApplicationDomain = null ) : Class
+		public static function getClassByName( definition : String , applicationDomain : ApplicationDomain = null ) : Class
 		{
 			var Clazz : Class;
 
@@ -66,7 +66,7 @@ package _appId_.utils
 		 * @param Clazz Class object from which get instance.
 		 * @param arguments The arguments to pass to instance constructor.
 		 */
-		public static function getInstance( Clazz : Class, ...arguments : Array ) : *
+		public static function getInstance( Clazz : Class , ...arguments : Array ) : *
 		{
 			var xml : XML = describeType( Clazz );
 
@@ -81,45 +81,45 @@ package _appId_.utils
 				case 1    :
 					return new Clazz( arguments[ 0 ] );
 				case 2    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] );
 				case 3    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] );
 				case 4    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] );
 				case 5    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] );
 				case 6    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] );
 				case 7    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] );
 				case 8    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] );
 				case 9    :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] );
 				case 10 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] );
 				case 11 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] );
 				case 12 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] );
 				case 13 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] );
 				case 14 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] );
 				case 15 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] );
 				case 16 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] );
 				case 17 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ], arguments[ 16 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] , arguments[ 16 ] );
 				case 18 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ], arguments[ 16 ], arguments[ 17 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] , arguments[ 16 ] , arguments[ 17 ] );
 				case 19 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ], arguments[ 16 ], arguments[ 17 ], arguments[ 18 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] , arguments[ 16 ] , arguments[ 17 ] , arguments[ 18 ] );
 				case 20 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ], arguments[ 16 ], arguments[ 17 ], arguments[ 18 ], arguments[ 19 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] , arguments[ 16 ] , arguments[ 17 ] , arguments[ 18 ] , arguments[ 19 ] );
 				case 21 :
-					return new Clazz( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ], arguments[ 3 ], arguments[ 4 ], arguments[ 5 ], arguments[ 6 ], arguments[ 7 ], arguments[ 8 ], arguments[ 9 ], arguments[ 10 ], arguments[ 11 ], arguments[ 12 ], arguments[ 13 ], arguments[ 14 ], arguments[ 15 ], arguments[ 16 ], arguments[ 17 ], arguments[ 18 ], arguments[ 19 ], arguments[ 20 ] );
+					return new Clazz( arguments[ 0 ] , arguments[ 1 ] , arguments[ 2 ] , arguments[ 3 ] , arguments[ 4 ] , arguments[ 5 ] , arguments[ 6 ] , arguments[ 7 ] , arguments[ 8 ] , arguments[ 9 ] , arguments[ 10 ] , arguments[ 11 ] , arguments[ 12 ] , arguments[ 13 ] , arguments[ 14 ] , arguments[ 15 ] , arguments[ 16 ] , arguments[ 17 ] , arguments[ 18 ] , arguments[ 19 ] , arguments[ 20 ] );
 			}
 		}
 
@@ -129,9 +129,9 @@ package _appId_.utils
 		 * @param An alternative application domain when search for definition.
 		 * @param arguments The arguments to pass to instance constructor.
 		 */
-		public static function getInstanceByName( definition : String, applicationDomain : ApplicationDomain = null, ...arguments : Array ) : *
+		public static function getInstanceByName( definition : String , applicationDomain : ApplicationDomain = null , ...arguments : Array ) : *
 		{
-			return ClassUtils.getInstance.apply( ClassUtils, [ ClassUtils.getClassByName( definition, applicationDomain ) ].concat( arguments ) );
+			return ClassUtils.getInstance.apply( ClassUtils , [ ClassUtils.getClassByName( definition , applicationDomain ) ].concat( arguments ) );
 		}
 
 		/**
@@ -162,7 +162,7 @@ package _appId_.utils
 		 * @param Clazz The Class to test.
 		 * @return true if Object inherit from Clazz.
 		 */
-		public static function extendsClass( o : *, Clazz : Class ) : Boolean
+		public static function extendsClass( o : * , Clazz : Class ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -179,7 +179,7 @@ package _appId_.utils
 		 * @param InterfaceClazz The interface Class to test.
 		 * @return true if Object implement from InterfaceClazz.
 		 */
-		public static function implementsInterface( o : *, InterfaceClazz : Class ) : Boolean
+		public static function implementsInterface( o : * , InterfaceClazz : Class ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -196,7 +196,7 @@ package _appId_.utils
 		 * @param property The property to search.
 		 * @return true if property exist within object.
 		 */
-		public static function hasProperty( o : *, property : String ) : Boolean
+		public static function hasProperty( o : * , property : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -216,7 +216,7 @@ package _appId_.utils
 		 * @param accessor The accessor to search.
 		 * @return true if accessor exist within object.
 		 */
-		public static function hasAccessor( o : *, accessor : String ) : Boolean
+		public static function hasAccessor( o : * , accessor : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -231,7 +231,7 @@ package _appId_.utils
 		 * @param accessor The writable accessor to search.
 		 * @return true if writable accessor exist within object.
 		 */
-		public static function hasWritableAccessor( o : *, accessor : String ) : Boolean
+		public static function hasWritableAccessor( o : * , accessor : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -246,7 +246,7 @@ package _appId_.utils
 		 * @param variable The variable to search.
 		 * @return true if variable exist within object.
 		 */
-		public static function hasVariable( o : *, variable : String ) : Boolean
+		public static function hasVariable( o : * , variable : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -261,7 +261,7 @@ package _appId_.utils
 		 * @param variableOrAccessor The variable or accessor to search.
 		 * @return true if variable or accessor exist within object.
 		 */
-		public static function hasVariableOrAccessor( o : *, variableOrAccessor : String ) : Boolean
+		public static function hasVariableOrAccessor( o : * , variableOrAccessor : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -276,7 +276,7 @@ package _appId_.utils
 		 * @param variableOrAccessor The variable or writable accessor to search.
 		 * @return true if variable or writable accessor exist within object.
 		 */
-		public static function hasWritableVariableOrAccessor( o : *, variableOrAccessor : String ) : Boolean
+		public static function hasWritableVariableOrAccessor( o : * , variableOrAccessor : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 
@@ -291,7 +291,7 @@ package _appId_.utils
 		 * @param method The method to search.
 		 * @return true if method exist within object.
 		 */
-		public static function hasMethod( o : *, method : String ) : Boolean
+		public static function hasMethod( o : * , method : String ) : Boolean
 		{
 			var xml : XML = describeType( o );
 

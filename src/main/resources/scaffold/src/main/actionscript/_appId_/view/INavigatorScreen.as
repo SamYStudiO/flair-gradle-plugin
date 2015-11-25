@@ -62,12 +62,12 @@ package _appId_.view
 		/**
 		 *
 		 */
-		function addScreen( id : String, item : ScreenNavigatorItem ) : void
+		function addScreen( id : String , item : ScreenNavigatorItem ) : void
 
 		/**
 		 *
 		 */
-		function addScreenAt( id : String, item : ScreenNavigatorItem, index : uint ) : void
+		function addScreenAt( id : String , item : ScreenNavigatorItem , index : uint ) : void
 
 		/**
 		 *
@@ -117,7 +117,7 @@ package _appId_.view
 		/**
 		 *
 		 */
-		function setScreenDefaultParams( id : String, params : Object ) : void
+		function setScreenDefaultParams( id : String , params : Object ) : void
 
 		/**
 		 *
@@ -127,6 +127,6 @@ package _appId_.view
 		/**
 		 *
 		 */
-		function showScreen( screenID : String = null, params : Object = null ) : IndexedScreen
+		function showScreen( screenID : String = null , params : Object = null ) : IndexedScreen
 	}
 }

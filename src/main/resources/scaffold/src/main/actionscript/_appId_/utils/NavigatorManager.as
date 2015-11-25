@@ -88,7 +88,7 @@ package _appId_.utils
 
 			if( _pathsHistory.length > _historyMaxLength )
 			{
-				_pathsHistory.splice( historyMaxLength, _historyMaxLength - _pathsHistory.length + 1 );
+				_pathsHistory.splice( historyMaxLength , _historyMaxLength - _pathsHistory.length + 1 );
 			}
 		}
 
@@ -129,7 +129,7 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		public function showPath( path : String, params : * = null, pushToHistory : Boolean = true ) : void
+		public function showPath( path : String , params : * = null , pushToHistory : Boolean = true ) : void
 		{
 			path = _cleanPath( path );
 
@@ -154,7 +154,7 @@ package _appId_.utils
 			var screenIDs : Array = path.split( "/" );
 			var currentIndex : int = -1;
 
-			params = _normalizeParams( params, screenIDs.length );
+			params = _normalizeParams( params , screenIDs.length );
 			path = "";
 
 			// before going any further save all pages params
@@ -170,7 +170,7 @@ package _appId_.utils
 				{
 					if( screen == null || p != screen.screenID ) break;
 
-					merge( screen.params, _pathsHistory[ _pathsHistory.length - 1 ].params[ cpt ], true, [ "index" ] );
+					merge( screen.params , _pathsHistory[ _pathsHistory.length - 1 ].params[ cpt ] , true , [ "index" ] );
 
 					if( screen is INavigatorScreen ) screen = ( screen as INavigatorScreen ).activeScreen as IndexedScreen;
 					else break;
@@ -186,7 +186,7 @@ package _appId_.utils
 
 				function complete() : void
 				{
-					navigatorScreen.removeEventListener( FeathersEventType.TRANSITION_COMPLETE, transitionComplete );
+					navigatorScreen.removeEventListener( FeathersEventType.TRANSITION_COMPLETE , transitionComplete );
 					var nextScreen : IndexedScreen = navigatorScreen.activeScreen as IndexedScreen;
 
 					path += nextScreen.screenID + "/";
@@ -195,7 +195,7 @@ package _appId_.utils
 					{
 						var currentPath : String = _pathsHistory[ _pathsHistory.length - 1 ].url;
 						var indexFromCurrentPath : uint = currentPath.split( "/" ).indexOf( nextScreen.screenID );
-						merge( nextScreen.params, _pathsHistory[ _pathsHistory.length - 1 ].params[ indexFromCurrentPath ], true, [ "index" ] );
+						merge( nextScreen.params , _pathsHistory[ _pathsHistory.length - 1 ].params[ indexFromCurrentPath ] , true , [ "index" ] );
 					}
 
 					if( nextScreen is INavigatorScreen )
@@ -204,13 +204,13 @@ package _appId_.utils
 					}
 					else
 					{
-						params = _normalizeParams( params, currentIndex + 1 );
+						params = _normalizeParams( params , currentIndex + 1 );
 
-						_currentPath = path.substr( 0, path.length - 1 );
+						_currentPath = path.substr( 0 , path.length - 1 );
 
 						if( pushToHistory )
 						{
-							_pathsHistory.push( {url : _currentPath, params : params} );
+							_pathsHistory.push( {url : _currentPath , params : params} );
 							while( _pathsHistory.length > _historyMaxLength ) _pathsHistory.shift();
 						}
 
@@ -220,7 +220,7 @@ package _appId_.utils
 
 						if( _nextFunction != null )
 						{
-							if( _nextArguments != null ) _nextFunction.apply( this, _nextArguments );
+							if( _nextArguments != null ) _nextFunction.apply( this , _nextArguments );
 							else _nextFunction.apply( this );
 						}
 					}
@@ -228,11 +228,11 @@ package _appId_.utils
 
 				function transitionComplete() : void
 				{
-					setTimeout( complete, 1 );
+					setTimeout( complete , 1 );
 				}
 
-				if( navigatorScreen.showScreen( screenID, screenParams ) != null ) complete();
-				else navigatorScreen.addEventListener( FeathersEventType.TRANSITION_COMPLETE, transitionComplete );
+				if( navigatorScreen.showScreen( screenID , screenParams ) != null ) complete();
+				else navigatorScreen.addEventListener( FeathersEventType.TRANSITION_COMPLETE , transitionComplete );
 			}
 
 			showNextScreenFromScreen( _rootNavigatorScreen );
@@ -241,7 +241,7 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		public function showScreenID( screenID : String, params : Object = null, pushToHistory : Boolean = true ) : void
+		public function showScreenID( screenID : String , params : Object = null , pushToHistory : Boolean = true ) : void
 		{
 			if( _activeTransition )
 			{
@@ -259,7 +259,7 @@ package _appId_.utils
 			aParams.pop();
 			aParams.push( params );
 
-			showPath( path, aParams, pushToHistory );
+			showPath( path , aParams , pushToHistory );
 		}
 
 		/**
@@ -280,10 +280,10 @@ package _appId_.utils
 
 			var index : uint = _pathsHistory.length - 1 - offset;
 
-			var v : Vector.<Object> = _pathsHistory.splice( index, _pathsHistory.length - index );
+			var v : Vector.<Object> = _pathsHistory.splice( index , _pathsHistory.length - index );
 			var o : Object = v.length > 0 ? v[ 0 ] : null;
 
-			if( o != null ) showPath( o.url, o.params );
+			if( o != null ) showPath( o.url , o.params );
 		}
 
 		/**
@@ -295,7 +295,7 @@ package _appId_.utils
 			path = trim( path );
 
 			if( path.charAt( 0 ) == "/" ) path = path.substr( 1 );
-			if( path.charAt( path.length - 1 ) == "/" ) path = path.substr( 0, path.length - 1 );
+			if( path.charAt( path.length - 1 ) == "/" ) path = path.substr( 0 , path.length - 1 );
 
 			return path;
 		}
@@ -303,7 +303,7 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		private function _normalizeParams( params : *, length : uint ) : Array
+		private function _normalizeParams( params : * , length : uint ) : Array
 		{
 			var a : Array = [];
 			a.length = length;

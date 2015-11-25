@@ -54,9 +54,9 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		public function LocalStorageAssetManager( scaleFactor : Number = 1, localFolder : File = null, activateReadLocalStorage : Boolean = false, activateWriteLocalStorage : Boolean = false )
+		public function LocalStorageAssetManager( scaleFactor : Number = 1 , localFolder : File = null , activateReadLocalStorage : Boolean = false , activateWriteLocalStorage : Boolean = false )
 		{
-			super( scaleFactor, false );
+			super( scaleFactor , false );
 
 			_activateReadLocalStorage = activateReadLocalStorage;
 			_activateWriteLocalStorage = activateWriteLocalStorage;
@@ -82,7 +82,7 @@ package _appId_.utils
 		/**
 		 * @inheritDoc
 		 */
-		protected override function transformData( data : ByteArray, url : String ) : ByteArray
+		protected override function transformData( data : ByteArray , url : String ) : ByteArray
 		{
 			if( _activateWriteLocalStorage )
 			{
@@ -91,8 +91,8 @@ package _appId_.utils
 				var extension : String = getExtensionFromUrl( url );
 
 				fileStream = new FileStream();
-				fileStream.open( _localFolder.resolvePath( name + "." + extension ), FileMode.WRITE );
-				fileStream.writeBytes( data, 0, data.length );
+				fileStream.open( _localFolder.resolvePath( name + "." + extension ) , FileMode.WRITE );
+				fileStream.writeBytes( data , 0 , data.length );
 				fileStream.close();
 			}
 
@@ -102,7 +102,7 @@ package _appId_.utils
 		/**
 		 * @inheritDoc
 		 */
-		protected override function loadRawAsset( rawAsset : Object, onProgress : Function, onComplete : Function ) : void
+		protected override function loadRawAsset( rawAsset : Object , onProgress : Function , onComplete : Function ) : void
 		{
 			if( _activateReadLocalStorage && ( rawAsset is String || rawAsset is URLRequest ) )
 			{
@@ -118,7 +118,7 @@ package _appId_.utils
 				}
 			}
 
-			super.loadRawAsset( rawAsset, onProgress, onComplete );
+			super.loadRawAsset( rawAsset , onProgress , onComplete );
 		}
 	}
 }

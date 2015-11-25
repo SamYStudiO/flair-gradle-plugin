@@ -126,10 +126,10 @@ package _appId_.view
 			super();
 
 			_navigator = new ScreenNavigator();
-			_navigator.addEventListener( Event.CHANGE, _bubbleEvent );
-			_navigator.addEventListener( FeathersEventType.TRANSITION_START, _bubbleEvent );
-			_navigator.addEventListener( FeathersEventType.TRANSITION_COMPLETE, _bubbleEvent );
-			_navigator.addEventListener( FeathersEventType.CLEAR, _bubbleEvent );
+			_navigator.addEventListener( Event.CHANGE , _bubbleEvent );
+			_navigator.addEventListener( FeathersEventType.TRANSITION_START , _bubbleEvent );
+			_navigator.addEventListener( FeathersEventType.TRANSITION_COMPLETE , _bubbleEvent );
+			_navigator.addEventListener( FeathersEventType.CLEAR , _bubbleEvent );
 			new SlideTransitionManager( _navigator );
 			addChild( _navigator );
 		}
@@ -147,15 +147,15 @@ package _appId_.view
 		/**
 		 *
 		 */
-		public function addScreen( id : String, item : ScreenNavigatorItem ) : void
+		public function addScreen( id : String , item : ScreenNavigatorItem ) : void
 		{
-			addScreenAt( id, item, _navigator.getScreenIDs().length );
+			addScreenAt( id , item , _navigator.getScreenIDs().length );
 		}
 
 		/**
 		 *
 		 */
-		public function addScreenAt( id : String, item : ScreenNavigatorItem, index : uint ) : void
+		public function addScreenAt( id : String , item : ScreenNavigatorItem , index : uint ) : void
 		{
 			var o : Object = item.properties == null ? {} : item.properties;
 			o.index = index;
@@ -175,7 +175,7 @@ package _appId_.view
 
 			if( _defaultScreenID == null && index == 0 ) _defaultScreenID = id;
 
-			_navigator.addScreen( id, item );
+			_navigator.addScreen( id , item );
 		}
 
 		/**
@@ -197,7 +197,7 @@ package _appId_.view
 
 			delete _screenIndexes[ id ];
 			delete _screenDefaultParams[ id ];
-			_screens.splice( index, 1 );
+			_screens.splice( index , 1 );
 		}
 
 		/**
@@ -273,7 +273,7 @@ package _appId_.view
 		/**
 		 *
 		 */
-		public function setScreenDefaultParams( id : String, params : Object ) : void
+		public function setScreenDefaultParams( id : String , params : Object ) : void
 		{
 			if( _navigator.hasScreen( id ) )
 			{
@@ -293,7 +293,7 @@ package _appId_.view
 		/**
 		 *
 		 */
-		public function showScreen( screenID : String = null, additionalParams : Object = null ) : IndexedScreen
+		public function showScreen( screenID : String = null , additionalParams : Object = null ) : IndexedScreen
 		{
 			var screenIDIsNull : Boolean = screenID == null;
 

@@ -7,7 +7,7 @@ package _appId_.model
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function getTexture( assetID : String, groupID : String = EnumScreen.MAIN ) : Texture
+	public function getTexture( assetID : String , groupID : String = EnumScreen.MAIN ) : Texture
 	{
 		return getAssetManager( groupID ).getTexture( assetID );
 	}

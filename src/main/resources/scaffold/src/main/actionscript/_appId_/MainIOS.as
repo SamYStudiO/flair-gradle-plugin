@@ -1,16 +1,12 @@
 package _appId_
 {
 	import _appId_.actors.STAGE;
-	import _appId_.utils.DeviceInfos;
 
-	import feathers.system.DeviceCapabilities;
-
-	import flash.events.InvokeEvent;
-
-	[SWF(width='640', height='1136', frameRate='60', backgroundColor='0xffffff')]
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
-	 */ public class MainIOS extends AMainMobile
+	 */
+	[SWF(width='1080' , height='1920' , frameRate='60' , backgroundColor='0xffffff')]
+	public class MainIOS extends AMainMobile
 	{
 		/**
 		 *
@@ -62,16 +58,6 @@ package _appId_
 			}
 
 			return filePath;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		protected override function _init( e : InvokeEvent ) : void
-		{
-			if( DeviceInfos.isDesktop() ) DeviceCapabilities.dpi = uint( e.arguments );
-
-			super._init( e );
 		}
 	}
 }

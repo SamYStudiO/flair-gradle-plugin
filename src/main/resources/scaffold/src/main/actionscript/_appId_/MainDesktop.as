@@ -4,10 +4,11 @@ package _appId_
 
 	import flash.events.InvokeEvent;
 
-	[SWF(width='1024', height='768', frameRate='60', backgroundColor='0xffffff')]
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
-	 */ public class MainDesktop extends AMain
+	 */
+	[SWF(width='1024' , height='768' , frameRate='60' , backgroundColor='0xffffff')]
+	public class MainDesktop extends AMain
 	{
 		/**
 		 *

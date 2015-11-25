@@ -44,22 +44,22 @@ package _appId_.utils
 		/**
 		 * An Array of full month names.
 		 */
-		public static var MONTHS : Array = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+		public static var MONTHS : Array = [ "January" , "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September" , "October" , "November" , "December" ];
 
 		/**
 		 * An Array of short month names (3 chars).
 		 */
-		public static var MONTHS_SHORT : Array = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+		public static var MONTHS_SHORT : Array = [ "Jan" , "Feb" , "Mar" , "Apr" , "May" , "Jun" , "Jul" , "Aug" , "Sep" , "Oct" , "Nov" , "Dec" ];
 
 		/**
 		 * An Array of full week day names.
 		 */
-		public static var WEEKDAY : Array = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+		public static var WEEKDAY : Array = [ "Sunday" , "Monday" , "Tuesday" , "Wednesday" , "Thursday" , "Friday" , "Saturday" ];
 
 		/**
 		 * An Array of short week day names (3 chars).
 		 */
-		public static var WEEKDAY_SHORT : Array = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
+		public static var WEEKDAY_SHORT : Array = [ "Sun" , "Mon" , "Tue" , "Wed" , "Thu" , "Fri" , "Sat" ];
 
 		/**
 		 * Convert a Date object to a string representation.
@@ -68,7 +68,7 @@ package _appId_.utils
 		 * @param escapeChar A Char to used to esape format patterns.
 		 * @return The date converted to a string representation.
 		 */
-		public static function format( d : Date, format : String, escapeChar : String = "@" ) : String
+		public static function format( d : Date , format : String , escapeChar : String = "@" ) : String
 		{
 			var i : uint = 0;
 			var l : uint = format.length;
@@ -88,7 +88,7 @@ package _appId_.utils
 
 				while( format.charAt( ++i ) == char && i < l ) pattern += char;
 
-				result += __convertPattern( pattern, d );
+				result += __convertPattern( pattern , d );
 			}
 
 			return result;
@@ -102,7 +102,7 @@ package _appId_.utils
 		 * @param autoAddOverflow A Boolean that indicates if an overflow value (a value that does not match a pattern range > month 13 out of range 1-12) is allowed.
 		 * @return The date object from string representation. If conversion is impossible the value is null.
 		 */
-		public static function getDateFrom( from : String, format : String, caseSensitive : Boolean = false, autoAddOverflow : Boolean = false ) : Date
+		public static function getDateFrom( from : String , format : String , caseSensitive : Boolean = false , autoAddOverflow : Boolean = false ) : Date
 		{
 			var i : uint = 0;
 			var searchIndex : uint = 0;
@@ -128,101 +128,101 @@ package _appId_.utils
 				switch( pattern )
 				{
 					case "yy" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						if( !__testInteger( str ) || str.length != 2 ) return null;
-						y = int( String( new Date().getFullYear() ).substr( 0, 2 ) + str );
+						y = int( String( new Date().getFullYear() ).substr( 0 , 2 ) + str );
 						searchIndex += 2;
 						break;
 					case "yyyy" :
-						str = from.substr( searchIndex, 4 );
+						str = from.substr( searchIndex , 4 );
 						if( !__testInteger( str ) || str.length != 4 ) return null;
 						y = int( str );
 						searchIndex += 4;
 						break;
 					case "MM"    :
-						var so : String = from.substr( searchIndex, 2 );
+						var so : String = from.substr( searchIndex , 2 );
 						mo = int( so ) - 1;
 						if( !__testInteger( so ) || ( mo < 0 || ( mo > 11 && !autoAddOverflow ) ) || so.length != 2 ) return null;
 						searchIndex += 2;
 						break;
 					case "MMM" :
-						mo = __searchArrayIndex( from.substr( searchIndex, 3 ), MONTHS_SHORT, caseSensitive );
+						mo = __searchArrayIndex( from.substr( searchIndex , 3 ) , MONTHS_SHORT , caseSensitive );
 						if( mo < 0 || ( mo > 11 && !autoAddOverflow ) ) return null;
 						searchIndex += 3;
 						break;
 					case "MMMM" :
-						mo = __searchArrayIndex( from.substr( searchIndex, 3 ), MONTHS, caseSensitive );
+						mo = __searchArrayIndex( from.substr( searchIndex , 3 ) , MONTHS , caseSensitive );
 						if( mo < 0 || ( mo > 11 && !autoAddOverflow ) ) return null;
 						searchIndex += String( MONTHS[ mo ] ).length;
 						break;
 					case "dd" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						d = int( str );
 						if( !__testInteger( str ) || str.length != 2 || d <= 0 ) return null;
 						searchIndex += 2;
 						break;
 					case "E" :
-						index = __searchArrayIndex( from.substr( searchIndex, 3 ), WEEKDAY_SHORT, caseSensitive );
+						index = __searchArrayIndex( from.substr( searchIndex , 3 ) , WEEKDAY_SHORT , caseSensitive );
 						if( index < 0 ) return null;
 						str = String( WEEKDAY_SHORT[ index ] );
 						searchIndex += str.length;
 						break;
 					case "EE" :
-						index = __searchArrayIndex( from.substr( searchIndex, 3 ), WEEKDAY, caseSensitive );
+						index = __searchArrayIndex( from.substr( searchIndex , 3 ) , WEEKDAY , caseSensitive );
 						if( index < 0 ) return null;
 						str = String( WEEKDAY[ index ] );
 						searchIndex += str.length;
 						break;
 					case "hh" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						h = int( str );
 						if( ( h < 0 || ( h > 12 && !autoAddOverflow ) ) || str.length != 2 ) return null;
 						searchIndex += 2;
 						break;
 					case "HH" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						h = int( str );
 						if( ( h < 0 || ( h > 23 && !autoAddOverflow ) ) || str.length != 2 ) return null;
 						searchIndex += 2;
 						break;
 					case "mm" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						mi = int( str );
 						if( ( mi < 0 || ( mi > 59 && !autoAddOverflow ) ) || str.length != 2 ) return null;
 						searchIndex += 2;
 						break;
 					case "ss" :
-						str = from.substr( searchIndex, 2 );
+						str = from.substr( searchIndex , 2 );
 						s = int( str );
 						if( ( s < 0 || ( s > 59 && !autoAddOverflow ) ) || str.length != 2 ) return null;
 						searchIndex += 2;
 						break;
 					case "SS" :
-						str = from.substr( searchIndex, 3 );
+						str = from.substr( searchIndex , 3 );
 						ms = int( str );
 						if( ( ms < 0 || ( ms > 999 && !autoAddOverflow ) ) || str.length != 3 ) return null;
 						searchIndex += 3;
 						break;
 					case "o" :
-						str = from.substr( searchIndex, 5 );
+						str = from.substr( searchIndex , 5 );
 						if( !__testTimezoneOffset( str ) || String( str ).length != 5 ) return null;
 						o = __timezoneOffset2Number( str ) * 60000;
 						searchIndex += 5;
 						break;
 					case "O" :
-						str = from.substr( searchIndex, 6 );
-						if( !__testTimezoneOffset( str, true ) || String( str ).length != 6 ) return null;
-						o = __timezoneOffset2Number( str, true ) * 60000;
+						str = from.substr( searchIndex , 6 );
+						if( !__testTimezoneOffset( str , true ) || String( str ).length != 6 ) return null;
+						o = __timezoneOffset2Number( str , true ) * 60000;
 						searchIndex += 6;
 						break;
 					default    :
 						if( caseSensitive )
 						{
-							if( from.substr( searchIndex, pattern.length ) != pattern ) return null;
+							if( from.substr( searchIndex , pattern.length ) != pattern ) return null;
 						}
 						else
 						{
-							if( from.substr( searchIndex, pattern.length ).toLowerCase() != pattern.toLowerCase() ) return null;
+							if( from.substr( searchIndex , pattern.length ).toLowerCase() != pattern.toLowerCase() ) return null;
 						}
 						searchIndex += pattern.length;
 						break;
@@ -249,13 +249,13 @@ package _appId_.utils
 			// check there is no more char from source
 			if( from.length > searchIndex ) return null;
 
-			return new Date( new Date( y, mo, d, h, mi, s, ms ).getTime() + o );
+			return new Date( new Date( y , mo , d , h , mi , s , ms ).getTime() + o );
 		}
 
 		/**
 		 *
 		 */
-		private static function __convertPattern( pattern : String, d : Date ) : String
+		private static function __convertPattern( pattern : String , d : Date ) : String
 		{
 			switch( true )
 			{
@@ -278,7 +278,7 @@ package _appId_.utils
 				case pattern == "D"        :
 					return String( __getDayYearNumber( d ) );
 				case pattern == "DD"    :
-					return digitFormat( __getDayYearNumber( d ), 3 );
+					return digitFormat( __getDayYearNumber( d ) , 3 );
 				case pattern == "E"        :
 					return WEEKDAY_SHORT[ d.getDay() ];
 				case pattern == "EE"    :
@@ -306,7 +306,7 @@ package _appId_.utils
 				case pattern == "S"        :
 					return String( d.getMilliseconds() );
 				case pattern == "SS"    :
-					return digitFormat( d.getMilliseconds(), 3 );
+					return digitFormat( d.getMilliseconds() , 3 );
 				case pattern == "aa"    :
 					return d.getHours() < 12 ? "am" : "pm";
 				case pattern == "AA"    :
@@ -314,17 +314,17 @@ package _appId_.utils
 				case pattern == "o"        :
 					return __timezoneOffset2String( d.getTimezoneOffset() );
 				case pattern == "O"        :
-					return __timezoneOffset2String( d.getTimezoneOffset(), ":" );
+					return __timezoneOffset2String( d.getTimezoneOffset() , ":" );
 				default                    :
 					var l : uint = pattern.length;
-					return l > 1 ? __convertPattern( pattern.substr( 0, l - 1 ), d ) + pattern.substr( l - 1 ) : pattern;
+					return l > 1 ? __convertPattern( pattern.substr( 0 , l - 1 ) , d ) + pattern.substr( l - 1 ) : pattern;
 			}
 		}
 
 		/**
 		 *
 		 */
-		private static function __searchArrayIndex( s : String, a : Array, caseSensitive : Boolean = false ) : int
+		private static function __searchArrayIndex( s : String , a : Array , caseSensitive : Boolean = false ) : int
 		{
 			s = caseSensitive ? s : s.toLowerCase();
 
@@ -361,7 +361,7 @@ package _appId_.utils
 		 */
 		private static function __getDayYearNumber( d : Date ) : uint
 		{
-			var monthsLength : Array = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+			var monthsLength : Array = [ 31 , 28 , 31 , 30 , 31 , 30 , 31 , 31 , 30 , 31 , 30 , 31 ];
 			var y : Number = d.fullYear;
 			var dayNumber : uint;
 
@@ -381,7 +381,7 @@ package _appId_.utils
 		private static function __getWeekYearNumber( d : Date ) : uint
 		{
 			var dayNumber : int = __getDayYearNumber( d );
-			var firstYearDay : Date = new Date( d.fullYear, 0, 1 );
+			var firstYearDay : Date = new Date( d.fullYear , 0 , 1 );
 			var firstDay : Number = firstYearDay.day;
 
 			firstDay = firstDay == 0 ? 7 : firstDay;
@@ -393,13 +393,13 @@ package _appId_.utils
 
 			if( dayNumber % 7 != 0 ) weekNumber++;
 
-			return weekNumber == 0 ? __getWeekYearNumber( new Date( d.fullYear - 1, 11, 31 ) ) : weekNumber;
+			return weekNumber == 0 ? __getWeekYearNumber( new Date( d.fullYear - 1 , 11 , 31 ) ) : weekNumber;
 		}
 
 		/**
 		 *
 		 */
-		private static function __timezoneOffset2String( n : int, separator : String = "" ) : String
+		private static function __timezoneOffset2String( n : int , separator : String = "" ) : String
 		{
 			var sign : String = n < 0 ? "+" : "-";
 			var h : int = Math.abs( n ) / 60;
@@ -412,17 +412,17 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		private static function __timezoneOffset2Number( s : String, separator : Boolean = false ) : int
+		private static function __timezoneOffset2Number( s : String , separator : Boolean = false ) : int
 		{
-			var n : int = int( s.substr( 1, 2 ) ) * 60 + int( s.substr( separator ? 4 : 3, 2 ) );
+			var n : int = int( s.substr( 1 , 2 ) ) * 60 + int( s.substr( separator ? 4 : 3 , 2 ) );
 
-			return s.substr( 0, 1 ) == "+" ? -n : n;
+			return s.substr( 0 , 1 ) == "+" ? -n : n;
 		}
 
 		/**
 		 *
 		 */
-		private static function __testTimezoneOffset( s : String, separator : Boolean = false ) : Boolean
+		private static function __testTimezoneOffset( s : String , separator : Boolean = false ) : Boolean
 		{
 			var a : Array = s.split( "" );
 

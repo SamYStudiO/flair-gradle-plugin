@@ -71,7 +71,7 @@ package _appId_.utils
 		{
 			var urlVariables : URLVariables = new URLVariables();
 			urlVariables.decode( Capabilities.serverString );
-			return parseInt( urlVariables.DP, 10 );
+			return parseInt( urlVariables.DP , 10 );
 		}
 
 		/**

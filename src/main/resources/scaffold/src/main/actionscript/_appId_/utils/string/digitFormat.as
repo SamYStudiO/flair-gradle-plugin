@@ -3,7 +3,7 @@ package _appId_.utils.string
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function digitFormat( n : Number, length : uint = 2 ) : String
+	public function digitFormat( n : Number , length : uint = 2 ) : String
 	{
 		var a : Array = n.toString().split( "." );
 		var s : String = isNaN( n ) ? "" : a[ 0 ];

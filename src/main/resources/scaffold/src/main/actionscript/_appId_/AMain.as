@@ -191,8 +191,6 @@ package _appId_
 		 */
 		protected function _stageResized( e : flash.events.Event = null ) : void
 		{
-			e;
-
 			var stageWidth : Number = DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
 			var stageHeight : Number = DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
 
