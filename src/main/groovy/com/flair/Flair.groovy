@@ -15,6 +15,7 @@ public class Flair implements Plugin<Project>
 		project.getExtensions( ).create( "flair" , FlairProperties )
 		project.getTasks( ).create( "generateProject" , Scaffold )
 		project.getTasks( ).create( "updateProperties" , UpdateProperties )
+		project.getTasks( ).create( "generateFonts" , Fonts )
 		project.getTasks( ).create( "copyIOSResources" , CopyIOSResources )
 		project.getTasks( ).create( "copyAndroidResources" , CopyAndroidResources )
 		project.getTasks( ).create( "copyDesktopResources" , CopyDesktopResources )
