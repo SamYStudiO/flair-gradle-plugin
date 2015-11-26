@@ -18,53 +18,27 @@ public class CopyAndroidResources extends DefaultTask
 	public void copy()
 	{
 		String moduleName = project.flair.moduleName
+		String commonResources = project.flair.commonResources
+		String androidResources = project.flair.androidResources
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-mdpi"
+			from "${ moduleName }/src/main/resources/"
+			into "${ project.getBuildDir( ) }/resources/"
 
-			into "${ project.buildDir }/resources/drawable-mdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-hhdpi"
-
-			into "${ project.buildDir }/resources/drawable-hhdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-xhdpi"
-
-			into "${ project.buildDir }/resources/drawable-xhdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-xxhdpi"
-
-			into "${ project.buildDir }/resources/drawable-xxhdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-xxxhdpi"
-
-			into "${ project.buildDir }/resources/drawable-xxxhdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/values"
-
-			into "${ project.buildDir }/resources/values"
+			include commonResources
+			include androidResources
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/android/splashs"
 
-			into "${ project.buildDir }/"
+			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/android/icons"
 
-			into "${ project.buildDir }/icons"
+			into "${ project.getBuildDir( ) }/icons"
 		}
 	}
 }

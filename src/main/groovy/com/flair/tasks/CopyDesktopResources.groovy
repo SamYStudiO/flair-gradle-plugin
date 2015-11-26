@@ -18,29 +18,27 @@ public class CopyDesktopResources extends DefaultTask
 	public void copy()
 	{
 		String moduleName = project.flair.moduleName
+		String commonResources = project.flair.commonResources
+		String desktopResources = project.flair.desktopResources
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-mdpi"
+			from "${ moduleName }/src/main/resources/"
+			into "${ project.getBuildDir( ) }/resources/"
 
-			into "${ project.buildDir }/resources/drawable-mdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/values"
-
-			into "${ project.buildDir }/resources/values"
+			include commonResources
+			include desktopResources
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/desktop/splashs"
 
-			into "${ project.buildDir }/"
+			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/desktop/icons"
 
-			into "${ project.buildDir }/icons"
+			into "${ project.getBuildDir( ) }/icons"
 		} s
 	}
 }

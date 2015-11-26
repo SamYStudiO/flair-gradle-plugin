@@ -18,35 +18,27 @@ public class CopyIOSResources extends DefaultTask
 	public void copy()
 	{
 		String moduleName = project.flair.moduleName
+		String commonResources = project.flair.commonResources
+		String iosResources = project.flair.iosResources
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-mdpi"
+			from "${ moduleName }/src/main/resources/"
+			into "${ project.getBuildDir( ) }/resources/"
 
-			into "${ project.buildDir }/resources/drawable-mdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/drawable-xhdpi"
-
-			into "${ project.buildDir }/resources/drawable-xhdpi"
-		}
-
-		project.copy {
-			from "${ moduleName }/src/main/resources/values"
-
-			into "${ project.buildDir }/resources/values"
+			include commonResources
+			include iosResources
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/ios/splashs"
 
-			into "${ project.buildDir }/"
+			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/ios/icons"
 
-			into "${ project.buildDir }/icons"
+			into "${ project.getBuildDir( ) }/icons"
 		}
 	}
 }
