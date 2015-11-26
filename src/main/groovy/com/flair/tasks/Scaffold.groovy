@@ -27,10 +27,7 @@ public class Scaffold extends DefaultTask
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
-			//from project.zipTree( f )
 			into project.getRootDir( )
-
-			//rename( /scaffold.iml/ , "${ moduleName }.iml" )
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"

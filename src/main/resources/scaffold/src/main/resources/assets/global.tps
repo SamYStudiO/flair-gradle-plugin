@@ -11,6 +11,23 @@
         <array>
             <struct type="AutoSDSettings">
                 <key>scale</key>
+                <double>0.1875</double>
+                <key>extension</key>
+                <string>drawable-ldpi</string>
+                <key>spriteFilter</key>
+                <string></string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>2048</int>
+                    <key>height</key>
+                    <int>2048</int>
+                </QSize>
+            </struct>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
                 <double>0.25</double>
                 <key>extension</key>
                 <string>drawable-mdpi</string>
@@ -28,7 +45,7 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.333</double>
+                <double>0.375</double>
                 <key>extension</key>
                 <string>drawable-hdpi</string>
                 <key>spriteFilter</key>
@@ -106,7 +123,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../resources_common/{v}/global{n}.png</filename>
+        <filename>../{v}/global{n}.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -213,7 +230,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../resources_common/{v}/global{n}.xml</filename>
+                <filename>../{v}/global{n}.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
