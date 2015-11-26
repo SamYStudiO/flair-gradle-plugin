@@ -25,8 +25,6 @@ class TexturePacker extends DefaultTask
 
 			if( file.getName( ).toLowerCase( ).indexOf( ".tps" ) >= 0 )
 			{
-				println( file.getPath( ) )
-
 				project.exec {
 					commandLine "TexturePacker" , "${ file.getPath( ) }"
 					ignoreExitValue = true

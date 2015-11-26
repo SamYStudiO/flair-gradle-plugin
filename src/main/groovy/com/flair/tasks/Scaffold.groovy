@@ -1,6 +1,7 @@
 package com.flair.tasks
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -18,7 +19,10 @@ public class Scaffold extends DefaultTask
 	public void generateProject()
 	{
 		String appId = project.flair.appId
+		String appName = project.flair.appName
 		String moduleName = project.flair.moduleName
+
+		appName = appName == "" ? project.name : appName
 
 		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
@@ -31,30 +35,37 @@ public class Scaffold extends DefaultTask
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"
+
+			rename( "scaffold.iml" , "${ moduleName }.iml" )
 		}
 
-		File imlFile = project.file( "/scaffold/scaffold.iml" )
-		String imlContent = project.file( "/scaffold/scaffold.iml" ).getText( )
+		FileTree tree = project.fileTree( "/scaffold" )
 
-		imlContent = imlContent.replace( "\${appId}" , appId )
-				.replace( "_appId_" , appId )
-				.replace( "\${projectName}" , project.name )
-				.replace( "\${moduleName}" , moduleName )
+		tree.each { file ->
 
-		project.file( "/scaffold/${ moduleName }.iml" ).write( imlContent )
-		imlFile.delete( )
+			if( file.isFile( ) )
+			{
+				String ext = file.getName( ).split( "\\." ).last( )
+				String allowedExt = "xml,as,iml"
+
+				if( allowedExt.indexOf( ext ) >= 0 )
+				{
+					String content = file.getText( )
+
+					content = content.replace( "\${appId}" , appId )
+							.replace( "_appId_" , appId )
+							.replace( "\${projectName}" , project.getName( ) )
+							.replace( "\${appName}" , appName )
+							.replace( "\${moduleName}" , moduleName )
+
+					file.write( content )
+				}
+			}
+		}
 
 		project.copy {
 			from "scaffold/src/main/actionscript/_appId_"
 			into "scaffold/src/main/actionscript/${ s }"
-
-			filter {
-				println( )
-				it.replace( "\${appId}" , appId )
-						.replace( "_appId_" , appId )
-						.replace( "\${projectName}" , project.name )
-						.replace( "\${moduleName}" , moduleName )
-			}
 		}
 
 		project.file( "scaffold" ).renameTo( moduleName )
@@ -63,11 +74,6 @@ public class Scaffold extends DefaultTask
 		project.copy {
 			from "${ moduleName }/libraries"
 			into ".idea/libraries"
-
-			filter {
-				println( )
-				it.replace( "\${moduleName}" , moduleName )
-			}
 		}
 
 		project.file( "${ moduleName }/libraries" ).deleteDir( )
@@ -75,12 +81,6 @@ public class Scaffold extends DefaultTask
 		project.copy {
 			from "${ moduleName }/modules.xml"
 			into ".idea/"
-
-			filter {
-				println( )
-				it.replace( "\${projectName}" , project.name )
-						.replace( "\${moduleName}" , moduleName )
-			}
 		}
 
 		project.file( "${ moduleName }/modules.xml" ).delete( )

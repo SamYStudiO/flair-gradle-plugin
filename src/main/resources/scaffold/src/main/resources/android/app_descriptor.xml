@@ -18,7 +18,7 @@
     <filename>${projectName}</filename>
 
     <!-- The name that is displayed in the AIR application installer. May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <name>${projectName}</name>
+    <name>${appName}</name>
 
     <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
@@ -116,7 +116,7 @@
     <!--<supportedProfiles>desktop extendedDesktop mobileDevice extendedMobileDevice</supportedProfiles>-->
 
     <!-- Languages supported by application. Only these languages can be specified -->
-    <!--<supportedLanguages>en de cs es fr it ja ko nl pl pt ru sv tr zh</supportedLanguages>-->
+    <supportedLanguages>en de cs es fr it ja ko nl pl pt ru sv tr zh</supportedLanguages>
 
     <!-- The subpath of the standard default installation location to use. Optional. -->
     <!--<installFolder></installFolder>-->
