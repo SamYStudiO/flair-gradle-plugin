@@ -39,51 +39,18 @@ public class VersionHuntingWriteVersion extends DefaultTask
 			if( it.indexOf( "minor=" ) >= 0 ) minor = it.replace( "minor=" , "" )
 			if( it.indexOf( "build=" ) >= 0 ) build = it.replace( "build=" , "" )
 		}
+		
+		writeApp( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
+		writeApp( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
+		writeApp( project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
+	}
 
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/android/temp" )
+	private void writeApp( File app , String version )
+	{
+		String content = app.getText( )
 
-			filter {
-				it.replaceAll( "<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>" , "<versionNumber>${ major }.${ minor }.${ build }</versionNumber>" )
-			}
-		}
+		content = content.replaceAll( "<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>" , "<versionNumber>${ version }</versionNumber>" )
 
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/ios/temp" )
-
-			filter {
-				it.replaceAll( "<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>" , "<versionNumber>${ major }.${ minor }.${ build }</versionNumber>" )
-			}
-		}
-
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/desktop/temp" )
-
-			filter {
-				it.replaceAll( "<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>" , "<versionNumber>${ major }.${ minor }.${ build }</versionNumber>" )
-			}
-		}
-
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/android/temp/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/android/" )
-		}
-
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/ios/temp/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/ios/" )
-		}
-
-		project.copy {
-			from project.file( "${ moduleName }/src/main/resources/desktop/temp/app_descriptor.xml" )
-			into project.file( "${ moduleName }/src/main/resources/desktop/" )
-		}
-
-		project.file( "${ moduleName }/src/main/resources/android/temp/app_descriptor.xml" ).delete( )
-		project.file( "${ moduleName }/src/main/resources/ios/temp/app_descriptor.xml" ).delete( )
-		project.file( "${ moduleName }/src/main/resources/desktop/temp/app_descriptor.xml" ).delete( )
+		app.write( content )
 	}
 }
