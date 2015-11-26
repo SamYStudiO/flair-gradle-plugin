@@ -7,6 +7,6 @@ package _appId_.model
 	 */
 	public function getTranslation( id : String , groupID : String = EnumScreen.MAIN ) : String
 	{
-		return getAssetManager( groupID ).getXml( "translations" ).child( id ).toString();
+		return getAssetManager( groupID ).getXml( "strings" ).child( id ).toString();
 	}
 }

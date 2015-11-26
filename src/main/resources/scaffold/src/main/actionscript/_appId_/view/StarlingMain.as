@@ -8,6 +8,7 @@ package _appId_.view
 	import feathers.controls.ScreenNavigatorItem;
 
 	import flash.filesystem.File;
+	import flash.system.Capabilities;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
@@ -61,7 +62,12 @@ package _appId_.view
 			else
 			{
 				_assets.enqueue( File.applicationDirectory.resolvePath( "resources/drawable-" + dpiBucketID ) );
-				_assets.enqueue( File.applicationDirectory.resolvePath( "resources/values" ) );
+
+				var localeStrings : File = File.applicationDirectory.resolvePath( "resources/values-" + Capabilities.language );
+
+				if( !localeStrings.exists ) localeStrings = File.applicationDirectory.resolvePath( "resources/values" );
+
+				_assets.enqueue( localeStrings );
 			}
 		}
 	}
