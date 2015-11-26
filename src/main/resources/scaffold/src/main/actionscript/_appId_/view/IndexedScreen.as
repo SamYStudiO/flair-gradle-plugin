@@ -2,6 +2,8 @@ package _appId_.view
 {
 	import feathers.controls.IScreen;
 
+	import org.osflash.signals.Signal;
+
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
@@ -25,21 +27,21 @@ package _appId_.view
 		/**
 		 *
 		 */
+		function get shown() : Signal;
+
+		/**
+		 *
+		 */
+		function get hidden() : Signal;
+
+		/**
+		 *
+		 */
 		function show() : void;
 
 		/**
 		 *
 		 */
 		function hide() : void;
-
-		/**
-		 *
-		 */
-		function shown() : void;
-
-		/**
-		 *
-		 */
-		function hidden() : void;
 	}
 }

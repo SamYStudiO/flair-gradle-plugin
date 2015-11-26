@@ -6,6 +6,8 @@ package _appId_.view
 	import feathers.controls.ScrollScreen;
 	import feathers.system.DeviceCapabilities;
 
+	import org.osflash.signals.Signal;
+
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
@@ -43,6 +45,32 @@ package _appId_.view
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _shown : Signal = new Signal();
+
+		/**
+		 *
+		 */
+		public function get shown() : Signal
+		{
+			return _shown;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _hidden : Signal = new Signal();
+
+		/**
+		 *
+		 */
+		public function get hidden() : Signal
+		{
+			return _hidden;
+		}
+
+		/**
 		 *
 		 */
 		public function AScrollScreen()
@@ -65,34 +93,6 @@ package _appId_.view
 		 *
 		 */
 		public function hide() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		public function shown() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		public function hidden() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		public function popupShown() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		public function popupHidden() : void
 		{
 		}
 

@@ -48,8 +48,8 @@ package _appId_
 		{
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE , _init , false , 0 , true );
 
-			addEventListener( flash.events.Event.ACTIVATE , _activated , false , 0 , true );
-			addEventListener( flash.events.Event.DEACTIVATE , _deactivated , false , 0 , true );
+			addEventListener( flash.events.Event.ACTIVATE , _onActivate , false , 0 , true );
+			addEventListener( flash.events.Event.DEACTIVATE , _onDeactivate , false , 0 , true );
 		}
 
 		/**
@@ -107,8 +107,8 @@ package _appId_
 			STARLING.enableErrorChecking = Boolean( CONFIG::DEBUG );
 			STARLING_STAGE = STARLING.stage;
 
-			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _starlingContextCreated );
-			STARLING.addEventListener( starling.events.Event.ROOT_CREATED , _starlingRootCreated );
+			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
+			STARLING.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 
 			Gestouch.inputAdapter = new NativeInputAdapter( STAGE );
 			Gestouch.addDisplayListAdapter( DisplayObject , new StarlingDisplayListAdapter() );
@@ -120,7 +120,7 @@ package _appId_
 		/**
 		 * @private
 		 */
-		protected function _mainReady() : void
+		protected function _onMainReady() : void
 		{
 			NAVIGATOR.showPath( Config.FIRST_SCREEN_PATH );
 		}
@@ -128,7 +128,7 @@ package _appId_
 		/**
 		 * @private
 		 */
-		protected function _activated( e : flash.events.Event ) : void
+		protected function _onActivate( e : flash.events.Event ) : void
 		{
 			_isActivated = true;
 
@@ -138,7 +138,7 @@ package _appId_
 		/**
 		 * @private
 		 */
-		protected function _deactivated( e : flash.events.Event ) : void
+		protected function _onDeactivate( e : flash.events.Event ) : void
 		{
 			_isActivated = false;
 
@@ -163,33 +163,33 @@ package _appId_
 		/**
 		 * @private
 		 */
-		protected function _starlingContextCreated( e : starling.events.Event ) : void
+		protected function _onStarlingContextCreate( e : starling.events.Event ) : void
 		{
-			debug( this , "_starlingContextCreated" );
+			debug( this , "_onStarlingContextCreate" );
 
-			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _starlingContextCreated );
+			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function _starlingRootCreated( e : starling.events.Event ) : void
+		protected function _onStarlingRootCreate( e : starling.events.Event ) : void
 		{
-			debug( this , "_starlingRootCreated" );
+			debug( this , "_onStarlingRootCreate" );
 
-			STAGE.addEventListener( flash.events.Event.RESIZE , _stageResized , false , int.MAX_VALUE );
-			_stageResized();
+			STAGE.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
+			_onStageResize();
 
-			if( STARLING_MAIN.isReady ) _mainReady();
-			else STARLING_MAIN.assetsComplete.add( _mainReady );
+			if( STARLING_MAIN.isReady ) _onMainReady();
+			else STARLING_MAIN.assetsComplete.add( _onMainReady );
 
-			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED , _starlingRootCreated );
+			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function _stageResized( e : flash.events.Event = null ) : void
+		protected function _onStageResize( e : flash.events.Event = null ) : void
 		{
 			var stageWidth : Number = DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
 			var stageHeight : Number = DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;

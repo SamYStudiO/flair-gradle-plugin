@@ -106,7 +106,6 @@ package _appId_.transitions
 							function runNewShow() : void
 							{
 								assetsScreen.show();
-								assetsScreen.shown();
 
 								assetsScreen.assetsComplete.remove( runTransition );
 								assetsScreen.assetsError.remove( runTransition );
@@ -118,7 +117,6 @@ package _appId_.transitions
 						else
 						{
 							( newScreen as IndexedScreen ).show();
-							( newScreen as IndexedScreen ).shown();
 						}
 					}
 				}
@@ -128,7 +126,6 @@ package _appId_.transitions
 					if( oldScreen is IndexedScreen )
 					{
 						( oldScreen as IndexedScreen ).hide();
-						( oldScreen as IndexedScreen ).hidden();
 					}
 				}
 				if( onComplete != null )
@@ -224,9 +221,6 @@ package _appId_.transitions
 		 */
 		protected function activeTransition_onComplete() : void
 		{
-			if( this._savedOtherTarget && this._savedOtherTarget is IndexedScreen ) ( this._savedOtherTarget as IndexedScreen ).hidden();
-			if( this._activeTransition.target is IndexedScreen ) ( this._activeTransition.target as IndexedScreen ).shown();
-
 			this._activeTransition = null;
 			this._savedOtherTarget = null;
 

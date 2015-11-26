@@ -186,7 +186,7 @@ package _appId_.utils
 
 				function complete() : void
 				{
-					navigatorScreen.removeEventListener( FeathersEventType.TRANSITION_COMPLETE , transitionComplete );
+					navigatorScreen.removeEventListener( FeathersEventType.TRANSITION_COMPLETE , onTransitionComplete );
 					var nextScreen : IndexedScreen = navigatorScreen.activeScreen as IndexedScreen;
 
 					path += nextScreen.screenID + "/";
@@ -226,13 +226,13 @@ package _appId_.utils
 					}
 				}
 
-				function transitionComplete() : void
+				function onTransitionComplete() : void
 				{
 					setTimeout( complete , 1 );
 				}
 
 				if( navigatorScreen.showScreen( screenID , screenParams ) != null ) complete();
-				else navigatorScreen.addEventListener( FeathersEventType.TRANSITION_COMPLETE , transitionComplete );
+				else navigatorScreen.addEventListener( FeathersEventType.TRANSITION_COMPLETE , onTransitionComplete );
 			}
 
 			showNextScreenFromScreen( _rootNavigatorScreen );

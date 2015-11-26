@@ -6,14 +6,6 @@ package _appId_.view
 	public final class EnumScreen
 	{
 		/**
-		 * @private
-		 */
-		public function EnumScreen()
-		{
-			throw new Error( this + " cannot be instantiated" );
-		}
-
-		/**
 		 *
 		 */
 		public static const MAIN : String = "main";
@@ -21,5 +13,13 @@ package _appId_.view
 		 *
 		 */
 		public static const HOME : String = "home";
+
+		/**
+		 * @private
+		 */
+		public function EnumScreen()
+		{
+			throw new Error( this + " cannot be instantiated" );
+		}
 	}
 }

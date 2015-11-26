@@ -80,14 +80,14 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _mainReady() : void
+		protected override function _onMainReady() : void
 		{
 			_cleanupSplashScreen();
 
 			STAGE.autoOrients = _defaultAutoOrients;
 			if( STAGE.autoOrients ) ORIENTATION_MANAGER.updateStageOrientationFromDeviceOrientation();
 
-			super._mainReady();
+			super._onMainReady();
 		}
 
 		/**

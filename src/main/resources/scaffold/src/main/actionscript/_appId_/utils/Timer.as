@@ -150,7 +150,7 @@ package _appId_.utils
 			_offset = 0;
 
 			_frameListener = new Shape();
-			_frameListener.addEventListener( Event.ENTER_FRAME , _enterFrame , false , 0 , true );
+			_frameListener.addEventListener( Event.ENTER_FRAME , _tick , false , 0 , true );
 		}
 
 		/**
@@ -160,7 +160,7 @@ package _appId_.utils
 		{
 			if( !running ) return;
 
-			_frameListener.removeEventListener( Event.ENTER_FRAME , _enterFrame );
+			_frameListener.removeEventListener( Event.ENTER_FRAME , _tick );
 			_frameListener = null;
 
 			_offset = getTimer() - _startTimer;
@@ -175,14 +175,14 @@ package _appId_.utils
 
 			if( _frameListener == null ) return;
 
-			_frameListener.removeEventListener( Event.ENTER_FRAME , _enterFrame );
+			_frameListener.removeEventListener( Event.ENTER_FRAME , _tick );
 			_frameListener = null;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function _enterFrame( e : Event ) : void
+		protected function _tick( e : Event ) : void
 		{
 			var timer : int = getTimer();
 
