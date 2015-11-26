@@ -1,6 +1,7 @@
 package com.flair.tasks
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -18,9 +19,19 @@ class TexturePacker extends DefaultTask
 	public void generateTextures()
 	{
 		String moduleName = project.flair.moduleName
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+		String tps = ""
 
-		project.exec {
-			commandLine "TexturePacker" , "${ moduleName }/src/main/resources/assets/global.tps"
+		tree.each { file ->
+
+			if( file.getName( ).toLowerCase( ).indexOf( ".tps" ) >= 0 )
+			{
+				println( file.getPath( ) )
+
+				project.exec {
+					commandLine "TexturePacker" , "${ file.getPath( ) }"
+				}
+			}
 		}
 	}
 }
