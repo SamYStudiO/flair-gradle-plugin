@@ -55,20 +55,13 @@ package _appId_.view
 		 */
 		protected override function _addAssets() : void
 		{
-			if( dpiBucketID == null )
-			{
-				_assets.enqueue( File.applicationDirectory.resolvePath( "resources" ) );
-			}
-			else
-			{
-				_assets.enqueue( File.applicationDirectory.resolvePath( "resources/drawable-" + dpiBucketID ) );
+			_assets.enqueue( File.applicationDirectory.resolvePath( "resources/drawable-" + dpiBucketID ) );
 
-				var localeStrings : File = File.applicationDirectory.resolvePath( "resources/values-" + Capabilities.language );
+			var localeStrings : File = File.applicationDirectory.resolvePath( "resources/values-" + Capabilities.language.toLowerCase() );
+			if( !localeStrings.exists ) localeStrings = File.applicationDirectory.resolvePath( "resources/values-" + Capabilities.language.toLowerCase().split( "-" )[ 0 ] );
+			if( !localeStrings.exists ) localeStrings = File.applicationDirectory.resolvePath( "resources/values" );
 
-				if( !localeStrings.exists ) localeStrings = File.applicationDirectory.resolvePath( "resources/values" );
-
-				_assets.enqueue( localeStrings );
-			}
+			_assets.enqueue( localeStrings );
 		}
 	}
 }
