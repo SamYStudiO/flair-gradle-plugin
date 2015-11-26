@@ -33,6 +33,7 @@ public class Scaffold extends DefaultTask
 			//rename( /scaffold.iml/ , "${ moduleName }.iml" )
 
 			include "scaffold/**"
+			exclude "**/.gitkeep"
 		}
 
 		File imlFile = project.file( "/scaffold/scaffold.iml" )
