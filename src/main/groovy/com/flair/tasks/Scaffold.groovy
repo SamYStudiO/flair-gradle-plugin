@@ -60,11 +60,14 @@ public class Scaffold extends DefaultTask
 		project.file( "scaffold" ).renameTo( moduleName )
 		project.file( "app/src/main/actionscript/_appId_" ).deleteDir( )
 
-		//project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
-
 		project.copy {
 			from "${ moduleName }/libraries"
 			into ".idea/libraries"
+
+			filter {
+				println( )
+				it.replace( "\${moduleName}" , moduleName )
+			}
 		}
 
 		project.file( "${ moduleName }/libraries" ).deleteDir( )
@@ -75,8 +78,7 @@ public class Scaffold extends DefaultTask
 
 			filter {
 				println( )
-				it.replace( "\${appId}" , appId )
-						.replace( "\${projectName}" , project.name )
+				it.replace( "\${projectName}" , project.name )
 						.replace( "\${moduleName}" , moduleName )
 			}
 		}
