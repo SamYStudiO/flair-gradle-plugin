@@ -20,7 +20,6 @@ class TexturePacker extends DefaultTask
 	{
 		String moduleName = project.flair.moduleName
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
-		String tps = ""
 
 		tree.each { file ->
 
@@ -30,6 +29,7 @@ class TexturePacker extends DefaultTask
 
 				project.exec {
 					commandLine "TexturePacker" , "${ file.getPath( ) }"
+					ignoreExitValue = true
 				}
 			}
 		}
