@@ -1,0 +1,47 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration name="ios_dev" default="false" factoryName="Flash App" type="FlashRunConfigurationType">
+        <option name="BCName" value="ios_dev" />
+        <option name="IOSSimulatorSdkPath" value="" />
+        <option name="adlOptions" value="" />
+        <option name="airProgramParameters" value="" />
+        <option name="appDescriptorForEmulator" value="Android" />
+        <option name="debugTransport" value="USB" />
+        <option name="debuggerSdkRaw" value="BC SDK" />
+        <option name="emulator" value="NexusOne" />
+        <option name="emulatorAdlOptions" value="" />
+        <option name="fastPackaging" value="false" />
+        <option name="fullScreenHeight" value="0" />
+        <option name="fullScreenWidth" value="0" />
+        <option name="launchUrl" value="false" />
+        <option name="launcherParameters">
+            <LauncherParameters>
+                <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+                <option name="launcherType" value="OSDefault" />
+                <option name="newPlayerInstance" value="false" />
+                <option name="playerPath" value="FlashPlayerDebugger.exe" />
+            </LauncherParameters>
+        </option>
+        <option name="mobileRunTarget" value="iOSDevice" />
+        <option name="moduleName" value="${moduleName}" />
+        <option name="overriddenMainClass" value="" />
+        <option name="overriddenOutputFileName" value="" />
+        <option name="overrideMainClass" value="false" />
+        <option name="runTrusted" value="true" />
+        <option name="screenDpi" value="0" />
+        <option name="screenHeight" value="0" />
+        <option name="screenWidth" value="0" />
+        <option name="url" value="http://" />
+        <option name="usbDebugPort" value="7936" />
+        <method>
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="writeVersion"
+                vmOptions="" />
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="incrementVersion"
+                vmOptions="" />
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="generateTextures"
+                vmOptions="" />
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="copyIOSResources"
+                vmOptions="" />
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+</component>

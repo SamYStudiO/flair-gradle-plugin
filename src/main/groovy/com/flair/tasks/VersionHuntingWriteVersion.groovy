@@ -49,7 +49,7 @@ public class VersionHuntingWriteVersion extends DefaultTask
 	{
 		String content = app.getText( )
 
-		content = content.replaceAll( /<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
+		content = content.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
 
 		app.write( content )
 	}

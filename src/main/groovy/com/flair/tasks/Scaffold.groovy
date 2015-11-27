@@ -79,6 +79,13 @@ public class Scaffold extends DefaultTask
 		project.file( "${ moduleName }/libraries" ).deleteDir( )
 
 		project.copy {
+			from "${ moduleName }/runConfigurations"
+			into ".idea/runConfigurations"
+		}
+
+		project.file( "${ moduleName }/runConfigurations" ).deleteDir( )
+
+		project.copy {
 			from "${ moduleName }/modules.xml"
 			into ".idea/"
 		}
