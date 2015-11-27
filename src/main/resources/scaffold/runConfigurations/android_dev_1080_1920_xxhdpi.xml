@@ -10,8 +10,8 @@
         <option name="emulator" value="OtherAndroidDevice" />
         <option name="emulatorAdlOptions" value="" />
         <option name="fastPackaging" value="true" />
-        <option name="fullScreenHeight" value="1920" />
-        <option name="fullScreenWidth" value="1080" />
+        <option name="fullScreenHeight" value="960" />
+        <option name="fullScreenWidth" value="540" />
         <option name="launchUrl" value="false" />
         <option name="launcherParameters">
             <LauncherParameters>
@@ -27,9 +27,9 @@
         <option name="overriddenOutputFileName" value="" />
         <option name="overrideMainClass" value="false" />
         <option name="runTrusted" value="true" />
-        <option name="screenDpi" value="480" />
-        <option name="screenHeight" value="1872" />
-        <option name="screenWidth" value="1080" />
+        <option name="screenDpi" value="240" />
+        <option name="screenHeight" value="936" />
+        <option name="screenWidth" value="540" />
         <option name="url" value="http://" />
         <option name="usbDebugPort" value="7936" />
         <method>

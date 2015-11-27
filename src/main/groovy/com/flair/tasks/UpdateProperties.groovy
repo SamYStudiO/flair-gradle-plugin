@@ -1,8 +1,5 @@
 package com.flair.tasks
 
-import groovy.util.slurpersupport.GPathResult
-import groovy.util.slurpersupport.NodeChildren
-import groovy.xml.XmlUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -32,65 +29,75 @@ class UpdateProperties extends DefaultTask
 		String iosResources = project.flair.iosResources
 		String desktopResources = project.flair.desktopResources
 
-		GPathResult root = new XmlSlurper( ).parse( "${ moduleName }/${ moduleName }.iml" )
+		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
+		String imlContent = iml.getText( )
+		String out = ""
+		Boolean replace = false
+		String subNodeName = ""
+		String typeResources = ""
 
-		root.component.configurations.configuration.each { conf ->
+		imlContent.eachLine { line ->
 
-			String subNodeName = ""
-			String typeResources = ""
-
-			if( conf.@name.toString( ).indexOf( "android" ) >= 0 )
+			if( line.indexOf( "configuration" ) >= 0 )
 			{
-				subNodeName = "packaging-android"
-				typeResources = androidResources
-			}
-			if( conf.@name.toString( ).indexOf( "ios" ) >= 0 )
-			{
-				subNodeName = "packaging-ios"
-				typeResources = iosResources
-			}
-			if( conf.@name.toString( ).indexOf( "desktop" ) >= 0 )
-			{
-				subNodeName = "packaging-air-desktop"
-				typeResources = desktopResources
-			}
-
-			NodeChildren rootFileToPackage = conf."${ subNodeName }"."files-to-package"
-
-			rootFileToPackage.FilePathAndPathInPackage.each { file ->
-
-				if( file.@"file-path".toString( ).indexOf( "icons" ) < 0 && file.@"file-path".toString( ).indexOf( "splashs" ) < 0 )
+				if( line.indexOf( "android" ) >= 0 )
 				{
-					file.replaceNode {}
+					subNodeName = "packaging-android"
+					typeResources = androidResources
 				}
+				if( line.indexOf( "ios" ) >= 0 )
+				{
+					subNodeName = "packaging-ios"
+					typeResources = iosResources
+				}
+				if( line.indexOf( "desktop" ) >= 0 )
+				{
+					subNodeName = "packaging-air-desktop"
+					typeResources = desktopResources
+				}
+
+				out += line + "\r\n"
 			}
+			else if( line.indexOf( "FilePathAndPathInPackage" ) >= 0 && line.indexOf( "splashs" ) < 0 && line.indexOf( "icons" ) < 0 )
+			{
+				replace = true
+			}
+			else
+			{
+				if( replace )
+				{
+					replace = false
 
-			FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+					FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
 
-			tree.each { file ->
-				File parent = file.getParentFile( )
-				String parentName = parent.getName( )
+					tree.each { file ->
+						File parent = file.getParentFile( )
+						String parentName = parent.getName( )
 
-				String[] commons = commonResources.split( "," )
-				String[] types = typeResources.split( "," )
+						String[] commons = commonResources.split( "," )
+						String[] types = typeResources.split( "," )
 
-				commons.each { common ->
-					if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) )
-					{
-						rootFileToPackage.appendNode( new XmlSlurper( ).parseText( "<FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" ) )
+						commons.each { common ->
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) )
+							{
+								out += "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+							}
+						}
+
+						types.each { type ->
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) )
+							{
+								out += "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+							}
+						}
 					}
 				}
 
-				types.each { type ->
-					if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) )
-					{
-						rootFileToPackage.appendNode( new XmlSlurper( ).parseText( "<FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" ) )
-					}
-				}
+				out += line + "\r\n"
 			}
 		}
 
-		project.file( "${ moduleName }/${ moduleName }.iml" ).write( XmlUtil.serialize( root ) )
+		iml.write( out )
 	}
 
 	private void updatePropertiesFromFile( File f )
@@ -130,7 +137,7 @@ class UpdateProperties extends DefaultTask
 		String moduleName = project.flair.moduleName
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
-		String allowLocales = "en de cs es fr it ja ko nl pl pt ru sv tr zh"
+		String locales = "en de cs es fr it ja ko nl pl pt ru sv tr zh"
 		String supportedLocales = ""
 
 		tree.each { file ->
@@ -143,13 +150,13 @@ class UpdateProperties extends DefaultTask
 				{
 					String locale = parent.split( "-" )[ 1 ].toLowerCase( )
 
-					if( allowLocales.indexOf( locale ) >= 0 ) supportedLocales = supportedLocales.concat( locale + " " )
+					if( locales.indexOf( locale ) >= 0 ) supportedLocales = supportedLocales.concat( locale + " " )
 				}
 			}
 		}
 
 		String defaultLocale = project.flair.defaultLocale.toLowerCase( )
-		if( !defaultLocale.isEmpty( ) && allowLocales.indexOf( allowLocales ) >= 0 && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
+		if( !defaultLocale.isEmpty( ) && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )
 	}
