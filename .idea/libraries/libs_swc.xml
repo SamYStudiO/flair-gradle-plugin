@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="libs_swc" type="flex">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/main/resources/scaffold/libs_swc" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/src/main/resources/scaffold/libs_swc" recursive="false" />
+  </library>
+</component>

@@ -1,5 +1,8 @@
 package com.flair.tasks
 
+import groovy.util.slurpersupport.GPathResult
+import groovy.util.slurpersupport.NodeChildren
+import groovy.xml.XmlUtil
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -23,6 +26,71 @@ class UpdateProperties extends DefaultTask
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) )
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) )
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" ) , true )
+
+		String commonResources = project.flair.commonResources
+		String androidResources = project.flair.androidResources
+		String iosResources = project.flair.iosResources
+		String desktopResources = project.flair.desktopResources
+
+		GPathResult root = new XmlSlurper( ).parse( "${ moduleName }/${ moduleName }.iml" )
+
+		root.component.configurations.configuration.each { conf ->
+
+			String subNodeName = ""
+			String typeResources = ""
+
+			if( conf.@name.toString( ).indexOf( "android" ) >= 0 )
+			{
+				subNodeName = "packaging-android"
+				typeResources = androidResources
+			}
+			if( conf.@name.toString( ).indexOf( "ios" ) >= 0 )
+			{
+				subNodeName = "packaging-ios"
+				typeResources = iosResources
+			}
+			if( conf.@name.toString( ).indexOf( "desktop" ) >= 0 )
+			{
+				subNodeName = "packaging-air-desktop"
+				typeResources = desktopResources
+			}
+
+			NodeChildren rootFileToPackage = conf."${ subNodeName }"."files-to-package"
+
+			rootFileToPackage.FilePathAndPathInPackage.each { file ->
+
+				if( file.@"file-path".toString( ).indexOf( "icons" ) < 0 && file.@"file-path".toString( ).indexOf( "splashs" ) < 0 )
+				{
+					file.replaceNode {}
+				}
+			}
+
+			FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+
+			tree.each { file ->
+				File parent = file.getParentFile( )
+				String parentName = parent.getName( )
+
+				String[] commons = commonResources.split( "," )
+				String[] types = typeResources.split( "," )
+
+				commons.each { common ->
+					if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) )
+					{
+						rootFileToPackage.appendNode( new XmlSlurper( ).parseText( "<FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" ) )
+					}
+				}
+
+				types.each { type ->
+					if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) )
+					{
+						rootFileToPackage.appendNode( new XmlSlurper( ).parseText( "<FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" ) )
+					}
+				}
+			}
+		}
+
+		project.file( "${ moduleName }/${ moduleName }.iml" ).write( XmlUtil.serialize( root ) )
 	}
 
 	private void updatePropertiesFromFile( File f )

@@ -22,6 +22,7 @@
             <entry key="compiler.debug.swf" value="true" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_armv7_dev">
@@ -82,6 +83,7 @@
             <entry key="compiler.debug.swf" value="true" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_x86_dev">
@@ -143,6 +145,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_armv7_preprod">
@@ -203,6 +206,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_x86_preprod">
@@ -263,6 +267,7 @@
           <map>
             <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_dev" />
@@ -327,6 +332,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_armv7_prod">
@@ -387,6 +393,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="android_x86_prod">
@@ -448,6 +455,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_preprod" />
@@ -512,6 +520,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_prod" />
@@ -575,6 +584,7 @@
           <map>
             <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="desktop">
           <files-to-package>
@@ -613,6 +623,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="desktop_preprod">
           <files-to-package>
@@ -651,6 +662,7 @@
             <entry key="compiler.debug.swf" value="false" />
             <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
           </map>
+          <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="desktop_prod">
           <files-to-package>

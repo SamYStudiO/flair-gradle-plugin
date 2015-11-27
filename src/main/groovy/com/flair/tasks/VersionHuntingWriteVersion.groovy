@@ -39,7 +39,7 @@ public class VersionHuntingWriteVersion extends DefaultTask
 			if( it.indexOf( "minor=" ) >= 0 ) minor = it.replace( "minor=" , "" )
 			if( it.indexOf( "build=" ) >= 0 ) build = it.replace( "build=" , "" )
 		}
-		
+
 		writeApp( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
 		writeApp( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
 		writeApp( project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
@@ -49,7 +49,7 @@ public class VersionHuntingWriteVersion extends DefaultTask
 	{
 		String content = app.getText( )
 
-		content = content.replaceAll( "<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>" , "<versionNumber>${ version }</versionNumber>" )
+		content = content.replaceAll( /<versionNumber>[0-9]*\\.[0-9]*\\.[0-9]*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
 
 		app.write( content )
 	}
