@@ -18,7 +18,14 @@ class UpdateProperties extends DefaultTask
 	@TaskAction
 	public void updateProperties()
 	{
+		String sdkVersion = project.flair.sdkVersion
+		String appId = project.flair.appId
+
+		if( sdkVersion.isEmpty( ) ) throw new IllegalArgumentException( "Missing sdkVersion property add\nflair {\n	sdkVersion = \"xx.x\"\n}\nto your build.gradle file." )
+		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
+
 		String moduleName = project.flair.moduleName
+
 
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) )
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) )
@@ -107,6 +114,7 @@ class UpdateProperties extends DefaultTask
 
 	private void updatePropertiesFromFile( File f , Boolean desktop )
 	{
+		String sdkVersion = project.flair.sdkVersion
 		String appId = project.flair.appId
 		String appAspectRatio = project.flair.appAspectRatio
 		String appAutoOrient = project.flair.appAutoOrient
@@ -117,12 +125,14 @@ class UpdateProperties extends DefaultTask
 		if( desktop )
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
+					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 					.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 		}
 		else
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
+					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 					.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 					.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
