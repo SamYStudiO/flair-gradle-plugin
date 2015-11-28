@@ -1,5 +1,6 @@
 package com.flair.tasks
 
+import com.flair.utils.SDKManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -18,14 +19,13 @@ public class Scaffold extends DefaultTask
 	@TaskAction
 	public void generateProject()
 	{
-		String sdkVersion = project.flair.sdkVersion
+		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
 		String appName = project.flair.appName
 		String moduleName = project.flair.moduleName
 
 		appName = appName == "" ? project.name : appName
 
-		if( sdkVersion.isEmpty( ) ) throw new IllegalArgumentException( "Missing sdkVersion property add\nflair {\n	sdkVersion = \"xx.x\"\n}\nto your build.gradle file." )
 		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
 
@@ -94,5 +94,21 @@ public class Scaffold extends DefaultTask
 		}
 
 		project.file( "${ moduleName }/modules.xml" ).delete( )
+
+		project.copy {
+			from "${ moduleName }/gitignore"
+			into ""
+
+			rename( "gitignore" , ".gitignore" )
+		}
+
+		project.file( "${ moduleName }/gitignore" ).delete( )
+
+		project.copy {
+			from "${ moduleName }/local.properties"
+			into ""
+		}
+
+		project.file( "${ moduleName }/local.properties" ).delete( )
 	}
 }

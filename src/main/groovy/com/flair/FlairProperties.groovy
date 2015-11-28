@@ -5,8 +5,6 @@ package com.flair
  */
 public class FlairProperties
 {
-	public String sdkVersion = ""
-
 	public String appId = ""
 
 	public String appName = ""

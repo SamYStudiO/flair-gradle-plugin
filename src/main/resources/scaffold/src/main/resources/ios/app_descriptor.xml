@@ -129,18 +129,18 @@
         <image29x29>icons/icon29x29.png</image29x29> <!--settings ipad/iphone-->
         <image40x40>icons/icon40x40.png</image40x40> <!--spotlight ipad/iphone-->
         <image48x48>icons/icon48x48.png</image48x48> <!--spotlight air only-->
-        <image50x50>icons/icon50x50.png</image50x50> <!--spotlight ipad ios6-->
-        <image57x57>icons/icon57x57.png</image57x57> <!--app icon iphone ios6-->
+        <!--<image50x50>icons/icon50x50.png</image50x50> spotlight ipad ios6-->
+        <!--<image57x57>icons/icon57x57.png</image57x57> app icon iphone ios6-->
         <image58x58>icons/icon58x58.png</image58x58> <!--settings ipad/iphone retina-->
         <image60x60>icons/icon60x60.png</image60x60> <!--app icon iphone-->
-        <image72x72>icons/icon72x72.png</image72x72> <!--app icon ipad ios6-->
+        <!--<image72x72>icons/icon72x72.png</image72x72> app icon ipad ios6-->
         <image76x76>icons/icon76x76.png</image76x76> <!--app icon ipad-->
         <image80x80>icons/icon80x80.png</image80x80> <!--spotlight ipad/iphone retina-->
         <image87x87>icons/icon87x87.png</image87x87> <!--settings iphone 6 plus-->
-        <image100x100>icons/icon100x100.png</image100x100> <!--spotlight ipad retina ios6-->
-        <image114x114>icons/icon114x114.png</image114x114> <!--app icon iphone retina ios6-->
+        <!--<image100x100>icons/icon100x100.png</image100x100> spotlight ipad retina ios6-->
+        <!--<image114x114>icons/icon114x114.png</image114x114> app icon iphone retina ios6-->
         <image120x120>icons/icon120x120.png</image120x120> <!--app icon iphone retina-->
-        <image144x144>icons/icon144x144.png</image144x144> <!--app icon ipad retina ios6-->
+        <!--<image144x144>icons/icon144x144.png</image144x144> app icon ipad retina ios6-->
         <image152x152>icons/icon152x152.png</image152x152> <!--app icon ipad retina-->
         <image180x180>icons/icon180x180.png</image180x180> <!--app icon iphone 6 plus-->
         <image512x512>icons/icon512x512.png</image512x512> <!--store icon ipad/iphone-->

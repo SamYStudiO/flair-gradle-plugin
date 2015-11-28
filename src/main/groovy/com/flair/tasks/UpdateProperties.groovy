@@ -1,5 +1,6 @@
 package com.flair.tasks
 
+import com.flair.utils.SDKManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -18,14 +19,11 @@ class UpdateProperties extends DefaultTask
 	@TaskAction
 	public void updateProperties()
 	{
-		String sdkVersion = project.flair.sdkVersion
 		String appId = project.flair.appId
 
-		if( sdkVersion.isEmpty( ) ) throw new IllegalArgumentException( "Missing sdkVersion property add\nflair {\n	sdkVersion = \"xx.x\"\n}\nto your build.gradle file." )
 		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
 
 		String moduleName = project.flair.moduleName
-
 
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) )
 		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) )
@@ -114,7 +112,7 @@ class UpdateProperties extends DefaultTask
 
 	private void updatePropertiesFromFile( File f , Boolean desktop )
 	{
-		String sdkVersion = project.flair.sdkVersion
+		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
 		String appAspectRatio = project.flair.appAspectRatio
 		String appAutoOrient = project.flair.appAutoOrient
