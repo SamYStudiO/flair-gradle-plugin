@@ -11,7 +11,7 @@ class Fonts extends DefaultTask
 {
 	public Fonts()
 	{
-		group = "scaffold"
+		group = "fonts"
 		description = ""
 	}
 

@@ -6,11 +6,11 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-public class CopyIOSResources extends DefaultTask
+public class ProcessAndroidResources extends DefaultTask
 {
-	public CopyIOSResources()
+	public ProcessAndroidResources()
 	{
-		group = "copy"
+		group = "processResources"
 		description = ""
 	}
 
@@ -19,27 +19,26 @@ public class CopyIOSResources extends DefaultTask
 	{
 		String moduleName = project.flair.moduleName
 		String commonResources = project.flair.commonResources
-		String iosResources = project.flair.iosResources
+		String androidResources = project.flair.androidResources
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
 			include commonResources
-			include iosResources
+			include androidResources
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/ios/splashs"
+			from "${ moduleName }/src/main/resources/android/splashs"
 
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/ios/icons"
+			from "${ moduleName }/src/main/resources/android/icons"
 
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}
 }
-

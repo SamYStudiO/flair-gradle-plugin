@@ -60,6 +60,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_dev" />
       </configuration>
@@ -121,7 +122,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" />
+          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_dev" />
       </configuration>
@@ -183,6 +184,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_preprod" />
       </configuration>
@@ -244,7 +246,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" />
+          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_preprod" />
       </configuration>
@@ -370,6 +372,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_prod" />
       </configuration>
@@ -431,7 +434,7 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" />
+          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/resources/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_prod" />
       </configuration>

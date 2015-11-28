@@ -6,11 +6,11 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-public class CopyDesktopResources extends DefaultTask
+public class ProcessDesktopResources extends DefaultTask
 {
-	public CopyDesktopResources()
+	public ProcessDesktopResources()
 	{
-		group = "copy"
+		group = "processResources"
 		description = ""
 	}
 
