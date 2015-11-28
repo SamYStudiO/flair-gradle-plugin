@@ -275,22 +275,16 @@
         <packaging-android package-file-name="ios_dev" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="ios_dev">
           <files-to-package>
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon100x100.png" path-in-package="icons/icon100x100.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon120x120.png" path-in-package="icons/icon120x120.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon152x152.png" path-in-package="icons/icon152x152.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon29x29.png" path-in-package="icons/icon29x29.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon40x40.png" path-in-package="icons/icon40x40.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon50x50.png" path-in-package="icons/icon50x50.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon512x512.png" path-in-package="icons/icon512x512.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon57x57.png" path-in-package="icons/icon57x57.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon58x58.png" path-in-package="icons/icon58x58.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon60x60.png" path-in-package="icons/icon60x60.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon64x64.png" path-in-package="icons/icon64x64.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon76x76.png" path-in-package="icons/icon76x76.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon80x80.png" path-in-package="icons/icon80x80.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/splashs/Default-375w-667h-Landscape@2x.png" path-in-package="Default-375w-667h-Landscape@2x.png" />
@@ -464,22 +458,16 @@
         <packaging-android package-file-name="ios_preprod" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="ios_preprod">
           <files-to-package>
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon100x100.png" path-in-package="icons/icon100x100.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon120x120.png" path-in-package="icons/icon120x120.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon152x152.png" path-in-package="icons/icon152x152.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon29x29.png" path-in-package="icons/icon29x29.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon40x40.png" path-in-package="icons/icon40x40.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon50x50.png" path-in-package="icons/icon50x50.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon512x512.png" path-in-package="icons/icon512x512.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon57x57.png" path-in-package="icons/icon57x57.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon58x58.png" path-in-package="icons/icon58x58.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon60x60.png" path-in-package="icons/icon60x60.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon64x64.png" path-in-package="icons/icon64x64.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon76x76.png" path-in-package="icons/icon76x76.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon80x80.png" path-in-package="icons/icon80x80.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/splashs/Default-375w-667h-Landscape@2x.png" path-in-package="Default-375w-667h-Landscape@2x.png" />
@@ -529,22 +517,16 @@
         <packaging-android package-file-name="ios_prod" />
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="ios_prod">
           <files-to-package>
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon100x100.png" path-in-package="icons/icon100x100.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon120x120.png" path-in-package="icons/icon120x120.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon152x152.png" path-in-package="icons/icon152x152.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon29x29.png" path-in-package="icons/icon29x29.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon40x40.png" path-in-package="icons/icon40x40.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon50x50.png" path-in-package="icons/icon50x50.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon512x512.png" path-in-package="icons/icon512x512.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon57x57.png" path-in-package="icons/icon57x57.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon58x58.png" path-in-package="icons/icon58x58.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon60x60.png" path-in-package="icons/icon60x60.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon64x64.png" path-in-package="icons/icon64x64.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon76x76.png" path-in-package="icons/icon76x76.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon80x80.png" path-in-package="icons/icon80x80.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/splashs/Default-375w-667h-Landscape@2x.png" path-in-package="Default-375w-667h-Landscape@2x.png" />
