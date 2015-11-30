@@ -7,6 +7,6 @@ package _appId_.resources
 	 */
 	public function getString( id : String , groupID : String = EnumScreen.MAIN ) : String
 	{
-		return getAssetManager( groupID ).getXml( "strings" ).child( id ).toString();
+		return getAssetManager( groupID ).getXml( "strings" ).*.( @name == id ).toString();
 	}
 }
