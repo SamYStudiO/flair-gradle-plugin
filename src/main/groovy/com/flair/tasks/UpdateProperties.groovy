@@ -74,6 +74,7 @@ class UpdateProperties extends DefaultTask
 					replace = false
 
 					FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+					String paths = ""
 
 					tree.each { file ->
 						File parent = file.getParentFile( )
@@ -82,20 +83,29 @@ class UpdateProperties extends DefaultTask
 						String[] commons = commonResources.split( "," )
 						String[] types = typeResources.split( "," )
 
+
 						commons.each { common ->
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) )
+
+							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) && paths.indexOf( path ) < 0 )
 							{
-								out += "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+								paths += path
 							}
 						}
 
 						types.each { type ->
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) )
+
+							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) && paths.indexOf( path ) < 0 )
 							{
-								out += "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+								paths += path
 							}
 						}
 					}
+					
+					out += paths
 				}
 
 				out += line + "\r\n"

@@ -23,11 +23,13 @@ public class FlairProperties
 
 	public String defaultLocale = "en"
 
-	public String commonResources = "values*"
+	public String commonResources = "values*/**,xml*/**,drawable/**,drawable-nodpi/**"
 
-	public String iosResources = "drawable-mdpi,drawable-xhdpi"
+	public String iosResources = "drawable*-xhdpi*/**,drawable*-xxhdpi*/**"
 
-	public String androidResources = "drawable*"
+	public String androidResources = "drawable-*/**"
 
-	public String desktopResources = "drawable-mdpi"
+	public String desktopResources = "drawable-mdpi/**"
+
+	// TODO add device type choice (phone and/or tablet)
 }
