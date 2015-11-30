@@ -37,9 +37,9 @@
                 vmOptions="" />
             <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="incrementVersion"
                 vmOptions="" />
-            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="generateTextures"
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="generateAtlases"
                 vmOptions="" />
-            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="copyAndroidResources"
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="processAndroidResources"
                 vmOptions="" />
             <option name="Make" enabled="true" />
         </method>
