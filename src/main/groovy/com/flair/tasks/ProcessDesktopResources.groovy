@@ -25,17 +25,22 @@ public class ProcessDesktopResources extends DefaultTask
 		String resources = commonResources.concat( "," + desktopResources )
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/"
-			into "${ project.getBuildDir( ) }/resources/"
-
-			include resources.split( "," )
+			from "${ moduleName }/src/main/assets"
+			into "${ project.getBuildDir( ) }/assets"
 
 			includeEmptyDirs = false
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/android/splashs"
+			from "${ moduleName }/src/main/resources/"
+			into "${ project.getBuildDir( ) }/resources/"
 
+			include resources.split( "," )
+			includeEmptyDirs = false
+		}
+
+		project.copy {
+			from "${ moduleName }/src/main/resources/android/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 

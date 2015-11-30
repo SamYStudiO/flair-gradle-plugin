@@ -25,23 +25,27 @@ public class ProcessIOSResources extends DefaultTask
 		String resources = commonResources.concat( "," + iosResources )
 
 		project.copy {
+			from "${ moduleName }/src/main/assets"
+
+			into "${ project.getBuildDir( ) }/assets"
+			includeEmptyDirs = false
+		}
+
+		project.copy {
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
 			include resources.split( "," )
-
 			includeEmptyDirs = false
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/ios/splashs"
-
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/ios/icons"
-
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}

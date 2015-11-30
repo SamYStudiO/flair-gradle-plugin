@@ -23,7 +23,7 @@ public class FlairProperties
 
 	public String defaultLocale = "en"
 
-	public String commonResources = "values*/**,xml*/**,drawable/**,drawable-nodpi/**"
+	public String commonResources = "drawable/**,drawable-nodpi/**,values*/**,xml*/**"
 
 	public String iosResources = "drawable*-xhdpi*/**,drawable*-xxhdpi*/**"
 

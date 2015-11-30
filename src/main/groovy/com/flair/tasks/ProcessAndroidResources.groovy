@@ -25,23 +25,27 @@ public class ProcessAndroidResources extends DefaultTask
 		String resources = commonResources.concat( "," + androidResources )
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/"
-			into "${ project.getBuildDir( ) }/resources/"
-
-			include resources.split( "," )
+			from "${ moduleName }/src/main/assets"
+			into "${ project.getBuildDir( ) }/assets"
 
 			includeEmptyDirs = false
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/android/splashs"
+			from "${ moduleName }/src/main/resources/"
+			into "${ project.getBuildDir( ) }/resources/"
 
+			include resources.split( "," )
+			includeEmptyDirs = false
+		}
+
+		project.copy {
+			from "${ moduleName }/src/main/resources/android/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/android/icons"
-
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}
