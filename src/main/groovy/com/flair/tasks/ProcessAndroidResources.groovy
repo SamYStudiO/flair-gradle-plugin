@@ -17,16 +17,20 @@ public class ProcessAndroidResources extends DefaultTask
 	@TaskAction
 	public void copy()
 	{
+		project.getBuildDir( ).deleteDir( )
+
 		String moduleName = project.flair.moduleName
 		String commonResources = project.flair.commonResources
 		String androidResources = project.flair.androidResources
+		String resources = commonResources.concat( "," + androidResources )
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include commonResources
-			include androidResources
+			include resources.split( "," )
+
+			includeEmptyDirs = false
 		}
 
 		project.copy {

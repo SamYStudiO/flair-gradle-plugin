@@ -17,16 +17,20 @@ public class ProcessIOSResources extends DefaultTask
 	@TaskAction
 	public void copy()
 	{
+		project.getBuildDir( ).deleteDir( )
+
 		String moduleName = project.flair.moduleName
 		String commonResources = project.flair.commonResources
 		String iosResources = project.flair.iosResources
+		String resources = commonResources.concat( "," + iosResources )
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include commonResources
-			include iosResources
+			include resources.split( "," )
+
+			includeEmptyDirs = false
 		}
 
 		project.copy {

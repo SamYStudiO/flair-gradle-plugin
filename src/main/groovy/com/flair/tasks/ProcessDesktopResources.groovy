@@ -17,16 +17,26 @@ public class ProcessDesktopResources extends DefaultTask
 	@TaskAction
 	public void copy()
 	{
+		project.getBuildDir( ).deleteDir( )
+
 		String moduleName = project.flair.moduleName
 		String commonResources = project.flair.commonResources
 		String desktopResources = project.flair.desktopResources
+		String resources = commonResources.concat( "," + desktopResources )
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include commonResources
-			include desktopResources
+			include resources.split( "," )
+
+			includeEmptyDirs = false
+		}
+
+		project.copy {
+			from "${ moduleName }/src/main/resources/android/splashs"
+
+			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
@@ -39,6 +49,6 @@ public class ProcessDesktopResources extends DefaultTask
 			from "${ moduleName }/src/main/resources/desktop/icons"
 
 			into "${ project.getBuildDir( ) }/icons"
-		} s
+		}
 	}
 }
