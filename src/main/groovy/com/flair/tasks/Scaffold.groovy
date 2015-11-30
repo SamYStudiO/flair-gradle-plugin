@@ -1,6 +1,5 @@
 package com.flair.tasks
 
-import com.flair.utils.SDKManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -19,7 +18,6 @@ public class Scaffold extends DefaultTask
 	@TaskAction
 	public void generateProject()
 	{
-		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
 		String appName = project.flair.appName
 		String moduleName = project.flair.moduleName
@@ -56,7 +54,6 @@ public class Scaffold extends DefaultTask
 
 					content = content.replace( "\${appId}" , appId )
 							.replace( "_appId_" , appId )
-							.replace( "\${sdkVersion}" , sdkVersion )
 							.replace( "\${projectName}" , project.getName( ) )
 							.replace( "\${appName}" , appName )
 							.replace( "\${moduleName}" , moduleName )
