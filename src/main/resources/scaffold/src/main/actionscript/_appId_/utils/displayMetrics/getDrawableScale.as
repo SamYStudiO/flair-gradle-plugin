@@ -10,6 +10,6 @@ package _appId_.utils.displayMetrics
 		var bucket : String = R.getDrawableBucket();
 		var drawableDensity : uint = getBucketDensity( bucket );
 
-		return drawableDensity / getDensity();
+		return drawableDensity / getBucketDensity( densityBucket ) * getDensityScale();
 	}
 }
