@@ -29,7 +29,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _getSplashScreenFilePath( portrait : Boolean ) : String
+		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
 			var stageWidth : Number = STAGE.fullScreenWidth;
@@ -68,7 +68,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _init( e : InvokeEvent ) : void
+		override protected function _init( e : InvokeEvent ) : void
 		{
 			if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
@@ -78,7 +78,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _splashScreenPortraitLoaded( e : Event ) : void
+		override protected function _splashScreenPortraitLoaded( e : Event ) : void
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
 
@@ -95,7 +95,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _splashScreenLandscapeLoaded( e : Event ) : void
+		override protected function _splashScreenLandscapeLoaded( e : Event ) : void
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 

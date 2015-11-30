@@ -7,7 +7,8 @@ package _appId_
 	import _appId_.actors.STARLING_STAGE;
 	import _appId_.model.Config;
 	import _appId_.theme.Fonts;
-	import _appId_.utils.DeviceInfos;
+	import _appId_.utils.DeviceManufacturer;
+	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.StarlingMain;
 
 	import flash.desktop.NativeApplication;
@@ -37,7 +38,7 @@ package _appId_
 	public class AMain extends Sprite
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _isActivated : Boolean = true;
 
@@ -53,7 +54,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initDebugger() : void
 		{
@@ -61,7 +62,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initStage() : void
 		{
@@ -72,7 +73,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initFonts() : void
 		{
@@ -80,21 +81,21 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initConstants() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initSplashScreen() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initStarling() : void
 		{
@@ -107,6 +108,8 @@ package _appId_
 			STARLING.enableErrorChecking = Boolean( CONFIG::DEBUG );
 			STARLING_STAGE = STARLING.stage;
 
+			_onStageResize();
+
 			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 			STARLING.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 
@@ -118,7 +121,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onMainReady() : void
 		{
@@ -126,7 +129,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onActivate( e : flash.events.Event ) : void
 		{
@@ -136,17 +139,17 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onDeactivate( e : flash.events.Event ) : void
 		{
 			_isActivated = false;
 
-			if( STARLING != null && !DeviceInfos.isDesktop() ) STARLING.stop( true );
+			if( STARLING != null && !DeviceManufacturer.isDesktop() ) STARLING.stop( true );
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _init( e : InvokeEvent ) : void
 		{
@@ -161,7 +164,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onStarlingContextCreate( e : starling.events.Event ) : void
 		{
@@ -171,14 +174,13 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onStarlingRootCreate( e : starling.events.Event ) : void
 		{
 			debug( this , "_onStarlingRootCreate" );
 
 			STAGE.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
-			_onStageResize();
 
 			if( STARLING_MAIN.isReady ) _onMainReady();
 			else STARLING_MAIN.assetsComplete.add( _onMainReady );
@@ -187,19 +189,18 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _onStageResize( e : flash.events.Event = null ) : void
 		{
-			var stageWidth : Number = DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			var stageHeight : Number = DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var stageWidth : Number = DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			var stageHeight : Number = DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var scale : Number = getDensityScale();
 
-			STARLING_STAGE.stageWidth = stageWidth;
-			STARLING_STAGE.stageHeight = stageHeight;
+			STARLING_STAGE.stageWidth = stageWidth / scale;
+			STARLING_STAGE.stageHeight = stageHeight / scale;
 
 			STARLING.viewPort = new Rectangle( 0 , 0 , stageWidth , stageHeight );
-
-			STARLING_MAIN.setSize( stageWidth , stageHeight );
 		}
 	}
 }

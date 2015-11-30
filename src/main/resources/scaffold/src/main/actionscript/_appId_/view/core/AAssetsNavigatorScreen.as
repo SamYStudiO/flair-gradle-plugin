@@ -1,4 +1,4 @@
-package _appId_.view
+package _appId_.view.core
 {
 	import _appId_.transitions.SlideTransitionManager;
 
@@ -14,30 +14,30 @@ package _appId_.view
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class ANavigatorScreen extends AScreen implements INavigatorScreen
+	public class AAssetsNavigatorScreen extends AAssetsScreen implements INavigatorScreen
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _navigator : ScreenNavigator;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _screenDefaultParams : Dictionary = new Dictionary( true );
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _screenIndexes : Dictionary = new Dictionary( true );
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _screens : Vector.<String> = new Vector.<String>();
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get activeScreen() : DisplayObject
 		{
@@ -45,7 +45,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get activeScreenID() : String
 		{
@@ -53,27 +53,27 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
-		public override function get autoSizeMode() : String
+		override public function get autoSizeMode() : String
 		{
 			return _navigator.autoSizeMode;
 		}
 
-		public override function set autoSizeMode( s : String ) : void
+		override public function set autoSizeMode( s : String ) : void
 		{
 			_navigator.autoSizeMode = s;
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
-		public override function get clipContent() : Boolean
+		override public function get clipContent() : Boolean
 		{
 			return super.clipContent;
 		}
 
-		public override function set clipContent( b : Boolean ) : void
+		override public function set clipContent( b : Boolean ) : void
 		{
 			super.clipContent = b;
 			_navigator.clipContent = b;
@@ -85,7 +85,7 @@ package _appId_.view
 		protected var _defaultScreenID : String;
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get defaultScreenID() : String
 		{
@@ -98,7 +98,7 @@ package _appId_.view
 		protected var _defaultScreenParams : Object;
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get defaultScreenParams() : Object
 		{
@@ -106,7 +106,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get transition() : Function
 		{
@@ -121,7 +121,7 @@ package _appId_.view
 		/**
 		 *
 		 */
-		public function ANavigatorScreen()
+		public function AAssetsNavigatorScreen()
 		{
 			super();
 
@@ -137,7 +137,7 @@ package _appId_.view
 		/**
 		 * @inheritDoc
 		 */
-		public override function dispose() : void
+		override public function dispose() : void
 		{
 			super.dispose();
 
@@ -145,7 +145,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function addScreen( id : String , item : ScreenNavigatorItem ) : void
 		{
@@ -153,7 +153,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function addScreenAt( id : String , item : ScreenNavigatorItem , index : uint ) : void
 		{
@@ -179,7 +179,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function removeScreen( id : String ) : void
 		{
@@ -201,7 +201,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function removeScreenAt( index : uint ) : void
 		{
@@ -209,7 +209,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function removeAllScreens() : void
 		{
@@ -223,7 +223,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function clearScreen() : void
 		{
@@ -231,7 +231,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function getScreen( id : String ) : ScreenNavigatorItem
 		{
@@ -239,7 +239,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function getScreenAt( index : uint ) : ScreenNavigatorItem
 		{
@@ -247,7 +247,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function getScreenIDAt( index : uint ) : String
 		{
@@ -255,7 +255,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function getScreenIDs( result : Vector.<String> = null ) : Vector.<String>
 		{
@@ -263,7 +263,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function getScreenDefaultParams( id : String ) : Object
 		{
@@ -271,7 +271,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function setScreenDefaultParams( id : String , params : Object ) : void
 		{
@@ -283,7 +283,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function hasScreen( id : String ) : Boolean
 		{
@@ -291,7 +291,7 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function showScreen( screenID : String = null , additionalParams : Object = null ) : IndexedScreen
 		{
@@ -319,7 +319,7 @@ package _appId_.view
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _bubbleEvent( e : Event ) : void
 		{

@@ -1,12 +1,11 @@
 package _appId_.utils
 {
-	import flash.net.URLVariables;
 	import flash.system.Capabilities;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public final class DeviceInfos
+	public final class DeviceManufacturer
 	{
 		/**
 		 *
@@ -65,19 +64,9 @@ package _appId_.utils
 		}
 
 		/**
-		 *
-		 */
-		public static function dpi() : uint
-		{
-			var urlVariables : URLVariables = new URLVariables();
-			urlVariables.decode( Capabilities.serverString );
-			return parseInt( urlVariables.DP , 10 );
-		}
-
-		/**
 		 * @private
 		 */
-		public function DeviceInfos()
+		public function DeviceManufacturer()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}

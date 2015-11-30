@@ -1,10 +1,14 @@
-package _appId_.view
+package _appId_.view.core
 {
-	import _appId_.actors.ASSET_MANAGER;
+	import _appId_.actors.R;
 	import _appId_.actors.STAGE;
-	import _appId_.theme.assetScale;
+	import _appId_.resources.addAssetManager;
+	import _appId_.resources.removeAssetManager;
+	import _appId_.utils.displayMetrics.getDrawableScale;
 
 	import feathers.system.DeviceCapabilities;
+
+	import flash.filesystem.File;
 
 	import org.osflash.signals.Signal;
 
@@ -16,21 +20,9 @@ package _appId_.view
 	public class AAssetsScrollScreen extends AScrollScreen implements IndexedAssetsScreen
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _assets : AssetManager;
-		/**
-		 * @private
-		 */
-		protected var _assetsProgressEvent : Signal = new Signal( Number );
-		/**
-		 * @private
-		 */
-		protected var _assetsCompleteEvent : Signal = new Signal();
-		/**
-		 * @private
-		 */
-		protected var _assetsErrorEvent : Signal = new Signal();
 
 		/**
 		 * @private
@@ -38,7 +30,7 @@ package _appId_.view
 		protected var _isReady : Boolean;
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get isReady() : Boolean
 		{
@@ -46,27 +38,42 @@ package _appId_.view
 		}
 
 		/**
-		 *
+		 * @private
+		 */
+		protected var _assetsProgress : Signal = new Signal( Number );
+
+		/**
+		 * @inheritDoc
 		 */
 		public function get assetsProgress() : Signal
 		{
-			return _assetsProgressEvent;
+			return _assetsProgress;
 		}
 
 		/**
-		 *
+		 * @private
+		 */
+		protected var _assetsComplete : Signal = new Signal();
+
+		/**
+		 * @inheritDoc
 		 */
 		public function get assetsComplete() : Signal
 		{
-			return _assetsCompleteEvent;
+			return _assetsComplete;
 		}
 
 		/**
-		 *
+		 * @private
+		 */
+		protected var _assetsError : Signal = new Signal();
+
+		/**
+		 * @inheritDoc
 		 */
 		public function get assetsError() : Signal
 		{
-			return _assetsErrorEvent;
+			return _assetsError;
 		}
 
 		/**
@@ -80,18 +87,18 @@ package _appId_.view
 		/**
 		 * @inheritDoc
 		 */
-		public override function dispose() : void
+		override public function dispose() : void
 		{
 			super.dispose();
 
 			if( _assets != null ) _assets.purge();
-			delete ASSET_MANAGER[ _screenID ];
+			delete removeAssetManager( _screenID );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		protected override function initialize() : void
+		override protected function initialize() : void
 		{
 			_initAssets();
 		}
@@ -99,55 +106,61 @@ package _appId_.view
 		/**
 		 * @inheritDoc
 		 */
-		protected override function draw() : void
+		override protected function draw() : void
 		{
 			if( _isReady ) super.draw();
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initAssets() : void
 		{
 			_assets = _getAssetManager();
 			_assets.verbose = Boolean( CONFIG::DEBUG );
 
-			ASSET_MANAGER[ _screenID ] = _assets;
+			addAssetManager( _assets , _screenID );
 
 			_addAssets();
 
-			_assets.loadQueue( _assetsProgress );
+			_assets.loadQueue( _onAssetsProgress );
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _getAssetManager() : AssetManager
 		{
-			return new AssetManager( 1 / assetScale );
+			return new AssetManager( getDrawableScale() );
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _addAssets() : void
 		{
+			var resourcesList : Vector.<File> = R.getResources( _screenID );
+
+			for each ( var file : File in resourcesList )
+			{
+				_assets.enqueue( file );
+			}
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected function _assetsProgress( ratio : Number ) : void
+		protected function _onAssetsProgress( ratio : Number ) : void
 		{
-			_assetsProgressEvent.dispatch( ratio );
+			_assetsProgress.dispatch( ratio );
 
-			if( ratio == 1 ) _assetsComplete();
+			if( ratio == 1 ) _onAssetsComplete();
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected function _assetsComplete() : void
+		protected function _onAssetsComplete() : void
 		{
 			_initialize();
 
@@ -155,17 +168,17 @@ package _appId_.view
 			else _initializeTablet();
 
 			_isReady = true;
-			_assetsCompleteEvent.dispatch();
+			_assetsComplete.dispatch();
 
 			invalidate();
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected function _assetsError() : void
+		protected function _onAssetsError() : void
 		{
-			_assetsErrorEvent.dispatch();
+			_assetsError.dispatch();
 		}
 	}
 }

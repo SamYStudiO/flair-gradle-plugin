@@ -1,4 +1,4 @@
-package _appId_.utils
+package _appId_.resources
 {
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -11,7 +11,7 @@ package _appId_.utils
 	public class LocalStorageAssetManager extends AssetManager
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _localFolder : File;
 
@@ -82,7 +82,7 @@ package _appId_.utils
 		/**
 		 * @inheritDoc
 		 */
-		protected override function transformData( data : ByteArray , url : String ) : ByteArray
+		override protected function transformData( data : ByteArray , url : String ) : ByteArray
 		{
 			if( _activateWriteLocalStorage )
 			{
@@ -102,7 +102,7 @@ package _appId_.utils
 		/**
 		 * @inheritDoc
 		 */
-		protected override function loadRawAsset( rawAsset : Object , onProgress : Function , onComplete : Function ) : void
+		override protected function loadRawAsset( rawAsset : Object , onProgress : Function , onComplete : Function ) : void
 		{
 			if( _activateReadLocalStorage && ( rawAsset is String || rawAsset is URLRequest ) )
 			{

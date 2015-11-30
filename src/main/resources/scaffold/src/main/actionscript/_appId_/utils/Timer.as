@@ -21,17 +21,17 @@ package _appId_.utils
 	 */ public class Timer extends EventDispatcher
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _frameListener : Shape;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _startTimer : uint;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _offset : uint = 0;
 
@@ -180,7 +180,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _tick( e : Event ) : void
 		{

@@ -9,6 +9,7 @@ package _appId_.view
 		 *
 		 */
 		public static const MAIN : String = "main";
+
 		/**
 		 *
 		 */

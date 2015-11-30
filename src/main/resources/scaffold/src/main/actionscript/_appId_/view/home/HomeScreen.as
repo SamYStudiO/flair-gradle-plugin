@@ -1,7 +1,6 @@
 package _appId_.view.home
 {
-	import _appId_.theme.dpiScale;
-	import _appId_.view.AScreen;
+	import _appId_.view.core.AScreen;
 
 	import feathers.controls.Label;
 
@@ -13,7 +12,7 @@ package _appId_.view.home
 	public class HomeScreen extends AScreen
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _label : Label;
 
@@ -30,7 +29,7 @@ package _appId_.view.home
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _initialize() : void
+		override protected function _initialize() : void
 		{
 			super._initialize();
 
@@ -42,7 +41,7 @@ package _appId_.view.home
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _draw() : void
+		override protected function _draw() : void
 		{
 			super._draw();
 
@@ -50,7 +49,7 @@ package _appId_.view.home
 			{
 				_label.validate();
 				_label.x = ( actualWidth - _label.width ) / 2;
-				_label.y = 100 * dpiScale;
+				_label.y = 100;
 			}
 		}
 	}

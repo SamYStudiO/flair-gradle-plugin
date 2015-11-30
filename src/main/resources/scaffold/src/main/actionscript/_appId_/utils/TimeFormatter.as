@@ -27,7 +27,8 @@ package _appId_.utils
 		/**
 		 * GGet the number of milliseconds in the specified milliseconds.
 		 * @param milliseconds The milliseconds where retrive milliseconds.
-		 * @param overflow A Boolean that indicates if overflow which could be converted in second or bigger pattern is returned. If overflow is false max value is 999.
+		 * @param overflow A Boolean that indicates if overflow which could be converted in second or bigger pattern is returned. If overflow is
+		 *     false max value is 999.
 		 * @param round A Boolean that indicates if value is rounded.
 		 * @return The number of milliseconds according specified arguments.
 		 */
@@ -41,7 +42,8 @@ package _appId_.utils
 		/**
 		 * Get the number of seconds in the specified milliseconds.
 		 * @param milliseconds The milliseconds where retrive seconds.
-		 * @param overflow A Boolean that indicates if overflow which could be converted in minutes or bigger pattern is returned. If overflow is false max value is 59.
+		 * @param overflow A Boolean that indicates if overflow which could be converted in minutes or bigger pattern is returned. If overflow is
+		 *     false max value is 59.
 		 * @param round A Boolean that indicates if value is rounded.
 		 * @return The number of seconds according specified arguments.
 		 */
@@ -55,7 +57,8 @@ package _appId_.utils
 		/**
 		 * Get the number of minutes in the specified milliseconds.
 		 * @param milliseconds The milliseconds where retrive minutes.
-		 * @param overflow A Boolean that indicates if overflow which could be converted in hours or bigger pattern is returned. If overflow is false max value is 59.
+		 * @param overflow A Boolean that indicates if overflow which could be converted in hours or bigger pattern is returned. If overflow is false
+		 *     max value is 59.
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of minutes according specified arguments.
 		 */
@@ -69,7 +72,8 @@ package _appId_.utils
 		/**
 		 * Get the number of hours in the specified milliseconds.
 		 * @param milliseconds The milliseconds where retrive hours.
-		 * @param overflow A Boolean that indicates if overflow which could be converted in days or bigger pattern is returned. If overflow is false max value is 23.
+		 * @param overflow A Boolean that indicates if overflow which could be converted in days or bigger pattern is returned. If overflow is false
+		 *     max value is 23.
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of hours according specified arguments.
 		 */
@@ -83,7 +87,8 @@ package _appId_.utils
 		/**
 		 * Get the number of days in the specified milliseconds.
 		 * @param milliseconds The milliseconds where retrive days.
-		 * @param overflow A Boolean that indicates if overflow which could be converted in weeks or bigger pattern is returned. If overflow is false max value is 6.
+		 * @param overflow A Boolean that indicates if overflow which could be converted in weeks or bigger pattern is returned. If overflow is false
+		 *     max value is 6.
 		 * @param round A Boolean taht indicates if value is rounded.
 		 * @return The number of days according specified arguments.
 		 */
@@ -298,16 +303,16 @@ package _appId_.utils
 		}
 
 		/**
+		 *
+		 */
+		protected static const __PATTERNS : Array = [ "w" , "ww" , "d" , "dd" , "h" , "hh" , "m" , "mm" , "S" , "SS" , "s" , "ss" ];
+
+		/**
 		 * @private
 		 */
 		public function TimeFormatter()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const __PATTERNS : Array = [ "w" , "ww" , "d" , "dd" , "h" , "hh" , "m" , "mm" , "S" , "SS" , "s" , "ss" ];
 	}
 }

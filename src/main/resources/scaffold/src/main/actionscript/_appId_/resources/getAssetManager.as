@@ -1,6 +1,5 @@
-package _appId_.model
+package _appId_.resources
 {
-	import _appId_.actors.ASSET_MANAGER;
 	import _appId_.view.EnumScreen;
 
 	import starling.utils.AssetManager;
@@ -10,6 +9,6 @@ package _appId_.model
 	 */
 	public function getAssetManager( id : String = EnumScreen.MAIN ) : AssetManager
 	{
-		return ASSET_MANAGER[ id ];
+		return assetManagers[ id ];
 	}
 }

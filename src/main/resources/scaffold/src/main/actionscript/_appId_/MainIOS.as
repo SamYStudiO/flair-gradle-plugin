@@ -2,6 +2,8 @@ package _appId_
 {
 	import _appId_.actors.STAGE;
 
+	import flash.events.InvokeEvent;
+
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
@@ -19,7 +21,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _getSplashScreenFilePath( portrait : Boolean ) : String
+		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
 			var stageWidth : Number = STAGE.fullScreenWidth;
@@ -58,6 +60,16 @@ package _appId_
 			}
 
 			return filePath;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		override protected function _init( e : InvokeEvent ) : void
+		{
+			//DeviceCapabilities.dpi = getBucketDensity( getDensityBucket( DeviceCapabilities.dpi ) );
+
+			super._init( e );
 		}
 	}
 }

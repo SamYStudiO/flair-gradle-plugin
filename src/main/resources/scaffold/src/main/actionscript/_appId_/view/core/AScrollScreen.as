@@ -1,9 +1,9 @@
-package _appId_.view
+package _appId_.view.core
 {
 	import _appId_.actors.NAVIGATOR;
 	import _appId_.actors.STAGE;
 
-	import feathers.controls.Screen;
+	import feathers.controls.ScrollScreen;
 	import feathers.system.DeviceCapabilities;
 
 	import org.osflash.signals.Signal;
@@ -11,7 +11,7 @@ package _appId_.view
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AScreen extends Screen implements IndexedScreen
+	public class AScrollScreen extends ScrollScreen implements IndexedScreen
 	{
 		/**
 		 * @private
@@ -19,7 +19,7 @@ package _appId_.view
 		protected var _index : uint;
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get index() : uint
 		{
@@ -34,10 +34,10 @@ package _appId_.view
 		/**
 		 * @private
 		 */
-		protected var _params : Object = {};
+		protected var _params : Object;
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get params() : Object
 		{
@@ -50,7 +50,7 @@ package _appId_.view
 		protected var _shown : Signal = new Signal();
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get shown() : Signal
 		{
@@ -63,7 +63,7 @@ package _appId_.view
 		protected var _hidden : Signal = new Signal();
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function get hidden() : Signal
 		{
@@ -73,22 +73,24 @@ package _appId_.view
 		/**
 		 *
 		 */
-		public function AScreen()
+		public function AScrollScreen()
 		{
 			super();
 
 			backButtonHandler = _goBack;
+			horizontalScrollPolicy = SCROLL_POLICY_OFF;
+			snapScrollPositionsToPixels = true;
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function show() : void
 		{
 		}
 
 		/**
-		 *
+		 * @inheritDoc
 		 */
 		public function hide() : void
 		{
@@ -97,7 +99,7 @@ package _appId_.view
 		/**
 		 * @inheritDoc
 		 */
-		protected override function initialize() : void
+		override protected function initialize() : void
 		{
 			super.initialize();
 
@@ -109,60 +111,59 @@ package _appId_.view
 		/**
 		 * @inheritDoc
 		 */
-		protected override function draw() : void
+		override protected function draw() : void
 		{
 			super.draw();
 
 			_draw();
-
 			if( DeviceCapabilities.isPhone( STAGE ) ) _drawPhone();
 			else _drawTablet();
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initialize() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initializePhone() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _initializeTablet() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _draw() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _drawPhone() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _drawTablet() : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _goBack() : void
 		{

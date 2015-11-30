@@ -5,5 +5,5 @@ package _appId_.actors
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public var NAVIGATOR : NavigatorManager = NavigatorManager.getInstance();
+	public const NAVIGATOR : NavigatorManager = NavigatorManager.getInstance();
 }

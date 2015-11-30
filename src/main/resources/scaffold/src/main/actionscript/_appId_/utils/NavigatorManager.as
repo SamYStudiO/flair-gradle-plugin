@@ -3,8 +3,8 @@ package _appId_.utils
 	import _appId_.actors.STARLING_MAIN;
 	import _appId_.utils.object.merge;
 	import _appId_.utils.string.trim;
-	import _appId_.view.INavigatorScreen;
-	import _appId_.view.IndexedScreen;
+	import _appId_.view.core.INavigatorScreen;
+	import _appId_.view.core.IndexedScreen;
 
 	import feathers.events.FeathersEventType;
 
@@ -38,21 +38,24 @@ package _appId_.utils
 		 *
 		 */
 		private var _pathsHistory : Vector.<Object> = new Vector.<Object>();
+
 		/**
 		 *
 		 */
 		private var _activeTransition : Boolean;
+
 		/**
 		 *
 		 */
 		private var _nextArguments : Array;
+
 		/**
 		 *
 		 */
 		private var _nextFunction : Function;
 
 		/**
-		 *
+		 * @private
 		 */
 		private var _rootNavigatorScreen : INavigatorScreen = STARLING_MAIN;
 
@@ -93,7 +96,7 @@ package _appId_.utils
 		}
 
 		/**
-		 *
+		 * @private
 		 */
 		private var _currentPath : String;
 

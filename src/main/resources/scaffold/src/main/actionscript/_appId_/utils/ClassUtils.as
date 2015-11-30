@@ -126,7 +126,7 @@ package _appId_.utils
 		/**
 		 * Get an instance from a String defintion.
 		 * @param definition String definition from which get instance.
-		 * @param An alternative application domain when search for definition.
+		 * @param applicationDomain An alternative application domain when search for definition.
 		 * @param arguments The arguments to pass to instance constructor.
 		 */
 		public static function getInstanceByName( definition : String , applicationDomain : ApplicationDomain = null , ...arguments : Array ) : *
@@ -309,8 +309,9 @@ package _appId_.utils
 		}
 
 		/**
-		 * describetype is the same as flash.utils.describeType but use an internal cache in order to optimize multiple call to the same object since this can be expansive.
-		 * The bad thing is cache increase memory consumption, if you have any memory problem you should use clearDescribeTypeCache method to flush cache.
+		 * describetype is the same as flash.utils.describeType but use an internal cache in order to optimize multiple call to the same object since
+		 * this can be expansive. The bad thing is cache increase memory consumption, if you have any memory problem you should use
+		 * clearDescribeTypeCache method to flush cache.
 		 *
 		 * @see http://help.adobe.com/en_US/AS3LCR/Flash_10.0/flash/utils/package.html#describeType() flash.utils.describeType
 		 * @see #clearDescribeTypeCache

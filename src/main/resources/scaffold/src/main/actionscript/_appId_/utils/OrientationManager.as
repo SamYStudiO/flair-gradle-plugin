@@ -31,6 +31,11 @@ package _appId_.utils
 		/**
 		 *
 		 */
+		private const _orientations : Array = [ StageOrientation.DEFAULT , StageOrientation.ROTATED_LEFT , StageOrientation.UPSIDE_DOWN , StageOrientation.ROTATED_RIGHT ];
+
+		/**
+		 * @private
+		 */
 		private var _stageOrientation : String;
 
 		/**
@@ -47,7 +52,7 @@ package _appId_.utils
 		}
 
 		/**
-		 *
+		 * @private
 		 */
 		private var _deviceOrientation : String;
 
@@ -64,7 +69,7 @@ package _appId_.utils
 		 */
 		public function get isStagePortrait() : Boolean
 		{
-			return DeviceInfos.isDesktop() ? STAGE.stageWidth < STAGE.stageHeight : STAGE.fullScreenWidth < STAGE.fullScreenHeight;
+			return DeviceManufacturer.isDesktop() ? STAGE.stageWidth < STAGE.stageHeight : STAGE.fullScreenWidth < STAGE.fullScreenHeight;
 		}
 
 		/**
@@ -72,7 +77,7 @@ package _appId_.utils
 		 */
 		public function get isStageLandscape() : Boolean
 		{
-			return DeviceInfos.isDesktop() ? STAGE.stageWidth > STAGE.stageHeight : STAGE.fullScreenWidth > STAGE.fullScreenHeight;
+			return DeviceManufacturer.isDesktop() ? STAGE.stageWidth > STAGE.stageHeight : STAGE.fullScreenWidth > STAGE.fullScreenHeight;
 		}
 
 		/**
@@ -92,7 +97,7 @@ package _appId_.utils
 		}
 
 		/**
-		 *
+		 * @private
 		 */
 		private var _defautOrientationIsPortrait : Boolean;
 
@@ -198,8 +203,8 @@ package _appId_.utils
 		private function _monitorOrientation( e : Event = null ) : void
 		{
 			var newStageOrientation : String = STAGE.orientation == StageOrientation.UNKNOWN ? _stageOrientation : STAGE.orientation;
-			var stageWidth : Number = DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			var stageHeight : Number = DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var stageWidth : Number = DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			var stageHeight : Number = DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
 			var stageIsPortrait : Boolean = ( _defautOrientationIsPortrait && ( newStageOrientation == StageOrientation.DEFAULT || newStageOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defautOrientationIsPortrait && ( newStageOrientation == StageOrientation.ROTATED_LEFT || newStageOrientation == StageOrientation.ROTATED_RIGHT ) );
 			var stageOrientationChanged : Boolean = _stageOrientation != newStageOrientation && ( ( stageIsPortrait && stageWidth < stageHeight ) || ( !stageIsPortrait && stageWidth >= stageHeight ) );
 
@@ -245,11 +250,6 @@ package _appId_.utils
 
 			if( deviceOrientationChanged ) this.deviceOrientationChanged.dispatch();
 		}
-
-		/**
-		 *
-		 */
-		private const _orientations : Array = [ StageOrientation.DEFAULT , StageOrientation.ROTATED_LEFT , StageOrientation.UPSIDE_DOWN , StageOrientation.ROTATED_RIGHT ];
 	}
 }
 

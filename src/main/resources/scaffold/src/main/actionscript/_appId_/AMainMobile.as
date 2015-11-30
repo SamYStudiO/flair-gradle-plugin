@@ -2,7 +2,7 @@ package _appId_
 {
 	import _appId_.actors.ORIENTATION_MANAGER;
 	import _appId_.actors.STAGE;
-	import _appId_.utils.DeviceInfos;
+	import _appId_.utils.DeviceManufacturer;
 
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -19,22 +19,22 @@ package _appId_
 	public class AMainMobile extends AMain
 	{
 		/**
-		 * @private
+		 *
 		 */
 		protected var _defaultAutoOrients : Boolean;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _splashScreenContainer : Sprite;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _splashScreenPortrait : Loader;
 
 		/**
-		 * @private
+		 *
 		 */
 		protected var _splashScreenLandscape : Loader;
 
@@ -49,7 +49,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _initStage() : void
+		override protected function _initStage() : void
 		{
 			super._initStage();
 
@@ -61,7 +61,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _initSplashScreen() : void
+		override protected function _initSplashScreen() : void
 		{
 			_splashScreenContainer = new Sprite();
 			STAGE.addChild( _splashScreenContainer );
@@ -80,7 +80,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _onMainReady() : void
+		override protected function _onMainReady() : void
 		{
 			_cleanupSplashScreen();
 
@@ -91,7 +91,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _getSplashScreen( portrait : Boolean ) : Loader
 		{
@@ -120,7 +120,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _orientationChanged() : void
 		{
@@ -128,14 +128,14 @@ package _appId_
 			_splashScreenLandscape.visible = ORIENTATION_MANAGER.isDeviceLandscape;
 
 			var m : Matrix = ORIENTATION_MANAGER.deviceVSStageMatrix;
-			m.tx *= DeviceInfos.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			m.ty *= DeviceInfos.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			m.tx *= DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			m.ty *= DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
 
 			_splashScreenContainer.transform.matrix = m;
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
@@ -143,7 +143,7 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _cleanupSplashScreen() : void
 		{
@@ -178,14 +178,14 @@ package _appId_
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _splashScreenPortraitLoaded( e : Event ) : void
 		{
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function _splashScreenLandscapeLoaded( e : Event ) : void
 		{

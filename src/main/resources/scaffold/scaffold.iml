@@ -675,7 +675,10 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources/fonts" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources/embed" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/android" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/atlases" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/desktop" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/ios" />
     </content>
     <orderEntry type="jdk" jdkName="flex_sdk_4.6_air_19.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />

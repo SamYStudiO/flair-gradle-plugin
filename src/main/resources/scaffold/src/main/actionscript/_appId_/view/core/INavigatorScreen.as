@@ -1,4 +1,4 @@
-package _appId_.view
+package _appId_.view.core
 {
 	import feathers.controls.ScreenNavigatorItem;
 
@@ -24,9 +24,6 @@ package _appId_.view
 		 */
 		function get autoSizeMode() : String
 
-		/**
-		 *
-		 */
 		function set autoSizeMode( s : String ) : void
 
 		/**
@@ -34,9 +31,6 @@ package _appId_.view
 		 */
 		function get clipContent() : Boolean
 
-		/**
-		 *
-		 */
 		function set clipContent( b : Boolean ) : void
 
 		/**
@@ -54,9 +48,6 @@ package _appId_.view
 		 */
 		function get transition() : Function
 
-		/**
-		 *
-		 */
 		function set transition( f : Function ) : void
 
 		/**

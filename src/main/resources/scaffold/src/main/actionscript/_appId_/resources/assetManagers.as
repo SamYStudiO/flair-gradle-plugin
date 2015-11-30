@@ -1,9 +1,9 @@
-package _appId_.actors
+package _appId_.resources
 {
 	import flash.utils.Dictionary;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public var ASSET_MANAGER : Dictionary = new Dictionary( true );
+	internal const assetManagers : Dictionary = new Dictionary( true );
 }

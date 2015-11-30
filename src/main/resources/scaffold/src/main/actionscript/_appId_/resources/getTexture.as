@@ -1,4 +1,4 @@
-package _appId_.model
+package _appId_.resources
 {
 	import _appId_.view.EnumScreen;
 

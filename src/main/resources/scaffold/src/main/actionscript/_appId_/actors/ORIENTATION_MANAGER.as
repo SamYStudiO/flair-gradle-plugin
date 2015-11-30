@@ -5,5 +5,5 @@ package _appId_.actors
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public var ORIENTATION_MANAGER : OrientationManager = OrientationManager.getInstance();
+	public const ORIENTATION_MANAGER : OrientationManager = OrientationManager.getInstance();
 }

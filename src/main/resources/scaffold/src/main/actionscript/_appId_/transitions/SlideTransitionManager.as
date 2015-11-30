@@ -1,7 +1,7 @@
 package _appId_.transitions
 {
-	import _appId_.view.IndexedAssetsScreen;
-	import _appId_.view.IndexedScreen;
+	import _appId_.view.core.IndexedAssetsScreen;
+	import _appId_.view.core.IndexedScreen;
 
 	import feathers.controls.ScreenNavigator;
 
@@ -12,6 +12,7 @@ package _appId_.transitions
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
+	 * TODO update this transition with last from feathers and make it compatible assetsScreen
 	 */
 	public class SlideTransitionManager
 	{
@@ -19,24 +20,29 @@ package _appId_.transitions
 		 * The <code>ScreenNavigator</code> being managed.
 		 */
 		protected var navigator : ScreenNavigator;
+
 		/**
-		 * @private
+		 *
 		 */
 		protected var _activeTransition : Tween;
+
 		/**
-		 * @private
+		 *
 		 */
 		protected var _savedOtherTarget : DisplayObject;
+
 		/**
-		 * @private
+		 *
 		 */
 		protected var _savedCompleteHandler : Function;
+
 		/**
 		 * The duration of the transition, in seconds.
 		 *
 		 * @default 0.25
 		 */
 		public var duration : Number = 0.25;
+
 		/**
 		 * A delay before the transition starts, measured in seconds. This may
 		 * be required on low-end systems that will slow down for a short time
@@ -45,12 +51,14 @@ package _appId_.transitions
 		 * @default 0.1
 		 */
 		public var delay : Number = 0.1;
+
 		/**
 		 * The easing function to use.
 		 *
 		 * @default starling.animation.Transitions.EASE_OUT
 		 */
 		public var ease : Object = Transitions.EASE_OUT;
+
 		/**
 		 * Determines if the next transition should be skipped. After the
 		 * transition, this value returns to <code>false</code>.
@@ -193,7 +201,7 @@ package _appId_.transitions
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function activeTransitionPush_onUpdate() : void
 		{
@@ -205,7 +213,7 @@ package _appId_.transitions
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function activeTransitionPop_onUpdate() : void
 		{
@@ -217,7 +225,7 @@ package _appId_.transitions
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		protected function activeTransition_onComplete() : void
 		{

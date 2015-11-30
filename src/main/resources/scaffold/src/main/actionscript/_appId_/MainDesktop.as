@@ -21,7 +21,7 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		protected override function _init( e : InvokeEvent ) : void
+		override protected function _init( e : InvokeEvent ) : void
 		{
 			DeviceCapabilities.dpi = 132;
 			DeviceCapabilities.screenPixelWidth = stage.stageWidth;

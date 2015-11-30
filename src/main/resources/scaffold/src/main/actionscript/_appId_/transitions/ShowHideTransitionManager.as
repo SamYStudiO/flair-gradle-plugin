@@ -1,7 +1,7 @@
 package _appId_.transitions
 {
-	import _appId_.view.IndexedAssetsScreen;
-	import _appId_.view.IndexedScreen;
+	import _appId_.view.core.IndexedAssetsScreen;
+	import _appId_.view.core.IndexedScreen;
 
 	import feathers.controls.ScreenNavigator;
 

@@ -99,7 +99,8 @@ package _appId_.utils
 		 * @param from The string date representation.
 		 * @param format The patterns format to used.
 		 * @param caseSensitive A boolean that indicates if format is case sensitive.
-		 * @param autoAddOverflow A Boolean that indicates if an overflow value (a value that does not match a pattern range > month 13 out of range 1-12) is allowed.
+		 * @param autoAddOverflow A Boolean that indicates if an overflow value (a value that does not match a pattern range > month 13 out of range
+		 *     1-12) is allowed.
 		 * @return The date object from string representation. If conversion is impossible the value is null.
 		 */
 		public static function getDateFrom( from : String , format : String , caseSensitive : Boolean = false , autoAddOverflow : Boolean = false ) : Date

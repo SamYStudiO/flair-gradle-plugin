@@ -1,4 +1,4 @@
-package _appId_.view
+package _appId_.view.core
 {
 	import feathers.controls.IScreen;
 
@@ -14,9 +14,6 @@ package _appId_.view
 		 */
 		function get index() : uint;
 
-		/**
-		 *
-		 */
 		function set index( index : uint ) : void;
 
 		/**

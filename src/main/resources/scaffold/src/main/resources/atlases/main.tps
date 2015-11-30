@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.7.1</string>
+        <string>4.0.1</string>
         <key>fileName</key>
-        <string>W:/Projects/flair/src/main/resources/scaffold/src/main/resources/assets/global.tps</string>
+        <string>W:/Projects/flair/src/main/resources/scaffold/src/main/resources/atlases/main.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -123,11 +123,13 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../{v}/global{n}.png</filename>
+        <filename>../{v}/main{n}.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
         <enum type="SettingsBase::PvrCompressionQuality">PVR_QUALITY_NORMAL</enum>
+        <key>atfCompressData</key>
+        <false/>
         <key>mipMapMinSize</key>
         <uint>32768</uint>
         <key>etc1CompressionQuality</key>
@@ -230,7 +232,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../{v}/global{n}.xml</filename>
+                <filename>../{v}/main{n}.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -258,14 +260,16 @@
             <double>1</double>
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
-            <key>innerPadding</key>
-            <uint>0</uint>
             <key>extrude</key>
             <uint>0</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
+            <key>trimMargin</key>
+            <uint>1</uint>
             <key>trimMode</key>
             <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <key>tracerTolerance</key>
+            <int>200</int>
             <key>heuristicMask</key>
             <false/>
             <key>pivotPoint</key>
@@ -273,7 +277,7 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>global</filename>
+            <filename>main</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
