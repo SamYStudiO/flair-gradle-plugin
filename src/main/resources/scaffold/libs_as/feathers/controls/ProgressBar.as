@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -61,6 +61,18 @@ package feathers.controls
 		 * @private
 		 */
 		protected var currentFill : DisplayObject;
+		/**
+		 * The progress bar fills horizontally (on the x-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * The progress bar fills vertically (on the y-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_VERTICAL : String = "vertical";
 
 		/**
 		 * @private
@@ -75,7 +87,7 @@ package feathers.controls
 		 */
 		protected var _direction : String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String", enumeration="horizontal,vertical")]
+		[Inspectable(type="String" , enumeration="horizontal,vertical")]
 		/**
 		 * Determines the direction that the progress bar fills. When this value
 		 * changes, the progress bar's width and height values do not change
@@ -138,7 +150,7 @@ package feathers.controls
 		 */
 		public function set value( newValue : Number ) : void
 		{
-			newValue = clamp( newValue, this._minimum, this._maximum );
+			newValue = clamp( newValue , this._minimum , this._maximum );
 			if( this._value == newValue )
 			{
 				return;
@@ -262,7 +274,7 @@ package feathers.controls
 			if( this._backgroundSkin && this._backgroundSkin.parent != this )
 			{
 				this._backgroundSkin.visible = false;
-				this.addChildAt( this._backgroundSkin, 0 );
+				this.addChildAt( this._backgroundSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -306,7 +318,7 @@ package feathers.controls
 			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this )
 			{
 				this._backgroundDisabledSkin.visible = false;
-				this.addChildAt( this._backgroundDisabledSkin, 0 );
+				this.addChildAt( this._backgroundDisabledSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -595,7 +607,6 @@ package feathers.controls
 		 */
 		override protected function draw() : void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
 			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
 			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
 			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
@@ -608,33 +619,7 @@ package feathers.controls
 
 			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
 
-			if( sizeInvalid || stylesInvalid || stateInvalid )
-			{
-				if( this.currentBackground )
-				{
-					this.currentBackground.width = this.actualWidth;
-					this.currentBackground.height = this.actualHeight;
-				}
-			}
-
-			if( dataInvalid || sizeInvalid || stateInvalid || stylesInvalid )
-			{
-				var percentage : Number = (this._value - this._minimum) / (this._maximum - this._minimum);
-				if( this._direction == DIRECTION_VERTICAL )
-				{
-					this.currentFill.width = this.actualWidth - this._paddingLeft - this._paddingRight;
-					this.currentFill.height = this._originalFillHeight + percentage * (this.actualHeight - this._paddingTop - this._paddingBottom - this._originalFillHeight);
-					this.currentFill.x = this._paddingLeft;
-					this.currentFill.y = this.actualHeight - this._paddingBottom - this.currentFill.height;
-				}
-				else
-				{
-					this.currentFill.width = this._originalFillWidth + percentage * (this.actualWidth - this._paddingLeft - this._paddingRight - this._originalFillWidth);
-					this.currentFill.height = this.actualHeight - this._paddingTop - this._paddingBottom;
-					this.currentFill.x = this._paddingLeft;
-					this.currentFill.y = this._paddingTop;
-				}
-			}
+			this.layoutChildren();
 		}
 
 		/**
@@ -655,15 +640,15 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
 			}
 			var newWidth : Number = needsWidth ? this._originalBackgroundWidth : this.explicitWidth;
 			var newHeight : Number = needsHeight ? this._originalBackgroundHeight : this.explicitHeight;
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -689,11 +674,11 @@ package feathers.controls
 			}
 			if( this.currentBackground )
 			{
-				if( this._originalBackgroundWidth !== this._originalBackgroundWidth ) // isNaN
+				if( this._originalBackgroundWidth !== this._originalBackgroundWidth ) //isNaN
 				{
 					this._originalBackgroundWidth = this.currentBackground.width;
 				}
-				if( this._originalBackgroundHeight !== this._originalBackgroundHeight ) // isNaN
+				if( this._originalBackgroundHeight !== this._originalBackgroundHeight ) //isNaN
 				{
 					this._originalBackgroundHeight = this.currentBackground.height;
 				}
@@ -724,11 +709,11 @@ package feathers.controls
 			}
 			if( this.currentFill )
 			{
-				if( this._originalFillWidth !== this._originalFillWidth ) // isNaN
+				if( this._originalFillWidth !== this._originalFillWidth ) //isNaN
 				{
 					this._originalFillWidth = this.currentFill.width;
 				}
-				if( this._originalFillHeight !== this._originalFillHeight ) // isNaN
+				if( this._originalFillHeight !== this._originalFillHeight ) //isNaN
 				{
 					this._originalFillHeight = this.currentFill.height;
 				}
@@ -737,16 +722,46 @@ package feathers.controls
 		}
 
 		/**
-		 * The progress bar fills horizontally (on the x-axis).
-		 *
-		 * @see #direction
+		 * @private
 		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * The progress bar fills vertically (on the y-axis).
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
+		protected function layoutChildren() : void
+		{
+			if( this.currentBackground )
+			{
+				this.currentBackground.width = this.actualWidth;
+				this.currentBackground.height = this.actualHeight;
+			}
+
+			if( this._minimum === this._maximum )
+			{
+				var percentage : Number = 1;
+			}
+			else
+			{
+				percentage = (this._value - this._minimum) / (this._maximum - this._minimum);
+				if( percentage < 0 )
+				{
+					percentage = 0;
+				}
+				else if( percentage > 1 )
+				{
+					percentage = 1;
+				}
+			}
+			if( this._direction == DIRECTION_VERTICAL )
+			{
+				this.currentFill.width = this.actualWidth - this._paddingLeft - this._paddingRight;
+				this.currentFill.height = Math.round( this._originalFillHeight + percentage * (this.actualHeight - this._paddingTop - this._paddingBottom - this._originalFillHeight) );
+				this.currentFill.x = this._paddingLeft;
+				this.currentFill.y = this.actualHeight - this._paddingBottom - this.currentFill.height;
+			}
+			else //horizontal
+			{
+				this.currentFill.width = Math.round( this._originalFillWidth + percentage * (this.actualWidth - this._paddingLeft - this._paddingRight - this._originalFillWidth) );
+				this.currentFill.height = this.actualHeight - this._paddingTop - this._paddingBottom;
+				this.currentFill.x = this._paddingLeft;
+				this.currentFill.y = this._paddingTop;
+			}
+		}
 	}
 }

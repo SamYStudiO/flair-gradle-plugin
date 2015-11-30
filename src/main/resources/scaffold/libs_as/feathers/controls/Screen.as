@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -37,7 +37,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_START
 	 */
-	[Event(name="transitionInStart", type="starling.events.Event")]
+	[Event(name="transitionInStart" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation finishes as the screen is shown
 	 * by the screen navigator.
@@ -59,7 +60,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_COMPLETE
 	 */
-	[Event(name="transitionInComplete", type="starling.events.Event")]
+	[Event(name="transitionInComplete" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation begins as a different screen is
 	 * shown by the screen navigator and this screen is hidden.
@@ -81,7 +83,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_START
 	 */
-	[Event(name="transitionOutStart", type="starling.events.Event")]
+	[Event(name="transitionOutStart" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation finishes as a different screen
 	 * is shown by the screen navigator and this screen is hidden.
@@ -103,7 +106,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_COMPLETE
 	 */
-	[Event(name="transitionOutComplete", type="starling.events.Event")]
+	[Event(name="transitionOutComplete" , type="starling.events.Event")]
+
 	/**
 	 * A basic screen to be displayed by <code>ScreenNavigator</code>. Provides
 	 * layout capabilities, but no scrolling.
@@ -124,10 +128,10 @@ package feathers.controls
 	 *         
 	 *         override protected function initialize():void
 	 *         {
-	 *             // runs once when screen is first added to the stage
-	 *             // a good place to add children and customize the layout
+	 *             //runs once when screen is first added to the stage
+	 *             //a good place to add children and customize the layout
 	 *             
-	 *             // don't forget to call this!
+	 *             //don't forget to call this!
 	 *             super.initialize()
 	 *         }
 	 *     }
@@ -184,7 +188,7 @@ package feathers.controls
 		 *
 		 * private function onMenuButton():void
 		 * {
-		 *     // do something with the menu button
+		 *     //do something with the menu button
 		 * };</listing>
 		 *
 		 * @default null
@@ -206,12 +210,24 @@ package feathers.controls
 		 *
 		 * private function onSearchButton():void
 		 * {
-		 *     // do something with the search button
+		 *     //do something with the search button
 		 * };</listing>
 		 *
 		 * @default null
 		 */
 		protected var searchButtonHandler : Function;
+		/**
+		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_STAGE
+		 *
+		 * @see feathers.controls.LayoutGroup#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		/**
+		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_CONTENT
+		 *
+		 * @see feathers.controls.LayoutGroup#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 
 		/**
 		 * @private
@@ -246,7 +262,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _owner : Object;
-
+		
 		/**
 		 * @inheritDoc
 		 */
@@ -268,7 +284,7 @@ package feathers.controls
 		 */
 		public function Screen()
 		{
-			this.addEventListener( Event.ADDED_TO_STAGE, screen_addedToStageHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , screen_addedToStageHandler );
 			super();
 		}
 
@@ -281,11 +297,11 @@ package feathers.controls
 			{
 				return;
 			}
-			this.addEventListener( Event.REMOVED_FROM_STAGE, screen_removedFromStageHandler );
-			// using priority here is a hack so that objects higher up in the
-			// display list have a chance to cancel the event first.
+			this.addEventListener( Event.REMOVED_FROM_STAGE , screen_removedFromStageHandler );
+			//using priority here is a hack so that objects higher up in the
+			//display list have a chance to cancel the event first.
 			var priority : int = -getDisplayObjectDepthFromStage( this );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN, screen_nativeStage_keyDownHandler, false, priority, true );
+			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , screen_nativeStage_keyDownHandler , false , priority , true );
 		}
 
 		/**
@@ -297,8 +313,8 @@ package feathers.controls
 			{
 				return;
 			}
-			this.removeEventListener( Event.REMOVED_FROM_STAGE, screen_removedFromStageHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN, screen_nativeStage_keyDownHandler );
+			this.removeEventListener( Event.REMOVED_FROM_STAGE , screen_removedFromStageHandler );
+			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , screen_nativeStage_keyDownHandler );
 		}
 
 		/**
@@ -308,7 +324,7 @@ package feathers.controls
 		{
 			if( event.isDefaultPrevented() )
 			{
-				// someone else already handled this one
+				//someone else already handled this one
 				return;
 			}
 			if( this.backButtonHandler != null && event.keyCode == Keyboard.BACK )
@@ -329,18 +345,5 @@ package feathers.controls
 				this.searchButtonHandler();
 			}
 		}
-
-		/**
-		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_STAGE
-		 *
-		 * @see feathers.controls.LayoutGroup#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_CONTENT
-		 *
-		 * @see feathers.controls.LayoutGroup#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 	}
 }

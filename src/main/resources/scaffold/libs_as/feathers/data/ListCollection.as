@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -33,7 +33,8 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the collection has changed drastically, such as when
 	 * the underlying data source is replaced completely.
@@ -55,7 +56,8 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.RESET
 	 */
-	[Event(name="reset", type="starling.events.Event")]
+	[Event(name="reset" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when an item is added to the collection.
 	 *
@@ -77,7 +79,8 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.ADD_ITEM
 	 */
-	[Event(name="addItem", type="starling.events.Event")]
+	[Event(name="addItem" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when an item is removed from the collection.
 	 *
@@ -99,7 +102,8 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REMOVE_ITEM
 	 */
-	[Event(name="removeItem", type="starling.events.Event")]
+	[Event(name="removeItem" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when an item is replaced in the collection.
 	 *
@@ -121,15 +125,11 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REPLACE_ITEM
 	 */
-	[Event(name="replaceItem", type="starling.events.Event")]
+	[Event(name="replaceItem" , type="starling.events.Event")]
+
 	/**
-	 * Dispatched when a property of an item in the collection has changed
-	 * and the item doesn't have its own change event or signal. This event
-	 * is only dispatched when the <code>updateItemAt()</code> function is
-	 * called on the <code>ListCollection</code>.
-	 *
-	 * <p>In general, it's better for the items themselves to dispatch events
-	 * or signals when their properties change.</p>
+	 * Dispatched when the <code>updateItemAt()</code> function is called on the
+	 * <code>ListCollection</code>.
 	 *
 	 * <p>The properties of the event object have the following values:</p>
 	 * <table class="innertable">
@@ -147,16 +147,43 @@ package feathers.data
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 *
+	 * @see #updateItemAt()
+	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ITEM
 	 */
-	[Event(name="updateItem", type="starling.events.Event")]
-	[DefaultProperty("data")]
+	[Event(name="updateItem" , type="starling.events.Event")]
+
+	/**
+	 * Dispatched when the <code>updateAll()</code> function is called on the
+	 * <code>ListCollection</code>.
+	 *
+	 * <p>The properties of the event object have the following values:</p>
+	 * <table class="innertable">
+	 * <tr><th>Property</th><th>Value</th></tr>
+	 * <tr><td><code>bubbles</code></td><td>false</td></tr>
+	 * <tr><td><code>currentTarget</code></td><td>The Object that defines the
+	 *   event listener that handles the event. For example, if you use
+	 *   <code>myButton.addEventListener()</code> to register an event listener,
+	 *   myButton is the value of the <code>currentTarget</code>.</td></tr>
+	 * <tr><td><code>data</code></td><td>null</td></tr>
+	 * <tr><td><code>target</code></td><td>The Object that dispatched the event;
+	 *   it is not always the Object listening for the event. Use the
+	 *   <code>currentTarget</code> property to always access the Object
+	 *   listening for the event.</td></tr>
+	 * </table>
+	 *
+	 * @see #updateAll()
+	 *
+	 * @eventType feathers.events.CollectionEventType.UPDATE_ALL
+	 */
+	[Event(name="updateAll" , type="starling.events.Event")]
+
 	/**
 	 * Wraps a data source with a common API for use with UI controls, like
 	 * lists, that support one dimensional collections of data. Supports custom
 	 * "data descriptors" so that unexpected data sources may be used. Supports
 	 * Arrays, Vectors, and XMLLists automatically.
-	 *
+	 * 
 	 * @see ArrayListCollectionDataDescriptor
 	 * @see VectorListCollectionDataDescriptor
 	 * @see XMLListListCollectionDataDescriptor
@@ -166,7 +193,7 @@ package feathers.data
 		 * @private
 		 */
 		protected var _data : Object;
-
+		
 		/**
 		 * The data source for this collection. May be any type of data, but a
 		 * <code>dataDescriptor</code> needs to be provided to translate from
@@ -192,7 +219,7 @@ package feathers.data
 				return;
 			}
 			this._data = value;
-			// we'll automatically detect an array, vector, or xmllist for convenience
+			//we'll automatically detect an array, vector, or xmllist for convenience
 			if( this._data is Array && !(this._dataDescriptor is ArrayListCollectionDataDescriptor) )
 			{
 				this._dataDescriptor = new ArrayListCollectionDataDescriptor();
@@ -229,7 +256,7 @@ package feathers.data
 		 * @private
 		 */
 		protected var _dataDescriptor : IListCollectionDataDescriptor;
-
+		
 		/**
 		 * Describes the underlying data source by translating APIs.
 		 *
@@ -273,21 +300,46 @@ package feathers.data
 		{
 			if( !data )
 			{
-				// default to an array if no data is provided
+				//default to an array if no data is provided
 				data = [];
 			}
 			this.data = data;
 		}
 
 		/**
-		 * If an item doesn't dispatch an event or signal to indicate that it
-		 * has changed, you can manually tell the collection about the change,
-		 * and the collection will dispatch the <code>CollectionEventType.UPDATE_ITEM</code>
-		 * event to manually notify the component that renders the data.
+		 * Call <code>updateItemAt()</code> to manually inform any component
+		 * rendering the <code>ListCollection</code> that the properties of a
+		 * single item in the collection have changed, and that any views
+		 * associated with the item should be updated. The collection will
+		 * dispatch the <code>CollectionEventType.UPDATE_ITEM</code> event.
+		 *
+		 * <p>Alternatively, the item can dispatch an event when one of its
+		 * properties has changed, and item renderers can listen for that event
+		 * and update themselves automatically.</p>
+		 *
+		 * @see #updateAll()
 		 */
 		public function updateItemAt( index : int ) : void
 		{
-			this.dispatchEventWith( CollectionEventType.UPDATE_ITEM, false, index );
+			this.dispatchEventWith( CollectionEventType.UPDATE_ITEM , false , index );
+		}
+
+		/**
+		 * Call <code>updateAll()</code> to manually inform any component
+		 * rendering the <code>ListCollection</code> that the properties of all,
+		 * or many, of the collection's items have changed, and that any
+		 * rendered views should be updated. The collection will dispatch the
+		 * <code>CollectionEventType.UPDATE_ALL</code> event.
+		 *
+		 * <p>Alternatively, the item can dispatch an event when one of its
+		 * properties has changed, and item renderers can listen for that event
+		 * and update themselves automatically.</p>
+		 *
+		 * @see #updateItemAt()
+		 */
+		public function updateAll() : void
+		{
+			this.dispatchEventWith( CollectionEventType.UPDATE_ALL );
 		}
 
 		/**
@@ -295,7 +347,7 @@ package feathers.data
 		 */
 		public function getItemAt( index : int ) : Object
 		{
-			return this._dataDescriptor.getItemAt( this._data, index );
+			return this._dataDescriptor.getItemAt( this._data , index );
 		}
 
 		/**
@@ -304,17 +356,17 @@ package feathers.data
 		 */
 		public function getItemIndex( item : Object ) : int
 		{
-			return this._dataDescriptor.getItemIndex( this._data, item );
+			return this._dataDescriptor.getItemIndex( this._data , item );
 		}
 
 		/**
 		 * Adds an item to the collection, at the specified index.
 		 */
-		public function addItemAt( item : Object, index : int ) : void
+		public function addItemAt( item : Object , index : int ) : void
 		{
-			this._dataDescriptor.addItemAt( this._data, item, index );
+			this._dataDescriptor.addItemAt( this._data , item , index );
 			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.ADD_ITEM, false, index );
+			this.dispatchEventWith( CollectionEventType.ADD_ITEM , false , index );
 		}
 
 		/**
@@ -323,9 +375,9 @@ package feathers.data
 		 */
 		public function removeItemAt( index : int ) : Object
 		{
-			var item : Object = this._dataDescriptor.removeItemAt( this._data, index );
+			var item : Object = this._dataDescriptor.removeItemAt( this._data , index );
 			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.REMOVE_ITEM, false, index );
+			this.dispatchEventWith( CollectionEventType.REMOVE_ITEM , false , index );
 			return item;
 		}
 
@@ -352,17 +404,17 @@ package feathers.data
 			}
 			this._dataDescriptor.removeAll( this._data );
 			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.RESET, false );
+			this.dispatchEventWith( CollectionEventType.RESET , false );
 		}
 
 		/**
 		 * Replaces the item at the specified index with a new item.
 		 */
-		public function setItemAt( item : Object, index : int ) : void
+		public function setItemAt( item : Object , index : int ) : void
 		{
-			this._dataDescriptor.setItemAt( this._data, item, index );
+			this._dataDescriptor.setItemAt( this._data , item , index );
 			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.REPLACE_ITEM, false, index );
+			this.dispatchEventWith( CollectionEventType.REPLACE_ITEM , false , index );
 		}
 
 		/**
@@ -370,7 +422,7 @@ package feathers.data
 		 */
 		public function addItem( item : Object ) : void
 		{
-			this.addItemAt( item, this.length );
+			this.addItemAt( item , this.length );
 		}
 
 		/**
@@ -378,7 +430,7 @@ package feathers.data
 		 */
 		public function push( item : Object ) : void
 		{
-			this.addItemAt( item, this.length );
+			this.addItemAt( item , this.length );
 		}
 
 		/**
@@ -398,14 +450,14 @@ package feathers.data
 		 * Adds all items from another collection, placing the items at a
 		 * specific index in this collection.
 		 */
-		public function addAllAt( collection : ListCollection, index : int ) : void
+		public function addAllAt( collection : ListCollection , index : int ) : void
 		{
 			var otherCollectionLength : int = collection.length;
 			var currentIndex : int = index;
 			for( var i : int = 0; i < otherCollectionLength; i++ )
 			{
 				var item : Object = collection.getItemAt( i );
-				this.addItemAt( item, currentIndex );
+				this.addItemAt( item , currentIndex );
 				currentIndex++;
 			}
 		}
@@ -423,11 +475,11 @@ package feathers.data
 		 */
 		public function unshift( item : Object ) : void
 		{
-			this.addItemAt( item, 0 );
+			this.addItemAt( item , 0 );
 		}
 
 		/**
-		 * Removed the item from the beginning of the collection and returns it.
+		 * Removed the item from the beginning of the collection and returns it. 
 		 */
 		public function shift() : Object
 		{

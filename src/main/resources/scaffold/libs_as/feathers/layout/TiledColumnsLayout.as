@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -37,7 +37,8 @@ package feathers.layout
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Positions items as tiles (equal width and height) from top to bottom
 	 * in multiple columns. Constrained to the suggested height, the tiled
@@ -51,6 +52,121 @@ package feathers.layout
 		 * @private
 		 */
 		protected var _discoveredItemsCache : Vector.<DisplayObject> = new <DisplayObject>[];
+		/**
+		 * If the total item height is smaller than the height of the bounds,
+		 * the items will be aligned to the top.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * If the total item height is smaller than the height of the bounds,
+		 * the items will be aligned to the middle.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * If the total item height is smaller than the height of the bounds,
+		 * the items will be aligned to the bottom.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * If the total item width is smaller than the width of the bounds, the
+		 * items will be aligned to the left.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		/**
+		 * If the total item width is smaller than the width of the bounds, the
+		 * items will be aligned to the center.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * If the total item width is smaller than the width of the bounds, the
+		 * items will be aligned to the right.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * If an item height is smaller than the height of a tile, the item will
+		 * be aligned to the top edge of the tile.
+		 *
+		 * @see #tileVerticalAlign
+		 */
+		public static const TILE_VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * If an item height is smaller than the height of a tile, the item will
+		 * be aligned to the middle of the tile.
+		 *
+		 * @see #tileVerticalAlign
+		 */
+		public static const TILE_VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * If an item height is smaller than the height of a tile, the item will
+		 * be aligned to the bottom edge of the tile.
+		 *
+		 * @see #tileVerticalAlign
+		 */
+		public static const TILE_VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * The item will be resized to fit the height of the tile.
+		 *
+		 * @see #tileVerticalAlign
+		 */
+		public static const TILE_VERTICAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * If an item width is smaller than the width of a tile, the item will
+		 * be aligned to the left edge of the tile.
+		 *
+		 * @see #tileHorizontalAlign
+		 */
+		public static const TILE_HORIZONTAL_ALIGN_LEFT : String = "left";
+		/**
+		 * If an item width is smaller than the width of a tile, the item will
+		 * be aligned to the center of the tile.
+		 *
+		 * @see #tileHorizontalAlign
+		 */
+		public static const TILE_HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * If an item width is smaller than the width of a tile, the item will
+		 * be aligned to the right edge of the tile.
+		 *
+		 * @see #tileHorizontalAlign
+		 */
+		public static const TILE_HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * The item will be resized to fit the width of the tile.
+		 *
+		 * @see #tileHorizontalAlign
+		 */
+		public static const TILE_HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * The items will be positioned in pages horizontally from left to right.
+		 *
+		 * @see #paging
+		 */
+		public static const PAGING_HORIZONTAL : String = "horizontal";
+		/**
+		 * The items will be positioned in pages vertically from top to bottom.
+		 *
+		 * @see #paging
+		 */
+		public static const PAGING_VERTICAL : String = "vertical";
+		/**
+		 * The items will not be paged. In other words, they will be positioned
+		 * in a continuous set of columns without gaps.
+		 *
+		 * @see #paging
+		 */
+		public static const PAGING_NONE : String = "none";
 
 		/**
 		 * Quickly sets both <code>horizontalGap</code> and <code>verticalGap</code>
@@ -281,10 +397,15 @@ package feathers.layout
 
 		/**
 		 * Requests that the layout uses a specific number of rows in a column,
-		 * if possible. If the view port's explicit or maximum height is not
-		 * large enough to fit the requested number of rows, it will use fewer.
-		 * Set to <code>0</code> to calculate the number of rows automatically
-		 * based on width and height.
+		 * if possible. Set to <code>0</code> to calculate the maximum of
+		 * rows that will fit in the available space.
+		 *
+		 * <p>If the view port's explicit or maximum height is not large enough
+		 * to fit the requested number of rows, it will use fewer. If the
+		 * view port doesn't have an explicit height and the maximum height is
+		 * equal to <code>Number.POSITIVE_INFINITY</code>, the height will be
+		 * calculated automatically to fit the exact number of requested
+		 * rows.</p>
 		 *
 		 * <p>If paging is enabled, this value will be used to calculate the
 		 * number of rows in a page. If paging isn't enabled, this value will
@@ -361,7 +482,7 @@ package feathers.layout
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_TOP;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom")]
 		/**
 		 * If the total column height is less than the bounds, the items in the
 		 * column can be aligned vertically.
@@ -394,7 +515,7 @@ package feathers.layout
 		 */
 		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_CENTER;
 
-		[Inspectable(type="String", enumeration="left,center,right")]
+		[Inspectable(type="String" , enumeration="left,center,right")]
 		/**
 		 * If the total row width is less than the bounds, the items in the row
 		 * can be aligned horizontally.
@@ -427,7 +548,7 @@ package feathers.layout
 		 */
 		protected var _tileVerticalAlign : String = TILE_VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
 		/**
 		 * If an item's height is less than the tile bounds, the position of the
 		 * item can be aligned vertically.
@@ -461,7 +582,7 @@ package feathers.layout
 		 */
 		protected var _tileHorizontalAlign : String = TILE_HORIZONTAL_ALIGN_CENTER;
 
-		[Inspectable(type="String", enumeration="left,center,right,justify")]
+		[Inspectable(type="String" , enumeration="left,center,right,justify")]
 		/**
 		 * If the item's width is less than the tile bounds, the position of the
 		 * item can be aligned horizontally.
@@ -551,46 +672,6 @@ package feathers.layout
 				return;
 			}
 			this._useSquareTiles = value;
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _manageVisibility : Boolean = false;
-
-		/**
-		 * Determines if items will be set invisible if they are outside the
-		 * view port. If <code>true</code>, you will not be able to manually
-		 * change the <code>visible</code> property of any items in the layout.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.0. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.
-		 * Originally, the <code>manageVisibility</code> property could be used
-		 * to improve performance of non-virtual layouts by hiding items that
-		 * were outside the view port. However, other performance improvements
-		 * have made it so that setting <code>manageVisibility</code> can now
-		 * sometimes hurt performance instead of improving it.</p>
-		 *
-		 * @default false
-		 */
-		public function get manageVisibility() : Boolean
-		{
-			return this._manageVisibility;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set manageVisibility( value : Boolean ) : void
-		{
-			if( this._manageVisibility == value )
-			{
-				return;
-			}
-			this._manageVisibility = value;
 			this.dispatchEventWith( Event.CHANGE );
 		}
 
@@ -784,7 +865,7 @@ package feathers.layout
 		 */
 		public function get requiresLayoutOnScroll() : Boolean
 		{
-			return this._manageVisibility || this._useVirtualLayout;
+			return this._useVirtualLayout;
 		}
 
 		/**
@@ -797,20 +878,20 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function layout( items : Vector.<DisplayObject>, viewPortBounds : ViewPortBounds = null, result : LayoutBoundsResult = null ) : LayoutBoundsResult
+		public function layout( items : Vector.<DisplayObject> , viewPortBounds : ViewPortBounds = null , result : LayoutBoundsResult = null ) : LayoutBoundsResult
 		{
 			if( !result )
 			{
 				result = new LayoutBoundsResult();
 			}
-			if( items.length == 0 )
+			if( items.length === 0 )
 			{
 				result.contentX = 0;
 				result.contentY = 0;
-				result.contentWidth = 0;
-				result.contentHeight = 0;
-				result.viewPortWidth = 0;
-				result.viewPortHeight = 0;
+				result.contentWidth = this._paddingLeft + this._paddingRight;
+				result.contentHeight = this._paddingTop + this._paddingBottom;
+				result.viewPortWidth = result.contentWidth;
+				result.viewPortHeight = result.contentHeight;
 				return result;
 			}
 
@@ -837,9 +918,9 @@ package feathers.layout
 			var itemCount : int = items.length;
 			var tileWidth : Number = this._useVirtualLayout ? calculatedTypicalItemWidth : 0;
 			var tileHeight : Number = this._useVirtualLayout ? calculatedTypicalItemHeight : 0;
-			// a virtual layout assumes that all items are the same size as
-			// the typical item, so we don't need to measure every item in
-			// that case
+			//a virtual layout assumes that all items are the same size as
+			//the typical item, so we don't need to measure every item in
+			//that case
 			if( !this._useVirtualLayout )
 			{
 				for( var i : int = 0; i < itemCount; i++ )
@@ -885,91 +966,43 @@ package feathers.layout
 				}
 			}
 
-			var availableWidth : Number = NaN;
-			var availableHeight : Number = NaN;
-
-			var verticalTileCount : int;
-			if( explicitHeight === explicitHeight ) // !isNaN
+			var verticalTileCount : int = this.calculateVerticalTileCount( tileHeight , explicitHeight , maxHeight , this._paddingTop + this._paddingBottom , this._verticalGap , this._requestedRowCount , itemCount );
+			var horizontalTileCount : int = this.calculateHorizontalTileCount( tileWidth , explicitWidth , maxWidth , this._paddingLeft + this._paddingRight , this._horizontalGap , this._requestedColumnCount , itemCount , verticalTileCount );
+			if( explicitHeight === explicitHeight ) //!isNaN
 			{
-				availableHeight = explicitHeight;
-				verticalTileCount = (explicitHeight - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
-			}
-			else if( maxHeight === maxHeight && // !isNaN
-					maxHeight < Number.POSITIVE_INFINITY )
-			{
-				availableHeight = maxHeight;
-				verticalTileCount = (maxHeight - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
+				var availableHeight : Number = explicitHeight;
 			}
 			else
 			{
-				// put everything in one column
-				verticalTileCount = itemCount;
-			}
-			if( verticalTileCount < 1 )
-			{
-				// we must have at least one tile per column
-				verticalTileCount = 1;
-			}
-			else if( this._requestedRowCount > 0 )
-			{
-				if( availableHeight !== availableHeight ) // isNaN
+				availableHeight = this._paddingTop + this._paddingBottom + ((tileHeight + this._verticalGap) * verticalTileCount) - this._verticalGap;
+				if( availableHeight < minHeight )
 				{
-					verticalTileCount = this._requestedRowCount;
-					availableHeight = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap - this._paddingTop - this._paddingBottom;
+					availableHeight = minHeight;
 				}
-				else if( verticalTileCount > this._requestedRowCount )
+				else if( availableHeight > maxHeight )
 				{
-					verticalTileCount = this._requestedRowCount;
+					availableHeight = maxHeight;
 				}
 			}
-			var horizontalTileCount : int;
-			if( explicitWidth === explicitWidth ) // !isNaN
+			if( explicitWidth === explicitWidth ) //!isNaN
 			{
-				availableWidth = explicitWidth;
-				horizontalTileCount = (explicitWidth - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
-			}
-			else if( maxWidth === maxWidth && // !isNaN
-					maxWidth < Number.POSITIVE_INFINITY )
-			{
-				availableWidth = maxWidth;
-				horizontalTileCount = (maxWidth - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
+				var availableWidth : Number = explicitWidth;
 			}
 			else
 			{
-				// using the vertical tile count, calculate how many rows will
-				// be required for the total number of items.
-				horizontalTileCount = Math.ceil( itemCount / verticalTileCount );
-			}
-			if( horizontalTileCount < 1 )
-			{
-				// we must have at least one tile per row
-				horizontalTileCount = 1;
-			}
-			else if( this._requestedColumnCount > 0 )
-			{
-				if( availableWidth !== availableWidth ) // isNaN
+				availableWidth = this._paddingLeft + this._paddingRight + ((tileWidth + this._horizontalGap) * horizontalTileCount) - this._horizontalGap;
+				if( availableWidth < minWidth )
 				{
-					horizontalTileCount = this._requestedColumnCount;
-					availableWidth = horizontalTileCount * (tileWidth + this._horizontalGap) - this._horizontalGap - this._paddingLeft - this._paddingRight;
+					availableWidth = minWidth;
 				}
-				else if( horizontalTileCount > this._requestedColumnCount )
+				else if( availableWidth > maxWidth )
 				{
-					horizontalTileCount = this._requestedColumnCount;
+					availableWidth = maxWidth;
 				}
 			}
 
-			var totalPageWidth : Number = horizontalTileCount * (tileWidth + this._horizontalGap) - this._horizontalGap + this._paddingLeft + this._paddingRight;
-			var totalPageHeight : Number = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap + this._paddingTop + this._paddingBottom;
-			var availablePageWidth : Number = availableWidth;
-			if( availablePageWidth !== availablePageWidth ) // isNaN
-			{
-				availablePageWidth = totalPageWidth;
-			}
-			var availablePageHeight : Number = availableHeight;
-			if( availablePageHeight !== availablePageHeight ) // isNaN
-			{
-				availablePageHeight = totalPageHeight;
-			}
+			var totalPageContentWidth : Number = horizontalTileCount * (tileWidth + this._horizontalGap) - this._horizontalGap + this._paddingLeft + this._paddingRight;
+			var totalPageContentHeight : Number = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap + this._paddingTop + this._paddingBottom;
 
 			var startX : Number = boundsX + this._paddingLeft;
 			var startY : Number = boundsY + this._paddingTop;
@@ -996,33 +1029,29 @@ package feathers.layout
 				}
 				if( itemIndex == nextPageStartIndex )
 				{
-					// we're starting a new page, so handle alignment of the
-					// items on the current page and update the positions
-					if( this._paging != PAGING_NONE )
+					//we're starting a new page, so handle alignment of the
+					//items on the current page and update the positions
+					if( this._paging !== PAGING_NONE )
 					{
 						var discoveredItems : Vector.<DisplayObject> = this._useVirtualLayout ? this._discoveredItemsCache : items;
 						var discoveredItemsFirstIndex : int = this._useVirtualLayout ? 0 : (itemIndex - perPage);
 						var discoveredItemsLastIndex : int = this._useVirtualLayout ? (this._discoveredItemsCache.length - 1) : (itemIndex - 1);
-						this.applyHorizontalAlign( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, totalPageWidth, availablePageWidth );
-						this.applyVerticalAlign( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, totalPageHeight, availablePageHeight );
-						if( this._manageVisibility )
-						{
-							this.applyVisible( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, boundsX + scrollX, scrollX + availableWidth, boundsY + scrollY, scrollY + availableHeight );
-						}
+						this.applyHorizontalAlign( discoveredItems , discoveredItemsFirstIndex , discoveredItemsLastIndex , totalPageContentWidth , availableWidth );
+						this.applyVerticalAlign( discoveredItems , discoveredItemsFirstIndex , discoveredItemsLastIndex , totalPageContentHeight , availableHeight );
 						this._discoveredItemsCache.length = 0;
 						discoveredItemsCachePushIndex = 0;
 					}
 					pageIndex++;
 					nextPageStartIndex += perPage;
 
-					// we can use availableWidth and availableHeight here without
-					// checking if they're NaN because we will never reach a
-					// new page without them already being calculated.
-					if( this._paging == PAGING_HORIZONTAL )
+					//we can use availableWidth and availableHeight here without
+					//checking if they're NaN because we will never reach a
+					//new page without them already being calculated.
+					if( this._paging === PAGING_HORIZONTAL )
 					{
 						positionX = startX + availableWidth * pageIndex;
 					}
-					else if( this._paging == PAGING_VERTICAL )
+					else if( this._paging === PAGING_VERTICAL )
 					{
 						positionX = startX;
 						positionY = pageStartY = startY + availableHeight * pageIndex;
@@ -1048,7 +1077,7 @@ package feathers.layout
 							item.x = item.pivotX + positionX + tileWidth - item.width;
 							break;
 						}
-						default: // center or unknown
+						default: //center or unknown
 						{
 							item.x = item.pivotX + positionX + Math.round( (tileWidth - item.width) / 2 );
 						}
@@ -1071,7 +1100,7 @@ package feathers.layout
 							item.y = item.pivotY + positionY + tileHeight - item.height;
 							break;
 						}
-						default: // middle or unknown
+						default: //middle or unknown
 						{
 							item.y = item.pivotY + positionY + Math.round( (tileHeight - item.height) / 2 );
 						}
@@ -1085,66 +1114,47 @@ package feathers.layout
 				positionY += tileHeight + this._verticalGap;
 				itemIndex++;
 			}
-			// align the last page
-			if( this._paging != PAGING_NONE )
+			//align the last page
+			if( this._paging !== PAGING_NONE )
 			{
 				discoveredItems = this._useVirtualLayout ? this._discoveredItemsCache : items;
 				discoveredItemsFirstIndex = this._useVirtualLayout ? 0 : (nextPageStartIndex - perPage);
 				discoveredItemsLastIndex = this._useVirtualLayout ? (this._discoveredItemsCache.length - 1) : (i - 1);
-				this.applyHorizontalAlign( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, totalPageWidth, availablePageWidth );
-				this.applyVerticalAlign( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, totalPageHeight, availablePageHeight );
-				if( this._manageVisibility )
-				{
-					this.applyVisible( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, boundsX + scrollX, scrollX + availableWidth, boundsY + scrollY, scrollY + availableHeight );
-				}
+				this.applyHorizontalAlign( discoveredItems , discoveredItemsFirstIndex , discoveredItemsLastIndex , totalPageContentWidth , availableWidth );
+				this.applyVerticalAlign( discoveredItems , discoveredItemsFirstIndex , discoveredItemsLastIndex , totalPageContentHeight , availableHeight );
 			}
 
-			var totalWidth : Number = positionX + tileWidth + this._paddingRight;
-			if( availableWidth === availableWidth ) // !isNaN
+			if( this._paging === PAGING_VERTICAL )
 			{
-				if( this._paging == PAGING_VERTICAL )
+				var totalWidth : Number = availableWidth;
+			}
+			else if( this._paging === PAGING_HORIZONTAL )
+			{
+				totalWidth = Math.ceil( itemCount / perPage ) * availableWidth;
+			}
+			else
+			{
+				totalWidth = positionX + tileWidth + this._paddingRight;
+				if( totalWidth < totalPageContentWidth )
 				{
-					totalWidth = availableWidth;
-				}
-				else if( this._paging == PAGING_HORIZONTAL )
-				{
-					totalWidth = Math.ceil( itemCount / perPage ) * availableWidth;
+					totalWidth = totalPageContentWidth;
 				}
 			}
-			var totalHeight : Number = totalPageHeight;
-			if( availableHeight === availableHeight && // !isNaN
-					this._paging == PAGING_VERTICAL )
+			if( this._paging === PAGING_VERTICAL )
 			{
-				totalHeight = Math.ceil( itemCount / perPage ) * availableHeight;
+				var totalHeight : Number = Math.ceil( itemCount / perPage ) * availableHeight;
+			}
+			else
+			{
+				totalHeight = totalPageContentHeight;
 			}
 
-			if( availableWidth !== availableWidth ) // isNaN
-			{
-				availableWidth = totalWidth;
-			}
-			if( availableHeight !== availableHeight ) // isNaN
-			{
-				availableHeight = totalHeight;
-			}
-			if( availableWidth < minWidth )
-			{
-				availableWidth = minWidth;
-			}
-			if( availableHeight < minHeight )
-			{
-				availableHeight = minHeight;
-			}
-
-			if( this._paging == PAGING_NONE )
+			if( this._paging === PAGING_NONE )
 			{
 				discoveredItems = this._useVirtualLayout ? this._discoveredItemsCache : items;
 				discoveredItemsLastIndex = discoveredItems.length - 1;
-				this.applyHorizontalAlign( discoveredItems, 0, discoveredItemsLastIndex, totalWidth, availableWidth );
-				this.applyVerticalAlign( discoveredItems, 0, discoveredItemsLastIndex, totalHeight, availableHeight );
-				if( this._manageVisibility )
-				{
-					this.applyVisible( discoveredItems, discoveredItemsFirstIndex, discoveredItemsLastIndex, boundsX + scrollX, scrollX + availableWidth, boundsY + scrollY, scrollY + availableHeight );
-				}
+				this.applyHorizontalAlign( discoveredItems , 0 , discoveredItemsLastIndex , totalPageContentWidth , availableWidth );
+				this.applyVerticalAlign( discoveredItems , 0 , discoveredItemsLastIndex , totalPageContentHeight , availableHeight );
 			}
 			this._discoveredItemsCache.length = 0;
 
@@ -1165,7 +1175,7 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function measureViewPort( itemCount : int, viewPortBounds : ViewPortBounds = null, result : Point = null ) : Point
+		public function measureViewPort( itemCount : int , viewPortBounds : ViewPortBounds = null , result : Point = null ) : Point
 		{
 			if( !result )
 			{
@@ -1178,8 +1188,8 @@ package feathers.layout
 
 			var explicitWidth : Number = viewPortBounds ? viewPortBounds.explicitWidth : NaN;
 			var explicitHeight : Number = viewPortBounds ? viewPortBounds.explicitHeight : NaN;
-			var needsWidth : Boolean = explicitWidth !== explicitWidth; // isNaN
-			var needsHeight : Boolean = explicitHeight !== explicitHeight; // isNaN
+			var needsWidth : Boolean = explicitWidth !== explicitWidth; //isNaN
+			var needsHeight : Boolean = explicitHeight !== explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				result.x = explicitWidth;
@@ -1218,75 +1228,44 @@ package feathers.layout
 					tileWidth = tileHeight;
 				}
 			}
-			var availableWidth : Number = NaN;
-			var availableHeight : Number = NaN;
 
-			var verticalTileCount : int;
-			if( explicitHeight === explicitHeight ) // !isNaN
+			var verticalTileCount : int = this.calculateVerticalTileCount( tileHeight , explicitHeight , maxHeight , this._paddingTop + this._paddingBottom , this._verticalGap , this._requestedRowCount , itemCount );
+			var horizontalTileCount : int = this.calculateHorizontalTileCount( tileWidth , explicitWidth , maxWidth , this._paddingLeft + this._paddingRight , this._horizontalGap , this._requestedColumnCount , itemCount , verticalTileCount );
+			if( explicitHeight === explicitHeight ) //!isNaN
 			{
-				availableHeight = explicitHeight;
-				verticalTileCount = (explicitHeight - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
-			}
-			else if( maxHeight === maxHeight && // !isNaN
-					maxHeight < Number.POSITIVE_INFINITY )
-			{
-				availableHeight = maxHeight;
-				verticalTileCount = (maxHeight - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
+				var availableHeight : Number = explicitHeight;
 			}
 			else
 			{
-				verticalTileCount = itemCount;
-			}
-			if( verticalTileCount < 1 )
-			{
-				verticalTileCount = 1;
-			}
-			else if( this._requestedRowCount > 0 )
-			{
-				if( availableHeight !== availableHeight ) // isNaN
+				availableHeight = this._paddingTop + this._paddingBottom + ((tileHeight + this._verticalGap) * verticalTileCount) - this._verticalGap;
+				if( availableHeight < minHeight )
 				{
-					verticalTileCount = this._requestedRowCount;
-					availableHeight = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap - this._paddingTop - this._paddingBottom;
+					availableHeight = minHeight;
 				}
-				else if( verticalTileCount > this._requestedRowCount )
+				else if( availableHeight > maxHeight )
 				{
-					verticalTileCount = this._requestedRowCount;
+					availableHeight = maxHeight;
 				}
 			}
-			var horizontalTileCount : int;
-			if( explicitWidth === explicitWidth ) // !isNaN
+			if( explicitWidth === explicitWidth ) //!isNaN
 			{
-				availableWidth = explicitWidth;
-				horizontalTileCount = (explicitWidth - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
-			}
-			else if( maxWidth === maxWidth && // !isNaN
-					maxWidth < Number.POSITIVE_INFINITY )
-			{
-				availableWidth = maxWidth;
-				horizontalTileCount = (maxWidth - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
+				var availableWidth : Number = explicitWidth;
 			}
 			else
 			{
-				horizontalTileCount = Math.ceil( itemCount / verticalTileCount );
-			}
-			if( horizontalTileCount < 1 )
-			{
-				horizontalTileCount = 1;
-			}
-			else if( this._requestedColumnCount > 0 )
-			{
-				if( availableWidth !== availableWidth ) // isNaN
+				availableWidth = this._paddingLeft + this._paddingRight + ((tileWidth + this._horizontalGap) * horizontalTileCount) - this._horizontalGap;
+				if( availableWidth < minWidth )
 				{
-					horizontalTileCount = this._requestedColumnCount;
-					availableWidth = horizontalTileCount * (tileWidth + this._horizontalGap) - this._horizontalGap - this._paddingLeft - this._paddingRight;
+					availableWidth = minWidth;
 				}
-				else if( horizontalTileCount > this._requestedColumnCount )
+				else if( availableWidth > maxWidth )
 				{
-					horizontalTileCount = this._requestedColumnCount;
+					availableWidth = maxWidth;
 				}
 			}
 
-			var totalPageHeight : Number = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap + this._paddingTop + this._paddingBottom;
+			var totalPageContentWidth : Number = horizontalTileCount * (tileWidth + this._horizontalGap) - this._horizontalGap + this._paddingLeft + this._paddingRight;
+			var totalPageContentHeight : Number = verticalTileCount * (tileHeight + this._verticalGap) - this._verticalGap + this._paddingTop + this._paddingBottom;
 
 			var startX : Number = boundsX + this._paddingLeft;
 
@@ -1305,37 +1284,43 @@ package feathers.layout
 					pageIndex++;
 					nextPageStartIndex += perPage;
 
-					// we can use availableWidth and availableHeight here without
-					// checking if they're NaN because we will never reach a
-					// new page without them already being calculated.
-					if( this._paging == PAGING_HORIZONTAL )
+					//we can use availableWidth and availableHeight here without
+					//checking if they're NaN because we will never reach a
+					//new page without them already being calculated.
+					if( this._paging === PAGING_HORIZONTAL )
 					{
 						positionX = startX + availableWidth * pageIndex;
 					}
-					else if( this._paging == PAGING_VERTICAL )
+					else if( this._paging === PAGING_VERTICAL )
 					{
 						positionX = startX;
 					}
 				}
 			}
 
-			var totalWidth : Number = positionX + tileWidth + this._paddingRight;
-			if( availableWidth === availableWidth ) // !isNaN
+			if( this._paging === PAGING_VERTICAL )
 			{
-				if( this._paging == PAGING_VERTICAL )
+				var totalWidth : Number = availableWidth;
+			}
+			else if( this._paging === PAGING_HORIZONTAL )
+			{
+				totalWidth = Math.ceil( itemCount / perPage ) * availableWidth;
+			}
+			else //none
+			{
+				totalWidth = positionX + tileWidth + this._paddingRight;
+				if( totalWidth < totalPageContentWidth )
 				{
-					totalWidth = availableWidth;
-				}
-				else if( this._paging == PAGING_HORIZONTAL )
-				{
-					totalWidth = Math.ceil( itemCount / perPage ) * availableWidth;
+					totalWidth = totalPageContentWidth;
 				}
 			}
-			var totalHeight : Number = totalPageHeight;
-			if( availableHeight === availableHeight && // !isNaN
-					this._paging == PAGING_VERTICAL )
+			if( this._paging === PAGING_VERTICAL )
 			{
-				totalHeight = Math.ceil( itemCount / perPage ) * availableHeight;
+				var totalHeight : Number = Math.ceil( itemCount / perPage ) * availableHeight;
+			}
+			else //horizontal or none
+			{
+				totalHeight = totalPageContentHeight;
 			}
 
 			if( needsWidth )
@@ -1378,7 +1363,7 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function getVisibleIndicesAtScrollPosition( scrollX : Number, scrollY : Number, width : Number, height : Number, itemCount : int, result : Vector.<int> = null ) : Vector.<int>
+		public function getVisibleIndicesAtScrollPosition( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> = null ) : Vector.<int>
 		{
 			if( result )
 			{
@@ -1393,17 +1378,17 @@ package feathers.layout
 				throw new IllegalOperationError( "getVisibleIndicesAtScrollPosition() may be called only if useVirtualLayout is true." )
 			}
 
-			if( this._paging == PAGING_HORIZONTAL )
+			if( this._paging === PAGING_HORIZONTAL )
 			{
-				this.getVisibleIndicesAtScrollPositionWithHorizontalPaging( scrollX, scrollY, width, height, itemCount, result );
+				this.getVisibleIndicesAtScrollPositionWithHorizontalPaging( scrollX , scrollY , width , height , itemCount , result );
 			}
-			else if( this._paging == PAGING_VERTICAL )
+			else if( this._paging === PAGING_VERTICAL )
 			{
-				this.getVisibleIndicesAtScrollPositionWithVerticalPaging( scrollX, scrollY, width, height, itemCount, result );
+				this.getVisibleIndicesAtScrollPositionWithVerticalPaging( scrollX , scrollY , width , height , itemCount , result );
 			}
-			else
+			else //none
 			{
-				this.getVisibleIndicesAtScrollPositionWithoutPaging( scrollX, scrollY, width, height, itemCount, result );
+				this.getVisibleIndicesAtScrollPositionWithoutPaging( scrollX , scrollY , width , height , itemCount , result );
 			}
 
 			return result;
@@ -1412,58 +1397,40 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function getNearestScrollPositionForIndex( index : int, scrollX : Number, scrollY : Number, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point
+		public function getNearestScrollPositionForIndex( index : int , scrollX : Number , scrollY : Number , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
 		{
-			return this.calculateScrollPositionForIndex( index, items, x, y, width, height, result, true, scrollX, scrollY );
+			return this.calculateScrollPositionForIndex( index , items , x , y , width , height , result , true , scrollX , scrollY );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function getScrollPositionForIndex( index : int, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point
+		public function getScrollPositionForIndex( index : int , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
 		{
-			return this.calculateScrollPositionForIndex( index, items, x, y, width, height, result, false );
+			return this.calculateScrollPositionForIndex( index , items , x , y , width , height , result , false );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function applyVisible( items : Vector.<DisplayObject>, startIndex : int, endIndex : int, startX : Number, endX : Number, startY : Number, endY : Number ) : void
-		{
-			for( var i : int = startIndex; i <= endIndex; i++ )
-			{
-				var item : DisplayObject = items[ i ];
-				if( item is ILayoutDisplayObject && !ILayoutDisplayObject( item ).includeInLayout )
-				{
-					continue;
-				}
-				var itemX : Number = item.x - item.pivotX;
-				var itemY : Number = item.y - item.pivotY;
-				item.visible = ((itemX + item.width) >= startX) && (itemX < endX) && ((itemY + item.height) >= startY) && (itemY < endY);
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected function applyHorizontalAlign( items : Vector.<DisplayObject>, startIndex : int, endIndex : int, totalItemWidth : Number, availableWidth : Number ) : void
+		protected function applyHorizontalAlign( items : Vector.<DisplayObject> , startIndex : int , endIndex : int , totalItemWidth : Number , availableWidth : Number ) : void
 		{
 			if( totalItemWidth >= availableWidth )
 			{
 				return;
 			}
 			var horizontalAlignOffsetX : Number = 0;
-			if( this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT )
+			if( this._horizontalAlign === HORIZONTAL_ALIGN_RIGHT )
 			{
 				horizontalAlignOffsetX = availableWidth - totalItemWidth;
 			}
-			else if( this._horizontalAlign != HORIZONTAL_ALIGN_LEFT )
+			else if( this._horizontalAlign !== HORIZONTAL_ALIGN_LEFT )
 			{
-				// we're going to default to center if we encounter an
-				// unknown value
+				//we're going to default to center if we encounter an
+				//unknown value
 				horizontalAlignOffsetX = Math.round( (availableWidth - totalItemWidth) / 2 );
 			}
-			if( horizontalAlignOffsetX != 0 )
+			if( horizontalAlignOffsetX !== 0 )
 			{
 				for( var i : int = startIndex; i <= endIndex; i++ )
 				{
@@ -1480,22 +1447,22 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function applyVerticalAlign( items : Vector.<DisplayObject>, startIndex : int, endIndex : int, totalItemHeight : Number, availableHeight : Number ) : void
+		protected function applyVerticalAlign( items : Vector.<DisplayObject> , startIndex : int , endIndex : int , totalItemHeight : Number , availableHeight : Number ) : void
 		{
 			if( totalItemHeight >= availableHeight )
 			{
 				return;
 			}
 			var verticalAlignOffsetY : Number = 0;
-			if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+			if( this._verticalAlign === VERTICAL_ALIGN_BOTTOM )
 			{
 				verticalAlignOffsetY = availableHeight - totalItemHeight;
 			}
-			else if( this._verticalAlign == VERTICAL_ALIGN_MIDDLE )
+			else if( this._verticalAlign === VERTICAL_ALIGN_MIDDLE )
 			{
 				verticalAlignOffsetY = Math.round( (availableHeight - totalItemHeight) / 2 );
 			}
-			if( verticalAlignOffsetY != 0 )
+			if( verticalAlignOffsetY !== 0 )
 			{
 				for( var i : int = startIndex; i <= endIndex; i++ )
 				{
@@ -1512,7 +1479,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function getVisibleIndicesAtScrollPositionWithHorizontalPaging( scrollX : Number, scrollY : Number, width : Number, height : Number, itemCount : int, result : Vector.<int> ) : void
+		protected function getVisibleIndicesAtScrollPositionWithHorizontalPaging( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> ) : void
 		{
 			this.prepareTypicalItem();
 			var calculatedTypicalItemWidth : Number = this._typicalItem ? this._typicalItem.width : 0;
@@ -1539,20 +1506,9 @@ package feathers.layout
 					tileWidth = tileHeight;
 				}
 			}
-			var horizontalTileCount : int = (width - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
-			if( horizontalTileCount < 1 )
-			{
-				horizontalTileCount = 1;
-			}
-			var verticalTileCount : int = (height - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
-			if( verticalTileCount < 1 )
-			{
-				verticalTileCount = 1;
-			}
-			else if( this._requestedRowCount > 0 && verticalTileCount > this._requestedRowCount )
-			{
-				verticalTileCount = this._requestedRowCount;
-			}
+
+			var verticalTileCount : int = this.calculateVerticalTileCount( tileHeight , height , height , this._paddingTop + this._paddingBottom , this._verticalGap , this._requestedRowCount , itemCount );
+			var horizontalTileCount : int = this.calculateHorizontalTileCount( tileWidth , width , width , this._paddingLeft + this._paddingRight , this._horizontalGap , this._requestedColumnCount , itemCount , verticalTileCount );
 			var perPage : int = horizontalTileCount * verticalTileCount;
 			var minimumItemCount : int = perPage + 2 * verticalTileCount;
 			if( minimumItemCount > itemCount )
@@ -1567,16 +1523,16 @@ package feathers.layout
 			var rightSideOffset : Number = 0;
 			if( totalRowWidth < width )
 			{
-				if( this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT )
+				if( this._horizontalAlign === HORIZONTAL_ALIGN_RIGHT )
 				{
 					leftSideOffset = width - this._paddingLeft - this._paddingRight - totalRowWidth;
 					rightSideOffset = 0;
 				}
-				else if( this._horizontalAlign == HORIZONTAL_ALIGN_CENTER )
+				else if( this._horizontalAlign === HORIZONTAL_ALIGN_CENTER )
 				{
 					leftSideOffset = rightSideOffset = Math.round( (width - this._paddingLeft - this._paddingRight - totalRowWidth) / 2 );
 				}
-				else if( this._horizontalAlign == HORIZONTAL_ALIGN_LEFT )
+				else //left
 				{
 					leftSideOffset = 0;
 					rightSideOffset = width - this._paddingLeft - this._paddingRight - totalRowWidth;
@@ -1628,7 +1584,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function getVisibleIndicesAtScrollPositionWithVerticalPaging( scrollX : Number, scrollY : Number, width : Number, height : Number, itemCount : int, result : Vector.<int> ) : void
+		protected function getVisibleIndicesAtScrollPositionWithVerticalPaging( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> ) : void
 		{
 			this.prepareTypicalItem();
 			var calculatedTypicalItemWidth : Number = this._typicalItem ? this._typicalItem.width : 0;
@@ -1655,20 +1611,8 @@ package feathers.layout
 					tileWidth = tileHeight;
 				}
 			}
-			var horizontalTileCount : int = (width - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
-			if( horizontalTileCount < 1 )
-			{
-				horizontalTileCount = 1;
-			}
-			var verticalTileCount : int = (height - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
-			if( verticalTileCount < 1 )
-			{
-				verticalTileCount = 1;
-			}
-			else if( this._requestedRowCount > 0 && verticalTileCount > this._requestedRowCount )
-			{
-				verticalTileCount = this._requestedRowCount;
-			}
+			var verticalTileCount : int = this.calculateVerticalTileCount( tileHeight , height , height , this._paddingTop + this._paddingBottom , this._verticalGap , this._requestedRowCount , itemCount );
+			var horizontalTileCount : int = this.calculateHorizontalTileCount( tileWidth , width , width , this._paddingLeft + this._paddingRight , this._horizontalGap , this._requestedColumnCount , itemCount , verticalTileCount );
 			var perPage : int = horizontalTileCount * verticalTileCount;
 			var minimumItemCount : int = perPage + 2 * verticalTileCount;
 			if( minimumItemCount > itemCount )
@@ -1683,16 +1627,16 @@ package feathers.layout
 			var bottomSideOffset : Number = 0;
 			if( totalColumnHeight < height )
 			{
-				if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+				if( this._verticalAlign === VERTICAL_ALIGN_BOTTOM )
 				{
 					topSideOffset = height - this._paddingTop - this._paddingBottom - totalColumnHeight;
 					bottomSideOffset = 0;
 				}
-				else if( this._horizontalAlign == VERTICAL_ALIGN_MIDDLE )
+				else if( this._horizontalAlign === VERTICAL_ALIGN_MIDDLE )
 				{
 					topSideOffset = bottomSideOffset = Math.round( (height - this._paddingTop - this._paddingBottom - totalColumnHeight) / 2 );
 				}
-				else if( this._horizontalAlign == VERTICAL_ALIGN_TOP )
+				else //top
 				{
 					topSideOffset = 0;
 					bottomSideOffset = height - this._paddingTop - this._paddingBottom - totalColumnHeight;
@@ -1729,7 +1673,7 @@ package feathers.layout
 
 			if( minimum + minimumItemCount >= itemCount )
 			{
-				// an optimized path when we're on or near the last page
+				//an optimized path when we're on or near the last page
 				minimum = itemCount - minimumItemCount;
 				var resultPushIndex : int = result.length;
 				for( var i : int = minimum; i < itemCount; i++ )
@@ -1771,7 +1715,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function getVisibleIndicesAtScrollPositionWithoutPaging( scrollX : Number, scrollY : Number, width : Number, height : Number, itemCount : int, result : Vector.<int> ) : void
+		protected function getVisibleIndicesAtScrollPositionWithoutPaging( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> ) : void
 		{
 			this.prepareTypicalItem();
 			var calculatedTypicalItemWidth : Number = this._typicalItem ? this._typicalItem.width : 0;
@@ -1798,15 +1742,7 @@ package feathers.layout
 					tileWidth = tileHeight;
 				}
 			}
-			var verticalTileCount : int = (height - this._paddingTop - this._paddingBottom + this._verticalGap) / (tileHeight + this._verticalGap);
-			if( verticalTileCount < 1 )
-			{
-				verticalTileCount = 1;
-			}
-			else if( this._requestedRowCount > 0 && verticalTileCount > this._requestedRowCount )
-			{
-				verticalTileCount = this._requestedRowCount;
-			}
+			var verticalTileCount : int = this.calculateVerticalTileCount( tileHeight , height , height , this._paddingTop + this._paddingBottom , this._verticalGap , this._requestedRowCount , itemCount );
 			var horizontalTileCount : int = Math.ceil( (width + this._horizontalGap) / (tileWidth + this._horizontalGap) ) + 1;
 			var minimumItemCount : int = verticalTileCount * horizontalTileCount;
 			if( minimumItemCount > itemCount )
@@ -1817,11 +1753,11 @@ package feathers.layout
 			var totalColumnWidth : Number = Math.ceil( itemCount / verticalTileCount ) * (tileWidth + this._horizontalGap) - this._horizontalGap;
 			if( totalColumnWidth < width )
 			{
-				if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+				if( this._verticalAlign === VERTICAL_ALIGN_BOTTOM )
 				{
 					columnIndexOffset = Math.ceil( (width - totalColumnWidth) / (tileWidth + this._horizontalGap) );
 				}
-				else if( this._verticalAlign == VERTICAL_ALIGN_MIDDLE )
+				else if( this._verticalAlign === VERTICAL_ALIGN_MIDDLE )
 				{
 					columnIndexOffset = Math.ceil( (width - totalColumnWidth) / (tileWidth + this._horizontalGap) / 2 );
 				}
@@ -1889,7 +1825,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function calculateScrollPositionForIndex( index : int, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null, nearest : Boolean = false, scrollX : Number = 0, scrollY : Number = 0 ) : Point
+		protected function calculateScrollPositionForIndex( index : int , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null , nearest : Boolean = false , scrollX : Number = 0 , scrollY : Number = 0 ) : Point
 		{
 			if( !result )
 			{
@@ -1905,9 +1841,9 @@ package feathers.layout
 			var itemCount : int = items.length;
 			var tileWidth : Number = this._useVirtualLayout ? calculatedTypicalItemWidth : 0;
 			var tileHeight : Number = this._useVirtualLayout ? calculatedTypicalItemHeight : 0;
-			// a virtual layout assumes that all items are the same size as
-			// the typical item, so we don't need to measure every item in
-			// that case
+			//a virtual layout assumes that all items are the same size as
+			//the typical item, so we don't need to measure every item in
+			//that case
 			if( !this._useVirtualLayout )
 			{
 				for( var i : int = 0; i < itemCount; i++ )
@@ -1961,7 +1897,7 @@ package feathers.layout
 			{
 				verticalTileCount = this._requestedRowCount;
 			}
-			if( this._paging != PAGING_NONE )
+			if( this._paging !== PAGING_NONE )
 			{
 				var horizontalTileCount : int = (width - this._paddingLeft - this._paddingRight + this._horizontalGap) / (tileWidth + this._horizontalGap);
 				if( horizontalTileCount < 1 )
@@ -1970,7 +1906,7 @@ package feathers.layout
 				}
 				var perPage : Number = horizontalTileCount * verticalTileCount;
 				var pageIndex : int = index / perPage;
-				if( this._paging == PAGING_HORIZONTAL )
+				if( this._paging === PAGING_HORIZONTAL )
 				{
 					result.x = pageIndex * width;
 					result.y = 0;
@@ -1989,8 +1925,8 @@ package feathers.layout
 					var rightPosition : Number = resultX - (width - tileWidth);
 					if( scrollX >= rightPosition && scrollX <= resultX )
 					{
-						// keep the current scroll position because the item is already
-						// fully visible
+						//keep the current scroll position because the item is already
+						//fully visible
 						resultX = scrollX;
 					}
 					else
@@ -2014,119 +1950,126 @@ package feathers.layout
 		}
 
 		/**
-		 * If the total item height is smaller than the height of the bounds,
-		 * the items will be aligned to the top.
-		 *
-		 * @see #verticalAlign
+		 * @private
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		protected function calculateHorizontalTileCount( tileWidth : Number , explicitWidth : Number , maxWidth : Number , paddingLeftAndRight : Number , horizontalGap : Number , requestedColumnCount : int , totalItemCount : int , verticalTileCount : int ) : int
+		{
+			//using the horizontal tile count, calculate how many rows would be
+			//required for the total number of items if there were no restrictions.
+			var defaultHorizontalTileCount : int = Math.ceil( totalItemCount / verticalTileCount );
+
+			var tileCount : int;
+			if( explicitWidth === explicitWidth ) //!isNaN
+			{
+				//in this case, the exact width is known
+				tileCount = (explicitWidth - paddingLeftAndRight + horizontalGap) / (tileWidth + horizontalGap);
+				if( requestedColumnCount > 0 && tileCount > requestedColumnCount )
+				{
+					return requestedColumnCount;
+				}
+				if( tileCount > defaultHorizontalTileCount )
+				{
+					tileCount = defaultHorizontalTileCount;
+				}
+				if( tileCount < 1 )
+				{
+					//we must have at least one tile per row
+					tileCount = 1;
+				}
+				return tileCount;
+			}
+
+			//in this case, the width is not known, but it may have a maximum
+			if( requestedColumnCount > 0 )
+			{
+				tileCount = requestedColumnCount;
+			}
+			else
+			{
+				tileCount = defaultHorizontalTileCount;
+			}
+
+			var maxTileCount : int = int.MAX_VALUE;
+			if( maxWidth === maxWidth && //!isNaN
+					maxWidth < Number.POSITIVE_INFINITY )
+			{
+				maxTileCount = (maxWidth - paddingLeftAndRight + horizontalGap) / (tileWidth + horizontalGap);
+				if( maxTileCount < 1 )
+				{
+					//we must have at least one tile per row
+					maxTileCount = 1;
+				}
+			}
+			if( tileCount > maxTileCount )
+			{
+				tileCount = maxTileCount;
+			}
+			if( tileCount < 1 )
+			{
+				//we must have at least one tile per row
+				tileCount = 1;
+			}
+			return tileCount;
+		}
+
 		/**
-		 * If the total item height is smaller than the height of the bounds,
-		 * the items will be aligned to the middle.
-		 *
-		 * @see #verticalAlign
+		 * @private
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * If the total item height is smaller than the height of the bounds,
-		 * the items will be aligned to the bottom.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * If the total item width is smaller than the width of the bounds, the
-		 * items will be aligned to the left.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * If the total item width is smaller than the width of the bounds, the
-		 * items will be aligned to the center.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * If the total item width is smaller than the width of the bounds, the
-		 * items will be aligned to the right.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * If an item height is smaller than the height of a tile, the item will
-		 * be aligned to the top edge of the tile.
-		 *
-		 * @see #tileVerticalAlign
-		 */
-		public static const TILE_VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * If an item height is smaller than the height of a tile, the item will
-		 * be aligned to the middle of the tile.
-		 *
-		 * @see #tileVerticalAlign
-		 */
-		public static const TILE_VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * If an item height is smaller than the height of a tile, the item will
-		 * be aligned to the bottom edge of the tile.
-		 *
-		 * @see #tileVerticalAlign
-		 */
-		public static const TILE_VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * The item will be resized to fit the height of the tile.
-		 *
-		 * @see #tileVerticalAlign
-		 */
-		public static const TILE_VERTICAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * If an item width is smaller than the width of a tile, the item will
-		 * be aligned to the left edge of the tile.
-		 *
-		 * @see #tileHorizontalAlign
-		 */
-		public static const TILE_HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * If an item width is smaller than the width of a tile, the item will
-		 * be aligned to the center of the tile.
-		 *
-		 * @see #tileHorizontalAlign
-		 */
-		public static const TILE_HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * If an item width is smaller than the width of a tile, the item will
-		 * be aligned to the right edge of the tile.
-		 *
-		 * @see #tileHorizontalAlign
-		 */
-		public static const TILE_HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * The item will be resized to fit the width of the tile.
-		 *
-		 * @see #tileHorizontalAlign
-		 */
-		public static const TILE_HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * The items will be positioned in pages horizontally from left to right.
-		 *
-		 * @see #paging
-		 */
-		public static const PAGING_HORIZONTAL : String = "horizontal";
-		/**
-		 * The items will be positioned in pages vertically from top to bottom.
-		 *
-		 * @see #paging
-		 */
-		public static const PAGING_VERTICAL : String = "vertical";
-		/**
-		 * The items will not be paged. In other words, they will be positioned
-		 * in a continuous set of columns without gaps.
-		 *
-		 * @see #paging
-		 */
-		public static const PAGING_NONE : String = "none";
+		protected function calculateVerticalTileCount( tileHeight : Number , explicitHeight : Number , maxHeight : Number , paddingTopAndBottom : Number , verticalGap : Number , requestedRowCount : int , totalItemCount : int ) : int
+		{
+
+			var verticalTileCount : int;
+			if( explicitHeight === explicitHeight ) //!isNaN
+			{
+				//in this case, the exact height is known
+				verticalTileCount = (explicitHeight - paddingTopAndBottom + verticalGap) / (tileHeight + verticalGap);
+				if( requestedRowCount > 0 && verticalTileCount > requestedRowCount )
+				{
+					return requestedRowCount;
+				}
+				if( verticalTileCount > totalItemCount )
+				{
+					verticalTileCount = totalItemCount;
+				}
+				if( verticalTileCount < 1 )
+				{
+					//we must have at least one tile per row
+					verticalTileCount = 1;
+				}
+				return verticalTileCount;
+			}
+
+			//in this case, the height is not known, but it may have a maximum
+			if( requestedRowCount > 0 )
+			{
+				verticalTileCount = requestedRowCount;
+			}
+			else
+			{
+				verticalTileCount = totalItemCount;
+			}
+
+			var maxVerticalTileCount : int = int.MAX_VALUE;
+			if( maxHeight === maxHeight && //!isNaN
+					maxHeight < Number.POSITIVE_INFINITY )
+			{
+				maxVerticalTileCount = (maxHeight - paddingTopAndBottom + verticalGap) / (tileHeight + verticalGap);
+				if( maxVerticalTileCount < 1 )
+				{
+					//we must have at least one tile per row
+					maxVerticalTileCount = 1;
+				}
+			}
+			if( verticalTileCount > maxVerticalTileCount )
+			{
+				verticalTileCount = maxVerticalTileCount;
+			}
+			if( verticalTileCount < 1 )
+			{
+				//we must have at least one tile per row
+				verticalTileCount = 1;
+			}
+			return verticalTileCount;
+		}
 	}
 }

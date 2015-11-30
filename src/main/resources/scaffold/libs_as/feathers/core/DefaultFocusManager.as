@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,8 +8,8 @@
 package feathers.core
 {
 	import feathers.controls.supportClasses.LayoutViewPort;
-	import feathers.core.IFocusDisplayObject;
 	import feathers.events.FeathersEventType;
+	import feathers.utils.display.stageToStarling;
 
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
@@ -26,9 +26,10 @@ package feathers.core
 	import starling.events.TouchPhase;
 
 	/**
-	 * The default <code>IPopUpManager</code> implementation.
+	 * The default <code>IFocusManager</code> implementation.
 	 *
-	 * @see FocusManager
+	 * @see ../../../help/focus.html Keyboard focus management in Feathers
+	 * @see feathers.core.FocusManager
 	 */
 	public class DefaultFocusManager implements IFocusManager
 	{
@@ -99,11 +100,19 @@ package feathers.core
 				{
 					this._nativeFocusTarget.referenceCount++;
 				}
-				this._root.addEventListener( Event.ADDED, topLevelContainer_addedHandler );
-				this._root.addEventListener( Event.REMOVED, topLevelContainer_removedHandler );
-				this._root.addEventListener( TouchEvent.TOUCH, topLevelContainer_touchHandler );
-				this._starling.nativeStage.addEventListener( FocusEvent.KEY_FOCUS_CHANGE, stage_keyFocusChangeHandler, false, 0, true );
-				this._starling.nativeStage.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, stage_mouseFocusChangeHandler, false, 0, true );
+				//since we weren't listening for objects being added while the
+				//focus manager was disabled, we need to do it now in case there
+				//are new ones.
+				this.setFocusManager( this._root );
+				this._root.addEventListener( Event.ADDED , topLevelContainer_addedHandler );
+				this._root.addEventListener( Event.REMOVED , topLevelContainer_removedHandler );
+				this._root.addEventListener( TouchEvent.TOUCH , topLevelContainer_touchHandler );
+				this._starling.nativeStage.addEventListener( FocusEvent.KEY_FOCUS_CHANGE , stage_keyFocusChangeHandler , false , 0 , true );
+				this._starling.nativeStage.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE , stage_mouseFocusChangeHandler , false , 0 , true );
+				if( this._savedFocus && !this._savedFocus.stage )
+				{
+					this._savedFocus = null;
+				}
 				this.focus = this._savedFocus;
 				this._savedFocus = null;
 			}
@@ -116,11 +125,11 @@ package feathers.core
 					delete NATIVE_STAGE_TO_FOCUS_TARGET[ this._starling.nativeStage ];
 				}
 				this._nativeFocusTarget = null;
-				this._root.removeEventListener( Event.ADDED, topLevelContainer_addedHandler );
-				this._root.removeEventListener( Event.REMOVED, topLevelContainer_removedHandler );
-				this._root.removeEventListener( TouchEvent.TOUCH, topLevelContainer_touchHandler );
-				this._starling.nativeStage.removeEventListener( FocusEvent.KEY_FOCUS_CHANGE, stage_keyFocusChangeHandler );
-				this._starling.nativeStage.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE, stage_mouseFocusChangeHandler );
+				this._root.removeEventListener( Event.ADDED , topLevelContainer_addedHandler );
+				this._root.removeEventListener( Event.REMOVED , topLevelContainer_removedHandler );
+				this._root.removeEventListener( TouchEvent.TOUCH , topLevelContainer_touchHandler );
+				this._starling.nativeStage.removeEventListener( FocusEvent.KEY_FOCUS_CHANGE , stage_keyFocusChangeHandler );
+				this._starling.nativeStage.addEventListener( FocusEvent.MOUSE_FOCUS_CHANGE , stage_mouseFocusChangeHandler );
 				var focusToSave : IFocusDisplayObject = this.focus;
 				this.focus = null;
 				this._savedFocus = focusToSave;
@@ -151,32 +160,56 @@ package feathers.core
 			{
 				return;
 			}
+			var shouldHaveFocus : Boolean = false;
 			var oldFocus : IFeathersDisplayObject = this._focus;
 			if( this._isEnabled && value && value.isFocusEnabled && value.focusManager == this )
 			{
 				this._focus = value;
+				shouldHaveFocus = true;
 			}
 			else
 			{
 				this._focus = null;
 			}
+			var nativeStage : Stage = this._starling.nativeStage;
+			if( nativeStage && nativeStage.focus )
+			{
+				//this listener restores focus, if it is lost in a way that is
+				//out of our control. since we may be manually removing focus in
+				//a listener for FeathersEventType.FOCUS_OUT, we don't want it
+				//to restore focus.
+				nativeStage.focus.removeEventListener( FocusEvent.FOCUS_OUT , nativeFocus_focusOutHandler );
+			}
 			if( oldFocus )
 			{
-				// this event should be dispatched after setting the new value of
-				// _focus because we want to be able to access it in the event
-				// listener
+				//this event should be dispatched after setting the new value of
+				//_focus because we want to be able to access the value of the
+				//focus property in the event listener.
 				oldFocus.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+			}
+			if( shouldHaveFocus && this._focus !== value )
+			{
+				//this shouldn't happen, but if it does, let's not break the
+				//current state even more by referencing an old focused object.
+				return;
 			}
 			if( this._isEnabled )
 			{
-				var nativeStage : Stage = this._starling.nativeStage;
 				if( this._focus )
 				{
+					if( this._focus is INativeFocusOwner )
+					{
+						nativeStage.focus = INativeFocusOwner( this._focus ).nativeFocus;
+					}
+					//an INativeFocusOwner may return null for its
+					//nativeFocus property, so we still need to double-check
+					//that the native stage has something in focus. that's
+					//why there isn't an else here
 					if( !nativeStage.focus )
 					{
 						nativeStage.focus = this._nativeFocusTarget;
 					}
-					nativeStage.focus.addEventListener( FocusEvent.FOCUS_OUT, nativeFocus_focusOutHandler, false, 0, true );
+					nativeStage.focus.addEventListener( FocusEvent.FOCUS_OUT , nativeFocus_focusOutHandler , false , 0 , true );
 					this._focus.dispatchEventWith( FeathersEventType.FOCUS_IN );
 				}
 				else
@@ -200,15 +233,7 @@ package feathers.core
 				throw new ArgumentError( "Focus manager root must be added to the stage." );
 			}
 			this._root = root;
-			for each( var starling : Starling in Starling.all )
-			{
-				if( starling.stage == root.stage )
-				{
-					this._starling = starling;
-					break;
-				}
-			}
-			this.setFocusManager( this._root );
+			this._starling = stageToStarling( root.stage );
 		}
 
 		/**
@@ -269,7 +294,7 @@ package feathers.core
 				{
 					if( this._focus == targetWithFocus )
 					{
-						// change to focus owner, which falls back to null
+						//change to focus owner, which falls back to null
 						this.focus = targetWithFocus.focusOwner;
 					}
 					targetWithFocus.focusManager = null;
@@ -314,7 +339,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		protected function findPreviousContainerFocus( container : DisplayObjectContainer, beforeChild : DisplayObject, fallbackToGlobal : Boolean ) : IFocusDisplayObject
+		protected function findPreviousContainerFocus( container : DisplayObjectContainer , beforeChild : DisplayObject , fallbackToGlobal : Boolean ) : IFocusDisplayObject
 		{
 			if( container is LayoutViewPort )
 			{
@@ -403,7 +428,7 @@ package feathers.core
 
 			if( fallbackToGlobal && container != this._root )
 			{
-				// try the container itself before moving backwards
+				//try the container itself before moving backwards
 				if( container is IFocusDisplayObject )
 				{
 					var focusContainer : IFocusDisplayObject = IFocusDisplayObject( container );
@@ -412,7 +437,7 @@ package feathers.core
 						return focusContainer;
 					}
 				}
-				return this.findPreviousContainerFocus( container.parent, container, true );
+				return this.findPreviousContainerFocus( container.parent , container , true );
 			}
 			return null;
 		}
@@ -420,7 +445,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		protected function findNextContainerFocus( container : DisplayObjectContainer, afterChild : DisplayObject, fallbackToGlobal : Boolean ) : IFocusDisplayObject
+		protected function findNextContainerFocus( container : DisplayObjectContainer , afterChild : DisplayObject , fallbackToGlobal : Boolean ) : IFocusDisplayObject
 		{
 			if( container is LayoutViewPort )
 			{
@@ -512,7 +537,7 @@ package feathers.core
 
 			if( fallbackToGlobal && container != this._root )
 			{
-				return this.findNextContainerFocus( container.parent, container, true );
+				return this.findNextContainerFocus( container.parent , container , true );
 			}
 			return null;
 		}
@@ -525,7 +550,7 @@ package feathers.core
 			if( (child is DisplayObjectContainer && !(child is IFocusDisplayObject)) || (child is IFocusContainer && IFocusContainer( child ).isChildFocusEnabled) )
 			{
 				var childContainer : DisplayObjectContainer = DisplayObjectContainer( child );
-				var foundChild : IFocusDisplayObject = this.findPreviousContainerFocus( childContainer, null, false );
+				var foundChild : IFocusDisplayObject = this.findPreviousContainerFocus( childContainer , null , false );
 				if( foundChild )
 				{
 					return foundChild;
@@ -558,7 +583,7 @@ package feathers.core
 			if( (child is DisplayObjectContainer && !(child is IFocusDisplayObject)) || (child is IFocusContainer && IFocusContainer( child ).isChildFocusEnabled) )
 			{
 				var childContainer : DisplayObjectContainer = DisplayObjectContainer( child );
-				var foundChild : IFocusDisplayObject = this.findNextContainerFocus( childContainer, null, false );
+				var foundChild : IFocusDisplayObject = this.findNextContainerFocus( childContainer , null , false );
 				if( foundChild )
 				{
 					return foundChild;
@@ -591,9 +616,9 @@ package feathers.core
 		{
 			if( event.relatedObject )
 			{
-				// we need to allow mouse focus to be passed to native display
-				// objects. for instance, hyperlinks in TextField won't work
-				// unless the TextField can be focused.
+				//we need to allow mouse focus to be passed to native display
+				//objects. for instance, hyperlinks in TextField won't work
+				//unless the TextField can be focused.
 				this.focus = null;
 				return;
 			}
@@ -605,7 +630,7 @@ package feathers.core
 		 */
 		protected function stage_keyFocusChangeHandler( event : FocusEvent ) : void
 		{
-			// keyCode 0 is sent by IE, for some reason
+			//keyCode 0 is sent by IE, for some reason
 			if( event.keyCode != Keyboard.TAB && event.keyCode != 0 )
 			{
 				return;
@@ -627,12 +652,12 @@ package feathers.core
 					}
 					else
 					{
-						newFocus = this.findPreviousContainerFocus( currentFocus.parent, DisplayObject( currentFocus ), true );
+						newFocus = this.findPreviousContainerFocus( currentFocus.parent , DisplayObject( currentFocus ) , true );
 					}
 				}
 				if( !newFocus )
 				{
-					newFocus = this.findPreviousContainerFocus( this._root, null, false );
+					newFocus = this.findPreviousContainerFocus( this._root , null , false );
 				}
 			}
 			else
@@ -645,16 +670,16 @@ package feathers.core
 					}
 					else if( currentFocus is IFocusContainer && IFocusContainer( currentFocus ).isChildFocusEnabled )
 					{
-						newFocus = this.findNextContainerFocus( DisplayObjectContainer( currentFocus ), null, false );
+						newFocus = this.findNextContainerFocus( DisplayObjectContainer( currentFocus ) , null , false );
 					}
 					else
 					{
-						newFocus = this.findNextContainerFocus( currentFocus.parent, DisplayObject( currentFocus ), true );
+						newFocus = this.findNextContainerFocus( currentFocus.parent , DisplayObject( currentFocus ) , true );
 					}
 				}
 				if( !newFocus )
 				{
-					newFocus = this.findNextContainerFocus( this._root, null, false );
+					newFocus = this.findNextContainerFocus( this._root , null , false );
 				}
 			}
 			if( newFocus )
@@ -666,6 +691,7 @@ package feathers.core
 			{
 				this._focus.showFocus();
 			}
+
 		}
 
 		/**
@@ -674,6 +700,7 @@ package feathers.core
 		protected function topLevelContainer_addedHandler( event : Event ) : void
 		{
 			this.setFocusManager( DisplayObject( event.target ) );
+
 		}
 
 		/**
@@ -689,7 +716,7 @@ package feathers.core
 		 */
 		protected function topLevelContainer_touchHandler( event : TouchEvent ) : void
 		{
-			var touch : Touch = event.getTouch( this._root, TouchPhase.BEGAN );
+			var touch : Touch = event.getTouch( this._root , TouchPhase.BEGAN );
 			if( !touch )
 			{
 				return;
@@ -723,16 +750,16 @@ package feathers.core
 			var nativeStage : Stage = this._starling.nativeStage;
 			if( this._focus && !nativeStage.focus )
 			{
-				// if there's still a feathers focus, but the native stage object has
-				// lost focus for some reason, and there's no focus at all, force it
-				// back into focus.
-				// this can happen on app deactivate!
-				nativeStage.focus = this._nativeFocusTarget;
+				//if there's still a feathers focus, but the native stage object has
+				//lost focus for some reason, and there's no focus at all, force it
+				//back into focus.
+				//this can happen on app deactivate!
+				nativeStage.focus = nativeFocus;
 			}
 			if( nativeFocus != nativeStage.focus )
 			{
-				// otherwise, we should stop listening for this event
-				nativeFocus.removeEventListener( FocusEvent.FOCUS_OUT, nativeFocus_focusOutHandler );
+				//otherwise, we should stop listening for this event
+				nativeFocus.removeEventListener( FocusEvent.FOCUS_OUT , nativeFocus_focusOutHandler );
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -185,7 +185,7 @@ package feathers.core
 		public function DisplayListWatcher( topLevelContainer : DisplayObjectContainer )
 		{
 			this.root = topLevelContainer;
-			this.root.addEventListener( Event.ADDED, addedHandler );
+			this.root.addEventListener( Event.ADDED , addedHandler );
 		}
 
 		/**
@@ -197,7 +197,7 @@ package feathers.core
 		{
 			if( this.root )
 			{
-				this.root.removeEventListener( Event.ADDED, addedHandler );
+				this.root.removeEventListener( Event.ADDED , addedHandler );
 				this.root = null;
 			}
 			if( this._excludedObjects )
@@ -277,7 +277,7 @@ package feathers.core
 		/**
 		 * Sets the initializer for a specific class.
 		 */
-		public function setInitializerForClass( type : Class, initializer : Function, withName : String = null ) : void
+		public function setInitializerForClass( type : Class , initializer : Function , withName : String = null ) : void
 		{
 			if( !withName )
 			{
@@ -296,7 +296,7 @@ package feathers.core
 		 * Sets an initializer for a specific class and any subclasses. This
 		 * option can potentially hurt performance, so use sparingly.
 		 */
-		public function setInitializerForClassAndSubclasses( type : Class, initializer : Function ) : void
+		public function setInitializerForClassAndSubclasses( type : Class , initializer : Function ) : void
 		{
 			var index : int = this._initializerSuperTypes.indexOf( type );
 			if( index < 0 )
@@ -309,7 +309,7 @@ package feathers.core
 		/**
 		 * If an initializer exists for a specific class, it will be returned.
 		 */
-		public function getInitializerForClass( type : Class, withName : String = null ) : Function
+		public function getInitializerForClass( type : Class , withName : String = null ) : Function
 		{
 			if( !withName )
 			{
@@ -335,7 +335,7 @@ package feathers.core
 		 * If an initializer exists for a specific class, it will be removed
 		 * completely.
 		 */
-		public function clearInitializerForClass( type : Class, withName : String = null ) : void
+		public function clearInitializerForClass( type : Class , withName : String = null ) : void
 		{
 			if( !withName )
 			{
@@ -362,7 +362,7 @@ package feathers.core
 			var index : int = this._initializerSuperTypes.indexOf( type );
 			if( index >= 0 )
 			{
-				this._initializerSuperTypes.splice( index, 1 );
+				this._initializerSuperTypes.splice( index , 1 );
 			}
 		}
 
@@ -422,17 +422,17 @@ package feathers.core
 				var type : Class = this._initializerSuperTypes[ i ];
 				if( target is type )
 				{
-					this.applyAllStylesForTypeFromMaps( target, type, this._initializerSuperTypeMap );
+					this.applyAllStylesForTypeFromMaps( target , type , this._initializerSuperTypeMap );
 				}
 			}
 			type = Class( Object( target ).constructor );
-			this.applyAllStylesForTypeFromMaps( target, type, this._initializerNoNameTypeMap, this._initializerNameTypeMap );
+			this.applyAllStylesForTypeFromMaps( target , type , this._initializerNoNameTypeMap , this._initializerNameTypeMap );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function applyAllStylesForTypeFromMaps( target : DisplayObject, type : Class, map : Dictionary, nameMap : Dictionary = null ) : void
+		protected function applyAllStylesForTypeFromMaps( target : DisplayObject , type : Class , map : Dictionary , nameMap : Dictionary = null ) : void
 		{
 			var initializer : Function;
 			var hasNameInitializer : Boolean = false;

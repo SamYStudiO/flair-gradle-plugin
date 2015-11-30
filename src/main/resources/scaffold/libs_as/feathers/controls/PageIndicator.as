@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -46,7 +46,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Displays a selected index, usually corresponding to a page index in
 	 * another UI control, using a highlighted symbol.
@@ -68,7 +69,7 @@ package feathers.controls
 		 */
 		protected static function defaultSelectedSymbolFactory() : Quad
 		{
-			return new Quad( 25, 25, 0xffffff );
+			return new Quad( 25 , 25 , 0xffffff );
 		}
 
 		/**
@@ -76,9 +77,20 @@ package feathers.controls
 		 */
 		protected static function defaultNormalSymbolFactory() : Quad
 		{
-			return new Quad( 25, 25, 0xcccccc );
+			return new Quad( 25 , 25 , 0xcccccc );
 		}
-
+		/**
+		 * @private
+		 */
+		private static const LAYOUT_RESULT : LayoutBoundsResult = new LayoutBoundsResult();
+		/**
+		 * @private
+		 */
+		private static const SUGGESTED_BOUNDS : ViewPortBounds = new ViewPortBounds();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
 		/**
 		 * @private
 		 */
@@ -103,6 +115,71 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _layout : ILayout;
+		/**
+		 * The page indicator's symbols will be positioned vertically, from top
+		 * to bottom.
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_VERTICAL : String = "vertical";
+		/**
+		 * The page indicator's symbols will be positioned horizontally, from
+		 * left to right.
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * The symbols will be vertically aligned to the top.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * The symbols will be vertically aligned to the middle.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * The symbols will be vertically aligned to the bottom.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * The symbols will be horizontally aligned to the left.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		/**
+		 * The symbols will be horizontally aligned to the center.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * The symbols will be horizontally aligned to the right.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * Touching the page indicator on the left of the selected symbol will
+		 * select the previous index and to the right of the selected symbol
+		 * will select the next index.
+		 *
+		 * @see #interactionMode
+		 */
+		public static const INTERACTION_MODE_PREVIOUS_NEXT : String = "previousNext";
+		/**
+		 * Touching the page indicator on a symbol will select that symbol's
+		 * exact index.
+		 *
+		 * @see #interactionMode
+		 */
+		public static const INTERACTION_MODE_PRECISE : String = "precise";
 
 		/**
 		 * @private
@@ -183,7 +260,7 @@ package feathers.controls
 		 */
 		public function set selectedIndex( value : int ) : void
 		{
-			value = Math.max( 0, Math.min( value, this._pageCount - 1 ) );
+			value = Math.max( 0 , Math.min( value , this._pageCount - 1 ) );
 			if( this._selectedIndex == value )
 			{
 				return;
@@ -198,7 +275,7 @@ package feathers.controls
 		 */
 		protected var _interactionMode : String = INTERACTION_MODE_PREVIOUS_NEXT;
 
-		[Inspectable(type="String", enumeration="previousNext,precise")]
+		[Inspectable(type="String" , enumeration="previousNext,precise")]
 		/**
 		 * Determines how the selected index changes on touch.
 		 *
@@ -229,7 +306,7 @@ package feathers.controls
 		 */
 		protected var _direction : String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String", enumeration="horizontal,vertical")]
+		[Inspectable(type="String" , enumeration="horizontal,vertical")]
 		/**
 		 * The symbols may be positioned vertically or horizontally.
 		 *
@@ -265,7 +342,7 @@ package feathers.controls
 		 */
 		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_CENTER;
 
-		[Inspectable(type="String", enumeration="left,center,right")]
+		[Inspectable(type="String" , enumeration="left,center,right")]
 		/**
 		 * The alignment of the symbols on the horizontal axis.
 		 *
@@ -303,7 +380,7 @@ package feathers.controls
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom")]
 		/**
 		 * The alignment of the symbols on the vertical axis.
 		 *
@@ -630,7 +707,7 @@ package feathers.controls
 		{
 			super();
 			this.isQuickHitAreaEnabled = true;
-			this.addEventListener( TouchEvent.TOUCH, touchHandler );
+			this.addEventListener( TouchEvent.TOUCH , touchHandler );
 		}
 
 		/**
@@ -664,11 +741,11 @@ package feathers.controls
 				for( var i : int = 0; i < symbolCount; i++ )
 				{
 					var symbol : DisplayObject = this.unselectedSymbols.shift();
-					this.removeChild( symbol, true );
+					this.removeChild( symbol , true );
 				}
 				if( this.selectedSymbol )
 				{
-					this.removeChild( this.selectedSymbol, true );
+					this.removeChild( this.selectedSymbol , true );
 					this.selectedSymbol = null;
 				}
 			}
@@ -713,8 +790,9 @@ package feathers.controls
 			for( i = 0; i < symbolCount; i++ )
 			{
 				symbol = this.cache.shift();
-				this.removeChild( symbol, true );
+				this.removeChild( symbol , true );
 			}
+
 		}
 
 		/**
@@ -765,8 +843,8 @@ package feathers.controls
 			SUGGESTED_BOUNDS.maxHeight = this._maxHeight;
 			SUGGESTED_BOUNDS.minWidth = this._minWidth;
 			SUGGESTED_BOUNDS.minHeight = this._minHeight;
-			this._layout.layout( this.symbols, SUGGESTED_BOUNDS, LAYOUT_RESULT );
-			this.setSizeInternal( LAYOUT_RESULT.contentWidth, LAYOUT_RESULT.contentHeight, false );
+			this._layout.layout( this.symbols , SUGGESTED_BOUNDS , LAYOUT_RESULT );
+			this.setSizeInternal( LAYOUT_RESULT.contentWidth , LAYOUT_RESULT.contentHeight , false );
 		}
 
 		/**
@@ -782,18 +860,18 @@ package feathers.controls
 
 			if( this.touchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( this, TouchPhase.ENDED, this.touchPointID );
+				var touch : Touch = event.getTouch( this , TouchPhase.ENDED , this.touchPointID );
 				if( !touch )
 				{
 					return;
 				}
 				this.touchPointID = -1;
-				touch.getLocation( this.stage, HELPER_POINT );
-				var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT, true ) );
+				touch.getLocation( this.stage , HELPER_POINT );
+				var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
 				if( isInBounds )
 				{
 					var lastPageIndex : int = this._pageCount - 1;
-					this.globalToLocal( HELPER_POINT, HELPER_POINT );
+					this.globalToLocal( HELPER_POINT , HELPER_POINT );
 					if( this._direction == DIRECTION_VERTICAL )
 					{
 						if( this._interactionMode == INTERACTION_MODE_PRECISE )
@@ -814,11 +892,11 @@ package feathers.controls
 						{
 							if( HELPER_POINT.y < this.selectedSymbol.y )
 							{
-								this.selectedIndex = Math.max( 0, this._selectedIndex - 1 );
+								this.selectedIndex = Math.max( 0 , this._selectedIndex - 1 );
 							}
 							if( HELPER_POINT.y > (this.selectedSymbol.y + this.selectedSymbol.height) )
 							{
-								this.selectedIndex = Math.min( lastPageIndex, this._selectedIndex + 1 );
+								this.selectedIndex = Math.min( lastPageIndex , this._selectedIndex + 1 );
 							}
 						}
 					}
@@ -842,19 +920,19 @@ package feathers.controls
 						{
 							if( HELPER_POINT.x < this.selectedSymbol.x )
 							{
-								this.selectedIndex = Math.max( 0, this._selectedIndex - 1 );
+								this.selectedIndex = Math.max( 0 , this._selectedIndex - 1 );
 							}
 							if( HELPER_POINT.x > (this.selectedSymbol.x + this.selectedSymbol.width) )
 							{
-								this.selectedIndex = Math.min( lastPageIndex, this._selectedIndex + 1 );
+								this.selectedIndex = Math.min( lastPageIndex , this._selectedIndex + 1 );
 							}
 						}
 					}
 				}
 			}
-			else // if we get here, we don't have a saved touch ID yet
+			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this, TouchPhase.BEGAN );
+				touch = event.getTouch( this , TouchPhase.BEGAN );
 				if( !touch )
 				{
 					return;
@@ -863,82 +941,5 @@ package feathers.controls
 			}
 		}
 
-		/**
-		 * @private
-		 */
-		private static const LAYOUT_RESULT : LayoutBoundsResult = new LayoutBoundsResult();
-		/**
-		 * @private
-		 */
-		private static const SUGGESTED_BOUNDS : ViewPortBounds = new ViewPortBounds();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * The page indicator's symbols will be positioned vertically, from top
-		 * to bottom.
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * The page indicator's symbols will be positioned horizontally, from
-		 * left to right.
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * The symbols will be vertically aligned to the top.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * The symbols will be vertically aligned to the middle.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * The symbols will be vertically aligned to the bottom.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * The symbols will be horizontally aligned to the left.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * The symbols will be horizontally aligned to the center.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * The symbols will be horizontally aligned to the right.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * Touching the page indicator on the left of the selected symbol will
-		 * select the previous index and to the right of the selected symbol
-		 * will select the next index.
-		 *
-		 * @see #interactionMode
-		 */
-		public static const INTERACTION_MODE_PREVIOUS_NEXT : String = "previousNext";
-		/**
-		 * Touching the page indicator on a symbol will select that symbol's
-		 * exact index.
-		 *
-		 * @see #interactionMode
-		 */
-		public static const INTERACTION_MODE_PRECISE : String = "precise";
 	}
 }

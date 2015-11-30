@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -21,7 +21,10 @@ package feathers.skins
 		{
 			return new StyleNameFunctionStyleProvider();
 		}
-
+		/**
+		 * @private
+		 */
+		protected static const GLOBAL_STYLE_PROVIDER_PROPERTY_NAME : String = "globalStyleProvider";
 		/**
 		 * @private
 		 */
@@ -48,9 +51,10 @@ package feathers.skins
 		 * <pre>function():IStyleProvider</pre>
 		 *
 		 * @param registerGlobally            Determines if the registry sets the static <code>globalStyleProvider</code> property.
-		 * @param styleProviderFactory        An optional function that creates a new style provider. If <code>null</code>, a <code>StyleNameFunctionStyleProvider</code> will be created.
+		 * @param styleProviderFactory        An optional function that creates a new style provider. If <code>null</code>, a
+		 *     <code>StyleNameFunctionStyleProvider</code> will be created.
 		 */
-		public function StyleProviderRegistry( registerGlobally : Boolean = true, styleProviderFactory : Function = null )
+		public function StyleProviderRegistry( registerGlobally : Boolean = true , styleProviderFactory : Function = null )
 		{
 			this._registerGlobally = registerGlobally;
 			if( styleProviderFactory === null )
@@ -61,6 +65,7 @@ package feathers.skins
 			{
 				this._styleProviderFactory = styleProviderFactory;
 			}
+
 		}
 
 		/**
@@ -68,9 +73,9 @@ package feathers.skins
 		 */
 		public function dispose() : void
 		{
-			// clear the global style providers, but only if they still match the
-			// ones that the theme created. a developer could replace the global
-			// style providers with different ones.
+			//clear the global style providers, but only if they still match the
+			//ones that the theme created. a developer could replace the global
+			//style providers with different ones.
 			for( var untypedType : Object in this._classToStyleProvider )
 			{
 				var type : Class = Class( untypedType );
@@ -123,9 +128,9 @@ package feathers.skins
 				delete this._classToStyleProvider[ forClass ];
 				if( this._registerGlobally && forClass[ GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ] === styleProvider )
 				{
-					// something else may have changed the global style provider
-					// after this registry set it, so we check if it's equal
-					// before setting to null.
+					//something else may have changed the global style provider
+					//after this registry set it, so we check if it's equal
+					//before setting to null.
 					forClass[ GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ] = null;
 				}
 			}
@@ -142,10 +147,5 @@ package feathers.skins
 			}
 			throw ArgumentError( "Class " + type + " must have a " + GLOBAL_STYLE_PROVIDER_PROPERTY_NAME + " static property to support themes." );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const GLOBAL_STYLE_PROVIDER_PROPERTY_NAME : String = "globalStyleProvider";
 	}
 }

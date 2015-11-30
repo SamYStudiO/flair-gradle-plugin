@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -14,12 +14,12 @@ package feathers.utils.math
 	 * @param        number        the input number to round.
 	 * @param        precision    the number of decimal digits to keep
 	 * @return        the rounded number, or the original input if no rounding is needed
-	 *
+	 * 
 	 * @see Math#round
 	 */
-	public function roundToPrecision( number : Number, precision : int = 0 ) : Number
+	public function roundToPrecision( number : Number , precision : int = 0 ) : Number
 	{
-		var decimalPlaces : Number = Math.pow( 10, precision );
+		var decimalPlaces : Number = Math.pow( 10 , precision );
 		return Math.round( decimalPlaces * number ) / decimalPlaces;
 	}
 }

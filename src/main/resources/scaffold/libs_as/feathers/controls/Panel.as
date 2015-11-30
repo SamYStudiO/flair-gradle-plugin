@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -26,18 +26,18 @@ package feathers.controls
 	 * <listing version="3.0">
 	 * var panel:Panel = new Panel();
 	 * panel.title = "Is it time to party?";
-	 *
+	 * 
 	 * var layout:HorizontalLayout = new HorizontalLayout();
 	 * layout.gap = 20;
 	 * layout.padding = 20;
 	 * panel.layout = layout;
-	 *
+	 * 
 	 * this.addChild( panel );
-	 *
+	 * 
 	 * var yesButton:Button = new Button();
 	 * yesButton.label = "Yes";
 	 * panel.addChild( yesButton );
-	 *
+	 * 
 	 * var noButton:Button = new Button();
 	 * noButton.label = "No";
 	 * panel.addChild( noButton );</listing>
@@ -62,7 +62,14 @@ package feathers.controls
 		{
 			return new Header();
 		}
-
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_HEADER_FACTORY : String = "headerFactory";
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_FOOTER_FACTORY : String = "footerFactory";
 		/**
 		 * The header sub-component.
 		 *
@@ -117,52 +124,123 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _ignoreFooterResizing : Boolean = false;
-
 		/**
-		 * DEPRECATED: Replaced by <code>headerStyleName</code>.
+		 * The default value added to the <code>styleNameList</code> of the header.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #headerStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function get headerName() : String
-		{
-			return this.headerStyleName;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-panel-header";
 		/**
-		 * @private
-		 */
-		protected function set headerName( value : String ) : void
-		{
-			this.headerStyleName = value;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>footerStyleName</code>.
+		 * The default value added to the <code>styleNameList</code> of the footer.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #footerStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function get footerName() : String
-		{
-			return this.footerStyleName;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_FOOTER : String = "feathers-panel-footer";
 		/**
-		 * @private
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
 		 */
-		protected function set footerName( value : String ) : void
-		{
-			this.footerStyleName = value;
-		}
+		public static const SCROLL_POLICY_AUTO : String = "auto";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_ON : String = "on";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_OFF : String = "off";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
+		/**
+		 * The vertical scroll bar will be positioned on the right.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
+		/**
+		 * The vertical scroll bar will be positioned on the left.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH : String = "touch";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_MOUSE : String = "mouse";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_FAST : Number = 0.99;
+		/**
+		 * @copy feathers.controls.ScrollContainer#AUTO_SIZE_MODE_STAGE
+		 *
+		 * @see feathers.controls.ScrollContainer#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		/**
+		 * @copy feathers.controls.ScrollContainer#AUTO_SIZE_MODE_CONTENT
+		 *
+		 * @see feathers.controls.ScrollContainer#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 
 		/**
 		 * @private
@@ -316,8 +394,8 @@ package feathers.controls
 			}
 			this._headerFactory = value;
 			this.invalidate( INVALIDATION_FLAG_HEADER_FACTORY );
-			// hack because the super class doesn't know anything about the
-			// header factory
+			//hack because the super class doesn't know anything about the
+			//header factory
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
 
@@ -367,32 +445,9 @@ package feathers.controls
 			}
 			this._customHeaderStyleName = value;
 			this.invalidate( INVALIDATION_FLAG_HEADER_FACTORY );
-			// hack because the super class doesn't know anything about the
-			// header factory
+			//hack because the super class doesn't know anything about the
+			//header factory
 			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>customHeaderStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customHeaderStyleName
-		 */
-		public function get customHeaderName() : String
-		{
-			return this.customHeaderStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customHeaderName( value : String ) : void
-		{
-			this.customHeaderStyleName = value;
 		}
 
 		/**
@@ -401,12 +456,19 @@ package feathers.controls
 		protected var _headerProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the container's
-		 * header sub-component. The header may be any
-		 * <code>feathers.core.IFeathersControl</code> instance, but the default
-		 * is a <code>feathers.controls.Header</code> instance. The available
-		 * properties depend on what type of component is returned by
-		 * <code>headerFactory</code>.
+		 * An object that stores properties for the container's header
+		 * sub-component, and the properties will be passed down to the header
+		 * when the container validates. Any Feathers component may be used as
+		 * the container's header, so the available properties depend on which
+		 * type of component is returned by <code>headerFactory</code>.
+		 *
+		 * <p>By default, the <code>headerFactory</code> will return a
+		 * <code>Header</code> instance. If you aren't using a different type of
+		 * component as the container's header, you can refer to
+		 * <a href="Header.html"><code>feathers.controls.Header</code></a>
+		 * for a list of available properties. Otherwise, refer to the
+		 * appropriate documentation for details about which properties are
+		 * available on the component that you're using as the header.</p>
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -520,8 +582,8 @@ package feathers.controls
 			}
 			this._footerFactory = value;
 			this.invalidate( INVALIDATION_FLAG_FOOTER_FACTORY );
-			// hack because the super class doesn't know anything about the
-			// header factory
+			//hack because the super class doesn't know anything about the
+			//header factory
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
 
@@ -571,32 +633,9 @@ package feathers.controls
 			}
 			this._customFooterStyleName = value;
 			this.invalidate( INVALIDATION_FLAG_FOOTER_FACTORY );
-			// hack because the super class doesn't know anything about the
-			// header factory
+			//hack because the super class doesn't know anything about the
+			//header factory
 			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>customFooterStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customFooterStyleName
-		 */
-		public function get customFooterName() : String
-		{
-			return this.customFooterStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customFooterName( value : String ) : void
-		{
-			this.customFooterStyleName = value;
 		}
 
 		/**
@@ -605,11 +644,13 @@ package feathers.controls
 		protected var _footerProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the container's
-		 * footer sub-component. The footer may be any
-		 * <code>feathers.core.IFeathersControl</code> instance, but there is no
-		 * default. The available properties depend on what type of component is
-		 * returned by <code>footerFactory</code>.
+		 * An object that stores properties for the container's footer
+		 * sub-component, and the properties will be passed down to the footer
+		 * when the container validates. Any Feathers component may be used as
+		 * the container's footer, so the available properties depend on which
+		 * type of component is returned by <code>footerFactory</code>. Refer to
+		 * the appropriate documentation for details about which properties are
+		 * available on the component that you're using as the footer.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -953,11 +994,15 @@ package feathers.controls
 		 */
 		override protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
+			}
+			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+			{
+				return this.setSizeInternal( this.stage.stageWidth , this.stage.stageHeight , false );
 			}
 
 			var oldIgnoreHeaderResizing : Boolean = this._ignoreHeaderResizing;
@@ -986,22 +1031,22 @@ package feathers.controls
 			var newHeight : Number = this.explicitHeight;
 			if( needsWidth )
 			{
-				newWidth = Math.max( this.header.width, this._viewPort.width + this._rightViewPortOffset + this._leftViewPortOffset );
+				newWidth = Math.max( this.header.width , this._viewPort.width + this._rightViewPortOffset + this._leftViewPortOffset );
 				if( this.footer )
 				{
-					newWidth = Math.max( newWidth, this.footer.width );
+					newWidth = Math.max( newWidth , this.footer.width );
 				}
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth ) // !isNaN
+				if( this.originalBackgroundWidth === this.originalBackgroundWidth ) //!isNaN
 				{
-					newWidth = Math.max( newWidth, this.originalBackgroundWidth );
+					newWidth = Math.max( newWidth , this.originalBackgroundWidth );
 				}
 			}
 			if( needsHeight )
 			{
 				newHeight = this._viewPort.height + this._bottomViewPortOffset + this._topViewPortOffset;
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight ) // !isNaN
+				if( this.originalBackgroundHeight === this.originalBackgroundHeight ) //!isNaN
 				{
-					newHeight = Math.max( newHeight, this.originalBackgroundHeight );
+					newHeight = Math.max( newHeight , this.originalBackgroundHeight );
 				}
 			}
 
@@ -1015,13 +1060,13 @@ package feathers.controls
 			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
 			this._ignoreFooterResizing = oldIgnoreFooterResizing;
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function calculateViewPortOffsets( forceScrollBars : Boolean = false, useActualBounds : Boolean = false ) : void
+		override protected function calculateViewPortOffsets( forceScrollBars : Boolean = false , useActualBounds : Boolean = false ) : void
 		{
 			super.calculateViewPortOffsets( forceScrollBars );
 
@@ -1070,6 +1115,10 @@ package feathers.controls
 				this.footer.height = oldFooterHeight;
 				this._ignoreFooterResizing = oldIgnoreFooterResizing;
 			}
+			else
+			{
+				this._bottomViewPortOffset += this._outerPaddingBottom;
+			}
 		}
 
 		/**
@@ -1116,10 +1165,10 @@ package feathers.controls
 		{
 			if( this.header )
 			{
-				this.header.removeEventListener( FeathersEventType.RESIZE, header_resizeHandler );
+				this.header.removeEventListener( FeathersEventType.RESIZE , header_resizeHandler );
 				var displayHeader : DisplayObject = DisplayObject( this.header );
-				this._focusExtrasBefore.splice( this._focusExtrasBefore.indexOf( displayHeader ), 1 );
-				this.removeRawChild( displayHeader, true );
+				this._focusExtrasBefore.splice( this._focusExtrasBefore.indexOf( displayHeader ) , 1 );
+				this.removeRawChild( displayHeader , true );
 				this.header = null;
 			}
 
@@ -1127,7 +1176,7 @@ package feathers.controls
 			var headerStyleName : String = this._customHeaderStyleName != null ? this._customHeaderStyleName : this.headerStyleName;
 			this.header = IFeathersControl( factory() );
 			this.header.styleNameList.add( headerStyleName );
-			this.header.addEventListener( FeathersEventType.RESIZE, header_resizeHandler );
+			this.header.addEventListener( FeathersEventType.RESIZE , header_resizeHandler );
 			displayHeader = DisplayObject( this.header );
 			this.addRawChild( displayHeader );
 			this._focusExtrasBefore.push( displayHeader );
@@ -1148,10 +1197,10 @@ package feathers.controls
 		{
 			if( this.footer )
 			{
-				this.footer.removeEventListener( FeathersEventType.RESIZE, footer_resizeHandler );
+				this.footer.removeEventListener( FeathersEventType.RESIZE , footer_resizeHandler );
 				var displayFooter : DisplayObject = DisplayObject( this.footer );
-				this._focusExtrasAfter.splice( this._focusExtrasAfter.indexOf( displayFooter ), 1 );
-				this.removeRawChild( displayFooter, true );
+				this._focusExtrasAfter.splice( this._focusExtrasAfter.indexOf( displayFooter ) , 1 );
+				this.removeRawChild( displayFooter , true );
 				this.footer = null;
 			}
 
@@ -1162,7 +1211,7 @@ package feathers.controls
 			var footerStyleName : String = this._customFooterStyleName != null ? this._customFooterStyleName : this.footerStyleName;
 			this.footer = IFeathersControl( this._footerFactory() );
 			this.footer.styleNameList.add( footerStyleName );
-			this.footer.addEventListener( FeathersEventType.RESIZE, footer_resizeHandler );
+			this.footer.addEventListener( FeathersEventType.RESIZE , footer_resizeHandler );
 			displayFooter = DisplayObject( this.footer );
 			this.addRawChild( displayFooter );
 			this._focusExtrasAfter.push( displayFooter );
@@ -1219,153 +1268,5 @@ package feathers.controls
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
-
-		/**
-		 * The default value added to the <code>styleNameList</code> of the header.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-panel-header";
-		/**
-		 * DEPRECATED: Replaced by <code>Panel.DEFAULT_CHILD_STYLE_NAME_HEADER</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Panel#DEFAULT_CHILD_STYLE_NAME_HEADER
-		 */
-		public static const DEFAULT_CHILD_NAME_HEADER : String = DEFAULT_CHILD_STYLE_NAME_HEADER;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the footer.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_FOOTER : String = "feathers-panel-footer";
-		/**
-		 * DEPRECATED: Replaced by <code>Panel.DEFAULT_CHILD_STYLE_NAME_FOOTER</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Panel#DEFAULT_CHILD_STYLE_NAME_FOOTER
-		 */
-		public static const DEFAULT_CHILD_NAME_FOOTER : String = DEFAULT_CHILD_STYLE_NAME_FOOTER;
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_ON : String = "on";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
-		/**
-		 * The vertical scroll bar will be positioned on the right.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
-		/**
-		 * The vertical scroll bar will be positioned on the left.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
-		/**
-		 * @copy feathers.controls.ScrollContainer#AUTO_SIZE_MODE_STAGE
-		 *
-		 * @see feathers.controls.ScrollContainer#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * @copy feathers.controls.ScrollContainer#AUTO_SIZE_MODE_CONTENT
-		 *
-		 * @see feathers.controls.ScrollContainer#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_HEADER_FACTORY : String = "headerFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_FOOTER_FACTORY : String = "footerFactory";
 	}
 }

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -24,7 +24,7 @@ package feathers.core
 		/**
 		 * Creates a <code>PropertyProxy</code> from a regular old <code>Object</code>.
 		 */
-		public static function fromObject( source : Object, onChangeCallback : Function = null ) : PropertyProxy
+		public static function fromObject( source : Object , onChangeCallback : Function = null ) : PropertyProxy
 		{
 			var newValue : PropertyProxy = new PropertyProxy( onChangeCallback );
 			for( var propertyName : String in source )
@@ -33,7 +33,6 @@ package feathers.core
 			}
 			return newValue;
 		}
-
 		/**
 		 * @private
 		 */
@@ -91,7 +90,7 @@ package feathers.core
 				this._onChangeCallbacks.pop();
 				return;
 			}
-			this._onChangeCallbacks.splice( index, 1 );
+			this._onChangeCallbacks.splice( index , 1 );
 		}
 
 		/**
@@ -116,14 +115,14 @@ package feathers.core
 			for( var i : int = 0; i < callbackCount; i++ )
 			{
 				var callback : Function = this._onChangeCallbacks[ i ] as Function;
-				callback( this, forName );
+				callback( this , forName );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		private function subProxy_onChange( proxy : PropertyProxy, name : String ) : void
+		private function subProxy_onChange( proxy : PropertyProxy , name : String ) : void
 		{
 			this.fireOnChangeCallback( proxy._subProxyName );
 		}
@@ -160,7 +159,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		override flash_proxy function setProperty( name : *, value : * ) : void
+		override flash_proxy function setProperty( name : * , value : * ) : void
 		{
 			var nameAsString : String = name is QName ? QName( name ).localName : name.toString();
 			this._storage[ nameAsString ] = value;
@@ -191,7 +190,7 @@ package feathers.core
 				}
 				else
 				{
-					this._names.splice( index, 1 );
+					this._names.splice( index , 1 );
 				}
 			}
 			var result : Boolean = delete this._storage[ nameAsString ];

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,18 +8,23 @@
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
+	import feathers.core.IFocusDisplayObject;
 	import feathers.core.PropertyProxy;
 	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
 	import feathers.events.CollectionEventType;
+	import feathers.events.FeathersEventType;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.LayoutBoundsResult;
 	import feathers.layout.VerticalLayout;
 	import feathers.layout.ViewPortBounds;
 	import feathers.skins.IStyleProvider;
 
+	import flash.ui.Keyboard;
+
 	import starling.display.DisplayObject;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 
 	/**
 	 * Dispatched when the selected tab changes.
@@ -41,8 +46,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
-	[DefaultProperty("dataProvider")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * A line of tabs (vertical or horizontal), where one may be selected at a
 	 * time.
@@ -63,7 +68,7 @@ package feathers.controls
 	 * this.addChild( tabs );</listing>
 	 *
 	 * @see ../../../help/tab-bar.html How to use the Feathers TabBar component
-	 */ public class TabBar extends FeathersControl
+	 */ public class TabBar extends FeathersControl implements IFocusDisplayObject
 	{
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>TabBar</code>
@@ -81,7 +86,15 @@ package feathers.controls
 		{
 			return new ToggleButton();
 		}
-
+		/**
+		 * @private
+		 */
+		private static const DEFAULT_TAB_FIELDS : Vector.<String> = new <String>
+				[ "defaultIcon" , "upIcon" , "downIcon" , "hoverIcon" , "disabledIcon" , "defaultSelectedIcon" , "selectedUpIcon" , "selectedDownIcon" , "selectedHoverIcon" , "selectedDisabledIcon" , "isEnabled" ];
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_TAB_FACTORY : String = "tabFactory";
 		/**
 		 * The value added to the <code>styleNameList</code> of the tabs. This
 		 * variable is <code>protected</code> so that sub-classes can customize
@@ -175,75 +188,82 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _ignoreSelectionChanges : Boolean = false;
-
+		protected var _focusedTabIndex : int = -1;
 		/**
-		 * DEPRECATED: Replaced by <code>tabStyleName</code>.
+		 * The tabs are displayed in order from left to right.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #tabStyleName
+		 * @see #direction
 		 */
-		protected function get tabName() : String
-		{
-			return this.tabStyleName;
-		}
-
+		public static const DIRECTION_HORIZONTAL : String = "horizontal";
 		/**
-		 * @private
-		 */
-		protected function set tabName( value : String ) : void
-		{
-			this.tabStyleName = value;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>firstTabStyleName</code>.
+		 * The tabs are displayed in order from top to bottom.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #firstTabStyleName
+		 * @see #direction
 		 */
-		protected function get firstTabName() : String
-		{
-			return this.firstTabStyleName;
-		}
-
+		public static const DIRECTION_VERTICAL : String = "vertical";
 		/**
-		 * @private
-		 */
-		protected function set firstTabName( value : String ) : void
-		{
-			this.firstTabStyleName = value;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>lastTabStyleName</code>.
+		 * The tabs will be aligned horizontally to the left edge of the tab
+		 * bar.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #lastTabStyleName
+		 * @see #horizontalAlign
 		 */
-		protected function get lastTabName() : String
-		{
-			return this.lastTabStyleName;
-		}
-
+		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
 		/**
-		 * @private
+		 * The tabs will be aligned horizontally to the center of the tab bar.
+		 *
+		 * @see #horizontalAlign
 		 */
-		protected function set lastTabName( value : String ) : void
-		{
-			this.lastTabStyleName = value;
-		}
+		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * The tabs will be aligned horizontally to the right edge of the tab
+		 * bar.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * If the direction is vertical, each tab will fill the entire width of
+		 * the tab bar, and if the direction is horizontal, the alignment will
+		 * behave the same as <code>HORIZONTAL_ALIGN_LEFT</code>.
+		 *
+		 * @see #horizontalAlign
+		 * @see #direction
+		 */
+		public static const HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * The tabs will be aligned vertically to the top edge of the tab bar.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * The tabs will be aligned vertically to the middle of the tab bar.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * The tabs will be aligned vertically to the bottom edge of the tab
+		 * bar.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * If the direction is horizontal, each tab will fill the entire height
+		 * of the tab bar. If the direction is vertical, the alignment will
+		 * behave the same as <code>VERTICAL_ALIGN_TOP</code>.
+		 *
+		 * @see #verticalAlign
+		 * @see #direction
+		 */
+		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the tabs.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_TAB : String = "feathers-tab-bar-tab";
 
 		/**
 		 * @private
@@ -275,6 +295,7 @@ package feathers.controls
 		 *     <li>selectedDownIcon</li>
 		 *     <li>selectedHoverIcon</li>
 		 *     <li>selectedDisabledIcon</li>
+		 *     <li>isEnabled</li>
 		 * </ul>
 		 *
 		 * <p>The following example passes in a data provider:</p>
@@ -309,20 +330,22 @@ package feathers.controls
 			var oldSelectedItem : Object = this.selectedItem;
 			if( this._dataProvider )
 			{
-				this._dataProvider.removeEventListener( CollectionEventType.ADD_ITEM, dataProvider_addItemHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REMOVE_ITEM, dataProvider_removeItemHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REPLACE_ITEM, dataProvider_replaceItemHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.UPDATE_ITEM, dataProvider_updateItemHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.RESET, dataProvider_resetHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.ADD_ITEM , dataProvider_addItemHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_removeItemHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_replaceItemHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.UPDATE_ITEM , dataProvider_updateItemHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.UPDATE_ALL , dataProvider_updateAllHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.RESET , dataProvider_resetHandler );
 			}
 			this._dataProvider = value;
 			if( this._dataProvider )
 			{
-				this._dataProvider.addEventListener( CollectionEventType.ADD_ITEM, dataProvider_addItemHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REMOVE_ITEM, dataProvider_removeItemHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REPLACE_ITEM, dataProvider_replaceItemHandler );
-				this._dataProvider.addEventListener( CollectionEventType.UPDATE_ITEM, dataProvider_updateItemHandler );
-				this._dataProvider.addEventListener( CollectionEventType.RESET, dataProvider_resetHandler );
+				this._dataProvider.addEventListener( CollectionEventType.ADD_ITEM , dataProvider_addItemHandler );
+				this._dataProvider.addEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_removeItemHandler );
+				this._dataProvider.addEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_replaceItemHandler );
+				this._dataProvider.addEventListener( CollectionEventType.UPDATE_ITEM , dataProvider_updateItemHandler );
+				this._dataProvider.addEventListener( CollectionEventType.UPDATE_ALL , dataProvider_updateAllHandler );
+				this._dataProvider.addEventListener( CollectionEventType.RESET , dataProvider_resetHandler );
 			}
 			if( !this._dataProvider || this._dataProvider.length == 0 )
 			{
@@ -332,8 +355,8 @@ package feathers.controls
 			{
 				this.selectedIndex = 0;
 			}
-			// this ensures that Event.CHANGE will dispatch for selectedItem
-			// changing, even if selectedIndex has not changed.
+			//this ensures that Event.CHANGE will dispatch for selectedItem
+			//changing, even if selectedIndex has not changed.
 			if( this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem )
 			{
 				this.dispatchEventWith( Event.CHANGE );
@@ -346,7 +369,7 @@ package feathers.controls
 		 */
 		protected var _direction : String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String", enumeration="horizontal,vertical")]
+		[Inspectable(type="String" , enumeration="horizontal,vertical")]
 		/**
 		 * The tab bar layout is either vertical or horizontal.
 		 *
@@ -383,7 +406,7 @@ package feathers.controls
 		 */
 		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_JUSTIFY;
 
-		[Inspectable(type="String", enumeration="left,center,right,justify")]
+		[Inspectable(type="String" , enumeration="left,center,right,justify")]
 		/**
 		 * Determines how the tabs are horizontally aligned within the bounds
 		 * of the tab bar (on the x-axis).
@@ -422,7 +445,7 @@ package feathers.controls
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_JUSTIFY;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
 		/**
 		 * Determines how the tabs are vertically aligned within the bounds
 		 * of the tab bar (on the y-axis).
@@ -922,7 +945,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 *
-		 * @see feathers.controls.Button
+		 * @see feathers.controls.ToggleButton
 		 * @see #tabFactory
 		 * @see #firstTabFactory
 		 */
@@ -1130,29 +1153,6 @@ package feathers.controls
 		}
 
 		/**
-		 * DEPRECATED: Replaced by <code>customTabStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customTabStyleName
-		 */
-		public function get customTabName() : String
-		{
-			return this.customTabStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customTabName( value : String ) : void
-		{
-			this.customTabStyleName = value;
-		}
-
-		/**
 		 * @private
 		 */
 		protected var _customFirstTabStyleName : String;
@@ -1193,29 +1193,6 @@ package feathers.controls
 			}
 			this._customFirstTabStyleName = value;
 			this.invalidate( INVALIDATION_FLAG_TAB_FACTORY );
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>customFirstTabStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customFirstTabStyleName
-		 */
-		public function get customFirstTabName() : String
-		{
-			return this.customFirstTabStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customFirstTabName( value : String ) : void
-		{
-			this.customFirstTabStyleName = value;
 		}
 
 		/**
@@ -1262,41 +1239,20 @@ package feathers.controls
 		}
 
 		/**
-		 * DEPRECATED: Replaced by <code>customLastTabStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customLastTabStyleName
-		 */
-		public function get customLastTabName() : String
-		{
-			return this.customLastTabStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customLastTabName( value : String ) : void
-		{
-			this.customLastTabStyleName = value;
-		}
-
-		/**
 		 * @private
 		 */
 		protected var _tabProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to all of the tab bar's
-		 * tabs. These values are shared by each tabs, so values that cannot be
-		 * shared (such as display objects that need to be added to the display
-		 * list) should be passed to tabs using the <code>tabFactory</code> or
-		 * in a theme. The buttons in a tab bar are instances of
-		 * <code>feathers.controls.Button</code> that are created by
-		 * <code>tabFactory</code>.
+		 * An object that stores properties for all of the tab bar's tabs, and
+		 * the properties will be passed down to every tab when the tab bar
+		 * validates. For a list of available properties, refer to
+		 * <a href="ToggleButton.html"><code>feathers.controls.ToggleButton</code></a>.
+		 *
+		 * <p>These properties are shared by every tab, so anything that cannot
+		 * be shared (such as display objects, which cannot be added to multiple
+		 * parents) should be passed to tabs using the <code>tabFactory</code>
+		 * or in the theme.</p>
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -1316,7 +1272,7 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see #tabFactory
-		 * @see feathers.controls.Button
+		 * @see feathers.controls.ToggleButton
 		 */
 		public function get tabProperties() : Object
 		{
@@ -1362,6 +1318,19 @@ package feathers.controls
 		}
 
 		/**
+		 * @inheritDoc
+		 */
+		public function get baseline() : Number
+		{
+			if( !this.activeTabs || this.activeTabs.length === 0 )
+			{
+				return this.scaledActualHeight;
+			}
+			var firstTab : ToggleButton = this.activeTabs[ 0 ];
+			return this.scaleY * (firstTab.y + firstTab.baseline);
+		}
+
+		/**
 		 * Constructor.
 		 */
 		public function TabBar()
@@ -1374,11 +1343,40 @@ package feathers.controls
 		 */
 		override public function dispose() : void
 		{
-			// clearing selection now so that the data provider setter won't
-			// cause a selection change that triggers events.
+			//clearing selection now so that the data provider setter won't
+			//cause a selection change that triggers events.
 			this._selectedIndex = -1;
 			this.dataProvider = null;
 			super.dispose();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function showFocus() : void
+		{
+			if( !this._hasFocus )
+			{
+				return;
+			}
+
+			this._showFocus = true;
+			this.showFocusedTab();
+			this.invalidate( INVALIDATION_FLAG_FOCUS );
+		}
+
+		/**
+		 * @private
+		 */
+		override public function hideFocus() : void
+		{
+			if( !this._hasFocus )
+			{
+				return;
+			}
+			this._showFocus = false;
+			this.hideFocusedTab();
+			this.invalidate( INVALIDATION_FLAG_FOCUS );
 		}
 
 		/**
@@ -1388,7 +1386,7 @@ package feathers.controls
 		{
 			this.toggleGroup = new ToggleGroup();
 			this.toggleGroup.isSelectionRequired = true;
-			this.toggleGroup.addEventListener( Event.CHANGE, toggleGroup_changeHandler );
+			this.toggleGroup.addEventListener( Event.CHANGE , toggleGroup_changeHandler );
 		}
 
 		/**
@@ -1446,7 +1444,7 @@ package feathers.controls
 		{
 			for each( var tab : ToggleButton in this.activeTabs )
 			{
-				tab.isEnabled = this._isEnabled;
+				tab.isEnabled &&= this._isEnabled;
 			}
 		}
 
@@ -1492,7 +1490,7 @@ package feathers.controls
 				this.verticalLayout.paddingBottom = this._paddingBottom;
 				this.verticalLayout.paddingLeft = this._paddingLeft;
 			}
-			else // horizontal
+			else //horizontal
 			{
 				if( this.verticalLayout )
 				{
@@ -1519,7 +1517,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function defaultTabInitializer( tab : ToggleButton, item : Object ) : void
+		protected function defaultTabInitializer( tab : ToggleButton , item : Object ) : void
 		{
 			if( item is Object )
 			{
@@ -1543,6 +1541,7 @@ package feathers.controls
 			{
 				tab.label = "";
 			}
+
 		}
 
 		/**
@@ -1614,10 +1613,10 @@ package feathers.controls
 				{
 					newSelectedIndex = oldSelectedIndex;
 				}
-				// removing all items from the ToggleGroup clears the selection,
-				// so we need to set it back to the old value (or a new clamped
-				// value). we want the change event to dispatch only if the old
-				// value and the new value don't match.
+				//removing all items from the ToggleGroup clears the selection,
+				//so we need to set it back to the old value (or a new clamped
+				//value). we want the change event to dispatch only if the old
+				//value and the new value don't match.
 				this._ignoreSelectionChanges = oldSelectedIndex == newSelectedIndex;
 				this.toggleGroup.selectedIndex = newSelectedIndex;
 				this._ignoreSelectionChanges = oldIgnoreSelectionChanges;
@@ -1678,7 +1677,7 @@ package feathers.controls
 				tab.isToggle = true;
 				this.addChild( tab );
 			}
-			this._tabInitializer( tab, item );
+			this._tabInitializer( tab , item );
 			return tab;
 		}
 
@@ -1711,7 +1710,7 @@ package feathers.controls
 				tab.isToggle = true;
 				this.addChild( tab );
 			}
-			this._tabInitializer( tab, item );
+			this._tabInitializer( tab , item );
 			return tab;
 		}
 
@@ -1738,7 +1737,7 @@ package feathers.controls
 			{
 				tab = this.inactiveTabs.shift();
 			}
-			this._tabInitializer( tab, item );
+			this._tabInitializer( tab , item );
 			return tab;
 		}
 
@@ -1748,7 +1747,7 @@ package feathers.controls
 		protected function destroyTab( tab : ToggleButton ) : void
 		{
 			this.toggleGroup.removeItem( tab );
-			this.removeChild( tab, true );
+			this.removeChild( tab , true );
 		}
 
 		/**
@@ -1768,19 +1767,76 @@ package feathers.controls
 			this._viewPortBounds.maxHeight = this._maxHeight;
 			if( this.verticalLayout )
 			{
-				this.verticalLayout.layout( this._layoutItems, this._viewPortBounds, this._layoutResult );
+				this.verticalLayout.layout( this._layoutItems , this._viewPortBounds , this._layoutResult );
 			}
 			else if( this.horizontalLayout )
 			{
-				this.horizontalLayout.layout( this._layoutItems, this._viewPortBounds, this._layoutResult );
+				this.horizontalLayout.layout( this._layoutItems , this._viewPortBounds , this._layoutResult );
 			}
-			this.setSizeInternal( this._layoutResult.contentWidth, this._layoutResult.contentHeight, false );
+			this.setSizeInternal( this._layoutResult.contentWidth , this._layoutResult.contentHeight , false );
+			//final validation to avoid juggler next frame issues
+			for each( var tab : ToggleButton in this.activeTabs )
+			{
+				tab.validate();
+			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy, name : String ) : void
+		protected function hideFocusedTab() : void
+		{
+			if( this._focusedTabIndex < 0 )
+			{
+				return;
+			}
+			var focusedTab : ToggleButton = this.activeTabs[ this._focusedTabIndex ];
+			focusedTab.hideFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function showFocusedTab() : void
+		{
+			if( !this._showFocus || this._focusedTabIndex < 0 )
+			{
+				return;
+			}
+			var tab : ToggleButton = this.activeTabs[ this._focusedTabIndex ];
+			tab.showFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function focusedTabFocusIn() : void
+		{
+			if( this._focusedTabIndex < 0 )
+			{
+				return;
+			}
+			var tab : ToggleButton = this.activeTabs[ this._focusedTabIndex ];
+			tab.dispatchEventWith( FeathersEventType.FOCUS_IN );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function focusedTabFocusOut() : void
+		{
+			if( this._focusedTabIndex < 0 )
+			{
+				return;
+			}
+			var tab : ToggleButton = this.activeTabs[ this._focusedTabIndex ];
+			tab.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function childProperties_onChange( proxy : PropertyProxy , name : String ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -1788,12 +1844,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function dataProvider_addItemHandler( event : Event, index : int ) : void
+		protected function dataProvider_addItemHandler( event : Event , index : int ) : void
 		{
 			if( this._selectedIndex >= index )
 			{
-				// we're keeping the same selected item, but the selected index
-				// will change, so we need to manually dispatch the change event
+				//we're keeping the same selected item, but the selected index
+				//will change, so we need to manually dispatch the change event
 				this.selectedIndex += 1;
 				this.invalidate( INVALIDATION_FLAG_SELECTED );
 			}
@@ -1803,11 +1859,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function dataProvider_removeItemHandler( event : Event, index : int ) : void
+		protected function dataProvider_removeItemHandler( event : Event , index : int ) : void
 		{
 			if( this._selectedIndex > index )
 			{
-				// the same item is selected, but its index has changed.
+				//the same item is selected, but its index has changed.
 				this.selectedIndex -= 1;
 			}
 			else if( this._selectedIndex == index )
@@ -1821,16 +1877,16 @@ package feathers.controls
 				}
 				if( oldIndex == newIndex )
 				{
-					// we're keeping the same selected index, but the selected
-					// item will change, so we need to manually dispatch the
-					// change event
+					//we're keeping the same selected index, but the selected
+					//item will change, so we need to manually dispatch the
+					//change event
 					this.invalidate( INVALIDATION_FLAG_SELECTED );
 					this.dispatchEventWith( Event.CHANGE );
 				}
 				else
 				{
-					// we're selecting both a different index and a different
-					// item, so we'll just call the selectedIndex setter
+					//we're selecting both a different index and a different
+					//item, so we'll just call the selectedIndex setter
 					this.selectedIndex = newIndex;
 				}
 			}
@@ -1840,13 +1896,13 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function dataProvider_replaceItemHandler( event : Event, index : int ) : void
+		protected function dataProvider_replaceItemHandler( event : Event , index : int ) : void
 		{
 			if( this._selectedIndex == index )
 			{
-				// we're keeping the same selected index, but the selected
-				// item will change, so we need to manually dispatch the
-				// change event
+				//we're keeping the same selected index, but the selected
+				//item will change, so we need to manually dispatch the
+				//change event
 				this.invalidate( INVALIDATION_FLAG_SELECTED );
 				this.dispatchEventWith( Event.CHANGE );
 			}
@@ -1856,12 +1912,80 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function dataProvider_updateItemHandler( event : Event, index : int ) : void
+		protected function dataProvider_updateItemHandler( event : Event , index : int ) : void
 		{
-			// no need to dispatch a change event. the index and the item are the
-			// same. the item's properties have changed, but that doesn't require
-			// a change event.
+			//no need to dispatch a change event. the index and the item are the
+			//same. the item's properties have changed, but that doesn't require
+			//a change event.
 			this.invalidate( INVALIDATION_FLAG_DATA );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function stage_keyDownHandler( event : KeyboardEvent ) : void
+		{
+			if( !this._isEnabled )
+			{
+				return;
+			}
+			if( !this._dataProvider || this._dataProvider.length === 0 )
+			{
+				return;
+			}
+			var newFocusedTabIndex : int = this._focusedTabIndex;
+			var maxFocusedTabIndex : int = this._dataProvider.length - 1;
+			if( event.keyCode == Keyboard.HOME )
+			{
+				this.selectedIndex = newFocusedTabIndex = 0;
+			}
+			else if( event.keyCode == Keyboard.END )
+			{
+				this.selectedIndex = newFocusedTabIndex = maxFocusedTabIndex;
+			}
+			else if( event.keyCode == Keyboard.PAGE_UP )
+			{
+				newFocusedTabIndex--;
+				if( newFocusedTabIndex < 0 )
+				{
+					newFocusedTabIndex = maxFocusedTabIndex;
+				}
+				this.selectedIndex = newFocusedTabIndex;
+			}
+			else if( event.keyCode == Keyboard.PAGE_DOWN )
+			{
+				newFocusedTabIndex++;
+				if( newFocusedTabIndex > maxFocusedTabIndex )
+				{
+					newFocusedTabIndex = 0;
+				}
+				this.selectedIndex = newFocusedTabIndex;
+			}
+			else if( event.keyCode === Keyboard.UP || event.keyCode === Keyboard.LEFT )
+			{
+				newFocusedTabIndex--;
+				if( newFocusedTabIndex < 0 )
+				{
+					newFocusedTabIndex = maxFocusedTabIndex;
+				}
+			}
+			else if( event.keyCode === Keyboard.DOWN || event.keyCode === Keyboard.RIGHT )
+			{
+				newFocusedTabIndex++;
+				if( newFocusedTabIndex > maxFocusedTabIndex )
+				{
+					newFocusedTabIndex = 0;
+				}
+			}
+
+			if( newFocusedTabIndex >= 0 && newFocusedTabIndex !== this._focusedTabIndex )
+			{
+				this.hideFocusedTab();
+				this.focusedTabFocusOut();
+				this._focusedTabIndex = newFocusedTabIndex;
+				this.focusedTabFocusIn();
+				this.showFocusedTab();
+			}
 		}
 
 		/**
@@ -1883,17 +2007,17 @@ package feathers.controls
 		{
 			if( this._dataProvider.length > 0 )
 			{
-				// the data provider has changed drastically. we should reset the
-				// selection to the first item.
+				//the data provider has changed drastically. we should reset the
+				//selection to the first item.
 				if( this._selectedIndex != 0 )
 				{
 					this.selectedIndex = 0;
 				}
 				else
 				{
-					// we're keeping the same selected index, but the selected
-					// item will change, so we need to manually dispatch the
-					// change event
+					//we're keeping the same selected index, but the selected
+					//item will change, so we need to manually dispatch the
+					//change event
 					this.invalidate( INVALIDATION_FLAG_SELECTED );
 					this.dispatchEventWith( Event.CHANGE );
 				}
@@ -1908,97 +2032,31 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected static const INVALIDATION_FLAG_TAB_FACTORY : String = "tabFactory";
+		protected function dataProvider_updateAllHandler( event : Event ) : void
+		{
+			this.invalidate( INVALIDATION_FLAG_DATA );
+		}
+
 		/**
 		 * @private
 		 */
-		private static const DEFAULT_TAB_FIELDS : Vector.<String> = new <String>
-				[ "defaultIcon", "upIcon", "downIcon", "hoverIcon", "disabledIcon", "defaultSelectedIcon", "selectedUpIcon", "selectedDownIcon", "selectedHoverIcon", "selectedDisabledIcon" ];
+		override protected function focusInHandler( event : Event ) : void
+		{
+			super.focusInHandler( event );
+			this._focusedTabIndex = this._selectedIndex;
+			this.focusedTabFocusIn();
+			this.stage.addEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
+		}
+
 		/**
-		 * The tabs are displayed in order from left to right.
-		 *
-		 * @see #direction
+		 * @private
 		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * The tabs are displayed in order from top to bottom.
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * The tabs will be aligned horizontally to the left edge of the tab
-		 * bar.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * The tabs will be aligned horizontally to the center of the tab bar.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * The tabs will be aligned horizontally to the right edge of the tab
-		 * bar.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * If the direction is vertical, each tab will fill the entire width of
-		 * the tab bar, and if the direction is horizontal, the alignment will
-		 * behave the same as <code>HORIZONTAL_ALIGN_LEFT</code>.
-		 *
-		 * @see #horizontalAlign
-		 * @see #direction
-		 */
-		public static const HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * The tabs will be aligned vertically to the top edge of the tab bar.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * The tabs will be aligned vertically to the middle of the tab bar.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * The tabs will be aligned vertically to the bottom edge of the tab
-		 * bar.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * If the direction is horizontal, each tab will fill the entire height
-		 * of the tab bar. If the direction is vertical, the alignment will
-		 * behave the same as <code>VERTICAL_ALIGN_TOP</code>.
-		 *
-		 * @see #verticalAlign
-		 * @see #direction
-		 */
-		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the tabs.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_TAB : String = "feathers-tab-bar-tab";
-		/**
-		 * DEPRECATED: Replaced by <code>TabBar.DEFAULT_CHILD_STYLE_NAME_TAB</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see TabBar#DEFAULT_CHILD_STYLE_NAME_TAB
-		 */
-		public static const DEFAULT_CHILD_NAME_TAB : String = DEFAULT_CHILD_STYLE_NAME_TAB;
+		override protected function focusOutHandler( event : Event ) : void
+		{
+			super.focusOutHandler( event );
+			this.hideFocusedTab();
+			this.focusedTabFocusOut();
+			this.stage.removeEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
+		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,8 +8,6 @@
 package feathers.controls
 {
 	import feathers.controls.supportClasses.IScreenNavigatorItem;
-
-	import flash.errors.IllegalOperationError;
 
 	import starling.display.DisplayObject;
 
@@ -154,7 +152,7 @@ package feathers.controls
 		/**
 		 * Constructor.
 		 */
-		public function ScreenNavigatorItem( screen : Object = null, events : Object = null, properties : Object = null )
+		public function ScreenNavigatorItem( screen : Object = null , events : Object = null , properties : Object = null )
 		{
 			this._screen = screen;
 			this._events = events ? events : {};
@@ -175,7 +173,7 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setFunctionForEvent( eventType : String, action : Function ) : void
+		public function setFunctionForEvent( eventType : String , action : Function ) : void
 		{
 			this._events[ eventType ] = action;
 		}
@@ -195,7 +193,7 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setScreenIDForEvent( eventType : String, screenID : String ) : void
+		public function setScreenIDForEvent( eventType : String , screenID : String ) : void
 		{
 			this._events[ eventType ] = screenID;
 		}

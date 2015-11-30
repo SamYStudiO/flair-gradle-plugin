@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -24,7 +24,7 @@ package feathers.controls.renderers
 	 *
 	 * @see feathers.controls.GroupedList
 	 */
-	public class DefaultGroupedListHeaderOrFooterRenderer extends FeathersControl implements IGroupedListHeaderOrFooterRenderer
+	public class DefaultGroupedListHeaderOrFooterRenderer extends FeathersControl implements IGroupedListHeaderRenderer, IGroupedListFooterRenderer
 	{
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>DefaultGroupedListHeaderOrFooterRenderer</code>
@@ -42,7 +42,6 @@ package feathers.controls.renderers
 		{
 			return new ImageLoader();
 		}
-
 		/**
 		 * The value added to the <code>styleNameList</code> of the content
 		 * label text renderer.
@@ -74,29 +73,63 @@ package feathers.controls.renderers
 		 * @private
 		 */
 		protected var currentBackgroundSkin : DisplayObject;
-
 		/**
-		 * DEPRECATED: Replaced by <code>contentLabelStyleName</code>.
+		 * The content will be aligned horizontally to the left edge of the renderer.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #contentLabelStyleName
+		 * @see #horizontalAlign
 		 */
-		protected function get contentLabelName() : String
-		{
-			return this.contentLabelStyleName;
-		}
-
+		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
 		/**
-		 * @private
+		 * The content will be aligned horizontally to the center of the renderer.
+		 *
+		 * @see #horizontalAlign
 		 */
-		protected function set contentLabelName( value : String ) : void
-		{
-			this.contentLabelStyleName = value;
-		}
+		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * The content will be aligned horizontally to the right edge of the renderer.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * The content will be justified horizontally, filling the entire width
+		 * of the renderer, minus padding.
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * The content will be aligned vertically to the top edge of the renderer.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * The content will be aligned vertically to the middle of the renderer.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * The content will be aligned vertically to the bottom edge of the renderer.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * The content will be justified vertically, filling the entire height
+		 * of the renderer, minus padding.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the
+		 * content label.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL : String = "feathers-header-footer-renderer-content-label";
 
 		/**
 		 * @private
@@ -203,9 +236,30 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
+		protected var _factoryID : String;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get factoryID() : String
+		{
+			return this._factoryID;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set factoryID( value : String ) : void
+		{
+			this._factoryID = value;
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_LEFT;
 
-		[Inspectable(type="String", enumeration="left,center,right,justify")]
+		[Inspectable(type="String" , enumeration="left,center,right,justify")]
 		/**
 		 * The location where the renderer's content is aligned horizontally
 		 * (on the x-axis).
@@ -245,7 +299,7 @@ package feathers.controls.renderers
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
 		/**
 		 * The location where the renderer's content is aligned vertically (on
 		 * the y-axis).
@@ -750,10 +804,63 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
+		protected var _customContentLabelStyleName : String;
+
+		/**
+		 * A style name to add to the renderer's label text renderer
+		 * sub-component. Typically used by a theme to provide different styles
+		 * to different renderers.
+		 *
+		 * <p>In the following example, a custom label style name is passed to
+		 * the renderer:</p>
+		 *
+		 * <listing version="3.0">
+		 * renderer.customContentLabelStyleName = "my-custom-header-or-footer-renderer-label";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-header-or-footer-label",
+		 * setCustomHeaderOrFooterLabelStyles );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #contentLabelFactory
+		 */
+		public function get customContentLabelStyleName() : String
+		{
+			return this._customContentLabelStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customContentLabelStyleName( value : String ) : void
+		{
+			if( this._customContentLabelStyleName == value )
+			{
+				return;
+			}
+			this._customContentLabelStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _contentLabelProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to a content label.
+		 * An object that stores properties for the content label text renderer
+		 * sub-component, and the properties will be passed down to the
+		 * text renderer when this component validates. The available properties
+		 * depend on which <code>ITextRenderer</code> implementation is returned
+		 * by <code>contentLabelFactory</code>. Refer to
+		 * <a href="../../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -856,7 +963,7 @@ package feathers.controls.renderers
 			if( this._backgroundSkin && this._backgroundSkin.parent != this )
 			{
 				this._backgroundSkin.visible = false;
-				this.addChildAt( this._backgroundSkin, 0 );
+				this.addChildAt( this._backgroundSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -900,7 +1007,7 @@ package feathers.controls.renderers
 			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this )
 			{
 				this._backgroundDisabledSkin.visible = false;
-				this.addChildAt( this._backgroundDisabledSkin, 0 );
+				this.addChildAt( this._backgroundDisabledSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -1083,16 +1190,16 @@ package feathers.controls.renderers
 		 */
 		override public function dispose() : void
 		{
-			// the content may have come from outside of this class. it's up
-			// to that code to dispose of the content. in fact, if we disposed
-			// of it here, we might screw something up!
+			//the content may have come from outside of this class. it's up
+			//to that code to dispose of the content. in fact, if we disposed
+			//of it here, we might screw something up!
 			if( this.content )
 			{
 				this.content.removeFromParent();
 			}
 
-			// however, we need to dispose these, if they exist, since we made
-			// them here.
+			//however, we need to dispose these, if they exist, since we made
+			//them here.
 			if( this.contentImage )
 			{
 				this.contentImage.dispose();
@@ -1247,19 +1354,19 @@ package feathers.controls.renderers
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
 			}
 			if( !this.content )
 			{
-				return this.setSizeInternal( 0, 0, false );
+				return this.setSizeInternal( 0 , 0 , false );
 			}
 			if( this.contentLabel )
 			{
-				// special case for label to allow word wrap
+				//special case for label to allow word wrap
 				var labelMaxWidth : Number = this.explicitWidth;
 				if( needsWidth )
 				{
@@ -1284,7 +1391,7 @@ package feathers.controls.renderers
 			if( needsWidth )
 			{
 				newWidth = this.content.width + this._paddingLeft + this._paddingRight;
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth && // !isNaN
+				if( this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
 						this.originalBackgroundWidth > newWidth )
 				{
 					newWidth = this.originalBackgroundWidth;
@@ -1293,13 +1400,13 @@ package feathers.controls.renderers
 			if( needsHeight )
 			{
 				newHeight = this.content.height + this._paddingTop + this._paddingBottom;
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight && // !isNaN
+				if( this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
 						this.originalBackgroundHeight > newHeight )
 				{
 					newHeight = this.originalBackgroundHeight;
 				}
 			}
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -1322,11 +1429,11 @@ package feathers.controls.renderers
 			}
 			if( this.currentBackgroundSkin )
 			{
-				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) // isNaN
+				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) //isNaN
 				{
 					this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 				}
-				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) // isNaN
+				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
 				{
 					this.originalBackgroundHeight = this.currentBackgroundSkin.height;
 				}
@@ -1388,7 +1495,8 @@ package feathers.controls.renderers
 				{
 					var factory : Function = this._contentLabelFactory != null ? this._contentLabelFactory : FeathersControl.defaultTextRendererFactory;
 					this.contentLabel = ITextRenderer( factory() );
-					FeathersControl( this.contentLabel ).styleNameList.add( this.contentLabelName );
+					var contentLabelStyleName : String = this._customContentLabelStyleName != null ? this._customContentLabelStyleName : this.contentLabelStyleName;
+					FeathersControl( this.contentLabel ).styleNameList.add( contentLabelStyleName );
 				}
 				this.contentLabel.text = label;
 			}
@@ -1458,7 +1566,7 @@ package feathers.controls.renderers
 					this.content.width = this.actualWidth - this._paddingLeft - this._paddingRight;
 					break;
 				}
-				default: // left
+				default: //left
 				{
 					this.content.x = this._paddingLeft;
 				}
@@ -1482,88 +1590,20 @@ package feathers.controls.renderers
 					this.content.height = this.actualHeight - this._paddingTop - this._paddingBottom;
 					break;
 				}
-				default: // middle
+				default: //middle
 				{
 					this.content.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - this.content.height) / 2;
 				}
 			}
+
 		}
 
 		/**
 		 * @private
 		 */
-		protected function contentLabelProperties_onChange( proxy : PropertyProxy, name : String ) : void
+		protected function contentLabelProperties_onChange( proxy : PropertyProxy , name : String ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
-
-		/**
-		 * The content will be aligned horizontally to the left edge of the renderer.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * The content will be aligned horizontally to the center of the renderer.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * The content will be aligned horizontally to the right edge of the renderer.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * The content will be justified horizontally, filling the entire width
-		 * of the renderer, minus padding.
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * The content will be aligned vertically to the top edge of the renderer.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * The content will be aligned vertically to the middle of the renderer.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * The content will be aligned vertically to the bottom edge of the renderer.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * The content will be justified vertically, filling the entire height
-		 * of the renderer, minus padding.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the
-		 * content label.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL : String = "feathers-header-footer-renderer-content-label";
-		/**
-		 * DEPRECATED: Replaced by <code>DefaultGroupedListHeaderOrFooterRenderer.DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see DefaultGroupedListHeaderOrFooterRenderer#DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL
-		 */
-		public static const DEFAULT_CHILD_NAME_CONTENT_LABEL : String = DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL;
 	}
 }

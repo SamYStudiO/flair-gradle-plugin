@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -11,7 +11,7 @@ package feathers.data
 
 	/**
 	 * An <code>IListCollectionDataDescriptor</code> implementation for Vector.&lt;Number&gt;.
-	 *
+	 * 
 	 * @see ListCollection
 	 * @see IListCollectionDataDescriptor
 	 */
@@ -36,7 +36,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemAt( data : Object, index : int ) : Object
+		public function getItemAt( data : Object , index : int ) : Object
 		{
 			this.checkForCorrectDataType( data );
 			return (data as Vector.<Number>)[ index ];
@@ -45,7 +45,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function setItemAt( data : Object, item : Object, index : int ) : void
+		public function setItemAt( data : Object , item : Object , index : int ) : void
 		{
 			this.checkForCorrectDataType( data );
 			(data as Vector.<Number>)[ index ] = item as Number;
@@ -54,19 +54,19 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function addItemAt( data : Object, item : Object, index : int ) : void
+		public function addItemAt( data : Object , item : Object , index : int ) : void
 		{
 			this.checkForCorrectDataType( data );
-			(data as Vector.<Number>).splice( index, 0, item as Number );
+			(data as Vector.<Number>).splice( index , 0 , item as Number );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function removeItemAt( data : Object, index : int ) : Object
+		public function removeItemAt( data : Object , index : int ) : Object
 		{
 			this.checkForCorrectDataType( data );
-			return (data as Vector.<Number>).splice( index, 1 )[ 0 ];
+			return (data as Vector.<Number>).splice( index , 1 )[ 0 ];
 		}
 
 		/**
@@ -81,7 +81,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemIndex( data : Object, item : Object ) : int
+		public function getItemIndex( data : Object , item : Object ) : int
 		{
 			this.checkForCorrectDataType( data );
 			return (data as Vector.<Number>).indexOf( item as Number );

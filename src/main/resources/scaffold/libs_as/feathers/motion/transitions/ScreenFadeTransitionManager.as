@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -41,7 +41,7 @@ package feathers.motion.transitions
 		 * @private
 		 */
 		protected var _duration : Number = 0.25;
-
+		
 		/**
 		 * The duration of the transition, measured in seconds.
 		 *
@@ -99,7 +99,7 @@ package feathers.motion.transitions
 		 * @private
 		 */
 		protected var _ease : Object = Transitions.EASE_OUT;
-
+		
 		/**
 		 * The easing function to use.
 		 *
@@ -140,7 +140,7 @@ package feathers.motion.transitions
 		 * The function passed to the <code>transition</code> property of the
 		 * <code>ScreenNavigator</code>.
 		 */
-		protected function onTransition( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 		{
 			if( this.skipNextTransition )
 			{
@@ -153,9 +153,9 @@ package feathers.motion.transitions
 			}
 			if( this._transition === null )
 			{
-				this._transition = Fade.createCrossfadeTransition( this._duration, this._ease, {delay : this._delay} );
+				this._transition = Fade.createCrossfadeTransition( this._duration , this._ease , {delay : this._delay} );
 			}
-			this._transition( oldScreen, newScreen, onComplete );
+			this._transition( oldScreen , newScreen , onComplete );
 		}
 	}
 }

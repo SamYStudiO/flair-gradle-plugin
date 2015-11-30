@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,6 +8,7 @@
 package feathers.controls.text
 {
 	import feathers.controls.Scroller;
+	import feathers.skins.IStyleProvider;
 	import feathers.utils.geom.matrixToRotation;
 	import feathers.utils.geom.matrixToScaleX;
 	import feathers.utils.geom.matrixToScaleY;
@@ -32,6 +33,22 @@ package feathers.controls.text
 	public class TextFieldTextEditorViewPort extends TextFieldTextEditor implements ITextEditorViewPort
 	{
 		/**
+		 * The default <code>IStyleProvider</code> for all <code>TextFieldTextEditorViewPort</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @private
+		 */
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
 		 * @private
 		 */
 		private var _ignoreScrolling : Boolean = false;
@@ -39,6 +56,14 @@ package feathers.controls.text
 		 * @private
 		 */
 		protected var _scrollStep : int = 0;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider() : IStyleProvider
+		{
+			return globalStyleProvider;
+		}
 
 		/**
 		 * @private
@@ -62,7 +87,7 @@ package feathers.controls.text
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleWidth cannot be NaN" );
 			}
@@ -92,7 +117,7 @@ package feathers.controls.text
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleWidth cannot be NaN" );
 			}
@@ -118,7 +143,7 @@ package feathers.controls.text
 		 */
 		public function set visibleWidth( value : Number ) : void
 		{
-			if( this._visibleWidth == value || (value !== value && this._visibleWidth !== this._visibleWidth) ) // isNaN
+			if( this._visibleWidth == value || (value !== value && this._visibleWidth !== this._visibleWidth) ) //isNaN
 			{
 				return;
 			}
@@ -148,7 +173,7 @@ package feathers.controls.text
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleHeight cannot be NaN" );
 			}
@@ -178,7 +203,7 @@ package feathers.controls.text
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleHeight cannot be NaN" );
 			}
@@ -204,7 +229,7 @@ package feathers.controls.text
 		 */
 		public function set visibleHeight( value : Number ) : void
 		{
-			if( this._visibleHeight == value || (value !== value && this._visibleHeight !== this._visibleHeight) ) // isNaN
+			if( this._visibleHeight == value || (value !== value && this._visibleHeight !== this._visibleHeight) ) //isNaN
 			{
 				return;
 			}
@@ -256,8 +281,8 @@ package feathers.controls.text
 		 */
 		public function set horizontalScrollPosition( value : Number ) : void
 		{
-			// this value is basically ignored because the text does not scroll
-			// horizontally. instead, it wraps.
+			//this value is basically ignored because the text does not scroll
+			//horizontally. instead, it wraps.
 			this._horizontalScrollPosition = value;
 		}
 
@@ -285,8 +310,16 @@ package feathers.controls.text
 			}
 			this._verticalScrollPosition = value;
 			this.invalidate( INVALIDATION_FLAG_SCROLL );
-			// hack because the superclass doesn't know about the scroll flag
+			//hack because the superclass doesn't know about the scroll flag
 			this.invalidate( INVALIDATION_FLAG_SIZE );
+		}
+
+		/**
+		 * @private
+		 */
+		override public function get baseline() : Number
+		{
+			return super.baseline + this._paddingTop + this._verticalScrollPosition;
 		}
 
 		/**
@@ -455,7 +488,7 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth : Boolean = this._visibleWidth !== this._visibleWidth; // isNaN
+			var needsWidth : Boolean = this._visibleWidth !== this._visibleWidth; //isNaN
 
 			this.commitStylesAndData( this.measureTextField );
 
@@ -484,6 +517,17 @@ package feathers.controls.text
 			{
 				newHeight += 4;
 			}
+			if( this._visibleHeight === this._visibleHeight ) //!isNaN
+			{
+				if( newHeight < this._visibleHeight )
+				{
+					newHeight = this._visibleHeight;
+				}
+			}
+			else if( newHeight < this._minVisibleHeight )
+			{
+				newHeight = this._minVisibleHeight;
+			}
 
 			result.x = newWidth;
 			result.y = newHeight;
@@ -494,10 +538,10 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override protected function getSelectionIndexAtPoint( pointX : Number, pointY : Number ) : int
+		override protected function getSelectionIndexAtPoint( pointX : Number , pointY : Number ) : int
 		{
 			pointY += this._verticalScrollPosition;
-			return this.textField.getCharIndexAtPoint( pointX, pointY );
+			return this.textField.getCharIndexAtPoint( pointX , pointY );
 		}
 
 		/**
@@ -506,7 +550,7 @@ package feathers.controls.text
 		override protected function refreshSnapshotParameters() : void
 		{
 			var textFieldWidth : Number = this._visibleWidth - this._paddingLeft - this._paddingRight;
-			if( textFieldWidth !== textFieldWidth ) // isNaN
+			if( textFieldWidth !== textFieldWidth ) //isNaN
 			{
 				if( this._maxVisibleWidth < Number.POSITIVE_INFINITY )
 				{
@@ -518,7 +562,7 @@ package feathers.controls.text
 				}
 			}
 			var textFieldHeight : Number = this._visibleHeight - this._paddingTop - this._paddingBottom;
-			if( textFieldHeight !== textFieldHeight ) // isNaN
+			if( textFieldHeight !== textFieldHeight ) //isNaN
 			{
 				if( this._maxVisibleHeight < Number.POSITIVE_INFINITY )
 				{
@@ -532,22 +576,31 @@ package feathers.controls.text
 
 			this._textFieldOffsetX = 0;
 			this._textFieldOffsetY = 0;
-			this._textFieldClipRect.x = 0;
-			this._textFieldClipRect.y = 0;
+			this._textFieldSnapshotClipRect.x = 0;
+			this._textFieldSnapshotClipRect.y = 0;
 
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			var clipWidth : Number = textFieldWidth * Starling.contentScaleFactor * matrixToScaleX( HELPER_MATRIX );
+			var scaleFactor : Number = Starling.contentScaleFactor;
+			var clipWidth : Number = textFieldWidth * scaleFactor;
+			if( this._updateSnapshotOnScaleChange )
+			{
+				this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+				clipWidth *= matrixToScaleX( HELPER_MATRIX );
+			}
 			if( clipWidth < 0 )
 			{
 				clipWidth = 0;
 			}
-			var clipHeight : Number = textFieldHeight * Starling.contentScaleFactor * matrixToScaleY( HELPER_MATRIX );
+			var clipHeight : Number = textFieldHeight * scaleFactor;
+			if( this._updateSnapshotOnScaleChange )
+			{
+				clipHeight *= matrixToScaleY( HELPER_MATRIX );
+			}
 			if( clipHeight < 0 )
 			{
 				clipHeight = 0;
 			}
-			this._textFieldClipRect.width = clipWidth;
-			this._textFieldClipRect.height = clipHeight;
+			this._textFieldSnapshotClipRect.width = clipWidth;
+			this._textFieldSnapshotClipRect.height = clipHeight;
 		}
 
 		/**
@@ -601,8 +654,8 @@ package feathers.controls.text
 			}
 			var scaleFactor : Number = Starling.contentScaleFactor / nativeScaleFactor;
 			HELPER_POINT.x = HELPER_POINT.y = 0;
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			MatrixUtil.transformCoords( HELPER_MATRIX, 0, 0, HELPER_POINT );
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+			MatrixUtil.transformCoords( HELPER_MATRIX , 0 , 0 , HELPER_POINT );
 			var scaleX : Number = matrixToScaleX( HELPER_MATRIX ) * scaleFactor;
 			var scaleY : Number = matrixToScaleY( HELPER_MATRIX ) * scaleFactor;
 			var offsetX : Number = Math.round( this._paddingLeft * scaleX );
@@ -629,7 +682,7 @@ package feathers.controls.text
 			{
 				return;
 			}
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
 			this.textSnapshot.x = this._paddingLeft + Math.round( HELPER_MATRIX.tx ) - HELPER_MATRIX.tx;
 			this.textSnapshot.y = this._paddingTop + this._verticalScrollPosition + Math.round( HELPER_MATRIX.ty ) - HELPER_MATRIX.ty;
 		}
@@ -648,8 +701,8 @@ package feathers.controls.text
 		 */
 		protected function textField_scrollHandler( event : Event ) : void
 		{
-			// for some reason, the text field's scroll positions don't work
-			// properly unless we access the values here. weird.
+			//for some reason, the text field's scroll positions don't work
+			//properly unless we access the values here. weird.
 			var scrollH : Number = this.textField.scrollH;
 			var scrollV : Number = this.textField.scrollV;
 			if( this._ignoreScrolling )
@@ -660,7 +713,7 @@ package feathers.controls.text
 			if( scroller.maxVerticalScrollPosition > 0 && this.textField.maxScrollV > 1 )
 			{
 				var calculatedVerticalScrollPosition : Number = scroller.maxVerticalScrollPosition * (scrollV - 1) / (this.textField.maxScrollV - 1);
-				scroller.verticalScrollPosition = roundToNearest( calculatedVerticalScrollPosition, this._scrollStep );
+				scroller.verticalScrollPosition = roundToNearest( calculatedVerticalScrollPosition , this._scrollStep );
 			}
 		}
 
@@ -669,7 +722,7 @@ package feathers.controls.text
 		 */
 		override protected function textField_focusInHandler( event : FocusEvent ) : void
 		{
-			this.textField.addEventListener( Event.SCROLL, textField_scrollHandler );
+			this.textField.addEventListener( Event.SCROLL , textField_scrollHandler );
 			super.textField_focusInHandler( event );
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
@@ -679,18 +732,10 @@ package feathers.controls.text
 		 */
 		override protected function textField_focusOutHandler( event : FocusEvent ) : void
 		{
-			this.textField.removeEventListener( Event.SCROLL, textField_scrollHandler );
+			this.textField.removeEventListener( Event.SCROLL , textField_scrollHandler );
 			super.textField_focusOutHandler( event );
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
 
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

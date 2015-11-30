@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -37,7 +37,7 @@ package feathers.skins
 		 * Stores a value for a specified state to be returned from
 		 * getValueForState().
 		 */
-		public function setValueForState( value : Object, state : Object ) : void
+		public function setValueForState( value : Object , state : Object ) : void
 		{
 			this.stateToValue[ state ] = value;
 		}
@@ -68,7 +68,7 @@ package feathers.skins
 		 * @param state            The current state.
 		 * @param oldValue        The previous value. May be reused for the new value.
 		 */
-		public function updateValue( target : Object, state : Object, oldValue : Object = null ) : Object
+		public function updateValue( target : Object , state : Object , oldValue : Object = null ) : Object
 		{
 			var value : Object = this.stateToValue[ state ];
 			if( !value )

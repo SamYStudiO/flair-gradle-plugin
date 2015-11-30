@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,9 +8,12 @@
 package feathers.controls.text
 {
 	import feathers.core.FeathersControl;
+	import feathers.core.FocusManager;
 	import feathers.core.IMultilineTextEditor;
 	import feathers.events.FeathersEventType;
+	import feathers.skins.IStyleProvider;
 	import feathers.text.StageTextField;
+	import feathers.utils.display.stageToStarling;
 	import feathers.utils.geom.matrixToScaleX;
 	import feathers.utils.geom.matrixToScaleY;
 
@@ -20,8 +23,10 @@ package feathers.controls.text
 	import flash.events.KeyboardEvent;
 	import flash.events.SoftKeyboardEvent;
 	import flash.geom.Matrix;
+	import flash.geom.Matrix3D;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.geom.Vector3D;
 	import flash.system.Capabilities;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -40,6 +45,7 @@ package feathers.controls.text
 	import starling.textures.ConcreteTexture;
 	import starling.textures.Texture;
 	import starling.utils.MatrixUtil;
+	import starling.utils.SystemUtil;
 
 	/**
 	 * Dispatched when the text property changes.
@@ -59,7 +65,8 @@ package feathers.controls.text
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the user presses the Enter key while the editor has
 	 * focus. This event may not be dispatched on some platforms, depending on
@@ -84,7 +91,8 @@ package feathers.controls.text
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 * @see #returnKeyLabel
 	 */
-	[Event(name="enter", type="starling.events.Event")]
+	[Event(name="enter" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text editor receives focus.
 	 *
@@ -105,7 +113,8 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn", type="starling.events.Event")]
+	[Event(name="focusIn" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text editor loses focus.
 	 *
@@ -126,7 +135,8 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut", type="starling.events.Event")]
+	[Event(name="focusOut" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is activated. Not all text editors will
 	 * activate a soft keyboard.
@@ -148,7 +158,8 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_ACTIVATE
 	 */
-	[Event(name="softKeyboardActivate", type="starling.events.Event")]
+	[Event(name="softKeyboardActivate" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is deactivated. Not all text editors
 	 * will activate a soft keyboard.
@@ -170,22 +181,62 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_DEACTIVATE
 	 */
-	[Event(name="softKeyboardDeactivate", type="starling.events.Event")]
+	[Event(name="softKeyboardDeactivate" , type="starling.events.Event")]
+
 	/**
-	 * A Feathers text editor that uses the native <code>flash.text.StageText</code>
-	 * class in Adobe AIR, and the custom <code>feathers.text.StageTextField</code>
-	 * class (that simulates <code>StageText</code> using
-	 * <code>flash.text.TextField</code>) in Adobe Flash Player.
+	 * Text that may be edited at runtime by the user with the
+	 * <code>TextInput</code> component, rendered with the native
+	 * <code>flash.text.StageText</code> class in Adobe AIR and the custom
+	 * <code>feathers.text.StageTextField</code> class in Adobe Flash Player
+	 * (<code>StageTextField</code> simulates <code>StageText</code> using
+	 * <code>flash.text.TextField</code>). When not in focus, the
+	 * <code>StageText</code> (or <code>StageTextField</code>) is drawn to
+	 * <code>BitmapData</code> and uploaded to a texture on the GPU. Textures
+	 * are managed internally by this component, and they will be automatically
+	 * disposed when the component is disposed.
 	 *
-	 * <p>Note: Due to quirks with how the runtime manages focus with
-	 * <code>StageText</code>, <code>StageTextTextEditor</code> is not
-	 * compatible with the Feathers <code>FocusManager</code>.</p>
+	 * <p>The following example shows how to use
+	 * <code>StageTextTextEditor</code> with a <code>TextInput</code>:</p>
 	 *
-	 * @see ../../../help/text-editors.html Introduction to Feathers text editors
+	 * <listing version="3.0">
+	 * var input:TextInput = new TextInput();
+	 * input.textEditorFactory = function():ITextEditor
+	 * {
+	 *     return new StageTextTextEditor();
+	 * };
+	 * this.addChild( input );</listing>
+	 *
+	 * @see feathers.controls.TextInput
+	 * @see ../../../../help/text-editors.html Introduction to Feathers text editors
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html flash.text.StageText
 	 * @see feathers.text.StageTextField
 	 */ public class StageTextTextEditor extends FeathersControl implements IMultilineTextEditor
 	{
+		/**
+		 * @private
+		 */
+		private static var HELPER_MATRIX3D : Matrix3D;
+
+		/**
+		 * @private
+		 */
+		private static var HELPER_POINT3D : Vector3D;
+		/**
+		 * The default <code>IStyleProvider</code> for all <code>StageTextTextEditor</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @private
+		 */
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
 		/**
 		 * The StageText instance. It's typed Object so that a replacement class
 		 * can be used in browser-based Flash Player.
@@ -235,35 +286,21 @@ package feathers.controls.text
 		 * @private
 		 */
 		protected var _stageTextIsComplete : Boolean = false;
+		/**
+		 * @private
+		 */
+		protected var _lastGlobalScaleX : Number = 0;
+		/**
+		 * @private
+		 */
+		protected var _lastGlobalScaleY : Number = 0;
 
 		/**
 		 * @private
 		 */
-		override public function set x( value : Number ) : void
+		override protected function get defaultStyleProvider() : IStyleProvider
 		{
-			if( super.x == value )
-			{
-				return;
-			}
-			super.x = value;
-			// we need to know when the position changes to change the position
-			// of the StageText instance.
-			this.invalidate( INVALIDATION_FLAG_POSITION );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function set y( value : Number ) : void
-		{
-			if( super.y == value )
-			{
-				return;
-			}
-			super.y = value;
-			// we need to know when the position changes to change the position
-			// of the StageText instance.
-			this.invalidate( INVALIDATION_FLAG_POSITION );
+			return globalStyleProvider;
 		}
 
 		/**
@@ -293,7 +330,7 @@ package feathers.controls.text
 		{
 			if( !value )
 			{
-				// don't allow null or undefined
+				//don't allow null or undefined
 				value = "";
 			}
 			if( this._text == value )
@@ -366,7 +403,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.AutoCapitalize.NONE
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#autoCapitalize Full description of flash.text.StageText.autoCapitalize in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#autoCapitalize Full description of
+		 *     flash.text.StageText.autoCapitalize in Adobe's Flash Platform API Reference
 		 */
 		public function get autoCapitalize() : String
 		{
@@ -404,7 +442,8 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#autoCorrect Full description of flash.text.StageText.autoCorrect in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#autoCorrect Full description of
+		 *     flash.text.StageText.autoCorrect in Adobe's Flash Platform API Reference
 		 */
 		public function get autoCorrect() : Boolean
 		{
@@ -441,7 +480,8 @@ package feathers.controls.text
 		 * @default 0x000000
 		 *
 		 * @see #disabledColor
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#color Full description of flash.text.StageText.color in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#color Full description of
+		 *     flash.text.StageText.color in Adobe's Flash Platform API Reference
 		 */
 		public function get color() : uint
 		{
@@ -479,7 +519,8 @@ package feathers.controls.text
 		 * @default 0x999999
 		 *
 		 * @see #disabledColor
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#color Full description of flash.text.StageText.color in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#color Full description of
+		 *     flash.text.StageText.color in Adobe's Flash Platform API Reference
 		 */
 		public function get disabledColor() : uint
 		{
@@ -505,17 +546,13 @@ package feathers.controls.text
 		protected var _displayAsPassword : Boolean = false;
 
 		/**
-		 * Indicates whether the text field is a password text field that hides
-		 * input characters using a substitute character.
+		 * <p>This property is managed by the <code>TextInput</code>.</p>
 		 *
-		 * <p>In the following example, the text is displayed as a password:</p>
+		 * @copy feathers.controls.TextInput#displayAsPassword
 		 *
-		 * <listing version="3.0">
-		 * textEditor.displayAsPassword = true;</listing>
-		 *
-		 * @default false
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#displayAsPassword Full description of flash.text.StageText.displayAsPassword in Adobe's Flash Platform API Reference
+		 * @see feathers.controls.TextInput#displayAsPassword
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#displayAsPassword Full description of
+		 *     flash.text.StageText.displayAsPassword in Adobe's Flash Platform API Reference
 		 */
 		public function get displayAsPassword() : Boolean
 		{
@@ -541,15 +578,11 @@ package feathers.controls.text
 		protected var _isEditable : Boolean = true;
 
 		/**
-		 * Determines if the text input is editable. If the text input is not
-		 * editable, it will still appear enabled.
+		 * <p>This property is managed by the <code>TextInput</code>.</p>
 		 *
-		 * <p>In the following example, the text is not editable:</p>
+		 * @copy feathers.controls.TextInput#isEditable
 		 *
-		 * <listing version="3.0">
-		 * textEditor.isEditable = false;</listing>
-		 *
-		 * @default true
+		 * @see feathers.controls.TextInput#isEditable
 		 */
 		public function get isEditable() : Boolean
 		{
@@ -566,6 +599,36 @@ package feathers.controls.text
 				return;
 			}
 			this._isEditable = value;
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _isSelectable : Boolean = true;
+
+		/**
+		 * <p>This property is managed by the <code>TextInput</code>.</p>
+		 *
+		 * @copy feathers.controls.TextInput#isSelectable
+		 *
+		 * @see feathers.controls.TextInput#isSelectable
+		 */
+		public function get isSelectable() : Boolean
+		{
+			return this._isEditable;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set isSelectable( value : Boolean ) : void
+		{
+			if( this._isSelectable == value )
+			{
+				return;
+			}
+			this._isSelectable = value;
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -595,7 +658,8 @@ package feathers.controls.text
 		 *
 		 * @default null
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontFamily Full description of flash.text.StageText.fontFamily in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontFamily Full description of
+		 *     flash.text.StageText.fontFamily in Adobe's Flash Platform API Reference
 		 */
 		public function get fontFamily() : String
 		{
@@ -631,7 +695,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.engine.FontPosture.NORMAL
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontPosture Full description of flash.text.StageText.fontPosture in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontPosture Full description of
+		 *     flash.text.StageText.fontPosture in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/engine/FontPosture.html flash.text.engine.FontPosture
 		 */
 		public function get fontPosture() : String
@@ -667,7 +732,8 @@ package feathers.controls.text
 		 *
 		 * @default 12
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontSize Full description of flash.text.StageText.fontSize in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontSize Full description of
+		 *     flash.text.StageText.fontSize in Adobe's Flash Platform API Reference
 		 */
 		public function get fontSize() : int
 		{
@@ -703,7 +769,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.engine.FontWeight.NORMAL
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontWeight Full description of flash.text.StageText.fontWeight in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#fontWeight Full description of
+		 *     flash.text.StageText.fontWeight in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/engine/FontWeight.html flash.text.engine.FontWeight
 		 */
 		public function get fontWeight() : String
@@ -741,7 +808,8 @@ package feathers.controls.text
 		 *
 		 * @default "en"
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#locale Full description of flash.text.StageText.locale in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#locale Full description of
+		 *     flash.text.StageText.locale in Adobe's Flash Platform API Reference
 		 */
 		public function get locale() : String
 		{
@@ -767,19 +835,13 @@ package feathers.controls.text
 		protected var _maxChars : int = 0;
 
 		/**
-		 * Indicates the maximum number of characters that a user can enter into
-		 * the text editor. A script can insert more text than <code>maxChars</code>
-		 * allows. If <code>maxChars</code> equals zero, a user can enter an
-		 * unlimited amount of text into the text editor.
+		 * <p>This property is managed by the <code>TextInput</code>.</p>
 		 *
-		 * <p>In the following example, the maximum character count is changed:</p>
+		 * @copy feathers.controls.TextInput#maxChars
 		 *
-		 * <listing version="3.0">
-		 * textEditor.maxChars = 10;</listing>
-		 *
-		 * @default 0
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#maxChars Full description of flash.text.StageText.maxChars in Adobe's Flash Platform API Reference
+		 * @see feathers.controls.TextInput#maxChars
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#maxChars Full description of
+		 *     flash.text.StageText.maxChars in Adobe's Flash Platform API Reference
 		 */
 		public function get maxChars() : int
 		{
@@ -823,7 +885,8 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#multiline Full description of flash.text.StageText.multiline in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#multiline Full description of
+		 *     flash.text.StageText.multiline in Adobe's Flash Platform API Reference
 		 */
 		public function get multiline() : Boolean
 		{
@@ -849,18 +912,13 @@ package feathers.controls.text
 		protected var _restrict : String;
 
 		/**
-		 * Restricts the set of characters that a user can enter into the text
-		 * field. Only user interaction is restricted; a script can put any text
-		 * into the text field.
+		 * <p>This property is managed by the <code>TextInput</code>.</p>
 		 *
-		 * <p>In the following example, the text is restricted to numbers:</p>
+		 * @copy feathers.controls.TextInput#restrict
 		 *
-		 * <listing version="3.0">
-		 * textEditor.restrict = "0-9";</listing>
-		 *
-		 * @default null
-		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#restrict Full description of flash.text.StageText.restrict in Adobe's Flash Platform API Reference
+		 * @see feathers.controls.TextInput#restrict
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#restrict Full description of
+		 *     flash.text.StageText.restrict in Adobe's Flash Platform API Reference
 		 */
 		public function get restrict() : String
 		{
@@ -899,7 +957,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.ReturnKeyLabel.DEFAULT
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#returnKeyLabel Full description of flash.text.StageText.returnKeyLabel in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#returnKeyLabel Full description of
+		 *     flash.text.StageText.returnKeyLabel in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/ReturnKeyLabel.html flash.text.ReturnKeyLabel
 		 */
 		public function get returnKeyLabel() : String
@@ -939,7 +998,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.SoftKeyboardType.DEFAULT
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#softKeyboardType Full description of flash.text.StageText.softKeyboardType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#softKeyboardType Full description of
+		 *     flash.text.StageText.softKeyboardType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/SoftKeyboardType.html flash.text.SoftKeyboardType
 		 */
 		public function get softKeyboardType() : String
@@ -976,7 +1036,8 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.TextFormatAlign.START
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#textAlign Full description of flash.text.StageText.textAlign in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StageText.html#textAlign Full description of
+		 *     flash.text.StageText.textAlign in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextFormatAlign.html flash.text.TextFormatAlign
 		 */
 		public function get textAlign() : String
@@ -998,13 +1059,55 @@ package feathers.controls.text
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _updateSnapshotOnScaleChange : Boolean = false;
+
+		/**
+		 * Refreshes the texture snapshot every time that the text editor is
+		 * scaled. Based on the scale in global coordinates, so scaling the
+		 * parent will require a new snapshot.
+		 *
+		 * <p>Warning: setting this property to true may result in reduced
+		 * performance because every change of the scale requires uploading a
+		 * new texture to the GPU. Use with caution. Consider setting this
+		 * property to false temporarily during animations that modify the
+		 * scale.</p>
+		 *
+		 * <p>In the following example, the snapshot will be updated when the
+		 * text editor is scaled:</p>
+		 *
+		 * <listing version="3.0">
+		 * textEditor.updateSnapshotOnScaleChange = true;</listing>
+		 *
+		 * @default false
+		 */
+		public function get updateSnapshotOnScaleChange() : Boolean
+		{
+			return this._updateSnapshotOnScaleChange;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set updateSnapshotOnScaleChange( value : Boolean ) : void
+		{
+			if( this._updateSnapshotOnScaleChange == value )
+			{
+				return;
+			}
+			this._updateSnapshotOnScaleChange = value;
+			this.invalidate( INVALIDATION_FLAG_DATA );
+		}
+
+		/**
 		 * Constructor.
 		 */
 		public function StageTextTextEditor()
 		{
 			this._stageTextIsTextField = /^(Windows|Mac OS|Linux) .*/.exec( Capabilities.os );
 			this.isQuickHitAreaEnabled = true;
-			this.addEventListener( starling.events.Event.REMOVED_FROM_STAGE, textEditor_removedFromStageHandler );
+			this.addEventListener( starling.events.Event.REMOVED_FROM_STAGE , textEditor_removedFromStageHandler );
 		}
 
 		/**
@@ -1025,10 +1128,10 @@ package feathers.controls.text
 
 			if( this.textSnapshot )
 			{
-				// avoid the need to call dispose(). we'll create a new snapshot
-				// when the renderer is added to stage again.
+				//avoid the need to call dispose(). we'll create a new snapshot
+				//when the renderer is added to stage again.
 				this.textSnapshot.texture.dispose();
-				this.removeChild( this.textSnapshot, true );
+				this.removeChild( this.textSnapshot , true );
 				this.textSnapshot = null;
 			}
 
@@ -1038,64 +1141,33 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport, parentAlpha : Number ) : void
+		override public function render( support : RenderSupport , parentAlpha : Number ) : void
 		{
-			var desktopGutterPositionOffset : Number = 0;
-			var desktopGutterDimensionsOffset : Number = 0;
-			if( this._stageTextIsTextField )
+			if( this.textSnapshot && this._updateSnapshotOnScaleChange )
 			{
-				desktopGutterPositionOffset = 2;
-				desktopGutterDimensionsOffset = 4;
+				this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+				if( matrixToScaleX( HELPER_MATRIX ) != this._lastGlobalScaleX || matrixToScaleY( HELPER_MATRIX ) != this._lastGlobalScaleY )
+				{
+					//the snapshot needs to be updated because the scale has
+					//changed since the last snapshot was taken.
+					this.invalidate( INVALIDATION_FLAG_SIZE );
+					this.validate();
+				}
 			}
-			HELPER_POINT.x = HELPER_POINT.y = 0;
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			MatrixUtil.transformCoords( HELPER_MATRIX, -desktopGutterPositionOffset, -desktopGutterPositionOffset, HELPER_POINT );
-			var starlingViewPort : Rectangle = Starling.current.viewPort;
-			var stageTextViewPort : Rectangle = this.stageText.viewPort;
-			if( !stageTextViewPort )
-			{
-				stageTextViewPort = new Rectangle();
-			}
-			var nativeScaleFactor : Number = 1;
-			if( Starling.current.supportHighResolutions )
-			{
-				nativeScaleFactor = Starling.current.nativeStage.contentsScaleFactor;
-			}
-			var scaleFactor : Number = Starling.contentScaleFactor / nativeScaleFactor;
-			stageTextViewPort.x = Math.round( starlingViewPort.x + (HELPER_POINT.x * scaleFactor) );
-			stageTextViewPort.y = Math.round( starlingViewPort.y + (HELPER_POINT.y * scaleFactor) );
-			this.stageText.viewPort = stageTextViewPort;
 
-			if( this.stageText.visible )
+			//we'll skip this if the text field isn't visible to avoid running
+			//that code every frame.
+			if( this.stageText && this.stageText.visible )
 			{
-				this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-				var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
-				var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
-				var smallerGlobalScale : Number = globalScaleX;
-				if( globalScaleY < globalScaleX )
-				{
-					smallerGlobalScale = globalScaleY;
-				}
-				// for some reason, we don't need to account for the native scale factor here
-				scaleFactor = Starling.contentScaleFactor;
-				var newFontSize : Number = this._fontSize * scaleFactor * smallerGlobalScale;
-				if( this.stageText.fontSize != newFontSize )
-				{
-					// we need to check if this value has changed because on iOS
-					// if displayAsPassword is set to true, the new character
-					// will not be shown if the font size changes. instead, it
-					// immediately changes to a bullet. (Github issue #881)
-					this.stageText.fontSize = newFontSize;
-				}
+				this.refreshViewPortAndFontSize();
 			}
 
 			if( this.textSnapshot )
 			{
-				this.textSnapshot.x = Math.round( HELPER_MATRIX.tx ) - HELPER_MATRIX.tx - desktopGutterPositionOffset;
-				this.textSnapshot.y = Math.round( HELPER_MATRIX.ty ) - HELPER_MATRIX.ty - desktopGutterPositionOffset;
+				this.positionSnapshot();
 			}
 
-			super.render( support, parentAlpha );
+			super.render( support , parentAlpha );
 		}
 
 		/**
@@ -1103,6 +1175,16 @@ package feathers.controls.text
 		 */
 		public function setFocus( position : Point = null ) : void
 		{
+			//setting the editable property of a StageText to false seems to be
+			//ignored on Android, so this is the workaround
+			if( !this._isEditable && SystemUtil.platform === "AND" )
+			{
+				return;
+			}
+			if( !this._isEditable && !this._isSelectable )
+			{
+				return;
+			}
 			if( this.stage && !this.stageText.stage )
 			{
 				this.stageText.stage = Starling.current.nativeStage;
@@ -1119,7 +1201,7 @@ package feathers.controls.text
 					}
 					else
 					{
-						this._pendingSelectionBeginIndex = this._measureTextField.getCharIndexAtPoint( positionX, positionY );
+						this._pendingSelectionBeginIndex = this._measureTextField.getCharIndexAtPoint( positionX , positionY );
 						if( this._pendingSelectionBeginIndex < 0 )
 						{
 							if( this._multiline )
@@ -1135,14 +1217,14 @@ package feathers.controls.text
 								}
 								catch( error : Error )
 								{
-									// we may be checking for a line beyond the
-									// end that doesn't exist
+									//we may be checking for a line beyond the
+									//end that doesn't exist
 									this._pendingSelectionBeginIndex = this._text.length;
 								}
 							}
 							else
 							{
-								this._pendingSelectionBeginIndex = this._measureTextField.getCharIndexAtPoint( positionX, this._measureTextField.getLineMetrics( 0 ).ascent / 2 );
+								this._pendingSelectionBeginIndex = this._measureTextField.getCharIndexAtPoint( positionX , this._measureTextField.getLineMetrics( 0 ).ascent / 2 );
 								if( this._pendingSelectionBeginIndex < 0 )
 								{
 									this._pendingSelectionBeginIndex = this._text.length;
@@ -1183,19 +1265,23 @@ package feathers.controls.text
 			{
 				return;
 			}
-			Starling.current.nativeStage.focus = Starling.current.nativeStage;
+			//setting the focus to Starling.current.nativeStage doesn't work
+			//here, so we need to use null. on Android, if we give focus to the
+			//nativeStage, focus will be removed from the StageText, but the
+			//soft keyboard will incorrectly remain open.
+			Starling.current.nativeStage.focus = null;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function selectRange( beginIndex : int, endIndex : int ) : void
+		public function selectRange( beginIndex : int , endIndex : int ) : void
 		{
 			if( this._stageTextIsComplete && this.stageText )
 			{
 				this._pendingSelectionBeginIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.stageText.selectRange( beginIndex, endIndex );
+				this.stageText.selectRange( beginIndex , endIndex );
 			}
 			else
 			{
@@ -1214,8 +1300,8 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				result.x = this.explicitWidth;
@@ -1223,9 +1309,9 @@ package feathers.controls.text
 				return result;
 			}
 
-			// if a parent component validates before we're added to the stage,
-			// measureText() may be called before initialization, so we need to
-			// force it.
+			//if a parent component validates before we're added to the stage,
+			//measureText() may be called before initialization, so we need to
+			//force it.
 			if( !this._isInitialized )
 			{
 				this.initializeInternal();
@@ -1262,7 +1348,7 @@ package feathers.controls.text
 				this._measureTextField.multiline = false;
 				this._measureTextField.wordWrap = false;
 				this._measureTextField.embedFonts = false;
-				this._measureTextField.defaultTextFormat = new TextFormat( null, 11, 0x000000, false, false, false );
+				this._measureTextField.defaultTextFormat = new TextFormat( null , 11 , 0x000000 , false , false , false );
 				Starling.current.nativeStage.addChild( this._measureTextField );
 			}
 
@@ -1299,7 +1385,7 @@ package feathers.controls.text
 
 			var oldIgnoreStageTextChanges : Boolean = this._ignoreStageTextChanges;
 			this._ignoreStageTextChanges = true;
-			if( stylesInvalid )
+			if( stateInvalid || stylesInvalid )
 			{
 				this.refreshStageTextProperties();
 			}
@@ -1334,8 +1420,8 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 
 			this._measureTextField.autoSize = TextFieldAutoSize.LEFT;
 
@@ -1353,17 +1439,17 @@ package feathers.controls.text
 				}
 			}
 
-			// the +4 is accounting for the TextField gutter
+			//the +4 is accounting for the TextField gutter
 			this._measureTextField.width = newWidth + 4;
 			var newHeight : Number = this.explicitHeight;
 			if( needsHeight )
 			{
-				// since we're measuring with TextField, but rendering with
-				// StageText, we're using height instead of textHeight here to be
-				// sure that the measured size is on the larger side, in case the
-				// rendered size is actually bigger than textHeight
-				// if only StageText had an API for text measurement, we wouldn't
-				// be in this mess...
+				//since we're measuring with TextField, but rendering with
+				//StageText, we're using height instead of textHeight here to be
+				//sure that the measured size is on the larger side, in case the
+				//rendered size is actually bigger than textHeight
+				//if only StageText had an API for text measurement, we wouldn't
+				//be in this mess...
 				newHeight = this._measureTextField.height;
 				if( newHeight < this._minHeight )
 				{
@@ -1377,9 +1463,9 @@ package feathers.controls.text
 
 			this._measureTextField.autoSize = TextFieldAutoSize.NONE;
 
-			// put the width and height back just in case we measured without
-			// a full validation
-			// the +4 is accounting for the TextField gutter
+			//put the width and height back just in case we measured without
+			//a full validation
+			//the +4 is accounting for the TextField gutter
 			this._measureTextField.width = this.actualWidth + 4;
 			this._measureTextField.height = this.actualHeight;
 
@@ -1397,18 +1483,18 @@ package feathers.controls.text
 			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
 			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
 			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var positionInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_POSITION );
 			var skinInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SKIN );
 
-			if( positionInvalid || sizeInvalid || stylesInvalid || skinInvalid || stateInvalid )
+			if( sizeInvalid || stylesInvalid || skinInvalid || stateInvalid )
 			{
-				this.refreshViewPort();
+				this.refreshViewPortAndFontSize();
+				this.refreshMeasureTextFieldDimensions();
 				var viewPort : Rectangle = this.stageText.viewPort;
 				var textureRoot : ConcreteTexture = this.textSnapshot ? this.textSnapshot.texture.root : null;
-				this._needsNewTexture = this._needsNewTexture || !this.textSnapshot || viewPort.width != textureRoot.width || viewPort.height != textureRoot.height;
+				this._needsNewTexture = this._needsNewTexture || !this.textSnapshot || textureRoot.scale != Starling.contentScaleFactor || viewPort.width != textureRoot.width || viewPort.height != textureRoot.height;
 			}
 
-			if( !this._stageTextHasFocus && (stylesInvalid || dataInvalid || sizeInvalid || this._needsNewTexture) )
+			if( !this._stageTextHasFocus && (stateInvalid || stylesInvalid || dataInvalid || sizeInvalid || this._needsNewTexture) )
 			{
 				var hasText : Boolean = this._text.length > 0;
 				if( hasText )
@@ -1444,15 +1530,15 @@ package feathers.controls.text
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
 			}
 
 			this.measure( HELPER_POINT );
-			return this.setSizeInternal( HELPER_POINT.x, HELPER_POINT.y, false );
+			return this.setSizeInternal( HELPER_POINT.x , HELPER_POINT.y , false );
 		}
 
 		/**
@@ -1526,19 +1612,6 @@ package feathers.controls.text
 			this.stageText.displayAsPassword = this._displayAsPassword;
 			this.stageText.fontFamily = this._fontFamily;
 			this.stageText.fontPosture = this._fontPosture;
-
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
-			var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
-			var smallerGlobalScale : Number = globalScaleX;
-			if( globalScaleY < globalScaleX )
-			{
-				smallerGlobalScale = globalScaleY;
-			}
-			// for some reason, we don't need to account for the native scale factor here
-			var scaleFactor : Number = Starling.contentScaleFactor;
-			this.stageText.fontSize = this._fontSize * scaleFactor * smallerGlobalScale;
-
 			this.stageText.fontWeight = this._fontWeight;
 			this.stageText.locale = this._locale;
 			this.stageText.maxChars = this._maxChars;
@@ -1566,10 +1639,10 @@ package feathers.controls.text
 				this._pendingSelectionEndIndex = -1;
 				if( this.stageText.selectionAnchorIndex != startIndex || this.stageText.selectionActiveIndex != endIndex )
 				{
-					// if the same range is already selected, don't try to do it
-					// again because on iOS, if the StageText is multiline, this
-					// will cause the clipboard menu to appear when it shouldn't.
-					this.selectRange( startIndex, endIndex );
+					//if the same range is already selected, don't try to do it
+					//again because on iOS, if the StageText is multiline, this
+					//will cause the clipboard menu to appear when it shouldn't.
+					this.selectRange( startIndex , endIndex );
 				}
 			}
 		}
@@ -1579,15 +1652,24 @@ package feathers.controls.text
 		 */
 		protected function texture_onRestore() : void
 		{
-			this.refreshSnapshot();
-			if( this.textSnapshot )
+			if( this.textSnapshot.texture.scale != Starling.contentScaleFactor )
 			{
-				this.textSnapshot.visible = !this._stageTextHasFocus;
-				this.textSnapshot.alpha = this._text.length > 0 ? 1 : 0;
+				//if we've changed between scale factors, we need to recreate
+				//the texture to match the new scale factor.
+				this.invalidate( INVALIDATION_FLAG_SIZE );
 			}
-			if( !this._stageTextHasFocus )
+			else
 			{
-				this.stageText.visible = false;
+				this.refreshSnapshot();
+				if( this.textSnapshot )
+				{
+					this.textSnapshot.visible = !this._stageTextHasFocus;
+					this.textSnapshot.alpha = this._text.length > 0 ? 1 : 0;
+				}
+				if( !this._stageTextHasFocus )
+				{
+					this.stageText.visible = false;
+				}
 			}
 		}
 
@@ -1596,16 +1678,16 @@ package feathers.controls.text
 		 */
 		protected function refreshSnapshot() : void
 		{
-			// StageText's stage property cannot be null when we call
-			// drawViewPortToBitmapData()
+			//StageText's stage property cannot be null when we call
+			//drawViewPortToBitmapData()
 			if( this.stage && !this.stageText.stage )
 			{
 				this.stageText.stage = Starling.current.nativeStage;
 			}
 			if( !this.stageText.stage )
 			{
-				// we need to keep a flag active so that the snapshot will be
-				// refreshed after the text editor is added to the stage
+				//we need to keep a flag active so that the snapshot will be
+				//refreshed after the text editor is added to the stage
 				this.invalidate( INVALIDATION_FLAG_DATA );
 				return;
 			}
@@ -1619,29 +1701,34 @@ package feathers.controls.text
 			{
 				nativeScaleFactor = Starling.current.nativeStage.contentsScaleFactor;
 			}
-			// StageText sucks because it requires that the BitmapData's width
-			// and height exactly match its view port width and height.
-			// (may be doubled on Retina Mac)
+			//StageText sucks because it requires that the BitmapData's width
+			//and height exactly match its view port width and height.
+			//(may be doubled on Retina Mac) 
 			try
 			{
-				var bitmapData : BitmapData = new BitmapData( viewPort.width * nativeScaleFactor, viewPort.height * nativeScaleFactor, true, 0x00ff00ff );
+				var bitmapData : BitmapData = new BitmapData( viewPort.width * nativeScaleFactor , viewPort.height * nativeScaleFactor , true , 0x00ff00ff );
 				this.stageText.drawViewPortToBitmapData( bitmapData );
 			}
 			catch( error : Error )
 			{
-				// drawing stage text to the bitmap data at double size may fail
-				// on runtime versions less than 15, so fall back to using a
-				// snapshot that is half size. it's not ideal, but better than
-				// nothing.
+				//drawing stage text to the bitmap data at double size may fail
+				//on runtime versions less than 15, so fall back to using a
+				//snapshot that is half size. it's not ideal, but better than
+				//nothing.
 				bitmapData.dispose();
-				bitmapData = new BitmapData( viewPort.width, viewPort.height, true, 0x00ff00ff );
+				bitmapData = new BitmapData( viewPort.width , viewPort.height , true , 0x00ff00ff );
 				this.stageText.drawViewPortToBitmapData( bitmapData );
 			}
 
 			var newTexture : Texture;
 			if( !this.textSnapshot || this._needsNewTexture )
 			{
-				newTexture = Texture.fromBitmapData( bitmapData, false, false, Starling.contentScaleFactor );
+				var scaleFactor : Number = Starling.contentScaleFactor;
+				//skip Texture.fromBitmapData() because we don't want
+				//it to create an onRestore function that will be
+				//immediately discarded for garbage collection. 
+				newTexture = Texture.empty( bitmapData.width / scaleFactor , bitmapData.height / scaleFactor , true , false , false , scaleFactor );
+				newTexture.root.uploadBitmapData( bitmapData );
 				newTexture.root.onRestore = texture_onRestore;
 			}
 			if( !this.textSnapshot )
@@ -1659,16 +1746,30 @@ package feathers.controls.text
 				}
 				else
 				{
-					// this is faster, if we haven't resized the bitmapdata
+					//this is faster, if we haven't resized the bitmapdata
 					var existingTexture : Texture = this.textSnapshot.texture;
 					existingTexture.root.uploadBitmapData( bitmapData );
 				}
 			}
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			this.textSnapshot.scaleX = 1 / matrixToScaleX( HELPER_MATRIX );
-			this.textSnapshot.scaleY = 1 / matrixToScaleY( HELPER_MATRIX );
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+			var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
+			var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
+			if( this._updateSnapshotOnScaleChange )
+			{
+				this.textSnapshot.scaleX = 1 / globalScaleX;
+				this.textSnapshot.scaleY = 1 / globalScaleY;
+				this._lastGlobalScaleX = globalScaleX;
+				this._lastGlobalScaleY = globalScaleY;
+			}
+			else
+			{
+				this.textSnapshot.scaleX = 1;
+				this.textSnapshot.scaleY = 1;
+			}
 			if( nativeScaleFactor > 1 && bitmapData.width == viewPort.width )
 			{
+				//when we fall back to using a snapshot that is half size on
+				//older runtimes, we need to scale it up.
 				this.textSnapshot.scaleX *= nativeScaleFactor;
 				this.textSnapshot.scaleY *= nativeScaleFactor;
 			}
@@ -1679,15 +1780,8 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshViewPort() : void
+		protected function refreshViewPortAndFontSize() : void
 		{
-			var starlingViewPort : Rectangle = Starling.current.viewPort;
-			var stageTextViewPort : Rectangle = this.stageText.viewPort;
-			if( !stageTextViewPort )
-			{
-				stageTextViewPort = new Rectangle();
-			}
-
 			HELPER_POINT.x = HELPER_POINT.y = 0;
 			var desktopGutterPositionOffset : Number = 0;
 			var desktopGutterDimensionsOffset : Number = 0;
@@ -1696,25 +1790,54 @@ package feathers.controls.text
 				desktopGutterPositionOffset = 2;
 				desktopGutterDimensionsOffset = 4;
 			}
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
-			var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
-			MatrixUtil.transformCoords( HELPER_MATRIX, -desktopGutterPositionOffset, -desktopGutterPositionOffset, HELPER_POINT );
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+			if( this._stageTextHasFocus || this._updateSnapshotOnScaleChange )
+			{
+				var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
+				var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
+				var smallerGlobalScale : Number = globalScaleX;
+				if( globalScaleY < smallerGlobalScale )
+				{
+					smallerGlobalScale = globalScaleY;
+				}
+			}
+			else
+			{
+				globalScaleX = 1;
+				globalScaleY = 1;
+				smallerGlobalScale = 1;
+			}
+			if( this.is3D )
+			{
+				HELPER_MATRIX3D = this.getTransformationMatrix3D( this.stage , HELPER_MATRIX3D );
+				HELPER_POINT3D = MatrixUtil.transformCoords3D( HELPER_MATRIX3D , -desktopGutterPositionOffset , -desktopGutterPositionOffset , 0 , HELPER_POINT3D );
+				HELPER_POINT.setTo( HELPER_POINT3D.x , HELPER_POINT3D.y );
+			}
+			else
+			{
+				MatrixUtil.transformCoords( HELPER_MATRIX , -desktopGutterPositionOffset , -desktopGutterPositionOffset , HELPER_POINT );
+			}
 			var nativeScaleFactor : Number = 1;
 			if( Starling.current.supportHighResolutions )
 			{
 				nativeScaleFactor = Starling.current.nativeStage.contentsScaleFactor;
 			}
 			var scaleFactor : Number = Starling.contentScaleFactor / nativeScaleFactor;
+			var starlingViewPort : Rectangle = Starling.current.viewPort;
+			var stageTextViewPort : Rectangle = this.stageText.viewPort;
+			if( !stageTextViewPort )
+			{
+				stageTextViewPort = new Rectangle();
+			}
 			stageTextViewPort.x = Math.round( starlingViewPort.x + HELPER_POINT.x * scaleFactor );
 			stageTextViewPort.y = Math.round( starlingViewPort.y + HELPER_POINT.y * scaleFactor );
 			var viewPortWidth : Number = Math.round( (this.actualWidth + desktopGutterDimensionsOffset) * scaleFactor * globalScaleX );
-			if( viewPortWidth < 1 || viewPortWidth !== viewPortWidth ) // isNaN
+			if( viewPortWidth < 1 || viewPortWidth !== viewPortWidth ) //isNaN
 			{
 				viewPortWidth = 1;
 			}
 			var viewPortHeight : Number = Math.round( (this.actualHeight + desktopGutterDimensionsOffset) * scaleFactor * globalScaleY );
-			if( viewPortHeight < 1 || viewPortHeight !== viewPortHeight ) // isNaN
+			if( viewPortHeight < 1 || viewPortHeight !== viewPortHeight ) //isNaN
 			{
 				viewPortHeight = 1;
 			}
@@ -1722,9 +1845,45 @@ package feathers.controls.text
 			stageTextViewPort.height = viewPortHeight;
 			this.stageText.viewPort = stageTextViewPort;
 
-			// the +4 is accounting for the TextField gutter
+			//for some reason, we don't need to account for the native scale factor here
+			scaleFactor = Starling.contentScaleFactor;
+			//StageText's fontSize property is an int, so we need to
+			//specifically avoid using Number here.
+			var newFontSize : int = this._fontSize * scaleFactor * smallerGlobalScale;
+			if( this.stageText.fontSize != newFontSize )
+			{
+				//we need to check if this value has changed because on iOS
+				//if displayAsPassword is set to true, the new character
+				//will not be shown if the font size changes. instead, it
+				//immediately changes to a bullet. (Github issue #881)
+				this.stageText.fontSize = newFontSize;
+			}
+
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshMeasureTextFieldDimensions() : void
+		{
+			//the +4 is accounting for the TextField gutter
 			this._measureTextField.width = this.actualWidth + 4;
 			this._measureTextField.height = this.actualHeight;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function positionSnapshot() : void
+		{
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
+			var desktopGutterPositionOffset : Number = 0;
+			if( this._stageTextIsTextField )
+			{
+				desktopGutterPositionOffset = 2;
+			}
+			this.textSnapshot.x = Math.round( HELPER_MATRIX.tx ) - HELPER_MATRIX.tx - desktopGutterPositionOffset;
+			this.textSnapshot.y = Math.round( HELPER_MATRIX.ty ) - HELPER_MATRIX.ty - desktopGutterPositionOffset;
 		}
 
 		/**
@@ -1736,14 +1895,14 @@ package feathers.controls.text
 			{
 				return;
 			}
-			this.stageText.removeEventListener( flash.events.Event.CHANGE, stageText_changeHandler );
-			this.stageText.removeEventListener( KeyboardEvent.KEY_DOWN, stageText_keyDownHandler );
-			this.stageText.removeEventListener( KeyboardEvent.KEY_UP, stageText_keyUpHandler );
-			this.stageText.removeEventListener( FocusEvent.FOCUS_IN, stageText_focusInHandler );
-			this.stageText.removeEventListener( FocusEvent.FOCUS_OUT, stageText_focusOutHandler );
-			this.stageText.removeEventListener( flash.events.Event.COMPLETE, stageText_completeHandler );
-			this.stageText.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE, stageText_softKeyboardActivateHandler );
-			this.stageText.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE, stageText_softKeyboardDeactivateHandler );
+			this.stageText.removeEventListener( flash.events.Event.CHANGE , stageText_changeHandler );
+			this.stageText.removeEventListener( KeyboardEvent.KEY_DOWN , stageText_keyDownHandler );
+			this.stageText.removeEventListener( KeyboardEvent.KEY_UP , stageText_keyUpHandler );
+			this.stageText.removeEventListener( FocusEvent.FOCUS_IN , stageText_focusInHandler );
+			this.stageText.removeEventListener( FocusEvent.FOCUS_OUT , stageText_focusOutHandler );
+			this.stageText.removeEventListener( flash.events.Event.COMPLETE , stageText_completeHandler );
+			this.stageText.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE , stageText_softKeyboardActivateHandler );
+			this.stageText.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE , stageText_softKeyboardDeactivateHandler );
 			this.stageText.stage = null;
 			this.stageText.dispose();
 			this.stageText = null;
@@ -1773,15 +1932,25 @@ package feathers.controls.text
 			}
 			this.stageText = new StageTextType( initOptions );
 			this.stageText.visible = false;
-			this.stageText.addEventListener( flash.events.Event.CHANGE, stageText_changeHandler );
-			this.stageText.addEventListener( KeyboardEvent.KEY_DOWN, stageText_keyDownHandler );
-			this.stageText.addEventListener( KeyboardEvent.KEY_UP, stageText_keyUpHandler );
-			this.stageText.addEventListener( FocusEvent.FOCUS_IN, stageText_focusInHandler );
-			this.stageText.addEventListener( FocusEvent.FOCUS_OUT, stageText_focusOutHandler );
-			this.stageText.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE, stageText_softKeyboardActivateHandler );
-			this.stageText.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE, stageText_softKeyboardDeactivateHandler );
-			this.stageText.addEventListener( flash.events.Event.COMPLETE, stageText_completeHandler );
+			this.stageText.addEventListener( flash.events.Event.CHANGE , stageText_changeHandler );
+			this.stageText.addEventListener( KeyboardEvent.KEY_DOWN , stageText_keyDownHandler );
+			this.stageText.addEventListener( KeyboardEvent.KEY_UP , stageText_keyUpHandler );
+			this.stageText.addEventListener( FocusEvent.FOCUS_IN , stageText_focusInHandler );
+			this.stageText.addEventListener( FocusEvent.FOCUS_OUT , stageText_focusOutHandler );
+			this.stageText.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE , stageText_softKeyboardActivateHandler );
+			this.stageText.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE , stageText_softKeyboardDeactivateHandler );
+			this.stageText.addEventListener( flash.events.Event.COMPLETE , stageText_completeHandler );
 			this.invalidate();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function dispatchKeyFocusChangeEvent( event : KeyboardEvent ) : void
+		{
+			var starling : Starling = stageToStarling( this.stage );
+			var focusEvent : FocusEvent = new FocusEvent( FocusEvent.KEY_FOCUS_CHANGE , true , false , null , event.shiftKey , event.keyCode );
+			starling.nativeStage.dispatchEvent( focusEvent );
 		}
 
 		/**
@@ -1789,8 +1958,8 @@ package feathers.controls.text
 		 */
 		protected function textEditor_removedFromStageHandler( event : starling.events.Event ) : void
 		{
-			// remove this from the stage, if needed
-			// it will be added back next time we receive focus
+			//remove this from the stage, if needed
+			//it will be added back next time we receive focus
 			this.stageText.stage = null;
 		}
 
@@ -1811,7 +1980,7 @@ package feathers.controls.text
 		 */
 		protected function stageText_completeHandler( event : flash.events.Event ) : void
 		{
-			this.stageText.removeEventListener( flash.events.Event.COMPLETE, stageText_completeHandler );
+			this.stageText.removeEventListener( flash.events.Event.COMPLETE , stageText_completeHandler );
 			this.invalidate();
 
 			this._stageTextIsComplete = true;
@@ -1823,7 +1992,7 @@ package feathers.controls.text
 		protected function stageText_focusInHandler( event : FocusEvent ) : void
 		{
 			this._stageTextHasFocus = true;
-			this.addEventListener( starling.events.Event.ENTER_FRAME, hasFocus_enterFrameHandler );
+			this.addEventListener( starling.events.Event.ENTER_FRAME , hasFocus_enterFrameHandler );
 			if( this.textSnapshot )
 			{
 				this.textSnapshot.visible = false;
@@ -1838,11 +2007,11 @@ package feathers.controls.text
 		protected function stageText_focusOutHandler( event : FocusEvent ) : void
 		{
 			this._stageTextHasFocus = false;
-			// since StageText doesn't expose its scroll position, we need to
-			// set the selection back to the beginning to scroll there. it's a
-			// hack, but so is everything about StageText.
-			// in other news, why won't 0,0 work here?
-			this.stageText.selectRange( 1, 1 );
+			//since StageText doesn't expose its scroll position, we need to
+			//set the selection back to the beginning to scroll there. it's a
+			//hack, but so is everything about StageText.
+			//in other news, why won't 0,0 work here?
+			this.stageText.selectRange( 1 , 1 );
 
 			this.invalidate( INVALIDATION_FLAG_DATA );
 			this.invalidate( INVALIDATION_FLAG_SKIN );
@@ -1868,7 +2037,7 @@ package feathers.controls.text
 			}
 			else
 			{
-				this.removeEventListener( starling.events.Event.ENTER_FRAME, hasFocus_enterFrameHandler );
+				this.removeEventListener( starling.events.Event.ENTER_FRAME , hasFocus_enterFrameHandler );
 			}
 		}
 
@@ -1884,11 +2053,16 @@ package feathers.controls.text
 			}
 			else if( event.keyCode == Keyboard.BACK )
 			{
-				// even a listener on the stage won't detect the back key press that
-				// will close the application if the StageText has focus, so we
-				// always need to prevent it here
+				//even a listener on the stage won't detect the back key press that
+				//will close the application if the StageText has focus, so we
+				//always need to prevent it here
 				event.preventDefault();
 				Starling.current.nativeStage.focus = Starling.current.nativeStage;
+			}
+			if( event.keyCode === Keyboard.TAB && FocusManager.isEnabledForStage( this.stage ) )
+			{
+				event.preventDefault();
+				this.dispatchKeyFocusChangeEvent( event );
 			}
 		}
 
@@ -1901,6 +2075,10 @@ package feathers.controls.text
 			{
 				event.preventDefault();
 			}
+			if( event.keyCode === Keyboard.TAB && FocusManager.isEnabledForStage( this.stage ) )
+			{
+				event.preventDefault();
+			}
 		}
 
 		/**
@@ -1908,7 +2086,7 @@ package feathers.controls.text
 		 */
 		protected function stageText_softKeyboardActivateHandler( event : SoftKeyboardEvent ) : void
 		{
-			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_ACTIVATE, true );
+			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_ACTIVATE , true );
 		}
 
 		/**
@@ -1916,20 +2094,7 @@ package feathers.controls.text
 		 */
 		protected function stageText_softKeyboardDeactivateHandler( event : SoftKeyboardEvent ) : void
 		{
-			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_DEACTIVATE, true );
+			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_DEACTIVATE , true );
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_POSITION : String = "position";
 	}
 }

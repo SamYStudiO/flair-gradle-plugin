@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -27,7 +27,8 @@ package feathers.core
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the user presses the Enter key while the editor has focus.
 	 *
@@ -48,7 +49,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 */
-	[Event(name="enter", type="starling.events.Event")]
+	[Event(name="enter" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text editor receives focus.
 	 *
@@ -69,7 +71,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn", type="starling.events.Event")]
+	[Event(name="focusIn" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text editor loses focus.
 	 *
@@ -90,7 +93,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut", type="starling.events.Event")]
+	[Event(name="focusOut" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is activated. Not all text editors will
 	 * activate a soft keyboard.
@@ -112,7 +116,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_ACTIVATE
 	 */
-	[Event(name="softKeyboardActivate", type="starling.events.Event")]
+	[Event(name="softKeyboardActivate" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is deactivated. Not all text editors
 	 * will activate a soft keyboard.
@@ -134,12 +139,13 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_DEACTIVATE
 	 */
-	[Event(name="softKeyboardDectivate", type="starling.events.Event")]
+	[Event(name="softKeyboardDectivate" , type="starling.events.Event")]
+
 	/**
 	 * Handles the editing of text.
 	 *
 	 * @see feathers.controls.TextInput
-	 * @see ../../../help/text-editors Introduction to Feathers text editors
+	 * @see ../../../help/text-editors.html Introduction to Feathers text editors
 	 */ public interface ITextEditor extends IFeathersControl, ITextBaselineControl
 	{
 		/**
@@ -185,6 +191,8 @@ package feathers.core
 
 		/**
 		 * Determines if the text is editable.
+		 *
+		 * @see #isSelectable
 		 */
 		function get isEditable() : Boolean;
 
@@ -192,6 +200,21 @@ package feathers.core
 		 * @private
 		 */
 		function set isEditable( value : Boolean ) : void;
+
+		/**
+		 * If the <code>isEditable</code> property is set to <code>false</code>,
+		 * the <code>isSelectable</code> property determines if the text is
+		 * selectable. If the <code>isEditable</code> property is set to
+		 * <code>true</code>, the text will always be selectable.
+		 *
+		 * @see #isEditable
+		 */
+		function get isSelectable() : Boolean;
+
+		/**
+		 * @private
+		 */
+		function set isSelectable( value : Boolean ) : void;
 
 		/**
 		 * Determines if the owner should call <code>setFocus()</code> on
@@ -232,7 +255,7 @@ package feathers.core
 		 * Sets the range of selected characters. If both values are the same,
 		 * the text insertion position is changed and nothing is selected.
 		 */
-		function selectRange( startIndex : int, endIndex : int ) : void;
+		function selectRange( startIndex : int , endIndex : int ) : void;
 
 		/**
 		 * Measures the text's bounds (without a full validation, if

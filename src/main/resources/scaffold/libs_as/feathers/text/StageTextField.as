@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -358,9 +358,9 @@ package feathers.text
 			bitmap.draw( this._textField );
 		}
 
-		public function selectRange( anchorIndex : int, activeIndex : int ) : void
+		public function selectRange( anchorIndex : int , activeIndex : int ) : void
 		{
-			this._textField.setSelection( anchorIndex, activeIndex );
+			this._textField.setSelection( anchorIndex , activeIndex );
 		}
 
 		private function dispatchCompleteIfPossible() : void
@@ -369,7 +369,7 @@ package feathers.text
 			{
 				this._isComplete = false;
 			}
-			if( this._textField.stage && !this.viewPort.isEmpty() )
+			if( this._textField.stage && !this._viewPort.isEmpty() )
 			{
 				this._isComplete = true;
 				this.dispatchEvent( new Event( Event.COMPLETE ) );
@@ -383,18 +383,27 @@ package feathers.text
 			var isMultiline : Boolean = initOptions && initOptions.hasOwnProperty( "multiline" ) && initOptions.multiline;
 			this._textField.multiline = isMultiline;
 			this._textField.wordWrap = isMultiline;
-			this._textField.addEventListener( Event.CHANGE, textField_eventHandler );
-			this._textField.addEventListener( FocusEvent.FOCUS_IN, textField_eventHandler );
-			this._textField.addEventListener( FocusEvent.FOCUS_OUT, textField_eventHandler );
-			this._textField.addEventListener( KeyboardEvent.KEY_DOWN, textField_eventHandler );
-			this._textField.addEventListener( KeyboardEvent.KEY_UP, textField_eventHandler );
-			this._textFormat = new TextFormat( null, 11, 0x000000, false, false, false );
+			this._textField.addEventListener( Event.CHANGE , textField_eventHandler );
+			this._textField.addEventListener( FocusEvent.FOCUS_IN , textField_eventHandler );
+			this._textField.addEventListener( FocusEvent.FOCUS_OUT , textField_eventHandler );
+			this._textField.addEventListener( KeyboardEvent.KEY_DOWN , textField_eventHandler );
+			this._textField.addEventListener( KeyboardEvent.KEY_UP , textField_eventHandler );
+			this._textField.addEventListener( FocusEvent.KEY_FOCUS_CHANGE , textField_keyFocusChangeHandler );
+			this._textFormat = new TextFormat( null , 11 , 0x000000 , false , false , false );
 			this._textField.defaultTextFormat = this._textFormat;
 		}
 
 		private function textField_eventHandler( event : Event ) : void
 		{
 			this.dispatchEvent( event );
+		}
+
+		private function textField_keyFocusChangeHandler( event : FocusEvent ) : void
+		{
+			//StageText doesn't dispatch this event, so we shouldn't either
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			event.stopPropagation();
 		}
 	}
 }

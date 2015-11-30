@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -45,6 +45,18 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _screenEvents : Object = {};
+		/**
+		 * The screen navigator will auto size itself to fill the entire stage.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		/**
+		 * The screen navigator will auto size itself to fit its content.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 
 		/**
 		 * @private
@@ -60,10 +72,21 @@ package feathers.controls
 		protected var _transition : Function;
 
 		/**
-		 * A function that is called when a new screen is shown. Typically used
-		 * to provide some kind of animation.
+		 * Typically used to provide some kind of animation or visual effect,
+		 * this function is called when a new screen is shown. 
 		 *
-		 * <p>The function should have the following signature:</p>
+		 * <p>In the following example, the screen navigator is given a
+		 * transition that fades in the new screen on top of the old screen:</p>
+		 *
+		 * <listing version="3.0">
+		 * navigator.transition = Fade.createFadeInTransition();</listing>
+		 *
+		 * <p>A number of animated transitions may be found in the
+		 * <a href="../motion/package-detail.html">feathers.motion</a> package.
+		 * However, you are not limited to only these transitions. It's possible
+		 * to create custom transitions too.</p>
+		 *
+		 * <p>A custom transition function should have the following signature:</p>
 		 * <pre>function(oldScreen:DisplayObject, newScreen:DisplayObject, completeCallback:Function):void</pre>
 		 *
 		 * <p>Either of the <code>oldScreen</code> and <code>newScreen</code>
@@ -87,12 +110,6 @@ package feathers.controls
 		 * previous screen should be restored, pass <code>true</code> as the
 		 * first argument to the callback to inform the screen navigator that
 		 * the transition is cancelled.</p>
-		 *
-		 * <p>In the following example, a custom transition is passed to the
-		 * screen navigator:</p>
-		 *
-		 * <listing version="3.0">
-		 * navigator.transition = Fade.createFadeInTransition();</listing>
 		 *
 		 * @default null
 		 *
@@ -132,9 +149,9 @@ package feathers.controls
 		 *
 		 * @see #removeScreen()
 		 */
-		public function addScreen( id : String, item : ScreenNavigatorItem ) : void
+		public function addScreen( id : String , item : ScreenNavigatorItem ) : void
 		{
-			this.addScreenInternal( id, item );
+			this.addScreenInternal( id , item );
 		}
 
 		/**
@@ -172,13 +189,13 @@ package feathers.controls
 		 *
 		 * @see #transition
 		 */
-		public function showScreen( id : String, transition : Function = null ) : DisplayObject
+		public function showScreen( id : String , transition : Function = null ) : DisplayObject
 		{
 			if( transition === null )
 			{
 				transition = this._transition;
 			}
-			return this.showScreenInternal( id, transition );
+			return this.showScreenInternal( id , transition );
 		}
 
 		/**
@@ -220,26 +237,26 @@ package feathers.controls
 					}
 					else
 					{
-						this._activeScreen.addEventListener( eventName, eventAction as Function );
+						this._activeScreen.addEventListener( eventName , eventAction as Function );
 					}
 				}
 				else if( eventAction is String )
 				{
 					if( signal )
 					{
-						var eventListener : Function = this.createShowScreenSignalListener( eventAction as String, signal );
+						var eventListener : Function = this.createShowScreenSignalListener( eventAction as String , signal );
 						signal.add( eventListener );
 					}
 					else
 					{
 						eventListener = this.createShowScreenEventListener( eventAction as String );
-						this._activeScreen.addEventListener( eventName, eventListener );
+						this._activeScreen.addEventListener( eventName , eventListener );
 					}
 					savedScreenEvents[ eventName ] = eventListener;
 				}
 				else
 				{
-					throw new TypeError( "Unknown event action defined for screen:", eventAction.toString() );
+					throw new TypeError( "Unknown event action defined for screen:" , eventAction.toString() );
 				}
 			}
 			this._screenEvents[ this._activeScreenID ] = savedScreenEvents;
@@ -265,7 +282,7 @@ package feathers.controls
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName, eventAction as Function );
+						this._activeScreen.removeEventListener( eventName , eventAction as Function );
 					}
 				}
 				else if( eventAction is String )
@@ -277,7 +294,7 @@ package feathers.controls
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName, eventListener );
+						this._activeScreen.removeEventListener( eventName , eventListener );
 					}
 				}
 			}
@@ -301,12 +318,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createShowScreenSignalListener( screenID : String, signal : Object ) : Function
+		protected function createShowScreenSignalListener( screenID : String , signal : Object ) : Function
 		{
 			var self : ScreenNavigator = this;
 			if( signal.valueClasses.length == 1 )
 			{
-				// shortcut to avoid the allocation of the rest array
+				//shortcut to avoid the allocation of the rest array
 				var signalListener : Function = function ( arg0 : Object ) : void
 				{
 					self.showScreen( screenID );
@@ -322,18 +339,6 @@ package feathers.controls
 
 			return signalListener;
 		}
-
-		/**
-		 * The screen navigator will auto size itself to fill the entire stage.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * The screen navigator will auto size itself to fit its content.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 	}
+
 }

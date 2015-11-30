@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -33,15 +33,6 @@ package feathers.controls
 	 * item.setScreenIDForPushEvent( SettingsScreen.SHOW_ADVANCED_SETTINGS, "advancedSettings" );
 	 * item.addPopEvent( Event.COMPLETE );
 	 * navigator.addScreen( "settings", item );</listing>
-	 *
-	 * <p><strong>Beta Component:</strong> This is a new component, and its APIs
-	 * may need some changes between now and the next version of Feathers to
-	 * account for overlooked requirements or other issues. Upgrading to future
-	 * versions of Feathers may involve manual changes to your code that uses
-	 * this component. The
-	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>
-	 * will not go into effect until this component's status is upgraded from
-	 * beta to stable.</p>
 	 *
 	 * @see ../../../help/stack-screen-navigator.html How to use the Feathers StackScreenNavigator component
 	 * @see feathers.controls.StackScreenNavigator
@@ -125,6 +116,38 @@ package feathers.controls
 				value = {};
 			}
 			this._pushEvents = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _replaceEvents : Object;
+
+		/**
+		 * A set of key-value pairs representing actions that should be
+		 * triggered when events are dispatched by the screen when it is shown.
+		 * A pair's key is the event type to listen for (or the property name of
+		 * an <code>ISignal</code> instance), and a pair's value is a
+		 * <code>String</code> that is the ID of another screen that will
+		 * replace the currently active screen.
+		 *
+		 * @see #setScreenIDForReplaceEvent()
+		 */
+		public function get replaceEvents() : Object
+		{
+			return this._replaceEvents;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set replaceEvents( value : Object ) : void
+		{
+			if( !value )
+			{
+				value = {};
+			}
+			this._replaceEvents = value;
 		}
 
 		/**
@@ -219,7 +242,18 @@ package feathers.controls
 		 * the default <code>pushTransition</code> defined by the
 		 * <code>StackScreenNavigator</code> will be used.
 		 *
-		 * <p>The function should have the following signature:</p>
+		 * <p>In the following example, the screen navigator item is given a
+		 * push transition:</p>
+		 *
+		 * <listing version="3.0">
+		 * item.pushTransition = Slide.createSlideLeftTransition();</listing>
+		 *
+		 * <p>A number of animated transitions may be found in the
+		 * <a href="../motion/package-detail.html">feathers.motion</a> package.
+		 * However, you are not limited to only these transitions. It's possible
+		 * to create custom transitions too.</p>
+		 *
+		 * <p>A custom transition function should have the following signature:</p>
 		 * <pre>function(oldScreen:DisplayObject, newScreen:DisplayObject, completeCallback:Function):void</pre>
 		 *
 		 * <p>Either of the <code>oldScreen</code> and <code>newScreen</code>
@@ -271,6 +305,17 @@ package feathers.controls
 		 * A custom pop transition for this screen only. If <code>null</code>,
 		 * the default <code>popTransition</code> defined by the
 		 * <code>StackScreenNavigator</code> will be used.
+		 *
+		 * <p>In the following example, the screen navigator item is given a
+		 * pop transition:</p>
+		 *
+		 * <listing version="3.0">
+		 * item.popTransition = Slide.createSlideRightTransition();</listing>
+		 *
+		 * <p>A number of animated transitions may be found in the
+		 * <a href="../motion/package-detail.html">feathers.motion</a> package.
+		 * However, you are not limited to only these transitions. It's possible
+		 * to create custom transitions too.</p>
 		 *
 		 * <p>The function should have the following signature:</p>
 		 * <pre>function(oldScreen:DisplayObject, newScreen:DisplayObject, completeCallback:Function):void</pre>
@@ -331,7 +376,7 @@ package feathers.controls
 		 * @param popEvent An event that pops the screen from the top of the stack.
 		 * @param properties A set of key-value pairs to pass to the screen when it is shown.
 		 */
-		public function StackScreenNavigatorItem( screen : Object, pushEvents : Object = null, popEvent : String = null, properties : Object = null )
+		public function StackScreenNavigatorItem( screen : Object = null , pushEvents : Object = null , popEvent : String = null , properties : Object = null )
 		{
 			this._screen = screen;
 			this._pushEvents = pushEvents ? pushEvents : {};
@@ -356,7 +401,7 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setFunctionForPushEvent( eventType : String, action : Function ) : void
+		public function setFunctionForPushEvent( eventType : String , action : Function ) : void
 		{
 			this._pushEvents[ eventType ] = action;
 		}
@@ -377,20 +422,59 @@ package feathers.controls
 		 * @see #clearPushEvent()
 		 * @see #pushEvents
 		 */
-		public function setScreenIDForPushEvent( eventType : String, screenID : String ) : void
+		public function setScreenIDForPushEvent( eventType : String , screenID : String ) : void
 		{
 			this._pushEvents[ eventType ] = screenID;
 		}
 
 		/**
-		 * Cancels the action previously registered to be triggered when the
-		 * screen dispatches an event.
+		 * Cancels the "push" action previously registered to be triggered when
+		 * the screen dispatches an event.
 		 *
 		 * @see #pushEvents
 		 */
 		public function clearPushEvent( eventType : String ) : void
 		{
 			delete this._pushEvents[ eventType ];
+		}
+
+		/**
+		 * Specifies another screen to replace this screen on the top of the
+		 * stack when an event is dispatched by this screen. The other screen
+		 * should be specified by its ID that was registered with a call to
+		 * <code>addScreen()</code> on the <code>StackScreenNavigator</code>.
+		 *
+		 * <p>If the screen is currently being displayed by a
+		 * <code>StackScreenNavigator</code>, and you call
+		 * <code>setScreenIDForPushEvent()</code> on the <code>StackScreenNavigatorItem</code>,
+		 * the <code>StackScreenNavigator</code> won't listen for the event
+		 * until the next time that the screen is shown.</p>
+		 *
+		 * @see #clearReplaceEvent()
+		 * @see #replaceEvents
+		 */
+		public function setScreenIDForReplaceEvent( eventType : String , screenID : String ) : void
+		{
+			if( !this._replaceEvents )
+			{
+				this._replaceEvents = {};
+			}
+			this._replaceEvents[ eventType ] = screenID;
+		}
+
+		/**
+		 * Cancels the "replace" action previously registered to be triggered
+		 * when the screen dispatches an event.
+		 *
+		 * @see #replaceEvents
+		 */
+		public function clearReplaceEvent( eventType : String ) : void
+		{
+			if( !this._replaceEvents )
+			{
+				return;
+			}
+			delete this._replaceEvents[ eventType ];
 		}
 
 		/**
@@ -446,7 +530,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._popEvents.splice( index, 1 );
+			this._popEvents.splice( index , 1 );
 		}
 
 		/**
@@ -502,7 +586,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._popToRootEvents.splice( index, 1 );
+			this._popToRootEvents.splice( index , 1 );
 		}
 
 		/**
@@ -526,7 +610,7 @@ package feathers.controls
 			}
 			if( !(screenInstance is DisplayObject) )
 			{
-				throw new ArgumentError( "ScreenNavigatorItem \"getScreen()\" must return a Starling display object." );
+				throw new ArgumentError( "StackScreenNavigatorItem \"getScreen()\" must return a Starling display object." );
 			}
 			if( this._properties )
 			{

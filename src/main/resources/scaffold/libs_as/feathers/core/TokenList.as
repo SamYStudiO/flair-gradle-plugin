@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -31,7 +31,8 @@ package feathers.core
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * A list of space-delimited tokens. Obviously, since they are delimited by
 	 * spaces, tokens cannot contain spaces.
@@ -168,8 +169,9 @@ package feathers.core
 				this.dispatchEventWith( Event.CHANGE );
 				return;
 			}
-			this.names.splice( index, 1 );
+			this.names.splice( index , 1 );
 			this.dispatchEventWith( Event.CHANGE );
 		}
+
 	}
 }

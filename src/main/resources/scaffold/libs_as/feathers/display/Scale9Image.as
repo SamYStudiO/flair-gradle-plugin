@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -28,25 +28,26 @@ package feathers.display
 	import starling.textures.TextureSmoothing;
 	import starling.utils.MatrixUtil;
 
-	[Exclude(name="numChildren", kind="property")]
-	[Exclude(name="isFlattened", kind="property")]
-	[Exclude(name="addChild", kind="method")]
-	[Exclude(name="addChildAt", kind="method")]
-	[Exclude(name="broadcastEvent", kind="method")]
-	[Exclude(name="broadcastEventWith", kind="method")]
-	[Exclude(name="contains", kind="method")]
-	[Exclude(name="getChildAt", kind="method")]
-	[Exclude(name="getChildByName", kind="method")]
-	[Exclude(name="getChildIndex", kind="method")]
-	[Exclude(name="removeChild", kind="method")]
-	[Exclude(name="removeChildAt", kind="method")]
-	[Exclude(name="removeChildren", kind="method")]
-	[Exclude(name="setChildIndex", kind="method")]
-	[Exclude(name="sortChildren", kind="method")]
-	[Exclude(name="swapChildren", kind="method")]
-	[Exclude(name="swapChildrenAt", kind="method")]
-	[Exclude(name="flatten", kind="method")]
-	[Exclude(name="unflatten", kind="method")]
+	[Exclude(name="numChildren" , kind="property")]
+	[Exclude(name="isFlattened" , kind="property")]
+	[Exclude(name="addChild" , kind="method")]
+	[Exclude(name="addChildAt" , kind="method")]
+	[Exclude(name="broadcastEvent" , kind="method")]
+	[Exclude(name="broadcastEventWith" , kind="method")]
+	[Exclude(name="contains" , kind="method")]
+	[Exclude(name="getChildAt" , kind="method")]
+	[Exclude(name="getChildByName" , kind="method")]
+	[Exclude(name="getChildIndex" , kind="method")]
+	[Exclude(name="removeChild" , kind="method")]
+	[Exclude(name="removeChildAt" , kind="method")]
+	[Exclude(name="removeChildren" , kind="method")]
+	[Exclude(name="setChildIndex" , kind="method")]
+	[Exclude(name="sortChildren" , kind="method")]
+	[Exclude(name="swapChildren" , kind="method")]
+	[Exclude(name="swapChildrenAt" , kind="method")]
+	[Exclude(name="flatten" , kind="method")]
+	[Exclude(name="unflatten" , kind="method")]
+
 	/**
 	 * Scales an image with nine regions to maintain the aspect ratio of the
 	 * corners regions. The top and bottom regions stretch horizontally, and the
@@ -58,6 +59,14 @@ package feathers.display
 		 * @private
 		 */
 		private static var helperImage : Image;
+		/**
+		 * @private
+		 */
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
 		/**
 		 * @private
 		 */
@@ -131,7 +140,7 @@ package feathers.display
 			this._frame = texture.frame;
 			if( !this._frame )
 			{
-				this._frame = new Rectangle( 0, 0, texture.width, texture.height );
+				this._frame = new Rectangle( 0 , 0 , texture.width , texture.height );
 			}
 			this._layoutChanged = true;
 			this._renderingChanged = true;
@@ -348,7 +357,7 @@ package feathers.display
 		/**
 		 * Constructor.
 		 */
-		public function Scale9Image( textures : Scale9Textures, textureScale : Number = 1 )
+		public function Scale9Image( textures : Scale9Textures , textureScale : Number = 1 )
 		{
 			super();
 			this.textures = textures;
@@ -360,22 +369,22 @@ package feathers.display
 			this._batch.touchable = false;
 			this.addChild( this._batch );
 
-			this.addEventListener( Event.FLATTEN, flattenHandler );
-			this.addEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
+			this.addEventListener( Event.FLATTEN , flattenHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , addedToStageHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		public override function getBounds( targetSpace : DisplayObject, resultRect : Rectangle = null ) : Rectangle
+		public override function getBounds( targetSpace : DisplayObject , resultRect : Rectangle = null ) : Rectangle
 		{
 			if( !resultRect )
 			{
 				resultRect = new Rectangle();
 			}
 
-			var minX : Number = Number.MAX_VALUE, maxX : Number = -Number.MAX_VALUE;
-			var minY : Number = Number.MAX_VALUE, maxY : Number = -Number.MAX_VALUE;
+			var minX : Number = Number.MAX_VALUE , maxX : Number = -Number.MAX_VALUE;
+			var minY : Number = Number.MAX_VALUE , maxY : Number = -Number.MAX_VALUE;
 
 			if( targetSpace == this ) // optimization
 			{
@@ -386,27 +395,27 @@ package feathers.display
 			}
 			else
 			{
-				this.getTransformationMatrix( targetSpace, HELPER_MATRIX );
+				this.getTransformationMatrix( targetSpace , HELPER_MATRIX );
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this._hitArea.x, this._hitArea.y, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this._hitArea.x , this._hitArea.y , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this._hitArea.x, this._hitArea.y + this._hitArea.height, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this._hitArea.x , this._hitArea.y + this._hitArea.height , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this._hitArea.x + this._hitArea.width, this._hitArea.y, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this._hitArea.x + this._hitArea.width , this._hitArea.y , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this._hitArea.x + this._hitArea.width, this._hitArea.y + this._hitArea.height, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this._hitArea.x + this._hitArea.width , this._hitArea.y + this._hitArea.height , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
@@ -424,7 +433,7 @@ package feathers.display
 		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point, forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
 		{
 			if( forTouch && (!this.visible || !this.touchable) )
 			{
@@ -436,13 +445,13 @@ package feathers.display
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport, parentAlpha : Number ) : void
+		override public function render( support : RenderSupport , parentAlpha : Number ) : void
 		{
 			if( this._isInvalid )
 			{
 				this.validate();
 			}
-			super.render( support, parentAlpha );
+			super.render( support , parentAlpha );
 		}
 
 		/**
@@ -458,9 +467,9 @@ package feathers.display
 			{
 				if( this._validationQueue )
 				{
-					// we were already validating, and something else told us to
-					// validate. that's bad.
-					this._validationQueue.addControl( this, true );
+					//we were already validating, and something else told us to
+					//validate. that's bad.
+					this._validationQueue.addControl( this , true );
 				}
 				return;
 			}
@@ -472,9 +481,9 @@ package feathers.display
 
 				if( !helperImage )
 				{
-					// because Scale9Textures enforces it, we know for sure that
-					// this texture will have a size greater than zero, so there
-					// won't be an error from Quad.
+					//because Scale9Textures enforces it, we know for sure that
+					//this texture will have a size greater than zero, so there
+					//won't be an error from Quad.
 					helperImage = new Image( this._textures.middleCenter );
 				}
 				helperImage.smoothing = this._smoothing;
@@ -489,7 +498,7 @@ package feathers.display
 					var distortionScale : Number = (this._width / sumLeftAndRight);
 					scaledLeftWidth *= distortionScale;
 					scaledRightWidth *= distortionScale;
-					sumLeftAndRight + scaledLeftWidth + scaledRightWidth;
+					sumLeftAndRight = scaledLeftWidth + scaledRightWidth;
 				}
 				var scaledCenterWidth : Number = this._width - sumLeftAndRight;
 				var scaledTopHeight : Number = grid.y * this._textureScale;
@@ -645,7 +654,7 @@ package feathers.display
 			{
 				return;
 			}
-			this._validationQueue.addControl( this, false );
+			this._validationQueue.addControl( this , false );
 		}
 
 		/**
@@ -665,17 +674,8 @@ package feathers.display
 			this._validationQueue = ValidationQueue.forStarling( Starling.current );
 			if( this._isInvalid )
 			{
-				this._validationQueue.addControl( this, false );
+				this._validationQueue.addControl( this , false );
 			}
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

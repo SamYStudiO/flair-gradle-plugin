@@ -1,17 +1,16 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
  */
 package feathers.controls
 {
-	import feathers.data.IAutoCompleteSource;
 	import feathers.controls.popups.DropDownPopUpContentManager;
 	import feathers.controls.popups.IPopUpContentManager;
-	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.core.PropertyProxy;
+	import feathers.data.IAutoCompleteSource;
 	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
 	import feathers.skins.IStyleProvider;
@@ -45,7 +44,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open", type="starling.events.Event")]
+	[Event(name="open" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the pop-up list is closed.
 	 *
@@ -66,7 +66,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * A text input that provides a pop-up list with suggestions as you type.
 	 *
@@ -86,15 +87,6 @@ package feathers.controls
 	 *     "Watermelon"
 	 * ]));
 	 * this.addChild( input );</listing>
-	 *
-	 * <p><strong>Beta Component:</strong> This is a new component, and its APIs
-	 * may need some changes between now and the next version of Feathers to
-	 * account for overlooked requirements or other issues. Upgrading to future
-	 * versions of Feathers may involve manual changes to your code that uses
-	 * this component. The
-	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>
-	 * will not go into effect until this component's status is upgraded from
-	 * beta to stable.</p>
 	 *
 	 * @see ../../../help/auto-complete.html How to use the Feathers AutoComplete component
 	 * @see feathers.controls.TextInput
@@ -117,7 +109,10 @@ package feathers.controls
 		{
 			return new List();
 		}
-
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_LIST_FACTORY : String = "listFactory";
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * pop-up list. This variable is <code>protected</code> so that
@@ -169,6 +164,13 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _isCloseListPending : Boolean = false;
+		/**
+		 * The default value added to the <code>styleNameList</code> of the pop-up
+		 * list.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_LIST : String = "feathers-auto-complete-list";
 
 		/**
 		 * @private
@@ -222,12 +224,12 @@ package feathers.controls
 			}
 			if( this._source )
 			{
-				this._source.removeEventListener( Event.COMPLETE, dataProvider_completeHandler );
+				this._source.removeEventListener( Event.COMPLETE , dataProvider_completeHandler );
 			}
 			this._source = value;
 			if( this._source )
 			{
-				this._source.addEventListener( Event.COMPLETE, dataProvider_completeHandler );
+				this._source.addEventListener( Event.COMPLETE , dataProvider_completeHandler );
 			}
 		}
 
@@ -326,15 +328,15 @@ package feathers.controls
 			if( this._popUpContentManager is EventDispatcher )
 			{
 				var dispatcher : EventDispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.removeEventListener( Event.OPEN, popUpContentManager_openHandler );
-				dispatcher.removeEventListener( Event.CLOSE, popUpContentManager_closeHandler );
+				dispatcher.removeEventListener( Event.OPEN , popUpContentManager_openHandler );
+				dispatcher.removeEventListener( Event.CLOSE , popUpContentManager_closeHandler );
 			}
 			this._popUpContentManager = value;
 			if( this._popUpContentManager is EventDispatcher )
 			{
 				dispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.addEventListener( Event.OPEN, popUpContentManager_openHandler );
-				dispatcher.addEventListener( Event.CLOSE, popUpContentManager_closeHandler );
+				dispatcher.addEventListener( Event.OPEN , popUpContentManager_openHandler );
+				dispatcher.addEventListener( Event.CLOSE , popUpContentManager_closeHandler );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -441,10 +443,11 @@ package feathers.controls
 		protected var _listProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the pop-up list
-		 * sub-component of the <code>AutoComplete</code>. The pop-up list is a
-		 * <code>feathers.controls.List</code> instance that is created by
-		 * <code>listFactory</code>.
+		 * An object that stores properties for the auto-complete's pop-up list
+		 * sub-component, and the properties will be passed down to the pop-up
+		 * list when the auto-complete validates. For a list of available
+		 * properties, refer to
+		 * <a href="List.html"><code>feathers.controls.List</code></a>.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -515,7 +518,7 @@ package feathers.controls
 		 */
 		public function AutoComplete()
 		{
-			this.addEventListener( Event.CHANGE, autoComplete_changeHandler );
+			this.addEventListener( Event.CHANGE , autoComplete_changeHandler );
 		}
 
 		/**
@@ -554,11 +557,11 @@ package feathers.controls
 				return;
 			}
 			this._isOpenListPending = false;
-			this._popUpContentManager.open( this.list, this );
+			this._popUpContentManager.open( this.list , this );
 			this.list.validate();
 			if( this._focusManager )
 			{
-				this.stage.addEventListener( starling.events.KeyboardEvent.KEY_UP, stage_keyUpHandler );
+				this.stage.addEventListener( starling.events.KeyboardEvent.KEY_UP , stage_keyUpHandler );
 			}
 		}
 
@@ -583,10 +586,10 @@ package feathers.controls
 			}
 			this._isCloseListPending = false;
 			this.list.validate();
-			// don't clean up anything from openList() in closeList(). The list
-			// may be closed by removing it from the PopUpManager, which would
-			// result in closeList() never being called.
-			// instead, clean up in the Event.REMOVED_FROM_STAGE listener.
+			//don't clean up anything from openList() in closeList(). The list
+			//may be closed by removing it from the PopUpManager, which would
+			//result in closeList() never being called.
+			//instead, clean up in the Event.REMOVED_FROM_STAGE listener.
 			this._popUpContentManager.close();
 		}
 
@@ -643,7 +646,7 @@ package feathers.controls
 			if( this.list )
 			{
 				this.list.removeFromParent( false );
-				// disposing separately because the list may not have a parent
+				//disposing separately because the list may not have a parent
 				this.list.dispose();
 				this.list = null;
 			}
@@ -655,9 +658,9 @@ package feathers.controls
 			this.list.isFocusEnabled = false;
 			this.list.isChildFocusEnabled = false;
 			this.list.styleNameList.add( listStyleName );
-			this.list.addEventListener( Event.CHANGE, list_changeHandler );
-			this.list.addEventListener( Event.TRIGGERED, list_triggeredHandler );
-			this.list.addEventListener( Event.REMOVED_FROM_STAGE, list_removedFromStageHandler );
+			this.list.addEventListener( Event.CHANGE , list_changeHandler );
+			this.list.addEventListener( Event.TRIGGERED , list_triggeredHandler );
+			this.list.addEventListener( Event.REMOVED_FROM_STAGE , list_removedFromStageHandler );
 		}
 
 		/**
@@ -698,14 +701,14 @@ package feathers.controls
 			{
 				return;
 			}
-			this.removeEventListener( Event.ENTER_FRAME, autoComplete_enterFrameHandler );
-			this._source.load( this.text, this._listCollection );
+			this.removeEventListener( Event.ENTER_FRAME , autoComplete_enterFrameHandler );
+			this._source.load( this.text , this._listCollection );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function dataProvider_completeHandler( event : Event, data : ListCollection ) : void
+		protected function dataProvider_completeHandler( event : Event , data : ListCollection ) : void
 		{
 			this.list.dataProvider = data;
 			if( data.length == 0 )
@@ -748,7 +751,7 @@ package feathers.controls
 				{
 					this.list.selectedIndex = lastIndex;
 				}
-				this.list.scrollToDisplayIndex( this.list.selectedIndex, this.list.keyScrollDuration );
+				this.list.scrollToDisplayIndex( this.list.selectedIndex , this.list.keyScrollDuration );
 				this._listHasFocus = true;
 				this.list.dispatchEventWith( FeathersEventType.FOCUS_IN );
 			}
@@ -760,7 +763,7 @@ package feathers.controls
 				this.text = this._originalText;
 				this._ignoreAutoCompleteChanges = oldIgnoreAutoCompleteChanges;
 				this.list.selectedIndex = -1;
-				this.selectRange( this.text.length, this.text.length );
+				this.selectRange( this.text.length , this.text.length );
 				this._listHasFocus = false;
 				this.list.dispatchEventWith( FeathersEventType.FOCUS_OUT );
 			}
@@ -777,23 +780,23 @@ package feathers.controls
 			}
 			if( this.text.length < this._minimumAutoCompleteLength )
 			{
-				this.removeEventListener( Event.ENTER_FRAME, autoComplete_enterFrameHandler );
+				this.removeEventListener( Event.ENTER_FRAME , autoComplete_enterFrameHandler );
 				this.closeList();
 				return;
 			}
 
 			if( this._autoCompleteDelay == 0 )
 			{
-				// just in case the enter frame listener was added before
-				// sourceUpdateDelay was set to 0.
-				this.removeEventListener( Event.ENTER_FRAME, autoComplete_enterFrameHandler );
+				//just in case the enter frame listener was added before
+				//sourceUpdateDelay was set to 0.
+				this.removeEventListener( Event.ENTER_FRAME , autoComplete_enterFrameHandler );
 
-				this._source.load( this.text, this._listCollection );
+				this._source.load( this.text , this._listCollection );
 			}
 			else
 			{
 				this._lastChangeTime = getTimer();
-				this.addEventListener( Event.ENTER_FRAME, autoComplete_enterFrameHandler );
+				this.addEventListener( Event.ENTER_FRAME , autoComplete_enterFrameHandler );
 			}
 		}
 
@@ -809,7 +812,7 @@ package feathers.controls
 			var oldIgnoreAutoCompleteChanges : Boolean = this._ignoreAutoCompleteChanges;
 			this._ignoreAutoCompleteChanges = true;
 			this.text = this.list.selectedItem.toString();
-			this.selectRange( this.text.length, this.text.length );
+			this.selectRange( this.text.length , this.text.length );
 			this._ignoreAutoCompleteChanges = oldIgnoreAutoCompleteChanges;
 		}
 
@@ -836,7 +839,7 @@ package feathers.controls
 		{
 			if( this._focusManager )
 			{
-				this.list.stage.removeEventListener( starling.events.KeyboardEvent.KEY_UP, stage_keyUpHandler );
+				this.list.stage.removeEventListener( starling.events.KeyboardEvent.KEY_UP , stage_keyUpHandler );
 			}
 		}
 
@@ -850,7 +853,7 @@ package feathers.controls
 				return;
 			}
 			this.closeList();
-			this.selectRange( this.text.length, this.text.length );
+			this.selectRange( this.text.length , this.text.length );
 		}
 
 		/**
@@ -865,7 +868,7 @@ package feathers.controls
 			if( event.keyCode == Keyboard.ENTER )
 			{
 				this.closeList();
-				this.selectRange( this.text.length, this.text.length );
+				this.selectRange( this.text.length , this.text.length );
 			}
 		}
 
@@ -874,10 +877,10 @@ package feathers.controls
 		 */
 		override protected function focusInHandler( event : Event ) : void
 		{
-			// the priority here is 1 so that this listener is called before
-			// starling's listener. we want to know the list's selected index
-			// before the list changes it.
-			Starling.current.nativeStage.addEventListener( flash.events.KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, 1, true );
+			//the priority here is 1 so that this listener is called before
+			//starling's listener. we want to know the list's selected index
+			//before the list changes it.
+			Starling.current.nativeStage.addEventListener( flash.events.KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler , false , 1 , true );
 			super.focusInHandler( event );
 		}
 
@@ -886,20 +889,8 @@ package feathers.controls
 		 */
 		override protected function focusOutHandler( event : Event ) : void
 		{
-			Starling.current.nativeStage.removeEventListener( flash.events.KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler );
+			Starling.current.nativeStage.removeEventListener( flash.events.KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler );
 			super.focusOutHandler( event );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_LIST_FACTORY : String = "listFactory";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the pop-up
-		 * list.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LIST : String = "feathers-auto-complete-list";
 	}
 }

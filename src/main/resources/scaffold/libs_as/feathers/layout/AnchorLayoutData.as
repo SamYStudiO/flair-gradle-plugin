@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -14,7 +14,8 @@ package feathers.layout
 	/**
 	 * @inheritDoc
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Extra, optional data used by an <code>AnchorLayout</code> instance to
 	 * position and size a display object.
@@ -480,7 +481,7 @@ package feathers.layout
 		/**
 		 * Constructor.
 		 */
-		public function AnchorLayoutData( top : Number = NaN, right : Number = NaN, bottom : Number = NaN, left : Number = NaN, horizontalCenter : Number = NaN, verticalCenter : Number = NaN )
+		public function AnchorLayoutData( top : Number = NaN , right : Number = NaN , bottom : Number = NaN , left : Number = NaN , horizontalCenter : Number = NaN , verticalCenter : Number = NaN )
 		{
 			this.top = top;
 			this.right = right;

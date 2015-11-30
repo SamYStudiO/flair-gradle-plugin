@@ -1,12 +1,13 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
  */
 package feathers.controls
 {
+	import feathers.controls.supportClasses.BaseScreenNavigator;
 	import feathers.core.FeathersControl;
 	import feathers.core.IValidating;
 	import feathers.events.ExclusiveTouch;
@@ -58,7 +59,8 @@ package feathers.controls
 	 * @eventType feathers.events.FeathersEventType.BEGIN_INTERACTION
 	 * @see #event:endInteraction feathers.events.FeathersEventType.END_INTERACTION
 	 */
-	[Event(name="beginInteraction", type="starling.events.Event")]
+	[Event(name="beginInteraction" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the user stops dragging the content to open or close a
 	 * drawer. The drawer may continue opening or closing after this event is
@@ -82,7 +84,8 @@ package feathers.controls
 	 * @eventType feathers.events.FeathersEventType.END_INTERACTION
 	 * @see #event:beginInteraction feathers.events.FeathersEventType.BEGIN_INTERACTION
 	 */
-	[Event(name="endInteraction", type="starling.events.Event")]
+	[Event(name="endInteraction" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when a drawer has completed opening. The <code>data</code>
 	 * property of the event indicates which drawer is open.
@@ -105,7 +108,8 @@ package feathers.controls
 	 * @eventType starling.events.Event.OPEN
 	 * @see #event:close starling.events.Event.CLOSE
 	 */
-	[Event(name="open", type="starling.events.Event")]
+	[Event(name="open" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when a drawer has completed closing. The <code>data</code>
 	 * property of the event indicates which drawer was closed.
@@ -128,7 +132,8 @@ package feathers.controls
 	 * @eventType starling.events.Event.CLOSE
 	 * @see #event:open starling.events.Event.OPEN
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * A container that displays primary content in the center surrounded by
 	 * optional "drawers" that can open and close on the edges. Useful for
@@ -144,18 +149,18 @@ package feathers.controls
 	 * left of the main content:</p>
 	 *
 	 * <listing version="3.0">
-	 * var navigator:ScreenNavigator = new ScreenNavigator();
+	 * var navigator:StackScreenNavigator = new StackScreenNavigator();
 	 * var list:List = new List();
 	 * // the navigator's screens, the list's data provider, and additional
 	 * // properties should be set here.
-	 *
+	 * 
 	 * var drawers:Drawers = new Drawers();
 	 * drawers.content = navigator;
 	 * drawers.leftDrawer = menu;
 	 * drawers.leftDrawerToggleEventType = Event.OPEN;
 	 * this.addChild( drawers );</listing>
 	 *
-	 * <p>In the example above, a screen in the <code>ScreenNavigator</code>
+	 * <p>In the example above, a screen in the <code>StackScreenNavigator</code>
 	 * component dispatches an event of type <code>Event.OPEN</code> when it
 	 * wants to display the slide out the <code>List</code> that is used as
 	 * the left drawer.</p>
@@ -171,6 +176,33 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @private
+		 * The current velocity is given high importance.
+		 */
+		private static const CURRENT_VELOCITY_WEIGHT : Number = 2.33;
+		/**
+		 * @private
+		 * Older saved velocities are given less importance.
+		 */
+		private static const VELOCITY_WEIGHTS : Vector.<Number> = new <Number>[ 1 , 1.33 , 1.66 , 2 ];
+		/**
+		 * @private
+		 */
+		private static const MAXIMUM_SAVED_VELOCITY_COUNT : int = 4;
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * The field used to access the "content event dispatcher" of a
+		 * <code>ScreenNavigator</code> component, which happens to be the
+		 * currently active screen.
+		 *
+		 * @see #contentEventDispatcherField
+		 * @see feathers.controls.ScreenNavigator
+		 */
+		protected static const SCREEN_NAVIGATOR_CONTENT_EVENT_DISPATCHER_FIELD : String = "activeScreen";
 		/**
 		 * The event dispatcher that controls opening and closing drawers with
 		 * events. Often, the event dispatcher is the content itself, but you
@@ -279,6 +311,113 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _previousVelocityY : Vector.<Number> = new <Number>[];
+		/**
+		 * The drawer will be docked in portrait orientation, but it must be
+		 * opened and closed explicitly in landscape orientation.
+		 *
+		 * @see #topDrawerDockMode
+		 * @see #rightDrawerDockMode
+		 * @see #bottomDrawerDockMode
+		 * @see #leftDrawerDockMode
+		 * @see #isTopDrawerDocked
+		 * @see #isRightDrawerDocked
+		 * @see #isBottomDrawerDocked
+		 * @see #isLeftDrawerDocked
+		 */
+		public static const DOCK_MODE_PORTRAIT : String = "portrait";
+		/**
+		 * The drawer will be docked in landscape orientation, but it must be
+		 * opened and closed explicitly in portrait orientation.
+		 *
+		 * @see #topDrawerDockMode
+		 * @see #rightDrawerDockMode
+		 * @see #bottomDrawerDockMode
+		 * @see #leftDrawerDockMode
+		 * @see #isTopDrawerDocked
+		 * @see #isRightDrawerDocked
+		 * @see #isBottomDrawerDocked
+		 * @see #isLeftDrawerDocked
+		 */
+		public static const DOCK_MODE_LANDSCAPE : String = "landscape";
+		/**
+		 * The drawer will be docked in all orientations.
+		 *
+		 * @see #topDrawerDockMode
+		 * @see #rightDrawerDockMode
+		 * @see #bottomDrawerDockMode
+		 * @see #leftDrawerDockMode
+		 * @see #isTopDrawerDocked
+		 * @see #isRightDrawerDocked
+		 * @see #isBottomDrawerDocked
+		 * @see #isLeftDrawerDocked
+		 */
+		public static const DOCK_MODE_BOTH : String = "both";
+		/**
+		 * The drawer won't be docked in any orientation. It must be opened and
+		 * closed explicitly in all orientations.
+		 *
+		 * @see #topDrawerDockMode
+		 * @see #rightDrawerDockMode
+		 * @see #bottomDrawerDockMode
+		 * @see #leftDrawerDockMode
+		 * @see #isTopDrawerDocked
+		 * @see #isRightDrawerDocked
+		 * @see #isBottomDrawerDocked
+		 * @see #isLeftDrawerDocked
+		 */
+		public static const DOCK_MODE_NONE : String = "none";
+		/**
+		 * The drawer will be displayed above the content.
+		 *
+		 * @see #openMode
+		 */
+		public static const OPEN_MODE_ABOVE : String = "overlay";
+		/**
+		 * The drawer will be displayed below the content.
+		 *
+		 * @see #openMode
+		 */
+		public static const OPEN_MODE_BELOW : String = "below";
+		/**
+		 * The drawers container  will auto size itself to fill the entire stage.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		/**
+		 * The drawers container will auto size itself to fit its content.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+		/**
+		 * A drawer will open by dragging the content starting from a certain
+		 * physical distance (in inches) from the nearest edge of the content.
+		 * To customize this distance, use the <code>openGestureDragContentEdgeDistance</code>
+		 * property.
+		 *
+		 * @see #openGesture
+		 * @see openGestureEdgeSize
+		 */
+		public static const OPEN_GESTURE_DRAG_CONTENT_EDGE : String = "dragContentEdge";
+		/**
+		 * A drawer will open by dragging the content from any location in the
+		 * appropriate direction.
+		 *
+		 * @see #openGesture
+		 */
+		public static const OPEN_GESTURE_DRAG_CONTENT : String = "dragContent";
+		/**
+		 * The drawers container will only open using the toggle event types
+		 * dispatched by the content. No gesture can be used to open a drawer.
+		 *
+		 * @see #openGesture
+		 * @see #topDrawerToggleEventType
+		 * @see #rightDrawerToggleEventType
+		 * @see #bottomDrawerToggleEventType
+		 * @see #leftDrawerToggleEventType
+		 */
+		public static const OPEN_GESTURE_NONE : String = "none";
 
 		/**
 		 * @private
@@ -336,38 +475,45 @@ package feathers.controls
 			{
 				if( this._contentEventDispatcherChangeEventType )
 				{
-					this._content.removeEventListener( this._contentEventDispatcherChangeEventType, content_eventDispatcherChangeHandler );
+					this._content.removeEventListener( this._contentEventDispatcherChangeEventType , content_eventDispatcherChangeHandler );
 				}
-				this._content.removeEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+				this._content.removeEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 				if( this._content.parent == this )
 				{
-					this.removeChild( this._content, false );
+					this.removeChild( this._content , false );
 				}
 			}
 			this._content = value;
 			if( this._content )
 			{
-				if( this._content is ScreenNavigator )
+				if( this._content is BaseScreenNavigator )
 				{
 					this.contentEventDispatcherField = SCREEN_NAVIGATOR_CONTENT_EVENT_DISPATCHER_FIELD;
 					this.contentEventDispatcherChangeEventType = Event.CHANGE;
 				}
 				if( this._contentEventDispatcherChangeEventType )
 				{
-					this._content.addEventListener( this._contentEventDispatcherChangeEventType, content_eventDispatcherChangeHandler );
+					this._content.addEventListener( this._contentEventDispatcherChangeEventType , content_eventDispatcherChangeHandler );
 				}
 				if( this._autoSizeMode == AUTO_SIZE_MODE_CONTENT || !this.stage )
 				{
-					this._content.addEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+					this._content.addEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 				}
-				// the content should appear under the overlay skin, if it exists
-				if( this._overlaySkin )
+				if( this._openMode === OPEN_MODE_ABOVE )
 				{
-					this.addChildAt( this._content, this.getChildIndex( this._overlaySkin ) );
+					this.addChildAt( this._content , 0 );
 				}
-				else
+				else //below
 				{
-					this.addChild( this._content );
+					//the content should appear under the overlay skin, if it exists
+					if( this._overlaySkin )
+					{
+						this.addChildAt( this._content , this.getChildIndex( this._overlaySkin ) );
+					}
+					else
+					{
+						this.addChild( this._content );
+					}
 				}
 			}
 			this.invalidate( INVALIDATION_FLAG_DATA );
@@ -408,7 +554,7 @@ package feathers.controls
 			}
 			if( this._overlaySkin && this._overlaySkin.parent == this )
 			{
-				this.removeChild( this._overlaySkin, false );
+				this.removeChild( this._overlaySkin , false );
 			}
 			this._overlaySkin = value;
 			if( this._overlaySkin )
@@ -455,16 +601,27 @@ package feathers.controls
 			{
 				return;
 			}
+			if( this.isTopDrawerOpen && value === null )
+			{
+				this.isTopDrawerOpen = false;
+			}
 			if( this._topDrawer && this._topDrawer.parent == this )
 			{
-				this.removeChild( this._topDrawer, false );
+				this.removeChild( this._topDrawer , false );
 			}
 			this._topDrawer = value;
 			if( this._topDrawer )
 			{
 				this._topDrawer.visible = false;
-				this._topDrawer.addEventListener( FeathersEventType.RESIZE, drawer_resizeHandler );
-				this.addChildAt( this._topDrawer, 0 );
+				this._topDrawer.addEventListener( FeathersEventType.RESIZE , drawer_resizeHandler );
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					this.addChild( this._topDrawer );
+				}
+				else //below
+				{
+					this.addChildAt( this._topDrawer , 0 );
+				}
 			}
 			this.invalidate( INVALIDATION_FLAG_DATA );
 		}
@@ -472,8 +629,57 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _topDrawerDivider : DisplayObject;
+
+		/**
+		 * The divider between the top drawer and the content when the top
+		 * drawer is docked.
+		 *
+		 * <p>In the following example, a <code>Quad</code> is added as the
+		 * top drawer divider:</p>
+		 *
+		 * <listing version="3.0">
+		 * var divider:Quad = new Quad( 2, 2, 0x999999 );
+		 * drawers.topDrawerDivider = quad;
+		 * drawers.topDrawerDockMode = Drawers.DOCK_MODE_BOTH</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #topDrawer
+		 */
+		public function get topDrawerDivider() : DisplayObject
+		{
+			return this._topDrawerDivider;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set topDrawerDivider( value : DisplayObject ) : void
+		{
+			if( this._topDrawerDivider === value )
+			{
+				return;
+			}
+			if( this._topDrawerDivider && this._topDrawerDivider.parent == this )
+			{
+				this.removeChild( this._topDrawerDivider , false );
+			}
+			this._topDrawerDivider = value;
+			if( this._topDrawerDivider )
+			{
+				this._topDrawerDivider.visible = false;
+				this.addChild( this._topDrawerDivider );
+			}
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _topDrawerDockMode : String = DOCK_MODE_NONE;
 
+		[Inspectable(type="String" , enumeration="portrait,landscape,both,none")]
 		/**
 		 * Determines if the top drawer is docked in all, some, or no stage
 		 * orientations. The current stage orientation is determined by
@@ -487,9 +693,12 @@ package feathers.controls
 		 *
 		 * @default Drawers.DOCK_MODE_NONE
 		 *
+		 * @see #DOCK_MODE_PORTRAIT
+		 * @see #DOCK_MODE_LANDSCAPE
+		 * @see #DOCK_MODE_NONE
+		 * @see #DOCK_MODE_BOTH
 		 * @see #topDrawer
-		 */
-		public function get topDrawerDockMode() : String
+		 */ public function get topDrawerDockMode() : String
 		{
 			return this._topDrawerDockMode;
 		}
@@ -543,12 +752,12 @@ package feathers.controls
 			}
 			if( this.contentEventDispatcher && this._topDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.removeEventListener( this._topDrawerToggleEventType, content_topDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.removeEventListener( this._topDrawerToggleEventType , content_topDrawerToggleEventTypeHandler );
 			}
 			this._topDrawerToggleEventType = value;
 			if( this.contentEventDispatcher && this._topDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.addEventListener( this._topDrawerToggleEventType, content_topDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.addEventListener( this._topDrawerToggleEventType , content_topDrawerToggleEventTypeHandler );
 			}
 		}
 
@@ -625,7 +834,7 @@ package feathers.controls
 			var stage : Stage = this.stage;
 			if( !stage )
 			{
-				// fall back to the current stage, but it may be wrong...
+				//fall back to the current stage, but it may be wrong...
 				stage = Starling.current.stage;
 			}
 			if( stage.stageWidth > stage.stageHeight )
@@ -670,16 +879,27 @@ package feathers.controls
 			{
 				return;
 			}
+			if( this.isRightDrawerOpen && value === null )
+			{
+				this.isRightDrawerOpen = false;
+			}
 			if( this._rightDrawer && this._rightDrawer.parent == this )
 			{
-				this.removeChild( this._rightDrawer, false );
+				this.removeChild( this._rightDrawer , false );
 			}
 			this._rightDrawer = value;
 			if( this._rightDrawer )
 			{
 				this._rightDrawer.visible = false;
-				this._rightDrawer.addEventListener( FeathersEventType.RESIZE, drawer_resizeHandler );
-				this.addChildAt( this._rightDrawer, 0 );
+				this._rightDrawer.addEventListener( FeathersEventType.RESIZE , drawer_resizeHandler );
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					this.addChild( this._rightDrawer );
+				}
+				else //below
+				{
+					this.addChildAt( this._rightDrawer , 0 );
+				}
 			}
 			this.invalidate( INVALIDATION_FLAG_DATA );
 		}
@@ -687,8 +907,57 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _rightDrawerDivider : DisplayObject;
+
+		/**
+		 * The divider between the right drawer and the content when the right
+		 * drawer is docked.
+		 *
+		 * <p>In the following example, a <code>Quad</code> is added as the
+		 * right drawer divider:</p>
+		 *
+		 * <listing version="3.0">
+		 * var divider:Quad = new Quad( 2, 2, 0x999999 );
+		 * drawers.rightDrawerDivider = quad;
+		 * drawers.rightDrawerDockMode = Drawers.DOCK_MODE_BOTH</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #rightDrawer
+		 */
+		public function get rightDrawerDivider() : DisplayObject
+		{
+			return this._rightDrawerDivider;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set rightDrawerDivider( value : DisplayObject ) : void
+		{
+			if( this._rightDrawerDivider === value )
+			{
+				return;
+			}
+			if( this._rightDrawerDivider && this._rightDrawerDivider.parent == this )
+			{
+				this.removeChild( this._rightDrawerDivider , false );
+			}
+			this._rightDrawerDivider = value;
+			if( this._rightDrawerDivider )
+			{
+				this._rightDrawerDivider.visible = false;
+				this.addChild( this._rightDrawerDivider );
+			}
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _rightDrawerDockMode : String = DOCK_MODE_NONE;
 
+		[Inspectable(type="String" , enumeration="portrait,landscape,both,none")]
 		/**
 		 * Determines if the right drawer is docked in all, some, or no stage
 		 * orientations. The current stage orientation is determined by
@@ -702,9 +971,12 @@ package feathers.controls
 		 *
 		 * @default Drawers.DOCK_MODE_NONE
 		 *
+		 * @see #DOCK_MODE_PORTRAIT
+		 * @see #DOCK_MODE_LANDSCAPE
+		 * @see #DOCK_MODE_NONE
+		 * @see #DOCK_MODE_BOTH
 		 * @see #rightDrawer
-		 */
-		public function get rightDrawerDockMode() : String
+		 */ public function get rightDrawerDockMode() : String
 		{
 			return this._rightDrawerDockMode;
 		}
@@ -758,12 +1030,12 @@ package feathers.controls
 			}
 			if( this.contentEventDispatcher && this._rightDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.removeEventListener( this._rightDrawerToggleEventType, content_rightDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.removeEventListener( this._rightDrawerToggleEventType , content_rightDrawerToggleEventTypeHandler );
 			}
 			this._rightDrawerToggleEventType = value;
 			if( this.contentEventDispatcher && this._rightDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.addEventListener( this._rightDrawerToggleEventType, content_rightDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.addEventListener( this._rightDrawerToggleEventType , content_rightDrawerToggleEventTypeHandler );
 			}
 		}
 
@@ -840,7 +1112,7 @@ package feathers.controls
 			var stage : Stage = this.stage;
 			if( !stage )
 			{
-				// fall back to the current stage, but it may be wrong...
+				//fall back to the current stage, but it may be wrong...
 				stage = Starling.current.stage;
 			}
 			if( stage.stageWidth > stage.stageHeight )
@@ -885,16 +1157,27 @@ package feathers.controls
 			{
 				return;
 			}
+			if( this.isBottomDrawerOpen && value === null )
+			{
+				this.isBottomDrawerOpen = false;
+			}
 			if( this._bottomDrawer && this._bottomDrawer.parent == this )
 			{
-				this.removeChild( this._bottomDrawer, false );
+				this.removeChild( this._bottomDrawer , false );
 			}
 			this._bottomDrawer = value;
 			if( this._bottomDrawer )
 			{
 				this._bottomDrawer.visible = false;
-				this._bottomDrawer.addEventListener( FeathersEventType.RESIZE, drawer_resizeHandler );
-				this.addChildAt( this._bottomDrawer, 0 );
+				this._bottomDrawer.addEventListener( FeathersEventType.RESIZE , drawer_resizeHandler );
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					this.addChild( this._bottomDrawer );
+				}
+				else //below
+				{
+					this.addChildAt( this._bottomDrawer , 0 );
+				}
 			}
 			this.invalidate( INVALIDATION_FLAG_DATA );
 		}
@@ -902,8 +1185,57 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _bottomDrawerDivider : DisplayObject;
+
+		/**
+		 * The divider between the bottom drawer and the content when the bottom
+		 * drawer is docked.
+		 *
+		 * <p>In the following example, a <code>Quad</code> is added as the
+		 * bottom drawer divider:</p>
+		 *
+		 * <listing version="3.0">
+		 * var divider:Quad = new Quad( 2, 2, 0x999999 );
+		 * drawers.bottomDrawerDivider = quad;
+		 * drawers.bottomDrawerDockMode = Drawers.DOCK_MODE_BOTH</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #bottomDrawer
+		 */
+		public function get bottomDrawerDivider() : DisplayObject
+		{
+			return this._bottomDrawerDivider;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set bottomDrawerDivider( value : DisplayObject ) : void
+		{
+			if( this._bottomDrawerDivider === value )
+			{
+				return;
+			}
+			if( this._bottomDrawerDivider && this._bottomDrawerDivider.parent == this )
+			{
+				this.removeChild( this._bottomDrawerDivider , false );
+			}
+			this._bottomDrawerDivider = value;
+			if( this._bottomDrawerDivider )
+			{
+				this._bottomDrawerDivider.visible = false;
+				this.addChild( this._bottomDrawerDivider );
+			}
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _bottomDrawerDockMode : String = DOCK_MODE_NONE;
 
+		[Inspectable(type="String" , enumeration="portrait,landscape,both,none")]
 		/**
 		 * Determines if the bottom drawer is docked in all, some, or no stage
 		 * orientations. The current stage orientation is determined by
@@ -917,9 +1249,12 @@ package feathers.controls
 		 *
 		 * @default Drawers.DOCK_MODE_NONE
 		 *
+		 * @see #DOCK_MODE_PORTRAIT
+		 * @see #DOCK_MODE_LANDSCAPE
+		 * @see #DOCK_MODE_NONE
+		 * @see #DOCK_MODE_BOTH
 		 * @see #bottomDrawer
-		 */
-		public function get bottomDrawerDockMode() : String
+		 */ public function get bottomDrawerDockMode() : String
 		{
 			return this._bottomDrawerDockMode;
 		}
@@ -973,12 +1308,12 @@ package feathers.controls
 			}
 			if( this.contentEventDispatcher && this._bottomDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.removeEventListener( this._bottomDrawerToggleEventType, content_bottomDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.removeEventListener( this._bottomDrawerToggleEventType , content_bottomDrawerToggleEventTypeHandler );
 			}
 			this._bottomDrawerToggleEventType = value;
 			if( this.contentEventDispatcher && this._bottomDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.addEventListener( this._bottomDrawerToggleEventType, content_bottomDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.addEventListener( this._bottomDrawerToggleEventType , content_bottomDrawerToggleEventTypeHandler );
 			}
 		}
 
@@ -1055,7 +1390,7 @@ package feathers.controls
 			var stage : Stage = this.stage;
 			if( !stage )
 			{
-				// fall back to the current stage, but it may be wrong...
+				//fall back to the current stage, but it may be wrong...
 				stage = Starling.current.stage;
 			}
 			if( stage.stageWidth > stage.stageHeight )
@@ -1100,16 +1435,27 @@ package feathers.controls
 			{
 				return;
 			}
+			if( this.isLeftDrawerOpen && value === null )
+			{
+				this.isLeftDrawerOpen = false;
+			}
 			if( this._leftDrawer && this._leftDrawer.parent == this )
 			{
-				this.removeChild( this._leftDrawer, false );
+				this.removeChild( this._leftDrawer , false );
 			}
 			this._leftDrawer = value;
 			if( this._leftDrawer )
 			{
 				this._leftDrawer.visible = false;
-				this._leftDrawer.addEventListener( FeathersEventType.RESIZE, drawer_resizeHandler );
-				this.addChildAt( this._leftDrawer, 0 );
+				this._leftDrawer.addEventListener( FeathersEventType.RESIZE , drawer_resizeHandler );
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					this.addChild( this._leftDrawer );
+				}
+				else //below
+				{
+					this.addChildAt( this._leftDrawer , 0 );
+				}
 			}
 			this.invalidate( INVALIDATION_FLAG_DATA );
 		}
@@ -1117,8 +1463,57 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _leftDrawerDivider : DisplayObject;
+
+		/**
+		 * The divider between the left drawer and the content when the left
+		 * drawer is docked.
+		 *
+		 * <p>In the following example, a <code>Quad</code> is added as the
+		 * left drawer divider:</p>
+		 *
+		 * <listing version="3.0">
+		 * var divider:Quad = new Quad( 2, 2, 0x999999 );
+		 * drawers.leftDrawerDivider = quad;
+		 * drawers.leftDrawerDockMode = Drawers.DOCK_MODE_BOTH</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #leftDrawer
+		 */
+		public function get leftDrawerDivider() : DisplayObject
+		{
+			return this._leftDrawerDivider;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set leftDrawerDivider( value : DisplayObject ) : void
+		{
+			if( this._leftDrawerDivider === value )
+			{
+				return;
+			}
+			if( this._leftDrawerDivider && this._leftDrawerDivider.parent == this )
+			{
+				this.removeChild( this._leftDrawerDivider , false );
+			}
+			this._leftDrawerDivider = value;
+			if( this._leftDrawerDivider )
+			{
+				this._leftDrawerDivider.visible = false;
+				this.addChild( this._leftDrawerDivider );
+			}
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _leftDrawerDockMode : String = DOCK_MODE_NONE;
 
+		[Inspectable(type="String" , enumeration="portrait,landscape,both,none")]
 		/**
 		 * Determines if the left drawer is docked in all, some, or no stage
 		 * orientations. The current stage orientation is determined by
@@ -1132,9 +1527,12 @@ package feathers.controls
 		 *
 		 * @default Drawers.DOCK_MODE_NONE
 		 *
+		 * @see #DOCK_MODE_PORTRAIT
+		 * @see #DOCK_MODE_LANDSCAPE
+		 * @see #DOCK_MODE_NONE
+		 * @see #DOCK_MODE_BOTH
 		 * @see #leftDrawer
-		 */
-		public function get leftDrawerDockMode() : String
+		 */ public function get leftDrawerDockMode() : String
 		{
 			return this._leftDrawerDockMode;
 		}
@@ -1188,12 +1586,12 @@ package feathers.controls
 			}
 			if( this.contentEventDispatcher && this._leftDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.removeEventListener( this._leftDrawerToggleEventType, content_leftDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.removeEventListener( this._leftDrawerToggleEventType , content_leftDrawerToggleEventTypeHandler );
 			}
 			this._leftDrawerToggleEventType = value;
 			if( this.contentEventDispatcher && this._leftDrawerToggleEventType )
 			{
-				this.contentEventDispatcher.addEventListener( this._leftDrawerToggleEventType, content_leftDrawerToggleEventTypeHandler );
+				this.contentEventDispatcher.addEventListener( this._leftDrawerToggleEventType , content_leftDrawerToggleEventTypeHandler );
 			}
 		}
 
@@ -1270,7 +1668,7 @@ package feathers.controls
 			var stage : Stage = this.stage;
 			if( !stage )
 			{
-				// fall back to the current stage, but it may be wrong...
+				//fall back to the current stage, but it may be wrong...
 				stage = Starling.current.stage;
 			}
 			if( stage.stageWidth > stage.stageHeight )
@@ -1285,7 +1683,7 @@ package feathers.controls
 		 */
 		protected var _autoSizeMode : String = AUTO_SIZE_MODE_STAGE;
 
-		[Inspectable(type="String", enumeration="stage,content")]
+		[Inspectable(type="String" , enumeration="stage,content")]
 		/**
 		 * Determines how the drawers container will set its own size when its
 		 * dimensions (width and height) aren't set explicitly.
@@ -1319,11 +1717,11 @@ package feathers.controls
 			{
 				if( this._autoSizeMode == AUTO_SIZE_MODE_CONTENT )
 				{
-					this._content.addEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+					this._content.addEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 				}
 				else
 				{
-					this._content.removeEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+					this._content.removeEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 				}
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
@@ -1375,8 +1773,66 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _openMode : String = OPEN_MODE_BELOW;
+
+		[Inspectable(type="String" , enumeration="above,below")]
+		/**
+		 * Determines whether the drawer opens above the content or below it.
+		 *
+		 * <p>In the following example, the drawers are opened above the
+		 * content:</p>
+		 *
+		 * <listing version="3.0">
+		 * drawers.openMode = Drawers.OPEN_MODE_ABOVE;</listing>
+		 *
+		 * @default Drawers.OPEN_MODE_BELOW
+		 *
+		 * @see #OPEN_MODE_ABOVE
+		 * @see #OPEN_MODE_BELOW
+		 */ public function get openMode() : String
+		{
+			return this._openMode;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set openMode( value : String ) : void
+		{
+			if( this._openMode == value )
+			{
+				return;
+			}
+			this._openMode = value;
+			if( this._content )
+			{
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					this.setChildIndex( this._content , 0 );
+				}
+				else //below
+				{
+					if( this._overlaySkin )
+					{
+						//the content should below the overlay skin
+						this.setChildIndex( this._content , this.numChildren - 1 );
+						this.setChildIndex( this._overlaySkin , this.numChildren - 1 );
+					}
+					else
+					{
+						this.setChildIndex( this._content , this.numChildren - 1 );
+					}
+				}
+			}
+			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _openGesture : String = OPEN_GESTURE_DRAG_CONTENT_EDGE;
 
+		[Inspectable(type="String" , enumeration="dragContentEdge,dragContent,none")]
 		/**
 		 * An optional touch gesture used to open a drawer.
 		 *
@@ -1391,8 +1847,7 @@ package feathers.controls
 		 * @see #OPEN_GESTURE_NONE
 		 * @see #OPEN_GESTURE_DRAG_CONTENT
 		 * @see #OPEN_GESTURE_DRAG_CONTENT_EDGE
-		 */
-		public function get openGesture() : String
+		 */ public function get openGesture() : String
 		{
 			return this._openGesture;
 		}
@@ -1507,8 +1962,9 @@ package feathers.controls
 		 * <code>contentEventDispatcherField</code> or
 		 * <code>contentEventDispatcherFunction</code>.
 		 *
-		 * <p>For a <code>ScreenNavigator</code> component, this value is
-		 * automatically set to <code>Event.CHANGE</code>.</p>
+		 * <p>For <code>StackScreenNavigator</code> and
+		 * <code>ScreenNavigator</code> components, this value is automatically
+		 * set to <code>Event.CHANGE</code>.</p>
 		 *
 		 * <p>In the following example, the drawers container will update its
 		 * content event dispatcher when the content dispatches an event of type
@@ -1538,12 +1994,12 @@ package feathers.controls
 			}
 			if( this._content && this._contentEventDispatcherChangeEventType )
 			{
-				this._content.removeEventListener( this._contentEventDispatcherChangeEventType, content_eventDispatcherChangeHandler );
+				this._content.removeEventListener( this._contentEventDispatcherChangeEventType , content_eventDispatcherChangeHandler );
 			}
 			this._contentEventDispatcherChangeEventType = value;
 			if( this._content && this._contentEventDispatcherChangeEventType )
 			{
-				this._content.addEventListener( this._contentEventDispatcherChangeEventType, content_eventDispatcherChangeHandler );
+				this._content.addEventListener( this._contentEventDispatcherChangeEventType , content_eventDispatcherChangeHandler );
 			}
 		}
 
@@ -1556,9 +2012,10 @@ package feathers.controls
 		 * A property of the <code>content</code> that references an event
 		 * dispatcher that dispatches events to toggle drawers open and closed.
 		 *
-		 * <p>For a <code>ScreenNavigator</code> component, this value is
-		 * automatically set to <code>"activeScreen"</code> to listen for events
-		 * from the currently active/visible screen.</p>
+		 * <p>For <code>StackScreenNavigator</code> and
+		 * <code>ScreenNavigator</code> components, this value is automatically
+		 * set to <code>"activeScreen"</code> to listen for events from the
+		 * currently active/visible screen.</p>
 		 *
 		 * <p>In the following example, the content event dispatcher field is
 		 * customized:</p>
@@ -1713,17 +2170,17 @@ package feathers.controls
 		{
 			super();
 			this.content = content;
-			this.addEventListener( Event.ADDED_TO_STAGE, drawers_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, drawers_removedFromStageHandler );
-			this.addEventListener( TouchEvent.TOUCH, drawers_touchHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , drawers_addedToStageHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , drawers_removedFromStageHandler );
+			this.addEventListener( TouchEvent.TOUCH , drawers_touchHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point, forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
 		{
-			var result : DisplayObject = super.hitTest( localPoint, forTouch );
+			var result : DisplayObject = super.hitTest( localPoint , forTouch );
 			if( result )
 			{
 				if( !forTouch )
@@ -1752,12 +2209,12 @@ package feathers.controls
 				}
 				return result;
 			}
-			// we want to register touches in our hitArea as a last resort
+			//we want to register touches in our hitArea as a last resort
 			if( forTouch && (!this.visible || !this.touchable) )
 			{
 				return null;
 			}
-			return this._hitArea.contains( localPoint.x, localPoint.y ) ? this : null;
+			return this._hitArea.contains( localPoint.x , localPoint.y ) ? this : null;
 		}
 
 		/**
@@ -1896,6 +2353,7 @@ package feathers.controls
 			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
 			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
 			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
+			var selectedInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SELECTED );
 
 			if( dataInvalid )
 			{
@@ -1905,6 +2363,10 @@ package feathers.controls
 			if( sizeInvalid || layoutInvalid )
 			{
 				this.refreshDrawerStates();
+			}
+			if( layoutInvalid || selectedInvalid )
+			{
+				this.refreshOverlayState();
 			}
 
 			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
@@ -1932,8 +2394,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -2006,7 +2468,7 @@ package feathers.controls
 				}
 			}
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -2030,6 +2492,22 @@ package feathers.controls
 			{
 				IValidating( this._leftDrawer ).validate();
 			}
+			if( this._topDrawerDivider is IValidating )
+			{
+				IValidating( this._topDrawerDivider ).validate();
+			}
+			if( this._rightDrawerDivider is IValidating )
+			{
+				IValidating( this._rightDrawerDivider ).validate();
+			}
+			if( this._bottomDrawerDivider is IValidating )
+			{
+				IValidating( this._bottomDrawerDivider ).validate();
+			}
+			if( this._leftDrawerDivider is IValidating )
+			{
+				IValidating( this._leftDrawerDivider ).validate();
+			}
 			var isTopDrawerOpen : Boolean = this.isTopDrawerOpen;
 			var isRightDrawerOpen : Boolean = this.isRightDrawerOpen;
 			var isBottomDrawerOpen : Boolean = this.isBottomDrawerOpen;
@@ -2047,61 +2525,87 @@ package feathers.controls
 			if( isLeftDrawerDocked )
 			{
 				contentWidth -= leftDrawerWidth;
+				if( this._leftDrawerDivider )
+				{
+					contentWidth -= this._leftDrawerDivider.width;
+				}
 			}
 			if( isRightDrawerDocked )
 			{
 				contentWidth -= rightDrawerWidth;
+				if( this._rightDrawerDivider )
+				{
+					contentWidth -= this._rightDrawerDivider.width;
+				}
 			}
 			var contentHeight : Number = this.actualHeight;
 			if( isTopDrawerDocked )
 			{
 				contentHeight -= topDrawerHeight;
+				if( this._topDrawerDivider )
+				{
+					contentHeight -= this._topDrawerDivider.height;
+				}
 			}
 			if( isBottomDrawerDocked )
 			{
 				contentHeight -= bottomDrawerHeight;
+				if( this._bottomDrawerDivider )
+				{
+					contentHeight -= this._bottomDrawerDivider.height;
+				}
 			}
 
-			if( isRightDrawerOpen )
+			var contentX : Number = 0;
+			if( isRightDrawerOpen && this._openMode === OPEN_MODE_BELOW )
 			{
-				var contentX : Number = -rightDrawerWidth;
+				contentX = -rightDrawerWidth;
 				if( isLeftDrawerDocked )
 				{
 					contentX += leftDrawerWidth;
+					if( this._leftDrawerDivider )
+					{
+						contentX += this._leftDrawerDivider.width;
+					}
 				}
-				this._content.x = contentX;
 			}
-			else if( isLeftDrawerOpen || isLeftDrawerDocked )
+			else if( (isLeftDrawerOpen && this._openMode === OPEN_MODE_BELOW) || isLeftDrawerDocked )
 			{
-				this._content.x = leftDrawerWidth;
+				contentX = leftDrawerWidth;
+				if( this._leftDrawerDivider && isLeftDrawerDocked )
+				{
+					contentX += this._leftDrawerDivider.width;
+				}
 			}
-			else
+			this._content.x = contentX;
+			var contentY : Number = 0;
+			if( isBottomDrawerOpen && this._openMode === OPEN_MODE_BELOW )
 			{
-				this._content.x = 0;
-			}
-			if( isBottomDrawerOpen )
-			{
-				var contentY : Number = -bottomDrawerHeight;
+				contentY = -bottomDrawerHeight;
 				if( isTopDrawerDocked )
 				{
 					contentY += topDrawerHeight;
+					if( this._topDrawerDivider )
+					{
+						contentY += this._topDrawerDivider.height;
+					}
 				}
-				this._content.y = contentY;
 			}
-			else if( isTopDrawerOpen || isTopDrawerDocked )
+			else if( (isTopDrawerOpen && this._openMode === OPEN_MODE_BELOW) || isTopDrawerDocked )
 			{
-				this._content.y = topDrawerHeight;
+				contentY = topDrawerHeight;
+				if( this._topDrawerDivider && isTopDrawerDocked )
+				{
+					contentY += this._topDrawerDivider.height;
+				}
 			}
-			else
-			{
-				this._content.y = 0;
-			}
-			if( this._autoSizeMode != AUTO_SIZE_MODE_CONTENT )
+			this._content.y = contentY;
+			if( this._autoSizeMode !== AUTO_SIZE_MODE_CONTENT )
 			{
 				this._content.width = contentWidth;
 				this._content.height = contentHeight;
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._content is IValidating )
 				{
 					IValidating( this._content ).validate();
@@ -2114,7 +2618,7 @@ package feathers.controls
 				var topDrawerY : Number = 0;
 				if( isTopDrawerDocked )
 				{
-					if( isBottomDrawerOpen )
+					if( isBottomDrawerOpen && this._openMode === OPEN_MODE_BELOW )
 					{
 						topDrawerY -= bottomDrawerHeight;
 					}
@@ -2123,12 +2627,23 @@ package feathers.controls
 						topDrawerX = this._content.x;
 					}
 				}
+				else if( this._openMode === OPEN_MODE_ABOVE && !this._isTopDrawerOpen )
+				{
+					topDrawerY -= topDrawerHeight;
+				}
 				this._topDrawer.x = topDrawerX;
 				this._topDrawer.y = topDrawerY;
 				this._topDrawer.width = this.actualWidth;
-				this._topDrawer.visible = isTopDrawerOpen || isTopDrawerDocked;
+				this._topDrawer.visible = isTopDrawerOpen || isTopDrawerDocked || this._isDraggingTopDrawer;
+				if( this._topDrawerDivider )
+				{
+					this._topDrawerDivider.visible = isTopDrawerDocked;
+					this._topDrawerDivider.x = topDrawerX;
+					this._topDrawerDivider.y = topDrawerY + topDrawerHeight;
+					this._topDrawerDivider.width = this.actualWidth;
+				}
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._topDrawer is IValidating )
 				{
 					IValidating( this._topDrawer ).validate();
@@ -2143,6 +2658,10 @@ package feathers.controls
 				if( isRightDrawerDocked )
 				{
 					rightDrawerX = this._content.x + this._content.width;
+					if( this._rightDrawerDivider )
+					{
+						rightDrawerX += this._rightDrawerDivider.width;
+					}
 					if( isTopDrawerDocked )
 					{
 						rightDrawerHeight -= topDrawerHeight;
@@ -2153,12 +2672,23 @@ package feathers.controls
 					}
 					rightDrawerY = this._content.y;
 				}
+				else if( this._openMode === OPEN_MODE_ABOVE && !this._isRightDrawerOpen )
+				{
+					rightDrawerX += rightDrawerWidth;
+				}
 				this._rightDrawer.x = rightDrawerX;
 				this._rightDrawer.y = rightDrawerY;
 				this._rightDrawer.height = rightDrawerHeight;
-				this._rightDrawer.visible = isRightDrawerOpen || isRightDrawerDocked;
+				this._rightDrawer.visible = isRightDrawerOpen || isRightDrawerDocked || this._isDraggingRightDrawer;
+				if( this._rightDrawerDivider )
+				{
+					this._rightDrawerDivider.visible = isRightDrawerDocked;
+					this._rightDrawerDivider.x = rightDrawerX - this._rightDrawerDivider.width;
+					this._rightDrawerDivider.y = rightDrawerY;
+					this._rightDrawerDivider.height = rightDrawerHeight;
+				}
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._rightDrawer is IValidating )
 				{
 					IValidating( this._rightDrawer ).validate();
@@ -2176,13 +2706,28 @@ package feathers.controls
 						bottomDrawerX = this._content.x;
 					}
 					bottomDrawerY = this._content.y + this._content.height;
+					if( this._bottomDrawerDivider )
+					{
+						bottomDrawerY += this._bottomDrawerDivider.height;
+					}
+				}
+				else if( this._openMode === OPEN_MODE_ABOVE && !this._isBottomDrawerOpen )
+				{
+					bottomDrawerY += bottomDrawerHeight;
 				}
 				this._bottomDrawer.x = bottomDrawerX;
 				this._bottomDrawer.y = bottomDrawerY;
 				this._bottomDrawer.width = this.actualWidth;
-				this._bottomDrawer.visible = isBottomDrawerOpen || isBottomDrawerDocked;
+				this._bottomDrawer.visible = isBottomDrawerOpen || isBottomDrawerDocked || this._isDraggingBottomDrawer;
+				if( this._bottomDrawerDivider )
+				{
+					this._bottomDrawerDivider.visible = isBottomDrawerDocked;
+					this._bottomDrawerDivider.x = bottomDrawerX;
+					this._bottomDrawerDivider.y = bottomDrawerY - this._bottomDrawerDivider.height;
+					this._bottomDrawerDivider.width = this.actualWidth;
+				}
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._bottomDrawer is IValidating )
 				{
 					IValidating( this._bottomDrawer ).validate();
@@ -2196,7 +2741,7 @@ package feathers.controls
 				var leftDrawerHeight : Number = this.actualHeight;
 				if( isLeftDrawerDocked )
 				{
-					if( isRightDrawerOpen )
+					if( isRightDrawerOpen && this._openMode === OPEN_MODE_BELOW )
 					{
 						leftDrawerX -= rightDrawerWidth;
 					}
@@ -2210,12 +2755,23 @@ package feathers.controls
 					}
 					leftDrawerY = this._content.y;
 				}
+				else if( this._openMode === OPEN_MODE_ABOVE && !this._isLeftDrawerOpen )
+				{
+					leftDrawerX -= leftDrawerWidth;
+				}
 				this._leftDrawer.x = leftDrawerX;
 				this._leftDrawer.y = leftDrawerY;
 				this._leftDrawer.height = leftDrawerHeight;
-				this._leftDrawer.visible = isLeftDrawerOpen || isLeftDrawerDocked;
+				this._leftDrawer.visible = isLeftDrawerOpen || isLeftDrawerDocked || this._isDraggingLeftDrawer;
+				if( this._leftDrawerDivider )
+				{
+					this._leftDrawerDivider.visible = isLeftDrawerDocked;
+					this._leftDrawerDivider.x = leftDrawerX + leftDrawerWidth;
+					this._leftDrawerDivider.y = leftDrawerY;
+					this._leftDrawerDivider.height = leftDrawerHeight;
+				}
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._leftDrawer is IValidating )
 				{
 					IValidating( this._leftDrawer ).validate();
@@ -2228,7 +2784,7 @@ package feathers.controls
 				this._overlaySkin.width = this.actualWidth;
 				this._overlaySkin.height = this.actualHeight;
 
-				// final validation to avoid juggler next frame issues
+				//final validation to avoid juggler next frame issues
 				if( this._overlaySkin is IValidating )
 				{
 					IValidating( this._overlaySkin ).validate();
@@ -2282,7 +2838,7 @@ package feathers.controls
 				Starling.juggler.remove( this._openOrCloseTween );
 				this._openOrCloseTween = null;
 			}
-			this.applyTopClipRect();
+			this.prepareTopDrawer();
 			if( this._overlaySkin )
 			{
 				this._overlaySkin.visible = true;
@@ -2295,16 +2851,23 @@ package feathers.controls
 					this._overlaySkin.alpha = this._overlaySkinOriginalAlpha;
 				}
 			}
-			this._topDrawer.visible = true;
 			var targetPosition : Number = this._isTopDrawerOpen ? this._topDrawer.height : 0;
 			var duration : Number = this.pendingToggleDuration;
-			if( duration !== duration ) // isNaN
+			if( duration !== duration ) //isNaN
 			{
 				duration = this._openOrCloseDuration;
 			}
 			this.pendingToggleDuration = NaN;
-			this._openOrCloseTween = new Tween( this._content, duration, this._openOrCloseEase );
-			this._openOrCloseTween.animate( "y", targetPosition );
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				targetPosition = targetPosition === 0 ? -this._topDrawer.height : 0;
+				this._openOrCloseTween = new Tween( this._topDrawer , duration , this._openOrCloseEase );
+			}
+			else //below
+			{
+				this._openOrCloseTween = new Tween( this._content , duration , this._openOrCloseEase );
+			}
+			this._openOrCloseTween.animate( "y" , targetPosition );
 			this._openOrCloseTween.onUpdate = topDrawerOpenOrCloseTween_onUpdate;
 			this._openOrCloseTween.onComplete = topDrawerOpenOrCloseTween_onComplete;
 			Starling.juggler.add( this._openOrCloseTween );
@@ -2325,7 +2888,7 @@ package feathers.controls
 				Starling.juggler.remove( this._openOrCloseTween );
 				this._openOrCloseTween = null;
 			}
-			this.applyRightClipRect();
+			this.prepareRightDrawer();
 			if( this._overlaySkin )
 			{
 				this._overlaySkin.visible = true;
@@ -2338,24 +2901,35 @@ package feathers.controls
 					this._overlaySkin.alpha = this._overlaySkinOriginalAlpha;
 				}
 			}
-			this._rightDrawer.visible = true;
 			var targetPosition : Number = 0;
 			if( this._isRightDrawerOpen )
 			{
-				targetPosition = -this._rightDrawer.width
+				targetPosition = -this._rightDrawer.width;
 			}
-			if( this.isLeftDrawerDocked )
+			if( this.isLeftDrawerDocked && this._openMode === OPEN_MODE_BELOW )
 			{
 				targetPosition += this._leftDrawer.width;
+				if( this._leftDrawerDivider )
+				{
+					targetPosition += this._leftDrawerDivider.width;
+				}
 			}
 			var duration : Number = this.pendingToggleDuration;
-			if( duration !== duration ) // isNaN
+			if( duration !== duration ) //isNaN
 			{
 				duration = this._openOrCloseDuration;
 			}
 			this.pendingToggleDuration = NaN;
-			this._openOrCloseTween = new Tween( this._content, duration, this._openOrCloseEase );
-			this._openOrCloseTween.animate( "x", targetPosition );
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				this._openOrCloseTween = new Tween( this._rightDrawer , duration , this._openOrCloseEase );
+				targetPosition += this.actualWidth;
+			}
+			else //below
+			{
+				this._openOrCloseTween = new Tween( this._content , duration , this._openOrCloseEase );
+			}
+			this._openOrCloseTween.animate( "x" , targetPosition );
 			this._openOrCloseTween.onUpdate = rightDrawerOpenOrCloseTween_onUpdate;
 			this._openOrCloseTween.onComplete = rightDrawerOpenOrCloseTween_onComplete;
 			Starling.juggler.add( this._openOrCloseTween );
@@ -2376,7 +2950,7 @@ package feathers.controls
 				Starling.juggler.remove( this._openOrCloseTween );
 				this._openOrCloseTween = null;
 			}
-			this.applyBottomClipRect();
+			this.prepareBottomDrawer();
 			if( this._overlaySkin )
 			{
 				this._overlaySkin.visible = true;
@@ -2389,24 +2963,35 @@ package feathers.controls
 					this._overlaySkin.alpha = this._overlaySkinOriginalAlpha;
 				}
 			}
-			this._bottomDrawer.visible = true;
 			var targetPosition : Number = 0;
 			if( this._isBottomDrawerOpen )
 			{
 				targetPosition = -this._bottomDrawer.height;
 			}
-			if( this.isTopDrawerDocked )
+			if( this.isTopDrawerDocked && this._openMode === OPEN_MODE_BELOW )
 			{
 				targetPosition += this._topDrawer.height;
+				if( this._topDrawerDivider )
+				{
+					targetPosition += this._topDrawerDivider.height;
+				}
 			}
 			var duration : Number = this.pendingToggleDuration;
-			if( duration !== duration ) // isNaN
+			if( duration !== duration ) //isNaN
 			{
 				duration = this._openOrCloseDuration;
 			}
 			this.pendingToggleDuration = NaN;
-			this._openOrCloseTween = new Tween( this._content, duration, this._openOrCloseEase );
-			this._openOrCloseTween.animate( "y", targetPosition );
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				targetPosition += this.actualHeight;
+				this._openOrCloseTween = new Tween( this._bottomDrawer , duration , this._openOrCloseEase );
+			}
+			else //below
+			{
+				this._openOrCloseTween = new Tween( this._content , duration , this._openOrCloseEase );
+			}
+			this._openOrCloseTween.animate( "y" , targetPosition );
 			this._openOrCloseTween.onUpdate = bottomDrawerOpenOrCloseTween_onUpdate;
 			this._openOrCloseTween.onComplete = bottomDrawerOpenOrCloseTween_onComplete;
 			Starling.juggler.add( this._openOrCloseTween );
@@ -2427,7 +3012,7 @@ package feathers.controls
 				Starling.juggler.remove( this._openOrCloseTween );
 				this._openOrCloseTween = null;
 			}
-			this.applyLeftClipRect();
+			this.prepareLeftDrawer();
 			if( this._overlaySkin )
 			{
 				this._overlaySkin.visible = true;
@@ -2440,16 +3025,23 @@ package feathers.controls
 					this._overlaySkin.alpha = this._overlaySkinOriginalAlpha;
 				}
 			}
-			this._leftDrawer.visible = true;
 			var targetPosition : Number = this._isLeftDrawerOpen ? this._leftDrawer.width : 0;
 			var duration : Number = this.pendingToggleDuration;
-			if( duration !== duration ) // isNaN
+			if( duration !== duration ) //isNaN
 			{
 				duration = this._openOrCloseDuration;
 			}
 			this.pendingToggleDuration = NaN;
-			this._openOrCloseTween = new Tween( this._content, duration, this._openOrCloseEase );
-			this._openOrCloseTween.animate( "x", targetPosition );
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				targetPosition = targetPosition === 0 ? -this._leftDrawer.width : 0;
+				this._openOrCloseTween = new Tween( this._leftDrawer , duration , this._openOrCloseEase );
+			}
+			else //below
+			{
+				this._openOrCloseTween = new Tween( this._content , duration , this._openOrCloseEase );
+			}
+			this._openOrCloseTween.animate( "x" , targetPosition );
 			this._openOrCloseTween.onUpdate = leftDrawerOpenOrCloseTween_onUpdate;
 			this._openOrCloseTween.onComplete = leftDrawerOpenOrCloseTween_onComplete;
 			Starling.juggler.add( this._openOrCloseTween );
@@ -2458,64 +3050,100 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function applyTopClipRect() : void
+		protected function prepareTopDrawer() : void
 		{
-			if( !this._clipDrawers || !(this._topDrawer is Sprite) )
+			this._topDrawer.visible = true;
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				if( this._overlaySkin )
+				{
+					this.setChildIndex( this._overlaySkin , this.numChildren - 1 );
+				}
+				this.setChildIndex( this._topDrawer , this.numChildren - 1 );
+			}
+			if( !this._clipDrawers || this._openMode !== OPEN_MODE_BELOW || !(this._topDrawer is Sprite) )
 			{
 				return;
 			}
 			var topSprite : Sprite = Sprite( this._topDrawer );
 			if( !topSprite.clipRect )
 			{
-				topSprite.clipRect = new Rectangle( 0, 0, this.actualWidth, this._content.y );
+				topSprite.clipRect = new Rectangle( 0 , 0 , this.actualWidth , this._content.y );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function applyRightClipRect() : void
+		protected function prepareRightDrawer() : void
 		{
-			if( !this._clipDrawers || !(this._rightDrawer is Sprite) )
+			this._rightDrawer.visible = true;
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				if( this._overlaySkin )
+				{
+					this.setChildIndex( this._overlaySkin , this.numChildren - 1 );
+				}
+				this.setChildIndex( this._rightDrawer , this.numChildren - 1 );
+			}
+			if( !this._clipDrawers || this._openMode !== OPEN_MODE_BELOW || !(this._rightDrawer is Sprite) )
 			{
 				return;
 			}
 			var rightSprite : Sprite = Sprite( this._rightDrawer );
 			if( !rightSprite.clipRect )
 			{
-				rightSprite.clipRect = new Rectangle( 0, 0, -this._content.x, this.actualHeight );
+				rightSprite.clipRect = new Rectangle( 0 , 0 , -this._content.x , this.actualHeight );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function applyBottomClipRect() : void
+		protected function prepareBottomDrawer() : void
 		{
-			if( !this._clipDrawers || !(this._bottomDrawer is Sprite) )
+			this._bottomDrawer.visible = true;
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				if( this._overlaySkin )
+				{
+					this.setChildIndex( this._overlaySkin , this.numChildren - 1 );
+				}
+				this.setChildIndex( this._bottomDrawer , this.numChildren - 1 );
+			}
+			if( !this._clipDrawers || this._openMode !== OPEN_MODE_BELOW || !(this._bottomDrawer is Sprite) )
 			{
 				return;
 			}
 			var bottomSprite : Sprite = Sprite( this._bottomDrawer );
 			if( !bottomSprite.clipRect )
 			{
-				bottomSprite.clipRect = new Rectangle( 0, 0, this.actualWidth, -this._content.y );
+				bottomSprite.clipRect = new Rectangle( 0 , 0 , this.actualWidth , -this._content.y );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function applyLeftClipRect() : void
+		protected function prepareLeftDrawer() : void
 		{
-			if( !this._clipDrawers || !(this._leftDrawer is Sprite) )
+			this._leftDrawer.visible = true;
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				if( this._overlaySkin )
+				{
+					this.setChildIndex( this._overlaySkin , this.numChildren - 1 );
+				}
+				this.setChildIndex( this._leftDrawer , this.numChildren - 1 );
+			}
+			if( !this._clipDrawers || this._openMode !== OPEN_MODE_BELOW || !(this._leftDrawer is Sprite) )
 			{
 				return;
 			}
 			var leftSprite : Sprite = Sprite( this._leftDrawer );
 			if( !leftSprite.clipRect )
 			{
-				leftSprite.clipRect = new Rectangle( 0, 0, this._content.x, this.actualHeight );
+				leftSprite.clipRect = new Rectangle( 0 , 0 , this._content.x , this.actualHeight );
 			}
 		}
 
@@ -2557,19 +3185,19 @@ package feathers.controls
 			{
 				if( this._topDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.removeEventListener( this._topDrawerToggleEventType, content_topDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.removeEventListener( this._topDrawerToggleEventType , content_topDrawerToggleEventTypeHandler );
 				}
 				if( this._rightDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.removeEventListener( this._rightDrawerToggleEventType, content_rightDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.removeEventListener( this._rightDrawerToggleEventType , content_rightDrawerToggleEventTypeHandler );
 				}
 				if( this._bottomDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.removeEventListener( this._bottomDrawerToggleEventType, content_bottomDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.removeEventListener( this._bottomDrawerToggleEventType , content_bottomDrawerToggleEventTypeHandler );
 				}
 				if( this._leftDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.removeEventListener( this._leftDrawerToggleEventType, content_leftDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.removeEventListener( this._leftDrawerToggleEventType , content_leftDrawerToggleEventTypeHandler );
 				}
 			}
 			this.contentEventDispatcher = this.contentToContentEventDispatcher();
@@ -2577,19 +3205,19 @@ package feathers.controls
 			{
 				if( this._topDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.addEventListener( this._topDrawerToggleEventType, content_topDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.addEventListener( this._topDrawerToggleEventType , content_topDrawerToggleEventTypeHandler );
 				}
 				if( this._rightDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.addEventListener( this._rightDrawerToggleEventType, content_rightDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.addEventListener( this._rightDrawerToggleEventType , content_rightDrawerToggleEventTypeHandler );
 				}
 				if( this._bottomDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.addEventListener( this._bottomDrawerToggleEventType, content_bottomDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.addEventListener( this._bottomDrawerToggleEventType , content_bottomDrawerToggleEventTypeHandler );
 				}
 				if( this._leftDrawerToggleEventType )
 				{
-					this.contentEventDispatcher.addEventListener( this._leftDrawerToggleEventType, content_leftDrawerToggleEventTypeHandler );
+					this.contentEventDispatcher.addEventListener( this._leftDrawerToggleEventType , content_leftDrawerToggleEventTypeHandler );
 				}
 			}
 		}
@@ -2599,31 +3227,38 @@ package feathers.controls
 		 */
 		protected function refreshDrawerStates() : void
 		{
-			var needsToHideOverlay : Boolean = false;
 			if( this.isTopDrawerDocked && this._isTopDrawerOpen )
 			{
 				this._isTopDrawerOpen = false;
-				needsToHideOverlay = true;
 			}
 			if( this.isRightDrawerDocked && this._isRightDrawerOpen )
 			{
 				this._isRightDrawerOpen = false;
-				needsToHideOverlay = true;
 			}
 			if( this.isBottomDrawerDocked && this._isBottomDrawerOpen )
 			{
 				this._isBottomDrawerOpen = false;
-				needsToHideOverlay = true;
 			}
 			if( this.isLeftDrawerDocked && this._isLeftDrawerOpen )
 			{
 				this._isLeftDrawerOpen = false;
-				needsToHideOverlay = true;
 			}
-			if( needsToHideOverlay && this._overlaySkin )
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshOverlayState() : void
+		{
+			if( !this._overlaySkin || this._isDragging )
 			{
-				this._overlaySkin.alpha = 0;
-				this._overlaySkin.visible = false;
+				return;
+			}
+			var showOverlay : Boolean = this._isTopDrawerOpen || this._isRightDrawerOpen || this._isBottomDrawerOpen || this._isLeftDrawerOpen;
+			if( showOverlay !== this._overlaySkin.visible )
+			{
+				this._overlaySkin.visible = showOverlay;
+				this._overlaySkin.alpha = showOverlay ? this._overlaySkinOriginalAlpha : 0;
 			}
 		}
 
@@ -2632,8 +3267,8 @@ package feathers.controls
 		 */
 		protected function handleTapToClose( touch : Touch ) : void
 		{
-			touch.getLocation( this.stage, HELPER_POINT );
-			if( this != this.stage.hitTest( HELPER_POINT, true ) )
+			touch.getLocation( this.stage , HELPER_POINT );
+			if( this != this.stage.hitTest( HELPER_POINT , true ) )
 			{
 				return;
 			}
@@ -2668,11 +3303,11 @@ package feathers.controls
 			var exclusiveTouch : ExclusiveTouch = ExclusiveTouch.forStage( this.stage );
 			if( exclusiveTouch.getClaim( touch.id ) )
 			{
-				// already claimed
+				//already claimed
 				return;
 			}
 
-			touch.getLocation( this, HELPER_POINT );
+			touch.getLocation( this , HELPER_POINT );
 			var localX : Number = HELPER_POINT.x;
 			var localY : Number = HELPER_POINT.y;
 			if( !this.isTopDrawerOpen && !this.isRightDrawerOpen && !this.isBottomDrawerOpen && !this.isLeftDrawerOpen )
@@ -2731,12 +3366,13 @@ package feathers.controls
 					}
 				}
 			}
-			else if( touch.target != this && !touch.isTouching( this._content ) && !(this.isTopDrawerDocked && touch.isTouching( this._topDrawer )) && !(this.isRightDrawerDocked && touch.isTouching( this._rightDrawer )) && !(this.isBottomDrawerDocked && touch.isTouching( this._bottomDrawer )) && !(this.isLeftDrawerDocked && touch.isTouching( this._leftDrawer )) )
+			else if( this._openMode === OPEN_MODE_BELOW && touch.target !== this )
 			{
-				// a drawer is open, let's only work with touches over the
-				// content or other drawers that are docked
+				//when the drawer is opened below, it will only close when
+				//something outside of the drawer is touched
 				return;
 			}
+			//when the drawer is opened above, anything may be touched
 
 			this.touchPointID = touch.id;
 			this._velocityX = 0;
@@ -2752,7 +3388,7 @@ package feathers.controls
 			this._isDraggingBottomDrawer = false;
 			this._isDraggingLeftDrawer = false;
 
-			exclusiveTouch.addEventListener( Event.CHANGE, exclusiveTouch_changeHandler );
+			exclusiveTouch.addEventListener( Event.CHANGE , exclusiveTouch_changeHandler );
 		}
 
 		/**
@@ -2760,14 +3396,14 @@ package feathers.controls
 		 */
 		protected function handleTouchMoved( touch : Touch ) : void
 		{
-			touch.getLocation( this, HELPER_POINT );
+			touch.getLocation( this , HELPER_POINT );
 			this._currentTouchX = HELPER_POINT.x;
 			this._currentTouchY = HELPER_POINT.y;
 			var now : int = getTimer();
 			var timeOffset : int = now - this._previousTouchTime;
 			if( timeOffset > 0 )
 			{
-				// we're keeping previous velocity updates to improve accuracy
+				//we're keeping previous velocity updates to improve accuracy
 				this._previousVelocityX[ this._previousVelocityX.length ] = this._velocityX;
 				if( this._previousVelocityX.length > MAXIMUM_SAVED_VELOCITY_COUNT )
 				{
@@ -2791,7 +3427,7 @@ package feathers.controls
 		 */
 		protected function handleDragEnd() : void
 		{
-			// take the average for more accuracy
+			//take the average for more accuracy
 			var sum : Number = this._velocityX * CURRENT_VELOCITY_WEIGHT;
 			var velocityCount : int = this._previousVelocityX.length;
 			var totalWeight : Number = CURRENT_VELOCITY_WEIGHT;
@@ -2826,9 +3462,13 @@ package feathers.controls
 				{
 					this._isTopDrawerOpen = false;
 				}
-				else
+				else if( this._openMode === OPEN_MODE_ABOVE )
 				{
-					this._isTopDrawerOpen = roundToNearest( this._content.y, this._topDrawer.height ) != 0;
+					this._isTopDrawerOpen = roundToNearest( this._topDrawer.y , this._topDrawer.height ) == 0;
+				}
+				else //below
+				{
+					this._isTopDrawerOpen = roundToNearest( this._content.y , this._topDrawer.height ) != 0;
 				}
 				this.openOrCloseTopDrawer();
 			}
@@ -2843,14 +3483,18 @@ package feathers.controls
 				{
 					this._isRightDrawerOpen = false;
 				}
-				else
+				else if( this._openMode === OPEN_MODE_ABOVE )
 				{
-					var positionToCheck : Number = 0;
+					this._isRightDrawerOpen = roundToNearest( this.actualWidth - this._rightDrawer.x , this._rightDrawer.width ) != 0;
+				}
+				else //bottom
+				{
+					var positionToCheck : Number = this._content.x;
 					if( this.isLeftDrawerDocked )
 					{
-						positionToCheck = this._leftDrawer.width;
+						positionToCheck -= this._leftDrawer.width;
 					}
-					this._isRightDrawerOpen = roundToNearest( this._content.x, this._rightDrawer.width ) != positionToCheck;
+					this._isRightDrawerOpen = roundToNearest( positionToCheck , this._rightDrawer.width ) != 0;
 				}
 				this.openOrCloseRightDrawer();
 			}
@@ -2865,14 +3509,18 @@ package feathers.controls
 				{
 					this._isBottomDrawerOpen = false;
 				}
-				else
+				else if( this._openMode === OPEN_MODE_ABOVE )
 				{
-					positionToCheck = 0;
+					this._isBottomDrawerOpen = roundToNearest( this.actualHeight - this._bottomDrawer.y , this._bottomDrawer.height ) != 0;
+				}
+				else //below
+				{
+					positionToCheck = this._content.y;
 					if( this.isTopDrawerDocked )
 					{
-						positionToCheck = this._topDrawer.height;
+						positionToCheck -= this._topDrawer.height;
 					}
-					this._isBottomDrawerOpen = roundToNearest( this._content.y, this._bottomDrawer.height ) != positionToCheck;
+					this._isBottomDrawerOpen = roundToNearest( positionToCheck , this._bottomDrawer.height ) != 0;
 				}
 				this.openOrCloseBottomDrawer();
 			}
@@ -2887,9 +3535,13 @@ package feathers.controls
 				{
 					this._isLeftDrawerOpen = false;
 				}
-				else
+				else if( this._openMode === OPEN_MODE_ABOVE )
 				{
-					this._isLeftDrawerOpen = roundToNearest( this._content.x, this._leftDrawer.width ) != 0;
+					this._isLeftDrawerOpen = roundToNearest( this._leftDrawer.x , this._leftDrawer.width ) == 0;
+				}
+				else //below
+				{
+					this._isLeftDrawerOpen = roundToNearest( this._content.x , this._leftDrawer.width ) != 0;
 				}
 				this.openOrCloseLeftDrawer();
 			}
@@ -2949,7 +3601,7 @@ package feathers.controls
 				{
 					contentX = 0;
 				}
-				if( this.isLeftDrawerDocked )
+				if( this.isLeftDrawerDocked && this._openMode === OPEN_MODE_BELOW )
 				{
 					contentX += this._leftDrawer.width;
 				}
@@ -2973,7 +3625,6 @@ package feathers.controls
 				{
 					contentY = topDrawerHeight;
 				}
-				this._content.y = contentY;
 			}
 			else if( this._isDraggingBottomDrawer )
 			{
@@ -2994,13 +3645,35 @@ package feathers.controls
 				{
 					contentY = 0;
 				}
-				if( this.isTopDrawerDocked )
+				if( this.isTopDrawerDocked && this._openMode === OPEN_MODE_BELOW )
 				{
 					contentY += this._topDrawer.height;
 				}
 			}
-			this._content.x = contentX;
-			this._content.y = contentY;
+			if( this._openMode === OPEN_MODE_ABOVE )
+			{
+				if( this._isDraggingTopDrawer )
+				{
+					this._topDrawer.y = contentY - this._topDrawer.height;
+				}
+				else if( this._isDraggingRightDrawer )
+				{
+					this._rightDrawer.x = this.actualWidth + contentX;
+				}
+				else if( this._isDraggingBottomDrawer )
+				{
+					this._bottomDrawer.y = this.actualHeight + contentY;
+				}
+				else if( this._isDraggingLeftDrawer )
+				{
+					this._leftDrawer.x = contentX - this._leftDrawer.width;
+				}
+			}
+			else //below
+			{
+				this._content.x = contentX;
+				this._content.y = contentY;
+			}
 			if( this._isDraggingTopDrawer )
 			{
 				this.topDrawerOpenOrCloseTween_onUpdate();
@@ -3030,25 +3703,25 @@ package feathers.controls
 			{
 				this._isDragging = true;
 				this._isDraggingLeftDrawer = true;
-				this.applyLeftClipRect();
+				this.prepareLeftDrawer();
 			}
 			else if( this.isRightDrawerOpen && horizontalInchesMoved >= this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingRightDrawer = true;
-				this.applyRightClipRect();
+				this.prepareRightDrawer();
 			}
 			else if( this.isTopDrawerOpen && verticalInchesMoved <= -this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingTopDrawer = true;
-				this.applyTopClipRect();
+				this.prepareTopDrawer();
 			}
 			else if( this.isBottomDrawerOpen && verticalInchesMoved >= this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingBottomDrawer = true;
-				this.applyBottomClipRect();
+				this.prepareBottomDrawer();
 			}
 
 			if( this._isDragging )
@@ -3060,8 +3733,8 @@ package feathers.controls
 				}
 				this._startTouchY = this._currentTouchY;
 				var exclusiveTouch : ExclusiveTouch = ExclusiveTouch.forStage( this.stage );
-				exclusiveTouch.removeEventListener( Event.CHANGE, exclusiveTouch_changeHandler );
-				exclusiveTouch.claimTouch( this.touchPointID, this );
+				exclusiveTouch.removeEventListener( Event.CHANGE , exclusiveTouch_changeHandler );
+				exclusiveTouch.claimTouch( this.touchPointID , this );
 				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
 			}
 		}
@@ -3077,29 +3750,25 @@ package feathers.controls
 			{
 				this._isDragging = true;
 				this._isDraggingLeftDrawer = true;
-				this._leftDrawer.visible = true;
-				this.applyLeftClipRect();
+				this.prepareLeftDrawer();
 			}
 			else if( this._rightDrawer && !this.isRightDrawerDocked && horizontalInchesMoved <= -this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingRightDrawer = true;
-				this._rightDrawer.visible = true;
-				this.applyRightClipRect();
+				this.prepareRightDrawer();
 			}
 			else if( this._topDrawer && !this.isTopDrawerDocked && verticalInchesMoved >= this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingTopDrawer = true;
-				this._topDrawer.visible = true;
-				this.applyTopClipRect();
+				this.prepareTopDrawer();
 			}
 			else if( this._bottomDrawer && !this.isBottomDrawerDocked && verticalInchesMoved <= -this._minimumDragDistance )
 			{
 				this._isDragging = true;
 				this._isDraggingBottomDrawer = true;
-				this._bottomDrawer.visible = true;
-				this.applyBottomClipRect();
+				this.prepareBottomDrawer();
 			}
 
 			if( this._isDragging )
@@ -3111,8 +3780,8 @@ package feathers.controls
 				}
 				this._startTouchY = this._currentTouchY;
 				var exclusiveTouch : ExclusiveTouch = ExclusiveTouch.forStage( this.stage );
-				exclusiveTouch.claimTouch( this.touchPointID, this );
-				exclusiveTouch.removeEventListener( Event.CHANGE, exclusiveTouch_changeHandler );
+				exclusiveTouch.claimTouch( this.touchPointID , this );
+				exclusiveTouch.removeEventListener( Event.CHANGE , exclusiveTouch_changeHandler );
 				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
 			}
 		}
@@ -3122,24 +3791,35 @@ package feathers.controls
 		 */
 		protected function positionOverlaySkin() : void
 		{
-			if( this._overlaySkin )
+			if( !this._overlaySkin )
 			{
-				if( this.isLeftDrawerDocked )
-				{
-					this._overlaySkin.x = this._leftDrawer.x;
-				}
-				else
-				{
-					this._overlaySkin.x = this._content.x;
-				}
-				if( this.isTopDrawerDocked )
-				{
-					this._overlaySkin.y = this._topDrawer.y;
-				}
-				else
-				{
-					this._overlaySkin.y = this._content.y;
-				}
+				return;
+			}
+
+			if( this.isLeftDrawerDocked )
+			{
+				this._overlaySkin.x = this._leftDrawer.x;
+			}
+			else if( this._openMode === OPEN_MODE_ABOVE && this._leftDrawer )
+			{
+				this._overlaySkin.x = this._leftDrawer.x + this._leftDrawer.width;
+			}
+			else //below or no left drawer
+			{
+				this._overlaySkin.x = this._content.x;
+			}
+
+			if( this.isTopDrawerDocked )
+			{
+				this._overlaySkin.y = this._topDrawer.y;
+			}
+			else if( this._openMode === OPEN_MODE_ABOVE && this._topDrawer )
+			{
+				this._overlaySkin.y = this._topDrawer.y + this._topDrawer.height;
+			}
+			else //below or now top drawer
+			{
+				this._overlaySkin.y = this._content.y;
 			}
 		}
 
@@ -3150,7 +3830,15 @@ package feathers.controls
 		{
 			if( this._overlaySkin )
 			{
-				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * (this._content.y / this._topDrawer.height);
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					var ratio : Number = 1 + this._topDrawer.y / this._topDrawer.height;
+				}
+				else //below
+				{
+					ratio = this._content.y / this._topDrawer.height;
+				}
+				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * ratio;
 			}
 			this.openOrCloseTween_onUpdate();
 		}
@@ -3162,7 +3850,15 @@ package feathers.controls
 		{
 			if( this._overlaySkin )
 			{
-				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * (this.actualWidth - this._content.x - this._content.width) / this._rightDrawer.width;
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					var ratio : Number = -(this._rightDrawer.x - this.actualWidth) / this._rightDrawer.width;
+				}
+				else //below
+				{
+					ratio = (this.actualWidth - this._content.x - this._content.width) / this._rightDrawer.width;
+				}
+				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * ratio;
 			}
 			this.openOrCloseTween_onUpdate();
 		}
@@ -3174,7 +3870,15 @@ package feathers.controls
 		{
 			if( this._overlaySkin )
 			{
-				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * (this.actualHeight - this._content.y - this._content.height) / this._bottomDrawer.height;
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					var ratio : Number = -(this._bottomDrawer.y - this.actualHeight) / this._bottomDrawer.height;
+				}
+				else //below
+				{
+					ratio = (this.actualHeight - this._content.y - this._content.height) / this._bottomDrawer.height;
+				}
+				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * ratio;
 			}
 			this.openOrCloseTween_onUpdate();
 		}
@@ -3186,7 +3890,15 @@ package feathers.controls
 		{
 			if( this._overlaySkin )
 			{
-				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * (this._content.x / this._leftDrawer.width);
+				if( this._openMode === OPEN_MODE_ABOVE )
+				{
+					var ratio : Number = 1 + this._leftDrawer.x / this._leftDrawer.width;
+				}
+				else //below
+				{
+					ratio = this._content.x / this._leftDrawer.width;
+				}
+				this._overlaySkin.alpha = this._overlaySkinOriginalAlpha * ratio;
 			}
 			this.openOrCloseTween_onUpdate();
 		}
@@ -3196,7 +3908,7 @@ package feathers.controls
 		 */
 		protected function openOrCloseTween_onUpdate() : void
 		{
-			if( this._clipDrawers )
+			if( this._clipDrawers && this._openMode === OPEN_MODE_BELOW )
 			{
 				var isTopDrawerDocked : Boolean = this.isTopDrawerDocked;
 				var isRightDrawerDocked : Boolean = this.isRightDrawerDocked;
@@ -3221,6 +3933,10 @@ package feathers.controls
 						if( isLeftDrawerDocked )
 						{
 							rightClipWidth += this.leftDrawer.width;
+							if( this._leftDrawerDivider )
+							{
+								rightClipWidth += this._leftDrawerDivider.width;
+							}
 						}
 						clipRect.x = this._rightDrawer.width - rightClipWidth;
 						clipRect.width = rightClipWidth;
@@ -3236,6 +3952,10 @@ package feathers.controls
 						if( isTopDrawerDocked )
 						{
 							bottomClipHeight += this.topDrawer.height;
+							if( this._topDrawerDivider )
+							{
+								bottomClipHeight += this._topDrawerDivider.height;
+							}
 						}
 						clipRect.y = this._bottomDrawer.height - bottomClipHeight;
 						clipRect.height = bottomClipHeight;
@@ -3262,11 +3982,29 @@ package feathers.controls
 					{
 						this._topDrawer.x = contentX;
 					}
-					this._topDrawer.y = contentY - this._topDrawer.height;
+					if( this._topDrawerDivider )
+					{
+						this._topDrawerDivider.x = this._topDrawer.x;
+						this._topDrawerDivider.y = contentY - this._topDrawerDivider.height;
+						this._topDrawer.y = this._topDrawerDivider.y - this._topDrawer.height;
+					}
+					else
+					{
+						this._topDrawer.y = contentY - this._topDrawer.height;
+					}
 				}
 				if( isRightDrawerDocked )
 				{
-					this._rightDrawer.x = contentX + this._content.width;
+					if( this._leftDrawerDivider )
+					{
+						this._rightDrawerDivider.x = contentX + this._content.width;
+						this._rightDrawer.x = this._rightDrawerDivider.x + this._rightDrawerDivider.width;
+						this._rightDrawerDivider.y = contentY;
+					}
+					else
+					{
+						this._rightDrawer.x = contentX + this._content.width;
+					}
 					this._rightDrawer.y = contentY;
 				}
 				if( isBottomDrawerDocked )
@@ -3279,11 +4017,29 @@ package feathers.controls
 					{
 						this._bottomDrawer.x = contentX;
 					}
-					this._bottomDrawer.y = contentY + this._content.height;
+					if( this._bottomDrawerDivider )
+					{
+						this._bottomDrawerDivider.x = this._bottomDrawer.x;
+						this._bottomDrawerDivider.y = contentY + this._content.height;
+						this._bottomDrawer.y = this._bottomDrawerDivider.y + this._bottomDrawerDivider.height;
+					}
+					else
+					{
+						this._bottomDrawer.y = contentY + this._content.height;
+					}
 				}
 				if( isLeftDrawerDocked )
 				{
-					this._leftDrawer.x = contentX - this._leftDrawer.width;
+					if( this._leftDrawerDivider )
+					{
+						this._leftDrawerDivider.x = contentX - this._leftDrawerDivider.width;
+						this._leftDrawer.x = this._leftDrawerDivider.x - this._leftDrawer.width;
+						this._leftDrawerDivider.y = contentY;
+					}
+					else
+					{
+						this._leftDrawer.x = contentX - this._leftDrawer.width;
+					}
 					this._leftDrawer.y = contentY;
 				}
 			}
@@ -3317,11 +4073,11 @@ package feathers.controls
 			}
 			if( isTopDrawerOpen )
 			{
-				this.dispatchEventWith( Event.OPEN, false, this._topDrawer );
+				this.dispatchEventWith( Event.OPEN , false , this._topDrawer );
 			}
 			else
 			{
-				this.dispatchEventWith( Event.CLOSE, false, this._topDrawer );
+				this.dispatchEventWith( Event.CLOSE , false , this._topDrawer );
 			}
 		}
 
@@ -3344,11 +4100,11 @@ package feathers.controls
 			}
 			if( isRightDrawerOpen )
 			{
-				this.dispatchEventWith( Event.OPEN, false, this._rightDrawer );
+				this.dispatchEventWith( Event.OPEN , false , this._rightDrawer );
 			}
 			else
 			{
-				this.dispatchEventWith( Event.CLOSE, false, this._rightDrawer );
+				this.dispatchEventWith( Event.CLOSE , false , this._rightDrawer );
 			}
 		}
 
@@ -3371,11 +4127,11 @@ package feathers.controls
 			}
 			if( isBottomDrawerOpen )
 			{
-				this.dispatchEventWith( Event.OPEN, false, this._bottomDrawer );
+				this.dispatchEventWith( Event.OPEN , false , this._bottomDrawer );
 			}
 			else
 			{
-				this.dispatchEventWith( Event.CLOSE, false, this._bottomDrawer );
+				this.dispatchEventWith( Event.CLOSE , false , this._bottomDrawer );
 			}
 		}
 
@@ -3398,18 +4154,18 @@ package feathers.controls
 			}
 			if( isLeftDrawerOpen )
 			{
-				this.dispatchEventWith( Event.OPEN, false, this._leftDrawer );
+				this.dispatchEventWith( Event.OPEN , false , this._leftDrawer );
 			}
 			else
 			{
-				this.dispatchEventWith( Event.CLOSE, false, this._leftDrawer );
+				this.dispatchEventWith( Event.CLOSE , false , this._leftDrawer );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function exclusiveTouch_changeHandler( event : Event, touchID : int ) : void
+		protected function exclusiveTouch_changeHandler( event : Event , touchID : int ) : void
 		{
 			if( this.touchPointID < 0 || this.touchPointID != touchID || this._isDragging )
 			{
@@ -3423,6 +4179,7 @@ package feathers.controls
 			}
 
 			this.touchPointID = -1;
+
 		}
 
 		/**
@@ -3438,11 +4195,11 @@ package feathers.controls
 		 */
 		protected function drawers_addedToStageHandler( event : Event ) : void
 		{
-			this.stage.addEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
-			// using priority here is a hack so that objects higher up in the
-			// display list have a chance to cancel the event first.
+			this.stage.addEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
+			//using priority here is a hack so that objects higher up in the
+			//display list have a chance to cancel the event first.
 			var priority : int = -getDisplayObjectDepthFromStage( this );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN, drawers_nativeStage_keyDownHandler, false, priority, true );
+			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , drawers_nativeStage_keyDownHandler , false , priority , true );
 		}
 
 		/**
@@ -3453,7 +4210,7 @@ package feathers.controls
 			if( this.touchPointID >= 0 )
 			{
 				var exclusiveTouch : ExclusiveTouch = ExclusiveTouch.forStage( this.stage );
-				exclusiveTouch.removeEventListener( Event.CHANGE, exclusiveTouch_changeHandler );
+				exclusiveTouch.removeEventListener( Event.CHANGE , exclusiveTouch_changeHandler );
 			}
 			this.touchPointID = -1;
 			this._isDragging = false;
@@ -3461,8 +4218,8 @@ package feathers.controls
 			this._isDraggingRightDrawer = false;
 			this._isDraggingBottomDrawer = false;
 			this._isDraggingLeftDrawer = false;
-			this.stage.removeEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN, drawers_nativeStage_keyDownHandler );
+			this.stage.removeEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
+			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , drawers_nativeStage_keyDownHandler );
 		}
 
 		/**
@@ -3477,7 +4234,7 @@ package feathers.controls
 			}
 			if( this.touchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( this, null, this.touchPointID );
+				var touch : Touch = event.getTouch( this , null , this.touchPointID );
 				if( !touch )
 				{
 					return;
@@ -3512,18 +4269,19 @@ package feathers.controls
 					}
 					else
 					{
-						ExclusiveTouch.forStage( this.stage ).removeEventListener( Event.CHANGE, exclusiveTouch_changeHandler );
+						ExclusiveTouch.forStage( this.stage ).removeEventListener( Event.CHANGE , exclusiveTouch_changeHandler );
 						if( this.isTopDrawerOpen || this.isRightDrawerOpen || this.isBottomDrawerOpen || this.isLeftDrawerOpen )
 						{
-							// there is no drag, so we may have a tap
+							//there is no drag, so we may have a tap
 							this.handleTapToClose( touch );
 						}
 					}
+
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this, TouchPhase.BEGAN );
+				touch = event.getTouch( this , TouchPhase.BEGAN );
 				if( !touch )
 				{
 					return;
@@ -3548,7 +4306,7 @@ package feathers.controls
 		{
 			if( event.isDefaultPrevented() )
 			{
-				// someone else already handled this one
+				//someone else already handled this one
 				return;
 			}
 			if( event.keyCode == Keyboard.BACK )
@@ -3656,128 +4414,5 @@ package feathers.controls
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
-
-		/**
-		 * The drawer will be docked in portrait orientation, but it must be
-		 * opened and closed explicitly in landscape orientation.
-		 *
-		 * @see #topDrawerDockMode
-		 * @see #rightDrawerDockMode
-		 * @see #bottomDrawerDockMode
-		 * @see #leftDrawerDockMode
-		 * @see #isTopDrawerDocked
-		 * @see #isRightDrawerDocked
-		 * @see #isBottomDrawerDocked
-		 * @see #isLeftDrawerDocked
-		 */
-		public static const DOCK_MODE_PORTRAIT : String = "portrait";
-		/**
-		 * The drawer will be docked in landscape orientation, but it must be
-		 * opened and closed explicitly in portrait orientation.
-		 *
-		 * @see #topDrawerDockMode
-		 * @see #rightDrawerDockMode
-		 * @see #bottomDrawerDockMode
-		 * @see #leftDrawerDockMode
-		 * @see #isTopDrawerDocked
-		 * @see #isRightDrawerDocked
-		 * @see #isBottomDrawerDocked
-		 * @see #isLeftDrawerDocked
-		 */
-		public static const DOCK_MODE_LANDSCAPE : String = "landscape";
-		/**
-		 * The drawer will be docked in all orientations.
-		 *
-		 * @see #topDrawerDockMode
-		 * @see #rightDrawerDockMode
-		 * @see #bottomDrawerDockMode
-		 * @see #leftDrawerDockMode
-		 * @see #isTopDrawerDocked
-		 * @see #isRightDrawerDocked
-		 * @see #isBottomDrawerDocked
-		 * @see #isLeftDrawerDocked
-		 */
-		public static const DOCK_MODE_BOTH : String = "both";
-		/**
-		 * The drawer won't be docked in any orientation. It must be opened and
-		 * closed explicitly in all orientations.
-		 *
-		 * @see #topDrawerDockMode
-		 * @see #rightDrawerDockMode
-		 * @see #bottomDrawerDockMode
-		 * @see #leftDrawerDockMode
-		 * @see #isTopDrawerDocked
-		 * @see #isRightDrawerDocked
-		 * @see #isBottomDrawerDocked
-		 * @see #isLeftDrawerDocked
-		 */
-		public static const DOCK_MODE_NONE : String = "none";
-		/**
-		 * The drawers container  will auto size itself to fill the entire stage.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * The drawers container will auto size itself to fit its content.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
-		/**
-		 * A drawer will open by dragging the content starting from a certain
-		 * physical distance (in inches) from the nearest edge of the content.
-		 * To customize this distance, use the <code>openGestureDragContentEdgeDistance</code>
-		 * property.
-		 *
-		 * @see #openGesture
-		 * @see openGestureEdgeSize
-		 */
-		public static const OPEN_GESTURE_DRAG_CONTENT_EDGE : String = "dragContentEdge";
-		/**
-		 * A drawer will open by dragging the content from any location in the
-		 * appropriate direction.
-		 *
-		 * @see #openGesture
-		 */
-		public static const OPEN_GESTURE_DRAG_CONTENT : String = "dragContent";
-		/**
-		 * The drawers container will only open using the toggle event types
-		 * dispatched by the content. No gesture can be used to open a drawer.
-		 *
-		 * @see #openGesture
-		 * @see #topDrawerToggleEventType
-		 * @see #rightDrawerToggleEventType
-		 * @see #bottomDrawerToggleEventType
-		 * @see #leftDrawerToggleEventType
-		 */
-		public static const OPEN_GESTURE_NONE : String = "none";
-		/**
-		 * The field used to access the "content event dispatcher" of a
-		 * <code>ScreenNavigator</code> component, which happens to be the
-		 * currently active screen.
-		 *
-		 * @see #contentEventDispatcherField
-		 * @see feathers.controls.ScreenNavigator
-		 */
-		protected static const SCREEN_NAVIGATOR_CONTENT_EVENT_DISPATCHER_FIELD : String = "activeScreen";
-		/**
-		 * @private
-		 * The current velocity is given high importance.
-		 */
-		private static const CURRENT_VELOCITY_WEIGHT : Number = 2.33;
-		/**
-		 * @private
-		 * Older saved velocities are given less importance.
-		 */
-		private static const VELOCITY_WEIGHTS : Vector.<Number> = new <Number>[ 1, 1.33, 1.66, 2 ];
-		/**
-		 * @private
-		 */
-		private static const MAXIMUM_SAVED_VELOCITY_COUNT : int = 4;
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

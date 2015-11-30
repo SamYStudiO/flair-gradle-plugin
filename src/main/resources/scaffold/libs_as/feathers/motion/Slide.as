@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -29,9 +29,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createSlideLeftTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createSlideLeftTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -46,13 +46,13 @@ package feathers.motion
 					}
 					newScreen.x = newScreen.width;
 					newScreen.y = 0;
-					new SlideTween( newScreen, oldScreen, -newScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new SlideTween( newScreen , oldScreen , -newScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new SlideTween( oldScreen, null, -oldScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new SlideTween( oldScreen , null , -oldScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
 			}
 		}
@@ -67,9 +67,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createSlideRightTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createSlideRightTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -84,13 +84,13 @@ package feathers.motion
 					}
 					newScreen.x = -newScreen.width;
 					newScreen.y = 0;
-					new SlideTween( newScreen, oldScreen, newScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new SlideTween( newScreen , oldScreen , newScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new SlideTween( oldScreen, null, oldScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new SlideTween( oldScreen , null , oldScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
 			}
 		}
@@ -105,9 +105,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createSlideUpTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createSlideUpTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -122,13 +122,13 @@ package feathers.motion
 					}
 					newScreen.x = 0;
 					newScreen.y = newScreen.height;
-					new SlideTween( newScreen, oldScreen, 0, -newScreen.height, duration, ease, onComplete, tweenProperties );
+					new SlideTween( newScreen , oldScreen , 0 , -newScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new SlideTween( oldScreen, null, 0, -oldScreen.height, duration, ease, onComplete, tweenProperties );
+					new SlideTween( oldScreen , null , 0 , -oldScreen.height , duration , ease , onComplete , tweenProperties );
 				}
 			}
 		}
@@ -143,9 +143,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createSlideDownTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createSlideDownTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -160,17 +160,16 @@ package feathers.motion
 					}
 					newScreen.x = 0;
 					newScreen.y = -newScreen.height;
-					new SlideTween( newScreen, oldScreen, 0, newScreen.height, duration, ease, onComplete, tweenProperties );
+					new SlideTween( newScreen , oldScreen , 0 , newScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new SlideTween( oldScreen, null, 0, oldScreen.height, duration, ease, onComplete, tweenProperties );
+					new SlideTween( oldScreen , null , 0 , oldScreen.height , duration , ease , onComplete , tweenProperties );
 				}
 			}
 		}
-
 		/**
 		 * @private
 		 */
@@ -184,18 +183,18 @@ import starling.display.DisplayObject;
 
 class SlideTween extends Tween
 {
-	public function SlideTween( target : DisplayObject, otherTarget : DisplayObject, xOffset : Number, yOffset : Number, duration : Number, ease : Object, onCompleteCallback : Function, tweenProperties : Object )
+	public function SlideTween( target : DisplayObject , otherTarget : DisplayObject , xOffset : Number , yOffset : Number , duration : Number , ease : Object , onCompleteCallback : Function , tweenProperties : Object )
 	{
-		super( target, duration, ease );
+		super( target , duration , ease );
 		if( xOffset != 0 )
 		{
 			this._xOffset = xOffset;
-			this.animate( "x", target.x + xOffset );
+			this.animate( "x" , target.x + xOffset );
 		}
 		if( yOffset != 0 )
 		{
 			this._yOffset = yOffset;
-			this.animate( "y", target.y + yOffset );
+			this.animate( "y" , target.y + yOffset );
 		}
 		if( tweenProperties )
 		{
@@ -216,13 +215,9 @@ class SlideTween extends Tween
 	}
 
 	private var _navigator : DisplayObject;
-
 	private var _otherTarget : DisplayObject;
-
 	private var _onCompleteCallback : Function;
-
 	private var _xOffset : Number = 0;
-
 	private var _yOffset : Number = 0;
 
 	private function updateOtherTarget() : void

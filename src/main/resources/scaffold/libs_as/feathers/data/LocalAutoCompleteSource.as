@@ -1,14 +1,12 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
  */
 package feathers.data
 {
-	import feathers.data.ListCollection;
-
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 
@@ -33,7 +31,8 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete", type="starling.events.Event")]
+	[Event(name="complete" , type="starling.events.Event")]
+
 	/**
 	 * Creates a list of suggestions for an <code>AutoComplete</code> component
 	 * by searching through items in a <code>ListCollection</code>.
@@ -45,7 +44,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected static function defaultCompareFunction( item : Object, textToMatch : String ) : Boolean
+		protected static function defaultCompareFunction( item : Object , textToMatch : String ) : Boolean
 		{
 			return item.toString().toLowerCase().indexOf( textToMatch.toLowerCase() ) >= 0;
 		}
@@ -115,7 +114,7 @@ package feathers.data
 		/**
 		 * @copy feathers.data.IAutoCompleteSource#load()
 		 */
-		public function load( textToMatch : String, result : ListCollection = null ) : void
+		public function load( textToMatch : String , result : ListCollection = null ) : void
 		{
 			if( result )
 			{
@@ -127,19 +126,19 @@ package feathers.data
 			}
 			if( !this._dataProvider || textToMatch.length == 0 )
 			{
-				this.dispatchEventWith( Event.COMPLETE, false, result );
+				this.dispatchEventWith( Event.COMPLETE , false , result );
 				return;
 			}
 			var compareFunction : Function = this._compareFunction;
 			for( var i : int = 0; i < this._dataProvider.length; i++ )
 			{
 				var item : Object = this._dataProvider.getItemAt( i );
-				if( compareFunction( item, textToMatch ) )
+				if( compareFunction( item , textToMatch ) )
 				{
 					result.addItem( item );
 				}
 			}
-			this.dispatchEventWith( Event.COMPLETE, false, result );
+			this.dispatchEventWith( Event.COMPLETE , false , result );
 		}
 	}
 }

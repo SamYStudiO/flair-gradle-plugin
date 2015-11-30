@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -14,19 +14,21 @@ package feathers.controls
 	import feathers.core.PopUpManager;
 	import feathers.core.PropertyProxy;
 	import feathers.data.ListCollection;
+	import feathers.events.FeathersEventType;
 	import feathers.layout.VerticalLayout;
 	import feathers.skins.IStyleProvider;
 
 	import starling.display.DisplayObject;
 	import starling.events.Event;
 
-	[Exclude(name="layout", kind="property")]
-	[Exclude(name="footer", kind="property")]
-	[Exclude(name="footerFactory", kind="property")]
-	[Exclude(name="footerProperties", kind="property")]
-	[Exclude(name="customFooterName", kind="property")]
-	[Exclude(name="customFooterStyleName", kind="property")]
-	[Exclude(name="createFooter", kind="method")]
+	[Exclude(name="layout" , kind="property")]
+	[Exclude(name="footer" , kind="property")]
+	[Exclude(name="footerFactory" , kind="property")]
+	[Exclude(name="footerProperties" , kind="property")]
+	[Exclude(name="customFooterName" , kind="property")]
+	[Exclude(name="customFooterStyleName" , kind="property")]
+	[Exclude(name="createFooter" , kind="method")]
+
 	/**
 	 * Dispatched when the alert is closed. The <code>data</code> property of
 	 * the event object will contain the item from the <code>ButtonGroup</code>
@@ -50,7 +52,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * Displays a message in a modal pop-up with a title and a set of buttons.
 	 *
@@ -64,13 +67,13 @@ package feathers.controls
 	 *
 	 * <listing version="3.0">
 	 * button.addEventListener( Event.TRIGGERED, button_triggeredHandler );
-	 *
+	 * 
 	 * function button_triggeredHandler( event:Event ):void
 	 * {
 	 *     var alert:Alert = Alert.show( "This is an alert!", "Hello World", new ListCollection(
 	 *     [
 	 *         { label: "OK" }
-	 *     ]);
+	 *     ]));
 	 * }</listing>
 	 *
 	 * @see ../../../help/alert.html How to use the Feathers Alert component
@@ -91,7 +94,7 @@ package feathers.controls
 		 * Alert.alertFactory = function():Alert
 		 * {
 		 *     var alert:Alert = new Alert();
-		 *     // set properties here!
+		 *     //set properties here!
 		 *     return alert;
 		 * };</listing>
 		 *
@@ -165,7 +168,7 @@ package feathers.controls
 		 *     ]);
 		 * }</listing>
 		 */
-		public static function show( message : String, title : String = null, buttons : ListCollection = null, icon : DisplayObject = null, isModal : Boolean = true, isCentered : Boolean = true, customAlertFactory : Function = null, customOverlayFactory : Function = null ) : Alert
+		public static function show( message : String , title : String = null , buttons : ListCollection = null , icon : DisplayObject = null , isModal : Boolean = true , isCentered : Boolean = true , customAlertFactory : Function = null , customOverlayFactory : Function = null ) : Alert
 		{
 			var factory : Function = customAlertFactory;
 			if( factory == null )
@@ -182,7 +185,7 @@ package feathers.controls
 			{
 				factory = overlayFactory;
 			}
-			PopUpManager.addPopUp( alert, isModal, isCentered, factory );
+			PopUpManager.addPopUp( alert , isModal , isCentered , factory );
 			return alert;
 		}
 
@@ -193,7 +196,6 @@ package feathers.controls
 		{
 			return new ButtonGroup();
 		}
-
 		/**
 		 * The value added to the <code>styleNameList</code> of the alert's
 		 * message text renderer. This variable is <code>protected</code> so
@@ -222,29 +224,24 @@ package feathers.controls
 		 * <p>For internal use in subclasses.</p>
 		 */
 		protected var messageTextRenderer : ITextRenderer;
-
 		/**
-		 * DEPRECATED: Replaced by <code>messageStyleName</code>.
+		 * The default value added to the <code>styleNameList</code> of the header.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #messageStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function get messageName() : String
-		{
-			return this.messageStyleName;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-alert-header";
 		/**
-		 * @private
+		 * The default value added to the <code>styleNameList</code> of the button group.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function set messageName( value : String ) : void
-		{
-			this.messageStyleName = value;
-		}
+		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP : String = "feathers-alert-button-group";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the message.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_MESSAGE : String = "feathers-alert-message";
 
 		/**
 		 * @private
@@ -306,11 +303,13 @@ package feathers.controls
 			this.displayListBypassEnabled = false;
 			if( this._icon )
 			{
+				this._icon.removeEventListener( FeathersEventType.RESIZE , icon_resizeHandler );
 				this.removeChild( this._icon );
 			}
 			this._icon = value;
 			if( this._icon )
 			{
+				this._icon.addEventListener( FeathersEventType.RESIZE , icon_resizeHandler );
 				this.addChild( this._icon );
 			}
 			this.displayListBypassEnabled = oldDisplayListBypassEnabled;
@@ -415,8 +414,6 @@ package feathers.controls
 		 * @see #message
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get messageFactory() : Function
 		{
@@ -442,12 +439,13 @@ package feathers.controls
 		protected var _messageProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the alert's message
-		 * text renderer. The message text renderer is an <code>ITextRenderer</code>
-		 * instance. The available properties depend on which
-		 * <code>ITextRenderer</code> implementation is returned by
-		 * <code>messageFactory</code>. The most common implementations are
-		 * <code>BitmapFontTextRenderer</code> and <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the alert's message text
+		 * renderer sub-component, and the properties will be passed down to the
+		 * text renderer when the alert validates. The available properties
+		 * depend on which <code>ITextRenderer</code> implementation is returned
+		 * by <code>messageFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>In the following example, some properties are set for the alert's
 		 * message text renderer (this example assumes that the message text
@@ -471,8 +469,6 @@ package feathers.controls
 		 *
 		 * @see #messageFactory
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get messageProperties() : Object
 		{
@@ -506,6 +502,53 @@ package feathers.controls
 				this._messageProperties.addOnChangeCallback( childProperties_onChange );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _customMessageStyleName : String;
+
+		/**
+		 * A style name to add to the alert's message text renderer
+		 * sub-component. Typically used by a theme to provide different styles
+		 * to different alerts.
+		 *
+		 * <p>In the following example, a custom message style name is passed
+		 * to the alert:</p>
+		 *
+		 * <listing version="3.0">
+		 * alert.customMessageStyleName = "my-custom-button-group";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-message", setCustomMessageStyles );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_MESSAGE
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #messageFactory
+		 * @see #messageProperties
+		 */
+		public function get customMessageStyleName() : String
+		{
+			return this._customMessageStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customMessageStyleName( value : String ) : void
+		{
+			if( this._customMessageStyleName == value )
+			{
+				return;
+			}
+			this._customMessageStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
 		}
 
 		/**
@@ -583,32 +626,10 @@ package feathers.controls
 		}
 
 		/**
-		 * DEPRECATED: Replaced by <code>customButtonGroupStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customButtonGroupStyleName
-		 */
-		public function get customButtonGroupName() : String
-		{
-			return this.customButtonGroupStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customButtonGroupName( value : String ) : void
-		{
-			this.customButtonGroupStyleName = value;
-		}
-
-		/**
-		 * A set of key/value pairs to be passed down to the alert's button
-		 * group sub-component. The button must be a
-		 * <code>feathers.core.ButtonGroup</code> instance.
+		 * An object that stores properties for the alert's button group
+		 * sub-component, and the properties will be passed down to the button
+		 * group when the alert validates. For a list of available properties,
+		 * refer to <a href="ButtonGroup.html"><code>feathers.controls.ButtonGroup</code></a>.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -701,7 +722,7 @@ package feathers.controls
 					IValidating( this._icon ).validate();
 				}
 				this._icon.x = this._paddingLeft;
-				this._icon.y = this._topViewPortOffset + (this._viewPort.height - this._icon.height) / 2;
+				this._icon.y = this._topViewPortOffset + (this._viewPort.visibleHeight - this._icon.height) / 2;
 			}
 		}
 
@@ -710,8 +731,8 @@ package feathers.controls
 		 */
 		override protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -752,17 +773,17 @@ package feathers.controls
 				if( this._icon )
 				{
 					var iconWidth : Number = this._icon.width;
-					if( iconWidth === iconWidth ) // !isNaN
+					if( iconWidth === iconWidth ) //!isNaN
 					{
 						newWidth += this._icon.width + this._gap;
 					}
 				}
-				newWidth = Math.max( newWidth, this.header.width );
+				newWidth = Math.max( newWidth , this.header.width );
 				if( this.footer )
 				{
-					newWidth = Math.max( newWidth, this.footer.width );
+					newWidth = Math.max( newWidth , this.footer.width );
 				}
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth && // !isNaN
+				if( this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
 						this.originalBackgroundWidth > newWidth )
 				{
 					newWidth = this.originalBackgroundWidth;
@@ -774,13 +795,13 @@ package feathers.controls
 				if( this._icon )
 				{
 					var iconHeight : Number = this._icon.height;
-					if( iconHeight === iconHeight ) // !isNaN
+					if( iconHeight === iconHeight ) //!isNaN
 					{
-						newHeight = Math.max( newHeight, this._icon.height );
+						newHeight = Math.max( newHeight , this._icon.height );
 					}
 				}
 				newHeight += this._bottomViewPortOffset + this._topViewPortOffset;
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight && // !isNaN
+				if( this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
 						this.originalBackgroundHeight > newHeight )
 				{
 					newHeight = this.originalBackgroundHeight;
@@ -797,7 +818,7 @@ package feathers.controls
 			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
 			this._ignoreFooterResizing = oldIgnoreFooterResizing;
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -837,9 +858,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function calculateViewPortOffsets( forceScrollBars : Boolean = false, useActualBounds : Boolean = false ) : void
+		override protected function calculateViewPortOffsets( forceScrollBars : Boolean = false , useActualBounds : Boolean = false ) : void
 		{
-			super.calculateViewPortOffsets( forceScrollBars, useActualBounds );
+			super.calculateViewPortOffsets( forceScrollBars , useActualBounds );
 			if( this._icon )
 			{
 				if( this._icon is IValidating )
@@ -847,7 +868,7 @@ package feathers.controls
 					IValidating( this._icon ).validate();
 				}
 				var iconWidth : Number = this._icon.width;
-				if( iconWidth == iconWidth ) // !isNaN
+				if( iconWidth == iconWidth ) //!isNaN
 				{
 					this._leftViewPortOffset += this._icon.width + this._gap;
 				}
@@ -869,11 +890,11 @@ package feathers.controls
 		{
 			if( this.buttonGroupFooter )
 			{
-				this.buttonGroupFooter.removeEventListener( Event.TRIGGERED, buttonsFooter_triggeredHandler );
+				this.buttonGroupFooter.removeEventListener( Event.TRIGGERED , buttonsFooter_triggeredHandler );
 			}
 			super.createFooter();
 			this.buttonGroupFooter = ButtonGroup( this.footer );
-			this.buttonGroupFooter.addEventListener( Event.TRIGGERED, buttonsFooter_triggeredHandler );
+			this.buttonGroupFooter.addEventListener( Event.TRIGGERED , buttonsFooter_triggeredHandler );
 		}
 
 		/**
@@ -891,14 +912,15 @@ package feathers.controls
 		{
 			if( this.messageTextRenderer )
 			{
-				this.removeChild( DisplayObject( this.messageTextRenderer ), true );
+				this.removeChild( DisplayObject( this.messageTextRenderer ) , true );
 				this.messageTextRenderer = null;
 			}
 
 			var factory : Function = this._messageFactory != null ? this._messageFactory : FeathersControl.defaultTextRendererFactory;
 			this.messageTextRenderer = ITextRenderer( factory() );
+			var messageStyleName : String = this._customMessageStyleName != null ? this._customMessageStyleName : this.messageStyleName;
 			var uiTextRenderer : IFeathersControl = IFeathersControl( this.messageTextRenderer );
-			uiTextRenderer.styleNameList.add( this.messageName );
+			uiTextRenderer.styleNameList.add( messageStyleName );
 			uiTextRenderer.touchable = false;
 			this.addChild( DisplayObject( this.messageTextRenderer ) );
 		}
@@ -918,63 +940,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function buttonsFooter_triggeredHandler( event : Event, data : Object ) : void
+		protected function buttonsFooter_triggeredHandler( event : Event , data : Object ) : void
 		{
 			this.removeFromParent();
-			this.dispatchEventWith( Event.CLOSE, false, data );
+			this.dispatchEventWith( Event.CLOSE , false , data );
 			this.dispose();
 		}
 
 		/**
-		 * The default value added to the <code>styleNameList</code> of the header.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
+		 * @private
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-alert-header";
-		/**
-		 * DEPRECATED: Replaced by <code>Alert.DEFAULT_CHILD_STYLE_NAME_HEADER</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Alert#DEFAULT_CHILD_STYLE_NAME_HEADER
-		 */
-		public static const DEFAULT_CHILD_NAME_HEADER : String = DEFAULT_CHILD_STYLE_NAME_HEADER;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the button group.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP : String = "feathers-alert-button-group";
-		/**
-		 * DEPRECATED: Replaced by <code>Alert.DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Alert#DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP
-		 */
-		public static const DEFAULT_CHILD_NAME_BUTTON_GROUP : String = DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the message.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_MESSAGE : String = "feathers-alert-message";
-		/**
-		 * DEPRECATED: Replaced by <code>Alert.DEFAULT_CHILD_STYLE_NAME_MESSAGE</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Alert#DEFAULT_CHILD_STYLE_NAME_MESSAGE
-		 */
-		public static const DEFAULT_CHILD_NAME_MESSAGE : String = DEFAULT_CHILD_STYLE_NAME_MESSAGE;
+		protected function icon_resizeHandler( event : Event ) : void
+		{
+			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+		}
+
 	}
 }

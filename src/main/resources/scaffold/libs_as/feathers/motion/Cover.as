@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -31,9 +31,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createCoverLeftTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createCoverLeftTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -48,11 +48,11 @@ package feathers.motion
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new CoverTween( newScreen, oldScreen, -oldScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new CoverTween( newScreen , oldScreen , -oldScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the new screen
+				else //we only have the new screen
 				{
-					slideInNewScreen( newScreen, duration, ease, tweenProperties, onComplete );
+					slideInNewScreen( newScreen , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -67,9 +67,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createCoverRightTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createCoverRightTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -84,11 +84,11 @@ package feathers.motion
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new CoverTween( newScreen, oldScreen, oldScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new CoverTween( newScreen , oldScreen , oldScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the new screen
+				else //we only have the new screen
 				{
-					slideInNewScreen( newScreen, duration, ease, tweenProperties, onComplete );
+					slideInNewScreen( newScreen , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -103,9 +103,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createCoverUpTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createCoverUpTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -120,11 +120,11 @@ package feathers.motion
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new CoverTween( newScreen, oldScreen, 0, -oldScreen.height, duration, ease, onComplete, tweenProperties );
+					new CoverTween( newScreen , oldScreen , 0 , -oldScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the new screen
+				else //we only have the new screen
 				{
-					slideInNewScreen( newScreen, duration, ease, tweenProperties, onComplete );
+					slideInNewScreen( newScreen , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -139,9 +139,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createCoverDownTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createCoverDownTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -156,11 +156,11 @@ package feathers.motion
 				{
 					oldScreen.x = 0;
 					oldScreen.y = 0;
-					new CoverTween( newScreen, oldScreen, 0, oldScreen.height, duration, ease, onComplete, tweenProperties );
+					new CoverTween( newScreen , oldScreen , 0 , oldScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the new screen
+				else //we only have the new screen
 				{
-					slideInNewScreen( newScreen, duration, ease, tweenProperties, onComplete );
+					slideInNewScreen( newScreen , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -168,16 +168,16 @@ package feathers.motion
 		/**
 		 * @private
 		 */
-		private static function slideInNewScreen( newScreen : DisplayObject, duration : Number, ease : Object, tweenProperties : Object, onComplete : Function ) : void
+		private static function slideInNewScreen( newScreen : DisplayObject , duration : Number , ease : Object , tweenProperties : Object , onComplete : Function ) : void
 		{
-			var tween : Tween = new Tween( newScreen, duration, ease );
+			var tween : Tween = new Tween( newScreen , duration , ease );
 			if( newScreen.x != 0 )
 			{
-				tween.animate( "x", 0 );
+				tween.animate( "x" , 0 );
 			}
 			if( newScreen.y !== 0 )
 			{
-				tween.animate( "y", 0 );
+				tween.animate( "y" , 0 );
 			}
 			if( tweenProperties )
 			{
@@ -189,13 +189,14 @@ package feathers.motion
 			tween.onComplete = onComplete;
 			Starling.juggler.add( tween );
 		}
-
 		/**
 		 * @private
 		 */
 		protected static const SCREEN_REQUIRED_ERROR : String = "Cannot transition if both old screen and new screen are null.";
 	}
 }
+
+import feathers.display.RenderDelegate;
 
 import flash.geom.Rectangle;
 
@@ -206,33 +207,41 @@ import starling.display.Sprite;
 
 class CoverTween extends Tween
 {
-	public function CoverTween( newScreen : DisplayObject, oldScreen : DisplayObject, xOffset : Number, yOffset : Number, duration : Number, ease : Object, onCompleteCallback : Function, tweenProperties : Object )
+	public function CoverTween( newScreen : DisplayObject , oldScreen : DisplayObject , xOffset : Number , yOffset : Number , duration : Number , ease : Object , onCompleteCallback : Function , tweenProperties : Object )
 	{
-		var clipRect : Rectangle = new Rectangle( 0, 0, oldScreen.width, oldScreen.height );
+		var clipRect : Rectangle = new Rectangle( 0 , 0 , oldScreen.width , oldScreen.height );
 		this._temporaryParent = new Sprite();
 		this._temporaryParent.clipRect = clipRect;
 		oldScreen.parent.addChild( this._temporaryParent );
-		this._temporaryParent.addChild( oldScreen );
+		var delegate : RenderDelegate = new RenderDelegate( oldScreen );
+		delegate.alpha = oldScreen.alpha;
+		delegate.blendMode = oldScreen.blendMode;
+		delegate.rotation = oldScreen.rotation;
+		delegate.scaleX = oldScreen.scaleX;
+		delegate.scaleY = oldScreen.scaleY;
+		this._temporaryParent.addChild( delegate );
+		oldScreen.visible = false;
+		this._savedOldScreen = oldScreen;
 
-		super( this._temporaryParent.clipRect, duration, ease );
+		super( this._temporaryParent.clipRect , duration , ease );
 
 		if( xOffset < 0 )
 		{
-			this.animate( "width", 0 );
+			this.animate( "width" , 0 );
 		}
 		else if( xOffset > 0 )
 		{
-			this.animate( "x", xOffset );
-			this.animate( "width", 0 );
+			this.animate( "x" , xOffset );
+			this.animate( "width" , 0 );
 		}
 		if( yOffset < 0 )
 		{
-			this.animate( "height", 0 );
+			this.animate( "height" , 0 );
 		}
 		else if( yOffset > 0 )
 		{
-			this.animate( "y", yOffset );
-			this.animate( "height", 0 );
+			this.animate( "y" , yOffset );
+			this.animate( "height" , 0 );
 		}
 		if( tweenProperties )
 		{
@@ -254,13 +263,10 @@ class CoverTween extends Tween
 	}
 
 	private var _savedXOffset : Number;
-
 	private var _savedYOffset : Number;
-
+	private var _savedOldScreen : DisplayObject;
 	private var _savedNewScreen : DisplayObject;
-
 	private var _temporaryParent : Sprite;
-
 	private var _onCompleteCallback : Function;
 
 	private function updateNewScreen() : void
@@ -286,16 +292,16 @@ class CoverTween extends Tween
 
 	private function cleanupTween() : void
 	{
-		var target : DisplayObject = this._temporaryParent.removeChildAt( 0 );
-		this._temporaryParent.parent.addChild( target );
 		this._temporaryParent.removeFromParent( true );
-		target.x = 0;
-		target.y = 0;
+		this._temporaryParent = null;
+		this._savedOldScreen.visible = true;
 		this._savedNewScreen = null;
+		this._savedOldScreen = null;
 		if( this._onCompleteCallback !== null )
 		{
 			this._onCompleteCallback();
 		}
 	}
+
 }
 

@@ -1,14 +1,17 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
  */
 package feathers.controls
 {
+	import feathers.core.IGroupedToggle;
 	import feathers.core.IToggle;
 	import feathers.core.PropertyProxy;
+	import feathers.core.ToggleGroup;
+	import feathers.events.FeathersEventType;
 	import feathers.skins.IStyleProvider;
 
 	import starling.display.DisplayObject;
@@ -41,7 +44,8 @@ package feathers.controls
 	 * @see #isSelected
 	 * @see #isToggle
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * A button that may be selected and deselected when triggered.
 	 *
@@ -55,7 +59,7 @@ package feathers.controls
 	 * this.addChild( button );</listing>
 	 *
 	 * @see ../../../help/toggle-button.html How to use the Feathers ToggleButton component
-	 */ public class ToggleButton extends Button implements IToggle
+	 */ public class ToggleButton extends Button implements IGroupedToggle
 	{
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>ToggleButton</code>
@@ -67,6 +71,154 @@ package feathers.controls
 		 * @see feathers.controls.Button#globalStyleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @copy feathers.controls.Button#STATE_UP
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_UP : String = "up";
+		/**
+		 * @copy feathers.controls.Button#STATE_DOWN
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DOWN : String = "down";
+		/**
+		 * @copy feathers.controls.Button#STATE_HOVER
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_HOVER : String = "hover";
+		/**
+		 * @copy feathers.controls.Button#STATE_DISABLED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DISABLED : String = "disabled";
+		/**
+		 * Identifier for the toggle button's up state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_UP_AND_SELECTED : String = "upAndSelected";
+		/**
+		 * Identifier for the toggle button's down state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DOWN_AND_SELECTED : String = "downAndSelected";
+		/**
+		 * Identifier for the toggle button's hover state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_HOVER_AND_SELECTED : String = "hoverAndSelected";
+		/**
+		 * Identifier for the toggle button's disabled state when selected. Can
+		 * be used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DISABLED_AND_SELECTED : String = "disabledAndSelected";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_TOP
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_TOP : String = "top";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_RIGHT : String = "right";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_BOTTOM
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_BOTTOM : String = "bottom";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_LEFT
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_MANUAL
+		 *
+		 * @see #iconPosition
+		 * @see #iconOffsetX
+		 * @see #iconOffsetY
+		 */
+		public static const ICON_POSITION_MANUAL : String = "manual";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_LEFT_BASELINE
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_LEFT_BASELINE : String = "leftBaseline";
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT_BASELINE
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_RIGHT_BASELINE : String = "rightBaseline";
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_LEFT
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_CENTER
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_RIGHT
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_TOP
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_MIDDLE
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_BOTTOM
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
 
 		/**
 		 * @private
@@ -78,6 +230,18 @@ package feathers.controls
 				return ToggleButton.globalStyleProvider;
 			}
 			return Button.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function get currentState() : String
+		{
+			if( this._isSelected )
+			{
+				return super.currentState + "AndSelected";
+			}
+			return super.currentState;
 		}
 
 		/**
@@ -157,6 +321,40 @@ package feathers.controls
 			this.invalidate( INVALIDATION_FLAG_SELECTED );
 			this.invalidate( INVALIDATION_FLAG_STATE );
 			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith( FeathersEventType.STATE_CHANGE );
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _toggleGroup : ToggleGroup;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get toggleGroup() : ToggleGroup
+		{
+			return this._toggleGroup;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set toggleGroup( value : ToggleGroup ) : void
+		{
+			if( this._toggleGroup == value )
+			{
+				return;
+			}
+			if( this._toggleGroup && this._toggleGroup.hasItem( this ) )
+			{
+				this._toggleGroup.removeItem( this );
+			}
+			this._toggleGroup = value;
+			if( this._toggleGroup && !this._toggleGroup.hasItem( this ) )
+			{
+				this._toggleGroup.addItem( this );
+			}
 		}
 
 		/**
@@ -218,10 +416,11 @@ package feathers.controls
 		 *
 		 * @see #defaultSkin
 		 * @see #defaultSelectedSkin
+		 * @see #STATE_UP
 		 */
 		public function get selectedUpSkin() : DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_UP, true ) );
+			return DisplayObject( this._skinSelector.getValueForState( STATE_UP , true ) );
 		}
 
 		/**
@@ -229,11 +428,11 @@ package feathers.controls
 		 */
 		public function set selectedUpSkin( value : DisplayObject ) : void
 		{
-			if( this._skinSelector.getValueForState( STATE_UP, true ) == value )
+			if( this._skinSelector.getValueForState( STATE_UP , true ) == value )
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_UP, true );
+			this._skinSelector.setValueForState( value , STATE_UP , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -255,10 +454,11 @@ package feathers.controls
 		 *
 		 * @see #defaultSkin
 		 * @see #defaultSelectedSkin
+		 * @see #STATE_DOWN
 		 */
 		public function get selectedDownSkin() : DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DOWN, true ) );
+			return DisplayObject( this._skinSelector.getValueForState( STATE_DOWN , true ) );
 		}
 
 		/**
@@ -266,11 +466,11 @@ package feathers.controls
 		 */
 		public function set selectedDownSkin( value : DisplayObject ) : void
 		{
-			if( this._skinSelector.getValueForState( STATE_DOWN, true ) == value )
+			if( this._skinSelector.getValueForState( STATE_DOWN , true ) == value )
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_DOWN, true );
+			this._skinSelector.setValueForState( value , STATE_DOWN , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -292,10 +492,11 @@ package feathers.controls
 		 *
 		 * @see #defaultSkin
 		 * @see #defaultSelectedSkin
+		 * @see #STATE_HOVER
 		 */
 		public function get selectedHoverSkin() : DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_HOVER, true ) );
+			return DisplayObject( this._skinSelector.getValueForState( STATE_HOVER , true ) );
 		}
 
 		/**
@@ -303,11 +504,11 @@ package feathers.controls
 		 */
 		public function set selectedHoverSkin( value : DisplayObject ) : void
 		{
-			if( this._skinSelector.getValueForState( STATE_HOVER, true ) == value )
+			if( this._skinSelector.getValueForState( STATE_HOVER , true ) == value )
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_HOVER, true );
+			this._skinSelector.setValueForState( value , STATE_HOVER , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -329,10 +530,11 @@ package feathers.controls
 		 *
 		 * @see #defaultSkin
 		 * @see #defaultSelectedSkin
+		 * @see #STATE_DISABLED
 		 */
 		public function get selectedDisabledSkin() : DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DISABLED, true ) );
+			return DisplayObject( this._skinSelector.getValueForState( STATE_DISABLED , true ) );
 		}
 
 		/**
@@ -340,25 +542,24 @@ package feathers.controls
 		 */
 		public function set selectedDisabledSkin( value : DisplayObject ) : void
 		{
-			if( this._skinSelector.getValueForState( STATE_DISABLED, true ) == value )
+			if( this._skinSelector.getValueForState( STATE_DISABLED , true ) == value )
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_DISABLED, true );
+			this._skinSelector.setValueForState( value , STATE_DISABLED , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
 		/**
-		 * The default selected label properties are a set of key/value pairs to
-		 * be passed down ot the button's label text renderer, and it is used
-		 * when the button is selected and no specific properties are defined
-		 * for the button's current state. If <code>null</code>, then
-		 * <code>defaultLabelProperties</code> is used instead. The label
-		 * text renderer is an <code>ITextRenderer</code> instance. The
-		 * available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>labelFactory</code>. The most
-		 * common implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the button's label text renderer
+		 * when no specific properties are defined for the button's current
+		 * state (and the button's <code>isSelected</code> property is
+		 * <code>true</code>), and the properties will be passed down to the
+		 * label text renderer when the button validates. The available
+		 * properties depend on which <code>ITextRenderer</code> implementation
+		 * is returned by <code>labelFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>The following example gives the button default label properties to
 		 * use for all selected states when no specific label properties are
@@ -371,8 +572,6 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 * @see #defaultLabelProperties
 		 */
 		public function get defaultSelectedLabelProperties() : Object
@@ -409,16 +608,15 @@ package feathers.controls
 		}
 
 		/**
-		 * A set of key/value pairs to be passed down ot the button's label
-		 * text renderer when the button is in the up state and is selected. If
-		 * <code>null</code>, then <code>defaultSelectedLabelProperties</code>
-		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
-		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * The label text renderer is an <code>ITextRenderer</code> instance.
-		 * The available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>labelFactory</code>. The most
-		 * common implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the button's label text renderer
+		 * when the button is in the <code>Button.STATE_UP</code> state (and
+		 * the button's <code>isSelected</code> property is <code>true</code>),
+		 * and the properties will be passed down to the label text renderer
+		 * when the button validates. The available properties depend on which
+		 * <code>ITextRenderer</code> implementation is returned by
+		 * <code>labelFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>The following example gives the button label properties for the
 		 * selected up state:</p>
@@ -429,19 +627,18 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 * @see #upLabelProperties
+		 * @see #STATE_UP
 		 */
 		public function get selectedUpLabelProperties() : Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP, true ) );
+			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , true ) );
 			if( !value )
 			{
 				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value, STATE_UP, true );
+				this._labelPropertiesSelector.setValueForState( value , STATE_UP , true );
 			}
 			return value;
 		}
@@ -455,12 +652,12 @@ package feathers.controls
 			{
 				value = PropertyProxy.fromObject( value );
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP, true ) );
+			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , true ) );
 			if( oldValue )
 			{
 				oldValue.removeOnChangeCallback( childProperties_onChange );
 			}
-			this._labelPropertiesSelector.setValueForState( value, STATE_UP, true );
+			this._labelPropertiesSelector.setValueForState( value , STATE_UP , true );
 			if( value )
 			{
 				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
@@ -469,16 +666,15 @@ package feathers.controls
 		}
 
 		/**
-		 * A set of key/value pairs to be passed down ot the button's label
-		 * text renderer when the button is in the down state and is selected.
-		 * If <code>null</code>, then <code>defaultSelectedLabelProperties</code>
-		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
-		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * The label text renderer is an <code>ITextRenderer</code> instance.
-		 * The available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>labelFactory</code>. The most
-		 * common implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the button's label text renderer
+		 * when the button is in the <code>Button.STATE_DOWN</code> state (and
+		 * the button's <code>isSelected</code> property is <code>true</code>),
+		 * and the properties will be passed down to the label text renderer
+		 * when the button validates. The available properties depend on which
+		 * <code>ITextRenderer</code> implementation is returned by
+		 * <code>labelFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>The following example gives the button label properties for the
 		 * selected down state:</p>
@@ -489,19 +685,18 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 * @see #downLabelProperties
+		 * @see #STATE_DOWN
 		 */
 		public function get selectedDownLabelProperties() : Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN, true ) );
+			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , true ) );
 			if( !value )
 			{
 				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value, STATE_DOWN, true );
+				this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , true );
 			}
 			return value;
 		}
@@ -515,12 +710,12 @@ package feathers.controls
 			{
 				value = PropertyProxy.fromObject( value );
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN, true ) );
+			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , true ) );
 			if( oldValue )
 			{
 				oldValue.removeOnChangeCallback( childProperties_onChange );
 			}
-			this._labelPropertiesSelector.setValueForState( value, STATE_DOWN, true );
+			this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , true );
 			if( value )
 			{
 				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
@@ -529,16 +724,15 @@ package feathers.controls
 		}
 
 		/**
-		 * A set of key/value pairs to be passed down ot the button's label
-		 * text renderer when the button is in the hover state and is selected.
-		 * If <code>null</code>, then <code>defaultSelectedLabelProperties</code>
-		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
-		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * The label text renderer is an <code>ITextRenderer</code> instance.
-		 * The available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>labelFactory</code>. The most
-		 * common implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the button's label text renderer
+		 * when the button is in the <code>Button.STATE_HOVER</code> state (and
+		 * the button's <code>isSelected</code> property is <code>true</code>),
+		 * and the properties will be passed down to the label text renderer
+		 * when the button validates. The available properties depend on which
+		 * <code>ITextRenderer</code> implementation is returned by
+		 * <code>labelFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>The following example gives the button label properties for the
 		 * selected hover state:</p>
@@ -549,19 +743,18 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 * @see #hoverLabelProperties
+		 * @see #STATE_HOVER
 		 */
 		public function get selectedHoverLabelProperties() : Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER, true ) );
+			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , true ) );
 			if( !value )
 			{
 				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value, STATE_HOVER, true );
+				this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , true );
 			}
 			return value;
 		}
@@ -575,12 +768,12 @@ package feathers.controls
 			{
 				value = PropertyProxy.fromObject( value );
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER, true ) );
+			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , true ) );
 			if( oldValue )
 			{
 				oldValue.removeOnChangeCallback( childProperties_onChange );
 			}
-			this._labelPropertiesSelector.setValueForState( value, STATE_HOVER, true );
+			this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , true );
 			if( value )
 			{
 				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
@@ -589,16 +782,15 @@ package feathers.controls
 		}
 
 		/**
-		 * A set of key/value pairs to be passed down ot the button's label
-		 * text renderer when the button is in the disabled state and is
-		 * selected. If <code>null</code>, then <code>defaultSelectedLabelProperties</code>
-		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
-		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * The label text renderer is an <code>ITextRenderer</code> instance.
-		 * The available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>labelFactory</code>. The most
-		 * common implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the button's label text renderer
+		 * when the button is in the <code>Button.STATE_DISABLED</code> state
+		 * (and the button's <code>isSelected</code> property is
+		 * <code>true</code>), and the properties will be passed down to the
+		 * label text renderer when the button validates. The available
+		 * properties depend on which <code>ITextRenderer</code> implementation
+		 * is returned by <code>labelFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>The following example gives the button label properties for the
 		 * selected disabled state:</p>
@@ -609,19 +801,18 @@ package feathers.controls
 		 * @default null
 		 *
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 * @see #disabledLabelProperties
+		 * @see #STATE_DISABLED
 		 */
 		public function get selectedDisabledLabelProperties() : Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED, true ) );
+			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , true ) );
 			if( !value )
 			{
 				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value, STATE_DISABLED, true );
+				this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , true );
 			}
 			return value;
 		}
@@ -635,12 +826,12 @@ package feathers.controls
 			{
 				value = PropertyProxy.fromObject( value );
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED, true ) );
+			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , true ) );
 			if( oldValue )
 			{
 				oldValue.removeOnChangeCallback( childProperties_onChange );
 			}
-			this._labelPropertiesSelector.setValueForState( value, STATE_DISABLED, true );
+			this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , true );
 			if( value )
 			{
 				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
@@ -707,10 +898,11 @@ package feathers.controls
 		 *
 		 * @see #defaultIcon
 		 * @see #defaultSelectedIcon
+		 * @see #STATE_UP
 		 */
 		public function get selectedUpIcon() : DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_UP, true ) );
+			return DisplayObject( this._iconSelector.getValueForState( STATE_UP , true ) );
 		}
 
 		/**
@@ -718,11 +910,11 @@ package feathers.controls
 		 */
 		public function set selectedUpIcon( value : DisplayObject ) : void
 		{
-			if( this._iconSelector.getValueForState( STATE_UP, true ) == value )
+			if( this._iconSelector.getValueForState( STATE_UP , true ) == value )
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_UP, true );
+			this._iconSelector.setValueForState( value , STATE_UP , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -744,10 +936,11 @@ package feathers.controls
 		 *
 		 * @see #defaultIcon
 		 * @see #defaultSelectedIcon
+		 * @see #STATE_DOWN
 		 */
 		public function get selectedDownIcon() : DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DOWN, true ) );
+			return DisplayObject( this._iconSelector.getValueForState( STATE_DOWN , true ) );
 		}
 
 		/**
@@ -755,11 +948,11 @@ package feathers.controls
 		 */
 		public function set selectedDownIcon( value : DisplayObject ) : void
 		{
-			if( this._iconSelector.getValueForState( STATE_DOWN, true ) == value )
+			if( this._iconSelector.getValueForState( STATE_DOWN , true ) == value )
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_DOWN, true );
+			this._iconSelector.setValueForState( value , STATE_DOWN , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -781,10 +974,11 @@ package feathers.controls
 		 *
 		 * @see #defaultIcon
 		 * @see #defaultSelectedIcon
+		 * @see #STATE_HOVER
 		 */
 		public function get selectedHoverIcon() : DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_HOVER, true ) );
+			return DisplayObject( this._iconSelector.getValueForState( STATE_HOVER , true ) );
 		}
 
 		/**
@@ -792,11 +986,11 @@ package feathers.controls
 		 */
 		public function set selectedHoverIcon( value : DisplayObject ) : void
 		{
-			if( this._iconSelector.getValueForState( STATE_HOVER, true ) == value )
+			if( this._iconSelector.getValueForState( STATE_HOVER , true ) == value )
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_HOVER, true );
+			this._iconSelector.setValueForState( value , STATE_HOVER , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -818,10 +1012,11 @@ package feathers.controls
 		 *
 		 * @see #defaultIcon
 		 * @see #defaultSelectedIcon
+		 * @see #STATE_DISABLED
 		 */
 		public function get selectedDisabledIcon() : DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DISABLED, true ) );
+			return DisplayObject( this._iconSelector.getValueForState( STATE_DISABLED , true ) );
 		}
 
 		/**
@@ -829,11 +1024,11 @@ package feathers.controls
 		 */
 		public function set selectedDisabledIcon( value : DisplayObject ) : void
 		{
-			if( this._iconSelector.getValueForState( STATE_DISABLED, true ) == value )
+			if( this._iconSelector.getValueForState( STATE_DISABLED , true ) == value )
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_DISABLED, true );
+			this._iconSelector.setValueForState( value , STATE_DISABLED , true );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -843,6 +1038,42 @@ package feathers.controls
 		public function ToggleButton()
 		{
 			super();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose() : void
+		{
+			var skin : DisplayObject = this._skinSelector.defaultSelectedValue as DisplayObject;
+			if( skin )
+			{
+				skin.dispose();
+			}
+			for each( var state : String in this.stateNames )
+			{
+				skin = this._skinSelector.getValueForState( state , true ) as DisplayObject;
+				//it'll get disposed in super.dispose() if it's a child
+				if( skin && skin.parent !== this )
+				{
+					skin.dispose();
+				}
+			}
+			skin = this._iconSelector.defaultSelectedValue as DisplayObject;
+			if( skin )
+			{
+				skin.dispose();
+			}
+			for each( state in this.stateNames )
+			{
+				skin = this._iconSelector.getValueForState( state , true ) as DisplayObject;
+				//it'll get disposed in super.dispose() if it's a child
+				if( skin && skin.parent !== this )
+				{
+					skin.dispose();
+				}
+			}
+			super.dispose();
 		}
 
 		/**

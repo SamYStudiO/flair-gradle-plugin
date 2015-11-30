@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -13,6 +13,13 @@ package feathers.events
 	 * constants are meant to be used with <code>dispatchEventWith()</code> and
 	 * take advantage of the Starling's event object pooling. The object passed
 	 * to an event listener will be of type <code>starling.events.Event</code>.
+	 *
+	 * <listing version="3.0">
+	 * function listener( event:Event ):void
+	 * {
+	 *     trace( "creation complete" );
+	 * }
+	 * component.addEventListener( FeathersEventType.CREATION_COMPLETE, listener );</listing>
 	 */
 	public class FeathersEventType
 	{
@@ -216,5 +223,28 @@ package feathers.events
 		 * @see feathers.core.ITextEditor
 		 */
 		public static const SOFT_KEYBOARD_DEACTIVATE : String = "softKeyboardDeactivate";
+
+		/**
+		 * The <code>FeathersEventType.PROGRESS</code> event type is used by
+		 * Feathers classes with long-running tasks to indicate that progress
+		 * has been made, but the task is incomplete.
+		 */
+		public static const PROGRESS : String = "progress";
+
+		/**
+		 * The <code>FeathersEventType.LOCATION_CHANGE</code> event type is used
+		 * by the Feathers <code>WebView</code> component to indicate that its
+		 * location has changed.
+		 */
+		public static const LOCATION_CHANGE : String = "locationChange";
+
+		/**
+		 * The <code>FeathersEventType.STATE_CHANGE</code> event type is used by
+		 * Feathers classes that implement the <code>IStateContext</code>
+		 * interface.
+		 *
+		 * @see feathers.core.IStateContext
+		 */
+		public static const STATE_CHANGE : String = "stageChange";
 	}
 }

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -49,7 +49,8 @@ package feathers.controls
 	 * @see #loadURL()
 	 * @see #loadString()
 	 */
-	[Event(name="complete", type="starling.events.Event")]
+	[Event(name="complete" , type="starling.events.Event")]
+
 	/**
 	 * Indicates that the <code>location</code> property has changed.
 	 *
@@ -69,8 +70,11 @@ package feathers.controls
 	 * </table>
 	 *
 	 * @see #location
+	 *
+	 * @eventType feathers.events.FeathersEventType.LOCATION_CHANGE
 	 */
-	[Event(name="locationChange", type="starling.events.Event")]
+	[Event(name="locationChange" , type="starling.events.Event")]
+
 	/**
 	 * Indicates that an error occurred in the <code>StageWebView</code>.
 	 *
@@ -92,22 +96,14 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.ERROR
 	 */
-	[Event(name="error", type="starling.events.Event")]
+	[Event(name="error" , type="starling.events.Event")]
+
 	/**
 	 * A Feathers component that displays a web browser in Adobe AIR, using the
 	 * <code>flash.media.StageWebView</code> class.
 	 *
 	 * <p>Warning: This component is only compatible with Adobe AIR. It cannot
 	 * be used with Adobe Flash Player in a web browser.</p>
-	 *
-	 * <p><strong>Beta Component:</strong> This is a new component, and its APIs
-	 * may need some changes between now and the next version of Feathers to
-	 * account for overlooked requirements or other issues. Upgrading to future
-	 * versions of Feathers may involve manual changes to your code that uses
-	 * this component. The
-	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>
-	 * will not go into effect until this component's status is upgraded from
-	 * beta to stable.</p>
 	 *
 	 * @see ../../../help/web-view.html How to use the Feathers WebView component
 	 */ public class WebView extends FeathersControl
@@ -135,7 +131,30 @@ package feathers.controls
 			}
 			return STAGE_WEB_VIEW_CLASS.isSupported;
 		}
-
+		/**
+		 * @private
+		 */
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
+		protected static const STAGE_WEB_VIEW_NOT_SUPPORTED_ERROR : String = "Feathers WebView is only supported in Adobe AIR. It cannot be used in Adobe Flash Player.";
+		/**
+		 * @private
+		 */
+		protected static const USE_NATIVE_ERROR : String = "The useNative property may only be set before the WebView component validates for the first time.";
+		/**
+		 * @private
+		 */
+		protected static const DEFAULT_SIZE : Number = 320;
+		/**
+		 * @private
+		 */
+		protected static const STAGE_WEB_VIEW_FULLY_QUALIFIED_CLASS_NAME : String = "flash.media.StageWebView";
 		/**
 		 * @private
 		 */
@@ -150,7 +169,10 @@ package feathers.controls
 		 * Determines if the system native web browser control is used or if
 		 * Adobe AIR's embedded version of the WebKit engine is used.
 		 *
-		 * <p>Note: Although it is not prohibited, with some content, failures can occur when the same process uses both the embedded and the system WebKit, so it is recommended that all StageWebViews in a given application be constructed with the same value for useNative. In addition, as HTMLLoader depends on the embedded WebKit, applications using HTMLLoader should only construct StageWebViews with useNative set to false.</p>
+		 * <p>Note: Although it is not prohibited, with some content, failures can occur when the same process uses both the embedded and the system
+		 * WebKit, so it is recommended that all StageWebViews in a given application be constructed with the same value for useNative. In addition,
+		 * as HTMLLoader depends on the embedded WebKit, applications using HTMLLoader should only construct StageWebViews with useNative set to
+		 * false.</p>
 		 */
 		public function get useNative() : Boolean
 		{
@@ -172,7 +194,8 @@ package feathers.controls
 		/**
 		 * The URL of the currently loaded page.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#location Full description of flash.media.StageWebView.location in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#location Full description of
+		 *     flash.media.StageWebView.location in Adobe's Flash Platform API Reference
 		 */
 		public function get location() : String
 		{
@@ -186,7 +209,8 @@ package feathers.controls
 		/**
 		 * The title of the currently loaded page.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#title Full description of flash.media.StageWebView.title in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#title Full description of
+		 *     flash.media.StageWebView.title in Adobe's Flash Platform API Reference
 		 */
 		public function get title() : String
 		{
@@ -200,7 +224,8 @@ package feathers.controls
 		/**
 		 * Indicates if the web view can navigate back in its history.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#isHistoryBackEnabled Full description of flash.media.StageWebView.isHistoryBackEnabled in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#isHistoryBackEnabled Full
+		 *     description of flash.media.StageWebView.isHistoryBackEnabled in Adobe's Flash Platform API Reference
 		 */
 		public function get isHistoryBackEnabled() : Boolean
 		{
@@ -214,7 +239,8 @@ package feathers.controls
 		/**
 		 * Indicates if the web view can navigate forward in its history.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#isHistoryForwardEnabled Full description of flash.media.StageWebView.isHistoryForwardEnabled in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#isHistoryForwardEnabled Full
+		 *     description of flash.media.StageWebView.isHistoryForwardEnabled in Adobe's Flash Platform API Reference
 		 */
 		public function get isHistoryForwardEnabled() : Boolean
 		{
@@ -230,8 +256,8 @@ package feathers.controls
 		 */
 		public function WebView()
 		{
-			this.addEventListener( Event.ADDED_TO_STAGE, webView_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, webView_removedFromStageHandler );
+			this.addEventListener( starling.events.Event.ADDED_TO_STAGE , webView_addedToStageHandler );
+			this.addEventListener( starling.events.Event.REMOVED_FROM_STAGE , webView_removedFromStageHandler );
 		}
 
 		/**
@@ -251,16 +277,17 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport, parentAlpha : Number ) : void
+		override public function render( support : RenderSupport , parentAlpha : Number ) : void
 		{
 			this.refreshViewPort();
-			super.render( support, parentAlpha );
+			super.render( support , parentAlpha );
 		}
 
 		/**
 		 * Loads the specified URL.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#loadURL() Full description of flash.media.StageWebView.loadURL() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#loadURL() Full description of
+		 *     flash.media.StageWebView.loadURL() in Adobe's Flash Platform API Reference
 		 */
 		public function loadURL( url : String ) : void
 		{
@@ -271,18 +298,20 @@ package feathers.controls
 		/**
 		 * Renders the specified HTML or XHTML string.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#loadString() Full description of flash.media.StageWebView.loadString() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#loadString() Full description of
+		 *     flash.media.StageWebView.loadString() in Adobe's Flash Platform API Reference
 		 */
-		public function loadString( text : String, mimeType : String = "text/html" ) : void
+		public function loadString( text : String , mimeType : String = "text/html" ) : void
 		{
 			this.validate();
-			this.stageWebView.loadString( text, mimeType );
+			this.stageWebView.loadString( text , mimeType );
 		}
 
 		/**
 		 * Stops the current page from loading.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#stop() Full description of flash.media.StageWebView.stop() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#stop() Full description of
+		 *     flash.media.StageWebView.stop() in Adobe's Flash Platform API Reference
 		 */
 		public function stop() : void
 		{
@@ -293,7 +322,8 @@ package feathers.controls
 		/**
 		 * Reloads the currently loaded page.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#reload() Full description of flash.media.StageWebView.reload() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#reload() Full description of
+		 *     flash.media.StageWebView.reload() in Adobe's Flash Platform API Reference
 		 */
 		public function reload() : void
 		{
@@ -304,7 +334,8 @@ package feathers.controls
 		/**
 		 * Navigates to the previous page in the browsing history.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#historyBack() Full description of flash.media.StageWebView.historyBack() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#historyBack() Full description of
+		 *     flash.media.StageWebView.historyBack() in Adobe's Flash Platform API Reference
 		 * @see #isHistoryBackEnabled
 		 */
 		public function historyBack() : void
@@ -316,7 +347,8 @@ package feathers.controls
 		/**
 		 * Navigates to the next page in the browsing history.
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#historyForward() Full description of flash.media.StageWebView.historyForward() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/StageWebView.html#historyForward() Full description of
+		 *     flash.media.StageWebView.historyForward() in Adobe's Flash Platform API Reference
 		 * @see #isHistoryForwardEnabled
 		 */
 		public function historyForward() : void
@@ -365,8 +397,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -381,7 +413,7 @@ package feathers.controls
 			{
 				newHeight = DEFAULT_SIZE;
 			}
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -400,9 +432,10 @@ package feathers.controls
 			{
 				throw new IllegalOperationError( STAGE_WEB_VIEW_NOT_SUPPORTED_ERROR );
 			}
-			this.stageWebView.addEventListener( ErrorEvent.ERROR, stageWebView_errorHandler );
-			this.stageWebView.addEventListener( "locationChange", stageWebViewHandler );
-			this.stageWebView.addEventListener( flash.events.Event.COMPLETE, stageWebViewHandler );
+			this.stageWebView.addEventListener( ErrorEvent.ERROR , stageWebView_errorHandler );
+			//we're using the string here because this class is AIR-only
+			this.stageWebView.addEventListener( "locationChange" , stageWebView_locationChangeHandler );
+			this.stageWebView.addEventListener( flash.events.Event.COMPLETE , stageWebView_completeHandler );
 		}
 
 		/**
@@ -418,10 +451,10 @@ package feathers.controls
 			}
 
 			HELPER_POINT.x = HELPER_POINT.y = 0;
-			this.getTransformationMatrix( this.stage, HELPER_MATRIX );
+			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
 			var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
 			var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
-			MatrixUtil.transformCoords( HELPER_MATRIX, 0, 0, HELPER_POINT );
+			MatrixUtil.transformCoords( HELPER_MATRIX , 0 , 0 , HELPER_POINT );
 			var nativeScaleFactor : Number = 1;
 			if( Starling.current.supportHighResolutions )
 			{
@@ -431,12 +464,12 @@ package feathers.controls
 			stageWebViewViewPort.x = Math.round( starlingViewPort.x + HELPER_POINT.x * scaleFactor );
 			stageWebViewViewPort.y = Math.round( starlingViewPort.y + HELPER_POINT.y * scaleFactor );
 			var viewPortWidth : Number = Math.round( this.actualWidth * scaleFactor * globalScaleX );
-			if( viewPortWidth < 1 || viewPortWidth !== viewPortWidth ) // isNaN
+			if( viewPortWidth < 1 || viewPortWidth !== viewPortWidth ) //isNaN
 			{
 				viewPortWidth = 1;
 			}
 			var viewPortHeight : Number = Math.round( this.actualHeight * scaleFactor * globalScaleY );
-			if( viewPortHeight < 1 || viewPortHeight !== viewPortHeight ) // isNaN
+			if( viewPortHeight < 1 || viewPortHeight !== viewPortHeight ) //isNaN
 			{
 				viewPortHeight = 1;
 			}
@@ -448,28 +481,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function webView_addedToStageHandler( event : Event ) : void
+		protected function webView_addedToStageHandler( event : starling.events.Event ) : void
 		{
 			this.stageWebView.stage = Starling.current.nativeStage;
-			this.addEventListener( Event.ENTER_FRAME, webView_enterFrameHandler );
+			this.addEventListener( starling.events.Event.ENTER_FRAME , webView_enterFrameHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function webView_removedFromStageHandler( event : Event ) : void
+		protected function webView_removedFromStageHandler( event : starling.events.Event ) : void
 		{
 			if( this.stageWebView )
 			{
 				this.stageWebView.stage = null;
 			}
-			this.removeEventListener( Event.ENTER_FRAME, webView_enterFrameHandler );
+			this.removeEventListener( starling.events.Event.ENTER_FRAME , webView_enterFrameHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function webView_enterFrameHandler( event : Event ) : void
+		protected function webView_enterFrameHandler( event : starling.events.Event ) : void
 		{
 			var target : DisplayObject = this;
 			do {
@@ -488,40 +521,20 @@ package feathers.controls
 		 */
 		protected function stageWebView_errorHandler( event : ErrorEvent ) : void
 		{
-			this.dispatchEventWith( FeathersEventType.ERROR, false, event );
+			this.dispatchEventWith( FeathersEventType.ERROR , false , event );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stageWebViewHandler( event : flash.events.Event ) : void
+		protected function stageWebView_locationChangeHandler( event : flash.events.Event ) : void
 		{
-			this.dispatchEventWith( event.type );
+			this.dispatchEventWith( FeathersEventType.LOCATION_CHANGE );
 		}
 
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const STAGE_WEB_VIEW_NOT_SUPPORTED_ERROR : String = "Feathers WebView is only supported in Adobe AIR. It cannot be used in Adobe Flash Player.";
-		/**
-		 * @private
-		 */
-		protected static const USE_NATIVE_ERROR : String = "The useNative property may only be set before the WebView component validates for the first time.";
-		/**
-		 * @private
-		 */
-		protected static const DEFAULT_SIZE : Number = 320;
-		/**
-		 * @private
-		 */
-		protected static const STAGE_WEB_VIEW_FULLY_QUALIFIED_CLASS_NAME : String = "flash.media.StageWebView";
+		protected function stageWebView_completeHandler( event : flash.events.Event ) : void
+		{
+			this.dispatchEventWith( starling.events.Event.COMPLETE );
+		}
 	}
 }

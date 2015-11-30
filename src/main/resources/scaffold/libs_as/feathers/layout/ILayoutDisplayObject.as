@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -14,7 +14,8 @@ package feathers.layout
 	 *
 	 * @eventType feathers.events.FeathersEventType.LAYOUT_DATA_CHANGE
 	 */
-	[Event(name="layoutDataChange", type="starling.events.Event")]
+	[Event(name="layoutDataChange" , type="starling.events.Event")]
+
 	/**
 	 * A display object that may be associated with extra data for use with
 	 * advanced layouts.

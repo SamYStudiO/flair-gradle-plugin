@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -23,7 +23,8 @@ package feathers.events
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Allows a component to claim exclusive access to a touch to avoid
 	 * dragging, scrolling, or other touch interaction conflicts. In particular,
@@ -64,7 +65,10 @@ package feathers.events
 		{
 			delete stageToObject[ stage ];
 		}
-
+		/**
+		 * @private
+		 */
+		protected static const stageToObject : Dictionary = new Dictionary( true );
 		/**
 		 * @private
 		 */
@@ -96,7 +100,7 @@ package feathers.events
 		 * <code>true</code> if the touch is claimed. Returns <code>false</code>
 		 * if the touch was previously claimed by another display object.
 		 */
-		public function claimTouch( touchID : int, target : DisplayObject ) : Boolean
+		public function claimTouch( touchID : int , target : DisplayObject ) : Boolean
 		{
 			if( !target )
 			{
@@ -118,10 +122,10 @@ package feathers.events
 			this._claims[ touchID ] = target;
 			if( this._stageListenerCount == 0 )
 			{
-				this._stage.addEventListener( TouchEvent.TOUCH, stage_touchHandler );
+				this._stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
 			}
 			this._stageListenerCount++;
-			this.dispatchEventWith( Event.CHANGE, false, touchID );
+			this.dispatchEventWith( Event.CHANGE , false , touchID );
 			return true;
 		}
 
@@ -136,7 +140,7 @@ package feathers.events
 				return;
 			}
 			delete this._claims[ touchID ];
-			this.dispatchEventWith( Event.CHANGE, false, touchID );
+			this.dispatchEventWith( Event.CHANGE , false , touchID );
 		}
 
 		/**
@@ -161,7 +165,7 @@ package feathers.events
 			for( var key : Object in this._claims )
 			{
 				var touchID : int = key as int;
-				var touch : Touch = event.getTouch( this._stage, TouchPhase.ENDED, touchID );
+				var touch : Touch = event.getTouch( this._stage , TouchPhase.ENDED , touchID );
 				if( !touch )
 				{
 					continue;
@@ -171,13 +175,8 @@ package feathers.events
 			}
 			if( this._stageListenerCount == 0 )
 			{
-				this._stage.removeEventListener( TouchEvent.TOUCH, stage_touchHandler );
+				this._stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
 			}
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const stageToObject : Dictionary = new Dictionary( true );
 	}
 }

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -33,7 +33,8 @@ package feathers.system
 		 *
 		 * @default flash.display.Stage.fullScreenWidth
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of
+		 *     flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
 		 */
 		public static var screenPixelWidth : Number = NaN;
 
@@ -43,10 +44,11 @@ package feathers.system
 		 *
 		 * @default flash.display.Stage.fullScreenHeight
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of
+		 *     flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
 		 */
 		public static var screenPixelHeight : Number = NaN;
-
+		
 		/**
 		 * The screen density to be used by Feathers. Defaults to the value of
 		 * <code>flash.system.Capabilities.screenDPI</code>, but may be
@@ -65,7 +67,8 @@ package feathers.system
 		 *
 		 * @default flash.system.Capabilities.screenDPI
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#screenDPI Full description of flash.system.Capabilities.screenDPI in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#screenDPI Full description of
+		 *     flash.system.Capabilities.screenDPI in Adobe's Flash Platform API Reference
 		 */
 		public static var dpi : int = Capabilities.screenDPI;
 
@@ -82,12 +85,12 @@ package feathers.system
 		public static function isTablet( stage : Stage ) : Boolean
 		{
 			var screenWidth : Number = screenPixelWidth;
-			if( screenWidth !== screenWidth ) // isNaN
+			if( screenWidth !== screenWidth ) //isNaN
 			{
 				screenWidth = stage.fullScreenWidth;
 			}
 			var screenHeight : Number = screenPixelHeight;
-			if( screenHeight !== screenHeight ) // isNaN
+			if( screenHeight !== screenHeight ) //isNaN
 			{
 				screenHeight = stage.fullScreenHeight;
 			}
@@ -119,7 +122,7 @@ package feathers.system
 		public static function screenInchesX( stage : Stage ) : Number
 		{
 			var screenWidth : Number = screenPixelWidth;
-			if( screenWidth !== screenWidth ) // isNaN
+			if( screenWidth !== screenWidth ) //isNaN
 			{
 				screenWidth = stage.fullScreenWidth;
 			}
@@ -135,7 +138,7 @@ package feathers.system
 		public static function screenInchesY( stage : Stage ) : Number
 		{
 			var screenHeight : Number = screenPixelHeight;
-			if( screenHeight !== screenHeight ) // isNaN
+			if( screenHeight !== screenHeight ) //isNaN
 			{
 				screenHeight = stage.fullScreenHeight;
 			}

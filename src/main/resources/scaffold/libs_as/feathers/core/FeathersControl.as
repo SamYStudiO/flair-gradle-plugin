@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -47,7 +47,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.INITIALIZE
 	 */
-	[Event(name="initialize", type="starling.events.Event")]
+	[Event(name="initialize" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched after the component has validated for the first time. Both
 	 * <code>initialize()</code> and <code>draw()</code> will have been called,
@@ -70,7 +71,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.CREATION_COMPLETE
 	 */
-	[Event(name="creationComplete", type="starling.events.Event")]
+	[Event(name="creationComplete" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the width or height of the control changes.
 	 *
@@ -91,7 +93,8 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.RESIZE
 	 */
-	[Event(name="resize", type="starling.events.Event")]
+	[Event(name="resize" , type="starling.events.Event")]
+
 	/**
 	 * Base class for all UI controls. Implements invalidation and sets up some
 	 * basic template functions like <code>initialize()</code> and
@@ -140,11 +143,43 @@ package feathers.core
 		/**
 		 * @private
 		 */
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_TEXT_RENDERER : String = "textRenderer";
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_TEXT_EDITOR : String = "textEditor";
+		/**
+		 * @private
+		 */
+		protected static const ILLEGAL_WIDTH_ERROR : String = "A component's width cannot be NaN.";
+		/**
+		 * @private
+		 */
+		protected static const ILLEGAL_HEIGHT_ERROR : String = "A component's height cannot be NaN.";
+		/**
+		 * @private
+		 */
+		protected static const ABSTRACT_CLASS_ERROR : String = "FeathersControl is an abstract class. For a lightweight Feathers wrapper, use feathers.controls.LayoutGroup.";
+		/**
+		 * @private
+		 */
 		protected var _validationQueue : ValidationQueue;
 		/**
 		 * @private
 		 */
 		protected var _hitArea : Rectangle = new Rectangle();
+		/**
+		 * @private
+		 */
+		protected var _isInitializing : Boolean = false;
 		/**
 		 * @private
 		 * A flag that indicates that everything is invalid. If true, no other
@@ -227,6 +262,56 @@ package feathers.core
 		 * @private
 		 */
 		protected var _isDisposed : Boolean = false;
+		/**
+		 * Flag to indicate that everything is invalid and should be redrawn.
+		 */
+		public static const INVALIDATION_FLAG_ALL : String = "all";
+		/**
+		 * Invalidation flag to indicate that the state has changed. Used by
+		 * <code>isEnabled</code>, but may be used for other control states too.
+		 *
+		 * @see #isEnabled
+		 */
+		public static const INVALIDATION_FLAG_STATE : String = "state";
+		/**
+		 * Invalidation flag to indicate that the dimensions of the UI control
+		 * have changed.
+		 */
+		public static const INVALIDATION_FLAG_SIZE : String = "size";
+		/**
+		 * Invalidation flag to indicate that the styles or visual appearance of
+		 * the UI control has changed.
+		 */
+		public static const INVALIDATION_FLAG_STYLES : String = "styles";
+		/**
+		 * Invalidation flag to indicate that the skin of the UI control has changed.
+		 */
+		public static const INVALIDATION_FLAG_SKIN : String = "skin";
+		/**
+		 * Invalidation flag to indicate that the layout of the UI control has
+		 * changed.
+		 */
+		public static const INVALIDATION_FLAG_LAYOUT : String = "layout";
+		/**
+		 * Invalidation flag to indicate that the primary data displayed by the
+		 * UI control has changed.
+		 */
+		public static const INVALIDATION_FLAG_DATA : String = "data";
+		/**
+		 * Invalidation flag to indicate that the scroll position of the UI
+		 * control has changed.
+		 */
+		public static const INVALIDATION_FLAG_SCROLL : String = "scroll";
+		/**
+		 * Invalidation flag to indicate that the selection of the UI control
+		 * has changed.
+		 */
+		public static const INVALIDATION_FLAG_SELECTED : String = "selected";
+		/**
+		 * Invalidation flag to indicate that the focus of the UI control has
+		 * changed.
+		 */
+		public static const INVALIDATION_FLAG_FOCUS : String = "focus";
 
 		/**
 		 * When the <code>FeathersControl</code> constructor is called, the
@@ -311,22 +396,6 @@ package feathers.core
 		 * @see ../../../help/custom-themes.html Creating custom Feathers themes
 		 */
 		public function get styleNameList() : TokenList
-		{
-			return this._styleNameList;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by the <code>styleNameList</code>
-		 * property.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.0. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #styleNameList
-		 */
-		public function get nameList() : TokenList
 		{
 			return this._styleNameList;
 		}
@@ -503,7 +572,7 @@ package feathers.core
 			{
 				return;
 			}
-			var valueIsNaN : Boolean = value !== value; // isNaN
+			var valueIsNaN : Boolean = value !== value; //isNaN
 			if( valueIsNaN && this.explicitWidth !== this.explicitWidth )
 			{
 				return;
@@ -516,7 +585,7 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal( value, this.actualHeight, true );
+				this.setSizeInternal( value , this.actualHeight , true );
 			}
 		}
 
@@ -564,7 +633,7 @@ package feathers.core
 			{
 				return;
 			}
-			var valueIsNaN : Boolean = value !== value; // isNaN
+			var valueIsNaN : Boolean = value !== value; //isNaN
 			if( valueIsNaN && this.explicitHeight !== this.explicitHeight )
 			{
 				return;
@@ -577,7 +646,7 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal( this.actualWidth, value, true );
+				this.setSizeInternal( this.actualWidth , value , true );
 			}
 		}
 
@@ -685,7 +754,7 @@ package feathers.core
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minWidth cannot be NaN" );
 			}
@@ -727,7 +796,7 @@ package feathers.core
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minHeight cannot be NaN" );
 			}
@@ -769,7 +838,7 @@ package feathers.core
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxWidth cannot be NaN" );
 			}
@@ -811,7 +880,7 @@ package feathers.core
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxHeight cannot be NaN" );
 			}
@@ -825,7 +894,7 @@ package feathers.core
 		override public function set scaleX( value : Number ) : void
 		{
 			super.scaleX = value;
-			this.setSizeInternal( this.actualWidth, this.actualHeight, false );
+			this.setSizeInternal( this.actualWidth , this.actualHeight , false );
 		}
 
 		/**
@@ -834,7 +903,7 @@ package feathers.core
 		override public function set scaleY( value : Number ) : void
 		{
 			super.scaleY = value;
-			this.setSizeInternal( this.actualWidth, this.actualHeight, false );
+			this.setSizeInternal( this.actualWidth , this.actualHeight , false );
 		}
 
 		/**
@@ -891,12 +960,12 @@ package feathers.core
 			}
 			if( this._layoutData )
 			{
-				this._layoutData.removeEventListener( Event.CHANGE, layoutData_changeHandler );
+				this._layoutData.removeEventListener( Event.CHANGE , layoutData_changeHandler );
 			}
 			this._layoutData = value;
 			if( this._layoutData )
 			{
-				this._layoutData.addEventListener( Event.CHANGE, layoutData_changeHandler );
+				this._layoutData.addEventListener( Event.CHANGE , layoutData_changeHandler );
 			}
 			this.dispatchEventWith( FeathersEventType.LAYOUT_DATA_CHANGE );
 		}
@@ -907,13 +976,15 @@ package feathers.core
 		protected var _focusManager : IFocusManager;
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#focusManager
-		 *
 		 * <p>The implementation of this property is provided for convenience,
 		 * but it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
 		 *
+		 * @copy feathers.core.IFocusDisplayObject#focusManager
+		 *
 		 * @default null
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function get focusManager() : IFocusManager
 		{
@@ -936,13 +1007,13 @@ package feathers.core
 			this._focusManager = value;
 			if( this._focusManager )
 			{
-				this.addEventListener( FeathersEventType.FOCUS_IN, focusInHandler );
-				this.addEventListener( FeathersEventType.FOCUS_OUT, focusOutHandler );
+				this.addEventListener( FeathersEventType.FOCUS_IN , focusInHandler );
+				this.addEventListener( FeathersEventType.FOCUS_OUT , focusOutHandler );
 			}
 			else
 			{
-				this.removeEventListener( FeathersEventType.FOCUS_IN, focusInHandler );
-				this.removeEventListener( FeathersEventType.FOCUS_OUT, focusOutHandler );
+				this.removeEventListener( FeathersEventType.FOCUS_IN , focusInHandler );
+				this.removeEventListener( FeathersEventType.FOCUS_OUT , focusOutHandler );
 			}
 		}
 
@@ -952,13 +1023,15 @@ package feathers.core
 		protected var _focusOwner : IFocusDisplayObject;
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#focusOwner
-		 *
 		 * <p>The implementation of this property is provided for convenience,
 		 * but it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
 		 *
+		 * @copy feathers.core.IFocusDisplayObject#focusOwner
+		 *
 		 * @default null
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function get focusOwner() : IFocusDisplayObject
 		{
@@ -979,13 +1052,15 @@ package feathers.core
 		protected var _isFocusEnabled : Boolean = true;
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#isFocusEnabled
-		 *
 		 * <p>The implementation of this property is provided for convenience,
 		 * but it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
 		 *
+		 * @copy feathers.core.IFocusDisplayObject
+		 *
 		 * @default true
+		 *
+		 * @see feathers.core.IFocusDisplayObject#isFocusEnabled
 		 */
 		public function get isFocusEnabled() : Boolean
 		{
@@ -1014,13 +1089,16 @@ package feathers.core
 		protected var _nextTabFocus : IFocusDisplayObject;
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#nextTabFocus
 		 *
 		 * <p>The implementation of this property is provided for convenience,
 		 * but it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
 		 *
+		 * @copy feathers.core.IFocusDisplayObject#nextTabFocus
+		 *
 		 * @default null
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function get nextTabFocus() : IFocusDisplayObject
 		{
@@ -1045,13 +1123,15 @@ package feathers.core
 		protected var _previousTabFocus : IFocusDisplayObject;
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#previousTabFocus
-		 *
 		 * <p>The implementation of this property is provided for convenience,
 		 * but it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
 		 *
+		 * @copy feathers.core.IFocusDisplayObject#previousTabFocus
+		 *
 		 * @default null
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function get previousTabFocus() : IFocusDisplayObject
 		{
@@ -1376,23 +1456,23 @@ package feathers.core
 				throw new Error( ABSTRACT_CLASS_ERROR );
 			}
 			this._styleProvider = this.defaultStyleProvider;
-			this.addEventListener( Event.ADDED_TO_STAGE, feathersControl_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, feathersControl_removedFromStageHandler );
-			this.addEventListener( Event.FLATTEN, feathersControl_flattenHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , feathersControl_addedToStageHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , feathersControl_removedFromStageHandler );
+			this.addEventListener( Event.FLATTEN , feathersControl_flattenHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function getBounds( targetSpace : DisplayObject, resultRect : Rectangle = null ) : Rectangle
+		override public function getBounds( targetSpace : DisplayObject , resultRect : Rectangle = null ) : Rectangle
 		{
 			if( !resultRect )
 			{
 				resultRect = new Rectangle();
 			}
 
-			var minX : Number = Number.MAX_VALUE, maxX : Number = -Number.MAX_VALUE;
-			var minY : Number = Number.MAX_VALUE, maxY : Number = -Number.MAX_VALUE;
+			var minX : Number = Number.MAX_VALUE , maxX : Number = -Number.MAX_VALUE;
+			var minY : Number = Number.MAX_VALUE , maxY : Number = -Number.MAX_VALUE;
 
 			if( targetSpace == this ) // optimization
 			{
@@ -1403,27 +1483,27 @@ package feathers.core
 			}
 			else
 			{
-				this.getTransformationMatrix( targetSpace, HELPER_MATRIX );
+				this.getTransformationMatrix( targetSpace , HELPER_MATRIX );
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, 0, 0, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , 0 , 0 , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, 0, this.actualHeight, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , 0 , this.actualHeight , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this.actualWidth, 0, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this.actualWidth , 0 , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
 				maxY = maxY > HELPER_POINT.y ? maxY : HELPER_POINT.y;
 
-				MatrixUtil.transformCoords( HELPER_MATRIX, this.actualWidth, this.actualHeight, HELPER_POINT );
+				MatrixUtil.transformCoords( HELPER_MATRIX , this.actualWidth , this.actualHeight , HELPER_POINT );
 				minX = minX < HELPER_POINT.x ? minX : HELPER_POINT.x;
 				maxX = maxX > HELPER_POINT.x ? maxX : HELPER_POINT.x;
 				minY = minY < HELPER_POINT.y ? minY : HELPER_POINT.y;
@@ -1441,7 +1521,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point, forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
 		{
 			if( this._isQuickHitAreaEnabled )
 			{
@@ -1456,7 +1536,7 @@ package feathers.core
 				}
 				return this._hitArea.containsPoint( localPoint ) ? this : null;
 			}
-			return super.hitTest( localPoint, forTouch );
+			return super.hitTest( localPoint , forTouch );
 		}
 
 		/**
@@ -1475,13 +1555,13 @@ package feathers.core
 		 * control to the screen. The validation system exists to ensure that
 		 * multiple properties can be set together without redrawing multiple
 		 * times in between each property change.
-		 *
+		 * 
 		 * <p>If you cannot wait until later for the validation to happen, you
 		 * can call <code>validate()</code> to redraw immediately. As an example,
 		 * you might want to validate immediately if you need to access the
 		 * correct <code>width</code> or <code>height</code> values of the UI
 		 * control, since these values are calculated during validation.</p>
-		 *
+		 * 
 		 * @see feathers.core.FeathersControl#validate()
 		 */
 		public function invalidate( flag : String = INVALIDATION_FLAG_ALL ) : void
@@ -1520,8 +1600,8 @@ package feathers.core
 			}
 			if( !this._validationQueue || !this._isInitialized )
 			{
-				// we'll add this component to the queue later, after it has been
-				// added to the stage.
+				//we'll add this component to the queue later, after it has been
+				//added to the stage.
 				return;
 			}
 			if( this._isValidating )
@@ -1531,7 +1611,7 @@ package feathers.core
 					return;
 				}
 				this._invalidateCount++;
-				this._validationQueue.addControl( this, this._invalidateCount >= 10 );
+				this._validationQueue.addControl( this , this._invalidateCount >= 10 );
 				return;
 			}
 			if( isAlreadyInvalid )
@@ -1539,24 +1619,30 @@ package feathers.core
 				return;
 			}
 			this._invalidateCount = 0;
-			this._validationQueue.addControl( this, false );
+			this._validationQueue.addControl( this , false );
 		}
 
 		/**
 		 * @copy feathers.core.IValidating#validate()
-		 *
+		 * 
 		 * @see #invalidate()
 		 */
 		public function validate() : void
 		{
 			if( this._isDisposed )
 			{
-				// disposed components have no reason to validate, but they may
-				// have been left in the queue.
+				//disposed components have no reason to validate, but they may
+				//have been left in the queue.
 				return;
 			}
 			if( !this._isInitialized )
 			{
+				if( this._isInitializing )
+				{
+					//initializing components cannot validate until they've
+					//finished initializing. we'll have to wait.
+					return;
+				}
 				this.initializeInternal();
 			}
 			if( !this.isInvalid() )
@@ -1565,12 +1651,12 @@ package feathers.core
 			}
 			if( this._isValidating )
 			{
-				// we were already validating, and something else told us to
-				// validate. that's bad...
+				//we were already validating, and something else told us to
+				//validate. that's bad...
 				if( this._validationQueue )
 				{
-					// ...so we'll just try to do it later
-					this._validationQueue.addControl( this, true );
+					//...so we'll just try to do it later
+					this._validationQueue.addControl( this , true );
 				}
 				return;
 			}
@@ -1615,7 +1701,7 @@ package feathers.core
 			{
 				return true;
 			}
-			if( !flag ) // return true if any flag is set
+			if( !flag ) //return true if any flag is set
 			{
 				for( flag in this._invalidationFlags )
 				{
@@ -1633,7 +1719,7 @@ package feathers.core
 		 * @see #width
 		 * @see #height
 		 */
-		public function setSize( width : Number, height : Number ) : void
+		public function setSize( width : Number , height : Number ) : void
 		{
 			this.explicitWidth = width;
 			var widthIsNaN : Boolean = width != width;
@@ -1654,7 +1740,7 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal( width, height, true );
+				this.setSizeInternal( width , height , true );
 			}
 		}
 
@@ -1665,18 +1751,20 @@ package feathers.core
 		 * @see #x
 		 * @see #y
 		 */
-		public function move( x : Number, y : Number ) : void
+		public function move( x : Number , y : Number ) : void
 		{
 			this.x = x;
 			this.y = y;
 		}
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#showFocus()
-		 *
 		 * <p>The implementation of this method is provided for convenience, but
 		 * it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
+		 *
+		 * @copy feathers.core.IFocusDisplayObject#showFocus()
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function showFocus() : void
 		{
@@ -1690,11 +1778,13 @@ package feathers.core
 		}
 
 		/**
-		 * @copy feathers.core.IFocusDisplayObject#hideFocus()
-		 *
 		 * <p>The implementation of this method is provided for convenience, but
 		 * it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
+		 *
+		 * @copy feathers.core.IFocusDisplayObject#hideFocus()
+		 *
+		 * @see feathers.core.IFocusDisplayObject
 		 */
 		public function hideFocus() : void
 		{
@@ -1713,9 +1803,9 @@ package feathers.core
 		 * and <code>height</code> values have not been set explicitly, and the
 		 * UI control needs to measure itself and choose an "ideal" size.
 		 */
-		protected function setSizeInternal( width : Number, height : Number, canInvalidate : Boolean ) : Boolean
+		protected function setSizeInternal( width : Number , height : Number , canInvalidate : Boolean ) : Boolean
 		{
-			if( this.explicitWidth === this.explicitWidth ) // !isNaN
+			if( this.explicitWidth === this.explicitWidth ) //!isNaN
 			{
 				width = this.explicitWidth;
 			}
@@ -1730,7 +1820,7 @@ package feathers.core
 					width = this._maxWidth;
 				}
 			}
-			if( this.explicitHeight === this.explicitHeight ) // !isNaN
+			if( this.explicitHeight === this.explicitHeight ) //!isNaN
 			{
 				height = this.explicitHeight;
 			}
@@ -1745,11 +1835,11 @@ package feathers.core
 					height = this._maxHeight;
 				}
 			}
-			if( width !== width ) // isNaN
+			if( width !== width ) //isNaN
 			{
 				throw new ArgumentError( ILLEGAL_WIDTH_ERROR );
 			}
-			if( height !== height ) // isNaN
+			if( height !== height ) //isNaN
 			{
 				throw new ArgumentError( ILLEGAL_HEIGHT_ERROR );
 			}
@@ -1796,6 +1886,7 @@ package feathers.core
 		 */
 		protected function initialize() : void
 		{
+
 		}
 
 		/**
@@ -1805,6 +1896,7 @@ package feathers.core
 		 */
 		protected function draw() : void
 		{
+
 		}
 
 		/**
@@ -1853,7 +1945,7 @@ package feathers.core
 					}
 					else
 					{
-						this.setChildIndex( this._focusIndicatorSkin, this.numChildren - 1 );
+						this.setChildIndex( this._focusIndicatorSkin , this.numChildren - 1 );
 					}
 				}
 				else if( this._focusIndicatorSkin.parent )
@@ -1881,7 +1973,7 @@ package feathers.core
 				this._hitArea.width = this.actualWidth;
 			}
 			var hitAreaX : Number = (this.actualWidth - this._hitArea.width) / 2;
-			if( hitAreaX !== hitAreaX ) // isNaN
+			if( hitAreaX !== hitAreaX ) //isNaN
 			{
 				this._hitArea.x = 0;
 			}
@@ -1905,7 +1997,7 @@ package feathers.core
 				this._hitArea.height = this.actualHeight;
 			}
 			var hitAreaY : Number = (this.actualHeight - this._hitArea.height) / 2;
-			if( hitAreaY !== hitAreaY ) // isNaN
+			if( hitAreaY !== hitAreaY ) //isNaN
 			{
 				this._hitArea.y = 0;
 			}
@@ -1920,12 +2012,14 @@ package feathers.core
 		 */
 		protected function initializeInternal() : void
 		{
-			if( this._isInitialized )
+			if( this._isInitialized || this._isInitializing )
 			{
 				return;
 			}
+			this._isInitializing = true;
 			this.initialize();
-			this.invalidate(); // invalidate everything
+			this.invalidate(); //invalidate everything
+			this._isInitializing = false;
 			this._isInitialized = true;
 			this.dispatchEventWith( FeathersEventType.INITIALIZE );
 
@@ -1933,7 +2027,7 @@ package feathers.core
 			{
 				this._styleProvider.applyStyles( this );
 			}
-			this._styleNameList.addEventListener( Event.CHANGE, styleNameList_changeHandler );
+			this._styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 		}
 
 		/**
@@ -1984,8 +2078,8 @@ package feathers.core
 			if( this.isInvalid() )
 			{
 				this._invalidateCount = 0;
-				// add to validation queue, if required
-				this._validationQueue.addControl( this, false );
+				//add to validation queue, if required
+				this._validationQueue.addControl( this , false );
 			}
 		}
 
@@ -2017,84 +2111,5 @@ package feathers.core
 			}
 			this._styleProvider.applyStyles( this );
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * Flag to indicate that everything is invalid and should be redrawn.
-		 */
-		public static const INVALIDATION_FLAG_ALL : String = "all";
-		/**
-		 * Invalidation flag to indicate that the state has changed. Used by
-		 * <code>isEnabled</code>, but may be used for other control states too.
-		 *
-		 * @see #isEnabled
-		 */
-		public static const INVALIDATION_FLAG_STATE : String = "state";
-		/**
-		 * Invalidation flag to indicate that the dimensions of the UI control
-		 * have changed.
-		 */
-		public static const INVALIDATION_FLAG_SIZE : String = "size";
-		/**
-		 * Invalidation flag to indicate that the styles or visual appearance of
-		 * the UI control has changed.
-		 */
-		public static const INVALIDATION_FLAG_STYLES : String = "styles";
-		/**
-		 * Invalidation flag to indicate that the skin of the UI control has changed.
-		 */
-		public static const INVALIDATION_FLAG_SKIN : String = "skin";
-		/**
-		 * Invalidation flag to indicate that the layout of the UI control has
-		 * changed.
-		 */
-		public static const INVALIDATION_FLAG_LAYOUT : String = "layout";
-		/**
-		 * Invalidation flag to indicate that the primary data displayed by the
-		 * UI control has changed.
-		 */
-		public static const INVALIDATION_FLAG_DATA : String = "data";
-		/**
-		 * Invalidation flag to indicate that the scroll position of the UI
-		 * control has changed.
-		 */
-		public static const INVALIDATION_FLAG_SCROLL : String = "scroll";
-		/**
-		 * Invalidation flag to indicate that the selection of the UI control
-		 * has changed.
-		 */
-		public static const INVALIDATION_FLAG_SELECTED : String = "selected";
-		/**
-		 * Invalidation flag to indicate that the focus of the UI control has
-		 * changed.
-		 */
-		public static const INVALIDATION_FLAG_FOCUS : String = "focus";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_TEXT_RENDERER : String = "textRenderer";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_TEXT_EDITOR : String = "textEditor";
-		/**
-		 * @private
-		 */
-		protected static const ILLEGAL_WIDTH_ERROR : String = "A component's width cannot be NaN.";
-		/**
-		 * @private
-		 */
-		protected static const ILLEGAL_HEIGHT_ERROR : String = "A component's height cannot be NaN.";
-		/**
-		 * @private
-		 */
-		protected static const ABSTRACT_CLASS_ERROR : String = "FeathersControl is an abstract class. For a lightweight Feathers wrapper, use feathers.controls.LayoutGroup.";
 	}
 }

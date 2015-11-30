@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -8,9 +8,11 @@
 package feathers.controls
 {
 	import feathers.controls.popups.CalloutPopUpContentManager;
+	import feathers.controls.popups.DropDownPopUpContentManager;
+	import feathers.controls.popups.IPersistentPopUpContentManager;
 	import feathers.controls.popups.IPopUpContentManager;
+	import feathers.controls.popups.IPopUpContentManagerWithPrompt;
 	import feathers.controls.popups.VerticalCenteredPopUpContentManager;
-	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.core.FeathersControl;
 	import feathers.core.IFocusDisplayObject;
 	import feathers.core.IToggle;
@@ -30,6 +32,7 @@ package feathers.controls
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.utils.SystemUtil;
 
 	/**
 	 * Dispatched when the pop-up list is opened.
@@ -51,7 +54,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open", type="starling.events.Event")]
+	[Event(name="open" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the pop-up list is closed.
 	 *
@@ -72,7 +76,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the selected item changes.
 	 *
@@ -93,7 +98,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Displays a button that may be triggered to display a pop-up list.
 	 * The list may be customized to display in different ways, such as a
@@ -105,7 +111,7 @@ package feathers.controls
 	 *
 	 * <listing version="3.0">
 	 * var list:PickerList = new PickerList();
-	 *
+	 * 
 	 * list.dataProvider = new ListCollection(
 	 * [
 	 *     { text: "Milk", thumbnail: textureAtlas.getTexture( "milk" ) },
@@ -113,7 +119,7 @@ package feathers.controls
 	 *     { text: "Bread", thumbnail: textureAtlas.getTexture( "bread" ) },
 	 *     { text: "Chicken", thumbnail: textureAtlas.getTexture( "chicken" ) },
 	 * ]);
-	 *
+	 * 
 	 * list.listProperties.itemRendererFactory = function():IListItemRenderer
 	 * {
 	 *     var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
@@ -121,9 +127,9 @@ package feathers.controls
 	 *     renderer.iconSourceField = "thumbnail";
 	 *     return renderer;
 	 * };
-	 *
+	 * 
 	 * list.addEventListener( Event.CHANGE, list_changeHandler );
-	 *
+	 * 
 	 * this.addChild( list );</listing>
 	 *
 	 * @see ../../../help/picker-list.html How to use the Feathers PickerList component
@@ -153,7 +159,14 @@ package feathers.controls
 		{
 			return new List();
 		}
-
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_BUTTON_FACTORY : String = "buttonFactory";
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_LIST_FACTORY : String = "listFactory";
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * button. This variable is <code>protected</code> so that sub-classes
@@ -232,53 +245,20 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _listIsOpenOnTouchBegan : Boolean = false;
-
 		/**
-		 * DEPRECATED: Replaced by <code>buttonStyleName</code>.
+		 * The default value added to the <code>styleNameList</code> of the button.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #buttonStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function get buttonName() : String
-		{
-			return this.buttonStyleName;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON : String = "feathers-picker-list-button";
 		/**
-		 * @private
-		 */
-		protected function set buttonName( value : String ) : void
-		{
-			this.buttonStyleName = value;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>listStyleName</code>.
+		 * The default value added to the <code>styleNameList</code> of the pop-up
+		 * list.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #listStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected function get listName() : String
-		{
-			return this.listStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		protected function set listName( value : String ) : void
-		{
-			this.listStyleName = value;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_LIST : String = "feathers-picker-list-list";
+		
 		/**
 		 * @private
 		 */
@@ -291,7 +271,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _dataProvider : ListCollection;
-
+		
 		/**
 		 * The collection of data displayed by the list.
 		 *
@@ -335,18 +315,18 @@ package feathers.controls
 			var oldSelectedItem : Object = this.selectedItem;
 			if( this._dataProvider )
 			{
-				this._dataProvider.removeEventListener( CollectionEventType.RESET, dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.RESET , dataProvider_multipleEventHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.ADD_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.removeEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_multipleEventHandler );
 			}
 			this._dataProvider = value;
 			if( this._dataProvider )
 			{
-				this._dataProvider.addEventListener( CollectionEventType.RESET, dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler );
+				this._dataProvider.addEventListener( CollectionEventType.RESET , dataProvider_multipleEventHandler );
+				this._dataProvider.addEventListener( CollectionEventType.ADD_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.addEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.addEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_multipleEventHandler );
 			}
 			if( !this._dataProvider || this._dataProvider.length == 0 )
 			{
@@ -356,8 +336,8 @@ package feathers.controls
 			{
 				this.selectedIndex = 0;
 			}
-			// this ensures that Event.CHANGE will dispatch for selectedItem
-			// changing, even if selectedIndex has not changed.
+			//this ensures that Event.CHANGE will dispatch for selectedItem
+			//changing, even if selectedIndex has not changed.
 			if( this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem )
 			{
 				this.dispatchEventWith( Event.CHANGE );
@@ -511,7 +491,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _labelField : String = "label";
-
+		
 		/**
 		 * The field in the selected item that contains the label text to be
 		 * displayed by the picker list's button control. If the selected item
@@ -606,7 +586,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _popUpContentManager : IPopUpContentManager;
-
+		
 		/**
 		 * A manager that handles the details of how to display the pop-up list.
 		 *
@@ -634,15 +614,15 @@ package feathers.controls
 			if( this._popUpContentManager is EventDispatcher )
 			{
 				var dispatcher : EventDispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.removeEventListener( Event.OPEN, popUpContentManager_openHandler );
-				dispatcher.removeEventListener( Event.CLOSE, popUpContentManager_closeHandler );
+				dispatcher.removeEventListener( Event.OPEN , popUpContentManager_openHandler );
+				dispatcher.removeEventListener( Event.CLOSE , popUpContentManager_closeHandler );
 			}
 			this._popUpContentManager = value;
 			if( this._popUpContentManager is EventDispatcher )
 			{
 				dispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.addEventListener( Event.OPEN, popUpContentManager_openHandler );
-				dispatcher.addEventListener( Event.CLOSE, popUpContentManager_closeHandler );
+				dispatcher.addEventListener( Event.OPEN , popUpContentManager_openHandler );
+				dispatcher.addEventListener( Event.CLOSE , popUpContentManager_closeHandler );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -741,7 +721,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _customButtonStyleName : String;
-
+		
 		/**
 		 * A style name to add to the picker list's button sub-component.
 		 * Typically used by a theme to provide different styles to different
@@ -785,37 +765,16 @@ package feathers.controls
 		}
 
 		/**
-		 * DEPRECATED: Replaced by <code>customButtonStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customButtonStyleName
-		 */
-		public function get customButtonName() : String
-		{
-			return this.customButtonStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customButtonName( value : String ) : void
-		{
-			this.customButtonStyleName = value;
-		}
-
-		/**
 		 * @private
 		 */
 		protected var _buttonProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the picker's button
-		 * sub-component. It is a <code>feathers.controls.Button</code>
-		 * instance that is created by <code>buttonFactory</code>.
+		 * An object that stores properties for the picker's button
+		 * sub-component, and the properties will be passed down to the button
+		 * when the picker validates. For a list of available
+		 * properties, refer to
+		 * <a href="Button.html"><code>feathers.controls.Button</code></a>.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -936,7 +895,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _customListStyleName : String;
-
+		
 		/**
 		 * A style name to add to the picker list's list sub-component.
 		 * Typically used by a theme to provide different styles to different
@@ -980,38 +939,16 @@ package feathers.controls
 		}
 
 		/**
-		 * DEPRECATED: Replaced by <code>customListStyleName</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #customListStyleName
-		 */
-		public function get customListName() : String
-		{
-			return this.customListStyleName;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set customListName( value : String ) : void
-		{
-			this.customListStyleName = value;
-		}
-
-		/**
 		 * @private
 		 */
 		protected var _listProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the picker's pop-up
-		 * list sub-component. The pop-up list is a
-		 * <code>feathers.controls.List</code> instance that is created by
-		 * <code>listFactory</code>.
+		 * An object that stores properties for the picker's pop-up list
+		 * sub-component, and the properties will be passed down to the pop-up
+		 * list when the picker validates. For a list of available
+		 * properties, refer to
+		 * <a href="List.html"><code>feathers.controls.List</code></a>.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -1129,6 +1066,18 @@ package feathers.controls
 		}
 
 		/**
+		 * @inheritDoc
+		 */
+		public function get baseline() : Number
+		{
+			if( !this.button )
+			{
+				return this.scaledActualHeight;
+			}
+			return this.scaleY * (this.button.y + this.button.baseline);
+		}
+
+		/**
 		 * Constructor.
 		 */
 		public function PickerList()
@@ -1152,8 +1101,8 @@ package feathers.controls
 				this._popUpContentManager.dispose();
 				this._popUpContentManager = null;
 			}
-			// clearing selection now so that the data provider setter won't
-			// cause a selection change that triggers events.
+			//clearing selection now so that the data provider setter won't
+			//cause a selection change that triggers events.
 			this._selectedIndex = -1;
 			this.dataProvider = null;
 			super.dispose();
@@ -1239,14 +1188,18 @@ package feathers.controls
 				return;
 			}
 			this._isOpenListPending = false;
-			this._popUpContentManager.open( this.list, this );
+			if( this._popUpContentManager is IPopUpContentManagerWithPrompt )
+			{
+				IPopUpContentManagerWithPrompt( this._popUpContentManager ).prompt = this._prompt;
+			}
+			this._popUpContentManager.open( this.list , this );
 			this.list.scrollToDisplayIndex( this._selectedIndex );
 			this.list.validate();
 			if( this._focusManager )
 			{
 				this._focusManager.focus = this.list;
-				this.stage.addEventListener( KeyboardEvent.KEY_UP, stage_keyUpHandler );
-				this.list.addEventListener( FeathersEventType.FOCUS_OUT, list_focusOutHandler );
+				this.stage.addEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
+				this.list.addEventListener( FeathersEventType.FOCUS_OUT , list_focusOutHandler );
 			}
 		}
 
@@ -1267,10 +1220,10 @@ package feathers.controls
 			}
 			this._isCloseListPending = false;
 			this.list.validate();
-			// don't clean up anything from openList() in closeList(). The list
-			// may be closed by removing it from the PopUpManager, which would
-			// result in closeList() never being called.
-			// instead, clean up in the Event.REMOVED_FROM_STAGE listener.
+			//don't clean up anything from openList() in closeList(). The list
+			//may be closed by removing it from the PopUpManager, which would
+			//result in closeList() never being called.
+			//instead, clean up in the Event.REMOVED_FROM_STAGE listener.
 			this._popUpContentManager.close();
 		}
 
@@ -1281,7 +1234,11 @@ package feathers.controls
 		{
 			if( !this._popUpContentManager )
 			{
-				if( DeviceCapabilities.isTablet( Starling.current.nativeStage ) )
+				if( SystemUtil.isDesktop )
+				{
+					this.popUpContentManager = new DropDownPopUpContentManager();
+				}
+				else if( DeviceCapabilities.isTablet( Starling.current.nativeStage ) )
 				{
 					this.popUpContentManager = new CalloutPopUpContentManager();
 				}
@@ -1290,8 +1247,9 @@ package feathers.controls
 					this.popUpContentManager = new VerticalCenteredPopUpContentManager();
 				}
 			}
-		}
 
+		}
+		
 		/**
 		 * @private
 		 */
@@ -1317,15 +1275,15 @@ package feathers.controls
 
 			if( buttonFactoryInvalid || stylesInvalid || selectionInvalid )
 			{
-				// this section asks the button to auto-size again, if our
-				// explicit dimensions aren't set.
-				// set this before buttonProperties is used because it might
-				// contain width or height changes.
-				if( this.explicitWidth !== this.explicitWidth ) // isNaN
+				//this section asks the button to auto-size again, if our
+				//explicit dimensions aren't set.
+				//set this before buttonProperties is used because it might
+				//contain width or height changes.
+				if( this.explicitWidth !== this.explicitWidth ) //isNaN
 				{
 					this.button.width = NaN;
 				}
-				if( this.explicitHeight !== this.explicitHeight ) // isNaN
+				if( this.explicitHeight !== this.explicitHeight ) //isNaN
 				{
 					this.button.height = NaN;
 				}
@@ -1376,10 +1334,16 @@ package feathers.controls
 				this.layout();
 			}
 
-			// final validation to avoid juggler next frame issues
-			// also, to ensure that property changes on the pop-up list are fully
-			// committed
-			this.list.validate();
+			if( this.list.stage )
+			{
+				//final validation to avoid juggler next frame issues
+				//only validate if it's on the display list, though, because the
+				//popUpContentManager may need to place restrictions on
+				//dimensions or make other important changes.
+				//otherwise, the List may create an item renderer for every item
+				//in the data provider, which is not good for performance!
+				this.list.validate();
+			}
 
 			this.handlePendingActions();
 		}
@@ -1402,8 +1366,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -1413,8 +1377,8 @@ package feathers.controls
 			var buttonHeight : Number;
 			if( this._typicalItem )
 			{
-				if( this._typicalItemWidth !== this._typicalItemWidth || // isNaN
-						this._typicalItemHeight !== this._typicalItemHeight ) // isNaN
+				if( this._typicalItemWidth !== this._typicalItemWidth || //isNaN
+						this._typicalItemHeight !== this._typicalItemHeight ) //isNaN
 				{
 					var oldWidth : Number = this.button.width;
 					var oldHeight : Number = this.button.height;
@@ -1445,7 +1409,7 @@ package feathers.controls
 			var newHeight : Number = this.explicitHeight;
 			if( needsWidth )
 			{
-				if( buttonWidth === buttonWidth ) // !isNaN
+				if( buttonWidth === buttonWidth ) //!isNaN
 				{
 					newWidth = buttonWidth;
 				}
@@ -1456,7 +1420,7 @@ package feathers.controls
 			}
 			if( needsHeight )
 			{
-				if( buttonHeight === buttonHeight ) // !isNaN
+				if( buttonHeight === buttonHeight ) //!isNaN
 				{
 					newHeight = buttonHeight;
 				}
@@ -1466,7 +1430,7 @@ package feathers.controls
 				}
 			}
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -1493,12 +1457,12 @@ package feathers.controls
 			this.button = Button( factory() );
 			if( this.button is ToggleButton )
 			{
-				// we'll control the value of isSelected manually
+				//we'll control the value of isSelected manually
 				ToggleButton( this.button ).isToggle = false;
 			}
 			this.button.styleNameList.add( buttonStyleName );
-			this.button.addEventListener( TouchEvent.TOUCH, button_touchHandler );
-			this.button.addEventListener( Event.TRIGGERED, button_triggeredHandler );
+			this.button.addEventListener( TouchEvent.TOUCH , button_touchHandler );
+			this.button.addEventListener( Event.TRIGGERED , button_triggeredHandler );
 			this.addChild( this.button );
 		}
 
@@ -1518,7 +1482,7 @@ package feathers.controls
 			if( this.list )
 			{
 				this.list.removeFromParent( false );
-				// disposing separately because the list may not have a parent
+				//disposing separately because the list may not have a parent
 				this.list.dispose();
 				this.list = null;
 			}
@@ -1528,9 +1492,9 @@ package feathers.controls
 			this.list = List( factory() );
 			this.list.focusOwner = this;
 			this.list.styleNameList.add( listStyleName );
-			this.list.addEventListener( Event.CHANGE, list_changeHandler );
-			this.list.addEventListener( Event.TRIGGERED, list_triggeredHandler );
-			this.list.addEventListener( Event.REMOVED_FROM_STAGE, list_removedFromStageHandler );
+			this.list.addEventListener( Event.CHANGE , list_changeHandler );
+			this.list.addEventListener( Event.TRIGGERED , list_triggeredHandler );
+			this.list.addEventListener( Event.REMOVED_FROM_STAGE , list_removedFromStageHandler );
 		}
 
 		/**
@@ -1580,7 +1544,7 @@ package feathers.controls
 			this.button.width = this.actualWidth;
 			this.button.height = this.actualHeight;
 
-			// final validation to avoid juggler next frame issues
+			//final validation to avoid juggler next frame issues
 			this.button.validate();
 		}
 
@@ -1602,7 +1566,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy, name : String ) : void
+		protected function childProperties_onChange( proxy : PropertyProxy , name : String ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -1612,9 +1576,9 @@ package feathers.controls
 		 */
 		protected function dataProvider_multipleEventHandler() : void
 		{
-			// we need to ensure that the pop-up list has received the new
-			// selected index, or it might update the selected index to an
-			// incorrect value after an item is added, removed, or replaced.
+			//we need to ensure that the pop-up list has received the new
+			//selected index, or it might update the selected index to an
+			//incorrect value after an item is added, removed, or replaced.
 			this.validate();
 		}
 
@@ -1625,21 +1589,21 @@ package feathers.controls
 		{
 			if( this._buttonTouchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( this.button, TouchPhase.ENDED, this._buttonTouchPointID );
+				var touch : Touch = event.getTouch( this.button , TouchPhase.ENDED , this._buttonTouchPointID );
 				if( !touch )
 				{
 					return;
 				}
 				this._buttonTouchPointID = -1;
-				// the button will dispatch Event.TRIGGERED before this touch
-				// listener is called, so it is safe to clear this flag.
-				// we're clearing it because Event.TRIGGERED may also be
-				// dispatched after keyboard input.
+				//the button will dispatch Event.TRIGGERED before this touch
+				//listener is called, so it is safe to clear this flag.
+				//we're clearing it because Event.TRIGGERED may also be
+				//dispatched after keyboard input.
 				this._listIsOpenOnTouchBegan = false;
 			}
 			else
 			{
-				touch = event.getTouch( this.button, TouchPhase.BEGAN );
+				touch = event.getTouch( this.button , TouchPhase.BEGAN );
 				if( !touch )
 				{
 					return;
@@ -1671,7 +1635,7 @@ package feathers.controls
 		 */
 		protected function list_changeHandler( event : Event ) : void
 		{
-			if( this._ignoreSelectionChanges )
+			if( this._ignoreSelectionChanges || this._popUpContentManager is IPersistentPopUpContentManager )
 			{
 				return;
 			}
@@ -1695,6 +1659,10 @@ package feathers.controls
 		 */
 		protected function popUpContentManager_closeHandler( event : Event ) : void
 		{
+			if( this._popUpContentManager is IPersistentPopUpContentManager )
+			{
+				this.selectedIndex = this.list.selectedIndex;
+			}
 			if( this._toggleButtonOnOpenAndClose && this.button is IToggle )
 			{
 				IToggle( this.button ).isSelected = false;
@@ -1709,8 +1677,8 @@ package feathers.controls
 		{
 			if( this._focusManager )
 			{
-				this.list.stage.removeEventListener( KeyboardEvent.KEY_UP, stage_keyUpHandler );
-				this.list.removeEventListener( FeathersEventType.FOCUS_OUT, list_focusOutHandler );
+				this.list.stage.removeEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
+				this.list.removeEventListener( FeathersEventType.FOCUS_OUT , list_focusOutHandler );
 			}
 		}
 
@@ -1731,7 +1699,7 @@ package feathers.controls
 		 */
 		protected function list_triggeredHandler( event : Event ) : void
 		{
-			if( !this._isEnabled )
+			if( !this._isEnabled || this._popUpContentManager is IPersistentPopUpContentManager )
 			{
 				return;
 			}
@@ -1775,49 +1743,5 @@ package feathers.controls
 			}
 			super.focusOutHandler( event );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_BUTTON_FACTORY : String = "buttonFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_LIST_FACTORY : String = "listFactory";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the button.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON : String = "feathers-picker-list-button";
-		/**
-		 * DEPRECATED: Replaced by <code>PickerList.DEFAULT_CHILD_STYLE_NAME_BUTTON</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see PickerList#DEFAULT_CHILD_STYLE_NAME_BUTTON
-		 */
-		public static const DEFAULT_CHILD_NAME_BUTTON : String = DEFAULT_CHILD_STYLE_NAME_BUTTON;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the pop-up
-		 * list.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LIST : String = "feathers-picker-list-list";
-		/**
-		 * DEPRECATED: Replaced by <code>PickerList.DEFAULT_CHILD_STYLE_NAME_LIST</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see PickerList#DEFAULT_CHILD_STYLE_NAME_LIST
-		 */
-		public static const DEFAULT_CHILD_NAME_LIST : String = DEFAULT_CHILD_STYLE_NAME_LIST;
 	}
 }

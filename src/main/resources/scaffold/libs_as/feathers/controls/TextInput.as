@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -11,6 +11,9 @@ package feathers.controls
 	import feathers.core.IFeathersControl;
 	import feathers.core.IFocusDisplayObject;
 	import feathers.core.IMultilineTextEditor;
+	import feathers.core.INativeFocusOwner;
+	import feathers.core.IStateContext;
+	import feathers.core.IStateObserver;
 	import feathers.core.ITextBaselineControl;
 	import feathers.core.ITextEditor;
 	import feathers.core.ITextRenderer;
@@ -20,6 +23,7 @@ package feathers.controls
 	import feathers.skins.IStyleProvider;
 	import feathers.skins.StateValueSelector;
 
+	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Mouse;
@@ -51,7 +55,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the user presses the Enter key while the text input
 	 * has focus. This event may not be dispatched at all times. Certain text
@@ -78,7 +83,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 */
-	[Event(name="enter", type="starling.events.Event")]
+	[Event(name="enter" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text input receives focus.
 	 *
@@ -99,7 +105,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn", type="starling.events.Event")]
+	[Event(name="focusIn" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the text input loses focus.
 	 *
@@ -120,7 +127,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut", type="starling.events.Event")]
+	[Event(name="focusOut" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is activated by the text editor. Not
 	 * all text editors will activate a soft keyboard.
@@ -142,7 +150,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_ACTIVATE
 	 */
-	[Event(name="softKeyboardActivate", type="starling.events.Event")]
+	[Event(name="softKeyboardActivate" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the soft keyboard is deactivated by the text editor. Not
 	 * all text editors will activate a soft keyboard.
@@ -164,7 +173,32 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_DEACTIVATE
 	 */
-	[Event(name="softKeyboardDeactivate", type="starling.events.Event")]
+	[Event(name="softKeyboardDeactivate" , type="starling.events.Event")]
+
+	/**
+	 * Dispatched when the display object's state changes.
+	 *
+	 * <p>The properties of the event object have the following values:</p>
+	 * <table class="innertable">
+	 * <tr><th>Property</th><th>Value</th></tr>
+	 * <tr><td><code>bubbles</code></td><td>false</td></tr>
+	 * <tr><td><code>currentTarget</code></td><td>The Object that defines the
+	 *   event listener that handles the event. For example, if you use
+	 *   <code>myButton.addEventListener()</code> to register an event listener,
+	 *   myButton is the value of the <code>currentTarget</code>.</td></tr>
+	 * <tr><td><code>data</code></td><td>null</td></tr>
+	 * <tr><td><code>target</code></td><td>The Object that dispatched the event;
+	 *   it is not always the Object listening for the event. Use the
+	 *   <code>currentTarget</code> property to always access the Object
+	 *   listening for the event.</td></tr>
+	 * </table>
+	 *
+	 * @eventType feathers.events.FeathersEventType.STATE_CHANGE
+	 *
+	 * @see #currentState
+	 */
+	[Event(name="stateChange" , type="starling.events.Event")]
+
 	/**
 	 * A text entry control that allows users to enter and edit a single line of
 	 * uniformly-formatted text.
@@ -188,7 +222,7 @@ package feathers.controls
 	 * @see feathers.core.ITextEditor
 	 * @see feathers.controls.AutoComplete
 	 * @see feathers.controls.TextArea
-	 */ public class TextInput extends FeathersControl implements IFocusDisplayObject, ITextBaselineControl
+	 */ public class TextInput extends FeathersControl implements ITextBaselineControl, INativeFocusOwner, IStateContext
 	{
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>TextInput</code>
@@ -198,6 +232,14 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_PROMPT_FACTORY : String = "promptFactory";
 		/**
 		 * The text editor sub-component.
 		 *
@@ -223,6 +265,26 @@ package feathers.controls
 		 * <p>For internal use in subclasses.</p>
 		 */
 		protected var currentIcon : DisplayObject;
+		/**
+		 * The value added to the <code>styleNameList</code> of the text editor.
+		 * This variable is <code>protected</code> so that sub-classes can
+		 * customize the text editor style name in their constructors instead of
+		 * using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var textEditorStyleName : String = DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR;
+		/**
+		 * The value added to the <code>styleNameList</code> of the prompt text
+		 * renderer. This variable is <code>protected</code> so that sub-classes
+		 * can customize the prompt text renderer style name in their
+		 * constructors instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_PROMPT</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var promptStyleName : String = DEFAULT_CHILD_STYLE_NAME_PROMPT;
 		/**
 		 * @private
 		 */
@@ -271,6 +333,81 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _oldMouseCursor : String = null;
+		/**
+		 * The <code>TextInput</code> is enabled and does not have focus.
+		 */
+		public static const STATE_ENABLED : String = "enabled";
+		/**
+		 * The <code>TextInput</code> is disabled.
+		 */
+		public static const STATE_DISABLED : String = "disabled";
+		/**
+		 * The <code>TextInput</code> is enabled and has focus.
+		 */
+		public static const STATE_FOCUSED : String = "focused";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the text
+		 * editor.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR : String = "feathers-text-input-text-editor";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the
+		 * prompt text renderer.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_PROMPT : String = "feathers-text-input-prompt";
+		/**
+		 * An alternate style name to use with <code>TextInput</code> to allow a
+		 * theme to give it a search input style. If a theme does not provide a
+		 * style for the search text input, the theme will automatically fal
+		 * back to using the default text input style.
+		 *
+		 * <p>An alternate style name should always be added to a component's
+		 * <code>styleNameList</code> before the component is initialized. If
+		 * the style name is added later, it will be ignored.</p>
+		 *
+		 * <p>In the following example, the search style is applied to a text
+		 * input:</p>
+		 *
+		 * <listing version="3.0">
+		 * var input:TextInput = new TextInput();
+		 * input.styleNameList.add( TextInput.ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT );
+		 * this.addChild( input );</listing>
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT : String = "feathers-search-text-input";
+		/**
+		 * The text editor, icon, and prompt will be aligned vertically to the
+		 * top edge of the text input.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * The text editor, icon, and prompt will be aligned vertically to the
+		 * middle of the text input.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * The text editor, icon, and prompt will be aligned vertically to the
+		 * bottom edge of the text input.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * The text editor will fill the full height of the text input (minus
+		 * top and bottom padding).
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
 
 		/**
 		 * @private
@@ -284,7 +421,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _stateNames : Vector.<String> = new <String>
-				[ STATE_ENABLED, STATE_DISABLED, STATE_FOCUSED ];
+				[ STATE_ENABLED , STATE_DISABLED , STATE_FOCUSED ];
 
 		/**
 		 * A list of all valid state names for use with <code>currentState</code>.
@@ -299,43 +436,19 @@ package feathers.controls
 		}
 
 		/**
-		 * @private
-		 */
-		protected var _currentState : String = STATE_ENABLED;
-
-		/**
-		 * The current state of the input.
+		 * A text editor may be an <code>INativeFocusOwner</code>, so we need to
+		 * return the value of its <code>nativeFocus</code> property. If not,
+		 * then we return <code>null</code>.
 		 *
-		 * <p>For internal use in subclasses.</p>
+		 * @see feathers.core.INativeFocusOwner
 		 */
-		protected function get currentState() : String
+		public function get nativeFocus() : InteractiveObject
 		{
-			return this._currentState;
-		}
-
-		/**
-		 * @private
-		 */
-		protected function set currentState( value : String ) : void
-		{
-			if( this._currentState == value )
+			if( this.textEditor is INativeFocusOwner )
 			{
-				return;
+				return INativeFocusOwner( this.textEditor ).nativeFocus;
 			}
-			if( this.stateNames.indexOf( value ) < 0 )
-			{
-				throw new ArgumentError( "Invalid state: " + value + "." );
-			}
-			this._currentState = value;
-			this.invalidate( INVALIDATION_FLAG_STATE );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function get isFocusEnabled() : Boolean
-		{
-			return this._isEditable && super.isFocusEnabled;
+			return null;
 		}
 
 		/**
@@ -360,12 +473,27 @@ package feathers.controls
 			super.isEnabled = value;
 			if( this._isEnabled )
 			{
-				this.currentState = this._hasFocus ? STATE_FOCUSED : STATE_ENABLED;
+				this.changeState( this.hasFocus ? STATE_FOCUSED : STATE_ENABLED );
 			}
 			else
 			{
-				this.currentState = STATE_DISABLED;
+				this.changeState( STATE_DISABLED );
 			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _currentState : String = STATE_ENABLED;
+
+		/**
+		 * The current state of the text input.
+		 *
+		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
+		 */
+		public function get currentState() : String
+		{
+			return this._currentState;
 		}
 
 		/**
@@ -399,7 +527,7 @@ package feathers.controls
 		{
 			if( !value )
 			{
-				// don't allow null or undefined
+				//don't allow null or undefined
 				value = "";
 			}
 			if( this._text == value )
@@ -611,6 +739,8 @@ package feathers.controls
 		 * input.isEditable = false;</listing>
 		 *
 		 * @default true
+		 *
+		 * @see #isSelectable
 		 */
 		public function get isEditable() : Boolean
 		{
@@ -627,6 +757,45 @@ package feathers.controls
 				return;
 			}
 			this._isEditable = value;
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _isSelectable : Boolean = true;
+
+		/**
+		 * If the <code>isEditable</code> property is set to <code>false</code>,
+		 * the <code>isSelectable</code> property determines if the text is
+		 * selectable. If the <code>isEditable</code> property is set to
+		 * <code>true</code>, the text will always be selectable.
+		 *
+		 * <p>In the following example, the text input is not selectable:</p>
+		 *
+		 * <listing version="3.0">
+		 * input.isEditable = false;
+		 * input.isSelectable = false;</listing>
+		 *
+		 * @default true
+		 *
+		 * @see #isEditable
+		 */
+		public function get isSelectable() : Boolean
+		{
+			return this._isSelectable;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set isSelectable( value : Boolean ) : void
+		{
+			if( this._isSelectable == value )
+			{
+				return;
+			}
+			this._isSelectable = value;
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -682,6 +851,53 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _customTextEditorStyleName : String;
+
+		/**
+		 * A style name to add to the text input's text editor sub-component.
+		 * Typically used by a theme to provide different styles to different
+		 * text inputs.
+		 *
+		 * <p>In the following example, a custom text editor style name is
+		 * passed to the text input:</p>
+		 *
+		 * <listing version="3.0">
+		 * input.customTextEditorStyleName = "my-custom-text-input-text-editor";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( StageTextTextEditor ).setFunctionForStyleName( "my-custom-text-input-text-editor",
+		 * setCustomTextInputTextEditorStyles );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #textEditorFactory
+		 */
+		public function get customTextEditorStyleName() : String
+		{
+			return this._customTextEditorStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customTextEditorStyleName( value : String ) : void
+		{
+			if( this._customTextEditorStyleName == value )
+			{
+				return;
+			}
+			this._customTextEditorStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _promptFactory : Function;
 
 		/**
@@ -713,8 +929,6 @@ package feathers.controls
 		 * @see #prompt
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get promptFactory() : Function
 		{
@@ -737,16 +951,63 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _customPromptStyleName : String;
+
+		/**
+		 * A style name to add to the text input's prompt text renderer
+		 * sub-component. Typically used by a theme to provide different styles
+		 * to different text inputs.
+		 *
+		 * <p>In the following example, a custom prompt text renderer style name
+		 * is passed to the text input:</p>
+		 *
+		 * <listing version="3.0">
+		 * input.customPromptStyleName = "my-custom-text-input-prompt";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-text-input-prompt", setCustomTextInputPromptStyles
+		 * );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_PROMPT
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #promptFactory
+		 */
+		public function get customPromptStyleName() : String
+		{
+			return this._customPromptStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customPromptStyleName( value : String ) : void
+		{
+			if( this._customPromptStyleName == value )
+			{
+				return;
+			}
+			this._customPromptStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _promptProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the text input's prompt
-		 * text renderer. The prompt text renderer is an <code>ITextRenderer</code>
-		 * instance that is created by <code>promptFactory</code>. The available
-		 * properties depend on which <code>ITextRenderer</code> implementation
-		 * is returned by <code>promptFactory</code>. The most common
-		 * implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the input's prompt text
+		 * renderer sub-component, and the properties will be passed down to the
+		 * text renderer when the input validates. The available properties
+		 * depend on which <code>ITextRenderer</code> implementation is returned
+		 * by <code>messageFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -771,8 +1032,6 @@ package feathers.controls
 		 * @see #prompt
 		 * @see #promptFactory
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get promptProperties() : Object
 		{
@@ -879,7 +1138,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_ENABLED );
+			this._skinSelector.setValueForState( value , STATE_ENABLED );
 			this.invalidate( INVALIDATION_FLAG_SKIN );
 		}
 
@@ -908,7 +1167,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_FOCUSED );
+			this._skinSelector.setValueForState( value , STATE_FOCUSED );
 			this.invalidate( INVALIDATION_FLAG_SKIN );
 		}
 
@@ -937,7 +1196,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value, STATE_DISABLED );
+			this._skinSelector.setValueForState( value , STATE_DISABLED );
 			this.invalidate( INVALIDATION_FLAG_SKIN );
 		}
 
@@ -1035,7 +1294,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_ENABLED );
+			this._iconSelector.setValueForState( value , STATE_ENABLED );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -1067,7 +1326,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_DISABLED );
+			this._iconSelector.setValueForState( value , STATE_DISABLED );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -1100,7 +1359,7 @@ package feathers.controls
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value, STATE_FOCUSED );
+			this._iconSelector.setValueForState( value , STATE_FOCUSED );
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
 
@@ -1351,7 +1610,7 @@ package feathers.controls
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
 		/**
 		 * The location where the text editor is aligned vertically (on
 		 * the y-axis).
@@ -1391,9 +1650,13 @@ package feathers.controls
 		protected var _textEditorProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the text input's
-		 * text editor. The text editor is an <code>ITextEditor</code> instance
-		 * that is created by <code>textEditorFactory</code>.
+		 * An object that stores properties for the input's text editor
+		 * sub-component, and the properties will be passed down to the
+		 * text editor when the input validates. The available properties
+		 * depend on which <code>ITextEditor</code> implementation is returned
+		 * by <code>textEditorFactory</code>. Refer to
+		 * <a href="../core/ITextEditor.html"><code>feathers.core.ITextEditor</code></a>
+		 * for a list of available text editor implementations.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -1515,14 +1778,14 @@ package feathers.controls
 		public function TextInput()
 		{
 			super();
-			this.addEventListener( TouchEvent.TOUCH, textInput_touchHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, textInput_removedFromStageHandler );
+			this.addEventListener( TouchEvent.TOUCH , textInput_touchHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , textInput_removedFromStageHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point, forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
 		{
 			if( forTouch && (!this.visible || !this.touchable) )
 			{
@@ -1545,8 +1808,44 @@ package feathers.controls
 			{
 				return;
 			}
-			this.selectRange( 0, this._text.length );
+			this.selectRange( 0 , this._text.length );
 			super.showFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose() : void
+		{
+			var skin : DisplayObject = this._skinSelector.defaultValue as DisplayObject;
+			//we don't dispose it if the text input is the parent because it'll
+			//already get disposed in super.dispose()
+			if( skin && skin.parent !== this )
+			{
+				skin.dispose();
+			}
+			for each( var state : String in this.stateNames )
+			{
+				skin = this._skinSelector.getValueForState( state ) as DisplayObject;
+				if( skin && skin.parent !== this )
+				{
+					skin.dispose();
+				}
+			}
+			skin = this._iconSelector.defaultValue as DisplayObject;
+			if( skin && skin.parent !== this )
+			{
+				skin.dispose();
+			}
+			for each( state in this.stateNames )
+			{
+				skin = this._iconSelector.getValueForState( state ) as DisplayObject;
+				if( skin && skin.parent !== this )
+				{
+					skin.dispose();
+				}
+			}
+			super.dispose();
 		}
 
 		/**
@@ -1554,9 +1853,9 @@ package feathers.controls
 		 */
 		public function setFocus() : void
 		{
-			// if the text editor has focus, no need to set focus
-			// if this is invisible, it wouldn't make sense to set focus
-			// if there's a touch point ID, we'll be setting focus on our own
+			//if the text editor has focus, no need to set focus
+			//if this is invisible, it wouldn't make sense to set focus
+			//if there's a touch point ID, we'll be setting focus on our own
 			if( this._textEditorHasFocus || !this.visible || this._touchPointID >= 0 )
 			{
 				return;
@@ -1591,7 +1890,7 @@ package feathers.controls
 		 * or the end index is <code>-1</code>, the text insertion position is
 		 * changed and nothing is selected.
 		 */
-		public function selectRange( beginIndex : int, endIndex : int = -1 ) : void
+		public function selectRange( beginIndex : int , endIndex : int = -1 ) : void
 		{
 			if( endIndex < 0 )
 			{
@@ -1606,13 +1905,13 @@ package feathers.controls
 				throw new RangeError( "Expected end index <= " + this._text.length + ". Received " + endIndex + "." );
 			}
 
-			// if it's invalid, we need to wait until validation before changing
-			// the selection
+			//if it's invalid, we need to wait until validation before changing
+			//the selection
 			if( this.textEditor && (this._isValidating || !this.isInvalid()) )
 			{
 				this._pendingSelectionBeginIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.textEditor.selectRange( beginIndex, endIndex );
+				this.textEditor.selectRange( beginIndex , endIndex );
 			}
 			else
 			{
@@ -1726,8 +2025,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -1741,7 +2040,7 @@ package feathers.controls
 				var oldTextEditorHeight : Number = this.textEditor.height;
 				var oldIgnoreTextChanges : Boolean = this._ignoreTextChanges;
 				this._ignoreTextChanges = true;
-				this.textEditor.setSize( NaN, NaN );
+				this.textEditor.setSize( NaN , NaN );
 				this.textEditor.text = this._typicalText;
 				this.textEditor.measureText( HELPER_POINT );
 				this.textEditor.text = this._text;
@@ -1751,26 +2050,26 @@ package feathers.controls
 			}
 			if( this._prompt !== null )
 			{
-				this.promptTextRenderer.setSize( NaN, NaN );
+				this.promptTextRenderer.setSize( NaN , NaN );
 				this.promptTextRenderer.measureText( HELPER_POINT );
-				typicalTextWidth = Math.max( typicalTextWidth, HELPER_POINT.x );
-				typicalTextHeight = Math.max( typicalTextHeight, HELPER_POINT.y );
+				typicalTextWidth = Math.max( typicalTextWidth , HELPER_POINT.x );
+				typicalTextHeight = Math.max( typicalTextHeight , HELPER_POINT.y );
 			}
 
 			var newWidth : Number = this.explicitWidth;
 			var newHeight : Number = this.explicitHeight;
 			if( needsWidth )
 			{
-				newWidth = Math.max( this._originalSkinWidth, typicalTextWidth + this._paddingLeft + this._paddingRight );
-				if( newWidth !== newWidth ) // isNaN
+				newWidth = Math.max( this._originalSkinWidth , typicalTextWidth + this._paddingLeft + this._paddingRight );
+				if( newWidth !== newWidth ) //isNaN
 				{
 					newWidth = 0;
 				}
 			}
 			if( needsHeight )
 			{
-				newHeight = Math.max( this._originalSkinHeight, typicalTextHeight + this._paddingTop + this._paddingBottom );
-				if( newHeight !== newHeight ) // isNaN
+				newHeight = Math.max( this._originalSkinHeight , typicalTextHeight + this._paddingTop + this._paddingBottom );
+				if( newHeight !== newHeight ) //isNaN
 				{
 					newHeight = 0;
 				}
@@ -1783,7 +2082,7 @@ package feathers.controls
 				this.textEditor.height = oldTextEditorHeight;
 			}
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -1800,20 +2099,26 @@ package feathers.controls
 		{
 			if( this.textEditor )
 			{
-				this.removeChild( DisplayObject( this.textEditor ), true );
-				this.textEditor.removeEventListener( Event.CHANGE, textEditor_changeHandler );
-				this.textEditor.removeEventListener( FeathersEventType.ENTER, textEditor_enterHandler );
-				this.textEditor.removeEventListener( FeathersEventType.FOCUS_IN, textEditor_focusInHandler );
-				this.textEditor.removeEventListener( FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler );
+				this.removeChild( DisplayObject( this.textEditor ) , true );
+				this.textEditor.removeEventListener( Event.CHANGE , textEditor_changeHandler );
+				this.textEditor.removeEventListener( FeathersEventType.ENTER , textEditor_enterHandler );
+				this.textEditor.removeEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
+				this.textEditor.removeEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
 				this.textEditor = null;
 			}
 
 			var factory : Function = this._textEditorFactory != null ? this._textEditorFactory : FeathersControl.defaultTextEditorFactory;
 			this.textEditor = ITextEditor( factory() );
-			this.textEditor.addEventListener( Event.CHANGE, textEditor_changeHandler );
-			this.textEditor.addEventListener( FeathersEventType.ENTER, textEditor_enterHandler );
-			this.textEditor.addEventListener( FeathersEventType.FOCUS_IN, textEditor_focusInHandler );
-			this.textEditor.addEventListener( FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler );
+			var textEditorStyleName : String = this._customTextEditorStyleName != null ? this._customTextEditorStyleName : this.textEditorStyleName;
+			this.textEditor.styleNameList.add( textEditorStyleName );
+			if( this.textEditor is IStateObserver )
+			{
+				IStateObserver( this.textEditor ).stateContext = this;
+			}
+			this.textEditor.addEventListener( Event.CHANGE , textEditor_changeHandler );
+			this.textEditor.addEventListener( FeathersEventType.ENTER , textEditor_enterHandler );
+			this.textEditor.addEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
+			this.textEditor.addEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
 			this.addChild( DisplayObject( this.textEditor ) );
 		}
 
@@ -1824,7 +2129,7 @@ package feathers.controls
 		{
 			if( this.promptTextRenderer )
 			{
-				this.removeChild( DisplayObject( this.promptTextRenderer ), true );
+				this.removeChild( DisplayObject( this.promptTextRenderer ) , true );
 				this.promptTextRenderer = null;
 			}
 
@@ -1835,7 +2140,26 @@ package feathers.controls
 
 			var factory : Function = this._promptFactory != null ? this._promptFactory : FeathersControl.defaultTextRendererFactory;
 			this.promptTextRenderer = ITextRenderer( factory() );
+			var promptStyleName : String = this._customPromptStyleName != null ? this._customPromptStyleName : this.promptStyleName;
+			this.promptTextRenderer.styleNameList.add( promptStyleName );
 			this.addChild( DisplayObject( this.promptTextRenderer ) );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function changeState( state : String ) : void
+		{
+			if( this._currentState == state )
+			{
+				return;
+			}
+			if( this.stateNames.indexOf( state ) < 0 )
+			{
+				throw new ArgumentError( "Invalid state: " + state + "." );
+			}
+			this._currentState = state;
+			this.invalidate( INVALIDATION_FLAG_STATE );
 		}
 
 		/**
@@ -1865,7 +2189,7 @@ package feathers.controls
 						endIndex = textLength;
 					}
 				}
-				this.selectRange( startIndex, endIndex );
+				this.selectRange( startIndex , endIndex );
 			}
 		}
 
@@ -1878,6 +2202,7 @@ package feathers.controls
 			this.textEditor.maxChars = this._maxChars;
 			this.textEditor.restrict = this._restrict;
 			this.textEditor.isEditable = this._isEditable;
+			this.textEditor.isSelectable = this._isSelectable;
 			for( var propertyName : String in this._textEditorProperties )
 			{
 				var propertyValue : Object = this._textEditorProperties[ propertyName ];
@@ -1913,25 +2238,25 @@ package feathers.controls
 			var oldSkin : DisplayObject = this.currentBackground;
 			if( this._stateToSkinFunction != null )
 			{
-				this.currentBackground = DisplayObject( this._stateToSkinFunction( this, this._currentState, oldSkin ) );
+				this.currentBackground = DisplayObject( this._stateToSkinFunction( this , this._currentState , oldSkin ) );
 			}
 			else
 			{
-				this.currentBackground = DisplayObject( this._skinSelector.updateValue( this, this._currentState, this.currentBackground ) );
+				this.currentBackground = DisplayObject( this._skinSelector.updateValue( this , this._currentState , this.currentBackground ) );
 			}
 			if( this.currentBackground != oldSkin )
 			{
 				if( oldSkin )
 				{
-					this.removeChild( oldSkin, false );
+					this.removeChild( oldSkin , false );
 				}
 				if( this.currentBackground )
 				{
-					this.addChildAt( this.currentBackground, 0 );
+					this.addChildAt( this.currentBackground , 0 );
 				}
 			}
-			if( this.currentBackground && (this._originalSkinWidth !== this._originalSkinWidth || // isNaN
-					this._originalSkinHeight !== this._originalSkinHeight) ) // isNaN
+			if( this.currentBackground && (this._originalSkinWidth !== this._originalSkinWidth || //isNaN
+					this._originalSkinHeight !== this._originalSkinHeight) ) //isNaN
 			{
 				if( this.currentBackground is IValidating )
 				{
@@ -1952,11 +2277,11 @@ package feathers.controls
 			var oldIcon : DisplayObject = this.currentIcon;
 			if( this._stateToIconFunction != null )
 			{
-				this.currentIcon = DisplayObject( this._stateToIconFunction( this, this._currentState, oldIcon ) );
+				this.currentIcon = DisplayObject( this._stateToIconFunction( this , this._currentState , oldIcon ) );
 			}
 			else
 			{
-				this.currentIcon = DisplayObject( this._iconSelector.updateValue( this, this._currentState, this.currentIcon ) );
+				this.currentIcon = DisplayObject( this._iconSelector.updateValue( this , this._currentState , this.currentIcon ) );
 			}
 			if( this.currentIcon is IFeathersControl )
 			{
@@ -1966,13 +2291,13 @@ package feathers.controls
 			{
 				if( oldIcon )
 				{
-					this.removeChild( oldIcon, false );
+					this.removeChild( oldIcon , false );
 				}
 				if( this.currentIcon )
 				{
-					// we want the icon to appear below the text editor
+					//we want the icon to appear below the text editor
 					var index : int = this.getChildIndex( DisplayObject( this.textEditor ) );
-					this.addChildAt( this.currentIcon, index );
+					this.addChildAt( this.currentIcon , index );
 				}
 			}
 		}
@@ -2023,12 +2348,12 @@ package feathers.controls
 			var isMultiline : Boolean = this.textEditor is IMultilineTextEditor && IMultilineTextEditor( this.textEditor ).multiline;
 			if( isMultiline || this._verticalAlign == VERTICAL_ALIGN_JUSTIFY )
 			{
-				// multiline is treated the same as justify
+				//multiline is treated the same as justify
 				this.textEditor.height = this.actualHeight - this._paddingTop - this._paddingBottom;
 			}
 			else
 			{
-				// clear the height and auto-size instead
+				//clear the height and auto-size instead
 				this.textEditor.height = NaN;
 			}
 			this.textEditor.validate();
@@ -2110,7 +2435,7 @@ package feathers.controls
 						}
 						break;
 					}
-					default: // middle
+					default: //middle
 					{
 						this.textEditor.y = biggerBaseline - this.textEditor.baseline + this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2;
 						if( this.promptTextRenderer )
@@ -2135,11 +2460,11 @@ package feathers.controls
 			{
 				return;
 			}
-			touch.getLocation( this.stage, HELPER_POINT );
-			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT, true ) );
+			touch.getLocation( this.stage , HELPER_POINT );
+			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
 			if( isInBounds && !this._textEditorHasFocus )
 			{
-				this.textEditor.globalToLocal( HELPER_POINT, HELPER_POINT );
+				this.textEditor.globalToLocal( HELPER_POINT , HELPER_POINT );
 				this._isWaitingToSetFocus = false;
 				this.textEditor.setFocus( HELPER_POINT );
 			}
@@ -2148,7 +2473,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy, name : Object ) : void
+		protected function childProperties_onChange( proxy : PropertyProxy , name : Object ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -2177,7 +2502,7 @@ package feathers.controls
 		 */
 		protected function textInput_touchHandler( event : TouchEvent ) : void
 		{
-			if( !this._isEnabled || !this._isEditable )
+			if( !this._isEnabled )
 			{
 				this._touchPointID = -1;
 				return;
@@ -2185,7 +2510,7 @@ package feathers.controls
 
 			if( this._touchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( this, TouchPhase.ENDED, this._touchPointID );
+				var touch : Touch = event.getTouch( this , TouchPhase.ENDED , this._touchPointID );
 				if( !touch )
 				{
 					return;
@@ -2198,7 +2523,7 @@ package feathers.controls
 			}
 			else
 			{
-				touch = event.getTouch( this, TouchPhase.BEGAN );
+				touch = event.getTouch( this , TouchPhase.BEGAN );
 				if( touch )
 				{
 					this._touchPointID = touch.id;
@@ -2208,7 +2533,7 @@ package feathers.controls
 					}
 					return;
 				}
-				touch = event.getTouch( this, TouchPhase.HOVER );
+				touch = event.getTouch( this , TouchPhase.HOVER );
 				if( touch )
 				{
 					if( Mouse.supportsNativeCursor && !this._oldMouseCursor )
@@ -2219,7 +2544,7 @@ package feathers.controls
 					return;
 				}
 
-				// end hover
+				//end hover
 				if( Mouse.supportsNativeCursor && this._oldMouseCursor )
 				{
 					Mouse.cursor = this._oldMouseCursor;
@@ -2259,12 +2584,16 @@ package feathers.controls
 				return;
 			}
 			this._textEditorHasFocus = true;
-			this.currentState = STATE_FOCUSED;
-			if( this._focusManager && this._isFocusEnabled )
+			this.changeState( STATE_FOCUSED );
+			if( this._focusManager && this.isFocusEnabled && this._focusManager.focus !== this )
 			{
+				//if setFocus() was called manually, we need to notify the focus
+				//manager (unless isFocusEnabled is false).
+				//if the focus manager already knows that we have focus, it will
+				//simply return without doing anything.
 				this._focusManager.focus = this;
 			}
-			else
+			else if( !this._focusManager )
 			{
 				this.dispatchEventWith( FeathersEventType.FOCUS_IN );
 			}
@@ -2276,15 +2605,14 @@ package feathers.controls
 		protected function textEditor_focusOutHandler( event : Event ) : void
 		{
 			this._textEditorHasFocus = false;
-			this.currentState = this._isEnabled ? STATE_ENABLED : STATE_DISABLED;
-			if( this._focusManager && this._isFocusEnabled )
+			this.changeState( this._isEnabled ? STATE_ENABLED : STATE_DISABLED );
+			if( this._focusManager && this._focusManager.focus === this )
 			{
-				if( this._focusManager.focus == this )
-				{
-					this._focusManager.focus = null;
-				}
+				//if clearFocus() was called manually, we need to notify the
+				//focus manager if it still thinks we have focus.
+				this._focusManager.focus = null;
 			}
-			else
+			else if( !this._focusManager )
 			{
 				this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
 			}
@@ -2315,86 +2643,5 @@ package feathers.controls
 			super.focusOutHandler( event );
 			this.textEditor.clearFocus();
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_PROMPT_FACTORY : String = "promptFactory";
-		/**
-		 * The <code>TextInput</code> is enabled and does not have focus.
-		 */
-		public static const STATE_ENABLED : String = "enabled";
-		/**
-		 * The <code>TextInput</code> is disabled.
-		 */
-		public static const STATE_DISABLED : String = "disabled";
-		/**
-		 * The <code>TextInput</code> is enabled and has focus.
-		 */
-		public static const STATE_FOCUSED : String = "focused";
-		/**
-		 * An alternate style name to use with <code>TextInput</code> to allow a
-		 * theme to give it a search input style. If a theme does not provide a
-		 * style for the search text input, the theme will automatically fal
-		 * back to using the default text input style.
-		 *
-		 * <p>An alternate style name should always be added to a component's
-		 * <code>styleNameList</code> before the component is initialized. If
-		 * the style name is added later, it will be ignored.</p>
-		 *
-		 * <p>In the following example, the search style is applied to a text
-		 * input:</p>
-		 *
-		 * <listing version="3.0">
-		 * var input:TextInput = new TextInput();
-		 * input.styleNameList.add( TextInput.ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT );
-		 * this.addChild( input );</listing>
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT : String = "feathers-search-text-input";
-		/**
-		 * DEPRECATED: Replaced by <code>TextInput.ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see TextInput#ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT
-		 */
-		public static const ALTERNATE_NAME_SEARCH_TEXT_INPUT : String = ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT;
-		/**
-		 * The text editor, icon, and prompt will be aligned vertically to the
-		 * top edge of the text input.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * The text editor, icon, and prompt will be aligned vertically to the
-		 * middle of the text input.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * The text editor, icon, and prompt will be aligned vertically to the
-		 * bottom edge of the text input.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * The text editor will fill the full height of the text input (minus
-		 * top and bottom padding).
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
 	}
 }

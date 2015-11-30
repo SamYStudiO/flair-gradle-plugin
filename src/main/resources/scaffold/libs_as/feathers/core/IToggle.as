@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -27,7 +27,8 @@ package feathers.core
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * An interface for something that may be selected.
 	 */ public interface IToggle extends IFeathersControl
@@ -36,7 +37,7 @@ package feathers.core
 		 * Indicates if the IToggle is selected or not.
 		 */
 		function get isSelected() : Boolean;
-
+		
 		/**
 		 * @private
 		 */

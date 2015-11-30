@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -13,7 +13,7 @@ package feathers.data
 	 * An <code>IListCollectionDataDescriptor</code> implementation for
 	 * XMLLists. Has some limitations due to certain things that cannot be done
 	 * to XMLLists.
-	 *
+	 * 
 	 * @see ListCollection
 	 * @see IListCollectionDataDescriptor
 	 */
@@ -38,7 +38,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemAt( data : Object, index : int ) : Object
+		public function getItemAt( data : Object , index : int ) : Object
 		{
 			this.checkForCorrectDataType( data );
 			return data[ index ];
@@ -47,7 +47,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function setItemAt( data : Object, item : Object, index : int ) : void
+		public function setItemAt( data : Object , item : Object , index : int ) : void
 		{
 			this.checkForCorrectDataType( data );
 			data[ index ] = XML( item );
@@ -56,12 +56,12 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function addItemAt( data : Object, item : Object, index : int ) : void
+		public function addItemAt( data : Object , item : Object , index : int ) : void
 		{
 			this.checkForCorrectDataType( data );
 
-			// wow, this is weird. unless I have failed epicly, I can find no
-			// other way to insert an element into an XMLList at a specific index.
+			//wow, this is weird. unless I have failed epicly, I can find no 
+			//other way to insert an element into an XMLList at a specific index.
 			var dataClone : XMLList = (data as XMLList).copy();
 			data[ index ] = item;
 			var listLength : int = dataClone.length();
@@ -74,7 +74,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function removeItemAt( data : Object, index : int ) : Object
+		public function removeItemAt( data : Object , index : int ) : Object
 		{
 			this.checkForCorrectDataType( data );
 			var item : XML = data[ index ];
@@ -99,7 +99,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemIndex( data : Object, item : Object ) : int
+		public function getItemIndex( data : Object , item : Object ) : int
 		{
 			this.checkForCorrectDataType( data );
 			var list : XMLList = data as XMLList;

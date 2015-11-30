@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -29,7 +29,8 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open", type="starling.events.Event")]
+	[Event(name="open" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the pop-up content closes.
 	 *
@@ -50,7 +51,8 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * Automatically manages pop-up content layout and positioning.
 	 */ public interface IPopUpContentManager
@@ -66,7 +68,7 @@ package feathers.controls.popups
 		 * @param content        The content for the pop-up content manager to display.
 		 * @param source        The source of the pop-up. May be used to position and/or size the pop-up. May be completely ignored instead.
 		 */
-		function open( content : DisplayObject, source : DisplayObject ) : void;
+		function open( content : DisplayObject , source : DisplayObject ) : void;
 
 		/**
 		 * Closes the pop-up content. If it is not opened, nothing happens.

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -161,7 +161,7 @@ package feathers.motion.transitions
 		/**
 		 * Constructor.
 		 */
-		public function OldFadeNewSlideTransitionManager( navigator : ScreenNavigator, quickStackScreenClass : Class = null, quickStackScreenID : String = null )
+		public function OldFadeNewSlideTransitionManager( navigator : ScreenNavigator , quickStackScreenClass : Class = null , quickStackScreenID : String = null )
 		{
 			if( !navigator )
 			{
@@ -198,7 +198,7 @@ package feathers.motion.transitions
 		 * The function passed to the <code>transition</code> property of the
 		 * <code>ScreenNavigator</code>.
 		 */
-		protected function onTransition( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 		{
 			if( this.skipNextTransition )
 			{
@@ -218,9 +218,9 @@ package feathers.motion.transitions
 			{
 				if( this._crossfadeTransition === null )
 				{
-					this._crossfadeTransition = Fade.createCrossfadeTransition( this._duration, this._ease, {delay : this._delay} );
+					this._crossfadeTransition = Fade.createCrossfadeTransition( this._duration , this._ease , {delay : this._delay} );
 				}
-				this._crossfadeTransition( oldScreen, null, onComplete );
+				this._crossfadeTransition( oldScreen , null , onComplete );
 				onComplete = null;
 			}
 			if( !newScreen )
@@ -233,7 +233,7 @@ package feathers.motion.transitions
 				newScreenClassAndID += "~" + IScreen( newScreen ).screenID;
 			}
 			var stackIndex : int = this._stack.indexOf( newScreenClassAndID );
-			if( stackIndex < 0 ) // push
+			if( stackIndex < 0 ) //push
 			{
 				var oldScreenClassAndID : String = getQualifiedClassName( oldScreen );
 				if( oldScreen is IScreen )
@@ -244,19 +244,19 @@ package feathers.motion.transitions
 
 				if( this._pushSlideTransition === null )
 				{
-					this._pushSlideTransition = Slide.createSlideLeftTransition( this._duration, this._ease, {delay : this._delay} );
+					this._pushSlideTransition = Slide.createSlideLeftTransition( this._duration , this._ease , {delay : this._delay} );
 				}
-				this._pushSlideTransition( null, newScreen, onComplete );
+				this._pushSlideTransition( null , newScreen , onComplete );
 			}
-			else // pop
+			else //pop
 			{
 				this._stack.length = stackIndex;
 
 				if( this._popSlideTransition === null )
 				{
-					this._popSlideTransition = Slide.createSlideRightTransition( this._duration, this._ease, {delay : this._delay} );
+					this._popSlideTransition = Slide.createSlideRightTransition( this._duration , this._ease , {delay : this._delay} );
 				}
-				this._popSlideTransition( null, newScreen, onComplete );
+				this._popSlideTransition( null , newScreen , onComplete );
 			}
 			newScreen.alpha = 1;
 		}

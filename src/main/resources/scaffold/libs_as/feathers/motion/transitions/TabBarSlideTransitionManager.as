@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -104,7 +104,7 @@ package feathers.motion.transitions
 		/**
 		 * Constructor.
 		 */
-		public function TabBarSlideTransitionManager( navigator : ScreenNavigator, tabBar : TabBar )
+		public function TabBarSlideTransitionManager( navigator : ScreenNavigator , tabBar : TabBar )
 		{
 			if( !navigator )
 			{
@@ -113,7 +113,7 @@ package feathers.motion.transitions
 			this.navigator = navigator;
 			this.tabBar = tabBar;
 			this._activeIndex = this._pendingIndex = tabBar.selectedIndex;
-			this.tabBar.addEventListener( Event.CHANGE, tabBar_changeHandler );
+			this.tabBar.addEventListener( Event.CHANGE , tabBar_changeHandler );
 			this.navigator.transition = this.onTransition;
 		}
 
@@ -121,7 +121,7 @@ package feathers.motion.transitions
 		 * The function passed to the <code>transition</code> property of the
 		 * <code>ScreenNavigator</code>.
 		 */
-		protected function onTransition( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 		{
 			this._oldScreen = oldScreen;
 			this._newScreen = newScreen;
@@ -183,8 +183,8 @@ package feathers.motion.transitions
 					activeTransition_onUpdate = this.activeTransitionFromLeft_onUpdate;
 				}
 				this._savedOtherTarget = this._oldScreen;
-				this._activeTransition = new Tween( this._newScreen, this.duration, this.ease );
-				this._activeTransition.animate( "x", 0 );
+				this._activeTransition = new Tween( this._newScreen , this.duration , this.ease );
+				this._activeTransition.animate( "x" , 0 );
 				this._activeTransition.delay = this.delay;
 				this._activeTransition.onUpdate = activeTransition_onUpdate;
 				this._activeTransition.onComplete = activeTransition_onComplete;
@@ -242,9 +242,9 @@ package feathers.motion.transitions
 			this._pendingIndex = this.tabBar.selectedIndex;
 			if( this._pendingIndex == this._activeIndex )
 			{
-				// someone is changing tabs very quickly, and they just went back
-				// to the tab we're currently transitioning to. cancel the next
-				// transition.
+				//someone is changing tabs very quickly, and they just went back
+				//to the tab we're currently transitioning to. cancel the next
+				//transition.
 				this._isWaitingOnTabBarChange = true;
 				return;
 			}

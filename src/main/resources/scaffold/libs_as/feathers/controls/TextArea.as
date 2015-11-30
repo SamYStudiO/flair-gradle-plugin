@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -9,11 +9,14 @@ package feathers.controls
 {
 	import feathers.controls.text.ITextEditorViewPort;
 	import feathers.controls.text.TextFieldTextEditorViewPort;
-	import feathers.core.IFocusDisplayObject;
+	import feathers.core.INativeFocusOwner;
+	import feathers.core.IStateContext;
+	import feathers.core.IStateObserver;
 	import feathers.core.PropertyProxy;
 	import feathers.events.FeathersEventType;
 	import feathers.skins.IStyleProvider;
 
+	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -45,7 +48,32 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
+	/**
+	 * Dispatched when the display object's state changes.
+	 *
+	 * <p>The properties of the event object have the following values:</p>
+	 * <table class="innertable">
+	 * <tr><th>Property</th><th>Value</th></tr>
+	 * <tr><td><code>bubbles</code></td><td>false</td></tr>
+	 * <tr><td><code>currentTarget</code></td><td>The Object that defines the
+	 *   event listener that handles the event. For example, if you use
+	 *   <code>myButton.addEventListener()</code> to register an event listener,
+	 *   myButton is the value of the <code>currentTarget</code>.</td></tr>
+	 * <tr><td><code>data</code></td><td>null</td></tr>
+	 * <tr><td><code>target</code></td><td>The Object that dispatched the event;
+	 *   it is not always the Object listening for the event. Use the
+	 *   <code>currentTarget</code> property to always access the Object
+	 *   listening for the event.</td></tr>
+	 * </table>
+	 *
+	 * @eventType feathers.events.FeathersEventType.STATE_CHANGE
+	 *
+	 * @see #currentState
+	 */
+	[Event(name="stateChange" , type="starling.events.Event")]
+
 	/**
 	 * A text entry control that allows users to enter and edit multiple lines
 	 * of uniformly-formatted text with the ability to scroll.
@@ -64,14 +92,14 @@ package feathers.controls
 	 *
 	 * <listing version="3.0">
 	 * var textArea:TextArea = new TextArea();
-	 * textArea.text = "Hello\nWorld"; // it's multiline!
+	 * textArea.text = "Hello\nWorld"; //it's multiline!
 	 * textArea.selectRange( 0, textArea.text.length );
 	 * textArea.addEventListener( Event.CHANGE, input_changeHandler );
 	 * this.addChild( textArea );</listing>
 	 *
 	 * @see ../../../help/text-area.html How to use the Feathers TextArea component
 	 * @see feathers.controls.TextInput
-	 */ public class TextArea extends Scroller
+	 */ public class TextArea extends Scroller implements INativeFocusOwner, IStateContext
 	{
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>TextArea</code>
@@ -84,7 +112,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
 		protected var textEditorViewPort : ITextEditorViewPort;
+		/**
+		 * The value added to the <code>styleNameList</code> of the text editor.
+		 * This variable is <code>protected</code> so that sub-classes can
+		 * customize the text editor style name in their constructors instead of
+		 * using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var textEditorStyleName : String = DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR;
 		/**
 		 * @private
 		 */
@@ -113,6 +155,124 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _ignoreTextChanges : Boolean = false;
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_AUTO : String = "auto";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_ON : String = "on";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_OFF : String = "off";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT : String = "fixedFloat";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
+		/**
+		 * The vertical scroll bar will be positioned on the right.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
+		/**
+		 * The vertical scroll bar will be positioned on the left.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH : String = "touch";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_MOUSE : String = "mouse";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_FAST : Number = 0.99;
+		/**
+		 * The <code>TextArea</code> is enabled and does not have focus.
+		 */
+		public static const STATE_ENABLED : String = "enabled";
+		/**
+		 * The <code>TextArea</code> is disabled.
+		 */
+		public static const STATE_DISABLED : String = "disabled";
+		/**
+		 * The <code>TextArea</code> is enabled and has focus.
+		 */
+		public static const STATE_FOCUSED : String = "focused";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the text
+		 * editor.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR : String = "feathers-text-area-text-editor";
 
 		/**
 		 * @private
@@ -126,7 +286,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _stateNames : Vector.<String> = new <String>
-				[ STATE_ENABLED, STATE_DISABLED, STATE_FOCUSED ];
+				[ STATE_ENABLED , STATE_DISABLED , STATE_FOCUSED ];
 
 		/**
 		 * A list of all valid state names for use with <code>currentState</code>.
@@ -141,35 +301,19 @@ package feathers.controls
 		}
 
 		/**
-		 * @private
-		 */
-		protected var _currentState : String = STATE_ENABLED;
-
-		/**
-		 * The current state of the input.
+		 * A text editor may be an <code>INativeFocusOwner</code>, so we need to
+		 * return the value of its <code>nativeFocus</code> property. If not,
+		 * then we return <code>null</code>.
 		 *
-		 * <p>For internal use in subclasses.</p>
+		 * @see feathers.core.INativeFocusOwner
 		 */
-		protected function get currentState() : String
+		public function get nativeFocus() : InteractiveObject
 		{
-			return this._currentState;
-		}
-
-		/**
-		 * @private
-		 */
-		protected function set currentState( value : String ) : void
-		{
-			if( this._currentState == value )
+			if( this.textEditorViewPort is INativeFocusOwner )
 			{
-				return;
+				return INativeFocusOwner( this.textEditorViewPort ).nativeFocus;
 			}
-			if( this.stateNames.indexOf( value ) < 0 )
-			{
-				throw new ArgumentError( "Invalid state: " + value + "." );
-			}
-			this._currentState = value;
-			this.invalidate( INVALIDATION_FLAG_STATE );
+			return null;
 		}
 
 		/**
@@ -179,7 +323,7 @@ package feathers.controls
 		{
 			if( this._isEditable )
 			{
-				// the behavior is different when editable.
+				//the behavior is different when editable.
 				return this._isEnabled && this._isFocusEnabled;
 			}
 			return super.isFocusEnabled;
@@ -207,12 +351,27 @@ package feathers.controls
 			super.isEnabled = value;
 			if( this._isEnabled )
 			{
-				this.currentState = this._hasFocus ? STATE_FOCUSED : STATE_ENABLED;
+				this.changeState( this.hasFocus ? STATE_FOCUSED : STATE_ENABLED );
 			}
 			else
 			{
-				this.currentState = STATE_DISABLED;
+				this.changeState( STATE_DISABLED );
 			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _currentState : String = STATE_ENABLED;
+
+		/**
+		 * The current state of the text area.
+		 *
+		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
+		 */
+		public function get currentState() : String
+		{
+			return this._currentState;
 		}
 
 		/**
@@ -246,7 +405,7 @@ package feathers.controls
 		{
 			if( !value )
 			{
-				// don't allow null or undefined
+				//don't allow null or undefined
 				value = "";
 			}
 			if( this._text == value )
@@ -401,7 +560,7 @@ package feathers.controls
 			{
 				this._backgroundFocusedSkin.visible = false;
 				this._backgroundFocusedSkin.touchable = false;
-				this.addChildAt( this._backgroundFocusedSkin, 0 );
+				this.addChildAt( this._backgroundFocusedSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_SKIN );
 		}
@@ -490,12 +649,63 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _customTextEditorStyleName : String;
+
+		/**
+		 * A style name to add to the text area's text editor sub-component.
+		 * Typically used by a theme to provide different styles to different
+		 * text inputs.
+		 *
+		 * <p>In the following example, a custom text editor style name is
+		 * passed to the text area:</p>
+		 *
+		 * <listing version="3.0">
+		 * textArea.customTextEditorStyleName = "my-custom-text-area-text-editor";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( TextFieldTextEditorViewPort ).setFunctionForStyleName( "my-custom-text-area-text-editor",
+		 * setCustomTextAreaTextEditorStyles );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #textEditorFactory
+		 */
+		public function get customTextEditorStyleName() : String
+		{
+			return this._customTextEditorStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customTextEditorStyleName( value : String ) : void
+		{
+			if( this._customTextEditorStyleName == value )
+			{
+				return;
+			}
+			this._customTextEditorStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+		}
+
+		/**
+		 * @private
+		 */
 		protected var _textEditorProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the text area's text
-		 * editor view port. The text editor view port is an <code>ITextEditorViewPort</code>
-		 * instance that is created by <code>textEditorFactory</code>.
+		 * An object that stores properties for the text area's text editor
+		 * sub-component, and the properties will be passed down to the
+		 * text editor when the text area validates. The available properties
+		 * depend on which <code>ITextEditorViewPort</code> implementation is
+		 * returned by <code>textEditorFactory</code>. Refer to
+		 * <a href="text/ITextEditorViewPort.html"><code>feathers.controls.text.ITextEditorViewPort</code></a>
+		 * for a list of available text editor implementations for text area.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -519,7 +729,6 @@ package feathers.controls
 		 *
 		 * @see #textEditorFactory
 		 * @see feathers.controls.text.ITextEditorViewPort
-		 * @see feathers.controls.text.TextFieldTextEditorViewPort
 		 */
 		public function get textEditorProperties() : Object
 		{
@@ -571,8 +780,8 @@ package feathers.controls
 		{
 			super();
 			this._measureViewPort = false;
-			this.addEventListener( TouchEvent.TOUCH, textArea_touchHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, textArea_removedFromStageHandler );
+			this.addEventListener( TouchEvent.TOUCH , textArea_touchHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , textArea_removedFromStageHandler );
 		}
 
 		/**
@@ -584,8 +793,20 @@ package feathers.controls
 			{
 				return;
 			}
-			this.selectRange( 0, this._text.length );
+			this.selectRange( 0 , this._text.length );
 			super.showFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose() : void
+		{
+			if( this._backgroundFocusedSkin && this._backgroundFocusedSkin.parent !== this )
+			{
+				this._backgroundFocusedSkin.dispose();
+			}
+			super.dispose();
 		}
 
 		/**
@@ -627,7 +848,7 @@ package feathers.controls
 		 * or the end index is <code>-1</code>, the text insertion position is
 		 * changed and nothing is selected.
 		 */
-		public function selectRange( startIndex : int, endIndex : int = -1 ) : void
+		public function selectRange( startIndex : int , endIndex : int = -1 ) : void
 		{
 			if( endIndex < 0 )
 			{
@@ -646,7 +867,7 @@ package feathers.controls
 			{
 				this._pendingSelectionStartIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.textEditorViewPort.selectRange( startIndex, endIndex );
+				this.textEditorViewPort.selectRange( startIndex , endIndex );
 			}
 			else
 			{
@@ -707,13 +928,13 @@ package feathers.controls
 			var oldSkin : DisplayObject = this.currentBackgroundSkin;
 			if( this._stateToSkinFunction != null )
 			{
-				this.currentBackgroundSkin = DisplayObject( this._stateToSkinFunction( this, this._currentState, oldSkin ) );
+				this.currentBackgroundSkin = DisplayObject( this._stateToSkinFunction( this , this._currentState , oldSkin ) );
 			}
 			else if( !this._isEnabled && this._backgroundDisabledSkin )
 			{
 				this.currentBackgroundSkin = this._backgroundDisabledSkin;
 			}
-			else if( this._hasFocus && this._backgroundFocusedSkin )
+			else if( this.hasFocus && this._backgroundFocusedSkin )
 			{
 				this.currentBackgroundSkin = this._backgroundFocusedSkin;
 			}
@@ -725,16 +946,16 @@ package feathers.controls
 			{
 				if( oldSkin )
 				{
-					this.removeChild( oldSkin, false );
+					this.removeChild( oldSkin , false );
 				}
 				if( this.currentBackgroundSkin )
 				{
-					this.addChildAt( this.currentBackgroundSkin, 0 );
-					if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) // isNaN
+					this.addChildAt( this.currentBackgroundSkin , 0 );
+					if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) //isNaN
 					{
 						this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 					}
-					if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) // isNaN
+					if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
 					{
 						this.originalBackgroundHeight = this.currentBackgroundSkin.height;
 					}
@@ -756,9 +977,9 @@ package feathers.controls
 		{
 			if( this.textEditorViewPort )
 			{
-				this.textEditorViewPort.removeEventListener( Event.CHANGE, textEditor_changeHandler );
-				this.textEditorViewPort.removeEventListener( FeathersEventType.FOCUS_IN, textEditor_focusInHandler );
-				this.textEditorViewPort.removeEventListener( FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler );
+				this.textEditorViewPort.removeEventListener( Event.CHANGE , textEditor_changeHandler );
+				this.textEditorViewPort.removeEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
+				this.textEditorViewPort.removeEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
 				this.textEditorViewPort = null;
 			}
 
@@ -770,17 +991,40 @@ package feathers.controls
 			{
 				this.textEditorViewPort = new TextFieldTextEditorViewPort();
 			}
-			this.textEditorViewPort.addEventListener( Event.CHANGE, textEditor_changeHandler );
-			this.textEditorViewPort.addEventListener( FeathersEventType.FOCUS_IN, textEditor_focusInHandler );
-			this.textEditorViewPort.addEventListener( FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler );
+			var textEditorStyleName : String = this._customTextEditorStyleName != null ? this._customTextEditorStyleName : this.textEditorStyleName;
+			this.textEditorViewPort.styleNameList.add( textEditorStyleName );
+			if( this.textEditorViewPort is IStateObserver )
+			{
+				IStateObserver( this.textEditorViewPort ).stateContext = this;
+			}
+			this.textEditorViewPort.addEventListener( Event.CHANGE , textEditor_changeHandler );
+			this.textEditorViewPort.addEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
+			this.textEditorViewPort.addEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
 
 			var oldViewPort : ITextEditorViewPort = ITextEditorViewPort( this._viewPort );
 			this.viewPort = this.textEditorViewPort;
 			if( oldViewPort )
 			{
-				// the view port setter won't do this
+				//the view port setter won't do this
 				oldViewPort.dispose();
 			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected function changeState( state : String ) : void
+		{
+			if( this._currentState == state )
+			{
+				return;
+			}
+			if( this.stateNames.indexOf( state ) < 0 )
+			{
+				throw new ArgumentError( "Invalid state: " + state + "." );
+			}
+			this._currentState = state;
+			this.invalidate( INVALIDATION_FLAG_STATE );
 		}
 
 		/**
@@ -802,7 +1046,7 @@ package feathers.controls
 				var endIndex : int = this._pendingSelectionEndIndex;
 				this._pendingSelectionStartIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.selectRange( startIndex, endIndex );
+				this.selectRange( startIndex , endIndex );
 			}
 		}
 
@@ -830,11 +1074,11 @@ package feathers.controls
 			{
 				return;
 			}
-			touch.getLocation( this.stage, HELPER_POINT );
-			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT, true ) );
+			touch.getLocation( this.stage , HELPER_POINT );
+			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
 			if( !this._textEditorHasFocus && isInBounds )
 			{
-				this.globalToLocal( HELPER_POINT, HELPER_POINT );
+				this.globalToLocal( HELPER_POINT , HELPER_POINT );
 				HELPER_POINT.x -= this._paddingLeft;
 				HELPER_POINT.y -= this._paddingTop;
 				this._isWaitingToSetFocus = false;
@@ -857,12 +1101,12 @@ package feathers.controls
 			var verticalScrollBar : DisplayObject = DisplayObject( this.verticalScrollBar );
 			if( this._textAreaTouchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( this, TouchPhase.ENDED, this._textAreaTouchPointID );
+				var touch : Touch = event.getTouch( this , TouchPhase.ENDED , this._textAreaTouchPointID );
 				if( !touch || touch.isTouching( verticalScrollBar ) || touch.isTouching( horizontalScrollBar ) )
 				{
 					return;
 				}
-				this.removeEventListener( Event.SCROLL, textArea_scrollHandler );
+				this.removeEventListener( Event.SCROLL , textArea_scrollHandler );
 				this._textAreaTouchPointID = -1;
 				if( this.textEditorViewPort.setTouchFocusOnEndedPhase )
 				{
@@ -871,7 +1115,7 @@ package feathers.controls
 			}
 			else
 			{
-				touch = event.getTouch( this, TouchPhase.BEGAN );
+				touch = event.getTouch( this , TouchPhase.BEGAN );
 				if( touch )
 				{
 					if( touch.isTouching( verticalScrollBar ) || touch.isTouching( horizontalScrollBar ) )
@@ -883,10 +1127,10 @@ package feathers.controls
 					{
 						this.setFocusOnTextEditorWithTouch( touch );
 					}
-					this.addEventListener( Event.SCROLL, textArea_scrollHandler );
+					this.addEventListener( Event.SCROLL , textArea_scrollHandler );
 					return;
 				}
-				touch = event.getTouch( this, TouchPhase.HOVER );
+				touch = event.getTouch( this , TouchPhase.HOVER );
 				if( touch )
 				{
 					if( touch.isTouching( verticalScrollBar ) || touch.isTouching( horizontalScrollBar ) )
@@ -900,7 +1144,7 @@ package feathers.controls
 					}
 					return;
 				}
-				// end hover
+				//end hover
 				if( Mouse.supportsNativeCursor && this._oldMouseCursor )
 				{
 					Mouse.cursor = this._oldMouseCursor;
@@ -914,7 +1158,7 @@ package feathers.controls
 		 */
 		protected function textArea_scrollHandler( event : Event ) : void
 		{
-			this.removeEventListener( Event.SCROLL, textArea_scrollHandler );
+			this.removeEventListener( Event.SCROLL , textArea_scrollHandler );
 			this._textAreaTouchPointID = -1;
 		}
 
@@ -930,7 +1174,7 @@ package feathers.controls
 			this._isWaitingToSetFocus = false;
 			this._textEditorHasFocus = false;
 			this._textAreaTouchPointID = -1;
-			this.removeEventListener( Event.SCROLL, textArea_scrollHandler );
+			this.removeEventListener( Event.SCROLL , textArea_scrollHandler );
 			if( Mouse.supportsNativeCursor && this._oldMouseCursor )
 			{
 				Mouse.cursor = this._oldMouseCursor;
@@ -956,14 +1200,18 @@ package feathers.controls
 		protected function textEditor_focusInHandler( event : Event ) : void
 		{
 			this._textEditorHasFocus = true;
-			this.currentState = STATE_FOCUSED;
+			this.changeState( STATE_FOCUSED );
 			this._touchPointID = -1;
 			this.invalidate( INVALIDATION_FLAG_STATE );
-			if( this._focusManager )
+			if( this._focusManager && this.isFocusEnabled && this._focusManager.focus !== this )
 			{
+				//if setFocus() was called manually, we need to notify the focus
+				//manager (unless isFocusEnabled is false).
+				//if the focus manager already knows that we have focus, it will
+				//simply return without doing anything.
 				this._focusManager.focus = this;
 			}
-			else
+			else if( !this._focusManager )
 			{
 				this.dispatchEventWith( FeathersEventType.FOCUS_IN );
 			}
@@ -975,13 +1223,18 @@ package feathers.controls
 		protected function textEditor_focusOutHandler( event : Event ) : void
 		{
 			this._textEditorHasFocus = false;
-			this.currentState = this._isEnabled ? STATE_ENABLED : STATE_DISABLED;
+			this.changeState( this._isEnabled ? STATE_ENABLED : STATE_DISABLED );
 			this.invalidate( INVALIDATION_FLAG_STATE );
-			if( this._focusManager )
+			if( this._focusManager && this._focusManager.focus === this )
 			{
-				return;
+				//if clearFocus() was called manually, we need to notify the
+				//focus manager if it still thinks we have focus.
+				this._focusManager.focus = null;
 			}
-			this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+			else if( !this._focusManager )
+			{
+				this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+			}
 		}
 
 		/**
@@ -1022,115 +1275,5 @@ package feathers.controls
 			}
 			super.stage_keyDownHandler( event );
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_ON : String = "on";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
-		/**
-		 * The vertical scroll bar will be positioned on the right.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
-		/**
-		 * The vertical scroll bar will be positioned on the left.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
-		/**
-		 * The <code>TextArea</code> is enabled and does not have focus.
-		 */
-		public static const STATE_ENABLED : String = "enabled";
-		/**
-		 * The <code>TextArea</code> is disabled.
-		 */
-		public static const STATE_DISABLED : String = "disabled";
-		/**
-		 * The <code>TextArea</code> is enabled and has focus.
-		 */
-		public static const STATE_FOCUSED : String = "focused";
 	}
 }

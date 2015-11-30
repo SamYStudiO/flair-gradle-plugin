@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -30,19 +30,59 @@ package feathers.controls.popups
 	import starling.events.TouchPhase;
 
 	/**
-	 * @inheritDoc
+	 * Dispatched when the pop-up content opens.
+	 *
+	 * <p>The properties of the event object have the following values:</p>
+	 * <table class="innertable">
+	 * <tr><th>Property</th><th>Value</th></tr>
+	 * <tr><td><code>bubbles</code></td><td>false</td></tr>
+	 * <tr><td><code>currentTarget</code></td><td>The Object that defines the
+	 *   event listener that handles the event. For example, if you use
+	 *   <code>myButton.addEventListener()</code> to register an event listener,
+	 *   myButton is the value of the <code>currentTarget</code>.</td></tr>
+	 * <tr><td><code>data</code></td><td>null</td></tr>
+	 * <tr><td><code>target</code></td><td>The Object that dispatched the event;
+	 *   it is not always the Object listening for the event. Use the
+	 *   <code>currentTarget</code> property to always access the Object
+	 *   listening for the event.</td></tr>
+	 * </table>
+	 *
+	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open", type="starling.events.Event")]
+	[Event(name="open" , type="starling.events.Event")]
+
 	/**
-	 * @inheritDoc
+	 * Dispatched when the pop-up content closes.
+	 *
+	 * <p>The properties of the event object have the following values:</p>
+	 * <table class="innertable">
+	 * <tr><th>Property</th><th>Value</th></tr>
+	 * <tr><td><code>bubbles</code></td><td>false</td></tr>
+	 * <tr><td><code>currentTarget</code></td><td>The Object that defines the
+	 *   event listener that handles the event. For example, if you use
+	 *   <code>myButton.addEventListener()</code> to register an event listener,
+	 *   myButton is the value of the <code>currentTarget</code>.</td></tr>
+	 * <tr><td><code>data</code></td><td>null</td></tr>
+	 * <tr><td><code>target</code></td><td>The Object that dispatched the event;
+	 *   it is not always the Object listening for the event. Use the
+	 *   <code>currentTarget</code> property to always access the Object
+	 *   listening for the event.</td></tr>
+	 * </table>
+	 *
+	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close", type="starling.events.Event")]
+	[Event(name="close" , type="starling.events.Event")]
+
 	/**
 	 * Displays a pop-up at the center of the stage, filling the vertical space.
 	 * The content will be sized horizontally so that it is no larger than the
 	 * the width or height of the stage (whichever is smaller).
 	 */ public class VerticalCenteredPopUpContentManager extends EventDispatcher implements IPopUpContentManager
 	{
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
 		/**
 		 * @private
 		 */
@@ -165,7 +205,7 @@ package feathers.controls.popups
 		/**
 		 * @inheritDoc
 		 */
-		public function open( content : DisplayObject, source : DisplayObject ) : void
+		public function open( content : DisplayObject , source : DisplayObject ) : void
 		{
 			if( this.isOpen )
 			{
@@ -173,21 +213,21 @@ package feathers.controls.popups
 			}
 
 			this.content = content;
-			PopUpManager.addPopUp( this.content, true, false );
+			PopUpManager.addPopUp( this.content , true , false );
 			if( this.content is IFeathersControl )
 			{
-				this.content.addEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+				this.content.addEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 			}
-			this.content.addEventListener( Event.REMOVED_FROM_STAGE, content_removedFromStageHandler );
+			this.content.addEventListener( Event.REMOVED_FROM_STAGE , content_removedFromStageHandler );
 			this.layout();
 			var stage : Stage = Starling.current.stage;
-			stage.addEventListener( TouchEvent.TOUCH, stage_touchHandler );
-			stage.addEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
+			stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
+			stage.addEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
 
-			// using priority here is a hack so that objects higher up in the
-			// display list have a chance to cancel the event first.
+			//using priority here is a hack so that objects higher up in the
+			//display list have a chance to cancel the event first.
 			var priority : int = -getDisplayObjectDepthFromStage( this.content );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, priority, true );
+			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler , false , priority , true );
 			this.dispatchEventWith( Event.OPEN );
 		}
 
@@ -203,14 +243,14 @@ package feathers.controls.popups
 			var content : DisplayObject = this.content;
 			this.content = null;
 			var stage : Stage = Starling.current.stage;
-			stage.removeEventListener( TouchEvent.TOUCH, stage_touchHandler );
-			stage.removeEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler );
+			stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
+			stage.removeEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
+			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler );
 			if( content is IFeathersControl )
 			{
-				content.removeEventListener( FeathersEventType.RESIZE, content_resizeHandler );
+				content.removeEventListener( FeathersEventType.RESIZE , content_resizeHandler );
 			}
-			content.removeEventListener( Event.REMOVED_FROM_STAGE, content_removedFromStageHandler );
+			content.removeEventListener( Event.REMOVED_FROM_STAGE , content_removedFromStageHandler );
 			if( content.parent )
 			{
 				content.removeFromParent( false );
@@ -242,8 +282,8 @@ package feathers.controls.popups
 			var hasSetBounds : Boolean = false;
 			if( this.content is IFeathersControl )
 			{
-				// if it's a ui control that is able to auto-size, this section
-				// will ensure that the control stays within the required bounds.
+				//if it's a ui control that is able to auto-size, this section
+				//will ensure that the control stays within the required bounds.
 				var uiContent : IFeathersControl = IFeathersControl( this.content );
 				uiContent.minWidth = maxWidth;
 				uiContent.maxWidth = maxWidth;
@@ -256,9 +296,9 @@ package feathers.controls.popups
 			}
 			if( !hasSetBounds )
 			{
-				// if it's not a ui control, and the control's explicit width and
-				// height values are greater than our maximum bounds, then we
-				// will enforce the maximum bounds the hard way.
+				//if it's not a ui control, and the control's explicit width and
+				//height values are greater than our maximum bounds, then we
+				//will enforce the maximum bounds the hard way.
 				if( this.content.width > maxWidth )
 				{
 					this.content.width = maxWidth;
@@ -268,7 +308,7 @@ package feathers.controls.popups
 					this.content.height = maxHeight;
 				}
 			}
-			// round to the nearest pixel to avoid unnecessary smoothing
+			//round to the nearest pixel to avoid unnecessary smoothing
 			this.content.x = Math.round( (stage.stageWidth - this.content.width) / 2 );
 			this.content.y = Math.round( (stage.stageHeight - this.content.height) / 2 );
 		}
@@ -296,14 +336,14 @@ package feathers.controls.popups
 		{
 			if( event.isDefaultPrevented() )
 			{
-				// someone else already handled this one
+				//someone else already handled this one
 				return;
 			}
 			if( event.keyCode != Keyboard.BACK && event.keyCode != Keyboard.ESCAPE )
 			{
 				return;
 			}
-			// don't let the OS handle the event
+			//don't let the OS handle the event
 			event.preventDefault();
 
 			this.close();
@@ -329,13 +369,13 @@ package feathers.controls.popups
 			var stage : Stage = Starling.current.stage;
 			if( this.touchPointID >= 0 )
 			{
-				var touch : Touch = event.getTouch( stage, TouchPhase.ENDED, this.touchPointID );
+				var touch : Touch = event.getTouch( stage , TouchPhase.ENDED , this.touchPointID );
 				if( !touch )
 				{
 					return;
 				}
-				touch.getLocation( stage, HELPER_POINT );
-				var hitTestResult : DisplayObject = stage.hitTest( HELPER_POINT, true );
+				touch.getLocation( stage , HELPER_POINT );
+				var hitTestResult : DisplayObject = stage.hitTest( HELPER_POINT , true );
 				var isInBounds : Boolean = false;
 				if( this.content is DisplayObjectContainer )
 				{
@@ -353,13 +393,13 @@ package feathers.controls.popups
 			}
 			else
 			{
-				touch = event.getTouch( stage, TouchPhase.BEGAN );
+				touch = event.getTouch( stage , TouchPhase.BEGAN );
 				if( !touch )
 				{
 					return;
 				}
-				touch.getLocation( stage, HELPER_POINT );
-				hitTestResult = stage.hitTest( HELPER_POINT, true );
+				touch.getLocation( stage , HELPER_POINT );
+				hitTestResult = stage.hitTest( HELPER_POINT , true );
 				isInBounds = false;
 				if( this.content is DisplayObjectContainer )
 				{
@@ -377,9 +417,5 @@ package feathers.controls.popups
 			}
 		}
 
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

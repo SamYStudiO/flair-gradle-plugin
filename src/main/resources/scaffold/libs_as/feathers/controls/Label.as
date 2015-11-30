@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -34,6 +34,10 @@ package feathers.controls
 		 */
 		public static var globalStyleProvider : IStyleProvider;
 		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
 		 * The text renderer.
 		 *
 		 * @see #createTextRenderer()
@@ -52,6 +56,48 @@ package feathers.controls
 		 * @private
 		 */
 		protected var currentBackgroundSkin : DisplayObject;
+		/**
+		 * An alternate style name to use with <code>Label</code> to allow a
+		 * theme to give it a larger style meant for headings. If a theme does
+		 * not provide a style for a heading label, the theme will automatically
+		 * fall back to using the default style for a label.
+		 *
+		 * <p>An alternate style name should always be added to a component's
+		 * <code>styleNameList</code> before the component is initialized. If
+		 * the style name is added later, it will be ignored.</p>
+		 *
+		 * <p>In the following example, the heading style is applied to a label:</p>
+		 *
+		 * <listing version="3.0">
+		 * var label:Label = new Label();
+		 * label.text = "Very Important Heading";
+		 * label.styleNameList.add( Label.ALTERNATE_STYLE_NAME_HEADING );
+		 * this.addChild( label );</listing>
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const ALTERNATE_STYLE_NAME_HEADING : String = "feathers-heading-label";
+		/**
+		 * An alternate style name to use with <code>Label</code> to allow a
+		 * theme to give it a smaller style meant for less-important details. If
+		 * a theme does not provide a style for a detail label, the theme will
+		 * automatically fall back to using the default style for a label.
+		 *
+		 * <p>An alternate style name should always be added to a component's
+		 * <code>styleNameList</code> before the component is initialized. If
+		 * the style name is added later, it will be ignored.</p>
+		 *
+		 * <p>In the following example, the detail style is applied to a label:</p>
+		 *
+		 * <listing version="3.0">
+		 * var label:Label = new Label();
+		 * label.text = "Less important, detailed text";
+		 * label.styleNameList.add( Label.ALTERNATE_STYLE_NAME_DETAIL );
+		 * this.addChild( label );</listing>
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const ALTERNATE_STYLE_NAME_DETAIL : String = "feathers-detail-label";
 
 		/**
 		 * @private
@@ -101,7 +147,7 @@ package feathers.controls
 
 		/**
 		 * Determines if the text wraps to the next line when it reaches the
-		 * width of the component.
+		 * width (or max width) of the component.
 		 *
 		 * <p>In the following example, the label's text is wrapped:</p>
 		 *
@@ -135,9 +181,9 @@ package feathers.controls
 		{
 			if( !this.textRenderer )
 			{
-				return 0;
+				return this.scaledActualHeight;
 			}
-			return this.textRenderer.y + this.textRenderer.baseline;
+			return this.scaleY * (this.textRenderer.y + this.textRenderer.baseline);
 		}
 
 		/**
@@ -196,12 +242,13 @@ package feathers.controls
 		protected var _textRendererProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the text renderer. The
-		 * text renderer is an <code>ITextRenderer</code> instance. The
-		 * available properties depend on which <code>ITextRenderer</code>
-		 * implementation is returned by <code>textRendererFactory</code>. The
-		 * most common implementations are <code>BitmapFontTextRenderer</code>
-		 * and <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the label's text renderer
+		 * sub-component, and the properties will be passed down to the text
+		 * renderer when the label validates. The available properties
+		 * depend on which <code>ITextRenderer</code> implementation is returned
+		 * by <code>textRendererFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>If the subcomponent has its own subcomponents, their properties
 		 * can be set too, using attribute <code>&#64;</code> notation. For example,
@@ -225,8 +272,6 @@ package feathers.controls
 		 *
 		 * @see #textRendererFactory
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get textRendererProperties() : Object
 		{
@@ -578,8 +623,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -602,7 +647,7 @@ package feathers.controls
 				{
 					newWidth = 0;
 				}
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth && this.originalBackgroundWidth > newWidth ) // !isNaN
+				if( this.originalBackgroundWidth === this.originalBackgroundWidth && this.originalBackgroundWidth > newWidth ) //!isNaN
 				{
 					newWidth = this.originalBackgroundWidth;
 				}
@@ -620,14 +665,14 @@ package feathers.controls
 				{
 					newHeight = 0;
 				}
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight && this.originalBackgroundHeight > newHeight ) // !isNaN
+				if( this.originalBackgroundHeight === this.originalBackgroundHeight && this.originalBackgroundHeight > newHeight ) //!isNaN
 				{
 					newHeight = this.originalBackgroundHeight;
 				}
 				newHeight += this._paddingTop + this._paddingBottom;
 			}
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -644,7 +689,7 @@ package feathers.controls
 		{
 			if( this.textRenderer )
 			{
-				this.removeChild( DisplayObject( this.textRenderer ), true );
+				this.removeChild( DisplayObject( this.textRenderer ) , true );
 				this.textRenderer = null;
 			}
 
@@ -673,19 +718,19 @@ package feathers.controls
 				this.currentBackgroundSkin = newCurrentBackgroundSkin;
 				if( this.currentBackgroundSkin )
 				{
-					this.addChildAt( this.currentBackgroundSkin, 0 );
+					this.addChildAt( this.currentBackgroundSkin , 0 );
 				}
 			}
 			if( this.currentBackgroundSkin )
 			{
-				// force it to the bottom
-				this.setChildIndex( this.currentBackgroundSkin, 0 );
+				//force it to the bottom
+				this.setChildIndex( this.currentBackgroundSkin , 0 );
 
-				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) // isNaN
+				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) //isNaN
 				{
 					this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 				}
-				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) // isNaN
+				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
 				{
 					this.originalBackgroundHeight = this.currentBackgroundSkin.height;
 				}
@@ -745,78 +790,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textRendererProperties_onChange( proxy : PropertyProxy, propertyName : String ) : void
+		protected function textRendererProperties_onChange( proxy : PropertyProxy , propertyName : String ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * An alternate style name to use with <code>Label</code> to allow a
-		 * theme to give it a larger style meant for headings. If a theme does
-		 * not provide a style for a heading label, the theme will automatically
-		 * fall back to using the default style for a label.
-		 *
-		 * <p>An alternate style name should always be added to a component's
-		 * <code>styleNameList</code> before the component is initialized. If
-		 * the style name is added later, it will be ignored.</p>
-		 *
-		 * <p>In the following example, the heading style is applied to a label:</p>
-		 *
-		 * <listing version="3.0">
-		 * var label:Label = new Label();
-		 * label.text = "Very Important Heading";
-		 * label.styleNameList.add( Label.ALTERNATE_STYLE_NAME_HEADING );
-		 * this.addChild( label );</listing>
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const ALTERNATE_STYLE_NAME_HEADING : String = "feathers-heading-label";
-		/**
-		 * DEPRECATED: Replaced by <code>Label.ALTERNATE_STYLE_NAME_HEADING</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Label#ALTERNATE_STYLE_NAME_HEADING
-		 */
-		public static const ALTERNATE_NAME_HEADING : String = ALTERNATE_STYLE_NAME_HEADING;
-		/**
-		 * An alternate style name to use with <code>Label</code> to allow a
-		 * theme to give it a smaller style meant for less-important details. If
-		 * a theme does not provide a style for a detail label, the theme will
-		 * automatically fall back to using the default style for a label.
-		 *
-		 * <p>An alternate style name should always be added to a component's
-		 * <code>styleNameList</code> before the component is initialized. If
-		 * the style name is added later, it will be ignored.</p>
-		 *
-		 * <p>In the following example, the detail style is applied to a label:</p>
-		 *
-		 * <listing version="3.0">
-		 * var label:Label = new Label();
-		 * label.text = "Less important, detailed text";
-		 * label.styleNameList.add( Label.ALTERNATE_STYLE_NAME_DETAIL );
-		 * this.addChild( label );</listing>
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const ALTERNATE_STYLE_NAME_DETAIL : String = "feathers-detail-label";
-		/**
-		 * DEPRECATED: Replaced by <code>Label.ALTERNATE_STYLE_NAME_DETAIL</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Label#ALTERNATE_STYLE_NAME_DETAIL
-		 */
-		public static const ALTERNATE_NAME_DETAIL : String = ALTERNATE_STYLE_NAME_DETAIL;
 	}
 }

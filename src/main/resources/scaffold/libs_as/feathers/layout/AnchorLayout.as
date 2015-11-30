@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -36,7 +36,8 @@ package feathers.layout
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Positions and sizes items by anchoring their edges (or center points)
 	 * to their parent container or to other items.
@@ -45,6 +46,14 @@ package feathers.layout
 	 * @see AnchorLayoutData
 	 */ public class AnchorLayout extends EventDispatcher implements ILayout
 	{
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
+		protected static const CIRCULAR_REFERENCE_ERROR : String = "It is impossible to create this layout due to a circular reference in the AnchorLayoutData.";
 		/**
 		 * @private
 		 */
@@ -72,7 +81,7 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function layout( items : Vector.<DisplayObject>, viewPortBounds : ViewPortBounds = null, result : LayoutBoundsResult = null ) : LayoutBoundsResult
+		public function layout( items : Vector.<DisplayObject> , viewPortBounds : ViewPortBounds = null , result : LayoutBoundsResult = null ) : LayoutBoundsResult
 		{
 			var boundsX : Number = viewPortBounds ? viewPortBounds.x : 0;
 			var boundsY : Number = viewPortBounds ? viewPortBounds.y : 0;
@@ -86,29 +95,29 @@ package feathers.layout
 			var viewPortWidth : Number = explicitWidth;
 			var viewPortHeight : Number = explicitHeight;
 
-			var needsWidth : Boolean = explicitWidth !== explicitWidth; // isNaN
-			var needsHeight : Boolean = explicitHeight !== explicitHeight; // isNaN
+			var needsWidth : Boolean = explicitWidth !== explicitWidth; //isNaN
+			var needsHeight : Boolean = explicitHeight !== explicitHeight; //isNaN
 			if( needsWidth || needsHeight )
 			{
-				this.validateItems( items, true );
-				this.measureViewPort( items, viewPortWidth, viewPortHeight, HELPER_POINT );
+				this.validateItems( items , true );
+				this.measureViewPort( items , viewPortWidth , viewPortHeight , HELPER_POINT );
 				if( needsWidth )
 				{
-					viewPortWidth = Math.min( maxWidth, Math.max( minWidth, HELPER_POINT.x ) );
+					viewPortWidth = Math.min( maxWidth , Math.max( minWidth , HELPER_POINT.x ) );
 				}
 				if( needsHeight )
 				{
-					viewPortHeight = Math.min( maxHeight, Math.max( minHeight, HELPER_POINT.y ) );
+					viewPortHeight = Math.min( maxHeight , Math.max( minHeight , HELPER_POINT.y ) );
 				}
 			}
 			else
 			{
-				this.validateItems( items, false );
+				this.validateItems( items , false );
 			}
 
-			this.layoutWithBounds( items, boundsX, boundsY, viewPortWidth, viewPortHeight );
+			this.layoutWithBounds( items , boundsX , boundsY , viewPortWidth , viewPortHeight );
 
-			this.measureContent( items, viewPortWidth, viewPortHeight, HELPER_POINT );
+			this.measureContent( items , viewPortWidth , viewPortHeight , HELPER_POINT );
 
 			if( !result )
 			{
@@ -124,15 +133,15 @@ package feathers.layout
 		/**
 		 * @inheritDoc
 		 */
-		public function getNearestScrollPositionForIndex( index : int, scrollX : Number, scrollY : Number, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point
+		public function getNearestScrollPositionForIndex( index : int , scrollX : Number , scrollY : Number , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
 		{
-			return this.getScrollPositionForIndex( index, items, x, y, width, height, result );
+			return this.getScrollPositionForIndex( index , items , x , y , width , height , result );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function getScrollPositionForIndex( index : int, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point
+		public function getScrollPositionForIndex( index : int , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
 		{
 			if( !result )
 			{
@@ -146,7 +155,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureViewPort( items : Vector.<DisplayObject>, viewPortWidth : Number, viewPortHeight : Number, result : Point = null ) : Point
+		protected function measureViewPort( items : Vector.<DisplayObject> , viewPortWidth : Number , viewPortHeight : Number , result : Point = null ) : Point
 		{
 			this._helperVector1.length = 0;
 			this._helperVector2.length = 0;
@@ -154,7 +163,7 @@ package feathers.layout
 			HELPER_POINT.y = 0;
 			var mainVector : Vector.<DisplayObject> = items;
 			var otherVector : Vector.<DisplayObject> = this._helperVector1;
-			this.measureVector( items, otherVector, HELPER_POINT );
+			this.measureVector( items , otherVector , HELPER_POINT );
 			var currentLength : Number = otherVector.length;
 			while( currentLength > 0 )
 			{
@@ -168,7 +177,7 @@ package feathers.layout
 					mainVector = this._helperVector2;
 					otherVector = this._helperVector1;
 				}
-				this.measureVector( mainVector, otherVector, HELPER_POINT );
+				this.measureVector( mainVector , otherVector , HELPER_POINT );
 				var oldLength : Number = currentLength;
 				currentLength = otherVector.length;
 				if( oldLength == currentLength )
@@ -191,7 +200,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureVector( items : Vector.<DisplayObject>, unpositionedItems : Vector.<DisplayObject>, result : Point = null ) : Point
+		protected function measureVector( items : Vector.<DisplayObject> , unpositionedItems : Vector.<DisplayObject> , result : Point = null ) : Point
 		{
 			if( !result )
 			{
@@ -214,7 +223,7 @@ package feathers.layout
 					}
 					layoutData = layoutItem.layoutData as AnchorLayoutData;
 				}
-				var isReadyForLayout : Boolean = !layoutData || this.isReadyForLayout( layoutData, i, items, unpositionedItems );
+				var isReadyForLayout : Boolean = !layoutData || this.isReadyForLayout( layoutData , i , items , unpositionedItems );
 				if( !isReadyForLayout )
 				{
 					unpositionedItems[ pushIndex ] = item;
@@ -222,7 +231,7 @@ package feathers.layout
 					continue;
 				}
 
-				this.measureItem( item, result );
+				this.measureItem( item , result );
 			}
 
 			return result;
@@ -231,7 +240,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureItem( item : DisplayObject, result : Point ) : void
+		protected function measureItem( item : DisplayObject , result : Point ) : void
 		{
 			var maxX : Number = result.x;
 			var maxY : Number = result.y;
@@ -242,12 +251,12 @@ package feathers.layout
 				var layoutData : AnchorLayoutData = layoutItem.layoutData as AnchorLayoutData;
 				if( layoutData )
 				{
-					var measurement : Number = this.measureItemHorizontally( layoutItem, layoutData );
+					var measurement : Number = this.measureItemHorizontally( layoutItem , layoutData );
 					if( measurement > maxX )
 					{
 						maxX = measurement;
 					}
-					measurement = this.measureItemVertically( layoutItem, layoutData );
+					measurement = this.measureItemVertically( layoutItem , layoutData );
 					if( measurement > maxY )
 					{
 						maxY = measurement;
@@ -276,20 +285,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureItemHorizontally( item : ILayoutDisplayObject, layoutData : AnchorLayoutData ) : Number
+		protected function measureItemHorizontally( item : ILayoutDisplayObject , layoutData : AnchorLayoutData ) : Number
 		{
 			var itemWidth : Number = item.width;
 			if( layoutData && item is IFeathersControl )
 			{
 				var percentWidth : Number = layoutData.percentWidth;
-				// for some reason, if we don't call a function right here,
-				// compiling with the flex 4.6 SDK will throw a VerifyError
-				// for a stack overflow.
-				// we could change the === check back to !isNaN() instead, but
-				// isNaN() can allocate an object, so we should call a different
-				// function without allocation.
+				//for some reason, if we don't call a function right here,
+				//compiling with the flex 4.6 SDK will throw a VerifyError
+				//for a stack overflow.
+				//we could change the === check back to !isNaN() instead, but
+				//isNaN() can allocate an object, so we should call a different
+				//function without allocation.
 				this.doNothing();
-				if( percentWidth === percentWidth ) // !isNaN
+				if( percentWidth === percentWidth ) //!isNaN
 				{
 					itemWidth = IFeathersControl( item ).minWidth;
 				}
@@ -303,20 +312,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureItemVertically( item : ILayoutDisplayObject, layoutData : AnchorLayoutData ) : Number
+		protected function measureItemVertically( item : ILayoutDisplayObject , layoutData : AnchorLayoutData ) : Number
 		{
 			var itemHeight : Number = item.height;
 			if( layoutData && item is IFeathersControl )
 			{
 				var percentHeight : Number = layoutData.percentHeight;
-				// for some reason, if we don't call a function right here,
-				// compiling with the flex 4.6 SDK will throw a VerifyError
-				// for a stack overflow.
-				// we could change the === check back to !isNaN() instead, but
-				// isNaN() can allocate an object, so we should call a different
-				// function without allocation.
+				//for some reason, if we don't call a function right here,
+				//compiling with the flex 4.6 SDK will throw a VerifyError
+				//for a stack overflow.
+				//we could change the === check back to !isNaN() instead, but
+				//isNaN() can allocate an object, so we should call a different
+				//function without allocation.
 				this.doNothing();
-				if( percentHeight === percentHeight ) // !isNaN
+				if( percentHeight === percentHeight ) //!isNaN
 				{
 					itemHeight = IFeathersControl( item ).minHeight;
 				}
@@ -348,7 +357,7 @@ package feathers.layout
 				if( layoutData )
 				{
 					var top : Number = layoutData.top;
-					var hasTopPosition : Boolean = top === top; // !isNaN
+					var hasTopPosition : Boolean = top === top; //!isNaN
 					if( hasTopPosition )
 					{
 						var topAnchorDisplayObject : DisplayObject = layoutData.topAnchorDisplayObject;
@@ -366,24 +375,24 @@ package feathers.layout
 						top = 0;
 					}
 					var bottom : Number = layoutData.bottom;
-					var hasBottomPosition : Boolean = bottom === bottom; // !isNaN
+					var hasBottomPosition : Boolean = bottom === bottom; //!isNaN
 					if( hasBottomPosition )
 					{
 						var bottomAnchorDisplayObject : DisplayObject = layoutData.bottomAnchorDisplayObject;
 						if( bottomAnchorDisplayObject )
 						{
-							top = Math.max( top, -bottomAnchorDisplayObject.height - bottom + this.getTopOffset( bottomAnchorDisplayObject ) );
+							top = Math.max( top , -bottomAnchorDisplayObject.height - bottom + this.getTopOffset( bottomAnchorDisplayObject ) );
 						}
 					}
 					var verticalCenter : Number = layoutData.verticalCenter;
-					var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; // !isNaN
+					var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; //!isNaN
 					if( hasVerticalCenterPosition )
 					{
 						var verticalCenterAnchorDisplayObject : DisplayObject = layoutData.verticalCenterAnchorDisplayObject;
 						if( verticalCenterAnchorDisplayObject )
 						{
 							var verticalOffset : Number = verticalCenter - Math.round( (item.height - verticalCenterAnchorDisplayObject.height) / 2 );
-							top = Math.max( top, verticalOffset + this.getTopOffset( verticalCenterAnchorDisplayObject ) );
+							top = Math.max( top , verticalOffset + this.getTopOffset( verticalCenterAnchorDisplayObject ) );
 						}
 						else if( verticalCenter > 0 )
 						{
@@ -408,7 +417,7 @@ package feathers.layout
 				if( layoutData )
 				{
 					var right : Number = layoutData.right;
-					var hasRightPosition : Boolean = right === right; // !isNaN
+					var hasRightPosition : Boolean = right === right; //!isNaN
 					if( hasRightPosition )
 					{
 						var rightAnchorDisplayObject : DisplayObject = layoutData.rightAnchorDisplayObject;
@@ -426,24 +435,24 @@ package feathers.layout
 						right = 0;
 					}
 					var left : Number = layoutData.left;
-					var hasLeftPosition : Boolean = left === left; // !isNaN
+					var hasLeftPosition : Boolean = left === left; //!isNaN
 					if( hasLeftPosition )
 					{
 						var leftAnchorDisplayObject : DisplayObject = layoutData.leftAnchorDisplayObject;
 						if( leftAnchorDisplayObject )
 						{
-							right = Math.max( right, -leftAnchorDisplayObject.width - left + this.getRightOffset( leftAnchorDisplayObject ) );
+							right = Math.max( right , -leftAnchorDisplayObject.width - left + this.getRightOffset( leftAnchorDisplayObject ) );
 						}
 					}
 					var horizontalCenter : Number = layoutData.horizontalCenter;
-					var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; // !isNaN
+					var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; //!isNaN
 					if( hasHorizontalCenterPosition )
 					{
 						var horizontalCenterAnchorDisplayObject : DisplayObject = layoutData.horizontalCenterAnchorDisplayObject;
 						if( horizontalCenterAnchorDisplayObject )
 						{
 							var horizontalOffset : Number = -horizontalCenter - Math.round( (item.width - horizontalCenterAnchorDisplayObject.width) / 2 );
-							right = Math.max( right, horizontalOffset + this.getRightOffset( horizontalCenterAnchorDisplayObject ) );
+							right = Math.max( right , horizontalOffset + this.getRightOffset( horizontalCenterAnchorDisplayObject ) );
 						}
 						else if( horizontalCenter < 0 )
 						{
@@ -468,7 +477,7 @@ package feathers.layout
 				if( layoutData )
 				{
 					var bottom : Number = layoutData.bottom;
-					var hasBottomPosition : Boolean = bottom === bottom; // !isNaN
+					var hasBottomPosition : Boolean = bottom === bottom; //!isNaN
 					if( hasBottomPosition )
 					{
 						var bottomAnchorDisplayObject : DisplayObject = layoutData.bottomAnchorDisplayObject;
@@ -486,24 +495,24 @@ package feathers.layout
 						bottom = 0;
 					}
 					var top : Number = layoutData.top;
-					var hasTopPosition : Boolean = top === top; // !isNaN
+					var hasTopPosition : Boolean = top === top; //!isNaN
 					if( hasTopPosition )
 					{
 						var topAnchorDisplayObject : DisplayObject = layoutData.topAnchorDisplayObject;
 						if( topAnchorDisplayObject )
 						{
-							bottom = Math.max( bottom, -topAnchorDisplayObject.height - top + this.getBottomOffset( topAnchorDisplayObject ) );
+							bottom = Math.max( bottom , -topAnchorDisplayObject.height - top + this.getBottomOffset( topAnchorDisplayObject ) );
 						}
 					}
 					var verticalCenter : Number = layoutData.verticalCenter;
-					var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; // !isNaN
+					var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; //!isNaN
 					if( hasVerticalCenterPosition )
 					{
 						var verticalCenterAnchorDisplayObject : DisplayObject = layoutData.verticalCenterAnchorDisplayObject;
 						if( verticalCenterAnchorDisplayObject )
 						{
 							var verticalOffset : Number = -verticalCenter - Math.round( (item.height - verticalCenterAnchorDisplayObject.height) / 2 );
-							bottom = Math.max( bottom, verticalOffset + this.getBottomOffset( verticalCenterAnchorDisplayObject ) );
+							bottom = Math.max( bottom , verticalOffset + this.getBottomOffset( verticalCenterAnchorDisplayObject ) );
 						}
 						else if( verticalCenter < 0 )
 						{
@@ -528,7 +537,7 @@ package feathers.layout
 				if( layoutData )
 				{
 					var left : Number = layoutData.left;
-					var hasLeftPosition : Boolean = left === left; // !isNaN
+					var hasLeftPosition : Boolean = left === left; //!isNaN
 					if( hasLeftPosition )
 					{
 						var leftAnchorDisplayObject : DisplayObject = layoutData.leftAnchorDisplayObject;
@@ -546,24 +555,24 @@ package feathers.layout
 						left = 0;
 					}
 					var right : Number = layoutData.right;
-					var hasRightPosition : Boolean = right === right; // !isNaN;
+					var hasRightPosition : Boolean = right === right; //!isNaN;
 					if( hasRightPosition )
 					{
 						var rightAnchorDisplayObject : DisplayObject = layoutData.rightAnchorDisplayObject;
 						if( rightAnchorDisplayObject )
 						{
-							left = Math.max( left, -rightAnchorDisplayObject.width - right + this.getLeftOffset( rightAnchorDisplayObject ) );
+							left = Math.max( left , -rightAnchorDisplayObject.width - right + this.getLeftOffset( rightAnchorDisplayObject ) );
 						}
 					}
 					var horizontalCenter : Number = layoutData.horizontalCenter;
-					var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; // !isNaN
+					var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; //!isNaN
 					if( hasHorizontalCenterPosition )
 					{
 						var horizontalCenterAnchorDisplayObject : DisplayObject = layoutData.horizontalCenterAnchorDisplayObject;
 						if( horizontalCenterAnchorDisplayObject )
 						{
 							var horizontalOffset : Number = horizontalCenter - Math.round( (item.width - horizontalCenterAnchorDisplayObject.width) / 2 );
-							left = Math.max( left, horizontalOffset + this.getLeftOffset( horizontalCenterAnchorDisplayObject ) );
+							left = Math.max( left , horizontalOffset + this.getLeftOffset( horizontalCenterAnchorDisplayObject ) );
 						}
 						else if( horizontalCenter > 0 )
 						{
@@ -579,13 +588,13 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function layoutWithBounds( items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number ) : void
+		protected function layoutWithBounds( items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number ) : void
 		{
 			this._helperVector1.length = 0;
 			this._helperVector2.length = 0;
 			var mainVector : Vector.<DisplayObject> = items;
 			var otherVector : Vector.<DisplayObject> = this._helperVector1;
-			this.layoutVector( items, otherVector, x, y, width, height );
+			this.layoutVector( items , otherVector , x , y , width , height );
 			var currentLength : Number = otherVector.length;
 			while( currentLength > 0 )
 			{
@@ -599,7 +608,7 @@ package feathers.layout
 					mainVector = this._helperVector2;
 					otherVector = this._helperVector1;
 				}
-				this.layoutVector( mainVector, otherVector, x, y, width, height );
+				this.layoutVector( mainVector , otherVector , x , y , width , height );
 				var oldLength : Number = currentLength;
 				currentLength = otherVector.length;
 				if( oldLength == currentLength )
@@ -616,7 +625,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function layoutVector( items : Vector.<DisplayObject>, unpositionedItems : Vector.<DisplayObject>, boundsX : Number, boundsY : Number, viewPortWidth : Number, viewPortHeight : Number ) : void
+		protected function layoutVector( items : Vector.<DisplayObject> , unpositionedItems : Vector.<DisplayObject> , boundsX : Number , boundsY : Number , viewPortWidth : Number , viewPortHeight : Number ) : void
 		{
 			unpositionedItems.length = 0;
 			var itemCount : int = items.length;
@@ -635,27 +644,27 @@ package feathers.layout
 					continue;
 				}
 
-				var isReadyForLayout : Boolean = this.isReadyForLayout( layoutData, i, items, unpositionedItems );
+				var isReadyForLayout : Boolean = this.isReadyForLayout( layoutData , i , items , unpositionedItems );
 				if( !isReadyForLayout )
 				{
 					unpositionedItems[ pushIndex ] = item;
 					pushIndex++;
 					continue;
 				}
-				this.positionHorizontally( layoutItem, layoutData, boundsX, boundsY, viewPortWidth, viewPortHeight );
-				this.positionVertically( layoutItem, layoutData, boundsX, boundsY, viewPortWidth, viewPortHeight );
+				this.positionHorizontally( layoutItem , layoutData , boundsX , boundsY , viewPortWidth , viewPortHeight );
+				this.positionVertically( layoutItem , layoutData , boundsX , boundsY , viewPortWidth , viewPortHeight );
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function positionHorizontally( item : ILayoutDisplayObject, layoutData : AnchorLayoutData, boundsX : Number, boundsY : Number, viewPortWidth : Number, viewPortHeight : Number ) : void
+		protected function positionHorizontally( item : ILayoutDisplayObject , layoutData : AnchorLayoutData , boundsX : Number , boundsY : Number , viewPortWidth : Number , viewPortHeight : Number ) : void
 		{
 			var uiItem : IFeathersControl = item as IFeathersControl;
 			var percentWidth : Number = layoutData.percentWidth;
 			var checkWidth : Boolean = false;
-			if( percentWidth === percentWidth ) // !isNaN
+			if( percentWidth === percentWidth ) //!isNaN
 			{
 				if( percentWidth > 100 )
 				{
@@ -679,7 +688,7 @@ package feathers.layout
 				checkWidth = true;
 			}
 			var left : Number = layoutData.left;
-			var hasLeftPosition : Boolean = left === left; // !isNaN
+			var hasLeftPosition : Boolean = left === left; //!isNaN
 			if( hasLeftPosition )
 			{
 				var leftAnchorDisplayObject : DisplayObject = layoutData.leftAnchorDisplayObject;
@@ -693,9 +702,9 @@ package feathers.layout
 				}
 			}
 			var horizontalCenter : Number = layoutData.horizontalCenter;
-			var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; // !isNaN
+			var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; //!isNaN
 			var right : Number = layoutData.right;
-			var hasRightPosition : Boolean = right === right; // !isNaN
+			var hasRightPosition : Boolean = right === right; //!isNaN
 			if( hasRightPosition )
 			{
 				var rightAnchorDisplayObject : DisplayObject = layoutData.rightAnchorDisplayObject;
@@ -794,12 +803,12 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function positionVertically( item : ILayoutDisplayObject, layoutData : AnchorLayoutData, boundsX : Number, boundsY : Number, viewPortWidth : Number, viewPortHeight : Number ) : void
+		protected function positionVertically( item : ILayoutDisplayObject , layoutData : AnchorLayoutData , boundsX : Number , boundsY : Number , viewPortWidth : Number , viewPortHeight : Number ) : void
 		{
 			var uiItem : IFeathersControl = item as IFeathersControl;
 			var percentHeight : Number = layoutData.percentHeight;
 			var checkHeight : Boolean = false;
-			if( percentHeight === percentHeight ) // !isNaN
+			if( percentHeight === percentHeight ) //!isNaN
 			{
 				if( percentHeight > 100 )
 				{
@@ -823,7 +832,7 @@ package feathers.layout
 				checkHeight = true;
 			}
 			var top : Number = layoutData.top;
-			var hasTopPosition : Boolean = top === top; // !isNaN
+			var hasTopPosition : Boolean = top === top; //!isNaN
 			if( hasTopPosition )
 			{
 				var topAnchorDisplayObject : DisplayObject = layoutData.topAnchorDisplayObject;
@@ -837,9 +846,9 @@ package feathers.layout
 				}
 			}
 			var verticalCenter : Number = layoutData.verticalCenter;
-			var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; // !isNaN
+			var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; //!isNaN
 			var bottom : Number = layoutData.bottom;
-			var hasBottomPosition : Boolean = bottom === bottom; // !isNaN
+			var hasBottomPosition : Boolean = bottom === bottom; //!isNaN
 			if( hasBottomPosition )
 			{
 				var bottomAnchorDisplayObject : DisplayObject = layoutData.bottomAnchorDisplayObject;
@@ -938,7 +947,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function measureContent( items : Vector.<DisplayObject>, viewPortWidth : Number, viewPortHeight : Number, result : Point = null ) : Point
+		protected function measureContent( items : Vector.<DisplayObject> , viewPortWidth : Number , viewPortHeight : Number , result : Point = null ) : Point
 		{
 			var maxX : Number = viewPortWidth;
 			var maxY : Number = viewPortHeight;
@@ -948,12 +957,12 @@ package feathers.layout
 				var item : DisplayObject = items[ i ];
 				var itemMaxX : Number = item.x - item.pivotX + item.width;
 				var itemMaxY : Number = item.y - item.pivotY + item.height;
-				if( itemMaxX === itemMaxX && // !isNaN
+				if( itemMaxX === itemMaxX && //!isNaN
 						itemMaxX > maxX )
 				{
 					maxX = itemMaxX;
 				}
-				if( itemMaxY === itemMaxY && // !isNaN
+				if( itemMaxY === itemMaxY && //!isNaN
 						itemMaxY > maxY )
 				{
 					maxY = itemMaxY;
@@ -967,36 +976,36 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function isReadyForLayout( layoutData : AnchorLayoutData, index : int, items : Vector.<DisplayObject>, unpositionedItems : Vector.<DisplayObject> ) : Boolean
+		protected function isReadyForLayout( layoutData : AnchorLayoutData , index : int , items : Vector.<DisplayObject> , unpositionedItems : Vector.<DisplayObject> ) : Boolean
 		{
 			var nextIndex : int = index + 1;
 			var leftAnchorDisplayObject : DisplayObject = layoutData.leftAnchorDisplayObject;
-			if( leftAnchorDisplayObject && (items.indexOf( leftAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( leftAnchorDisplayObject ) >= 0) )
+			if( leftAnchorDisplayObject && (items.indexOf( leftAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( leftAnchorDisplayObject ) >= 0) )
 			{
 				return false;
 			}
 			var rightAnchorDisplayObject : DisplayObject = layoutData.rightAnchorDisplayObject;
-			if( rightAnchorDisplayObject && (items.indexOf( rightAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( rightAnchorDisplayObject ) >= 0) )
+			if( rightAnchorDisplayObject && (items.indexOf( rightAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( rightAnchorDisplayObject ) >= 0) )
 			{
 				return false;
 			}
 			var topAnchorDisplayObject : DisplayObject = layoutData.topAnchorDisplayObject;
-			if( topAnchorDisplayObject && (items.indexOf( topAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( topAnchorDisplayObject ) >= 0) )
+			if( topAnchorDisplayObject && (items.indexOf( topAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( topAnchorDisplayObject ) >= 0) )
 			{
 				return false;
 			}
 			var bottomAnchorDisplayObject : DisplayObject = layoutData.bottomAnchorDisplayObject;
-			if( bottomAnchorDisplayObject && (items.indexOf( bottomAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( bottomAnchorDisplayObject ) >= 0) )
+			if( bottomAnchorDisplayObject && (items.indexOf( bottomAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( bottomAnchorDisplayObject ) >= 0) )
 			{
 				return false
 			}
 			var horizontalCenterAnchorDisplayObject : DisplayObject = layoutData.horizontalCenterAnchorDisplayObject;
-			if( horizontalCenterAnchorDisplayObject && (items.indexOf( horizontalCenterAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( horizontalCenterAnchorDisplayObject ) >= 0) )
+			if( horizontalCenterAnchorDisplayObject && (items.indexOf( horizontalCenterAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( horizontalCenterAnchorDisplayObject ) >= 0) )
 			{
 				return false
 			}
 			var verticalCenterAnchorDisplayObject : DisplayObject = layoutData.verticalCenterAnchorDisplayObject;
-			if( verticalCenterAnchorDisplayObject && (items.indexOf( verticalCenterAnchorDisplayObject, nextIndex ) >= nextIndex || unpositionedItems.indexOf( verticalCenterAnchorDisplayObject ) >= 0) )
+			if( verticalCenterAnchorDisplayObject && (items.indexOf( verticalCenterAnchorDisplayObject , nextIndex ) >= nextIndex || unpositionedItems.indexOf( verticalCenterAnchorDisplayObject ) >= 0) )
 			{
 				return false
 			}
@@ -1006,7 +1015,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function isReferenced( item : DisplayObject, items : Vector.<DisplayObject> ) : Boolean
+		protected function isReferenced( item : DisplayObject , items : Vector.<DisplayObject> ) : Boolean
 		{
 			var itemCount : int = items.length;
 			for( var i : int = 0; i < itemCount; i++ )
@@ -1032,7 +1041,7 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function validateItems( items : Vector.<DisplayObject>, force : Boolean ) : void
+		protected function validateItems( items : Vector.<DisplayObject> , force : Boolean ) : void
 		{
 			var itemCount : int = items.length;
 			for( var i : int = 0; i < itemCount; i++ )
@@ -1056,22 +1065,22 @@ package feathers.layout
 						if( layoutData )
 						{
 							var left : Number = layoutData.left;
-							var hasLeftPosition : Boolean = left === left; // !isNaN
+							var hasLeftPosition : Boolean = left === left; //!isNaN
 							var right : Number = layoutData.right;
-							var hasRightPosition : Boolean = right === right; // !isNaN
+							var hasRightPosition : Boolean = right === right; //!isNaN
 							var horizontalCenter : Number = layoutData.horizontalCenter;
-							var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; // !isNaN
+							var hasHorizontalCenterPosition : Boolean = horizontalCenter === horizontalCenter; //!isNaN
 							if( (hasRightPosition && !hasLeftPosition && !hasHorizontalCenterPosition) || hasHorizontalCenterPosition )
 							{
 								control.validate();
 								continue;
 							}
 							var top : Number = layoutData.top;
-							var hasTopPosition : Boolean = top === top; // !isNaN
+							var hasTopPosition : Boolean = top === top; //!isNaN
 							var bottom : Number = layoutData.bottom;
-							var hasBottomPosition : Boolean = bottom === bottom; // !isNaN
+							var hasBottomPosition : Boolean = bottom === bottom; //!isNaN
 							var verticalCenter : Number = layoutData.verticalCenter;
-							var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; // !isNaN
+							var hasVerticalCenterPosition : Boolean = verticalCenter === verticalCenter; //!isNaN
 							if( (hasBottomPosition && !hasTopPosition && !hasVerticalCenterPosition) || hasVerticalCenterPosition )
 							{
 								control.validate();
@@ -1079,21 +1088,12 @@ package feathers.layout
 							}
 						}
 					}
-					if( this.isReferenced( DisplayObject( control ), items ) )
+					if( this.isReferenced( DisplayObject( control ) , items ) )
 					{
 						control.validate();
 					}
 				}
 			}
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const CIRCULAR_REFERENCE_ERROR : String = "It is impossible to create this layout due to a circular reference in the AnchorLayoutData.";
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

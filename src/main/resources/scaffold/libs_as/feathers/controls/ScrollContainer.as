@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -40,8 +40,8 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.SCROLL
 	 */
-	[Event(name="change", type="starling.events.Event")]
-	[DefaultProperty("mxmlContent")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * A generic container that supports layout, scrolling, and a background
 	 * skin. For a lighter container, see <code>LayoutGroup</code>, which
@@ -57,11 +57,11 @@ package feathers.controls
 	 * layout.padding = 20;
 	 * container.layout = layout;
 	 * this.addChild( container );
-	 *
+	 * 
 	 * var yesButton:Button = new Button();
 	 * yesButton.label = "Yes";
 	 * container.addChild( yesButton );
-	 *
+	 * 
 	 * var noButton:Button = new Button();
 	 * noButton.label = "No";
 	 * container.addChild( noButton );</listing>
@@ -91,11 +91,139 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _mxmlContentIsReady : Boolean = false;
-		/**
-		 * @private
-		 */
 		protected var _ignoreChildChanges : Boolean = false;
+		/**
+		 * An alternate style name to use with <code>ScrollContainer</code> to
+		 * allow a theme to give it a toolbar style. If a theme does not provide
+		 * a style for the toolbar container, the theme will automatically fall
+		 * back to using the default scroll container skin.
+		 *
+		 * <p>An alternate style name should always be added to a component's
+		 * <code>styleNameList</code> before the component is initialized. If
+		 * the style name is added later, it will be ignored.</p>
+		 *
+		 * <p>In the following example, the toolbar style is applied to a scroll
+		 * container:</p>
+		 *
+		 * <listing version="3.0">
+		 * var container:ScrollContainer = new ScrollContainer();
+		 * container.styleNameList.add( ScrollContainer.ALTERNATE_STYLE_NAME_TOOLBAR );
+		 * this.addChild( container );</listing>
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const ALTERNATE_STYLE_NAME_TOOLBAR : String = "feathers-toolbar-scroll-container";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_AUTO : String = "auto";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_ON : String = "on";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_OFF : String = "off";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT : String = "fixedFloat";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
+		/**
+		 * The vertical scroll bar will be positioned on the right.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
+		/**
+		 * The vertical scroll bar will be positioned on the left.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH : String = "touch";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_MOUSE : String = "mouse";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_FAST : Number = 0.99;
+		/**
+		 * The container will auto size itself to fill the entire stage.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		/**
+		 * The container will auto size itself to fit its content.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 
 		/**
 		 * @private
@@ -172,7 +300,7 @@ package feathers.controls
 		 */
 		protected var _autoSizeMode : String = AUTO_SIZE_MODE_CONTENT;
 
-		[Inspectable(type="String", enumeration="stage,content")]
+		[Inspectable(type="String" , enumeration="stage,content")]
 		/**
 		 * Determines how the container will set its own size when its
 		 * dimensions (width and height) aren't set explicitly.
@@ -202,54 +330,19 @@ package feathers.controls
 				return;
 			}
 			this._autoSizeMode = value;
+			this._measureViewPort = this._autoSizeMode != AUTO_SIZE_MODE_STAGE;
 			if( this.stage )
 			{
 				if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
 				{
-					this.stage.addEventListener( Event.RESIZE, stage_resizeHandler );
+					this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
 				}
 				else
 				{
-					this.stage.removeEventListener( Event.RESIZE, stage_resizeHandler );
+					this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
 				}
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _mxmlContent : Array;
-
-		[ArrayElementType("feathers.core.IFeathersControl")]
-		/**
-		 * @private
-		 */ public function get mxmlContent() : Array
-		{
-			return this._mxmlContent;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set mxmlContent( value : Array ) : void
-		{
-			if( this._mxmlContent == value )
-			{
-				return;
-			}
-			if( this._mxmlContent && this._mxmlContentIsReady )
-			{
-				var childCount : int = this._mxmlContent.length;
-				for( var i : int = 0; i < childCount; i++ )
-				{
-					var child : DisplayObject = DisplayObject( this._mxmlContent[ i ] );
-					this.removeChild( child, true );
-				}
-			}
-			this._mxmlContent = value;
-			this._mxmlContentIsReady = false;
-			this.invalidate( INVALIDATION_FLAG_MXML_CONTENT );
 		}
 
 		/**
@@ -284,8 +377,8 @@ package feathers.controls
 			super();
 			this.layoutViewPort = new LayoutViewPort();
 			this.viewPort = this.layoutViewPort;
-			this.addEventListener( Event.ADDED_TO_STAGE, scrollContainer_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , scrollContainer_addedToStageHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , scrollContainer_removedFromStageHandler );
 		}
 
 		/**
@@ -315,20 +408,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function addChildAt( child : DisplayObject, index : int ) : DisplayObject
+		override public function addChild( child : DisplayObject ) : DisplayObject
+		{
+			return this.addChildAt( child , this.numChildren );
+		}
+
+		/**
+		 * @private
+		 */
+		override public function addChildAt( child : DisplayObject , index : int ) : DisplayObject
 		{
 			if( !this.displayListBypassEnabled )
 			{
-				return super.addChildAt( child, index );
+				return super.addChildAt( child , index );
 			}
-			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).addChildAt( child, index );
+			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).addChildAt( child , index );
 			if( result is IFeathersControl )
 			{
-				result.addEventListener( Event.RESIZE, child_resizeHandler );
+				result.addEventListener( Event.RESIZE , child_resizeHandler );
 			}
 			if( result is ILayoutDisplayObject )
 			{
-				result.addEventListener( FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler );
+				result.addEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 			return result;
@@ -337,20 +438,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function removeChildAt( index : int, dispose : Boolean = false ) : DisplayObject
+		override public function removeChildAt( index : int , dispose : Boolean = false ) : DisplayObject
 		{
 			if( !this.displayListBypassEnabled )
 			{
-				return super.removeChildAt( index, dispose );
+				return super.removeChildAt( index , dispose );
 			}
-			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).removeChildAt( index, dispose );
+			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).removeChildAt( index , dispose );
 			if( result is IFeathersControl )
 			{
-				result.removeEventListener( Event.RESIZE, child_resizeHandler );
+				result.removeEventListener( Event.RESIZE , child_resizeHandler );
 			}
 			if( result is ILayoutDisplayObject )
 			{
-				result.removeEventListener( FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler );
+				result.removeEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
 			}
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 			return result;
@@ -371,27 +472,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function setChildIndex( child : DisplayObject, index : int ) : void
+		override public function setChildIndex( child : DisplayObject , index : int ) : void
 		{
 			if( !this.displayListBypassEnabled )
 			{
-				super.setChildIndex( child, index );
+				super.setChildIndex( child , index );
 				return;
 			}
-			DisplayObjectContainer( this.viewPort ).setChildIndex( child, index );
+			DisplayObjectContainer( this.viewPort ).setChildIndex( child , index );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function swapChildrenAt( index1 : int, index2 : int ) : void
+		override public function swapChildrenAt( index1 : int , index2 : int ) : void
 		{
 			if( !this.displayListBypassEnabled )
 			{
-				super.swapChildrenAt( index1, index2 );
+				super.swapChildrenAt( index1 , index2 );
 				return;
 			}
-			DisplayObjectContainer( this.viewPort ).swapChildrenAt( index1, index2 );
+			DisplayObjectContainer( this.viewPort ).swapChildrenAt( index1 , index2 );
 		}
 
 		/**
@@ -440,11 +541,11 @@ package feathers.controls
 			this.displayListBypassEnabled = false;
 			if( child.parent == this )
 			{
-				super.setChildIndex( child, super.numChildren );
+				super.setChildIndex( child , super.numChildren );
 			}
 			else
 			{
-				child = super.addChildAt( child, super.numChildren );
+				child = super.addChildAt( child , super.numChildren );
 			}
 			this.displayListBypassEnabled = oldBypass;
 			return child;
@@ -453,11 +554,11 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function addRawChildAt( child : DisplayObject, index : int ) : DisplayObject
+		public function addRawChildAt( child : DisplayObject , index : int ) : DisplayObject
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			child = super.addChildAt( child, index );
+			child = super.addChildAt( child , index );
 			this.displayListBypassEnabled = oldBypass;
 			return child;
 		}
@@ -465,14 +566,14 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function removeRawChild( child : DisplayObject, dispose : Boolean = false ) : DisplayObject
+		public function removeRawChild( child : DisplayObject , dispose : Boolean = false ) : DisplayObject
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
 			var index : int = super.getChildIndex( child );
 			if( index >= 0 )
 			{
-				super.removeChildAt( index, dispose );
+				super.removeChildAt( index , dispose );
 			}
 			this.displayListBypassEnabled = oldBypass;
 			return child;
@@ -481,11 +582,11 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function removeRawChildAt( index : int, dispose : Boolean = false ) : DisplayObject
+		public function removeRawChildAt( index : int , dispose : Boolean = false ) : DisplayObject
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			var child : DisplayObject = super.removeChildAt( index, dispose );
+			var child : DisplayObject = super.removeChildAt( index , dispose );
 			this.displayListBypassEnabled = oldBypass;
 			return child;
 		}
@@ -497,25 +598,26 @@ package feathers.controls
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			return super.getChildIndex( child );
+			var index : int = super.getChildIndex( child );
 			this.displayListBypassEnabled = oldBypass;
+			return index;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function setRawChildIndex( child : DisplayObject, index : int ) : void
+		public function setRawChildIndex( child : DisplayObject , index : int ) : void
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			super.setChildIndex( child, index );
+			super.setChildIndex( child , index );
 			this.displayListBypassEnabled = oldBypass;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function swapRawChildren( child1 : DisplayObject, child2 : DisplayObject ) : void
+		public function swapRawChildren( child1 : DisplayObject , child2 : DisplayObject ) : void
 		{
 			var index1 : int = this.getRawChildIndex( child1 );
 			var index2 : int = this.getRawChildIndex( child2 );
@@ -525,18 +627,18 @@ package feathers.controls
 			}
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			this.swapRawChildrenAt( index1, index2 );
+			this.swapRawChildrenAt( index1 , index2 );
 			this.displayListBypassEnabled = oldBypass;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function swapRawChildrenAt( index1 : int, index2 : int ) : void
+		public function swapRawChildrenAt( index1 : int , index2 : int ) : void
 		{
 			var oldBypass : Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			super.swapChildrenAt( index1, index2 );
+			super.swapChildrenAt( index1 , index2 );
 			this.displayListBypassEnabled = oldBypass;
 		}
 
@@ -568,32 +670,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
-		{
-			super.initialize();
-			this.refreshMXMLContent();
-		}
-
-		/**
-		 * @private
-		 */
 		override protected function draw() : void
 		{
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
 			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
-			var mxmlContentInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_MXML_CONTENT );
-
-			if( mxmlContentInvalid )
-			{
-				this.refreshMXMLContent();
-			}
-
-			if( sizeInvalid )
-			{
-				this.layoutViewPort.autoSizeMode = this._autoSizeMode;
-			}
 
 			if( layoutInvalid )
 			{
@@ -613,19 +692,19 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function refreshMXMLContent() : void
+		override protected function autoSizeIfNeeded() : Boolean
 		{
-			if( !this._mxmlContent || this._mxmlContentIsReady )
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if( !needsWidth && !needsHeight )
 			{
-				return;
+				return false;
 			}
-			var childCount : int = this._mxmlContent.length;
-			for( var i : int = 0; i < childCount; i++ )
+			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
 			{
-				var child : DisplayObject = DisplayObject( this._mxmlContent[ i ] );
-				this.addChild( child );
+				return this.setSizeInternal( this.stage.stageWidth , this.stage.stageHeight , false );
 			}
-			this._mxmlContentIsReady = true;
+			return super.autoSizeIfNeeded();
 		}
 
 		/**
@@ -635,7 +714,7 @@ package feathers.controls
 		{
 			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
 			{
-				this.stage.addEventListener( Event.RESIZE, stage_resizeHandler );
+				this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
 			}
 		}
 
@@ -644,7 +723,7 @@ package feathers.controls
 		 */
 		protected function scrollContainer_removedFromStageHandler( event : Event ) : void
 		{
-			this.stage.removeEventListener( Event.RESIZE, stage_resizeHandler );
+			this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
 		}
 
 		/**
@@ -678,147 +757,5 @@ package feathers.controls
 		{
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_MXML_CONTENT : String = "mxmlContent";
-		/**
-		 * An alternate style name to use with <code>ScrollContainer</code> to
-		 * allow a theme to give it a toolbar style. If a theme does not provide
-		 * a style for the toolbar container, the theme will automatically fall
-		 * back to using the default scroll container skin.
-		 *
-		 * <p>An alternate style name should always be added to a component's
-		 * <code>styleNameList</code> before the component is initialized. If
-		 * the style name is added later, it will be ignored.</p>
-		 *
-		 * <p>In the following example, the toolbar style is applied to a scroll
-		 * container:</p>
-		 *
-		 * <listing version="3.0">
-		 * var container:ScrollContainer = new ScrollContainer();
-		 * container.styleNameList.add( ScrollContainer.ALTERNATE_STYLE_NAME_TOOLBAR );
-		 * this.addChild( container );</listing>
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const ALTERNATE_STYLE_NAME_TOOLBAR : String = "feathers-toolbar-scroll-container";
-		/**
-		 * DEPRECATED: Replaced by <code>ScrollContainer.ALTERNATE_STYLE_NAME_TOOLBAR</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see ScrollContainer#ALTERNATE_STYLE_NAME_TOOLBAR
-		 */
-		public static const ALTERNATE_NAME_TOOLBAR : String = ALTERNATE_STYLE_NAME_TOOLBAR;
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_ON : String = "on";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
-		/**
-		 * The vertical scroll bar will be positioned on the right.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
-		/**
-		 * The vertical scroll bar will be positioned on the left.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
-		/**
-		 * The container will auto size itself to fill the entire stage.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * The container will auto size itself to fit its content.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
 	}
 }

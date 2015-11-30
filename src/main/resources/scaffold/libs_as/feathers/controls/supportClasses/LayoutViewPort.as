@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -36,7 +36,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleWidth cannot be NaN" );
 			}
@@ -57,7 +57,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleWidth cannot be NaN" );
 			}
@@ -67,7 +67,7 @@ package feathers.controls.supportClasses
 
 		public function get visibleWidth() : Number
 		{
-			if( this._explicitVisibleWidth !== this._explicitVisibleWidth ) // isNaN
+			if( this._explicitVisibleWidth !== this._explicitVisibleWidth ) //isNaN
 			{
 				return this._actualVisibleWidth;
 			}
@@ -76,7 +76,7 @@ package feathers.controls.supportClasses
 
 		public function set visibleWidth( value : Number ) : void
 		{
-			if( this._explicitVisibleWidth == value || (value !== value && this._explicitVisibleWidth !== this._explicitVisibleWidth) ) // isNaN
+			if( this._explicitVisibleWidth == value || (value !== value && this._explicitVisibleWidth !== this._explicitVisibleWidth) ) //isNaN
 			{
 				return;
 			}
@@ -97,7 +97,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleHeight cannot be NaN" );
 			}
@@ -118,7 +118,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleHeight cannot be NaN" );
 			}
@@ -128,7 +128,7 @@ package feathers.controls.supportClasses
 
 		public function get visibleHeight() : Number
 		{
-			if( this._explicitVisibleHeight !== this._explicitVisibleHeight ) // isNaN
+			if( this._explicitVisibleHeight !== this._explicitVisibleHeight ) //isNaN
 			{
 				return this._actualVisibleHeight;
 			}
@@ -137,7 +137,7 @@ package feathers.controls.supportClasses
 
 		public function set visibleHeight( value : Number ) : void
 		{
-			if( this._explicitVisibleHeight == value || (value !== value && this._explicitVisibleHeight !== this._explicitVisibleHeight) ) // isNaN
+			if( this._explicitVisibleHeight == value || (value !== value && this._explicitVisibleHeight !== this._explicitVisibleHeight) ) //isNaN
 			{
 				return;
 			}
@@ -221,26 +221,6 @@ package feathers.controls.supportClasses
 			super.dispose();
 		}
 
-		override protected function draw() : void
-		{
-			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var scrollInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SCROLL );
-
-			super.draw();
-
-			if( scrollInvalid || sizeInvalid || layoutInvalid )
-			{
-				if( this._layout )
-				{
-					this._contentX = this._layoutResult.contentX;
-					this._contentY = this._layoutResult.contentY;
-					this._actualVisibleWidth = this._layoutResult.viewPortWidth;
-					this._actualVisibleHeight = this._layoutResult.viewPortHeight;
-				}
-			}
-		}
-
 		override protected function refreshViewPortBounds() : void
 		{
 			this.viewPortBounds.x = 0;
@@ -269,19 +249,37 @@ package feathers.controls.supportClasses
 			this.viewPortBounds.maxHeight = this._maxVisibleHeight;
 		}
 
+		override protected function handleLayoutResult() : void
+		{
+			this.setSizeInternal( this._layoutResult.contentWidth , this._layoutResult.contentHeight , false );
+			this._contentX = this._layoutResult.contentX;
+			this._contentY = this._layoutResult.contentY;
+			this._actualVisibleWidth = this._layoutResult.viewPortWidth;
+			this._actualVisibleHeight = this._layoutResult.viewPortHeight;
+		}
+
 		override protected function handleManualLayout() : void
 		{
 			var minX : Number = 0;
 			var minY : Number = 0;
 			var explicitViewPortWidth : Number = this.viewPortBounds.explicitWidth;
 			var maxX : Number = explicitViewPortWidth;
-			if( maxX !== maxX ) // isNaN
+			//for some reason, if we don't call a function right here,
+			//compiling with the flex 4.6 SDK will throw a VerifyError
+			//for a stack overflow.
+			//we could change the !== check back to isNaN() instead, but
+			//isNaN() can allocate an object, so we should call a different
+			//function without allocation.
+			this.doNothing();
+			if( maxX !== maxX ) //isNaN
 			{
 				maxX = 0;
 			}
 			var explicitViewPortHeight : Number = this.viewPortBounds.explicitHeight;
 			var maxY : Number = explicitViewPortHeight;
-			if( maxY !== maxY ) // isNaN
+			//see explanation above the previous call to this function.
+			this.doNothing();
+			if( maxY !== maxY ) //isNaN
 			{
 				maxY = 0;
 			}
@@ -298,22 +296,22 @@ package feathers.controls.supportClasses
 				var itemY : Number = item.y;
 				var itemMaxX : Number = itemX + item.width;
 				var itemMaxY : Number = itemY + item.height;
-				if( itemX === itemX && // !isNaN 
+				if( itemX === itemX && //!isNaN
 						itemX < minX )
 				{
 					minX = itemX;
 				}
-				if( itemY === itemY && // !isNaN 
+				if( itemY === itemY && //!isNaN
 						itemY < minY )
 				{
 					minY = itemY;
 				}
-				if( itemMaxX === itemMaxX && // !isNaN 
+				if( itemMaxX === itemMaxX && //!isNaN
 						itemMaxX > maxX )
 				{
 					maxX = itemMaxX;
 				}
-				if( itemMaxY === itemMaxY && // !isNaN 
+				if( itemMaxY === itemMaxY && //!isNaN
 						itemMaxY > maxY )
 				{
 					maxY = itemMaxY;
@@ -344,7 +342,7 @@ package feathers.controls.supportClasses
 				calculatedHeight = maxHeight;
 			}
 			this._ignoreChildChanges = false;
-			if( explicitViewPortWidth !== explicitViewPortWidth ) // isNaN
+			if( explicitViewPortWidth !== explicitViewPortWidth ) //isNaN
 			{
 				this._actualVisibleWidth = calculatedWidth;
 			}
@@ -352,7 +350,7 @@ package feathers.controls.supportClasses
 			{
 				this._actualVisibleWidth = explicitViewPortWidth;
 			}
-			if( explicitViewPortHeight !== explicitViewPortHeight ) // isNaN
+			if( explicitViewPortHeight !== explicitViewPortHeight ) //isNaN
 			{
 				this._actualVisibleHeight = calculatedHeight;
 			}
@@ -364,8 +362,17 @@ package feathers.controls.supportClasses
 			this._layoutResult.contentY = 0;
 			this._layoutResult.contentWidth = calculatedWidth;
 			this._layoutResult.contentHeight = calculatedHeight;
-			this._layoutResult.viewPortWidth = this._actualVisibleWidth;
-			this._layoutResult.viewPortHeight = this._actualVisibleHeight;
+			this._layoutResult.viewPortWidth = calculatedWidth;//this._actualVisibleWidth;
+			this._layoutResult.viewPortHeight = calculatedHeight;//this._actualVisibleHeight;
+		}
+
+		/**
+		 * @private
+		 * This function is here to work around a bug in the Flex 4.6 SDK
+		 * compiler. For explanation, see the places where it gets called.
+		 */
+		protected function doNothing() : void
+		{
 		}
 	}
 }

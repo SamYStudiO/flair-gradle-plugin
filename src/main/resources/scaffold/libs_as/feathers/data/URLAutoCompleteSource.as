@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -39,7 +39,8 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete", type="starling.events.Event")]
+	[Event(name="complete" , type="starling.events.Event")]
+
 	/**
 	 * Creates a list of suggestions for an <code>AutoComplete</code> component
 	 * by loading data from a URL.
@@ -64,7 +65,6 @@ package feathers.data
 		{
 			return JSON.parse( result );
 		}
-
 		/**
 		 * @private
 		 */
@@ -103,7 +103,8 @@ package feathers.data
 		 * will be called, and the <code>parseResultFunction</code> may be used
 		 * to filter the result on the client side instead.</p>
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequest.html Full description of flash.net.URLRequest in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequest.html Full description of flash.net.URLRequest
+		 *     in Adobe's Flash Platform API Reference
 		 * @see #parseResultFunction
 		 */
 		public function get urlRequestFunction() : Function
@@ -147,7 +148,8 @@ package feathers.data
 		 * pass the text entered into the <code>AutoComplete</code> component
 		 * to the server.</p>
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/JSON.html#parse() Full description of JSON.parse() in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/JSON.html#parse() Full description of JSON.parse() in Adobe's
+		 *     Flash Platform API Reference
 		 * @see #urlRequestFunction
 		 */
 		public function get parseResultFunction() : Function
@@ -175,7 +177,7 @@ package feathers.data
 		/**
 		 * Constructor.
 		 */
-		public function URLAutoCompleteSource( urlRequestFunction : Function, parseResultFunction : Function = null )
+		public function URLAutoCompleteSource( urlRequestFunction : Function , parseResultFunction : Function = null )
 		{
 			this.urlRequestFunction = urlRequestFunction;
 			this.parseResultFunction = parseResultFunction;
@@ -184,7 +186,7 @@ package feathers.data
 		/**
 		 * @copy feathers.data.IAutoCompleteSource#load()
 		 */
-		public function load( textToMatch : String, suggestionsResult : ListCollection = null ) : void
+		public function load( textToMatch : String , suggestionsResult : ListCollection = null ) : void
 		{
 			if( !suggestionsResult )
 			{
@@ -200,7 +202,7 @@ package feathers.data
 			{
 				if( this._cachedResult !== null )
 				{
-					this.parseData( this._cachedResult, textToMatch, suggestionsResult );
+					this.parseData( this._cachedResult , textToMatch , suggestionsResult );
 					return;
 				}
 				request = URLRequest( urlRequestFunction() );
@@ -215,9 +217,9 @@ package feathers.data
 			{
 				this._urlLoader = new URLLoader();
 				this._urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
-				this._urlLoader.addEventListener( flash.events.Event.COMPLETE, urlLoader_completeHandler );
-				this._urlLoader.addEventListener( IOErrorEvent.IO_ERROR, urlLoader_errorHandler );
-				this._urlLoader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, urlLoader_errorHandler );
+				this._urlLoader.addEventListener( flash.events.Event.COMPLETE , urlLoader_completeHandler );
+				this._urlLoader.addEventListener( IOErrorEvent.IO_ERROR , urlLoader_errorHandler );
+				this._urlLoader.addEventListener( SecurityErrorEvent.SECURITY_ERROR , urlLoader_errorHandler );
 			}
 			this._urlLoader.load( request );
 		}
@@ -225,19 +227,20 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected function parseData( resultText : String, textToMatch : String, suggestions : ListCollection ) : void
+		protected function parseData( resultText : String , textToMatch : String , suggestions : ListCollection ) : void
 		{
 			var parseResultFunction : Function = this._parseResultFunction;
 			if( parseResultFunction.length === 2 )
 			{
-				suggestions.data = parseResultFunction( resultText, textToMatch );
+				suggestions.data = parseResultFunction( resultText , textToMatch );
 			}
 			else
 			{
 				suggestions.data = parseResultFunction( resultText );
 			}
-			this.dispatchEventWith( starling.events.Event.COMPLETE, false, suggestions );
+			this.dispatchEventWith( starling.events.Event.COMPLETE , false , suggestions );
 		}
+
 
 		/**
 		 * @private
@@ -256,12 +259,12 @@ package feathers.data
 			}
 			if( loadedData )
 			{
-				this.parseData( loadedData, textToMatch, suggestions );
+				this.parseData( loadedData , textToMatch , suggestions );
 			}
 			else
 			{
 				suggestions.removeAll();
-				this.dispatchEventWith( starling.events.Event.COMPLETE, false, suggestions );
+				this.dispatchEventWith( starling.events.Event.COMPLETE , false , suggestions );
 			}
 		}
 
@@ -273,7 +276,8 @@ package feathers.data
 			var result : ListCollection = this._savedSuggestionsCollection;
 			result.removeAll();
 			this._savedSuggestionsCollection = null;
-			this.dispatchEventWith( starling.events.Event.COMPLETE, false, result );
+			this.dispatchEventWith( starling.events.Event.COMPLETE , false , result );
 		}
+
 	}
 }

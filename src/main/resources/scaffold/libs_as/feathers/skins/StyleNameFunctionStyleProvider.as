@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -45,12 +45,12 @@ package feathers.skins
 	 *     target.defaultSkin = new Image( alternateTexture );
 	 *     // set other styles...
 	 * });
-	 *
+	 * 
 	 * var button:Button = new Button();
 	 * button.label = "Click Me";
 	 * button.styleProvider = styleProvider;
 	 * this.addChild(button);
-	 *
+	 * 
 	 * var alternateButton:Button = new Button()
 	 * button.label = "No, click me!";
 	 * alternateButton.styleProvider = styleProvider;
@@ -113,7 +113,7 @@ package feathers.skins
 		 *
 		 * @see #defaultStyleFunction
 		 */
-		public function setFunctionForStyleName( styleName : String, styleFunction : Function ) : void
+		public function setFunctionForStyleName( styleName : String , styleFunction : Function ) : void
 		{
 			if( !this._styleNameMap )
 			{

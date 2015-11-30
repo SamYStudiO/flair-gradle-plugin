@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -34,7 +34,8 @@ package feathers.layout
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Interface providing layout capabilities for containers.
 	 */ public interface ILayout extends IFeathersEventDispatcher
@@ -81,10 +82,11 @@ package feathers.layout
 		 *         item.validate();
 		 *     }
 		 * }</listing>
-		 *
+		 * 
 		 * @see feathers.core.FeathersControl#validate()
 		 */
-		function layout( items : Vector.<DisplayObject>, viewPortBounds : ViewPortBounds = null, result : LayoutBoundsResult = null ) : LayoutBoundsResult;
+		function layout( items : Vector.<DisplayObject> , viewPortBounds : ViewPortBounds = null , result : LayoutBoundsResult = null ) : LayoutBoundsResult;
+
 
 		/**
 		 * Using the item dimensions, calculates a scroll position that will
@@ -103,7 +105,7 @@ package feathers.layout
 		 *
 		 * @see #getNearestScrollPositionForIndex()
 		 */
-		function getScrollPositionForIndex( index : int, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point;
+		function getScrollPositionForIndex( index : int , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point;
 
 		/**
 		 * Calculates the scroll position nearest to the current scroll position
@@ -123,6 +125,6 @@ package feathers.layout
 		 *
 		 * @see #getScrollPositionForIndex()
 		 */
-		function getNearestScrollPositionForIndex( index : int, scrollX : Number, scrollY : Number, items : Vector.<DisplayObject>, x : Number, y : Number, width : Number, height : Number, result : Point = null ) : Point
+		function getNearestScrollPositionForIndex( index : int , scrollX : Number , scrollY : Number , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
 	}
 }

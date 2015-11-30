@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -13,14 +13,15 @@ package feathers.utils.text
 	 * Duplicates the functionality of the <code>restrict</code> property on
 	 * <code>flash.text.TextField</code>.
 	 *
-	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of flash.text.TextField.restrict in Adobe's Flash Platform API Reference
+	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of
+	 *     flash.text.TextField.restrict in Adobe's Flash Platform API Reference
 	 */
 	public class TextInputRestrict
 	{
 		/**
 		 * @private
 		 */
-		protected var _restrictStartsWithExclude : Boolean = false;
+		protected static const REQUIRES_ESCAPE : Dictionary = new Dictionary();
 		REQUIRES_ESCAPE[ /\[/g ] = "\\[";
 		REQUIRES_ESCAPE[ /\]/g ] = "\\]";
 		REQUIRES_ESCAPE[ /\{/g ] = "\\{";
@@ -34,6 +35,10 @@ package feathers.utils.text
 		REQUIRES_ESCAPE[ /\*/g ] = "\\*";
 		REQUIRES_ESCAPE[ /\?/g ] = "\\?";
 		REQUIRES_ESCAPE[ /\$/g ] = "\\$";
+		/**
+		 * @private
+		 */
+		protected var _restrictStartsWithExclude : Boolean = false;
 		/**
 		 * @private
 		 */
@@ -54,7 +59,8 @@ package feathers.utils.text
 		 *
 		 * @default null
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of flash.text.TextField.restrict in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of
+		 *     flash.text.TextField.restrict in Adobe's Flash Platform API Reference
 		 */
 		public function get restrict() : String
 		{
@@ -91,16 +97,16 @@ package feathers.utils.text
 					var isExcluding : Boolean = value.indexOf( "^" ) == 0;
 					this._restrictStartsWithExclude = isExcluding;
 					do {
-						var nextStartIndex : int = value.indexOf( "^", startIndex + 1 );
+						var nextStartIndex : int = value.indexOf( "^" , startIndex + 1 );
 						if( nextStartIndex >= 0 )
 						{
-							var partialRestrict : String = value.substr( startIndex, nextStartIndex - startIndex );
-							this._restricts.push( this.createRestrictRegExp( partialRestrict, isExcluding ) );
+							var partialRestrict : String = value.substr( startIndex , nextStartIndex - startIndex );
+							this._restricts.push( this.createRestrictRegExp( partialRestrict , isExcluding ) );
 						}
 						else
 						{
 							partialRestrict = value.substr( startIndex );
-							this._restricts.push( this.createRestrictRegExp( partialRestrict, isExcluding ) );
+							this._restricts.push( this.createRestrictRegExp( partialRestrict , isExcluding ) );
 							break;
 						}
 						startIndex = nextStartIndex;
@@ -183,7 +189,7 @@ package feathers.utils.text
 				}
 				if( !isIncluded )
 				{
-					value = value.substr( 0, i ) + value.substr( i + 1 );
+					value = value.substr( 0 , i ) + value.substr( i + 1 );
 					i--;
 					textLength--;
 				}
@@ -194,29 +200,24 @@ package feathers.utils.text
 		/**
 		 * @private
 		 */
-		protected function createRestrictRegExp( restrict : String, isExcluding : Boolean ) : RegExp
+		protected function createRestrictRegExp( restrict : String , isExcluding : Boolean ) : RegExp
 		{
 			if( !isExcluding && restrict.indexOf( "^" ) == 0 )
 			{
-				// unlike regular expressions, which always treat ^ as excluding,
-				// restrict uses ^ to swap between excluding and including.
-				// if we're including, we need to remove ^ for the regexp
+				//unlike regular expressions, which always treat ^ as excluding,
+				//restrict uses ^ to swap between excluding and including.
+				//if we're including, we need to remove ^ for the regexp
 				restrict = restrict.substr( 1 );
 			}
-			// we need to do backslash first. otherwise, we'll get duplicates
-			restrict = restrict.replace( /\\/g, "\\\\" );
+			//we need to do backslash first. otherwise, we'll get duplicates
+			restrict = restrict.replace( /\\/g , "\\\\" );
 			for( var key : Object in REQUIRES_ESCAPE )
 			{
 				var keyRegExp : RegExp = key as RegExp;
 				var value : String = REQUIRES_ESCAPE[ keyRegExp ] as String;
-				restrict = restrict.replace( keyRegExp, value );
+				restrict = restrict.replace( keyRegExp , value );
 			}
 			return new RegExp( "[" + restrict + "]" );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const REQUIRES_ESCAPE : Dictionary = new Dictionary();
 	}
 }

@@ -1,142 +1,167 @@
 // =================================================================================================
 //
-// Starling Framework
-// Copyright 2011-2014 Gamua. All Rights Reserved.
+//	Starling Framework
+//	Copyright 2011-2014 Gamua. All Rights Reserved.
 //
-// This program is free software. You can redistribute and/or modify it
-// in accordance with the terms of the accompanying license agreement.
+//	This program is free software. You can redistribute and/or modify it
+//	in accordance with the terms of the accompanying license agreement.
 //
 // =================================================================================================
+
 package starling.utils
 {
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
-	import flash.system.Capabilities;
-	import flash.utils.getDefinitionByName;
+    import flash.display3D.Context3D;
+    import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.system.Capabilities;
+    import flash.utils.getDefinitionByName;
 
-	import starling.errors.AbstractClassError;
+    import starling.errors.AbstractClassError;
 
-	/** A utility class with methods related to the current platform and runtime. */
-	public class SystemUtil
-	{
-		private static var sInitialized : Boolean = false;
+    /** A utility class with methods related to the current platform and runtime. */
+    public class SystemUtil
+    {
+        private static var sInitialized : Boolean = false;
+        private static var sApplicationActive : Boolean = true;
+        private static var sWaitingCalls : Array = [];
+        private static var sPlatform : String;
+        private static var sVersion : String;
+        private static var sAIR : Boolean;
+        private static var sSupportsDepthAndStencil : Boolean = true;
 
-		private static var sApplicationActive : Boolean = true;
+        /** Indicates if the application is currently active. On Desktop, this means that it has
+         *  the focus; on mobile, that it is in the foreground. In the Flash Plugin, always
+         *  returns true. */
+        public static function get isApplicationActive() : Boolean
+        {
+            initialize();
+            return sApplicationActive;
+        }
 
-		private static var sWaitingCalls : Array = [];
+        /** Indicates if the code is executed in an Adobe AIR runtime (true)
+         *  or Flash plugin/projector (false). */
+        public static function get isAIR() : Boolean
+        {
+            initialize();
+            return sAIR;
+        }
 
-		private static var sPlatform : String;
+        /** Indicates if the code is executed on a Desktop computer with Windows, OS X or Linux
+         *  operating system. If the method returns 'false', it's probably a mobile device
+         *  or a Smart TV. */
+        public static function get isDesktop() : Boolean
+        {
+            initialize();
+            return /(WIN|MAC|LNX)/.exec( sPlatform ) != null;
+        }
 
-		private static var sVersion : String;
+        /** Returns the three-letter platform string of the current system. These are
+         *  the most common platforms: <code>WIN, MAC, LNX, IOS, AND, QNX</code>. Except for the
+         *  last one, which indicates "Blackberry", all should be self-explanatory. */
+        public static function get platform() : String
+        {
+            initialize();
+            return sPlatform;
+        }
 
-		private static var sAIR : Boolean;
+        /** Returns the Flash Player/AIR version string. The format of the version number is:
+         *  <em>majorVersion,minorVersion,buildNumber,internalBuildNumber</em>. */
+        public static function get version() : String
+        {
+            initialize();
+            return sVersion;
+        }
 
-		/** Indicates if the application is currently active. On Desktop, this means that it has
-		 *  the focus; on mobile, that it is in the foreground. In the Flash Plugin, always
-		 *  returns true. */
-		public static function get isApplicationActive() : Boolean
-		{
-			initialize();
-			return sApplicationActive;
-		}
+        /** Prior to Flash/AIR 15, there was a restriction that the clear function must be
+         *  called on a render target before drawing. This requirement was removed subsequently,
+         *  and this property indicates if that's the case in the current runtime. */
+        public static function get supportsRelaxedTargetClearRequirement() : Boolean
+        {
+            return parseInt( /\d+/.exec( sVersion )[ 0 ] ) >= 15;
+        }
 
-		/** Indicates if the code is executed in an Adobe AIR runtime (true)
-		 *  or Flash plugin/projector (false). */
-		public static function get isAIR() : Boolean
-		{
-			initialize();
-			return sAIR;
-		}
+        /** Returns the value of the 'initialWindow.depthAndStencil' node of the application
+         *  descriptor, if this in an AIR app; otherwise always <code>true</code>. */
+        public static function get supportsDepthAndStencil() : Boolean
+        {
+            return sSupportsDepthAndStencil;
+        }
 
-		/** Indicates if the code is executed on a Desktop computer with Windows, OS X or Linux
-		 *  operating system. If the method returns 'false', it's probably a mobile device
-		 *  or a Smart TV. */
-		public static function get isDesktop() : Boolean
-		{
-			initialize();
-			return /(WIN|MAC|LNX)/.exec( sPlatform ) != null;
-		}
+        /** Indicates if Context3D supports video textures. At the time of this writing,
+         *  video textures are only supported on Windows, OS X and iOS, and only in AIR
+         *  applications (not the Flash Player). */
+        public static function get supportsVideoTexture() : Boolean
+        {
+            return Context3D[ "supportsVideoTexture" ];
+        }
 
-		/** Returns the three-letter platform string of the current system. These are
-		 *  the most common platforms: <code>WIN, MAC, LNX, IOS, AND, QNX</code>. Except for the
-		 *  last one, which indicates "Blackberry", all should be self-explanatory. */
-		public static function get platform() : String
-		{
-			initialize();
-			return sPlatform;
-		}
+        /** Initializes the <code>ACTIVATE/DEACTIVATE</code> event handlers on the native
+         *  application. This method is automatically called by the Starling constructor. */
+        public static function initialize() : void
+        {
+            if( sInitialized ) return;
 
-		/** Returns the Flash Player/AIR version string. The format of the version number is:
-		 *  <em>majorVersion,minorVersion,buildNumber,internalBuildNumber</em>. */
-		public static function get version() : String
-		{
-			initialize();
-			return sVersion;
-		}
+            sInitialized = true;
+            sPlatform = Capabilities.version.substr( 0 , 3 );
+            sVersion = Capabilities.version.substr( 4 );
 
-		/** Prior to Flash/AIR 15, there was a restriction that the clear function must be
-		 *  called on a render target before drawing. This requirement was removed subsequently,
-		 *  and this property indicates if that's the case in the current runtime. */
-		public static function get supportsRelaxedTargetClearRequirement() : Boolean
-		{
-			return parseInt( /\d+/.exec( sVersion )[ 0 ] ) >= 15;
-		}
+            try
+            {
+                var nativeAppClass : Object = getDefinitionByName( "flash.desktop::NativeApplication" );
+                var nativeApp : EventDispatcher = nativeAppClass[ "nativeApplication" ] as EventDispatcher;
 
-		/** Initializes the <code>ACTIVATE/DEACTIVATE</code> event handlers on the native
-		 *  application. This method is automatically called by the Starling constructor. */
-		public static function initialize() : void
-		{
-			if( sInitialized ) return;
+                nativeApp.addEventListener( Event.ACTIVATE , onActivate , false , 0 , true );
+                nativeApp.addEventListener( Event.DEACTIVATE , onDeactivate , false , 0 , true );
 
-			sInitialized = true;
-			sPlatform = Capabilities.version.substr( 0, 3 );
-			sVersion = Capabilities.version.substr( 4 );
+                var appDescriptor : XML = nativeApp[ "applicationDescriptor" ];
+                var ns : Namespace = appDescriptor.namespace();
+                var ds : String = appDescriptor.ns::initialWindow.ns::depthAndStencil.toString().toLowerCase();
 
-			try
-			{
-				var nativeAppClass : Object = getDefinitionByName( "flash.desktop::NativeApplication" );
-				var nativeApp : EventDispatcher = nativeAppClass[ "nativeApplication" ] as EventDispatcher;
+                sSupportsDepthAndStencil = (ds == "true");
+                sAIR = true;
+            }
+            catch( e : Error )
+            {
+                sAIR = false;
+            }
+        }
 
-				nativeApp.addEventListener( Event.ACTIVATE, onActivate, false, 0, true );
-				nativeApp.addEventListener( Event.DEACTIVATE, onDeactivate, false, 0, true );
+        /** Executes the given function with its arguments the next time the application is active.
+         *  (If it <em>is</em> active already, the call will be executed right away.) */
+        public static function executeWhenApplicationIsActive( call : Function , ...args ) : void
+        {
+            initialize();
 
-				sAIR = true;
-			}
-			catch( e : Error )
-			{
-				sAIR = false;
-			}
-		}
+            if( sApplicationActive ) call.apply( null , args );
+            else sWaitingCalls.push( [ call , args ] );
+        }
 
-		/** Executes the given function with its arguments the next time the application is active.
-		 *  (If it <em>is</em> active already, the call will be executed right away.) */
-		public static function executeWhenApplicationIsActive( call : Function, ...args ) : void
-		{
-			initialize();
+        private static function onActivate( event : Object ) : void
+        {
+            sApplicationActive = true;
 
-			if( sApplicationActive ) call.apply( null, args );
-			else sWaitingCalls.push( [ call, args ] );
-		}
+            for each ( var call : Array in sWaitingCalls )
+            {
+                try
+                { call[ 0 ].apply( null , call[ 1 ] ); }
+                catch( e : Error )
+                {
+                    trace( "[Starling] Error in 'executeWhenApplicationIsActive' call:" , e.message );
+                }
+            }
 
-		private static function onActivate( event : Object ) : void
-		{
-			sApplicationActive = true;
+            sWaitingCalls = [];
+        }
 
-			for each( var call : Array in sWaitingCalls )
-				call[ 0 ].apply( null, call[ 1 ] );
+        private static function onDeactivate( event : Object ) : void
+        {
+            sApplicationActive = false;
+        }
 
-			sWaitingCalls = [];
-		}
-
-		private static function onDeactivate( event : Object ) : void
-		{
-			sApplicationActive = false;
-		}
-
-		/** @private */
-		public function SystemUtil()
-		{
-			throw new AbstractClassError();
-		}
-	}
+        /** @private */
+        public function SystemUtil()
+        {
+            throw new AbstractClassError();
+        }
+    }
 }

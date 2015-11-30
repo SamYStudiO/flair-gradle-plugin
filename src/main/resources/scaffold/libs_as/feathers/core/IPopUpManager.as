@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -40,12 +40,12 @@ package feathers.core
 		/**
 		 * @copy PopUpManager#addPopUp()
 		 */
-		function addPopUp( popUp : DisplayObject, isModal : Boolean = true, isCentered : Boolean = true, customOverlayFactory : Function = null ) : DisplayObject;
+		function addPopUp( popUp : DisplayObject , isModal : Boolean = true , isCentered : Boolean = true , customOverlayFactory : Function = null ) : DisplayObject;
 
 		/**
 		 * @copy PopUpManager#removePopUp()
 		 */
-		function removePopUp( popUp : DisplayObject, dispose : Boolean = false ) : DisplayObject;
+		function removePopUp( popUp : DisplayObject , dispose : Boolean = false ) : DisplayObject;
 
 		/**
 		 * @copy PopUpManager#isPopUp()

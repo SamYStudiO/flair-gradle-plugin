@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -30,11 +30,10 @@ package feathers.core
 		 */
 		public static function defaultOverlayFactory() : DisplayObject
 		{
-			var quad : Quad = new Quad( 100, 100, 0x000000 );
+			var quad : Quad = new Quad( 100 , 100 , 0x000000 );
 			quad.alpha = 0;
 			return quad;
 		}
-
 		/**
 		 * @private
 		 */
@@ -100,7 +99,7 @@ package feathers.core
 				return;
 			}
 			var popUpCount : int = this._popUps.length;
-			var oldIgnoreRemoval : Boolean = this._ignoreRemoval; // just in case
+			var oldIgnoreRemoval : Boolean = this._ignoreRemoval; //just in case
 			this._ignoreRemoval = true;
 			for( var i : int = 0; i < popUpCount; i++ )
 			{
@@ -137,7 +136,7 @@ package feathers.core
 		/**
 		 * @copy PopUpManager#addPopUp()
 		 */
-		public function addPopUp( popUp : DisplayObject, isModal : Boolean = true, isCentered : Boolean = true, customOverlayFactory : Function = null ) : DisplayObject
+		public function addPopUp( popUp : DisplayObject , isModal : Boolean = true , isCentered : Boolean = true , customOverlayFactory : Function = null ) : DisplayObject
 		{
 			if( isModal )
 			{
@@ -157,12 +156,15 @@ package feathers.core
 			}
 
 			this._popUps.push( popUp );
-			popUp.addEventListener( Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler );
 			this._root.addChild( popUp );
+			//this listener needs to be added after the pop-up is added to the
+			//root because the pop-up may not have been removed from its old
+			//parent yet, which will trigger the listener if it is added first.
+			popUp.addEventListener( Event.REMOVED_FROM_STAGE , popUp_removedFromStageHandler );
 
 			if( this._popUps.length == 1 )
 			{
-				this._root.stage.addEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
+				this._root.stage.addEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
 			}
 
 			if( isModal && FocusManager.isEnabledForStage( this._root.stage ) && popUp is DisplayObjectContainer )
@@ -174,7 +176,7 @@ package feathers.core
 			{
 				if( popUp is IFeathersControl )
 				{
-					popUp.addEventListener( FeathersEventType.RESIZE, popUp_resizeHandler );
+					popUp.addEventListener( FeathersEventType.RESIZE , popUp_resizeHandler );
 				}
 				this._centeredPopUps.push( popUp );
 				this.centerPopUp( popUp );
@@ -186,7 +188,7 @@ package feathers.core
 		/**
 		 * @copy PopUpManager#removePopUp()
 		 */
-		public function removePopUp( popUp : DisplayObject, dispose : Boolean = false ) : DisplayObject
+		public function removePopUp( popUp : DisplayObject , dispose : Boolean = false ) : DisplayObject
 		{
 			var index : int = this._popUps.indexOf( popUp );
 			if( index < 0 )
@@ -216,18 +218,18 @@ package feathers.core
 				var otherPopUp : DisplayObject = this._popUps[ i ];
 				if( otherPopUp == popUp )
 				{
-					// we haven't encountered an overlay yet, so it is top-level
+					//we haven't encountered an overlay yet, so it is top-level
 					return true;
 				}
 				var overlay : DisplayObject = this._popUpToOverlay[ otherPopUp ] as DisplayObject;
 				if( overlay )
 				{
-					// this is the first overlay, and we haven't found the pop-up
-					// yet, so it is not top-level
+					//this is the first overlay, and we haven't found the pop-up
+					//yet, so it is not top-level
 					return false;
 				}
 			}
-			// pop-up was not found at all, so obviously, not top-level
+			//pop-up was not found at all, so obviously, not top-level
 			return false;
 		}
 
@@ -269,9 +271,9 @@ package feathers.core
 				return;
 			}
 			var popUp : DisplayObject = DisplayObject( event.currentTarget );
-			popUp.removeEventListener( Event.REMOVED_FROM_STAGE, popUp_removedFromStageHandler );
+			popUp.removeEventListener( Event.REMOVED_FROM_STAGE , popUp_removedFromStageHandler );
 			var index : int = this._popUps.indexOf( popUp );
-			this._popUps.splice( index, 1 );
+			this._popUps.splice( index , 1 );
 			var overlay : DisplayObject = DisplayObject( this._popUpToOverlay[ popUp ] );
 			if( overlay )
 			{
@@ -289,14 +291,14 @@ package feathers.core
 			{
 				if( popUp is IFeathersControl )
 				{
-					popUp.removeEventListener( FeathersEventType.RESIZE, popUp_resizeHandler );
+					popUp.removeEventListener( FeathersEventType.RESIZE , popUp_resizeHandler );
 				}
-				this._centeredPopUps.splice( index, 1 );
+				this._centeredPopUps.splice( index , 1 );
 			}
 
 			if( _popUps.length == 0 )
 			{
-				this._root.stage.removeEventListener( ResizeEvent.RESIZE, stage_resizeHandler );
+				this._root.stage.removeEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
 			}
 		}
 

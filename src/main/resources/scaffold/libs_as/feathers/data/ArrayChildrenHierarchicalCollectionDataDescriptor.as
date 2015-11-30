@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -52,7 +52,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getLength( data : Object, ...rest : Array ) : int
+		public function getLength( data : Object , ...rest : Array ) : int
 		{
 			var branch : Array = data as Array;
 			var indexCount : int = rest.length;
@@ -68,7 +68,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemAt( data : Object, index : int, ...rest : Array ) : Object
+		public function getItemAt( data : Object , index : int , ...rest : Array ) : Object
 		{
 			rest.unshift( index );
 			var branch : Array = data as Array;
@@ -85,7 +85,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function setItemAt( data : Object, item : Object, index : int, ...rest : Array ) : void
+		public function setItemAt( data : Object , item : Object , index : int , ...rest : Array ) : void
 		{
 			rest.unshift( index );
 			var branch : Array = data as Array;
@@ -102,7 +102,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function addItemAt( data : Object, item : Object, index : int, ...rest : Array ) : void
+		public function addItemAt( data : Object , item : Object , index : int , ...rest : Array ) : void
 		{
 			rest.unshift( index );
 			var branch : Array = data as Array;
@@ -113,13 +113,13 @@ package feathers.data
 				branch = branch[ index ][ childrenField ] as Array;
 			}
 			var lastIndex : int = rest[ indexCount ];
-			branch.splice( lastIndex, 0, item );
+			branch.splice( lastIndex , 0 , item );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function removeItemAt( data : Object, index : int, ...rest : Array ) : Object
+		public function removeItemAt( data : Object , index : int , ...rest : Array ) : Object
 		{
 			rest.unshift( index );
 			var branch : Array = data as Array;
@@ -131,7 +131,7 @@ package feathers.data
 			}
 			var lastIndex : int = rest[ indexCount ];
 			var item : Object = branch[ lastIndex ];
-			branch.splice( lastIndex, 1 );
+			branch.splice( lastIndex , 1 );
 			return item;
 		}
 
@@ -147,7 +147,7 @@ package feathers.data
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemLocation( data : Object, item : Object, result : Vector.<int> = null, ...rest : Array ) : Vector.<int>
+		public function getItemLocation( data : Object , item : Object , result : Vector.<int> = null , ...rest : Array ) : Vector.<int>
 		{
 			if( !result )
 			{
@@ -166,7 +166,7 @@ package feathers.data
 				branch = branch[ index ][ childrenField ] as Array;
 			}
 
-			var isFound : Boolean = this.findItemInBranch( branch, item, result );
+			var isFound : Boolean = this.findItemInBranch( branch , item , result );
 			if( !isFound )
 			{
 				result.length = 0;
@@ -185,7 +185,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected function findItemInBranch( branch : Array, item : Object, result : Vector.<int> ) : Boolean
+		protected function findItemInBranch( branch : Array , item : Object , result : Vector.<int> ) : Boolean
 		{
 			var index : int = branch.indexOf( item );
 			if( index >= 0 )
@@ -201,7 +201,7 @@ package feathers.data
 				if( this.isBranch( branchItem ) )
 				{
 					result.push( i );
-					var isFound : Boolean = this.findItemInBranch( branchItem[ childrenField ] as Array, item, result );
+					var isFound : Boolean = this.findItemInBranch( branchItem[ childrenField ] as Array , item , result );
 					if( isFound )
 					{
 						return true;

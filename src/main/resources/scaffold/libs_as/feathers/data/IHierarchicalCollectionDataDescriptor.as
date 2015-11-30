@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -27,28 +27,28 @@ package feathers.data
 		 * a location is omitted, the length returned will be for the root level
 		 * of the collection.</p>
 		 */
-		function getLength( data : Object, ...rest : Array ) : int;
+		function getLength( data : Object , ...rest : Array ) : int;
 
 		/**
 		 * Returns the item at the specified location in the data source.
 		 *
 		 * <p>The rest arguments are the indices that make up the location.</p>
 		 */
-		function getItemAt( data : Object, index : int, ...rest : Array ) : Object;
+		function getItemAt( data : Object , index : int , ...rest : Array ) : Object;
 
 		/**
 		 * Replaces the item at the specified location with a new item.
 		 *
 		 * <p>The rest arguments are the indices that make up the location.</p>
 		 */
-		function setItemAt( data : Object, item : Object, index : int, ...rest : Array ) : void;
+		function setItemAt( data : Object , item : Object , index : int , ...rest : Array ) : void;
 
 		/**
 		 * Adds an item to the data source, at the specified location.
 		 *
 		 * <p>The rest arguments are the indices that make up the location.</p>
 		 */
-		function addItemAt( data : Object, item : Object, index : int, ...rest : Array ) : void;
+		function addItemAt( data : Object , item : Object , index : int , ...rest : Array ) : void;
 
 		/**
 		 * Removes the item at the specified location from the data source and
@@ -56,7 +56,7 @@ package feathers.data
 		 *
 		 * <p>The rest arguments are the indices that make up the location.</p>
 		 */
-		function removeItemAt( data : Object, index : int, ...rest : Array ) : Object;
+		function removeItemAt( data : Object , index : int , ...rest : Array ) : Object;
 
 		/**
 		 * Removes all items from the data source.
@@ -70,6 +70,6 @@ package feathers.data
 		 * <p>The <code>rest</code> arguments are optional indices to narrow
 		 * the search.</p>
 		 */
-		function getItemLocation( data : Object, item : Object, result : Vector.<int> = null, ...rest : Array ) : Vector.<int>;
+		function getItemLocation( data : Object , item : Object , result : Vector.<int> = null , ...rest : Array ) : Vector.<int>;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -32,9 +32,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createRevealLeftTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createRevealLeftTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -49,11 +49,11 @@ package feathers.motion
 				{
 					newScreen.x = 0;
 					newScreen.y = 0;
-					new RevealTween( oldScreen, newScreen, -newScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new RevealTween( oldScreen , newScreen , -newScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
-					slideOutOldScreen( oldScreen, -oldScreen.width, 0, duration, ease, tweenProperties, onComplete );
+					slideOutOldScreen( oldScreen , -oldScreen.width , 0 , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -68,9 +68,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createRevealRightTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createRevealRightTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -85,11 +85,11 @@ package feathers.motion
 				{
 					newScreen.x = 0;
 					newScreen.y = 0;
-					new RevealTween( oldScreen, newScreen, newScreen.width, 0, duration, ease, onComplete, tweenProperties );
+					new RevealTween( oldScreen , newScreen , newScreen.width , 0 , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
-					slideOutOldScreen( oldScreen, oldScreen.width, 0, duration, ease, tweenProperties, onComplete );
+					slideOutOldScreen( oldScreen , oldScreen.width , 0 , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -104,9 +104,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createRevealUpTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createRevealUpTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -121,11 +121,11 @@ package feathers.motion
 				{
 					newScreen.x = 0;
 					newScreen.y = 0;
-					new RevealTween( oldScreen, newScreen, 0, -newScreen.height, duration, ease, onComplete, tweenProperties );
+					new RevealTween( oldScreen , newScreen , 0 , -newScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
-					slideOutOldScreen( oldScreen, 0, -oldScreen.height, duration, ease, tweenProperties, onComplete );
+					slideOutOldScreen( oldScreen , 0 , -oldScreen.height , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -140,9 +140,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createRevealDownTransition( duration : Number = 0.5, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createRevealDownTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -157,11 +157,11 @@ package feathers.motion
 				{
 					newScreen.x = 0;
 					newScreen.y = 0;
-					new RevealTween( oldScreen, newScreen, 0, newScreen.height, duration, ease, onComplete, tweenProperties );
+					new RevealTween( oldScreen , newScreen , 0 , newScreen.height , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
-					slideOutOldScreen( oldScreen, 0, oldScreen.height, duration, ease, tweenProperties, onComplete );
+					slideOutOldScreen( oldScreen , 0 , oldScreen.height , duration , ease , tweenProperties , onComplete );
 				}
 			}
 		}
@@ -169,16 +169,16 @@ package feathers.motion
 		/**
 		 * @private
 		 */
-		private static function slideOutOldScreen( oldScreen : DisplayObject, xOffset : Number, yOffset : Number, duration : Number, ease : Object, tweenProperties : Object, onComplete : Function ) : void
+		private static function slideOutOldScreen( oldScreen : DisplayObject , xOffset : Number , yOffset : Number , duration : Number , ease : Object , tweenProperties : Object , onComplete : Function ) : void
 		{
-			var tween : Tween = new Tween( oldScreen, duration, ease );
+			var tween : Tween = new Tween( oldScreen , duration , ease );
 			if( xOffset != 0 )
 			{
-				tween.animate( "x", xOffset );
+				tween.animate( "x" , xOffset );
 			}
 			if( yOffset !== 0 )
 			{
-				tween.animate( "y", yOffset );
+				tween.animate( "y" , yOffset );
 			}
 			if( tweenProperties )
 			{
@@ -190,13 +190,14 @@ package feathers.motion
 			tween.onComplete = onComplete;
 			Starling.juggler.add( tween );
 		}
-
 		/**
 		 * @private
 		 */
 		protected static const SCREEN_REQUIRED_ERROR : String = "Cannot transition if both old screen and new screen are null.";
 	}
 }
+
+import feathers.display.RenderDelegate;
 
 import flash.geom.Rectangle;
 
@@ -207,7 +208,7 @@ import starling.display.Sprite;
 
 class RevealTween extends Tween
 {
-	public function RevealTween( oldScreen : DisplayObject, newScreen : DisplayObject, xOffset : Number, yOffset : Number, duration : Number, ease : Object, onCompleteCallback : Function, tweenProperties : Object )
+	public function RevealTween( oldScreen : DisplayObject , newScreen : DisplayObject , xOffset : Number , yOffset : Number , duration : Number , ease : Object , onCompleteCallback : Function , tweenProperties : Object )
 	{
 		var clipRect : Rectangle = new Rectangle();
 		if( xOffset === 0 )
@@ -229,27 +230,35 @@ class RevealTween extends Tween
 		this._temporaryParent = new Sprite();
 		this._temporaryParent.clipRect = clipRect;
 		newScreen.parent.addChild( this._temporaryParent );
-		this._temporaryParent.addChild( newScreen );
+		var delegate : RenderDelegate = new RenderDelegate( newScreen );
+		delegate.alpha = newScreen.alpha;
+		delegate.blendMode = newScreen.blendMode;
+		delegate.rotation = newScreen.rotation;
+		delegate.scaleX = newScreen.scaleX;
+		delegate.scaleY = newScreen.scaleY;
+		this._temporaryParent.addChild( delegate );
+		newScreen.visible = false;
+		this._savedNewScreen = newScreen;
 
-		super( this._temporaryParent.clipRect, duration, ease );
+		super( this._temporaryParent.clipRect , duration , ease );
 
 		if( xOffset < 0 )
 		{
-			this.animate( "x", clipRect.x + xOffset );
-			this.animate( "width", -xOffset );
+			this.animate( "x" , clipRect.x + xOffset );
+			this.animate( "width" , -xOffset );
 		}
 		else if( xOffset > 0 )
 		{
-			this.animate( "width", xOffset );
+			this.animate( "width" , xOffset );
 		}
 		if( yOffset < 0 )
 		{
-			this.animate( "y", clipRect.y + yOffset );
-			this.animate( "height", -yOffset );
+			this.animate( "y" , clipRect.y + yOffset );
+			this.animate( "height" , -yOffset );
 		}
 		else if( yOffset > 0 )
 		{
-			this.animate( "height", yOffset );
+			this.animate( "height" , yOffset );
 		}
 
 		if( tweenProperties )
@@ -272,13 +281,10 @@ class RevealTween extends Tween
 	}
 
 	private var _savedXOffset : Number;
-
 	private var _savedYOffset : Number;
-
+	private var _savedNewScreen : DisplayObject;
 	private var _savedOldScreen : DisplayObject;
-
 	private var _temporaryParent : Sprite;
-
 	private var _onCompleteCallback : Function;
 
 	private function updateOldScreen() : void
@@ -304,9 +310,10 @@ class RevealTween extends Tween
 
 	private function cleanupTween() : void
 	{
-		var target : DisplayObject = this._temporaryParent.removeChildAt( 0 );
-		this._temporaryParent.parent.addChild( target );
 		this._temporaryParent.removeFromParent( true );
+		this._temporaryParent = null;
+		this._savedNewScreen.visible = true;
+		this._savedNewScreen = null;
 		if( this._savedOldScreen )
 		{
 			this._savedOldScreen.x = 0;
@@ -318,5 +325,6 @@ class RevealTween extends Tween
 			this._onCompleteCallback();
 		}
 	}
+
 }
 

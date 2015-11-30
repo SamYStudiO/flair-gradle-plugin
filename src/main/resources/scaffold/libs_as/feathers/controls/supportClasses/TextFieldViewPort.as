@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -35,6 +35,8 @@ package feathers.controls.supportClasses
 	 */
 	public class TextFieldViewPort extends FeathersControl implements IViewPort
 	{
+		private static const HELPER_MATRIX : Matrix = new Matrix();
+		private static const HELPER_POINT : Point = new Point();
 		private var _textFieldContainer : Sprite;
 		private var _textField : TextField;
 		private var _actualVisibleWidth : Number = 0;
@@ -336,6 +338,32 @@ package feathers.controls.supportClasses
 		/**
 		 * @private
 		 */
+		private var _cacheAsBitmap : Boolean = true;
+
+		/**
+		 * @see feathers.controls.ScrollText#cacheAsBitmap
+		 */
+		public function get cacheAsBitmap() : Boolean
+		{
+			return this._cacheAsBitmap;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set cacheAsBitmap( value : Boolean ) : void
+		{
+			if( this._cacheAsBitmap == value )
+			{
+				return;
+			}
+			this._cacheAsBitmap = value;
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		private var _condenseWhite : Boolean = false;
 
 		/**
@@ -476,7 +504,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleWidth cannot be NaN" );
 			}
@@ -497,7 +525,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleWidth cannot be NaN" );
 			}
@@ -507,7 +535,7 @@ package feathers.controls.supportClasses
 
 		public function get visibleWidth() : Number
 		{
-			if( this._explicitVisibleWidth !== this._explicitVisibleWidth ) // isNaN
+			if( this._explicitVisibleWidth !== this._explicitVisibleWidth ) //isNaN
 			{
 				return this._actualVisibleWidth;
 			}
@@ -516,7 +544,7 @@ package feathers.controls.supportClasses
 
 		public function set visibleWidth( value : Number ) : void
 		{
-			if( this._explicitVisibleWidth == value || (value !== value && this._explicitVisibleWidth !== this._explicitVisibleWidth) ) // isNaN
+			if( this._explicitVisibleWidth == value || (value !== value && this._explicitVisibleWidth !== this._explicitVisibleWidth) ) //isNaN
 			{
 				return;
 			}
@@ -537,7 +565,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "minVisibleHeight cannot be NaN" );
 			}
@@ -558,7 +586,7 @@ package feathers.controls.supportClasses
 			{
 				return;
 			}
-			if( value !== value ) // isNaN
+			if( value !== value ) //isNaN
 			{
 				throw new ArgumentError( "maxVisibleHeight cannot be NaN" );
 			}
@@ -568,7 +596,7 @@ package feathers.controls.supportClasses
 
 		public function get visibleHeight() : Number
 		{
-			if( this._explicitVisibleHeight !== this._explicitVisibleHeight ) // isNaN
+			if( this._explicitVisibleHeight !== this._explicitVisibleHeight ) //isNaN
 			{
 				return this._actualVisibleHeight;
 			}
@@ -577,7 +605,7 @@ package feathers.controls.supportClasses
 
 		public function set visibleHeight( value : Number ) : void
 		{
-			if( this._explicitVisibleHeight == value || (value !== value && this._explicitVisibleHeight !== this._explicitVisibleHeight) ) // isNaN
+			if( this._explicitVisibleHeight == value || (value !== value && this._explicitVisibleHeight !== this._explicitVisibleHeight) ) //isNaN
 			{
 				return;
 			}
@@ -710,16 +738,16 @@ package feathers.controls.supportClasses
 		public function TextFieldViewPort()
 		{
 			super();
-			this.addEventListener( Event.ADDED_TO_STAGE, addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, removedFromStageHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , addedToStageHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , removedFromStageHandler );
 		}
 
-		override public function render( support : RenderSupport, parentAlpha : Number ) : void
+		override public function render( support : RenderSupport , parentAlpha : Number ) : void
 		{
 			var starlingViewPort : Rectangle = Starling.current.viewPort;
 			HELPER_POINT.x = HELPER_POINT.y = 0;
-			this.parent.getTransformationMatrix( this.stage, HELPER_MATRIX );
-			MatrixUtil.transformCoords( HELPER_MATRIX, 0, 0, HELPER_POINT );
+			this.parent.getTransformationMatrix( this.stage , HELPER_MATRIX );
+			MatrixUtil.transformCoords( HELPER_MATRIX , 0 , 0 , HELPER_POINT );
 			var nativeScaleFactor : Number = 1;
 			if( Starling.current.supportHighResolutions )
 			{
@@ -732,7 +760,7 @@ package feathers.controls.supportClasses
 			this._textFieldContainer.scaleY = matrixToScaleY( HELPER_MATRIX ) * scaleFactor;
 			this._textFieldContainer.rotation = matrixToRotation( HELPER_MATRIX ) * 180 / Math.PI;
 			this._textFieldContainer.alpha = parentAlpha * this.alpha;
-			super.render( support, parentAlpha );
+			super.render( support , parentAlpha );
 		}
 
 		override protected function initialize() : void
@@ -745,7 +773,7 @@ package feathers.controls.supportClasses
 			this._textField.mouseWheelEnabled = false;
 			this._textField.wordWrap = true;
 			this._textField.multiline = true;
-			this._textField.addEventListener( TextEvent.LINK, textField_linkHandler );
+			this._textField.addEventListener( TextEvent.LINK , textField_linkHandler );
 			this._textFieldContainer.addChild( this._textField );
 		}
 
@@ -770,6 +798,7 @@ package feathers.controls.supportClasses
 				this._textField.gridFitType = this._gridFitType;
 				this._textField.sharpness = this._sharpness;
 				this._textField.thickness = this._thickness;
+				this._textField.cacheAsBitmap = this._cacheAsBitmap;
 				this._textField.x = this._paddingLeft;
 				this._textField.y = this._paddingTop;
 			}
@@ -838,7 +867,7 @@ package feathers.controls.supportClasses
 					calculatedVisibleHeight = this._maxVisibleHeight;
 				}
 			}
-			sizeInvalid = this.setSizeInternal( calculatedVisibleWidth, totalContentHeight, false ) || sizeInvalid;
+			sizeInvalid = this.setSizeInternal( calculatedVisibleWidth , totalContentHeight , false ) || sizeInvalid;
 			this._actualVisibleWidth = calculatedVisibleWidth;
 			this._actualVisibleHeight = calculatedVisibleHeight;
 
@@ -859,19 +888,19 @@ package feathers.controls.supportClasses
 
 		protected function textField_linkHandler( event : TextEvent ) : void
 		{
-			this.dispatchEventWith( Event.TRIGGERED, false, event.text );
+			this.dispatchEventWith( Event.TRIGGERED , false , event.text );
 		}
 
 		private function addedToStageHandler( event : Event ) : void
 		{
 			Starling.current.nativeStage.addChild( this._textFieldContainer );
-			this.addEventListener( Event.ENTER_FRAME, enterFrameHandler );
+			this.addEventListener( Event.ENTER_FRAME , enterFrameHandler );
 		}
 
 		private function removedFromStageHandler( event : Event ) : void
 		{
 			Starling.current.nativeStage.removeChild( this._textFieldContainer );
-			this.removeEventListener( Event.ENTER_FRAME, enterFrameHandler );
+			this.removeEventListener( Event.ENTER_FRAME , enterFrameHandler );
 		}
 
 		private function enterFrameHandler( event : Event ) : void
@@ -887,8 +916,5 @@ package feathers.controls.supportClasses
 			} while( target );
 			this._textFieldContainer.visible = true;
 		}
-
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

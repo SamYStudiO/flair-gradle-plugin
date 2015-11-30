@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -43,13 +43,13 @@ package feathers.controls
 	 * <listing version="3.0">
 	 * var header:Header = new Header();
 	 * header.title = "I'm a header";
-	 *
+	 * 
 	 * var backButton:Button = new Button();
 	 * backButton.label = "Back";
 	 * backButton.styleNameList.add( Button.ALTERNATE_STYLE_NAME_BACK_BUTTON );
 	 * backButton.addEventListener( Event.TRIGGERED, backButton_triggeredHandler );
 	 * header.leftItems = new &lt;DisplayObject&gt;[ backButton ];
-	 *
+	 * 
 	 * this.addChild( header );</listing>
 	 *
 	 * @see ../../../help/header.html How to use the Feathers Header component
@@ -64,6 +64,56 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
+		/**
+		 * @private
+		 */
+		private static const HELPER_BOUNDS : ViewPortBounds = new ViewPortBounds();
+		/**
+		 * @private
+		 */
+		private static const HELPER_LAYOUT_RESULT : LayoutBoundsResult = new LayoutBoundsResult();
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT : Point = new Point();
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_LEFT_CONTENT : String = "leftContent";
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_RIGHT_CONTENT : String = "rightContent";
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_CENTER_CONTENT : String = "centerContent";
+		/**
+		 * @private
+		 */
+		protected static const IOS_STATUS_BAR_HEIGHT : Number = 20;
+		/**
+		 * @private
+		 */
+		protected static const IOS_DPI : Number = 132;
+		/**
+		 * @private
+		 */
+		protected static const IOS_NAME_PREFIX : String = "iPhone OS ";
+		/**
+		 * @private
+		 */
+		protected static const STATUS_BAR_MIN_IOS_VERSION : int = 7;
+		/**
+		 * The text renderer for the header's title.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #title
+		 * @see #titleFactory
+		 * @see #createTitle()
+		 */
+		protected var titleTextRenderer : ITextRenderer;
 		/**
 		 * The value added to the <code>styleNameList</code> of the header's
 		 * title text renderer. This variable is <code>protected</code> so that
@@ -98,16 +148,6 @@ package feathers.controls
 		 */
 		protected var _layout : HorizontalLayout;
 		/**
-		 * The text renderer for the header's title.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #title
-		 * @see #titleFactory
-		 * @see #createTitle()
-		 */
-		protected var titleTextRenderer : ITextRenderer;
-		/**
 		 * @private
 		 */
 		protected var originalBackgroundWidth : Number = NaN;
@@ -119,52 +159,60 @@ package feathers.controls
 		 * @private
 		 */
 		protected var currentBackgroundSkin : DisplayObject;
-
 		/**
-		 * DEPRECATED: Replaced by <code>titleStyleName</code>.
+		 * The title will appear in the center of the header.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #titleStyleName
+		 * @see #titleAlign
 		 */
-		protected function get titleName() : String
-		{
-			return this.titleStyleName;
-		}
-
+		public static const TITLE_ALIGN_CENTER : String = "center";
 		/**
-		 * @private
-		 */
-		protected function set titleName( value : String ) : void
-		{
-			this.titleStyleName = value;
-		}
-
-		/**
-		 * DEPRECATED: Replaced by <code>itemStyleName</code>.
+		 * The title will appear on the left of the header, if there is no other
+		 * content on that side. If there is content, the title will appear in
+		 * the center.
 		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see #itemStyleName
+		 * @see #titleAlign
 		 */
-		protected function get itemName() : String
-		{
-			return this.itemStyleName;
-		}
-
+		public static const TITLE_ALIGN_PREFER_LEFT : String = "preferLeft";
 		/**
-		 * @private
+		 * The title will appear on the right of the header, if there is no
+		 * other content on that side. If there is content, the title will
+		 * appear in the center.
+		 *
+		 * @see #titleAlign
 		 */
-		protected function set itemName( value : String ) : void
-		{
-			this.itemStyleName = value;
-		}
+		public static const TITLE_ALIGN_PREFER_RIGHT : String = "preferRight";
+		/**
+		 * The items will be aligned to the top of the bounds.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP : String = "top";
+		/**
+		 * The items will be aligned to the middle of the bounds.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		/**
+		 * The items will be aligned to the bottom of the bounds.
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the header's
+		 * items.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_ITEM : String = "feathers-header-item";
+		/**
+		 * The default value added to the <code>styleNameList</code> of the header's
+		 * title.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_TITLE : String = "feathers-header-title";
 
 		/**
 		 * @private
@@ -251,8 +299,6 @@ package feathers.controls
 		 * @see #title
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get titleFactory() : Function
 		{
@@ -342,7 +388,7 @@ package feathers.controls
 					if( item is IFeathersControl )
 					{
 						IFeathersControl( item ).styleNameList.remove( this.itemStyleName );
-						item.removeEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.removeEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 					item.removeFromParent();
 				}
@@ -354,7 +400,7 @@ package feathers.controls
 				{
 					if( item is IFeathersControl )
 					{
-						item.addEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.addEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 				}
 			}
@@ -404,7 +450,7 @@ package feathers.controls
 					if( item is IFeathersControl )
 					{
 						IFeathersControl( item ).styleNameList.remove( this.itemStyleName );
-						item.removeEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.removeEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 					item.removeFromParent();
 				}
@@ -416,7 +462,7 @@ package feathers.controls
 				{
 					if( item is IFeathersControl )
 					{
-						item.addEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.addEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 				}
 			}
@@ -463,7 +509,7 @@ package feathers.controls
 					if( item is IFeathersControl )
 					{
 						IFeathersControl( item ).styleNameList.remove( this.itemStyleName );
-						item.removeEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.removeEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 					item.removeFromParent();
 				}
@@ -475,7 +521,7 @@ package feathers.controls
 				{
 					if( item is IFeathersControl )
 					{
-						item.addEventListener( FeathersEventType.RESIZE, item_resizeHandler );
+						item.addEventListener( FeathersEventType.RESIZE , item_resizeHandler );
 					}
 				}
 			}
@@ -783,7 +829,7 @@ package feathers.controls
 		 */
 		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String", enumeration="top,middle,bottom")]
+		[Inspectable(type="String" , enumeration="top,middle,bottom")]
 		/**
 		 * The alignment of the items vertically, on the y-axis.
 		 *
@@ -855,7 +901,7 @@ package feathers.controls
 			if( this._backgroundSkin && this._backgroundSkin.parent != this )
 			{
 				this._backgroundSkin.visible = false;
-				this.addChildAt( this._backgroundSkin, 0 );
+				this.addChildAt( this._backgroundSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -901,9 +947,56 @@ package feathers.controls
 			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this )
 			{
 				this._backgroundDisabledSkin.visible = false;
-				this.addChildAt( this._backgroundDisabledSkin, 0 );
+				this.addChildAt( this._backgroundDisabledSkin , 0 );
 			}
 			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _customTitleStyleName : String;
+
+		/**
+		 * A style name to add to the header's title text renderer
+		 * sub-component. Typically used by a theme to provide different styles
+		 * to different headers.
+		 *
+		 * <p>In the following example, a custom title style name is passed to
+		 * the header:</p>
+		 *
+		 * <listing version="3.0">
+		 * header.customTitleStyleName = "my-custom-header-title";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-header-title", setCustomHeaderTitleStyles
+		 * );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_TITLE
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #titleFactory
+		 */
+		public function get customTitleStyleName() : String
+		{
+			return this._customTitleStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customTitleStyleName( value : String ) : void
+		{
+			if( this._customTitleStyleName == value )
+			{
+				return;
+			}
+			this._customTitleStyleName = value;
+			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
 		}
 
 		/**
@@ -912,12 +1005,13 @@ package feathers.controls
 		protected var _titleProperties : PropertyProxy;
 
 		/**
-		 * A set of key/value pairs to be passed down to the header's title. The
-		 * title is an <code>ITextRenderer</code> instance. The available
-		 * properties depend on which <code>ITextRenderer</code> implementation
-		 * is returned by <code>titleFactory</code>. The most common
-		 * implementations are <code>BitmapFontTextRenderer</code> and
-		 * <code>TextFieldTextRenderer</code>.
+		 * An object that stores properties for the header's title text renderer
+		 * sub-component, and the properties will be passed down to the text
+		 * renderer when the header validates. The available properties
+		 * depend on which <code>ITextRenderer</code> implementation is returned
+		 * by <code>textRendererFactory</code>. Refer to
+		 * <a href="../core/ITextRenderer.html"><code>feathers.core.ITextRenderer</code></a>
+		 * for a list of available text renderer implementations.
 		 *
 		 * <p>In the following example, some properties are set for the header's
 		 * title text renderer (this example assumes that the title text renderer
@@ -941,8 +1035,6 @@ package feathers.controls
 		 *
 		 * @see #titleFactory
 		 * @see feathers.core.ITextRenderer
-		 * @see feathers.controls.text.BitmapFontTextRenderer
-		 * @see feathers.controls.text.TextFieldTextRenderer
 		 */
 		public function get titleProperties() : Object
 		{
@@ -983,7 +1075,7 @@ package feathers.controls
 		 */
 		protected var _titleAlign : String = TITLE_ALIGN_CENTER;
 
-		[Inspectable(type="String", enumeration="center,preferLeft,preferRight")]
+		[Inspectable(type="String" , enumeration="center,preferLeft,preferRight")]
 		/**
 		 * The preferred position of the title. If <code>leftItems</code> and/or
 		 * <code>rightItems</code> are not <code>null</code>, the title may be
@@ -1026,8 +1118,8 @@ package feathers.controls
 		public function Header()
 		{
 			super();
-			this.addEventListener( Event.ADDED_TO_STAGE, header_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE, header_removedFromStageHandler );
+			this.addEventListener( Event.ADDED_TO_STAGE , header_addedToStageHandler );
+			this.addEventListener( Event.REMOVED_FROM_STAGE , header_removedFromStageHandler );
 		}
 
 		/**
@@ -1186,6 +1278,7 @@ package feathers.controls
 			{
 				this.layoutTitle();
 			}
+
 		}
 
 		/**
@@ -1206,8 +1299,8 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded() : Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; // isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; // isNaN
+			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 			if( !needsWidth && !needsHeight )
 			{
 				return false;
@@ -1225,7 +1318,7 @@ package feathers.controls
 					IValidating( item ).validate();
 				}
 				var itemWidth : Number = item.width;
-				if( needsWidth && itemWidth === itemWidth ) // !isNaN
+				if( needsWidth && itemWidth === itemWidth ) //!isNaN
 				{
 					totalItemWidth += itemWidth;
 					if( i > 0 )
@@ -1234,7 +1327,7 @@ package feathers.controls
 					}
 				}
 				var itemHeight : Number = item.height;
-				if( needsHeight && itemHeight === itemHeight && // !isNaN
+				if( needsHeight && itemHeight === itemHeight && //!isNaN
 						itemHeight > newHeight )
 				{
 					newHeight = itemHeight;
@@ -1249,7 +1342,7 @@ package feathers.controls
 					IValidating( item ).validate();
 				}
 				itemWidth = item.width;
-				if( needsWidth && itemWidth === itemWidth ) // !isNaN
+				if( needsWidth && itemWidth === itemWidth ) //!isNaN
 				{
 					totalItemWidth += itemWidth;
 					if( i > 0 )
@@ -1258,7 +1351,7 @@ package feathers.controls
 					}
 				}
 				itemHeight = item.height;
-				if( needsHeight && itemHeight === itemHeight && // !isNaN
+				if( needsHeight && itemHeight === itemHeight && //!isNaN
 						itemHeight > newHeight )
 				{
 					newHeight = itemHeight;
@@ -1273,7 +1366,7 @@ package feathers.controls
 					IValidating( item ).validate();
 				}
 				itemWidth = item.width;
-				if( needsWidth && itemWidth === itemWidth ) // !isNaN
+				if( needsWidth && itemWidth === itemWidth ) //!isNaN
 				{
 					totalItemWidth += itemWidth;
 					if( i > 0 )
@@ -1282,7 +1375,7 @@ package feathers.controls
 					}
 				}
 				itemHeight = item.height;
-				if( needsHeight && itemHeight === itemHeight && // !isNaN
+				if( needsHeight && itemHeight === itemHeight && //!isNaN
 						itemHeight > newHeight )
 				{
 					newHeight = itemHeight;
@@ -1293,7 +1386,7 @@ package feathers.controls
 			if( this._title && !(this._titleAlign == TITLE_ALIGN_CENTER && this._centerItems) )
 			{
 				var calculatedTitleGap : Number = this._titleGap;
-				if( calculatedTitleGap !== calculatedTitleGap ) // isNaN
+				if( calculatedTitleGap !== calculatedTitleGap ) //isNaN
 				{
 					calculatedTitleGap = this._gap;
 				}
@@ -1315,7 +1408,7 @@ package feathers.controls
 				this.titleTextRenderer.measureText( HELPER_POINT );
 				var measuredTitleWidth : Number = HELPER_POINT.x;
 				var measuredTitleHeight : Number = HELPER_POINT.y;
-				if( needsWidth && measuredTitleWidth === measuredTitleWidth ) // !isNaN
+				if( needsWidth && measuredTitleWidth === measuredTitleWidth ) //!isNaN
 				{
 					newWidth += measuredTitleWidth;
 					if( leftItemCount > 0 )
@@ -1327,7 +1420,7 @@ package feathers.controls
 						newWidth += calculatedTitleGap;
 					}
 				}
-				if( needsHeight && measuredTitleHeight === measuredTitleHeight && // !isNaN
+				if( needsHeight && measuredTitleHeight === measuredTitleHeight && //!isNaN
 						measuredTitleHeight > newHeight )
 				{
 					newHeight = measuredTitleHeight;
@@ -1339,7 +1432,7 @@ package feathers.controls
 				var extraPaddingTop : Number = this.calculateExtraOSStatusBarPadding();
 				if( extraPaddingTop > 0 )
 				{
-					// account for the minimum height before adding the padding
+					//account for the minimum height before adding the padding
 					if( newHeight < this._minHeight )
 					{
 						newHeight = this._minHeight;
@@ -1347,18 +1440,18 @@ package feathers.controls
 					newHeight += extraPaddingTop;
 				}
 			}
-			if( needsWidth && this.originalBackgroundWidth === this.originalBackgroundWidth && // !isNaN
+			if( needsWidth && this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
 					this.originalBackgroundWidth > newWidth )
 			{
 				newWidth = this.originalBackgroundWidth;
 			}
-			if( needsHeight && this.originalBackgroundHeight === this.originalBackgroundHeight && // !isNaN
+			if( needsHeight && this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
 					this.originalBackgroundHeight > newHeight )
 			{
 				newHeight = this.originalBackgroundHeight;
 			}
 
-			return this.setSizeInternal( newWidth, newHeight, false );
+			return this.setSizeInternal( newWidth , newHeight , false );
 		}
 
 		/**
@@ -1376,14 +1469,15 @@ package feathers.controls
 		{
 			if( this.titleTextRenderer )
 			{
-				this.removeChild( DisplayObject( this.titleTextRenderer ), true );
+				this.removeChild( DisplayObject( this.titleTextRenderer ) , true );
 				this.titleTextRenderer = null;
 			}
 
 			var factory : Function = this._titleFactory != null ? this._titleFactory : FeathersControl.defaultTextRendererFactory;
 			this.titleTextRenderer = ITextRenderer( factory() );
 			var uiTitleRenderer : IFeathersControl = IFeathersControl( this.titleTextRenderer );
-			uiTitleRenderer.styleNameList.add( this.titleStyleName );
+			var titleStyleName : String = this._customTitleStyleName != null ? this._customTitleStyleName : this.titleStyleName;
+			uiTitleRenderer.styleNameList.add( titleStyleName );
 			this.addChild( DisplayObject( uiTitleRenderer ) );
 		}
 
@@ -1409,11 +1503,11 @@ package feathers.controls
 			{
 				this.currentBackgroundSkin.visible = true;
 
-				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) // isNaN
+				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) //isNaN
 				{
 					this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 				}
-				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) // isNaN
+				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
 				{
 					this.originalBackgroundHeight = this.currentBackgroundSkin.height;
 				}
@@ -1460,21 +1554,22 @@ package feathers.controls
 			{
 				return 0;
 			}
+			//first, we check if it's iOS or not. at this time, we only need to
+			//use extra padding on iOS. android and others are fine.
 			var os : String = Capabilities.os;
-			if( os.indexOf( IOS_NAME_PREFIX ) != 0 || parseInt( os.substr( IOS_NAME_PREFIX.length, 1 ), 10 ) < STATUS_BAR_MIN_IOS_VERSION )
+			if( os.indexOf( IOS_NAME_PREFIX ) != 0 || parseInt( os.substr( IOS_NAME_PREFIX.length , 1 ) , 10 ) < STATUS_BAR_MIN_IOS_VERSION )
 			{
 				return 0;
 			}
+			//next, we check if the app is full screen or not. if it is full
+			//screen, then the status bar isn't visible, and we don't need the
+			//extra padding.
 			var nativeStage : Stage = Starling.current.nativeStage;
 			if( nativeStage.displayState != StageDisplayState.NORMAL )
 			{
 				return 0;
 			}
-			if( DeviceCapabilities.dpi >= IOS_RETINA_MINIMUM_DPI )
-			{
-				return IOS_RETINA_STATUS_BAR_HEIGHT;
-			}
-			return IOS_NON_RETINA_STATUS_BAR_HEIGHT;
+			return IOS_STATUS_BAR_HEIGHT * Math.floor( DeviceCapabilities.dpi / IOS_DPI ) / Starling.current.contentScaleFactor;
 		}
 
 		/**
@@ -1509,12 +1604,13 @@ package feathers.controls
 			this._layout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_LEFT;
 			this._layout.paddingRight = 0;
 			this._layout.paddingLeft = this._paddingLeft;
-			this._layout.layout( this._leftItems, HELPER_BOUNDS, HELPER_LAYOUT_RESULT );
+			this._layout.layout( this._leftItems , HELPER_BOUNDS , HELPER_LAYOUT_RESULT );
 			this.leftItemsWidth = HELPER_LAYOUT_RESULT.contentWidth;
-			if( this.leftItemsWidth !== this.leftItemsWidth ) // isNaN
+			if( this.leftItemsWidth !== this.leftItemsWidth ) //isNaN
 			{
 				this.leftItemsWidth = 0;
 			}
+
 		}
 
 		/**
@@ -1536,9 +1632,9 @@ package feathers.controls
 			this._layout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_RIGHT;
 			this._layout.paddingRight = this._paddingRight;
 			this._layout.paddingLeft = 0;
-			this._layout.layout( this._rightItems, HELPER_BOUNDS, HELPER_LAYOUT_RESULT );
+			this._layout.layout( this._rightItems , HELPER_BOUNDS , HELPER_LAYOUT_RESULT );
 			this.rightItemsWidth = HELPER_LAYOUT_RESULT.contentWidth;
-			if( this.rightItemsWidth !== this.rightItemsWidth ) // isNaN
+			if( this.rightItemsWidth !== this.rightItemsWidth ) //isNaN
 			{
 				this.rightItemsWidth = 0;
 			}
@@ -1563,7 +1659,7 @@ package feathers.controls
 			this._layout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
 			this._layout.paddingRight = this._paddingRight;
 			this._layout.paddingLeft = this._paddingLeft;
-			this._layout.layout( this._centerItems, HELPER_BOUNDS, HELPER_LAYOUT_RESULT );
+			this._layout.layout( this._centerItems , HELPER_BOUNDS , HELPER_LAYOUT_RESULT );
 		}
 
 		/**
@@ -1578,11 +1674,11 @@ package feathers.controls
 			}
 			this.titleTextRenderer.visible = true;
 			var calculatedTitleGap : Number = this._titleGap;
-			if( calculatedTitleGap !== calculatedTitleGap ) // isNaN
+			if( calculatedTitleGap !== calculatedTitleGap ) //isNaN
 			{
 				calculatedTitleGap = this._gap;
 			}
-			// left and right offsets already include padding
+			//left and right offsets already include padding
 			var leftOffset : Number = (this._leftItems && this._leftItems.length > 0) ? (this.leftItemsWidth + calculatedTitleGap) : 0;
 			var rightOffset : Number = (this._rightItems && this._rightItems.length > 0) ? (this.rightItemsWidth + calculatedTitleGap) : 0;
 			if( this._titleAlign == TITLE_ALIGN_PREFER_LEFT && (!this._leftItems || this._leftItems.length == 0) )
@@ -1631,7 +1727,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function titleProperties_onChange( proxy : PropertyProxy, propertyName : String ) : void
+		protected function titleProperties_onChange( proxy : PropertyProxy , propertyName : String ) : void
 		{
 			this.invalidate( INVALIDATION_FLAG_STYLES );
 		}
@@ -1641,7 +1737,7 @@ package feathers.controls
 		 */
 		protected function header_addedToStageHandler( event : Event ) : void
 		{
-			Starling.current.nativeStage.addEventListener( "fullScreen", nativeStage_fullScreenHandler );
+			Starling.current.nativeStage.addEventListener( "fullScreen" , nativeStage_fullScreenHandler );
 		}
 
 		/**
@@ -1649,7 +1745,7 @@ package feathers.controls
 		 */
 		protected function header_removedFromStageHandler( event : Event ) : void
 		{
-			Starling.current.nativeStage.removeEventListener( "fullScreen", nativeStage_fullScreenHandler );
+			Starling.current.nativeStage.removeEventListener( "fullScreen" , nativeStage_fullScreenHandler );
 		}
 
 		/**
@@ -1667,126 +1763,5 @@ package feathers.controls
 		{
 			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
-
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_LEFT_CONTENT : String = "leftContent";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_RIGHT_CONTENT : String = "rightContent";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_CENTER_CONTENT : String = "centerContent";
-		/**
-		 * @private
-		 */
-		protected static const IOS_RETINA_STATUS_BAR_HEIGHT : Number = 40;
-		/**
-		 * @private
-		 */
-		protected static const IOS_NON_RETINA_STATUS_BAR_HEIGHT : Number = 20;
-		/**
-		 * @private
-		 */
-		protected static const IOS_RETINA_MINIMUM_DPI : Number = 264;
-		/**
-		 * @private
-		 */
-		protected static const IOS_NAME_PREFIX : String = "iPhone OS ";
-		/**
-		 * @private
-		 */
-		protected static const STATUS_BAR_MIN_IOS_VERSION : int = 7;
-		/**
-		 * The title will appear in the center of the header.
-		 *
-		 * @see #titleAlign
-		 */
-		public static const TITLE_ALIGN_CENTER : String = "center";
-		/**
-		 * The title will appear on the left of the header, if there is no other
-		 * content on that side. If there is content, the title will appear in
-		 * the center.
-		 *
-		 * @see #titleAlign
-		 */
-		public static const TITLE_ALIGN_PREFER_LEFT : String = "preferLeft";
-		/**
-		 * The title will appear on the right of the header, if there is no
-		 * other content on that side. If there is content, the title will
-		 * appear in the center.
-		 *
-		 * @see #titleAlign
-		 */
-		public static const TITLE_ALIGN_PREFER_RIGHT : String = "preferRight";
-		/**
-		 * The items will be aligned to the top of the bounds.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * The items will be aligned to the middle of the bounds.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * The items will be aligned to the bottom of the bounds.
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the header's
-		 * items.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_ITEM : String = "feathers-header-item";
-		/**
-		 * DEPRECATED: Replaced by <code>Header.DEFAULT_CHILD_STYLE_NAME_ITEM</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Header#DEFAULT_CHILD_STYLE_NAME_ITEM
-		 */
-		public static const DEFAULT_CHILD_NAME_ITEM : String = DEFAULT_CHILD_STYLE_NAME_ITEM;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the header's
-		 * title.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_TITLE : String = "feathers-header-title";
-		/**
-		 * DEPRECATED: Replaced by <code>Header.DEFAULT_CHILD_STYLE_NAME_TITLE</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see Header#DEFAULT_CHILD_STYLE_NAME_TITLE
-		 */
-		public static const DEFAULT_CHILD_NAME_TITLE : String = DEFAULT_CHILD_STYLE_NAME_TITLE;
-		/**
-		 * @private
-		 */
-		private static const HELPER_BOUNDS : ViewPortBounds = new ViewPortBounds();
-		/**
-		 * @private
-		 */
-		private static const HELPER_LAYOUT_RESULT : LayoutBoundsResult = new LayoutBoundsResult();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 	}
 }

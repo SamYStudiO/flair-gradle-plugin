@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -27,7 +27,8 @@ package feathers.layout
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Extra data used by layout algorithms.
 	 */ public interface ILayoutData extends IFeathersEventDispatcher

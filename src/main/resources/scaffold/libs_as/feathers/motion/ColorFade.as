@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -10,6 +10,8 @@ package feathers.motion
 	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
 
+	[Exclude(name="createBlackFadeToBlackTransition" , kind="method")]
+
 	/**
 	 * Creates animated effects, like transitions for screen navigators, that
 	 * fade a display object to a solid color.
@@ -18,6 +20,16 @@ package feathers.motion
 	 */
 	public class ColorFade
 	{
+		/**
+		 * @private
+		 * This was accidentally named wrong. It is included for temporary
+		 * backward compatibility.
+		 */
+		public static function createBlackFadeToBlackTransition( duration : Number = 0.75 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
+		{
+			return createBlackFadeTransition( duration , ease , tweenProperties );
+		}
+
 		/**
 		 * Creates a transition function for a screen navigator that hides the
 		 * old screen as a solid black color fades in over it. Then, the solid
@@ -29,9 +41,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createBlackFadeToBlackTransition( duration : Number = 0.75, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createBlackFadeTransition( duration : Number = 0.75 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return createColorFadeTransition( 0x000000, duration, ease, tweenProperties );
+			return createColorFadeTransition( 0x000000 , duration , ease , tweenProperties );
 		}
 
 		/**
@@ -44,9 +56,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createWhiteFadeTransition( duration : Number = 0.75, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createWhiteFadeTransition( duration : Number = 0.75 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return createColorFadeTransition( 0xffffff, duration, ease, tweenProperties );
+			return createColorFadeTransition( 0xffffff , duration , ease , tweenProperties );
 		}
 
 		/**
@@ -60,9 +72,9 @@ package feathers.motion
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see feathers.controls.ScreenNavigator#transition
 		 */
-		public static function createColorFadeTransition( color : uint, duration : Number = 0.75, ease : Object = Transitions.EASE_OUT, tweenProperties : Object = null ) : Function
+		public static function createColorFadeTransition( color : uint , duration : Number = 0.75 , ease : Object = Transitions.EASE_OUT , tweenProperties : Object = null ) : Function
 		{
-			return function ( oldScreen : DisplayObject, newScreen : DisplayObject, onComplete : Function ) : void
+			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
 				if( !oldScreen && !newScreen )
 				{
@@ -71,20 +83,19 @@ package feathers.motion
 				if( newScreen )
 				{
 					newScreen.alpha = 0;
-					if( oldScreen ) // oldScreen can be null, that's okay
+					if( oldScreen ) //oldScreen can be null, that's okay
 					{
 						oldScreen.alpha = 1;
 					}
-					new ColorFadeTween( newScreen, oldScreen, color, duration, ease, onComplete, tweenProperties );
+					new ColorFadeTween( newScreen , oldScreen , color , duration , ease , onComplete , tweenProperties );
 				}
-				else // we only have the old screen
+				else //we only have the old screen
 				{
 					oldScreen.alpha = 1;
-					new ColorFadeTween( oldScreen, null, color, duration, ease, onComplete, tweenProperties );
+					new ColorFadeTween( oldScreen , null , color , duration , ease , onComplete , tweenProperties );
 				}
 			}
 		}
-
 		/**
 		 * @private
 		 */
@@ -100,9 +111,9 @@ import starling.display.Quad;
 
 class ColorFadeTween extends Tween
 {
-	public function ColorFadeTween( target : DisplayObject, otherTarget : DisplayObject, color : uint, duration : Number, ease : Object, onCompleteCallback : Function, tweenProperties : Object )
+	public function ColorFadeTween( target : DisplayObject , otherTarget : DisplayObject , color : uint , duration : Number , ease : Object , onCompleteCallback : Function , tweenProperties : Object )
 	{
-		super( target, duration, ease );
+		super( target , duration , ease );
 		if( target.alpha == 0 )
 		{
 			this.fadeTo( 1 );
@@ -128,7 +139,7 @@ class ColorFadeTween extends Tween
 		this.onComplete = this.cleanupTween;
 
 		var navigator : DisplayObjectContainer = target.parent;
-		this._overlay = new Quad( navigator.width, navigator.height, color );
+		this._overlay = new Quad( navigator.width , navigator.height , color );
 		this._overlay.alpha = 0;
 		this._overlay.touchable = false;
 		navigator.addChild( this._overlay );
@@ -137,9 +148,7 @@ class ColorFadeTween extends Tween
 	}
 
 	private var _otherTarget : DisplayObject;
-
 	private var _overlay : Quad;
-
 	private var _onCompleteCallback : Function;
 
 	private function updateOverlay() : void

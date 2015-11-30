@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -31,7 +31,7 @@ package feathers.controls
 	 *
 	 * <listing version="3.0">
 	 * var list:SpinnerList = new SpinnerList();
-	 *
+	 * 
 	 * list.dataProvider = new ListCollection(
 	 * [
 	 *     { text: "Milk", thumbnail: textureAtlas.getTexture( "milk" ) },
@@ -39,7 +39,7 @@ package feathers.controls
 	 *     { text: "Bread", thumbnail: textureAtlas.getTexture( "bread" ) },
 	 *     { text: "Chicken", thumbnail: textureAtlas.getTexture( "chicken" ) },
 	 * ]);
-	 *
+	 * 
 	 * list.itemRendererFactory = function():IListItemRenderer
 	 * {
 	 *     var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
@@ -47,19 +47,10 @@ package feathers.controls
 	 *     renderer.iconSourceField = "thumbnail";
 	 *     return renderer;
 	 * };
-	 *
+	 * 
 	 * list.addEventListener( Event.CHANGE, list_changeHandler );
-	 *
+	 * 
 	 * this.addChild( list );</listing>
-	 *
-	 * <p><strong>Beta Component:</strong> This is a new component, and its APIs
-	 * may need some changes between now and the next version of Feathers to
-	 * account for overlooked requirements or other issues. Upgrading to future
-	 * versions of Feathers may involve manual changes to your code that uses
-	 * this component. The
-	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>
-	 * will not go into effect until this component's status is upgraded from
-	 * beta to stable.</p>
 	 *
 	 * @see ../../../help/spinner-list.html How to use the Feathers SpinnerList component
 	 */
@@ -153,7 +144,7 @@ package feathers.controls
 		{
 			if( this._selectedIndex != value )
 			{
-				this.scrollToDisplayIndex( value, 0 );
+				this.scrollToDisplayIndex( value , 0 );
 			}
 			super.selectedIndex = value;
 		}
@@ -163,6 +154,10 @@ package feathers.controls
 		 */
 		override public function set dataProvider( value : ListCollection ) : void
 		{
+			if( this._dataProvider == value )
+			{
+				return;
+			}
 			super.dataProvider = value;
 			if( !this._dataProvider || this._dataProvider.length == 0 )
 			{
@@ -227,11 +222,13 @@ package feathers.controls
 		 */
 		public function SpinnerList()
 		{
+			super();
+			this._scrollBarDisplayMode = SCROLL_BAR_DISPLAY_MODE_NONE;
 			this._snapToPages = true;
 			this._snapOnComplete = true;
 			this.decelerationRate = Scroller.DECELERATION_RATE_FAST;
-			this.addEventListener( Event.TRIGGERED, spinnerList_triggeredHandler );
-			this.addEventListener( FeathersEventType.SCROLL_COMPLETE, spinnerList_scrollCompleteHandler );
+			this.addEventListener( Event.TRIGGERED , spinnerList_triggeredHandler );
+			this.addEventListener( FeathersEventType.SCROLL_COMPLETE , spinnerList_scrollCompleteHandler );
 		}
 
 		/**
@@ -243,8 +240,8 @@ package feathers.controls
 			{
 				if( this._hasElasticEdges && this._verticalScrollPolicy == SCROLL_POLICY_AUTO && this._scrollBarDisplayMode != SCROLL_BAR_DISPLAY_MODE_FIXED )
 				{
-					// so that the elastic edges work even when the max scroll
-					// position is 0, similar to iOS.
+					//so that the elastic edges work even when the max scroll
+					//position is 0, similar to iOS.
 					this.verticalScrollPolicy = SCROLL_POLICY_ON;
 				}
 
@@ -253,7 +250,7 @@ package feathers.controls
 				layout.padding = 0;
 				layout.gap = 0;
 				layout.horizontalAlign = VerticalSpinnerLayout.HORIZONTAL_ALIGN_JUSTIFY;
-				layout.requestedRowCount = 5;
+				layout.requestedRowCount = 4;
 				this.layout = layout;
 			}
 
@@ -287,11 +284,13 @@ package feathers.controls
 				this.pendingItemIndex = -1;
 				if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
 				{
-					this.pendingVerticalPageIndex = this.calculateNearestPageIndexForItem( itemIndex, this._verticalPageIndex, this._maxVerticalPageIndex );
+					this.pendingVerticalPageIndex = this.calculateNearestPageIndexForItem( itemIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
+					this.hasPendingVerticalPageIndex = this.pendingVerticalPageIndex !== this._verticalPageIndex;
 				}
 				else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
 				{
-					this.pendingHorizontalPageIndex = this.calculateNearestPageIndexForItem( itemIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex );
+					this.pendingHorizontalPageIndex = this.calculateNearestPageIndexForItem( itemIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
+					this.hasPendingHorizontalPageIndex = this.pendingHorizontalPageIndex !== this._horizontalPageIndex;
 				}
 			}
 			super.handlePendingScroll();
@@ -330,7 +329,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function calculateNearestPageIndexForItem( itemIndex : int, currentPageIndex : int, maxPageIndex : int ) : int
+		protected function calculateNearestPageIndexForItem( itemIndex : int , currentPageIndex : int , maxPageIndex : int ) : int
 		{
 			if( maxPageIndex != int.MAX_VALUE )
 			{
@@ -359,18 +358,18 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function spinnerList_triggeredHandler( event : Event, item : Object ) : void
+		protected function spinnerList_triggeredHandler( event : Event , item : Object ) : void
 		{
 			var itemIndex : int = this._dataProvider.getItemIndex( item );
 			if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
 			{
-				itemIndex = this.calculateNearestPageIndexForItem( itemIndex, this._verticalPageIndex, this._maxVerticalPageIndex );
-				this.throwToPage( this._horizontalPageIndex, itemIndex, this._pageThrowDuration );
+				itemIndex = this.calculateNearestPageIndexForItem( itemIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
+				this.throwToPage( this._horizontalPageIndex , itemIndex , this._pageThrowDuration );
 			}
 			else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
 			{
-				itemIndex = this.calculateNearestPageIndexForItem( itemIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex );
-				this.throwToPage( itemIndex, this._verticalPageIndex );
+				itemIndex = this.calculateNearestPageIndexForItem( itemIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
+				this.throwToPage( itemIndex , this._verticalPageIndex );
 			}
 		}
 
@@ -442,13 +441,13 @@ package feathers.controls
 			{
 				if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
 				{
-					var pageIndex : int = this.calculateNearestPageIndexForItem( this._selectedIndex, this._verticalPageIndex, this._maxVerticalPageIndex );
-					this.throwToPage( this._horizontalPageIndex, pageIndex, this._pageThrowDuration );
+					var pageIndex : int = this.calculateNearestPageIndexForItem( this._selectedIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
+					this.throwToPage( this._horizontalPageIndex , pageIndex , this._pageThrowDuration );
 				}
 				else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
 				{
-					pageIndex = this.calculateNearestPageIndexForItem( this._selectedIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex );
-					this.throwToPage( pageIndex, this._verticalPageIndex );
+					pageIndex = this.calculateNearestPageIndexForItem( this._selectedIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
+					this.throwToPage( pageIndex , this._verticalPageIndex );
 				}
 			}
 		}

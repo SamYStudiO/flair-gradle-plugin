@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -16,10 +16,7 @@ package feathers.core
 	/**
 	 * Manages touch and keyboard focus.
 	 *
-	 * <p>Note: When enabling focus management, you should always use
-	 * <code>TextFieldTextEditor</code> as the text editor for <code>TextInput</code>
-	 * components. <code>StageTextTextEditor</code> is not compatible with the
-	 * focus manager.</p>
+	 * @see ../../../help/focus.html Keyboard focus management in Feathers
 	 */
 	public class FocusManager
 	{
@@ -34,7 +31,7 @@ package feathers.core
 		 * <listing version="3.0">
 		 * FocusManager.focusManagerFactory = function(root:DisplayObjectContainer):IPopUpManager
 		 * {
-		 *     return new CustomFocusManager(); // a custom class that implements IFocusManager
+		 *     return new CustomFocusManager(); //a custom class that implements IFocusManager
 		 * };</listing>
 		 *
 		 * @see feathers.core.IFocusManager
@@ -135,7 +132,7 @@ package feathers.core
 		 * @see #isEnabledForStage()
 		 * @see #getFocusManagerForStage()
 		 */
-		public static function setEnabledForStage( stage : Stage, isEnabled : Boolean ) : void
+		public static function setEnabledForStage( stage : Stage , isEnabled : Boolean ) : void
 		{
 			var stack : Vector.<IFocusManager> = STAGE_TO_STACK[ stage ];
 			if( (isEnabled && stack) || (!isEnabled && !stack) )
@@ -206,14 +203,27 @@ package feathers.core
 				return;
 			}
 			manager.isEnabled = false;
-			stack.splice( index, 1 );
-			// if this is the top-level focus manager, enable the previous one
+			stack.splice( index , 1 );
+			//if this is the top-level focus manager, enable the previous one
 			if( index > 0 && index == stack.length )
 			{
 				manager = stack[ stack.length - 1 ];
 				manager.isEnabled = true;
 			}
 		}
+
+		/**
+		 * @private
+		 */
+		protected static const FOCUS_MANAGER_NOT_ENABLED_ERROR : String = "The specified action is not permitted when the focus manager is not enabled.";
+		/**
+		 * @private
+		 */
+		protected static const FOCUS_MANAGER_ROOT_MUST_BE_ON_STAGE_ERROR : String = "A focus manager may not be added or removed for a display object that is not on stage.";
+		/**
+		 * @private
+		 */
+		protected static const STAGE_TO_STACK : Dictionary = new Dictionary( true );
 
 		/**
 		 * Disables focus management on all stages where it has previously been
@@ -234,17 +244,5 @@ package feathers.core
 			}
 		}
 
-		/**
-		 * @private
-		 */
-		protected static const FOCUS_MANAGER_NOT_ENABLED_ERROR : String = "The specified action is not permitted when the focus manager is not enabled.";
-		/**
-		 * @private
-		 */
-		protected static const FOCUS_MANAGER_ROOT_MUST_BE_ON_STAGE_ERROR : String = "A focus manager may not be added or removed for a display object that is not on stage.";
-		/**
-		 * @private
-		 */
-		protected static const STAGE_TO_STACK : Dictionary = new Dictionary( true );
 	}
 }

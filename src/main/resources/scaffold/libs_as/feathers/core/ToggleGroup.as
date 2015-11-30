@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -32,11 +32,12 @@ package feathers.core
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change", type="starling.events.Event")]
+	[Event(name="change" , type="starling.events.Event")]
+
 	/**
 	 * Controls the selection of two or more IToggle instances where only one
 	 * may be selected at a time.
-	 *
+	 * 
 	 * @see IToggle
 	 */ public class ToggleGroup extends EventDispatcher
 	{
@@ -124,7 +125,7 @@ package feathers.core
 		 * @private
 		 */
 		protected var _selectedIndex : int = -1;
-
+		
 		/**
 		 * The index of the currently selected toggle.
 		 *
@@ -153,7 +154,7 @@ package feathers.core
 			var hasChanged : Boolean = this._selectedIndex != value;
 			this._selectedIndex = value;
 
-			// refresh all the items
+			//refresh all the items
 			this._ignoreChanges = true;
 			for( var i : int = 0; i < itemCount; i++ )
 			{
@@ -163,10 +164,10 @@ package feathers.core
 			this._ignoreChanges = false;
 			if( hasChanged )
 			{
-				// only dispatch if there's been a change. we didn't return
-				// early because this setter could be called if an item is
-				// unselected. if selection is required, we need to reselect the
-				// item (happens below in the item's onChange listener).
+				//only dispatch if there's been a change. we didn't return
+				//early because this setter could be called if an item is
+				//unselected. if selection is required, we need to reselect the
+				//item (happens below in the item's onChange listener).
 				this.dispatchEventWith( Event.CHANGE );
 			}
 		}
@@ -209,7 +210,7 @@ package feathers.core
 			{
 				item.isSelected = false;
 			}
-			item.addEventListener( Event.CHANGE, item_changeHandler );
+			item.addEventListener( Event.CHANGE , item_changeHandler );
 
 			if( item is IGroupedToggle )
 			{
@@ -235,15 +236,15 @@ package feathers.core
 			{
 				return;
 			}
-			this._items.splice( index, 1 );
-			item.removeEventListener( Event.CHANGE, item_changeHandler );
+			this._items.splice( index , 1 );
+			item.removeEventListener( Event.CHANGE , item_changeHandler );
 			if( item is IGroupedToggle )
 			{
 				IGroupedToggle( item ).toggleGroup = null;
 			}
 			if( this._selectedIndex > index )
 			{
-				// the same item is selected, but its index has changed.
+				//the same item is selected, but its index has changed.
 				this.selectedIndex -= 1;
 			}
 			else if( this._selectedIndex == index )
@@ -253,23 +254,23 @@ package feathers.core
 					var maxSelectedIndex : int = this._items.length - 1;
 					if( this._selectedIndex > maxSelectedIndex )
 					{
-						// we want to keep the same index, if possible, but if
-						// we can't because it is too high, we should select the
-						// next highest item.
+						//we want to keep the same index, if possible, but if
+						//we can't because it is too high, we should select the
+						//next highest item.
 						this.selectedIndex = maxSelectedIndex;
 					}
 					else
 					{
-						// we need to manually dispatch the change event because
-						// the selected index hasn't changed, but the selected
-						// item has changed.
+						//we need to manually dispatch the change event because
+						//the selected index hasn't changed, but the selected
+						//item has changed.
 						this.dispatchEventWith( Event.CHANGE );
 					}
 				}
 				else
 				{
-					// selection isn't required, and we just removed the selected
-					// item, so no item should be selected.
+					//selection isn't required, and we just removed the selected
+					//item, so no item should be selected.
 					this.selectedIndex = -1;
 				}
 			}
@@ -289,7 +290,7 @@ package feathers.core
 			for( var i : int = 0; i < itemCount; i++ )
 			{
 				var item : IToggle = this._items.shift();
-				item.removeEventListener( Event.CHANGE, item_changeHandler );
+				item.removeEventListener( Event.CHANGE , item_changeHandler );
 				if( item is IGroupedToggle )
 				{
 					IGroupedToggle( item ).toggleGroup = null;
@@ -338,7 +339,7 @@ package feathers.core
 		 * <listing version="3.0">
 		 * group.setItemIndex( radio, 2 );</listing>
 		 */
-		public function setItemIndex( item : IToggle, index : int ) : void
+		public function setItemIndex( item : IToggle , index : int ) : void
 		{
 			var oldIndex : int = this._items.indexOf( item );
 			if( oldIndex < 0 )
@@ -347,11 +348,11 @@ package feathers.core
 			}
 			if( oldIndex == index )
 			{
-				// no change needed
+				//no change needed
 				return;
 			}
-			this._items.splice( oldIndex, 1 );
-			this._items.splice( index, 0, item );
+			this._items.splice( oldIndex , 1 );
+			this._items.splice( index , 0 , item );
 			if( this._selectedIndex >= 0 )
 			{
 				if( this._selectedIndex == oldIndex )
@@ -383,7 +384,7 @@ package feathers.core
 			var index : int = this._items.indexOf( item );
 			if( item.isSelected || (this._isSelectionRequired && this._selectedIndex == index) )
 			{
-				// don't let it deselect the item
+				//don't let it deselect the item
 				this.selectedIndex = index;
 			}
 			else if( !item.isSelected )
@@ -391,5 +392,6 @@ package feathers.core
 				this.selectedIndex = -1;
 			}
 		}
+
 	}
 }

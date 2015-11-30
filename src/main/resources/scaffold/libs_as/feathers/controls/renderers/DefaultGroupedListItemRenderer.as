@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -16,7 +16,7 @@ package feathers.controls.renderers
 	 * optional sub-views, including a label to display text, an icon to display
 	 * an image, and an "accessory" to display a UI control or another display
 	 * object (with shortcuts for including a second image or a second label).
-	 *
+	 * 
 	 * @see feathers.controls.GroupedList
 	 */
 	public class DefaultGroupedListItemRenderer extends BaseDefaultItemRenderer implements IGroupedListItemRenderer
@@ -29,128 +29,100 @@ package feathers.controls.renderers
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
-
 		/**
-		 * @private
+		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ALTERNATE_STYLE_NAME_DRILL_DOWN
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return DefaultGroupedListItemRenderer.globalStyleProvider;
-		}
-
+		public static const ALTERNATE_STYLE_NAME_DRILL_DOWN : String = "feathers-drill-down-item-renderer";
 		/**
-		 * @private
+		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ALTERNATE_STYLE_NAME_CHECK
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var _groupIndex : int = -1;
-
+		public static const ALTERNATE_STYLE_NAME_CHECK : String = "feathers-check-item-renderer";
 		/**
-		 * @inheritDoc
+		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_LABEL
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public function get groupIndex() : int
-		{
-			return this._groupIndex;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_LABEL : String = "feathers-item-renderer-label";
 		/**
-		 * @private
+		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_ICON_LABEL
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public function set groupIndex( value : int ) : void
-		{
-			this._groupIndex = value;
-		}
-
+		public static const DEFAULT_CHILD_STYLE_NAME_ICON_LABEL : String = "feathers-item-renderer-icon-label";
 		/**
-		 * @private
+		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var _itemIndex : int = -1;
-
+		public static const DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL : String = "feathers-item-renderer-accessory-label";
 		/**
-		 * @inheritDoc
+		 * @copy feathers.controls.Button#STATE_UP
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function get itemIndex() : int
-		{
-			return this._itemIndex;
-		}
-
+		public static const STATE_UP : String = "up";
 		/**
-		 * @private
+		 * @copy feathers.controls.Button#STATE_DOWN
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function set itemIndex( value : int ) : void
-		{
-			this._itemIndex = value;
-		}
-
+		public static const STATE_DOWN : String = "down";
 		/**
-		 * @private
+		 * @copy feathers.controls.Button#STATE_HOVER
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		protected var _layoutIndex : int = -1;
-
+		public static const STATE_HOVER : String = "hover";
 		/**
-		 * @inheritDoc
+		 * @copy feathers.controls.Button#STATE_DISABLED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function get layoutIndex() : int
-		{
-			return this._layoutIndex;
-		}
-
+		public static const STATE_DISABLED : String = "disabled";
 		/**
-		 * @private
+		 * @copy feathers.controls.Button#STATE_UP_AND_SELECTED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function set layoutIndex( value : int ) : void
-		{
-			this._layoutIndex = value;
-		}
-
+		public static const STATE_UP_AND_SELECTED : String = "upAndSelected";
 		/**
-		 * @inheritDoc
+		 * @copy feathers.controls.Button#STATE_DOWN_AND_SELECTED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function get owner() : GroupedList
-		{
-			return GroupedList( this._owner );
-		}
-
+		public static const STATE_DOWN_AND_SELECTED : String = "downAndSelected";
 		/**
-		 * @private
+		 * @copy feathers.controls.Button#STATE_HOVER_AND_SELECTED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function set owner( value : GroupedList ) : void
-		{
-			if( this._owner == value )
-			{
-				return;
-			}
-			if( this._owner )
-			{
-				this._owner.removeEventListener( FeathersEventType.SCROLL_START, owner_scrollStartHandler );
-				this._owner.removeEventListener( FeathersEventType.SCROLL_COMPLETE, owner_scrollCompleteHandler );
-			}
-			this._owner = value;
-			if( this._owner )
-			{
-				var list : GroupedList = GroupedList( this._owner );
-				this.isSelectableWithoutToggle = list.isSelectable;
-				this._owner.addEventListener( FeathersEventType.SCROLL_START, owner_scrollStartHandler );
-				this._owner.addEventListener( FeathersEventType.SCROLL_COMPLETE, owner_scrollCompleteHandler );
-			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
-
+		public static const STATE_HOVER_AND_SELECTED : String = "hoverAndSelected";
 		/**
-		 * Constructor.
+		 * @copy feathers.controls.Button#STATE_DISABLED_AND_SELECTED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function DefaultGroupedListItemRenderer()
-		{
-			super();
-		}
-
-		/**
-		 * @private
-		 */
-		override public function dispose() : void
-		{
-			this.owner = null;
-			super.dispose();
-		}
-
+		public static const STATE_DISABLED_AND_SELECTED : String = "disabledAndSelected";
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_TOP
 		 *
@@ -275,5 +247,126 @@ package feathers.controls.renderers
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#layoutOrder
 		 */
 		public static const LAYOUT_ORDER_LABEL_ICON_ACCESSORY : String = "labelIconAccessory";
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider() : IStyleProvider
+		{
+			return DefaultGroupedListItemRenderer.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _groupIndex : int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get groupIndex() : int
+		{
+			return this._groupIndex;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set groupIndex( value : int ) : void
+		{
+			this._groupIndex = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _itemIndex : int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get itemIndex() : int
+		{
+			return this._itemIndex;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set itemIndex( value : int ) : void
+		{
+			this._itemIndex = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _layoutIndex : int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get layoutIndex() : int
+		{
+			return this._layoutIndex;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set layoutIndex( value : int ) : void
+		{
+			this._layoutIndex = value;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get owner() : GroupedList
+		{
+			return GroupedList( this._owner );
+		}
+
+		/**
+		 * @private
+		 */
+		public function set owner( value : GroupedList ) : void
+		{
+			if( this._owner == value )
+			{
+				return;
+			}
+			if( this._owner )
+			{
+				this._owner.removeEventListener( FeathersEventType.SCROLL_START , owner_scrollStartHandler );
+				this._owner.removeEventListener( FeathersEventType.SCROLL_COMPLETE , owner_scrollCompleteHandler );
+			}
+			this._owner = value;
+			if( this._owner )
+			{
+				var list : GroupedList = GroupedList( this._owner );
+				this.isSelectableWithoutToggle = list.isSelectable;
+				this._owner.addEventListener( FeathersEventType.SCROLL_START , owner_scrollStartHandler );
+				this._owner.addEventListener( FeathersEventType.SCROLL_COMPLETE , owner_scrollCompleteHandler );
+			}
+			this.invalidate( INVALIDATION_FLAG_DATA );
+		}
+
+		/**
+		 * Constructor.
+		 */
+		public function DefaultGroupedListItemRenderer()
+		{
+			super();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose() : void
+		{
+			this.owner = null;
+			super.dispose();
+		}
 	}
 }

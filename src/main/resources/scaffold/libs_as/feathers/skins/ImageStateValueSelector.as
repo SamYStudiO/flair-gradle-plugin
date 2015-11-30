@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -54,21 +54,21 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		override public function setValueForState( value : Object, state : Object, isSelected : Boolean = false ) : void
+		override public function setValueForState( value : Object , state : Object , isSelected : Boolean = false ) : void
 		{
 			if( !(value is Texture) )
 			{
 				throw new ArgumentError( "Value for state must be a Texture instance." );
 			}
-			super.setValueForState( value, state, isSelected );
+			super.setValueForState( value , state , isSelected );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function updateValue( target : Object, state : Object, oldValue : Object = null ) : Object
+		override public function updateValue( target : Object , state : Object , oldValue : Object = null ) : Object
 		{
-			var texture : Texture = super.updateValue( target, state ) as Texture;
+			var texture : Texture = super.updateValue( target , state ) as Texture;
 			if( !texture )
 			{
 				return null;

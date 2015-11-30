@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -38,7 +38,7 @@ package feathers.skins
 		 *
 		 * @see http://doc.starling-framework.org/core/starling/textures/Texture.html starling.display.Texture
 		 */
-		public static function textureValueTypeHandler( value : Texture, oldDisplayObject : DisplayObject = null ) : DisplayObject
+		public static function textureValueTypeHandler( value : Texture , oldDisplayObject : DisplayObject = null ) : DisplayObject
 		{
 			var displayObject : Image;
 			if( oldDisplayObject && Object( oldDisplayObject ).constructor === Image )
@@ -59,7 +59,7 @@ package feathers.skins
 		 *
 		 * @see feathers.textures.Scale3Textures
 		 */
-		public static function scale3TextureValueTypeHandler( value : Scale3Textures, oldDisplayObject : DisplayObject = null ) : DisplayObject
+		public static function scale3TextureValueTypeHandler( value : Scale3Textures , oldDisplayObject : DisplayObject = null ) : DisplayObject
 		{
 			var displayObject : Scale3Image;
 			if( oldDisplayObject && Object( oldDisplayObject ).constructor === Scale3Image )
@@ -80,7 +80,7 @@ package feathers.skins
 		 *
 		 * @see feathers.textures.Scale9Textures
 		 */
-		public static function scale9TextureValueTypeHandler( value : Scale9Textures, oldDisplayObject : DisplayObject = null ) : DisplayObject
+		public static function scale9TextureValueTypeHandler( value : Scale9Textures , oldDisplayObject : DisplayObject = null ) : DisplayObject
 		{
 			var displayObject : Scale9Image;
 			if( oldDisplayObject && Object( oldDisplayObject ).constructor === Scale9Image )
@@ -102,7 +102,7 @@ package feathers.skins
 		 *
 		 * @see http://doc.starling-framework.org/core/starling/display/Quad.html starling.display.Quad
 		 */
-		public static function uintValueTypeHandler( value : uint, oldDisplayObject : DisplayObject = null ) : DisplayObject
+		public static function uintValueTypeHandler( value : uint , oldDisplayObject : DisplayObject = null ) : DisplayObject
 		{
 			var displayObject : Quad;
 			if( oldDisplayObject && Object( oldDisplayObject ).constructor === Quad )
@@ -111,12 +111,11 @@ package feathers.skins
 			}
 			if( !displayObject )
 			{
-				displayObject = new Quad( 1, 1, value );
+				displayObject = new Quad( 1 , 1 , value );
 			}
 			displayObject.color = value;
 			return displayObject;
 		}
-
 		/**
 		 * @private
 		 */
@@ -154,19 +153,19 @@ package feathers.skins
 		 */
 		public function SmartDisplayObjectStateValueSelector()
 		{
-			this.setValueTypeHandler( Texture, textureValueTypeHandler );
-			this.setValueTypeHandler( ConcreteTexture, textureValueTypeHandler );
-			this.setValueTypeHandler( SubTexture, textureValueTypeHandler );
-			this.setValueTypeHandler( Scale9Textures, scale9TextureValueTypeHandler );
-			this.setValueTypeHandler( Scale3Textures, scale3TextureValueTypeHandler );
-			// the constructor property of a uint is actually Number.
-			this.setValueTypeHandler( Number, uintValueTypeHandler );
+			this.setValueTypeHandler( Texture , textureValueTypeHandler );
+			this.setValueTypeHandler( ConcreteTexture , textureValueTypeHandler );
+			this.setValueTypeHandler( SubTexture , textureValueTypeHandler );
+			this.setValueTypeHandler( Scale9Textures , scale9TextureValueTypeHandler );
+			this.setValueTypeHandler( Scale3Textures , scale3TextureValueTypeHandler );
+			//the constructor property of a uint is actually Number.
+			this.setValueTypeHandler( Number , uintValueTypeHandler );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function setValueForState( value : Object, state : Object, isSelected : Boolean = false ) : void
+		override public function setValueForState( value : Object , state : Object , isSelected : Boolean = false ) : void
 		{
 			if( value !== null )
 			{
@@ -176,15 +175,15 @@ package feathers.skins
 					throw new ArgumentError( "Handler for value type " + type + " has not been set." );
 				}
 			}
-			super.setValueForState( value, state, isSelected );
+			super.setValueForState( value , state , isSelected );
 		}
 
 		/**
 		 * @private
 		 */
-		override public function updateValue( target : Object, state : Object, oldValue : Object = null ) : Object
+		override public function updateValue( target : Object , state : Object , oldValue : Object = null ) : Object
 		{
-			var value : Object = super.updateValue( target, state );
+			var value : Object = super.updateValue( target , state );
 			if( value === null )
 			{
 				return null;
@@ -193,11 +192,11 @@ package feathers.skins
 			var typeHandler : Function = this.valueToValueTypeHandler( value );
 			if( typeHandler != null )
 			{
-				var displayObject : DisplayObject = typeHandler( value, oldValue );
+				var displayObject : DisplayObject = typeHandler( value , oldValue );
 			}
 			else
 			{
-				throw new ArgumentError( "Invalid value: ", value );
+				throw new ArgumentError( "Invalid value: " , value );
 			}
 
 			for( var propertyName : String in this._displayObjectProperties )
@@ -220,7 +219,7 @@ package feathers.skins
 		 * types do not match, the function should create a new object instead
 		 * of reusing the old display object.</p>
 		 */
-		public function setValueTypeHandler( type : Class, handler : Function ) : void
+		public function setValueTypeHandler( type : Class , handler : Function ) : void
 		{
 			this._handlers[ type ] = handler;
 		}

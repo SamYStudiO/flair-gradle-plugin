@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -34,6 +34,11 @@ package feathers.core
 			return queue;
 		}
 
+		/**
+		 * @private
+		 */
+		private static const STARLING_TO_VALIDATION_QUEUE : Dictionary = new Dictionary( true );
+		private var _hasInsertAt : Boolean = true;
 		private var _starling : Starling;
 		private var _delayedQueue : Vector.<IValidating> = new <IValidating>[];
 		private var _queue : Vector.<IValidating> = new <IValidating>[];
@@ -62,6 +67,17 @@ package feathers.core
 		public function ValidationQueue( starling : Starling )
 		{
 			this._starling = starling;
+			try
+			{
+				//strangely hasOwnProperty() and "insertAt" in this._queue don't
+				//work in this case. it will throw a runtime error in versions
+				//of the runtime before 19, though.
+				this._queue[ "insertAt" ];
+			}
+			catch( error : ReferenceError )
+			{
+				this._hasInsertAt = false;
+			}
 		}
 
 		/**
@@ -79,9 +95,9 @@ package feathers.core
 		/**
 		 * Adds a validating component to the queue.
 		 */
-		public function addControl( control : IValidating, delayIfValidating : Boolean ) : void
+		public function addControl( control : IValidating , delayIfValidating : Boolean ) : void
 		{
-			// if the juggler was purged, we need to add the queue back in.
+			//if the juggler was purged, we need to add the queue back in.
 			if( !this._starling.juggler.contains( this ) )
 			{
 				this._starling.juggler.add( this );
@@ -89,41 +105,45 @@ package feathers.core
 			var currentQueue : Vector.<IValidating> = (this._isValidating && delayIfValidating) ? this._delayedQueue : this._queue;
 			if( currentQueue.indexOf( control ) >= 0 )
 			{
-				// already queued
+				//already queued
 				return;
 			}
 			var queueLength : int = currentQueue.length;
 			if( this._isValidating && currentQueue == this._queue )
 			{
-				// special case: we need to keep it sorted
+				//special case: we need to keep it sorted
 				var depth : int = control.depth;
 
-				// we're traversing the queue backwards because it's
-				// significantly more likely that we're going to push than that
-				// we're going to splice, so there's no point to iterating over
-				// the whole queue
+				//we're traversing the queue backwards because it's
+				//significantly more likely that we're going to push than that
+				//we're going to splice, so there's no point to iterating over
+				//the whole queue
 				for( var i : int = queueLength - 1; i >= 0; i-- )
 				{
 					var otherControl : IValidating = IValidating( currentQueue[ i ] );
 					var otherDepth : int = otherControl.depth;
-					// we can skip the overhead of calling queueSortFunction and
-					// of looking up the value we've already stored in the depth
-					// local variable.
+					//we can skip the overhead of calling queueSortFunction and
+					//of looking up the value we've already stored in the depth
+					//local variable.
 					if( depth >= otherDepth )
 					{
 						break;
 					}
 				}
-				// add one because we're going after the last item we checked
-				// if we made it through all of them, i will be -1, and we want 0
+				//add one because we're going after the last item we checked
+				//if we made it through all of them, i will be -1, and we want 0
 				i++;
 				if( i == queueLength )
 				{
 					currentQueue[ queueLength ] = control;
 				}
+				else if( this._hasInsertAt )
+				{
+					currentQueue[ "insertAt" ]( i , control );
+				}
 				else
 				{
-					currentQueue.splice( i, 0, control );
+					currentQueue.splice( i , 0 , control );
 				}
 			}
 			else
@@ -137,7 +157,7 @@ package feathers.core
 		 */
 		public function advanceTime( time : Number ) : void
 		{
-			if( this._isValidating )
+			if( this._isValidating || !this._starling.contextValid )
 			{
 				return;
 			}
@@ -148,9 +168,14 @@ package feathers.core
 			}
 			this._isValidating = true;
 			this._queue = this._queue.sort( queueSortFunction );
-			while( this._queue.length > 0 ) // rechecking length after the shift
+			while( this._queue.length > 0 ) //rechecking length after the shift
 			{
 				var item : IValidating = this._queue.shift();
+				if( item.depth < 0 )
+				{
+					//skip items that are no longer on the display list
+					continue;
+				}
 				item.validate();
 			}
 			var temp : Vector.<IValidating> = this._queue;
@@ -162,7 +187,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		protected function queueSortFunction( first : IValidating, second : IValidating ) : int
+		protected function queueSortFunction( first : IValidating , second : IValidating ) : int
 		{
 			var difference : int = second.depth - first.depth;
 			if( difference > 0 )
@@ -175,10 +200,5 @@ package feathers.core
 			}
 			return 0;
 		}
-
-		/**
-		 * @private
-		 */
-		private static const STARLING_TO_VALIDATION_QUEUE : Dictionary = new Dictionary( true );
 	}
 }

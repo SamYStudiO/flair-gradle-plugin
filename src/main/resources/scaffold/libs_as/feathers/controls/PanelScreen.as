@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -37,7 +37,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_START
 	 */
-	[Event(name="transitionInStart", type="starling.events.Event")]
+	[Event(name="transitionInStart" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation finishes as the screen is shown
 	 * by the screen navigator.
@@ -59,7 +60,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_COMPLETE
 	 */
-	[Event(name="transitionInComplete", type="starling.events.Event")]
+	[Event(name="transitionInComplete" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation begins as a different screen is
 	 * shown by the screen navigator and this screen is hidden.
@@ -81,7 +83,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_START
 	 */
-	[Event(name="transitionOutStart", type="starling.events.Event")]
+	[Event(name="transitionOutStart" , type="starling.events.Event")]
+
 	/**
 	 * Dispatched when the transition animation finishes as a different screen
 	 * is shown by the screen navigator and this screen is hidden.
@@ -103,7 +106,8 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_COMPLETE
 	 */
-	[Event(name="transitionOutComplete", type="starling.events.Event")]
+	[Event(name="transitionOutComplete" , type="starling.events.Event")]
+
 	/**
 	 * A screen for use with <code>ScreenNavigator</code>, based on <code>Panel</code>
 	 * in order to provide a header and layout.
@@ -128,10 +132,10 @@ package feathers.controls
 	 *         
 	 *         override protected function initialize():void
 	 *         {
-	 *             // runs once when screen is first added to the stage
-	 *             // a good place to add children and customize the layout
+	 *             //runs once when screen is first added to the stage
+	 *             //a good place to add children and customize the layout
 	 *             
-	 *             // don't forget to call this!
+	 *             //don't forget to call this!
 	 *             super.initialize()
 	 *         }
 	 *     }
@@ -188,7 +192,7 @@ package feathers.controls
 		 *
 		 * private function onMenuButton():void
 		 * {
-		 *     // do something with the menu button
+		 *     //do something with the menu button
 		 * };</listing>
 		 *
 		 * @default null
@@ -210,140 +214,18 @@ package feathers.controls
 		 *
 		 * private function onSearchButton():void
 		 * {
-		 *     // do something with the search button
+		 *     //do something with the search button
 		 * };</listing>
 		 *
 		 * @default null
 		 */
 		protected var searchButtonHandler : Function;
-
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return PanelScreen.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _screenID : String;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get screenID() : String
-		{
-			return this._screenID;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set screenID( value : String ) : void
-		{
-			this._screenID = value;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _owner : Object;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get owner() : Object
-		{
-			return this._owner;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set owner( value : Object ) : void
-		{
-			this._owner = value;
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function PanelScreen()
-		{
-			this.addEventListener( Event.ADDED_TO_STAGE, panelScreen_addedToStageHandler );
-			super();
-			this.headerStyleName = DEFAULT_CHILD_STYLE_NAME_HEADER;
-		}
-
-		/**
-		 * @private
-		 */
-		protected function panelScreen_addedToStageHandler( event : Event ) : void
-		{
-			this.addEventListener( Event.REMOVED_FROM_STAGE, panelScreen_removedFromStageHandler );
-			// using priority here is a hack so that objects higher up in the
-			// display list have a chance to cancel the event first.
-			var priority : int = -getDisplayObjectDepthFromStage( this );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN, panelScreen_nativeStage_keyDownHandler, false, priority, true );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function panelScreen_removedFromStageHandler( event : Event ) : void
-		{
-			this.removeEventListener( Event.REMOVED_FROM_STAGE, panelScreen_removedFromStageHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN, panelScreen_nativeStage_keyDownHandler );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function panelScreen_nativeStage_keyDownHandler( event : KeyboardEvent ) : void
-		{
-			if( event.isDefaultPrevented() )
-			{
-				// someone else already handled this one
-				return;
-			}
-			if( this.backButtonHandler != null && event.keyCode == Keyboard.BACK )
-			{
-				event.preventDefault();
-				this.backButtonHandler();
-			}
-
-			if( this.menuButtonHandler != null && event.keyCode == Keyboard.MENU )
-			{
-				event.preventDefault();
-				this.menuButtonHandler();
-			}
-
-			if( this.searchButtonHandler != null && event.keyCode == Keyboard.SEARCH )
-			{
-				event.preventDefault();
-				this.searchButtonHandler();
-			}
-		}
-
 		/**
 		 * The default value added to the <code>styleNameList</code> of the header.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
 		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-panel-screen-header";
-		/**
-		 * DEPRECATED: Replaced by <code>PanelScreen.DEFAULT_CHILD_STYLE_NAME_HEADER</code>.
-		 *
-		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
-		 * starting with Feathers 2.1. It will be removed in a future version of
-		 * Feathers according to the standard
-		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
-		 *
-		 * @see PanelScreen#DEFAULT_CHILD_STYLE_NAME_HEADER
-		 */
-		public static const DEFAULT_CHILD_NAME_HEADER : String = DEFAULT_CHILD_STYLE_NAME_HEADER;
 		/**
 		 * The default value added to the <code>styleNameList</code> of the footer.
 		 *
@@ -455,5 +337,115 @@ package feathers.controls
 		 * @see feathers.controls.ScrollContainer#autoSizeMode
 		 */
 		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider() : IStyleProvider
+		{
+			return PanelScreen.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _screenID : String;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get screenID() : String
+		{
+			return this._screenID;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set screenID( value : String ) : void
+		{
+			this._screenID = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _owner : Object;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get owner() : Object
+		{
+			return this._owner;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set owner( value : Object ) : void
+		{
+			this._owner = value;
+		}
+
+		/**
+		 * Constructor.
+		 */
+		public function PanelScreen()
+		{
+			this.addEventListener( Event.ADDED_TO_STAGE , panelScreen_addedToStageHandler );
+			super();
+			this.headerStyleName = DEFAULT_CHILD_STYLE_NAME_HEADER;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function panelScreen_addedToStageHandler( event : Event ) : void
+		{
+			this.addEventListener( Event.REMOVED_FROM_STAGE , panelScreen_removedFromStageHandler );
+			//using priority here is a hack so that objects higher up in the
+			//display list have a chance to cancel the event first.
+			var priority : int = -getDisplayObjectDepthFromStage( this );
+			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , panelScreen_nativeStage_keyDownHandler , false , priority , true );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function panelScreen_removedFromStageHandler( event : Event ) : void
+		{
+			this.removeEventListener( Event.REMOVED_FROM_STAGE , panelScreen_removedFromStageHandler );
+			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , panelScreen_nativeStage_keyDownHandler );
+		}
+
+		/**
+		 * @private
+		 */
+		protected function panelScreen_nativeStage_keyDownHandler( event : KeyboardEvent ) : void
+		{
+			if( event.isDefaultPrevented() )
+			{
+				//someone else already handled this one
+				return;
+			}
+			if( this.backButtonHandler != null && event.keyCode == Keyboard.BACK )
+			{
+				event.preventDefault();
+				this.backButtonHandler();
+			}
+
+			if( this.menuButtonHandler != null && event.keyCode == Keyboard.MENU )
+			{
+				event.preventDefault();
+				this.menuButtonHandler();
+			}
+
+			if( this.searchButtonHandler != null && event.keyCode == Keyboard.SEARCH )
+			{
+				event.preventDefault();
+				this.searchButtonHandler();
+			}
+		}
 	}
 }

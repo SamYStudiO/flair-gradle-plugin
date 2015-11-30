@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -43,14 +43,15 @@ package feathers.controls
 	 * <listing version="3.0">
 	 * function scrollText_triggeredHandler(event:Event):void
 	 * {
-	 *     trace( event.data ); // hello
-	* }</listing>
+	 *     trace( event.data ); //hello
+	 * }</listing>
 	 *
 	 * @eventType starling.events.Event.TRIGGERED
 	 *
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/TextEvent.html#LINK flash.events.TextEvent.LINK
 	 */
-	[Event(name="triggered", type="starling.events.Event")]
+	[Event(name="triggered" , type="starling.events.Event")]
+
 	/**
 	 * Displays long passages of text in a scrollable container using the
 	 * runtime's software-based <code>flash.text.TextField</code> as an overlay
@@ -74,7 +75,6 @@ package feathers.controls
 	 * this.addChild( scrollText );</listing>
 	 *
 	 * @see ../../../help/scroll-text.html How to use the Feathers ScrollText component
-	 * @see feathers.controls.text.TextFieldTextRenderer
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html flash.text.TextField
 	 */ public class ScrollText extends Scroller
 	{
@@ -106,6 +106,105 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _textPaddingLeft : Number = 0;
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_AUTO : String = "auto";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_ON : String = "on";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_OFF : String = "off";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT : String = "fixedFloat";
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
+		/**
+		 * The vertical scroll bar will be positioned on the right.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
+		/**
+		 * The vertical scroll bar will be positioned on the left.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH : String = "touch";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_MOUSE : String = "mouse";
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_FAST : Number = 0.99;
 
 		/**
 		 * @private
@@ -294,7 +393,8 @@ package feathers.controls
 		 *
 		 * @default null
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#styleSheet Full description of flash.text.TextField.styleSheet in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#styleSheet Full description of
+		 *     flash.text.TextField.styleSheet in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StyleSheet.html flash.text.StyleSheet
 		 * @see #isHTML
 		 */
@@ -334,7 +434,8 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of
+		 *     flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
 		 */
 		public function get embedFonts() : Boolean
 		{
@@ -370,7 +471,8 @@ package feathers.controls
 		 *
 		 * @default flash.text.AntiAliasType.ADVANCED
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of
+		 *     flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/AntiAliasType.html flash.text.AntiAliasType
 		 */
 		public function get antiAliasType() : String
@@ -409,7 +511,8 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of flash.text.TextField.background in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of
+		 *     flash.text.TextField.background in Adobe's Flash Platform API Reference
 		 * @see #backgroundColor
 		 */
 		public function get background() : Boolean
@@ -447,7 +550,8 @@ package feathers.controls
 		 *
 		 * @default 0xffffff
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of
+		 *     flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
 		 * @see #background
 		 */
 		public function get backgroundColor() : uint
@@ -485,7 +589,8 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of flash.text.TextField.border in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of
+		 *     flash.text.TextField.border in Adobe's Flash Platform API Reference
 		 * @see #borderColor
 		 */
 		public function get border() : Boolean
@@ -523,7 +628,8 @@ package feathers.controls
 		 *
 		 * @default 0x000000
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of
+		 *     flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
 		 * @see #border
 		 */
 		public function get borderColor() : uint
@@ -547,6 +653,44 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		private var _cacheAsBitmap : Boolean = true;
+
+		/**
+		 * If set to <code>true</code>, an internal bitmap representation of the
+		 * <code>TextField</code> on the classic display list is cached by the
+		 * runtime. This caching can increase performance.
+		 *
+		 * <p>In the following example, bitmap caching is disabled:</p>
+		 *
+		 * <listing version="3.0">
+		 * scrollText.cacheAsBitmap = false;</listing>
+		 *
+		 * @default true
+		 *
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObject.html#cacheAsBitmap Full description of
+		 *     flash.display.DisplayObject.cacheAsBitmap in Adobe's Flash Platform API Reference
+		 */
+		public function get cacheAsBitmap() : Boolean
+		{
+			return this._cacheAsBitmap;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set cacheAsBitmap( value : Boolean ) : void
+		{
+			if( this._cacheAsBitmap == value )
+			{
+				return;
+			}
+			this._cacheAsBitmap = value;
+			this.invalidate( INVALIDATION_FLAG_STYLES );
+		}
+
+		/**
+		 * @private
+		 */
 		private var _condenseWhite : Boolean = false;
 
 		/**
@@ -560,7 +704,8 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#condenseWhite Full description of flash.text.TextField.condenseWhite in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#condenseWhite Full description of
+		 *     flash.text.TextField.condenseWhite in Adobe's Flash Platform API Reference
 		 * @see #isHTML
 		 */
 		public function get condenseWhite() : Boolean
@@ -598,7 +743,8 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of
+		 *     flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
 		 */
 		public function get displayAsPassword() : Boolean
 		{
@@ -637,7 +783,8 @@ package feathers.controls
 		 *
 		 * @default flash.text.GridFitType.PIXEL
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of
+		 *     flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/GridFitType.html flash.text.GridFitType
 		 * @see #antiAliasType
 		 */
@@ -678,7 +825,8 @@ package feathers.controls
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of
+		 *     flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
 		public function get sharpness() : Number
@@ -704,6 +852,8 @@ package feathers.controls
 		 */
 		private var _thickness : Number = 0;
 
+		//no setter for padding because the one in Scroller is acceptable
+
 		/**
 		 * The thickness of the glyph edges in this text field. This property
 		 * applies only if the <code>antiAliasType</code> property is set to
@@ -718,7 +868,8 @@ package feathers.controls
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of flash.text.TextField.thickness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of
+		 *     flash.text.TextField.thickness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
 		public function get thickness() : Number
@@ -888,8 +1039,6 @@ package feathers.controls
 		 */
 		protected var _alpha : Number = 1;
 
-		// no setter for padding because the one in Scroller is acceptable
-
 		/**
 		 * @private
 		 */
@@ -926,7 +1075,7 @@ package feathers.controls
 		{
 			super();
 			this.textViewPort = new TextFieldViewPort();
-			this.textViewPort.addEventListener( Event.TRIGGERED, textViewPort_triggeredHandler );
+			this.textViewPort.addEventListener( Event.TRIGGERED , textViewPort_triggeredHandler );
 			this.viewPort = this.textViewPort;
 		}
 
@@ -953,6 +1102,7 @@ package feathers.controls
 				this.textViewPort.backgroundColor = this._backgroundColor;
 				this.textViewPort.border = this._border;
 				this.textViewPort.borderColor = this._borderColor;
+				this.textViewPort.cacheAsBitmap = this._cacheAsBitmap;
 				this.textViewPort.condenseWhite = this._condenseWhite;
 				this.textViewPort.displayAsPassword = this._displayAsPassword;
 				this.textViewPort.gridFitType = this._gridFitType;
@@ -976,103 +1126,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textViewPort_triggeredHandler( event : Event, link : String ) : void
+		protected function textViewPort_triggeredHandler( event : Event , link : String ) : void
 		{
-			this.dispatchEventWith( Event.TRIGGERED, false, link );
+			this.dispatchEventWith( Event.TRIGGERED , false , link );
 		}
-
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_ON : String = "on";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
-		/**
-		 * The vertical scroll bar will be positioned on the right.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
-		/**
-		 * The vertical scroll bar will be positioned on the left.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
 	}
 }

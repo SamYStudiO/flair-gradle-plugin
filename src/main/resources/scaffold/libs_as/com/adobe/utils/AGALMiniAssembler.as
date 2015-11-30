@@ -1,19 +1,19 @@
 /*
- Copyright (c) 2011, Adobe Systems Incorporated
+ Copyright (c) 2015, Adobe Systems Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are
  met:
 
- * Redistributions of source code must retain the above copyright notice, 
+ * Redistributions of source code must retain the above copyright notice,
  this list of conditions and the following disclaimer.
 
  * Redistributions in binary form must reproduce the above copyright
  notice, this list of conditions and the following disclaimer in the
  documentation and/or other materials provided with the distribution.
 
- * Neither the name of Adobe Systems Incorporated nor the names of its 
+ * Neither the name of Adobe Systems Incorporated nor the names of its
  contributors may be used to endorse or promote products derived from
  this software without specific prior written permission.
 
@@ -32,24 +32,24 @@
 package com.adobe.utils
 {
 	// ===========================================================================
-	// Imports
+	//	Imports
 	// ---------------------------------------------------------------------------
 	import flash.display3D.*;
 	import flash.utils.*;
 
 	// ===========================================================================
-	// Class
+	//	Class
 	// ---------------------------------------------------------------------------
 	public class AGALMiniAssembler
 	{		// ======================================================================
-		// Constants
-		// ----------------------------------------------------------------------
+		//	Constants
+		// ----------------------------------------------------------------------				
 		private static var initialized : Boolean = false;
-
+		
 		// ======================================================================
-		// Properties
+		//	Properties
 		// ----------------------------------------------------------------------
-		// AGAL bytes and error buffer
+		// AGAL bytes and error buffer 
 
 		static private function init() : void
 		{
@@ -91,7 +91,7 @@ package com.adobe.utils
 			OPMAP[ ELS ] = new OpCode( ELS, 0, 0x20, OP_NO_DEST | OP_VERSION2 | OP_INCNEST | OP_DECNEST | OP_SCALAR );
 			OPMAP[ EIF ] = new OpCode( EIF, 0, 0x21, OP_NO_DEST | OP_VERSION2 | OP_DECNEST | OP_SCALAR );
 			// space
-			// OPMAP[ TED ] = new OpCode( TED, 3, 0x26, OP_FRAG_ONLY | OP_SPECIAL_TEX | OP_VERSION2);	//ted is not available in AGAL2
+			//OPMAP[ TED ] = new OpCode( TED, 3, 0x26, OP_FRAG_ONLY | OP_SPECIAL_TEX | OP_VERSION2);	//ted is not available in AGAL2
 			OPMAP[ KIL ] = new OpCode( KIL, 1, 0x27, OP_NO_DEST | OP_FRAG_ONLY );
 			OPMAP[ TEX ] = new OpCode( TEX, 3, 0x28, OP_FRAG_ONLY | OP_SPECIAL_TEX );
 			OPMAP[ SGE ] = new OpCode( SGE, 3, 0x29, 0 );
@@ -100,34 +100,165 @@ package com.adobe.utils
 			OPMAP[ SEQ ] = new OpCode( SEQ, 3, 0x2c, 0 );
 			OPMAP[ SNE ] = new OpCode( SNE, 3, 0x2d, 0 );
 
-			SAMPLEMAP[ RGBA ] = new Sampler( RGBA, SAMPLER_TYPE_SHIFT, 0 );
-			SAMPLEMAP[ DXT1 ] = new Sampler( DXT1, SAMPLER_TYPE_SHIFT, 1 );
-			SAMPLEMAP[ DXT5 ] = new Sampler( DXT5, SAMPLER_TYPE_SHIFT, 2 );
-			SAMPLEMAP[ VIDEO ] = new Sampler( VIDEO, SAMPLER_TYPE_SHIFT, 3 );
-			SAMPLEMAP[ D2 ] = new Sampler( D2, SAMPLER_DIM_SHIFT, 0 );
-			SAMPLEMAP[ D3 ] = new Sampler( D3, SAMPLER_DIM_SHIFT, 2 );
-			SAMPLEMAP[ CUBE ] = new Sampler( CUBE, SAMPLER_DIM_SHIFT, 1 );
-			SAMPLEMAP[ MIPNEAREST ] = new Sampler( MIPNEAREST, SAMPLER_MIPMAP_SHIFT, 1 );
-			SAMPLEMAP[ MIPLINEAR ] = new Sampler( MIPLINEAR, SAMPLER_MIPMAP_SHIFT, 2 );
-			SAMPLEMAP[ MIPNONE ] = new Sampler( MIPNONE, SAMPLER_MIPMAP_SHIFT, 0 );
-			SAMPLEMAP[ NOMIP ] = new Sampler( NOMIP, SAMPLER_MIPMAP_SHIFT, 0 );
-			SAMPLEMAP[ NEAREST ] = new Sampler( NEAREST, SAMPLER_FILTER_SHIFT, 0 );
-			SAMPLEMAP[ LINEAR ] = new Sampler( LINEAR, SAMPLER_FILTER_SHIFT, 1 );
-			SAMPLEMAP[ ANISOTROPIC2X ] = new Sampler( ANISOTROPIC2X, SAMPLER_FILTER_SHIFT, 2 );
-			SAMPLEMAP[ ANISOTROPIC4X ] = new Sampler( ANISOTROPIC4X, SAMPLER_FILTER_SHIFT, 3 );
-			SAMPLEMAP[ ANISOTROPIC8X ] = new Sampler( ANISOTROPIC8X, SAMPLER_FILTER_SHIFT, 4 );
-			SAMPLEMAP[ ANISOTROPIC16X ] = new Sampler( ANISOTROPIC16X, SAMPLER_FILTER_SHIFT, 5 );
-			SAMPLEMAP[ CENTROID ] = new Sampler( CENTROID, SAMPLER_SPECIAL_SHIFT, 1 << 0 );
-			SAMPLEMAP[ SINGLE ] = new Sampler( SINGLE, SAMPLER_SPECIAL_SHIFT, 1 << 1 );
-			SAMPLEMAP[ IGNORESAMPLER ] = new Sampler( IGNORESAMPLER, SAMPLER_SPECIAL_SHIFT, 1 << 2 );
-			SAMPLEMAP[ REPEAT ] = new Sampler( REPEAT, SAMPLER_REPEAT_SHIFT, 1 );
-			SAMPLEMAP[ WRAP ] = new Sampler( WRAP, SAMPLER_REPEAT_SHIFT, 1 );
-			SAMPLEMAP[ CLAMP ] = new Sampler( CLAMP, SAMPLER_REPEAT_SHIFT, 0 );
-			SAMPLEMAP[ CLAMP_U_REPEAT_V ] = new Sampler( CLAMP_U_REPEAT_V, SAMPLER_REPEAT_SHIFT, 2 );
-			SAMPLEMAP[ REPEAT_U_CLAMP_V ] = new Sampler( REPEAT_U_CLAMP_V, SAMPLER_REPEAT_SHIFT, 3 );
+			SAMPLEMAP[ RGBA ] = new Sampler( RGBA , SAMPLER_TYPE_SHIFT , 0 );
+			SAMPLEMAP[ DXT1 ] = new Sampler( DXT1 , SAMPLER_TYPE_SHIFT , 1 );
+			SAMPLEMAP[ DXT5 ] = new Sampler( DXT5 , SAMPLER_TYPE_SHIFT , 2 );
+			SAMPLEMAP[ VIDEO ] = new Sampler( VIDEO , SAMPLER_TYPE_SHIFT , 3 );
+			SAMPLEMAP[ D2 ] = new Sampler( D2 , SAMPLER_DIM_SHIFT , 0 );
+			SAMPLEMAP[ D3 ] = new Sampler( D3 , SAMPLER_DIM_SHIFT , 2 );
+			SAMPLEMAP[ CUBE ] = new Sampler( CUBE , SAMPLER_DIM_SHIFT , 1 );
+			SAMPLEMAP[ MIPNEAREST ] = new Sampler( MIPNEAREST , SAMPLER_MIPMAP_SHIFT , 1 );
+			SAMPLEMAP[ MIPLINEAR ] = new Sampler( MIPLINEAR , SAMPLER_MIPMAP_SHIFT , 2 );
+			SAMPLEMAP[ MIPNONE ] = new Sampler( MIPNONE , SAMPLER_MIPMAP_SHIFT , 0 );
+			SAMPLEMAP[ NOMIP ] = new Sampler( NOMIP , SAMPLER_MIPMAP_SHIFT , 0 );
+			SAMPLEMAP[ NEAREST ] = new Sampler( NEAREST , SAMPLER_FILTER_SHIFT , 0 );
+			SAMPLEMAP[ LINEAR ] = new Sampler( LINEAR , SAMPLER_FILTER_SHIFT , 1 );
+			SAMPLEMAP[ ANISOTROPIC2X ] = new Sampler( ANISOTROPIC2X , SAMPLER_FILTER_SHIFT , 2 );
+			SAMPLEMAP[ ANISOTROPIC4X ] = new Sampler( ANISOTROPIC4X , SAMPLER_FILTER_SHIFT , 3 );
+			SAMPLEMAP[ ANISOTROPIC8X ] = new Sampler( ANISOTROPIC8X , SAMPLER_FILTER_SHIFT , 4 );
+			SAMPLEMAP[ ANISOTROPIC16X ] = new Sampler( ANISOTROPIC16X , SAMPLER_FILTER_SHIFT , 5 );
+			SAMPLEMAP[ CENTROID ] = new Sampler( CENTROID , SAMPLER_SPECIAL_SHIFT , 1 << 0 );
+			SAMPLEMAP[ SINGLE ] = new Sampler( SINGLE , SAMPLER_SPECIAL_SHIFT , 1 << 1 );
+			SAMPLEMAP[ IGNORESAMPLER ] = new Sampler( IGNORESAMPLER , SAMPLER_SPECIAL_SHIFT , 1 << 2 );
+			SAMPLEMAP[ REPEAT ] = new Sampler( REPEAT , SAMPLER_REPEAT_SHIFT , 1 );
+			SAMPLEMAP[ WRAP ] = new Sampler( WRAP , SAMPLER_REPEAT_SHIFT , 1 );
+			SAMPLEMAP[ CLAMP ] = new Sampler( CLAMP , SAMPLER_REPEAT_SHIFT , 0 );
+			SAMPLEMAP[ CLAMP_U_REPEAT_V ] = new Sampler( CLAMP_U_REPEAT_V , SAMPLER_REPEAT_SHIFT , 2 );
+			SAMPLEMAP[ REPEAT_U_CLAMP_V ] = new Sampler( REPEAT_U_CLAMP_V , SAMPLER_REPEAT_SHIFT , 3 );
 		}
 
+		private static const OPMAP : Dictionary = new Dictionary();
+		private static const REGMAP : Dictionary = new Dictionary();
+		private static const SAMPLEMAP : Dictionary = new Dictionary();
+		private static const MAX_NESTING : int = 4;
+		
+		// ======================================================================
+		//	Getters
+		// ----------------------------------------------------------------------
+		private static const MAX_OPCODES : int = 2048;
+		private static const FRAGMENT : String = "fragment";
+
+		// ======================================================================
+		//	Constructor
+		// ----------------------------------------------------------------------
+		private static const VERTEX : String = "vertex";
+		// ======================================================================
+		//	Methods
+		// ----------------------------------------------------------------------
+		private static const SAMPLER_TYPE_SHIFT : uint = 8;
+		private static const SAMPLER_DIM_SHIFT : uint = 12;
+		private static const SAMPLER_SPECIAL_SHIFT : uint = 16;
+		private static const SAMPLER_REPEAT_SHIFT : uint = 20;
+
+		// ======================================================================
+		//	Constants
+		// ----------------------------------------------------------------------
+		private static const SAMPLER_MIPMAP_SHIFT : uint = 24;
+		private static const SAMPLER_FILTER_SHIFT : uint = 28;
+		private static const REG_WRITE : uint = 0x1;
+		private static const REG_READ : uint = 0x2;
+		private static const REG_FRAG : uint = 0x20;
+		private static const REG_VERT : uint = 0x40;
+		private static const OP_SCALAR : uint = 0x1;
+
+		// masks and shifts
+		private static const OP_SPECIAL_TEX : uint = 0x8;
+		private static const OP_SPECIAL_MATRIX : uint = 0x10;
+		private static const OP_FRAG_ONLY : uint = 0x20;
+		private static const OP_VERT_ONLY : uint = 0x40;
+		private static const OP_NO_DEST : uint = 0x80;
+		private static const OP_VERSION2 : uint = 0x100;
+
+		// regmap flags
+		private static const OP_INCNEST : uint = 0x200;
+		private static const OP_DECNEST : uint = 0x400;
+		private static const MOV : String = "mov";
+		private static const ADD : String = "add";
+
+		// opmap flags
+		private static const SUB : String = "sub";
+		private static const MUL : String = "mul";
+		private static const DIV : String = "div";
+		private static const RCP : String = "rcp";
+		private static const MIN : String = "min";
+		private static const MAX : String = "max";
+		private static const FRC : String = "frc";
+		private static const SQT : String = "sqt";
+		private static const RSQ : String = "rsq";
+
+		// opcodes
+		private static const POW : String = "pow";
+		private static const LOG : String = "log";
+		private static const EXP : String = "exp";
+		private static const NRM : String = "nrm";
+		private static const SIN : String = "sin";
+		private static const COS : String = "cos";
+		private static const CRS : String = "crs";
+		private static const DP3 : String = "dp3";
+		private static const DP4 : String = "dp4";
+		private static const ABS : String = "abs";
+		private static const NEG : String = "neg";
+		private static const SAT : String = "sat";
+		private static const M33 : String = "m33";
+		private static const M44 : String = "m44";
+		private static const M34 : String = "m34";
+		private static const DDX : String = "ddx";
+		private static const DDY : String = "ddy";
+		private static const IFE : String = "ife";
+		private static const INE : String = "ine";
+		private static const IFG : String = "ifg";
+		private static const IFL : String = "ifl";
+		private static const ELS : String = "els";
+		private static const EIF : String = "eif";
+		private static const TED : String = "ted";
+		private static const KIL : String = "kil";
+		private static const TEX : String = "tex";
+		private static const SGE : String = "sge";
+		private static const SLT : String = "slt";
+		private static const SGN : String = "sgn";
+		private static const SEQ : String = "seq";
+		private static const SNE : String = "sne";
+		private static const VA : String = "va";
+		private static const VC : String = "vc";
+		private static const VT : String = "vt";
+		private static const VO : String = "vo";
+		private static const VI : String = "vi";
+		private static const FC : String = "fc";
+		private static const FT : String = "ft";
+		private static const FS : String = "fs";
+		private static const FO : String = "fo";
+		private static const FD : String = "fd";
+		private static const D2 : String = "2d";
+
+		// registers
+		private static const D3 : String = "3d";
+		private static const CUBE : String = "cube";
+		private static const MIPNEAREST : String = "mipnearest";
+		private static const MIPLINEAR : String = "miplinear";
+		private static const MIPNONE : String = "mipnone";
+		private static const NOMIP : String = "nomip";
+		private static const NEAREST : String = "nearest";
+		private static const LINEAR : String = "linear";
+		private static const ANISOTROPIC2X : String = "anisotropic2x";
+		private static const ANISOTROPIC4X : String = "anisotropic4x";
+
+		// samplers
+		private static const ANISOTROPIC8X : String = "anisotropic8x";
+		private static const ANISOTROPIC16X : String = "anisotropic16x";
+		private static const CENTROID : String = "centroid";
+		private static const SINGLE : String = "single";
+		private static const IGNORESAMPLER : String = "ignoresampler";
+		private static const REPEAT : String = "repeat";
+		private static const WRAP : String = "wrap";
+		private static const CLAMP : String = "clamp";
+		private static const REPEAT_U_CLAMP_V : String = "repeat_u_clamp_v";
+		private static const CLAMP_U_REPEAT_V : String = "clamp_u_repeat_v"; //Introduced by Flash 14
+		private static const RGBA : String = "rgba"; //Introduced by Flash 14
+		private static const DXT1 : String = "dxt1"; //Introduced by Flash 14
+		private static const DXT5 : String = "dxt5"; //Introduced by Flash 14
+		private static const VIDEO : String = "video";
 		private var debugEnabled : Boolean = false;
+		protected static const REGEXP_OUTER_SPACES : RegExp = /^\s+|\s+$/g;
 		public var verbose : Boolean = false;
 
 		private var _agalcode : ByteArray = null;
@@ -137,20 +268,12 @@ package com.adobe.utils
 			return _agalcode;
 		}
 
-		// ======================================================================
-		// Getters
-		// ----------------------------------------------------------------------
-
-		private var _error : String = "";
+		private var _error : String = ""; //Introduced by Flash 13
 
 		public function get error() : String
 		{
 			return _error;
-		}
-
-		// ======================================================================
-		// Constructor
-		// ----------------------------------------------------------------------
+		} //Introduced by Flash 13
 
 		public function AGALMiniAssembler( debugging : Boolean = false ) : void
 		{
@@ -159,19 +282,16 @@ package com.adobe.utils
 				init();
 		}
 
-		// ======================================================================
-		// Methods
-		// ----------------------------------------------------------------------
-		public function assemble2( ctx3d : Context3D, version : uint, vertexsrc : String, fragmentsrc : String ) : Program3D
+		public function assemble2( ctx3d : Context3D , version : uint , vertexsrc : String , fragmentsrc : String ) : Program3D
 		{
-			var agalvertex : ByteArray = assemble( VERTEX, vertexsrc, version );
-			var agalfragment : ByteArray = assemble( FRAGMENT, fragmentsrc, version );
+			var agalvertex : ByteArray = assemble( VERTEX , vertexsrc , version );
+			var agalfragment : ByteArray = assemble( FRAGMENT , fragmentsrc , version );
 			var prog : Program3D = ctx3d.createProgram();
-			prog.upload( agalvertex, agalfragment );
+			prog.upload( agalvertex , agalfragment );
 			return prog;
 		}
 
-		public function assemble( mode : String, source : String, version : uint = 1, ignorelimits : Boolean = false ) : ByteArray
+		public function assemble( mode : String , source : String , version : uint = 1 , ignorelimits : Boolean = false ) : ByteArray
 		{
 			var start : uint = getTimer();
 
@@ -191,9 +311,9 @@ package com.adobe.utils
 			agalcode.writeByte( 0xa1 );				// tag program id
 			agalcode.writeByte( isFrag ? 1 : 0 );	// vertex or fragment
 
-			initregmap( version, ignorelimits );
+			initregmap( version , ignorelimits );
 
-			var lines : Array = source.replace( /[\f\n\r\v]+/g, "\n" ).split( "\n" );
+			var lines : Array = source.replace( /[\f\n\r\v]+/g , "\n" ).split( "\n" );
 			var nest : int = 0;
 			var nops : int = 0;
 			var i : int;
@@ -345,7 +465,7 @@ package com.adobe.utils
 					}
 
 					regs[ j ] = regs[ j ].slice( regs[ j ].search( regFound.name ) + regFound.name.length );
-					// trace( "REGNUM: " +regs[j] );
+					//trace( "REGNUM: " +regs[j] );
 					var idxmatch : Array = isRelative ? relreg[ 0 ].match( /\d+/ ) : regs[ j ].match( /\d+/ );
 					var regidx : uint = 0;
 
@@ -458,7 +578,7 @@ package com.adobe.utils
 								if( optfound == null )
 								{
 									// todo check that it's a number...
-									// trace( "Warning, unknown sampler option: "+opts[k] );
+									//trace( "Warning, unknown sampler option: "+opts[k] );
 									bias = Number( opts[ k ] );
 									if( verbose )
 										trace( "    bias: " + bias );
@@ -540,19 +660,19 @@ package com.adobe.utils
 			return agalcode;
 		}
 
-		private function initregmap( version : uint, ignorelimits : Boolean ) : void
+		private function initregmap( version : uint , ignorelimits : Boolean ) : void
 		{
 			// version changes limits
-			REGMAP[ VA ] = new Register( VA, "vertex attribute", 0x0, ignorelimits ? 1024 : 7, REG_VERT | REG_READ );
-			REGMAP[ VC ] = new Register( VC, "vertex constant", 0x1, ignorelimits ? 1024 : (version == 1 ? 127 : 249), REG_VERT | REG_READ );
-			REGMAP[ VT ] = new Register( VT, "vertex temporary", 0x2, ignorelimits ? 1024 : (version == 1 ? 7 : 25), REG_VERT | REG_WRITE | REG_READ );
-			REGMAP[ VO ] = new Register( VO, "vertex output", 0x3, ignorelimits ? 1024 : 0, REG_VERT | REG_WRITE );
-			REGMAP[ VI ] = new Register( VI, "varying", 0x4, ignorelimits ? 1024 : (version == 1 ? 7 : 9), REG_VERT | REG_FRAG | REG_READ | REG_WRITE );
-			REGMAP[ FC ] = new Register( FC, "fragment constant", 0x1, ignorelimits ? 1024 : (version == 1 ? 27 : 63), REG_FRAG | REG_READ );
-			REGMAP[ FT ] = new Register( FT, "fragment temporary", 0x2, ignorelimits ? 1024 : (version == 1 ? 7 : 25), REG_FRAG | REG_WRITE | REG_READ );
-			REGMAP[ FS ] = new Register( FS, "texture sampler", 0x5, ignorelimits ? 1024 : 7, REG_FRAG | REG_READ );
-			REGMAP[ FO ] = new Register( FO, "fragment output", 0x3, ignorelimits ? 1024 : (version == 1 ? 0 : 3), REG_FRAG | REG_WRITE );
-			REGMAP[ FD ] = new Register( FD, "fragment depth output", 0x6, ignorelimits ? 1024 : (version == 1 ? -1 : 0), REG_FRAG | REG_WRITE );
+			REGMAP[ VA ] = new Register( VA , "vertex attribute" , 0x0 , ignorelimits ? 1024 : ((version == 1 || version == 2) ? 7 : 15) , REG_VERT | REG_READ );
+			REGMAP[ VC ] = new Register( VC , "vertex constant" , 0x1 , ignorelimits ? 1024 : (version == 1 ? 127 : 249) , REG_VERT | REG_READ );
+			REGMAP[ VT ] = new Register( VT , "vertex temporary" , 0x2 , ignorelimits ? 1024 : (version == 1 ? 7 : 25) , REG_VERT | REG_WRITE | REG_READ );
+			REGMAP[ VO ] = new Register( VO , "vertex output" , 0x3 , ignorelimits ? 1024 : 0 , REG_VERT | REG_WRITE );
+			REGMAP[ VI ] = new Register( VI , "varying" , 0x4 , ignorelimits ? 1024 : (version == 1 ? 7 : 9) , REG_VERT | REG_FRAG | REG_READ | REG_WRITE );
+			REGMAP[ FC ] = new Register( FC , "fragment constant" , 0x1 , ignorelimits ? 1024 : (version == 1 ? 27 : ((version == 2) ? 63 : 199)) , REG_FRAG | REG_READ );
+			REGMAP[ FT ] = new Register( FT , "fragment temporary" , 0x2 , ignorelimits ? 1024 : (version == 1 ? 7 : 25) , REG_FRAG | REG_WRITE | REG_READ );
+			REGMAP[ FS ] = new Register( FS , "texture sampler" , 0x5 , ignorelimits ? 1024 : 7 , REG_FRAG | REG_READ );
+			REGMAP[ FO ] = new Register( FO , "fragment output" , 0x3 , ignorelimits ? 1024 : (version == 1 ? 0 : 3) , REG_FRAG | REG_WRITE );
+			REGMAP[ FD ] = new Register( FD , "fragment depth output" , 0x6 , ignorelimits ? 1024 : (version == 1 ? -1 : 0) , REG_FRAG | REG_WRITE );
 
 			// aliases
 			REGMAP[ "op" ] = REGMAP[ VO ];
@@ -562,247 +682,28 @@ package com.adobe.utils
 			REGMAP[ "od" ] = REGMAP[ FD ];
 			REGMAP[ "fi" ] = REGMAP[ VI ];
 		}
-
-		protected static const REGEXP_OUTER_SPACES : RegExp = /^\s+|\s+$/g;
-
-		// ======================================================================
-		// Constants
-		// ----------------------------------------------------------------------
-		private static const OPMAP : Dictionary = new Dictionary();
-
-		private static const REGMAP : Dictionary = new Dictionary();
-
-		private static const SAMPLEMAP : Dictionary = new Dictionary();
-
-		private static const MAX_NESTING : int = 4;
-
-		private static const MAX_OPCODES : int = 2048;
-
-		private static const FRAGMENT : String = "fragment";
-
-		private static const VERTEX : String = "vertex";
-
-		// masks and shifts
-		private static const SAMPLER_TYPE_SHIFT : uint = 8;
-
-		private static const SAMPLER_DIM_SHIFT : uint = 12;
-
-		private static const SAMPLER_SPECIAL_SHIFT : uint = 16;
-
-		private static const SAMPLER_REPEAT_SHIFT : uint = 20;
-
-		private static const SAMPLER_MIPMAP_SHIFT : uint = 24;
-
-		private static const SAMPLER_FILTER_SHIFT : uint = 28;
-
-		// regmap flags
-		private static const REG_WRITE : uint = 0x1;
-
-		private static const REG_READ : uint = 0x2;
-
-		private static const REG_FRAG : uint = 0x20;
-
-		private static const REG_VERT : uint = 0x40;
-
-		// opmap flags
-		private static const OP_SCALAR : uint = 0x1;
-
-		private static const OP_SPECIAL_TEX : uint = 0x8;
-
-		private static const OP_SPECIAL_MATRIX : uint = 0x10;
-
-		private static const OP_FRAG_ONLY : uint = 0x20;
-
-		private static const OP_VERT_ONLY : uint = 0x40;
-
-		private static const OP_NO_DEST : uint = 0x80;
-
-		private static const OP_VERSION2 : uint = 0x100;
-
-		private static const OP_INCNEST : uint = 0x200;
-
-		private static const OP_DECNEST : uint = 0x400;
-
-		// opcodes
-		private static const MOV : String = "mov";
-
-		private static const ADD : String = "add";
-
-		private static const SUB : String = "sub";
-
-		private static const MUL : String = "mul";
-
-		private static const DIV : String = "div";
-
-		private static const RCP : String = "rcp";
-
-		private static const MIN : String = "min";
-
-		private static const MAX : String = "max";
-
-		private static const FRC : String = "frc";
-
-		private static const SQT : String = "sqt";
-
-		private static const RSQ : String = "rsq";
-
-		private static const POW : String = "pow";
-
-		private static const LOG : String = "log";
-
-		private static const EXP : String = "exp";
-
-		private static const NRM : String = "nrm";
-
-		private static const SIN : String = "sin";
-
-		private static const COS : String = "cos";
-
-		private static const CRS : String = "crs";
-
-		private static const DP3 : String = "dp3";
-
-		private static const DP4 : String = "dp4";
-
-		private static const ABS : String = "abs";
-
-		private static const NEG : String = "neg";
-
-		private static const SAT : String = "sat";
-
-		private static const M33 : String = "m33";
-
-		private static const M44 : String = "m44";
-
-		private static const M34 : String = "m34";
-
-		private static const DDX : String = "ddx";
-
-		private static const DDY : String = "ddy";
-
-		private static const IFE : String = "ife";
-
-		private static const INE : String = "ine";
-
-		private static const IFG : String = "ifg";
-
-		private static const IFL : String = "ifl";
-
-		private static const ELS : String = "els";
-
-		private static const EIF : String = "eif";
-
-		private static const TED : String = "ted";
-
-		private static const KIL : String = "kil";
-
-		private static const TEX : String = "tex";
-
-		private static const SGE : String = "sge";
-
-		private static const SLT : String = "slt";
-
-		private static const SGN : String = "sgn";
-
-		private static const SEQ : String = "seq";
-
-		private static const SNE : String = "sne";
-
-		// registers
-		private static const VA : String = "va";
-
-		private static const VC : String = "vc";
-
-		private static const VT : String = "vt";
-
-		private static const VO : String = "vo";
-
-		private static const VI : String = "vi";
-
-		private static const FC : String = "fc";
-
-		private static const FT : String = "ft";
-
-		private static const FS : String = "fs";
-
-		private static const FO : String = "fo";
-
-		private static const FD : String = "fd";
-
-		// samplers
-		private static const D2 : String = "2d";
-
-		private static const D3 : String = "3d";
-
-		private static const CUBE : String = "cube";
-
-		private static const MIPNEAREST : String = "mipnearest";
-
-		private static const MIPLINEAR : String = "miplinear";
-
-		private static const MIPNONE : String = "mipnone";
-
-		private static const NOMIP : String = "nomip";
-
-		private static const NEAREST : String = "nearest";
-
-		private static const LINEAR : String = "linear";
-
-		private static const ANISOTROPIC2X : String = "anisotropic2x"; // Introduced by Flash 14
-
-		private static const ANISOTROPIC4X : String = "anisotropic4x"; // Introduced by Flash 14
-
-		private static const ANISOTROPIC8X : String = "anisotropic8x"; // Introduced by Flash 14
-
-		private static const ANISOTROPIC16X : String = "anisotropic16x"; // Introduced by Flash 14
-
-		private static const CENTROID : String = "centroid";
-
-		private static const SINGLE : String = "single";
-
-		private static const IGNORESAMPLER : String = "ignoresampler";
-
-		private static const REPEAT : String = "repeat";
-
-		private static const WRAP : String = "wrap";
-
-		private static const CLAMP : String = "clamp";
-
-		private static const REPEAT_U_CLAMP_V : String = "repeat_u_clamp_v"; // Introduced by Flash 13
-
-		private static const CLAMP_U_REPEAT_V : String = "clamp_u_repeat_v"; // Introduced by Flash 13
-
-		private static const RGBA : String = "rgba";
-
-		private static const DXT1 : String = "dxt1";
-
-		private static const DXT5 : String = "dxt5";
-
-		private static const VIDEO : String = "video";
 	}
 }
+
 // ================================================================================
-// Helper Classes
+//	Helper Classes
 // --------------------------------------------------------------------------------
 {
 	// ===========================================================================
-	// Class
+	//	Class
 	// ---------------------------------------------------------------------------
 	class OpCode
-	{
+	{		
 		// ======================================================================
-		// Properties
+		//	Properties
 		// ----------------------------------------------------------------------
 		private var _emitCode : uint;
-
 		private var _flags : uint;
-
 		private var _name : String;
-
 		private var _numRegister : uint;
-
+		
 		// ======================================================================
-		// Getters
+		//	Getters
 		// ----------------------------------------------------------------------
 		public function get emitCode() : uint
 		{
@@ -823,20 +724,20 @@ package com.adobe.utils
 		{
 			return _numRegister;
 		}
-
+		
 		// ======================================================================
-		// Constructor
+		//	Constructor
 		// ----------------------------------------------------------------------
-		public function OpCode( name : String, numRegister : uint, emitCode : uint, flags : uint )
+		public function OpCode( name : String , numRegister : uint , emitCode : uint , flags : uint )
 		{
 			_name = name;
 			_numRegister = numRegister;
 			_emitCode = emitCode;
 			_flags = flags;
-		}
-
+		}		
+		
 		// ======================================================================
-		// Methods
+		//	Methods
 		// ----------------------------------------------------------------------
 		public function toString() : String
 		{
@@ -845,25 +746,21 @@ package com.adobe.utils
 	}
 
 	// ===========================================================================
-	// Class
+	//	Class
 	// ---------------------------------------------------------------------------
 	class Register
 	{
 		// ======================================================================
-		// Properties
+		//	Properties
 		// ----------------------------------------------------------------------
 		private var _emitCode : uint;
-
 		private var _name : String;
-
 		private var _longName : String;
-
 		private var _flags : uint;
-
 		private var _range : uint;
-
+		
 		// ======================================================================
-		// Getters
+		//	Getters
 		// ----------------------------------------------------------------------
 		public function get emitCode() : uint
 		{
@@ -889,11 +786,11 @@ package com.adobe.utils
 		{
 			return _range;
 		}
-
+		
 		// ======================================================================
-		// Constructor
+		//	Constructor
 		// ----------------------------------------------------------------------
-		public function Register( name : String, longName : String, emitCode : uint, range : uint, flags : uint )
+		public function Register( name : String , longName : String , emitCode : uint , range : uint , flags : uint )
 		{
 			_name = name;
 			_longName = longName;
@@ -903,7 +800,7 @@ package com.adobe.utils
 		}
 
 		// ======================================================================
-		// Methods
+		//	Methods
 		// ----------------------------------------------------------------------
 		public function toString() : String
 		{
@@ -912,21 +809,19 @@ package com.adobe.utils
 	}
 
 	// ===========================================================================
-	// Class
+	//	Class
 	// ---------------------------------------------------------------------------
 	class Sampler
 	{
 		// ======================================================================
-		// Properties
+		//	Properties
 		// ----------------------------------------------------------------------
 		private var _flag : uint;
-
 		private var _mask : uint;
-
 		private var _name : String;
-
+		
 		// ======================================================================
-		// Getters
+		//	Getters
 		// ----------------------------------------------------------------------
 		public function get flag() : uint
 		{
@@ -942,11 +837,11 @@ package com.adobe.utils
 		{
 			return _name;
 		}
-
+		
 		// ======================================================================
-		// Constructor
+		//	Constructor
 		// ----------------------------------------------------------------------
-		public function Sampler( name : String, flag : uint, mask : uint )
+		public function Sampler( name : String , flag : uint , mask : uint )
 		{
 			_name = name;
 			_flag = flag;
@@ -954,7 +849,7 @@ package com.adobe.utils
 		}
 
 		// ======================================================================
-		// Methods
+		//	Methods
 		// ----------------------------------------------------------------------
 		public function toString() : String
 		{

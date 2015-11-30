@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -15,7 +15,7 @@ package feathers.utils.text
 		/**
 		 * Finds the start index of the word that starts before the selection.
 		 */
-		public static function findPreviousWordStartIndex( text : String, selectionStartIndex : int ) : int
+		public static function findPreviousWordStartIndex( text : String , selectionStartIndex : int ) : int
 		{
 			if( selectionStartIndex <= 0 )
 			{
@@ -38,15 +38,15 @@ package feathers.utils.text
 		 * Finds the start index of the next word that starts after the
 		 * selection.
 		 */
-		public static function findNextWordStartIndex( text : String, selectionEndIndex : int ) : int
+		public static function findNextWordStartIndex( text : String , selectionEndIndex : int ) : int
 		{
 			var textLength : int = text.length;
 			if( selectionEndIndex >= textLength - 1 )
 			{
 				return textLength;
 			}
-			// the first character is a special case. any non-whitespace is
-			// considered part of the word.
+			//the first character is a special case. any non-whitespace is
+			//considered part of the word.
 			var prevCharIsWord : Boolean = !IS_WHITESPACE.test( text.charAt( selectionEndIndex ) );
 			for( var i : int = selectionEndIndex + 1; i < textLength; i++ )
 			{
@@ -59,7 +59,6 @@ package feathers.utils.text
 			}
 			return textLength;
 		}
-
 		/**
 		 * @private
 		 */

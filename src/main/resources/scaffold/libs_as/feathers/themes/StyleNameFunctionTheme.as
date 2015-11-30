@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -32,7 +32,7 @@ package feathers.themes
 		 */
 		public function StyleNameFunctionTheme()
 		{
-			this._registry = new StyleProviderRegistry();
+			this.createRegistry();
 		}
 
 		/**
@@ -55,5 +55,14 @@ package feathers.themes
 		{
 			return StyleNameFunctionStyleProvider( this._registry.getStyleProvider( type ) );
 		}
+
+		/**
+		 * @private
+		 */
+		protected function createRegistry() : void
+		{
+			this._registry = new StyleProviderRegistry();
+		}
+		
 	}
 }

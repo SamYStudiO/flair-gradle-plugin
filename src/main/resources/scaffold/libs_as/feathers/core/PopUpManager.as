@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -134,8 +134,8 @@ package feathers.core
 					factory = PopUpManager.defaultPopUpManagerFactory;
 				}
 				popUpManager = factory();
-				// this allows the factory to optionally set the root, but it
-				// also enforces the root being on the correct stage.
+				//this allows the factory to optionally set the root, but it
+				//also enforces the root being on the correct stage.
 				if( !popUpManager.root || !starling.stage.contains( popUpManager.root ) )
 				{
 					popUpManager.root = Starling.current.stage;
@@ -178,17 +178,17 @@ package feathers.core
 		 * Regular Starling display objects do not dispatch a proper resize
 		 * event that the pop-up manager can listen to.</p>
 		 */
-		public static function addPopUp( popUp : DisplayObject, isModal : Boolean = true, isCentered : Boolean = true, customOverlayFactory : Function = null ) : DisplayObject
+		public static function addPopUp( popUp : DisplayObject , isModal : Boolean = true , isCentered : Boolean = true , customOverlayFactory : Function = null ) : DisplayObject
 		{
-			return PopUpManager.forStarling( Starling.current ).addPopUp( popUp, isModal, isCentered, customOverlayFactory );
+			return PopUpManager.forStarling( Starling.current ).addPopUp( popUp , isModal , isCentered , customOverlayFactory );
 		}
 
 		/**
 		 * Removes a pop-up from the stage.
 		 */
-		public static function removePopUp( popUp : DisplayObject, dispose : Boolean = false ) : DisplayObject
+		public static function removePopUp( popUp : DisplayObject , dispose : Boolean = false ) : DisplayObject
 		{
-			return PopUpManager.forStarling( Starling.current ).removePopUp( popUp, dispose );
+			return PopUpManager.forStarling( Starling.current ).removePopUp( popUp , dispose );
 		}
 
 		/**
@@ -232,7 +232,6 @@ package feathers.core
 		{
 			PopUpManager.forStarling( Starling.current ).centerPopUp( popUp );
 		}
-
 		/**
 		 * @private
 		 */

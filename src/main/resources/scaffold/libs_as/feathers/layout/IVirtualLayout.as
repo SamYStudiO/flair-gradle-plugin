@@ -1,6 +1,6 @@
 /*
  Feathers
- Copyright 2012-2015 Joshua Tynjala. All Rights Reserved.
+ Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
  This program is free software. You can redistribute and/or modify it in
  accordance with the terms of the accompanying license agreement.
@@ -63,7 +63,7 @@ package feathers.layout
 		 * @see #typicalItemWidth
 		 * @see #typicalItemHeight
 		 */
-		function measureViewPort( itemCount : int, viewPortBounds : ViewPortBounds = null, result : Point = null ) : Point;
+		function measureViewPort( itemCount : int , viewPortBounds : ViewPortBounds = null , result : Point = null ) : Point;
 
 		/**
 		 * Used internally by a component, such as <code>List</code>, to
@@ -78,6 +78,6 @@ package feathers.layout
 		 * not call this function. It is meant for developers creating custom
 		 * components only.</p>
 		 */
-		function getVisibleIndicesAtScrollPosition( scrollX : Number, scrollY : Number, width : Number, height : Number, itemCount : int, result : Vector.<int> = null ) : Vector.<int>;
+		function getVisibleIndicesAtScrollPosition( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> = null ) : Vector.<int>;
 	}
 }
