@@ -83,12 +83,11 @@ class UpdateProperties extends DefaultTask
 						String[] commons = commonResources.split( "," )
 						String[] types = typeResources.split( "," )
 
-
 						commons.each { common ->
 
 							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
 
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common ) && paths.indexOf( path ) < 0 )
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
 							{
 								paths += path
 							}
@@ -98,7 +97,7 @@ class UpdateProperties extends DefaultTask
 
 							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
 
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type ) && paths.indexOf( path ) < 0 )
+							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
 							{
 								paths += path
 							}
