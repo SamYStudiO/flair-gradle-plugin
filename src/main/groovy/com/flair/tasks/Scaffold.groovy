@@ -97,7 +97,7 @@ public class Scaffold extends DefaultTask
 
 		project.copy {
 			from "${ moduleName }/gitignore"
-			into ""
+			into project.getRootDir( )
 
 			rename( "gitignore" , ".gitignore" )
 		}
@@ -106,7 +106,7 @@ public class Scaffold extends DefaultTask
 
 		project.copy {
 			from "${ moduleName }/local.properties"
-			into ""
+			into project.getRootDir( )
 		}
 
 		project.file( "${ moduleName }/local.properties" ).delete( )
