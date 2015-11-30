@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration name="android_dev" default="false" factoryName="Flash App" type="FlashRunConfigurationType">
+    <configuration name="android_dev" default="false" factoryName="Flash App" singleton="true" type="FlashRunConfigurationType">
         <option name="BCName" value="android_armv7_dev" />
         <option name="IOSSimulatorSdkPath" value="" />
         <option name="adlOptions" value="" />
