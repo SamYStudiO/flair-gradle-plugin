@@ -4,7 +4,7 @@ package _appId_.resources
 	import _appId_.actors.STARLING;
 	import _appId_.utils.*;
 	import _appId_.utils.displayMetrics.EnumDensityBucket;
-	import _appId_.utils.displayMetrics.densityBucket;
+	import _appId_.utils.displayMetrics.deviceBucket;
 	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.EnumScreen;
 
@@ -57,7 +57,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , densityBucket );
+		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , deviceBucket );
 
 		/**
 		 *
@@ -161,7 +161,7 @@ package _appId_.resources
 				{
 					var d : int = int.MIN_VALUE;
 					var buckets : Array = [ EnumDensityBucket.LDPI , EnumDensityBucket.MDPI , EnumDensityBucket.HDPI , EnumDensityBucket.XHDPI , EnumDensityBucket.XXHDPI , EnumDensityBucket.XXXHDPI ];
-					var index : uint = buckets.indexOf( densityBucket );
+					var index : uint = buckets.indexOf( deviceBucket );
 
 					for each ( directory in a )
 					{

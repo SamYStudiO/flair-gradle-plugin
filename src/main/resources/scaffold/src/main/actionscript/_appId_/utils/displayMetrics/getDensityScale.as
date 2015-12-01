@@ -5,6 +5,6 @@ package _appId_.utils.displayMetrics
 	 */
 	public function getDensityScale() : Number
 	{
-		return getDensity() / getBucketDensity( EnumDensityBucket.MDPI );
+		return getDensity() / getDensityFromBucket( EnumDensityBucket.MDPI );
 	}
 }

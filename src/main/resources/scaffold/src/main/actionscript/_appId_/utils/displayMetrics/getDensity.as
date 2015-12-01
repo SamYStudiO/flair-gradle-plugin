@@ -7,6 +7,6 @@ package _appId_.utils.displayMetrics
 	 */
 	public function getDensity() : Number
 	{
-		return DeviceCapabilities.dpi * densityScaleOffset;
+		return DeviceCapabilities.dpi;
 	}
 }

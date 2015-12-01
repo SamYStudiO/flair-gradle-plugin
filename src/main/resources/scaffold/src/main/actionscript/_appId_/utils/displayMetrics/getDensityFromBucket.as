@@ -3,7 +3,7 @@ package _appId_.utils.displayMetrics
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function getBucketDensity( bucket : String ) : uint
+	public function getDensityFromBucket( bucket : String ) : uint
 	{
 		switch( bucket )
 		{

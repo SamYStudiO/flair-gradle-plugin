@@ -69,7 +69,7 @@ package _appId_
 		{
 			// Uncomment if you don't want assets to be scaled to device physical density
 			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
-			//DeviceCapabilities.dpi = getBucketDensity( getDensityBucket( DeviceCapabilities.dpi ) );
+			//DeviceCapabilities.dpi = getDensityFromBucket( getBucketFromDensity( DeviceCapabilities.dpi ) );
 
 			super._init( e );
 		}

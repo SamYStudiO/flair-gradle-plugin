@@ -4,6 +4,7 @@ package _appId_.view.core
 	import _appId_.actors.STAGE;
 	import _appId_.resources.addAssetManager;
 	import _appId_.resources.removeAssetManager;
+	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.utils.displayMetrics.getDrawableScale;
 
 	import feathers.system.DeviceCapabilities;
@@ -131,7 +132,7 @@ package _appId_.view.core
 		 */
 		protected function _getAssetManager() : AssetManager
 		{
-			return new AssetManager( getDrawableScale() );
+			return new AssetManager( getDrawableScale() * getDensityScale() );
 		}
 
 		/**

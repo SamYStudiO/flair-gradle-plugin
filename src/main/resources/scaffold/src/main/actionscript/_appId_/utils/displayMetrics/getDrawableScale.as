@@ -8,8 +8,8 @@ package _appId_.utils.displayMetrics
 	public function getDrawableScale() : Number
 	{
 		var bucket : String = R.getDrawableBucket();
-		var drawableDensity : uint = getBucketDensity( bucket );
+		var drawableDensity : uint = getDensityFromBucket( bucket );
 
-		return drawableDensity / getBucketDensity( densityBucket ) * getDensityScale();
+		return drawableDensity / getDensityFromBucket( deviceBucket );
 	}
 }
