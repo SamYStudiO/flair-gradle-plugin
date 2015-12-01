@@ -1,9 +1,11 @@
 package _appId_.resources
 {
+	import _appId_.actors.STAGE;
 	import _appId_.actors.STARLING;
 	import _appId_.utils.*;
 	import _appId_.utils.displayMetrics.EnumDensityBucket;
 	import _appId_.utils.displayMetrics.densityBucket;
+	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.EnumScreen;
 
 	import flash.display3D.Context3DProfile;
@@ -12,38 +14,60 @@ package _appId_.resources
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
 	 */
-	public final class ResourcesManager
+	public final class ResourcesFilesManager
 	{
 		/**
 		 *
 		 */
-		private static var __instance : ResourcesManager;
+		private static var __instance : ResourcesFilesManager;
 
 		/**
 		 *
 		 */
-		public static function getInstance() : ResourcesManager
+		public static function getInstance() : ResourcesFilesManager
 		{
-			if( __instance == null ) __instance = new ResourcesManager( new Singleton() );
+			if( __instance == null ) __instance = new ResourcesFilesManager( new Singleton() );
 
 			return __instance;
 		}
 
 		/**
-		 * Regexps to retrieve resource qualifiers.
-		 * Actually only language,region and dpi densityBucket are supported
+		 *
 		 */
-		private const __REG_QUALIFIERS : Array = [ /((?:-)[a-z]{2,3}(?:[-|\/]))/ , /((?:-)r[A-Z]{2}(?:[-|\/]))/ , /(?:-)(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ ];
+		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2,3})(?:-|$)/ , locale.getLanguage() );
 
 		/**
 		 *
 		 */
-		private const __CURRENT_QUALIFIERS : Array = [ locale.getLanguage() , "r" + locale.getRegion() , densityBucket ];
+		private const __LOCALE_REGION_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_REGION , /-(r[A-Z]{2})(?:-|$)/ , locale.getRegion() );
+
+		/**
+		 *
+		 */
+		private const __SMALLEST_WIDTH_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.SMALLEST_WIDTH , /(sw[0-9]{2,4}dp)/ , Math.min( STAGE.stageWidth / getDensityScale() , STAGE.stageHeight / getDensityScale() ) , function ( qualifierValue : String , testValue : String ) : Boolean
+		{
+			function parseSWInt( s : String ) : int
+			{
+				return int( s.replace( "sw" , "" ).replace( "dp" , "" ) )
+			}
+
+			return parseSWInt( testValue ) >= parseSWInt( qualifierValue );
+		} );
+
+		/**
+		 *
+		 */
+		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , densityBucket );
+
+		/**
+		 *
+		 */
+		private const __QUALIFIERS : Array = [ __LOCALE_LANGUAGE_QUALIFIER , __LOCALE_REGION_QUALIFIER , __SMALLEST_WIDTH_QUALIFIER , __DENSITY_QUALIFIER ];
 
 		/**
 		 * @private
 		 */
-		public function ResourcesManager( singleton : Singleton )
+		public function ResourcesFilesManager( singleton : Singleton )
 		{
 			if( singleton == null ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
 		}
@@ -81,35 +105,32 @@ package _appId_.resources
 
 			var resourceList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
 			var a : Array = [];
-			var reg : RegExp;
+			var qualifier : Qualifier;
 			var directory : File;
 			var test : Array;
-			var l : uint;
-			var i : int;
 			var match : String;
 
 			files : for each ( directory in resourceList )
 			{
 				if( directory.isDirectory && directory.name.toLowerCase().indexOf( id ) == 0 )
 				{
-					l = __REG_QUALIFIERS.length;
+					var sw : Array = [];
 
-					for( i = 0; i < l; i++ )
+					for each ( qualifier in __QUALIFIERS )
 					{
-						if( i == 2 ) continue;
+						if( qualifier.name == EnumQualifier.DENSITY ) continue;
 
-						reg = __REG_QUALIFIERS[ i ];
-
-						test = ( directory.name + "/" ).match( reg );
+						test = directory.name.match( qualifier.regexp );
 
 						if( test != null && test.length > 0 )
 						{
 							match = test[ 0 ];
 
-							if( match.charAt( 0 ) == "-" ) match = match.substr( 1 );
-							if( match.charAt( match.length - 1 ) == "-" || match.charAt( match.length - 1 ) == "/" ) match = match.substr( 0 , match.length - 1 );
-
-							if( match != __CURRENT_QUALIFIERS[ i ] ) continue files;
+							if( !qualifier.test( match ) ) continue files;
+							else if( qualifier.name == EnumQualifier.SMALLEST_WIDTH )
+							{
+								sw.push( {file : directory , sw : int( match.replace( "sw" , "" ).replace( "dp" , "" ) )} );
+							}
 						}
 					}
 
@@ -117,15 +138,26 @@ package _appId_.resources
 				}
 			}
 
-			l = __REG_QUALIFIERS.length;
+			if( sw.length > 1 )
+			{
+				var max : Number = 0;
 
-			for( i = 0; i < l; i++ )
+				for each ( var o : Object in sw )
+				{
+					max = Math.max( max , o.sw );
+				}
+
+				for each ( o in sw )
+				{
+					if( o.sw != max ) a.removeAt( a.indexOf( o.file ) );
+				}
+			}
+
+			for each ( qualifier in __QUALIFIERS )
 			{
 				var b : Array = a.concat();
 
-				reg = __REG_QUALIFIERS[ i ];
-
-				if( i == 2 )
+				if( qualifier.name == EnumQualifier.DENSITY )
 				{
 					var d : int = int.MIN_VALUE;
 					var buckets : Array = [ EnumDensityBucket.LDPI , EnumDensityBucket.MDPI , EnumDensityBucket.HDPI , EnumDensityBucket.XHDPI , EnumDensityBucket.XXHDPI , EnumDensityBucket.XXXHDPI ];
@@ -133,14 +165,12 @@ package _appId_.resources
 
 					for each ( directory in a )
 					{
-						test = ( directory.name + "/" ).match( reg );
+						test = directory.name.match( qualifier.regexp );
 
 						if( test != null && test.length > 0 )
 						{
 							match = test[ 0 ];
 
-							if( match.charAt( 0 ) == "-" ) match = match.substr( 1 );
-							if( match.charAt( match.length - 1 ) == "-" || match.charAt( match.length - 1 ) == "/" ) match = match.substr( 0 , match.length - 1 );
 							var matchIndex : int = buckets.indexOf( match );
 							var diff : int = matchIndex - index;
 
@@ -154,21 +184,24 @@ package _appId_.resources
 
 					for each ( directory in a )
 					{
-						if( directory.name.indexOf( "-" + bucket ) < 0 && directory.name.indexOf( "nodpi" ) < 0 && ( directory.name + "/" ).match( reg ) ) b.removeAt( b.indexOf( directory ) );
+						if( directory.name.indexOf( "-" + bucket ) < 0 && directory.name.indexOf( "nodpi" ) < 0 && directory.name.match( qualifier.regexp ) ) b.removeAt( b.indexOf( directory ) );
 					}
 				}
 				else
 				{
 					for each ( directory in a )
 					{
-						test = ( directory.name + "/" ).match( reg );
+						test = directory.name.match( qualifier.regexp );
 
 						if( test != null && test.length > 0 )
 						{
+							match = test[ 0 ];
+
 							for each ( directory in a )
 							{
-								test = ( directory.name + "/" ).match( reg );
-								if( ( test == null || test.length == 0 ) && directory.name.indexOf( "nodpi" ) < 0 )
+								test = directory.name.match( qualifier.regexp );
+
+								if( test == null || test.length == 0 )
 								{
 									b.removeAt( b.indexOf( directory ) );
 								}
@@ -242,16 +275,11 @@ package _appId_.resources
 			{
 				var drawableDirectoryName : String = v[ 0 ].parent.name;
 
-				var test : Array = drawableDirectoryName.match( __REG_QUALIFIERS[ 2 ] );
+				var test : Array = drawableDirectoryName.match( __DENSITY_QUALIFIER.regexp );
 
 				if( test != null && test.length > 0 )
 				{
-					var match : String = test[ 0 ];
-
-					if( match.charAt( 0 ) == "-" ) match = match.substr( 1 );
-					if( match.charAt( match.length - 1 ) == "-" || match.charAt( match.length - 1 ) == "/" ) match = match.substr( 0 , match.length - 1 );
-
-					return match;
+					return test[ 0 ];
 				}
 			}
 
@@ -260,7 +288,81 @@ package _appId_.resources
 	}
 }
 
-internal class Singleton
+class Singleton
 {
 }
+
+class EnumQualifier
+{
+	/**
+	 *
+	 */
+	public static const LOCALE_LANGUAGE : String = "localeLanguage";
+
+	/**
+	 *
+	 */
+	public static const LOCALE_REGION : String = "localeRegion";
+
+	/**
+	 *
+	 */
+	public static const SMALLEST_WIDTH : String = "smallestWidth";
+
+	/**
+	 *
+	 */
+	public static const DENSITY : String = "density";
+
+	/**
+	 * @private
+	 */
+	public function EnumQualifier() : void
+	{
+		throw new Error( this + " cannot be instantiated" );
+	}
+}
+
+class Qualifier
+{
+	/**
+	 *
+	 */
+	public var name : String;
+
+	/**
+	 *
+	 */
+	public var regexp : RegExp;
+
+	/**
+	 *
+	 */
+	public var value : Object;
+
+	/**
+	 *
+	 */
+	public var matchFunction : Function;
+
+	/**
+	 *
+	 */
+	public function Qualifier( name : String , regexp : RegExp , value : Object , matchFunction : Function = null )
+	{
+		this.name = name;
+		this.regexp = regexp;
+		this.value = value;
+		this.matchFunction = matchFunction;
+	}
+
+	/**
+	 *
+	 */
+	public function test( value : Object ) : Boolean
+	{
+		return matchFunction != null ? matchFunction( this.value , value ) : value === this.value;
+	}
+}
+
 

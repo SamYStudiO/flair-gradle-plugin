@@ -333,6 +333,6 @@ package _appId_.utils
 	}
 }
 
-internal class Singleton
+class Singleton
 {
 }
