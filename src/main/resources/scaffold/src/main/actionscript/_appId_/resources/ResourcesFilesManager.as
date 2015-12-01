@@ -162,6 +162,7 @@ package _appId_.resources
 					var d : int = int.MIN_VALUE;
 					var buckets : Array = [ EnumDensityBucket.LDPI , EnumDensityBucket.MDPI , EnumDensityBucket.HDPI , EnumDensityBucket.XHDPI , EnumDensityBucket.XXHDPI , EnumDensityBucket.XXXHDPI ];
 					var index : uint = buckets.indexOf( deviceBucket );
+					var hasx2 : Boolean;
 
 					for each ( directory in a )
 					{
@@ -176,11 +177,13 @@ package _appId_.resources
 
 							d = d < 0 && diff > 0 ? diff : diff < 0 && d > 0 ? d : d < 0 && diff < 0 ? Math.max( diff , d ) : d > 0 && diff > 0 ? Math.min( diff , d ) : 0;
 
+							if( diff == 2 ) hasx2 = true;
+
 							if( d == 0 ) break;
 						}
 					}
 
-					var bucket : String = buckets[ index + d ];
+					var bucket : String = buckets[ index + ( d == 0 ? 0 : hasx2 ? 2 : d ) ];
 
 					for each ( directory in a )
 					{
