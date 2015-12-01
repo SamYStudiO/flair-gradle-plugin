@@ -40,25 +40,20 @@ package _appId_
 			var pixels : Number = stageWidth * stageHeight;
 			var n : Number = max / min;
 
-			if( n > 1.72 ) // 16/9
+			if( n > 1.68 ) // 16/9
 			{
 				if( pixels > 2073600 ) filePath = portrait ? "1440x2560.png" : "2560x1440.png";
 				else if( pixels > 921600 ) filePath = portrait ? "1080x1920.png" : "1920x1080.png";
 				else filePath = portrait ? "720x1280.png" : "1280x720.png";
 			}
-			else if( n > 1.63 && n <= 1.72 ) // wtf ratio :)
-			{
-				if( pixels > 983040 ) filePath = portrait ? "1536x2560.png" : "2560x1536.png";
-				else filePath = portrait ? "768x1280.png" : "1280x768.png";
-			}
-			else if( n > 1.50 && n <= 1.63 ) // 16/10
+			else if( n > 1.50 && n <= 1.68 ) // 16/10
 			{
 				if( pixels > 1024000 ) filePath = portrait ? "1600x2560.png" : "2560x1600.png";
 				else filePath = portrait ? "800x1280.png" : "1280x800.png";
 			}
 			else // 4/3
 			{
-				if( pixels > 1024000 ) filePath = portrait ? "1536x2048.png" : "2048x1536.png";
+				if( pixels > 786432 ) filePath = portrait ? "1536x2048.png" : "2048x1536.png";
 				else filePath = portrait ? "768x1024.png" : "1024x768.png";
 			}
 
@@ -70,6 +65,8 @@ package _appId_
 		 */
 		override protected function _init( e : InvokeEvent ) : void
 		{
+			// Comment if you don't want assets to be scaled to device physical density
+			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
 			if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
 			super._init( e );

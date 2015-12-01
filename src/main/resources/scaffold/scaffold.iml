@@ -36,23 +36,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
@@ -98,23 +92,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
@@ -160,23 +148,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
@@ -222,23 +204,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
@@ -342,23 +318,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
@@ -404,23 +374,17 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1024x768.png" path-in-package="1024x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1080x1920.png" path-in-package="1080x1920.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x720.png" path-in-package="1280x720.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x768.png" path-in-package="1280x768.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1280x800.png" path-in-package="1280x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1440x2560.png" path-in-package="1440x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2048.png" path-in-package="1536x2048.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1536x2560.png" path-in-package="1536x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1600x2560.png" path-in-package="1600x2560.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/1920x1080.png" path-in-package="1920x1080.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2048x1536.png" path-in-package="2048x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1440.png" path-in-package="2560x1440.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1536.png" path-in-package="2560x1536.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/2560x1600.png" path-in-package="2560x1600.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/480x800.png" path-in-package="480x800.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/720x1280.png" path-in-package="720x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1024.png" path-in-package="768x1024.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/768x1280.png" path-in-package="768x1280.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x1280.png" path-in-package="800x1280.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/splashs/800x480.png" path-in-package="800x480.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
