@@ -5,6 +5,6 @@ package _appId_.utils.number
 	 */
 	public function isOdd( n : Number ) : Boolean
 	{
-		return int( n / 2 ) != n / 2;
+		return n % 2 == 1;
 	}
 }

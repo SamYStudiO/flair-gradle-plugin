@@ -5,6 +5,6 @@ package _appId_.utils.number
 	 */
 	public function isInteger( n : Number ) : Boolean
 	{
-		return int( n ) == n;
+		return n is int;
 	}
 }
