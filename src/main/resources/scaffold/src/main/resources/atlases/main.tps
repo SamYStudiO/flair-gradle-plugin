@@ -11,23 +11,6 @@
         <array>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.1875</double>
-                <key>extension</key>
-                <string>drawable-ldpi</string>
-                <key>spriteFilter</key>
-                <string></string>
-                <key>acceptFractionalValues</key>
-                <false/>
-                <key>maxTextureSize</key>
-                <QSize>
-                    <key>width</key>
-                    <int>2048</int>
-                    <key>height</key>
-                    <int>2048</int>
-                </QSize>
-            </struct>
-            <struct type="AutoSDSettings">
-                <key>scale</key>
                 <double>0.25</double>
                 <key>extension</key>
                 <string>drawable-mdpi</string>
