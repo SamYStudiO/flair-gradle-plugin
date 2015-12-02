@@ -2,7 +2,7 @@ package _appId_.resources
 {
 	import _appId_.actors.STAGE;
 	import _appId_.actors.STARLING;
-	import _appId_.utils.*;
+	import _appId_.utils.device.deviceLocale;
 	import _appId_.utils.displayMetrics.EnumDensityBucket;
 	import _appId_.utils.displayMetrics.deviceBucket;
 	import _appId_.utils.displayMetrics.getDensityScale;
@@ -34,12 +34,12 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2,3})(?:-|$)/ , locale.getLanguage() );
+		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2,3})(?:-|$)/ , deviceLocale.getLanguage() );
 
 		/**
 		 *
 		 */
-		private const __LOCALE_REGION_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_REGION , /-(r[A-Z]{2})(?:-|$)/ , locale.getRegion() );
+		private const __LOCALE_REGION_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_REGION , /-(r[A-Z]{2})(?:-|$)/ , deviceLocale.getRegion() );
 
 		/**
 		 *
@@ -162,7 +162,7 @@ package _appId_.resources
 					var d : int = int.MIN_VALUE;
 					var buckets : Array = [ EnumDensityBucket.LDPI , EnumDensityBucket.MDPI , EnumDensityBucket.HDPI , EnumDensityBucket.XHDPI , EnumDensityBucket.XXHDPI , EnumDensityBucket.XXXHDPI ];
 					var index : uint = buckets.indexOf( deviceBucket );
-					var hasx2 : Boolean;
+					var has2x : Boolean;
 
 					for each ( directory in a )
 					{
@@ -177,13 +177,13 @@ package _appId_.resources
 
 							d = d < 0 && diff > 0 ? diff : diff < 0 && d > 0 ? d : d < 0 && diff < 0 ? Math.max( diff , d ) : d > 0 && diff > 0 ? Math.min( diff , d ) : 0;
 
-							if( diff == 2 ) hasx2 = true;
+							if( diff == 2 ) has2x = true;
 
 							if( d == 0 ) break;
 						}
 					}
 
-					var bucket : String = buckets[ index + ( d == 0 ? 0 : hasx2 ? 2 : d ) ];
+					var bucket : String = buckets[ index + ( d == 0 ? 0 : has2x ? 2 : d ) ];
 
 					for each ( directory in a )
 					{

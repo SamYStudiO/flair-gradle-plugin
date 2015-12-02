@@ -7,7 +7,7 @@ package _appId_
 	import _appId_.actors.STARLING_STAGE;
 	import _appId_.model.Config;
 	import _appId_.theme.Fonts;
-	import _appId_.utils.DeviceManufacturer;
+	import _appId_.utils.device.isDesktop;
 	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.StarlingMain;
 
@@ -105,7 +105,7 @@ package _appId_
 
 			STARLING = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
 			STARLING.showStats = Capabilities.isDebugger;
-			STARLING.simulateMultitouch = DeviceManufacturer.isDesktop();
+			STARLING.simulateMultitouch = isDesktop();
 			STARLING.enableErrorChecking = Capabilities.isDebugger;
 			STARLING_STAGE = STARLING.stage;
 
@@ -146,7 +146,7 @@ package _appId_
 		{
 			_isActivated = false;
 
-			if( STARLING != null && !DeviceManufacturer.isDesktop() ) STARLING.stop( true );
+			if( STARLING != null && !isDesktop() ) STARLING.stop( true );
 		}
 
 		/**
@@ -194,8 +194,8 @@ package _appId_
 		 */
 		protected function _onStageResize( e : flash.events.Event = null ) : void
 		{
-			var stageWidth : Number = DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			var stageHeight : Number = DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var stageWidth : Number = isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			var stageHeight : Number = isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
 			var scale : Number = getDensityScale();
 
 			STARLING_STAGE.stageWidth = stageWidth / scale;

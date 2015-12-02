@@ -1,6 +1,6 @@
 package _appId_.view.core
 {
-	import _appId_.transitions.SlideTransitionManager;
+	import _appId_.view.transitions.SlideTransitionManager;
 
 	import feathers.controls.ScreenNavigator;
 	import feathers.controls.ScreenNavigatorItem;

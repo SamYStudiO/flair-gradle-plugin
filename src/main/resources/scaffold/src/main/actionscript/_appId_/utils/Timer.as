@@ -11,11 +11,11 @@ package _appId_.utils
 	 */
 	[Event(name="timer" , type="flash.events.TimerEvent")]
 	/**
-	 * Dispatched when timer reach repeatCount property. If repeat is 0 this event is never dispatched, Timer need to be stopped manualy.
+	 * Dispatched when timer reach repeatCount property. If repeat is 0 this event is never dispatched, Timer need to be stopped manually.
 	 */
 	[Event(name="timerComplete" , type="flash.events.TimerEvent")]
 	/**
-	 * Timer class is equivalent to flash.utils.Timer class but is syncronize with system clock in order to make easier countdown.
+	 * Timer class is equivalent to flash.utils.Timer class but is synchronized with system clock in order to make easier countdown.
 	 * Even if processor is slow down, each intervals are always the same.
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */ public class Timer extends EventDispatcher
@@ -42,7 +42,7 @@ package _appId_.utils
 
 		/**
 		 * Get or set the delay between each intervals in milliseconds.
-		 * If delay is 0 interval is based on stage framerate.
+		 * If delay is 0 interval is based on stage frame rate.
 		 */
 		public function get delay() : uint
 		{
@@ -78,7 +78,7 @@ package _appId_.utils
 		protected var _currentTime : uint;
 
 		/**
-		 * Get or set the current time in milliseconds. This is useful when Timer is used as a playhead and you want to reach a time position.
+		 * Get or set the current time in milliseconds. This is useful when Timer is used as a play head and you want to reach a time position.
 		 */
 		public function get currentTime() : uint
 		{
@@ -128,7 +128,7 @@ package _appId_.utils
 		 * Build a new Timer instance.
 		 * @param delay the delay between each interval in milliseconds.
 		 * @param repeatCount The repeat count before Timer stop automatically.
-		 * @param startNow A Boolean that indicates if Timer must start immediatly.
+		 * @param startNow A Boolean that indicates if Timer must start immediately.
 		 */
 		public function Timer( delay : uint = 0 , repeatCount : uint = 0 , startNow : Boolean = false )
 		{

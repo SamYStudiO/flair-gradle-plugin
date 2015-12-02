@@ -2,7 +2,7 @@ package _appId_
 {
 	import _appId_.actors.ORIENTATION_MANAGER;
 	import _appId_.actors.STAGE;
-	import _appId_.utils.DeviceManufacturer;
+	import _appId_.utils.device.isDesktop;
 
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -128,8 +128,8 @@ package _appId_
 			_splashScreenLandscape.visible = ORIENTATION_MANAGER.isDeviceLandscape;
 
 			var m : Matrix = ORIENTATION_MANAGER.deviceVSStageMatrix;
-			m.tx *= DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			m.ty *= DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			m.tx *= isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			m.ty *= isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
 
 			_splashScreenContainer.transform.matrix = m;
 		}

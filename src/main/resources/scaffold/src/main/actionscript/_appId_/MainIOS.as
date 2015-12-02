@@ -29,31 +29,31 @@ package _appId_
 
 			switch( true )
 			{
-				// ipad retina
+				// iPad retina
 				case stageWidth == 1536 || stageWidth == 2048 :
 					filePath = portrait ? "Default-Portrait@2x.png" : "Default-Landscape@2x.png";
 					break;
-				// ipad
+				// iPad
 				case stageWidth == 768 || stageWidth == 1024 :
 					filePath = portrait ? "Default-Portrait.png" : "Default-Landscape.png";
 					break;
-				// iphone 6+
+				// iPhone 6+
 				case stageWidth == 1080 || stageWidth == 1920 :
 					filePath = portrait ? "Default-414w-736h@3x.png" : "Default-414w-736h-Landscape@3x.png";
 					break;
-				// iphone 6
+				// iPhone 6
 				case stageWidth == 750 || stageWidth == 1334 :
 					filePath = portrait ? "Default-375w-667h@2x.png" : "Default-375w-667h-Landscape@2x.png";
 					break;
-				// iphone 5
+				// iPhone 5
 				case ( stageWidth == 640 && stageHeight == 1136 ) || stageWidth == 1136 :
 					filePath = portrait ? "Default-568h@2x.png" : "Default-568h-Landscape@2x.png";
 					break;
-				// iphone 4
+				// iPhone 4
 				case stageWidth == 640 || stageWidth == 960 :
 					filePath = portrait ? "Default@2x.png" : "Default-Phone-Landscape@2x.png";
 					break;
-				// iphone
+				// iPhone
 				case stageWidth == 320 || stageWidth == 480 :
 					filePath = portrait ? "Default.png" : "Default-Phone-Landscape.png";
 					break;

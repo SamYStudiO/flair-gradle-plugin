@@ -1,6 +1,7 @@
 package _appId_.utils
 {
 	import _appId_.actors.STAGE;
+	import _appId_.utils.device.isDesktop;
 
 	import flash.display.StageOrientation;
 	import flash.events.Event;
@@ -69,7 +70,7 @@ package _appId_.utils
 		 */
 		public function get isStagePortrait() : Boolean
 		{
-			return DeviceManufacturer.isDesktop() ? STAGE.stageWidth < STAGE.stageHeight : STAGE.fullScreenWidth < STAGE.fullScreenHeight;
+			return isDesktop() ? STAGE.stageWidth < STAGE.stageHeight : STAGE.fullScreenWidth < STAGE.fullScreenHeight;
 		}
 
 		/**
@@ -77,7 +78,7 @@ package _appId_.utils
 		 */
 		public function get isStageLandscape() : Boolean
 		{
-			return DeviceManufacturer.isDesktop() ? STAGE.stageWidth > STAGE.stageHeight : STAGE.fullScreenWidth > STAGE.fullScreenHeight;
+			return isDesktop() ? STAGE.stageWidth > STAGE.stageHeight : STAGE.fullScreenWidth > STAGE.fullScreenHeight;
 		}
 
 		/**
@@ -85,7 +86,7 @@ package _appId_.utils
 		 */
 		public function get isDevicePortrait() : Boolean
 		{
-			return ( _defautOrientationIsPortrait && ( _deviceOrientation == StageOrientation.DEFAULT || _deviceOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defautOrientationIsPortrait && ( _deviceOrientation == StageOrientation.ROTATED_LEFT || _deviceOrientation == StageOrientation.ROTATED_RIGHT ) );
+			return ( _defaultOrientationIsPortrait && ( _deviceOrientation == StageOrientation.DEFAULT || _deviceOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defaultOrientationIsPortrait && ( _deviceOrientation == StageOrientation.ROTATED_LEFT || _deviceOrientation == StageOrientation.ROTATED_RIGHT ) );
 		}
 
 		/**
@@ -99,22 +100,22 @@ package _appId_.utils
 		/**
 		 * @private
 		 */
-		private var _defautOrientationIsPortrait : Boolean;
+		private var _defaultOrientationIsPortrait : Boolean;
 
 		/**
 		 *
 		 */
-		public function get defautOrientationIsPortrait() : Boolean
+		public function get defaultOrientationIsPortrait() : Boolean
 		{
-			return _defautOrientationIsPortrait;
+			return _defaultOrientationIsPortrait;
 		}
 
 		/**
 		 *
 		 */
-		public function get defautOrientationIsLandscape() : Boolean
+		public function get defaultOrientationIsLandscape() : Boolean
 		{
-			return !_defautOrientationIsPortrait;
+			return !_defaultOrientationIsPortrait;
 		}
 
 		/**
@@ -168,7 +169,7 @@ package _appId_.utils
 			var orientationIsDefaultUpDown : Boolean = _stageOrientation == StageOrientation.DEFAULT || _stageOrientation == StageOrientation.UPSIDE_DOWN;
 			var orientationIsRightLeft : Boolean = _stageOrientation == StageOrientation.ROTATED_LEFT || _stageOrientation == StageOrientation.ROTATED_RIGHT;
 
-			_defautOrientationIsPortrait = orientationIsDefaultUpDown && isStagePortrait || orientationIsRightLeft && isStageLandscape;
+			_defaultOrientationIsPortrait = orientationIsDefaultUpDown && isStagePortrait || orientationIsRightLeft && isStageLandscape;
 			_deviceOrientation = STAGE.deviceOrientation == StageOrientation.UNKNOWN ? ( _stageOrientation == StageOrientation.ROTATED_RIGHT ? StageOrientation.ROTATED_LEFT : _stageOrientation == StageOrientation.ROTATED_LEFT ? StageOrientation.ROTATED_RIGHT : _stageOrientation ) : STAGE.deviceOrientation;
 			_deviceVSStageMatrix = new Matrix();
 		}
@@ -203,9 +204,9 @@ package _appId_.utils
 		private function _monitorOrientation( e : Event = null ) : void
 		{
 			var newStageOrientation : String = STAGE.orientation == StageOrientation.UNKNOWN ? _stageOrientation : STAGE.orientation;
-			var stageWidth : Number = DeviceManufacturer.isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			var stageHeight : Number = DeviceManufacturer.isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
-			var stageIsPortrait : Boolean = ( _defautOrientationIsPortrait && ( newStageOrientation == StageOrientation.DEFAULT || newStageOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defautOrientationIsPortrait && ( newStageOrientation == StageOrientation.ROTATED_LEFT || newStageOrientation == StageOrientation.ROTATED_RIGHT ) );
+			var stageWidth : Number = isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
+			var stageHeight : Number = isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var stageIsPortrait : Boolean = ( _defaultOrientationIsPortrait && ( newStageOrientation == StageOrientation.DEFAULT || newStageOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defaultOrientationIsPortrait && ( newStageOrientation == StageOrientation.ROTATED_LEFT || newStageOrientation == StageOrientation.ROTATED_RIGHT ) );
 			var stageOrientationChanged : Boolean = _stageOrientation != newStageOrientation && ( ( stageIsPortrait && stageWidth < stageHeight ) || ( !stageIsPortrait && stageWidth >= stageHeight ) );
 
 			var newDeviceOrientation : String = STAGE.deviceOrientation == StageOrientation.UNKNOWN ? _deviceOrientation : STAGE.deviceOrientation;

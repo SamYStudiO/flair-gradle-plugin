@@ -1,4 +1,4 @@
-package _appId_.transitions
+package _appId_.view.transitions
 {
 	import _appId_.view.core.IndexedAssetsScreen;
 	import _appId_.view.core.IndexedScreen;

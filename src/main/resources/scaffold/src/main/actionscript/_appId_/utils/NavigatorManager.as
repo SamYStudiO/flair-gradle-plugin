@@ -167,7 +167,7 @@ package _appId_.utils
 				var paths : Array = currentPath.split( "/" );
 				var navigatorScreen : INavigatorScreen = _rootNavigatorScreen;
 				var screen : IndexedScreen = navigatorScreen.activeScreen as IndexedScreen;
-				var cpt : uint;
+				var cpt : uint = 0;
 
 				for each( var p : String in paths )
 				{
