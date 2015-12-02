@@ -19,6 +19,7 @@ package _appId_
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 
 	import myLogger.DEFAULT_LOGGER;
 	import myLogger.debug;
@@ -58,7 +59,7 @@ package _appId_
 		 */
 		protected function _initDebugger() : void
 		{
-			DEFAULT_LOGGER.verbose = Boolean( CONFIG::DEBUG );
+			DEFAULT_LOGGER.verbose = Capabilities.isDebugger;
 		}
 
 		/**
@@ -103,9 +104,9 @@ package _appId_
 			Starling.handleLostContext = true;
 
 			STARLING = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
-			STARLING.showStats = Boolean( CONFIG::DEBUG );
-			STARLING.simulateMultitouch = Boolean( CONFIG::DEBUG );
-			STARLING.enableErrorChecking = Boolean( CONFIG::DEBUG );
+			STARLING.showStats = Capabilities.isDebugger;
+			STARLING.simulateMultitouch = DeviceManufacturer.isDesktop();
+			STARLING.enableErrorChecking = Capabilities.isDebugger;
 			STARLING_STAGE = STARLING.stage;
 
 			_onStageResize();

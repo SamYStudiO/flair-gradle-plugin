@@ -20,7 +20,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="true" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -76,7 +76,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="true" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -132,7 +132,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -188,7 +188,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -243,7 +243,7 @@
         </dependencies>
         <compiler-options>
           <map>
-            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -302,7 +302,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -358,7 +358,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;true&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -414,7 +414,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -473,7 +473,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;true" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -531,7 +531,7 @@
         </dependencies>
         <compiler-options>
           <map>
-            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;true&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;true&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -570,7 +570,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;true&#10;CONFIG::PROD&#9;false" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -609,7 +609,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true&#10;CONFIG::DEBUG&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::IOS&#9;false" />
+            <entry key="compiler.define" value="CONFIG::DEV&#9;false&#10;CONFIG::PREPROD&#9;false&#10;CONFIG::PROD&#9;true" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>

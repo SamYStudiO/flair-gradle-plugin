@@ -10,6 +10,7 @@ package _appId_.view.core
 	import feathers.system.DeviceCapabilities;
 
 	import flash.filesystem.File;
+	import flash.system.Capabilities;
 
 	import org.osflash.signals.Signal;
 
@@ -118,7 +119,7 @@ package _appId_.view.core
 		protected function _initAssets() : void
 		{
 			_assets = _getAssetManager();
-			_assets.verbose = Boolean( CONFIG::DEBUG );
+			_assets.verbose = Capabilities.isDebugger;
 
 			addAssetManager( _assets , _screenID );
 
