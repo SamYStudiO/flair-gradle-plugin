@@ -1,10 +1,8 @@
 package _appId_.theme
 {
-	import feathers.controls.text.StageTextTextEditor;
 	import feathers.controls.text.TextFieldTextRenderer;
 	import feathers.core.FeathersControl;
 	import feathers.core.PopUpManager;
-	import feathers.system.DeviceCapabilities;
 	import feathers.themes.StyleNameFunctionTheme;
 
 	import starling.core.Starling;
@@ -14,7 +12,7 @@ package _appId_.theme
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class Theme extends StyleNameFunctionTheme
+	public class FeathersTheme extends StyleNameFunctionTheme
 	{
 		/**
 		 *
@@ -22,14 +20,6 @@ package _appId_.theme
 		protected static function __textRendererFactory() : TextFieldTextRenderer
 		{
 			return new TextFieldTextRenderer();
-		}
-
-		/**
-		 *
-		 */
-		protected static function __textEditorFactory() : StageTextTextEditor
-		{
-			return new StageTextTextEditor();
 		}
 
 		/**
@@ -46,12 +36,10 @@ package _appId_.theme
 		/**
 		 *
 		 */
-		public function Theme()
+		public function FeathersTheme()
 		{
 			_initializeGlobals();
 			_initializeStage();
-			_initializeScale();
-			_initializeStyleProviders();
 		}
 
 		/**
@@ -59,11 +47,7 @@ package _appId_.theme
 		 */
 		protected function _initializeGlobals() : void
 		{
-			DeviceCapabilities.tabletScreenMinimumInches = 5.5;
-
 			FeathersControl.defaultTextRendererFactory = __textRendererFactory;
-			FeathersControl.defaultTextEditorFactory = __textEditorFactory;
-
 			PopUpManager.overlayFactory = __popUpOverlayFactory;
 		}
 
@@ -74,21 +58,6 @@ package _appId_.theme
 		{
 			Starling.current.stage.color = 0xffffff;
 			Starling.current.nativeStage.color = 0xffffff;
-		}
-
-		/**
-		 *
-		 */
-		protected function _initializeScale() : void
-		{
-
-		}
-
-		/**
-		 *
-		 */
-		protected function _initializeStyleProviders() : void
-		{
 		}
 	}
 }
