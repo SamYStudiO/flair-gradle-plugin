@@ -5,11 +5,6 @@ package _appId_.utils.string
 	 */
 	public function trimLeft( s : String ) : String
 	{
-		while( s.charAt( 0 ).match( /\s/ ) )
-		{
-			s = s.substr( 1 );
-		}
-
-		return s;
+		return s.replace( /(^\s+)/ , "" );
 	}
 }

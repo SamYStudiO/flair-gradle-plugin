@@ -194,8 +194,8 @@ package _appId_
 		 */
 		protected function _onStageResize( e : flash.events.Event = null ) : void
 		{
-			var stageWidth : Number = isDesktop() ? STAGE.stageWidth : STAGE.fullScreenWidth;
-			var stageHeight : Number = isDesktop() ? STAGE.stageHeight : STAGE.fullScreenHeight;
+			var stageWidth : Number = STAGE.stageWidth;
+			var stageHeight : Number = STAGE.stageHeight;
 			var scale : Number = getDensityScale();
 
 			STARLING_STAGE.stageWidth = stageWidth / scale;

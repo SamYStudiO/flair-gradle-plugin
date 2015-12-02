@@ -32,8 +32,8 @@ package _appId_
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
-			var stageWidth : Number = STAGE.fullScreenWidth;
-			var stageHeight : Number = STAGE.fullScreenHeight;
+			var stageWidth : Number = STAGE.stageWidth;
+			var stageHeight : Number = STAGE.stageHeight;
 
 			var max : Number = Math.max( stageWidth , stageHeight );
 			var min : Number = Math.min( stageWidth , stageHeight );
@@ -79,8 +79,8 @@ package _appId_
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
 
-			var w : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.fullScreenWidth : STAGE.fullScreenHeight;
-			var h : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.fullScreenHeight : STAGE.fullScreenWidth;
+			var w : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.stageWidth : STAGE.stageHeight;
+			var h : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.stageHeight : STAGE.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
@@ -96,8 +96,8 @@ package _appId_
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 
-			var w : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.fullScreenWidth : STAGE.fullScreenHeight;
-			var h : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.fullScreenHeight : STAGE.fullScreenWidth;
+			var w : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.stageWidth : STAGE.stageHeight;
+			var h : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.stageHeight : STAGE.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 

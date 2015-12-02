@@ -24,8 +24,8 @@ package _appId_
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
-			var stageWidth : Number = STAGE.fullScreenWidth;
-			var stageHeight : Number = STAGE.fullScreenHeight;
+			var stageWidth : Number = STAGE.stageWidth;
+			var stageHeight : Number = STAGE.stageHeight;
 
 			switch( true )
 			{
