@@ -107,6 +107,7 @@ package _appId_
 			STARLING.showStats = Capabilities.isDebugger;
 			STARLING.simulateMultitouch = isDesktop();
 			STARLING.enableErrorChecking = Capabilities.isDebugger;
+			STARLING.supportHighResolutions = isDesktop();
 			STARLING_STAGE = STARLING.stage;
 
 			_onStageResize();
