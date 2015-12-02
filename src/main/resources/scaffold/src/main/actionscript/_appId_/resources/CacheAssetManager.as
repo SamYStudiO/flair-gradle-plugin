@@ -8,12 +8,9 @@ package _appId_.resources
 	import flash.net.URLRequest;
 	import flash.utils.ByteArray;
 
-	import myLogger.log;
+	import starling.utils.AssetManager;
 
-	import starling.events.EventDispatcher;
-	import starling.textures.TextureOptions;
-
-	public class CacheAssetManager extends EventDispatcher
+	public class CacheAssetManager extends AssetManager
 	{
 		/**
 		 *
@@ -21,60 +18,34 @@ package _appId_.resources
 		protected var _cacheDirectory : File;
 
 		/**
+		 * Enable or disable read/write from cache directory.
+		 * When enabled all external files (http files) are written into cache directory.
+		 */
+		public var cacheEnabled : Boolean = true;
+
+		/**
+		 * Indicates if cached files are process into memory as well.
+		 *
+		 * @default false
+		 */
+		public var processCachedAsset : Boolean = false;
+
+		/**
 		 *
 		 */
-		public function CacheAssetManager( scaleFactor : Number = 1 , cahceFolder : File = File.cacheDirectory.resolvePath( "${projectName}" ) )
+		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = File.cacheDirectory.resolvePath( "${projectName}" ) )
 		{
-			super( scaleFactor , false );
+			super( scaleFactor , useMipmaps );
 
-			_cacheDirectory = localFolder != null ? localFolder.resolvePath( "${projectName}" ) : File.cacheDirectory.resolvePath( "${projectName}" );
+			_cacheDirectory = cacheDirectory;
 		}
 
 		/**
 		 *
 		 */
-		public function cache( ...rawAssets ) : void
-		{
-			for each ( var rawAsset : Object in rawAssets )
-			{
-				if( rawAsset is Array )
-				{
-					cache.apply( this , rawAsset );
-				}
-				else if( rawAsset is String || rawAsset is URLRequest )
-				{
-					cacheWithName( rawAsset );
-				}
-				else
-				{
-					log( "Ignoring unsupported asset type: " + getQualifiedClassName( rawAsset ) );
-				}
-			}
-		}
-
-		/**
-		 *
-		 */
-		public function cacheWithName( url : * , name : String = null , options : TextureOptions = null ) : void
-		{
-			if( !( url is URLRequest ) || !isUrl( url.toString() ) ) throw new ArgumentError( "url is either a String or a URLRequest object" )
-
-		}
-
-		/**
-		 *
-		 */
-		public function clearLocalStorage() : void
+		public function clearCacheDirectory() : void
 		{
 			_cacheDirectory.deleteDirectory( true );
-		}
-
-		/**
-		 *
-		 */
-		public function getAssetName( asset : Object ) : String
-		{
-			return getName( asset );
 		}
 
 		/**
@@ -82,19 +53,20 @@ package _appId_.resources
 		 */
 		override protected function transformData( data : ByteArray , url : String ) : ByteArray
 		{
-			if( _activateWriteLocalStorage )
+			if( cacheEnabled && isUrl( url ) )
 			{
 				var fileStream : FileStream;
 				var name : String = getName( url );
 				var extension : String = getExtensionFromUrl( url );
 
 				fileStream = new FileStream();
-				fileStream.open( _cacheDirectory.resolvePath( name + "." + extension ) , FileMode.WRITE );
+				fileStream.open( _cacheDirectory.resolvePath( extension != null ? name + "." + extension : name ) , FileMode.WRITE );
 				fileStream.writeBytes( data , 0 , data.length );
 				fileStream.close();
-			}
 
-			return data;
+				if( !processCachedAsset ) return null;
+			}
+			else return data;
 		}
 
 		/**
@@ -102,14 +74,14 @@ package _appId_.resources
 		 */
 		override protected function loadRawAsset( rawAsset : Object , onProgress : Function , onComplete : Function ) : void
 		{
-			if( _activateReadLocalStorage && ( rawAsset is String || rawAsset is URLRequest ) )
+			if( cacheEnabled && ( rawAsset is String || rawAsset is URLRequest ) )
 			{
 				var url : String = rawAsset is String ? rawAsset as String : ( rawAsset as URLRequest ).url;
 				var name : String = getName( url );
 				var extension : String = getExtensionFromUrl( url );
 				var f : File = _cacheDirectory.resolvePath( extension != null ? name + "." + extension : name );
 
-				if( f.exists && url.indexOf( "http" ) == 0 )
+				if( f.exists && isUrl( url ) )
 				{
 					if( rawAsset is String ) rawAsset = f.url;
 					else ( rawAsset as URLRequest ).url = f.url;
