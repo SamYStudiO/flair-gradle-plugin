@@ -7,7 +7,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public interface INavigatorScreen extends IndexedScreen
+	public interface INavigatorScreen extends IndexScreen
 	{
 		/**
 		 *
@@ -118,6 +118,6 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		function showScreen( screenID : String = null , params : Object = null ) : IndexedScreen
+		function showScreen( screenID : String = null , params : Object = null ) : IndexScreen
 	}
 }

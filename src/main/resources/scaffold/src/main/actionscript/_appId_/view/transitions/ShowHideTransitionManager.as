@@ -1,7 +1,7 @@
 package _appId_.view.transitions
 {
-	import _appId_.view.core.IndexedAssetsScreen;
-	import _appId_.view.core.IndexedScreen;
+	import _appId_.view.core.IndexAssetScreen;
+	import _appId_.view.core.IndexScreen;
 
 	import feathers.controls.ScreenNavigator;
 
@@ -58,9 +58,9 @@ package _appId_.view.transitions
 		 */
 		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 		{
-			var oldIndexedScreen : IndexedScreen = oldScreen as IndexedScreen;
-			var newIndexedScreen : IndexedScreen = newScreen as IndexedScreen;
-			var newIndexedAssetScreen : IndexedAssetsScreen = newScreen as IndexedAssetsScreen;
+			var oldIndexedScreen : IndexScreen = oldScreen as IndexScreen;
+			var newIndexedScreen : IndexScreen = newScreen as IndexScreen;
+			var newIndexedAssetScreen : IndexAssetScreen = newScreen as IndexAssetScreen;
 
 			function hideOldScreen() : void
 			{

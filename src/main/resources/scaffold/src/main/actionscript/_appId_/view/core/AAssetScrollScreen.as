@@ -19,7 +19,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AAssetsScrollScreen extends AScrollScreen implements IndexedAssetsScreen
+	public class AAssetScrollScreen extends AScrollScreen implements IndexAssetScreen
 	{
 		/**
 		 *
@@ -81,7 +81,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AAssetsScrollScreen()
+		public function AAssetScrollScreen()
 		{
 			super();
 		}

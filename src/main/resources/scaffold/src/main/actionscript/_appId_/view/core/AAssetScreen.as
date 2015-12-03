@@ -19,7 +19,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AAssetsScreen extends AScreen implements IndexedAssetsScreen
+	public class AAssetScreen extends AScreen implements IndexAssetScreen
 	{
 		/**
 		 *
@@ -81,7 +81,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AAssetsScreen()
+		public function AAssetScreen()
 		{
 			super();
 		}

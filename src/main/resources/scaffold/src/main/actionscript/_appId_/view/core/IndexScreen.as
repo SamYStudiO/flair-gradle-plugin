@@ -7,7 +7,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public interface IndexedScreen extends IScreen
+	public interface IndexScreen extends IScreen
 	{
 		/**
 		 *

@@ -14,7 +14,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AAssetsNavigatorScrollScreen extends AAssetsScreen implements INavigatorScreen
+	public class AAssetNavigatorScrollScreen extends AAssetScreen implements INavigatorScreen
 	{
 		/**
 		 *
@@ -121,7 +121,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AAssetsNavigatorScrollScreen()
+		public function AAssetNavigatorScrollScreen()
 		{
 			super();
 
@@ -293,7 +293,7 @@ package _appId_.view.core
 		/**
 		 * @inheritDoc
 		 */
-		public function showScreen( screenID : String = null , additionalParams : Object = null ) : IndexedScreen
+		public function showScreen( screenID : String = null , additionalParams : Object = null ) : IndexScreen
 		{
 			var screenIDIsNull : Boolean = screenID == null;
 
@@ -315,7 +315,7 @@ package _appId_.view.core
 				screenItem.properties[ prop ] = additionalParams[ prop ];
 			}
 
-			return _navigator.showScreen( screenID ) as IndexedScreen;
+			return _navigator.showScreen( screenID ) as IndexScreen;
 		}
 
 		/**

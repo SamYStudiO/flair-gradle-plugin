@@ -11,7 +11,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AScreen extends Screen implements IndexedScreen
+	public class AScreen extends Screen implements IndexScreen
 	{
 		/**
 		 * @private

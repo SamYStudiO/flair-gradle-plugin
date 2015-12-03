@@ -1,5 +1,6 @@
 package _appId_.view.home
 {
+	import _appId_.resources.getString;
 	import _appId_.view.core.AScreen;
 
 	import feathers.controls.Label;
@@ -34,7 +35,7 @@ package _appId_.view.home
 			super._initialize();
 
 			_label = new Label();
-			_label.text = "Hello World!";
+			_label.text = getString( "hello" );
 			addChild( _label );
 		}
 

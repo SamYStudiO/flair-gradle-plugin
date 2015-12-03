@@ -16,19 +16,19 @@ package _appId_.resources
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
 	 */
-	public final class ResourcesFilesManager
+	public final class ResourceFileManager
 	{
 		/**
 		 *
 		 */
-		private static var __instance : ResourcesFilesManager;
+		private static var __instance : ResourceFileManager;
 
 		/**
 		 *
 		 */
-		public static function getInstance() : ResourcesFilesManager
+		public static function getInstance() : ResourceFileManager
 		{
-			if( __instance == null ) __instance = new ResourcesFilesManager( new Singleton() );
+			if( __instance == null ) __instance = new ResourceFileManager( new Singleton() );
 
 			return __instance;
 		}
@@ -69,7 +69,7 @@ package _appId_.resources
 		/**
 		 * @private
 		 */
-		public function ResourcesFilesManager( singleton : Singleton )
+		public function ResourceFileManager( singleton : Singleton )
 		{
 			if( singleton == null ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
 		}

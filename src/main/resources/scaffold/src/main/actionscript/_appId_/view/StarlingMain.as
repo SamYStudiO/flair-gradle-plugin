@@ -2,7 +2,7 @@ package _appId_.view
 {
 	import _appId_.actors.STARLING_MAIN;
 	import _appId_.theme.FeathersTheme;
-	import _appId_.view.core.AAssetsNavigatorScreen;
+	import _appId_.view.core.AAssetNavigatorScreen;
 	import _appId_.view.home.HomeScreen;
 
 	import feathers.controls.ScreenNavigatorItem;
@@ -10,7 +10,7 @@ package _appId_.view
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class StarlingMain extends AAssetsNavigatorScreen
+	public class StarlingMain extends AAssetNavigatorScreen
 	{
 		/**
 		 *

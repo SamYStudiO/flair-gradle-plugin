@@ -4,7 +4,7 @@ package _appId_.utils
 	import _appId_.utils.object.merge;
 	import _appId_.utils.string.trim;
 	import _appId_.view.core.INavigatorScreen;
-	import _appId_.view.core.IndexedScreen;
+	import _appId_.view.core.IndexScreen;
 
 	import feathers.events.FeathersEventType;
 
@@ -166,7 +166,7 @@ package _appId_.utils
 				var currentPath : String = _pathsHistory[ _pathsHistory.length - 1 ].url;
 				var paths : Array = currentPath.split( "/" );
 				var navigatorScreen : INavigatorScreen = _rootNavigatorScreen;
-				var screen : IndexedScreen = navigatorScreen.activeScreen as IndexedScreen;
+				var screen : IndexScreen = navigatorScreen.activeScreen as IndexScreen;
 				var cpt : uint = 0;
 
 				for each( var p : String in paths )
@@ -175,7 +175,7 @@ package _appId_.utils
 
 					merge( screen.params , _pathsHistory[ _pathsHistory.length - 1 ].params[ cpt ] , true , [ "index" ] );
 
-					if( screen is INavigatorScreen ) screen = ( screen as INavigatorScreen ).activeScreen as IndexedScreen;
+					if( screen is INavigatorScreen ) screen = ( screen as INavigatorScreen ).activeScreen as IndexScreen;
 					else break;
 					cpt++;
 				}
@@ -190,7 +190,7 @@ package _appId_.utils
 				function complete() : void
 				{
 					navigatorScreen.removeEventListener( FeathersEventType.TRANSITION_COMPLETE , onTransitionComplete );
-					var nextScreen : IndexedScreen = navigatorScreen.activeScreen as IndexedScreen;
+					var nextScreen : IndexScreen = navigatorScreen.activeScreen as IndexScreen;
 
 					path += nextScreen.screenID + "/";
 

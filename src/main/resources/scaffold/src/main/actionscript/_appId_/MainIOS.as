@@ -1,8 +1,7 @@
 package _appId_
 {
-	import _appId_.actors.STAGE;
-
 	import flash.events.InvokeEvent;
+	import flash.system.Capabilities;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
@@ -24,8 +23,8 @@ package _appId_
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
-			var stageWidth : Number = STAGE.stageWidth;
-			var stageHeight : Number = STAGE.stageHeight;
+			var stageWidth : Number = Capabilities.screenResolutionX;
+			var stageHeight : Number = Capabilities.screenResolutionY;
 
 			switch( true )
 			{

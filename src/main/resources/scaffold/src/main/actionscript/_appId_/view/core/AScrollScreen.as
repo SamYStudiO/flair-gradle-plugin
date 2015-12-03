@@ -11,7 +11,7 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AScrollScreen extends ScrollScreen implements IndexedScreen
+	public class AScrollScreen extends ScrollScreen implements IndexScreen
 	{
 		/**
 		 * @private
