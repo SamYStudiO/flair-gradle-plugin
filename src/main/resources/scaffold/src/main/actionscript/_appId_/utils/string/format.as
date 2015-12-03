@@ -9,10 +9,7 @@ package _appId_.utils.string
 
 		for( var i : int = 0; i < l; i++ )
 		{
-			var substitute : String = substitutes[ i ];
-
-			while( s.indexOf( "{" + i + "}" ) >= 0 )
-				s = s.replace( "{" + i + "}" , substitute )
+			s = s.replace( new RegExp( "\\{" + i + "\\}" , "g" ) , substitutes[ i ] )
 		}
 
 		return s;
