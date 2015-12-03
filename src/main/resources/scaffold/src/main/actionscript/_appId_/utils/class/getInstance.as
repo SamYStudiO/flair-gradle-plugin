@@ -8,7 +8,7 @@ package _appId_.utils.class
 	 * @param Clazz Class object from which get instance.
 	 * @param arguments The arguments to pass to instance constructor.
 	 */
-	public function getInstance( Clazz : Class , ...arguments : Array ) : *
+	public function getInstance( Clazz : Class , ...arguments ) : *
 	{
 		var constructorArgumentsLength : uint = describeType( Clazz ).factory.constructor.parameter.length();
 

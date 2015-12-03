@@ -20,11 +20,13 @@ package _appId_.resources
 		/**
 		 * Enable or disable read/write from cache directory.
 		 * When enabled all external files (http files) are written into cache directory.
+		 *
+		 * @default true
 		 */
 		public var cacheEnabled : Boolean = true;
 
 		/**
-		 * Indicates if cached files are process into memory as well.
+		 * Indicates if files that have just been written into cache are process into memory as well like any other asset.
 		 *
 		 * @default false
 		 */
@@ -33,7 +35,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = File.cacheDirectory.resolvePath( "${projectName}" ) )
+		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = File.cacheDirectory.resolvePath( "assets" ) )
 		{
 			super( scaleFactor , useMipmaps );
 
