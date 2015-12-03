@@ -81,7 +81,7 @@ package _appId_
 		 */
 		override protected function _onMainReady() : void
 		{
-			_cleanupSplashScreen();
+			setTimeout( _cleanupSplashScreen , 1000 );
 
 			STAGE.autoOrients = _defaultAutoOrients;
 			if( STAGE.autoOrients ) ORIENTATION_MANAGER.updateStageOrientationFromDeviceOrientation();
