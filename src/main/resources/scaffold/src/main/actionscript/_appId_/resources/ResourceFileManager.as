@@ -95,6 +95,7 @@ package _appId_.resources
 			{
 				stream.open( file , FileMode.READ );
 				output.appendChild( new XML( stream.readUTFBytes( stream.bytesAvailable ) ) );
+				stream.close();
 			}
 
 			return output;

@@ -32,9 +32,12 @@ package _appId_.resources
 
 					var dpi : Number = isAndroid() ? Density.service.xdpi : DeviceCapabilities.dpi;
 					var inches : Number = value * dpi / getDensityScale();
+
+					if( unit == "in" ) return inches;
+
 					var mm : Number = inches * 0.0393701;
 
-					return unit == "in" ? inches : mm;
+					return mm;
 			}
 		}
 		else return NaN;
