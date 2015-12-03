@@ -147,6 +147,8 @@ package _appId_.view.core
 			{
 				_assets.enqueue( file );
 			}
+
+			_assets.addXml( "values" , R.getValues( _screenID ) );
 		}
 
 		/**

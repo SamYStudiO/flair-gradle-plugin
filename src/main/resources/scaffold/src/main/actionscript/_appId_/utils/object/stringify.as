@@ -20,7 +20,7 @@ package _appId_.utils.object
 
 			var startTab : String = tab;
 			var s : String = "\n" + tab + "{ " + ref[ o ] + "\n";
-			var hasProp : Boolean = false;
+			var hasProp : Boolean;
 
 			tab += "  ";
 

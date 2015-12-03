@@ -7,8 +7,8 @@ package _appId_.resources
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function getTextures( assetID : String , groupID : String = EnumScreen.MAIN ) : Vector.<Texture>
+	public function getDrawable( assetID : String , groupID : String = EnumScreen.MAIN ) : Texture
 	{
-		return getAssetManager( groupID ).getTextures( assetID );
+		return getAssetManager( groupID ).getTexture( assetID );
 	}
 }

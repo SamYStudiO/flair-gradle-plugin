@@ -1,7 +1,7 @@
 package _appId_.view
 {
 	import _appId_.actors.STARLING_MAIN;
-	import _appId_.theme.Theme;
+	import _appId_.theme.FeathersTheme;
 	import _appId_.view.core.AAssetsNavigatorScreen;
 	import _appId_.view.home.HomeScreen;
 
@@ -21,7 +21,7 @@ package _appId_.view
 
 			STARLING_MAIN = this;
 			_screenID = EnumScreen.MAIN;
-			new Theme();
+			new FeathersTheme();
 		}
 
 		/**

@@ -11,7 +11,7 @@
         <array>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.25</double>
+                <double>0.33333</double>
                 <key>extension</key>
                 <string>drawable-mdpi</string>
                 <key>spriteFilter</key>
@@ -28,7 +28,7 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.375</double>
+                <double>0.5</double>
                 <key>extension</key>
                 <string>drawable-hdpi</string>
                 <key>spriteFilter</key>
@@ -45,7 +45,7 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.5</double>
+                <double>0.66667</double>
                 <key>extension</key>
                 <string>drawable-xhdpi</string>
                 <key>spriteFilter</key>
@@ -62,26 +62,9 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
-                <double>0.75</double>
-                <key>extension</key>
-                <string>drawable-xxhdpi</string>
-                <key>spriteFilter</key>
-                <string></string>
-                <key>acceptFractionalValues</key>
-                <false/>
-                <key>maxTextureSize</key>
-                <QSize>
-                    <key>width</key>
-                    <int>4096</int>
-                    <key>height</key>
-                    <int>4096</int>
-                </QSize>
-            </struct>
-            <struct type="AutoSDSettings">
-                <key>scale</key>
                 <double>1</double>
                 <key>extension</key>
-                <string>drawable-xxxhdpi</string>
+                <string>drawable-xxhdpi</string>
                 <key>spriteFilter</key>
                 <string></string>
                 <key>acceptFractionalValues</key>

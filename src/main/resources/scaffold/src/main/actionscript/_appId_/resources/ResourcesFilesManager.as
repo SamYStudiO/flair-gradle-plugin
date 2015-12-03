@@ -10,6 +10,8 @@ package _appId_.resources
 
 	import flash.display3D.Context3DProfile;
 	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
@@ -83,9 +85,19 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getValues( screen : String = EnumScreen.MAIN ) : Vector.<File>
+		public function getValues( screen : String = EnumScreen.MAIN ) : XML
 		{
-			return getResource( EnumResource.VALUES , screen );
+			var v : Vector.<File> = getResource( EnumResource.VALUES , screen );
+			var output : XML = <root />;
+			var stream : FileStream = new FileStream();
+
+			for each ( var file : File in v )
+			{
+				stream.open( file , FileMode.READ );
+				output.appendChild( new XML( stream.readUTFBytes( stream.bytesAvailable ) ) );
+			}
+
+			return output;
 		}
 
 		/**
@@ -109,12 +121,12 @@ package _appId_.resources
 			var directory : File;
 			var test : Array;
 			var match : String;
+			var sw : Array = [];
 
 			files : for each ( directory in resourceList )
 			{
 				if( directory.isDirectory && directory.name.toLowerCase().indexOf( id ) == 0 )
 				{
-					var sw : Array = [];
 
 					for each ( qualifier in __QUALIFIERS )
 					{
@@ -264,7 +276,7 @@ package _appId_.resources
 		 */
 		public function getResources( screen : String = null ) : Vector.<File>
 		{
-			return getDrawables( screen ).concat( getValues( screen ) ).concat( getXML( screen ) )
+			return getDrawables( screen ).concat( getXML( screen ) )
 		}
 
 		/**
