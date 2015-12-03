@@ -5,7 +5,7 @@ package _appId_
 	import _appId_.actors.STARLING;
 	import _appId_.actors.STARLING_MAIN;
 	import _appId_.actors.STARLING_STAGE;
-	import _appId_.model.Config;
+	import _appId_.resources.getString;
 	import _appId_.theme.Fonts;
 	import _appId_.utils.device.isDesktop;
 	import _appId_.utils.displayMetrics.getDensityScale;
@@ -127,7 +127,7 @@ package _appId_
 		 */
 		protected function _onMainReady() : void
 		{
-			NAVIGATOR.showPath( Config.FIRST_SCREEN_PATH );
+			NAVIGATOR.showPath( getString( "first_screen" ) );
 		}
 
 		/**

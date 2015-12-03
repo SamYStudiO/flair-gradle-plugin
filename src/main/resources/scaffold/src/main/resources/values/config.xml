@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="first_screen">home</string>
+    <string name="server_base_dev"></string>
+    <string name="server_base_preprod"></string>
+    <string name="server_base_prod"></string>
+</resources>
