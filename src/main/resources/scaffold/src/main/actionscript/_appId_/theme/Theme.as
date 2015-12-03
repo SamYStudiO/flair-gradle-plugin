@@ -21,7 +21,10 @@ package _appId_.theme
 		 */
 		protected static function __textRendererFactory() : TextFieldTextRenderer
 		{
-			return new TextFieldTextRenderer();
+			var tf : TextFieldTextRenderer = new TextFieldTextRenderer();
+			tf.useGutter = true;
+
+			return tf;
 		}
 
 		/**
