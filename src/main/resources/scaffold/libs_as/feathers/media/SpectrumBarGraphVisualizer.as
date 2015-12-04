@@ -262,7 +262,7 @@ package feathers.media
 			}
 
 			SoundMixer.computeSpectrum( this._bytes , true , 0 );
-
+			
 			this._barValues.length = barCount;
 			var valuesPerBar : int = 256 / barCount;
 			//read left values

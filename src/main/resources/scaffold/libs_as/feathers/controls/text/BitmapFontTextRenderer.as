@@ -244,7 +244,7 @@ package feathers.controls.text
 		 * @private
 		 */
 		protected var _text : String = null;
-
+		
 		/**
 		 * @inheritDoc
 		 *

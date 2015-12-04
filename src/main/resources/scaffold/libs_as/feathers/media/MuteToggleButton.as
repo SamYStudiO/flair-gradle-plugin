@@ -82,7 +82,7 @@ package feathers.media
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
-
+		
 		/**
 		 * @private
 		 */
@@ -92,7 +92,6 @@ package feathers.media
 			slider.direction = VolumeSlider.DIRECTION_VERTICAL;
 			return slider;
 		}
-
 		/**
 		 * @private
 		 */

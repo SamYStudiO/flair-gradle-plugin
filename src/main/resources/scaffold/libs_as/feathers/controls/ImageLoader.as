@@ -101,7 +101,7 @@ package feathers.controls
 	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 	 *
 	 * @eventType feathers.events.FeathersEventType.ERROR
-	 *
+	 * 
 	 * @see #event:ioError
 	 * @see #event:securityError
 	 */
@@ -2140,7 +2140,7 @@ package feathers.controls
 			this.cleanupLoaders( false );
 
 			var bitmapData : BitmapData = bitmap.bitmapData;
-
+			
 			//attempt to reuse the existing texture so that we don't need to
 			//create a new one.
 			var canReuseTexture : Boolean = this._texture && this._texture.nativeWidth === bitmapData.width && this._texture.nativeHeight === bitmapData.height && this._texture.scale === this._scaleFactor && this._texture.format === this._textureFormat;

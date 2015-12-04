@@ -2459,7 +2459,7 @@ package feathers.controls
 		 * After the next validation, scrolls the list so that the specified
 		 * item is visible. If <code>animationDuration</code> is greater than
 		 * zero, the scroll will animate. The duration is in seconds.
-		 *
+		 * 
 		 * <p>The <code>itemIndex</code> parameter is optional. If set to
 		 * <code>-1</code>, the list will scroll to the start of the specified
 		 * group.</p>

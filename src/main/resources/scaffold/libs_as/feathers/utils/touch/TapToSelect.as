@@ -43,7 +43,7 @@ package feathers.utils.touch
 	 * <code>TapToSelect</code> instance should be created second because
 	 * <code>Event.TRIGGERED</code> should be dispatched before
 	 * <code>Event.CHANGE</code>.</p>
-	 *
+	 * 
 	 * @see feathers.utils.touch.TapToTrigger
 	 * @see feathers.utils.touch.LongPress
 	 */

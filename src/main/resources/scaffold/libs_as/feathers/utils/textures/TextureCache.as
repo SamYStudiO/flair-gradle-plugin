@@ -14,7 +14,7 @@ package feathers.utils.textures
 	/**
 	 * Caches textures in memory. Each texture may be saved with its own key,
 	 * such as the URL where the original image file is located.
-	 *
+	 * 
 	 * @see feathers.controls.ImageLoader#textureCache
 	 */
 	public class TextureCache
@@ -101,7 +101,7 @@ package feathers.utils.textures
 
 		/**
 		 * Saves a texture, and associates it with a specific key.
-		 *
+		 * 
 		 * @see #removeTexture()
 		 * @see #hasTexture()
 		 */
@@ -187,7 +187,7 @@ package feathers.utils.textures
 		 * Gets the texture associated with the specified key, and increments
 		 * the retain count for the texture. Always remember to call
 		 * <code>releaseTexture()</code> when finished with a retained texture.
-		 *
+		 * 
 		 * @see #releaseTexture()
 		 */
 		public function retainTexture( key : String ) : Texture
@@ -232,7 +232,7 @@ package feathers.utils.textures
 			{
 				//get the existing texture
 				var texture : Texture = Texture( this._retainedTextures[ key ] );
-
+				
 				//remove from retained
 				delete this._retainCounts[ key ];
 				delete this._retainedTextures[ key ];

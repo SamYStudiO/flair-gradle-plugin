@@ -982,7 +982,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _typicalItem : Object = null;
-
+		
 		/**
 		 * Used to auto-size the list when a virtualized layout is used. If the
 		 * list's width or height is unknown, the list will try to automatically

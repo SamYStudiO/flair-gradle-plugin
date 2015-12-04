@@ -23,7 +23,7 @@ package feathers.themes
 	 * Base class for themes that need to skin components in multiple instances
 	 * of Starling. Intended for use in desktop apps with multiple native
 	 * windows where each window has its own Starling instance.
-	 *
+	 * 
 	 * @see ../../../help/skinning.html Skinning Feathers components
 	 * @see ../../../help/custom-themes.html Creating custom Feathers themes
 	 */

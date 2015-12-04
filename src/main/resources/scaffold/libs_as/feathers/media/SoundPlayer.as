@@ -42,7 +42,7 @@ package feathers.media
 	 *   <code>currentTarget</code> property to always access the Object
 	 *   listening for the event.</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/Sound.html#id3 flash.media.Sound.id3
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.METADATA_RECEIVED
@@ -70,7 +70,7 @@ package feathers.media
 	 *   <code>currentTarget</code> property to always access the Object
 	 *   listening for the event.</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * @see #bytesLoaded
 	 * @see #bytesTotal
 	 *
@@ -192,7 +192,7 @@ package feathers.media
 	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>
 	 * will not go into effect until this component's status is upgraded from
 	 * beta to stable.</p>
-	 *
+	 * 
 	 * @see ../../../help/sound-player.html How to use the Feathers SoundPlayer component
 	 */ public class SoundPlayer extends BaseTimedMediaPlayer implements IAudioPlayer, IProgressiveMediaPlayer
 	{
@@ -208,7 +208,7 @@ package feathers.media
 		 * @private
 		 */
 		protected static const NO_SOUND_SOURCE_PLAY_ERROR : String = "Cannot play media when soundSource property has not been set.";
-
+		
 		/**
 		 * @private
 		 */
@@ -221,7 +221,7 @@ package feathers.media
 		 * @private
 		 */
 		protected var _sound : Sound;
-
+		
 		/**
 		 * The <code>flash.media.Sound</code> object that has loaded the
 		 * content specified by <code>soundSource</code>.
@@ -237,7 +237,7 @@ package feathers.media
 		 * @private
 		 */
 		protected var _soundChannel : SoundChannel;
-
+		
 		/**
 		 * The currently playing <code>flash.media.SoundChannel</code>.
 		 */

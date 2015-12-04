@@ -39,7 +39,7 @@ package feathers.controls
 		/**
 		 * The amount the scroll bar value must change to get from one "page" to
 		 * the next.
-		 *
+		 * 
 		 * <p>If this value is <code>0</code>, the <code>step</code> value
 		 * will be used instead. If the <code>step</code> value is
 		 * <code>0</code>, paging is not possible.</p>

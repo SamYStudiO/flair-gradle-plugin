@@ -376,7 +376,7 @@ package feathers.controls.popups
 			}
 
 			var stage : Stage = this.source.stage;
-
+			
 			//we need to be sure that the source is properly positioned before
 			//positioning the content relative to it.
 			var starling : Starling = stageToStarling( stage );

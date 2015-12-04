@@ -81,7 +81,7 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
-
+		
 		/**
 		 * @private
 		 */
@@ -89,7 +89,6 @@ package feathers.controls
 		{
 			return new SpinnerList();
 		}
-
 		/**
 		 * @private
 		 */
@@ -747,7 +746,7 @@ package feathers.controls
 		 *
 		 * <listing version="3.0">
 		 * spinner.scrollToDate( new Date(2016, 0, 1), 1.5 );</listing>
-		 *
+		 * 
 		 * @see #scrollDuration
 		 */
 		public function scrollToDate( date : Date , animationDuration : Number = NaN ) : void
@@ -1918,6 +1917,7 @@ class IntegerRange
 	public var maximum : int;
 	public var step : int;
 }
+
 
 class IntegerRangeDataDescriptor implements IListCollectionDataDescriptor
 {

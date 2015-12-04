@@ -52,7 +52,7 @@ package feathers.media
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
 		public static const ALTERNATE_STYLE_NAME_OVERLAY_PLAY_PAUSE_TOGGLE_BUTTON : String = "feathers-overlay-play-pause-toggle-button";
-
+		
 		/**
 		 * @private
 		 */

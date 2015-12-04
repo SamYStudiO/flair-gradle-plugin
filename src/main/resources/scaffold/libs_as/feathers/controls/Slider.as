@@ -386,7 +386,7 @@ package feathers.controls
 		 * @default true
 		 */
 		public var liveDragging : Boolean = true;
-
+		
 		/**
 		 * @private
 		 */

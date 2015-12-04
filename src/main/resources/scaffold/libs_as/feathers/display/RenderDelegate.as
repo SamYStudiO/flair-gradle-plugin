@@ -18,7 +18,7 @@ package feathers.display
 	/**
 	 * Passes rendering to another display object, but provides its own separate
 	 * transformation.
-	 *
+	 * 
 	 * <p>Touching the delegate does not pass touches to the target. The
 	 * delegate is a separate display object. However, interacting with the
 	 * target may affect the rendering of the delegate.</p>
@@ -29,7 +29,7 @@ package feathers.display
 		 * @private
 		 */
 		private static const HELPER_MATRIX : Matrix = new Matrix();
-
+		
 		/**
 		 * @private
 		 */

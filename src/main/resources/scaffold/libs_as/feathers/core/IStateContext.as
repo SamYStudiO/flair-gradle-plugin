@@ -35,7 +35,7 @@ package feathers.core
 	{
 		/**
 		 * The object's current state.
-		 *
+		 * 
 		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
 		 */
 		function get currentState() : String;

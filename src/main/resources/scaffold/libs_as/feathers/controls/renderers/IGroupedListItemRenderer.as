@@ -96,7 +96,7 @@ package feathers.controls.renderers
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
 		function get owner() : GroupedList;
-
+		
 		/**
 		 * @private
 		 */

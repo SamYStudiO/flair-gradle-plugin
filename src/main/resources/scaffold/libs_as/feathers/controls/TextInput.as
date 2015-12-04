@@ -194,7 +194,7 @@ package feathers.controls
 	 * </table>
 	 *
 	 * @eventType feathers.events.FeathersEventType.STATE_CHANGE
-	 *
+	 * 
 	 * @see #currentState
 	 */
 	[Event(name="stateChange" , type="starling.events.Event")]

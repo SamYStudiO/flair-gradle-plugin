@@ -238,7 +238,7 @@ package feathers.utils.touch
 				else if( touch.phase == TouchPhase.ENDED )
 				{
 					this._target.removeEventListener( Event.ENTER_FRAME , target_enterFrameHandler );
-
+					
 					//re-enable the other events
 					if( this._tapToTrigger )
 					{

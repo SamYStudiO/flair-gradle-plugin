@@ -99,6 +99,7 @@ package feathers.controls
 		{
 			return new Button();
 		}
+
 		/**
 		 * @private
 		 */

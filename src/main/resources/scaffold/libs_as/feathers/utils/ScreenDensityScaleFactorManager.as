@@ -24,11 +24,11 @@ package feathers.utils
 	 * DPI or PPI). The stage and view port will be resized without
 	 * letterboxing. Additionally, the view port and stage will be automatically
 	 * updated if the native stage resizes or changes orientation.
-	 *
+	 * 
 	 * <p>The <code>contentScaleFactor</code> values calculated by this class
 	 * are based on a combination of the screen density buckets supported by
 	 * Google Android and the native scale factors used for Apple's iPhone:</p>
-	 *
+	 * 
 	 * <table>
 	 * <tr><th>Name</th><th>Density</th><th>Scale Factor</th></tr>
 	 * <tr><td>ldpi</td><td>120</td><td>0.75</td></tr>
@@ -38,11 +38,11 @@ package feathers.utils
 	 * <tr><td>xxhdpi</td><td>480</td><td>3</td></tr>
 	 * <tr><td>xxxhdpi</td><td>640</td><td>4</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * <p>The density values in the table above are approximate. The screen
 	 * density of an iPhone 5 is 326, so it uses the scale factor from the
 	 * "xhdpi" bucket because 326 is closer to 320 than it is to 480.</p>
-	 *
+	 * 
 	 * <p>Providing textures for every scale factor is optional. Textures from
 	 * another scale factor can be automatically scaled to fit the current scale
 	 * factor. For instance, since "ldpi" devices with a low screen density
@@ -50,7 +50,7 @@ package feathers.utils
 	 * "good enough" for these legacy devices, if your app encounters one. The
 	 * larger textures will be automatically scaled down, and the app will look
 	 * the same as it would if you were using lower resolution textures.</p>
-	 *
+	 * 
 	 * <p>Special behavior has been implemented for iPads to give them scale
 	 * factors of <code>1</code> and <code>2</code>, just like native apps.
 	 * Using Android's rules for DPI buckets, non-Retina iPads would have been
@@ -58,14 +58,14 @@ package feathers.utils
 	 * have been "hdpi" devices (scale factor <code>1.5</code>. However, because
 	 * it makes more sense to make Starling use the same scale factor as native
 	 * apps on iPad, this class makes a special exception just for them.</p>
-	 *
+	 * 
 	 * <p>The following example demonstrates how to use
 	 * <code>ScreenDensityScaleFactorManager</code>:</p>
-	 *
+	 * 
 	 * <listing version="3.0">
 	 * this._starling = new Starling( RootClass, this.stage, null, null, Context3DRenderMode.AUTO, Context3DProfile.BASELINE );
 	 * this._scaler = new ScreenDensityScaleFactorManager(this._starling);</listing>
-	 *
+	 * 
 	 * <p>When using this class, you should not attempt to manually resize the
 	 * Starling view port or stage manually. This class manages their dimensions
 	 * automatically on its own.</p>

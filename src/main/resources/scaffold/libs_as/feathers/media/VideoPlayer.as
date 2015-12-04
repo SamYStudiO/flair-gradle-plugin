@@ -58,7 +58,7 @@ package feathers.media
 	 * Dispatched when the media player changes to the full-screen display mode
 	 * or back to the normal display mode. The value of the
 	 * <code>isFullScreen</code> property indicates if the media player is
-	 * displayed in full screen mode or normally.
+	 * displayed in full screen mode or normally. 
 	 *
 	 * <p>The properties of the event object have the following values:</p>
 	 * <table class="innertable">
@@ -153,7 +153,7 @@ package feathers.media
 	 *   <code>currentTarget</code> property to always access the Object
 	 *   listening for the event.</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * @see #texture
 	 *
 	 * @eventType starling.events.Event.READY
@@ -266,7 +266,7 @@ package feathers.media
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
 		public static var globalStyleProvider : IStyleProvider;
-
+		
 		/**
 		 * @private
 		 */
@@ -276,7 +276,6 @@ package feathers.media
 			connection.connect( null );
 			return connection;
 		}
-
 		/**
 		 * @private
 		 */
@@ -447,7 +446,7 @@ package feathers.media
 
 		/**
 		 * The <code>flash.net.NetStream</code> object used to play the video.
-		 *
+		 * 
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/NetStream.html flash.net.NetStream
 		 */
 		public function get netStream() : NetStream
@@ -842,16 +841,16 @@ package feathers.media
 
 		/**
 		 * Goes to full screen or returns to normal display.
-		 *
+		 * 
 		 * <p> When the player is full screen, it will be displayed as a modal
 		 * pop-up that fills the entire Starling stage. Depending on the value
 		 * of <code>fullScreenDisplayState</code>, it may also change the value
 		 * of the native stage's <code>displayState</code> property.</p>
-		 *
+		 * 
 		 * <p>When the player is displaying normally (in other words, when it is
 		 * not full screen), it will be displayed in its parent's layout like
 		 * any other Feathers component.</p>
-		 *
+		 * 
 		 * @see #isFullScreen
 		 * @see #fullScreenDisplayState
 		 * @see #normalDisplayState

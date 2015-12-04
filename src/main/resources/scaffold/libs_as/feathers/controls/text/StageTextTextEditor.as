@@ -216,7 +216,7 @@ package feathers.controls.text
 		 * @private
 		 */
 		private static var HELPER_MATRIX3D : Matrix3D;
-
+		
 		/**
 		 * @private
 		 */

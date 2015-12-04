@@ -1,6 +1,5 @@
 package _appId_.view.core
 {
-	import _appId_.actors.NAVIGATOR;
 	import _appId_.actors.STAGE;
 
 	import feathers.controls.Screen;
@@ -76,8 +75,6 @@ package _appId_.view.core
 		public function AScreen()
 		{
 			super();
-
-			backButtonHandler = _goBack;
 		}
 
 		/**
@@ -92,6 +89,14 @@ package _appId_.view.core
 		 */
 		public function hide() : void
 		{
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function saveState() : Object
+		{
+			return null;
 		}
 
 		/**
@@ -159,14 +164,6 @@ package _appId_.view.core
 		 */
 		protected function _drawTablet() : void
 		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _goBack() : void
-		{
-			NAVIGATOR.showPreviousScreen();
 		}
 	}
 }

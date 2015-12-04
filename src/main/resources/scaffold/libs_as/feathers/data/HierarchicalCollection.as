@@ -175,13 +175,13 @@ package feathers.data
 	 *   <code>currentTarget</code> property to always access the Object
 	 *   listening for the event.</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * @see #updateAll()
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ALL
 	 */
 	[Event(name="updateAll" , type="starling.events.Event")]
-
+	
 	/**
 	 * Wraps a two-dimensional data source with a common API for use with UI
 	 * controls that support this type of data.
@@ -277,11 +277,11 @@ package feathers.data
 		 * of a single item in the collection have changed, and that any views
 		 * associated with the item should be updated. The collection will
 		 * dispatch the <code>CollectionEventType.UPDATE_ITEM</code> event.
-		 *
+		 * 
 		 * <p>Alternatively, the item can dispatch an event when one of its
 		 * properties has changed, and item renderers can listen for that event
 		 * and update themselves automatically.</p>
-		 *
+		 * 
 		 * @see #updateAll()
 		 */
 		public function updateItemAt( index : int , ...rest : Array ) : void

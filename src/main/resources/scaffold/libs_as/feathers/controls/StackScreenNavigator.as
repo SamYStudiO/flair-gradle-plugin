@@ -603,7 +603,7 @@ package feathers.controls
 		 * screen. May be used in the case where you want to navigate from
 		 * screen A to screen B and then to screen C, but when popping screen C,
 		 * you want to skip screen B and return to screen A.
-		 *
+		 * 
 		 * <p>Returns a reference to the new screen, unless a transition is
 		 * currently active. In that case, the new screen will be queued until
 		 * the transition has completed, and no reference will be returned.</p>

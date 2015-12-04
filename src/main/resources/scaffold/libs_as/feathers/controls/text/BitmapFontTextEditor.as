@@ -130,10 +130,10 @@ package feathers.controls.text
 	 * Text that may be edited at runtime by the user with the
 	 * <code>TextInput</code> component, rendered with
 	 * <a href="http://wiki.starling-framework.org/manual/displaying_text#bitmap_fonts" target="_top">bitmap fonts</a>.
-	 *
+	 * 
 	 * <p>The following example shows how to use
 	 * <code>BitmapFontTextEditor</code> with a <code>TextInput</code>:</p>
-	 *
+	 * 
 	 * <listing version="3.0">
 	 * var input:TextInput = new TextInput();
 	 * input.textEditorFactory = function():ITextEditor

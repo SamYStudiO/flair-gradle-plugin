@@ -269,7 +269,6 @@ package feathers.controls
 			ratio -= 1;
 			return 1 - ratio * ratio * ratio * ratio;
 		}
-
 		/**
 		 * @private
 		 */

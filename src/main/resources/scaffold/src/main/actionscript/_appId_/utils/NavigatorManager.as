@@ -42,6 +42,11 @@ package _appId_.utils
 		/**
 		 *
 		 */
+		private var _currentHistoryPosition : uint;
+
+		/**
+		 *
+		 */
 		private var _activeTransition : Boolean;
 
 		/**
@@ -53,24 +58,6 @@ package _appId_.utils
 		 *
 		 */
 		private var _nextFunction : Function;
-
-		/**
-		 * @private
-		 */
-		private var _rootNavigatorScreen : INavigatorScreen = STARLING_MAIN;
-
-		/**
-		 *
-		 */
-		public function get rootNavigatorScreen() : INavigatorScreen
-		{
-			return _rootNavigatorScreen;
-		}
-
-		public function set rootNavigatorScreen( navigatorScreen : INavigatorScreen ) : void
-		{
-			_rootNavigatorScreen = navigatorScreen;
-		}
 
 		/**
 		 * @private
@@ -165,8 +152,7 @@ package _appId_.utils
 			{
 				var currentPath : String = _pathsHistory[ _pathsHistory.length - 1 ].url;
 				var paths : Array = currentPath.split( "/" );
-				var navigatorScreen : INavigatorScreen = _rootNavigatorScreen;
-				var screen : IndexScreen = navigatorScreen.activeScreen as IndexScreen;
+				var screen : IndexScreen = STARLING_MAIN.activeScreen as IndexScreen;
 				var cpt : uint = 0;
 
 				for each( var p : String in paths )
@@ -238,7 +224,7 @@ package _appId_.utils
 				else navigatorScreen.addEventListener( FeathersEventType.TRANSITION_COMPLETE , onTransitionComplete );
 			}
 
-			showNextScreenFromScreen( _rootNavigatorScreen );
+			showNextScreenFromScreen( STARLING_MAIN );
 		}
 
 		/**
@@ -287,6 +273,14 @@ package _appId_.utils
 			var o : Object = v.length > 0 ? v[ 0 ] : null;
 
 			if( o != null ) showPath( o.url , o.params );
+		}
+
+		/**
+		 *
+		 */
+		public function showNextScreen( offset : int = 1 ) : void
+		{
+
 		}
 
 		/**

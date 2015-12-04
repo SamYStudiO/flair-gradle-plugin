@@ -1126,7 +1126,7 @@ package feathers.controls.supportClasses
 			var inactiveItemRenderers : Vector.<IListItemRenderer> = storage.inactiveItemRenderers;
 			var activeItemRenderers : Vector.<IListItemRenderer> = storage.activeItemRenderers;
 			var activeItemRenderersCount : int = activeItemRenderers.length;
-
+			
 			//we may keep around some extra renderers to avoid too much
 			//allocation and garbage collection. they'll be hidden.
 			var itemCount : int = inactiveItemRenderers.length;

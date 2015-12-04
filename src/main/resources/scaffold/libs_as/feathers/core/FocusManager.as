@@ -211,7 +211,6 @@ package feathers.core
 				manager.isEnabled = true;
 			}
 		}
-
 		/**
 		 * @private
 		 */

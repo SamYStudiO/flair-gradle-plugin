@@ -12,7 +12,7 @@ package feathers.controls.renderers
 
 	/**
 	 * Interface to implement a renderer for a grouped list header.
-	 *
+	 * 
 	 * @see feathers.controls.GroupedList
 	 */
 	public interface IGroupedListHeaderRenderer extends IFeathersControl

@@ -191,7 +191,7 @@ package feathers.core
 
 		/**
 		 * Determines if the text is editable.
-		 *
+		 * 
 		 * @see #isSelectable
 		 */
 		function get isEditable() : Boolean;

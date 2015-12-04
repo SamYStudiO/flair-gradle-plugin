@@ -260,7 +260,7 @@ package feathers.controls.renderers
 		 * @private
 		 */
 		protected var _index : int = -1;
-
+		
 		/**
 		 * @inheritDoc
 		 */

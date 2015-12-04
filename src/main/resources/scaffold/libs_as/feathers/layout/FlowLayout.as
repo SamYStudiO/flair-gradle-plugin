@@ -614,7 +614,7 @@ package feathers.layout
 			var maxHeight : Number = viewPortBounds ? viewPortBounds.maxHeight : Number.POSITIVE_INFINITY;
 			var explicitWidth : Number = viewPortBounds ? viewPortBounds.explicitWidth : NaN;
 			var explicitHeight : Number = viewPortBounds ? viewPortBounds.explicitHeight : NaN;
-
+			
 			//let's figure out if we can show multiple rows
 			var supportsMultipleRows : Boolean = true;
 			var availableRowWidth : Number = explicitWidth;
@@ -664,7 +664,7 @@ package feathers.layout
 				//items in the container!), then we don't want to subtract the
 				//gap when calculating the row width, so default to 0.
 				var horizontalGap : Number = 0;
-
+				
 				//this first loop sets the x position of items, and it calculates
 				//the total width of all items
 				for( ; i < itemCount; i++ )
@@ -1126,7 +1126,7 @@ package feathers.layout
 			result = this.calculateMaxScrollYAndRowHeightOfIndex( index , items , x , y , width , height , result );
 			var maxScrollY : Number = result.x;
 			var rowHeight : Number = result.y;
-
+			
 			result.x = 0;
 
 			var bottomPosition : Number = maxScrollY - (height - rowHeight);

@@ -18,7 +18,7 @@ package feathers.controls.renderers
 	 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 	 * 
 	 * Interface to implement a renderer for a grouped list header or footer.
-	 *
+	 * 
 	 * @see feathers.controls.GroupedList
 	 */ public interface IGroupedListHeaderOrFooterRenderer extends IGroupedListHeaderRenderer, IGroupedListFooterRenderer
 	{

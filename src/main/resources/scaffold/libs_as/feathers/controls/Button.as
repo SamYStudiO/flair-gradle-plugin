@@ -111,7 +111,7 @@ package feathers.controls
 	 * </table>
 	 *
 	 * @eventType feathers.events.FeathersEventType.STATE_CHANGE
-	 *
+	 * 
 	 * @see #currentState
 	 */
 	[Event(name="stateChange" , type="starling.events.Event")]
@@ -526,7 +526,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _currentState : String = STATE_UP;
-
+		
 		/**
 		 * The current state of the button.
 		 *
@@ -1481,7 +1481,7 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _customLabelStyleName : String;
-
+		
 		/**
 		 * A style name to add to the button's label text renderer
 		 * sub-component. Typically used by a theme to provide different styles
@@ -2195,7 +2195,7 @@ package feathers.controls
 		 *
 		 * <p>If a skin is not defined for a specific state, the value of the
 		 * <code>defaultSkin</code> property will be used instead.</p>
-		 *
+		 * 
 		 * @see #defaultSkin
 		 */
 		public function setSkinForState( state : String , skin : DisplayObject ) : void

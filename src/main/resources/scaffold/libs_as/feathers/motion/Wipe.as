@@ -115,7 +115,6 @@ package feathers.motion
 				new WipeTween( newScreen , oldScreen , 0 , yOffset , duration , ease , onComplete , tweenProperties );
 			}
 		}
-
 		/**
 		 * @private
 		 */

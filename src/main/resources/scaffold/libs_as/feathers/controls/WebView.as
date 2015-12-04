@@ -70,7 +70,7 @@ package feathers.controls
 	 * </table>
 	 *
 	 * @see #location
-	 *
+	 * 
 	 * @eventType feathers.events.FeathersEventType.LOCATION_CHANGE
 	 */
 	[Event(name="locationChange" , type="starling.events.Event")]

@@ -1761,7 +1761,7 @@ package feathers.core
 		 * <p>The implementation of this method is provided for convenience, but
 		 * it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
-		 *
+		 * 
 		 * @copy feathers.core.IFocusDisplayObject#showFocus()
 		 *
 		 * @see feathers.core.IFocusDisplayObject
@@ -1781,7 +1781,7 @@ package feathers.core
 		 * <p>The implementation of this method is provided for convenience, but
 		 * it cannot be used unless a subclass implements the
 		 * <code>IFocusDisplayObject</code> interface.</p>
-		 *
+		 * 
 		 * @copy feathers.core.IFocusDisplayObject#hideFocus()
 		 *
 		 * @see feathers.core.IFocusDisplayObject

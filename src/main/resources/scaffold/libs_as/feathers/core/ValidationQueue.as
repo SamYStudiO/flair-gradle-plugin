@@ -33,7 +33,6 @@ package feathers.core
 			}
 			return queue;
 		}
-
 		/**
 		 * @private
 		 */

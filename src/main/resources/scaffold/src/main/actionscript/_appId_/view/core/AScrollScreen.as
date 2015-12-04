@@ -99,6 +99,14 @@ package _appId_.view.core
 		/**
 		 * @inheritDoc
 		 */
+		public function saveState() : Object
+		{
+			return null;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
 		override protected function initialize() : void
 		{
 			super.initialize();

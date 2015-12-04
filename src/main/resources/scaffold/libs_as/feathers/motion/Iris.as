@@ -15,7 +15,7 @@ package feathers.motion
 	 * shows or hides a display object masked by a growing or shrinking circle.
 	 * In a transition, both display objects remain stationary while the effect
 	 * animates a stencil mask.
-	 *
+	 * 
 	 * <p>Note: This effect is not supported with display objects that have
 	 * transparent backgrounds due to limitations in stencil masks. Display
 	 * objects should be fully opaque.</p>
@@ -127,7 +127,6 @@ package feathers.motion
 				new IrisTween( newScreen , oldScreen , x , y , false , duration , ease , onComplete , tweenProperties );
 			}
 		}
-
 		/**
 		 * @private
 		 */

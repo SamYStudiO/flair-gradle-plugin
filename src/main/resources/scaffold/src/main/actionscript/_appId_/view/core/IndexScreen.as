@@ -40,5 +40,10 @@ package _appId_.view.core
 		 *
 		 */
 		function hide() : void;
+
+		/**
+		 *
+		 */
+		function saveState() : Object;
 	}
 }

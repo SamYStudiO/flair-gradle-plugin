@@ -1355,15 +1355,15 @@ package feathers.controls.text
 		 * Sets the <code>ElementFormat</code> to be used by the text renderer
 		 * when the <code>currentState</code> property of the
 		 * <code>stateContext</code> matches the specified state value.
-		 *
+		 * 
 		 * <p>If an <code>ElementFormat</code> is not defined for a specific
 		 * state, the value of the <code>elementFormat</code> property will be
 		 * used instead.</p>
-		 *
+		 * 
 		 * <p>If the <code>disabledElementFormat</code> property is not
 		 * <code>null</code> and the <code>isEnabled</code> property is
 		 * <code>false</code>, all other element formats will be ignored.</p>
-		 *
+		 * 
 		 * @see #stateContext
 		 * @see #elementFormat
 		 */

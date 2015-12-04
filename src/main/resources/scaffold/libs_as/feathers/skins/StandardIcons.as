@@ -22,7 +22,7 @@ package feathers.skins
 	public class StandardIcons
 	{
 		/**
-		 * DEPRECATED: To display in an item renderer, use the
+		 * DEPRECATED: To display in an item renderer, use the 
 		 * <code>DefaultListItemRenderer.ALTERNATE_STYLE_NAME_DRILL_DOWN</code>
 		 * style name.
 		 * 

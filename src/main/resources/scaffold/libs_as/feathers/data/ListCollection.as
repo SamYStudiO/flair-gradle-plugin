@@ -146,7 +146,7 @@ package feathers.data
 	 *   <code>currentTarget</code> property to always access the Object
 	 *   listening for the event.</td></tr>
 	 * </table>
-	 *
+	 * 
 	 * @see #updateItemAt()
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ITEM
@@ -316,7 +316,7 @@ package feathers.data
 		 * <p>Alternatively, the item can dispatch an event when one of its
 		 * properties has changed, and item renderers can listen for that event
 		 * and update themselves automatically.</p>
-		 *
+		 * 
 		 * @see #updateAll()
 		 */
 		public function updateItemAt( index : int ) : void
@@ -334,7 +334,7 @@ package feathers.data
 		 * <p>Alternatively, the item can dispatch an event when one of its
 		 * properties has changed, and item renderers can listen for that event
 		 * and update themselves automatically.</p>
-		 *
+		 * 
 		 * @see #updateItemAt()
 		 */
 		public function updateAll() : void

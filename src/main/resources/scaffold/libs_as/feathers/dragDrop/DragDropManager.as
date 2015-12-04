@@ -264,7 +264,6 @@ package feathers.dragDrop
 				dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_MOVE , _dragData , false , dropTargetLocalX , dropTargetLocalY ) );
 			}
 		}
-
 		/**
 		 * @private
 		 */
