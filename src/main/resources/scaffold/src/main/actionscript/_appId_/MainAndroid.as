@@ -16,7 +16,7 @@ package _appId_
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
 	[SWF(width='1080' , height='1920' , frameRate='60' , backgroundColor='0xffffff')]
-	public class MainAndroid extends AMainMobile
+	public class MainAndroid extends ASplashMain
 	{
 		/**
 		 *

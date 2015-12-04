@@ -1,6 +1,7 @@
 package _appId_.utils
 {
 	import _appId_.actors.STAGE;
+	import _appId_.utils.device.isDesktop;
 
 	import flash.display.StageOrientation;
 	import flash.events.Event;
@@ -69,7 +70,7 @@ package _appId_.utils
 		 */
 		public function get isStagePortrait() : Boolean
 		{
-			return STAGE.stageWidth < STAGE.stageHeight;
+			return STAGE.stageWidth < STAGE.stageHeight && !isDesktop();
 		}
 
 		/**
@@ -77,7 +78,7 @@ package _appId_.utils
 		 */
 		public function get isStageLandscape() : Boolean
 		{
-			return STAGE.stageWidth > STAGE.stageHeight;
+			return STAGE.stageWidth > STAGE.stageHeight || isDesktop();
 		}
 
 		/**

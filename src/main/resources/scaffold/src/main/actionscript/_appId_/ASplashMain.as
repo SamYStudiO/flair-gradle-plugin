@@ -11,11 +11,12 @@ package _appId_
 	import flash.filesystem.FileStream;
 	import flash.geom.Matrix;
 	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AMainMobile extends AMain
+	public class ASplashMain extends AMain
 	{
 		/**
 		 *
@@ -40,7 +41,7 @@ package _appId_
 		/**
 		 *
 		 */
-		public function AMainMobile()
+		public function ASplashMain()
 		{
 			super();
 		}
