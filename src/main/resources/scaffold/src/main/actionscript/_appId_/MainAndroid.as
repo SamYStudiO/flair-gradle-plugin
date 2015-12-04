@@ -2,13 +2,13 @@ package _appId_
 {
 	import _appId_.actors.ORIENTATION_MANAGER;
 	import _appId_.actors.STAGE;
+	import _appId_.resources.getBoolean;
 
 	import feathers.system.DeviceCapabilities;
 	import feathers.utils.display.calculateScaleRatioToFit;
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
-	import flash.events.InvokeEvent;
 
 	import net.samystudio.density.Density;
 
@@ -63,13 +63,11 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _init( e : InvokeEvent ) : void
+		override protected function _onMainReady() : void
 		{
-			// Comment if you don't want assets to be scaled to device physical density
-			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
-			if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
+			if( getBoolean( "android_scale_drawables_to_physical_density" ) && Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
-			super._init( e );
+			super._onMainReady();
 		}
 
 		/**
