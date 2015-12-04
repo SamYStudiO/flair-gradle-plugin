@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <bool name="ios_scale_drawables_to_physical_density">true</bool>
-    <bool name="android_scale_drawables_to_physical_density">true</bool>
     <string name="first_screen">home</string>
 </resources>

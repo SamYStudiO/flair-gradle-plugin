@@ -22,7 +22,7 @@ package _appId_
 	import flash.system.Capabilities;
 
 	import myLogger.DEFAULT_LOGGER;
-	import myLogger.debug;
+	import myLogger.info;
 
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
@@ -91,13 +91,6 @@ package _appId_
 		/**
 		 *
 		 */
-		protected function _initSplashScreen() : void
-		{
-		}
-
-		/**
-		 *
-		 */
 		protected function _initStarling() : void
 		{
 			Starling.multitouchEnabled = true;
@@ -127,6 +120,8 @@ package _appId_
 		 */
 		protected function _onMainReady() : void
 		{
+			info( this , "_onMainReady" );
+
 			NAVIGATOR.showPath( getString( "first_screen" ) );
 		}
 
@@ -135,6 +130,8 @@ package _appId_
 		 */
 		protected function _onActivate( e : flash.events.Event ) : void
 		{
+			info( this , "_onActivate" );
+
 			_isActivated = true;
 
 			if( STARLING != null ) STARLING.start();
@@ -145,6 +142,8 @@ package _appId_
 		 */
 		protected function _onDeactivate( e : flash.events.Event ) : void
 		{
+			info( this , "_onDeactivate" );
+
 			_isActivated = false;
 
 			if( STARLING != null && !isDesktop() ) STARLING.stop( true );
@@ -159,7 +158,6 @@ package _appId_
 			_initStage();
 			_initFonts();
 			_initConstants();
-			_initSplashScreen();
 			_initStarling();
 
 			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
@@ -170,7 +168,7 @@ package _appId_
 		 */
 		protected function _onStarlingContextCreate( e : starling.events.Event ) : void
 		{
-			debug( this , "_onStarlingContextCreate" );
+			info( this , "_onStarlingContextCreate" );
 
 			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 		}
@@ -180,12 +178,12 @@ package _appId_
 		 */
 		protected function _onStarlingRootCreate( e : starling.events.Event ) : void
 		{
-			debug( this , "_onStarlingRootCreate" );
+			info( this , "_onStarlingRootCreate" );
 
 			STAGE.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
 
 			if( STARLING_MAIN.isReady ) _onMainReady();
-			else STARLING_MAIN.assetsComplete.add( _onMainReady );
+			else STARLING_MAIN.assetsComplete.addOnce( _onMainReady );
 
 			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 		}
@@ -197,6 +195,9 @@ package _appId_
 		{
 			var stageWidth : Number = STAGE.stageWidth;
 			var stageHeight : Number = STAGE.stageHeight;
+
+			info( this , "_onStageResize" , stageWidth , stageHeight );
+
 			var scale : Number = getDensityScale();
 
 			STARLING_STAGE.stageWidth = stageWidth / scale;

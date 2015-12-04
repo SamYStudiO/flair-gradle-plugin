@@ -1,11 +1,10 @@
 package _appId_.resources
 {
-	import _appId_.actors.STAGE;
 	import _appId_.actors.STARLING;
+	import _appId_.actors.STARLING_STAGE;
 	import _appId_.utils.device.deviceLocale;
 	import _appId_.utils.displayMetrics.EnumDensityBucket;
 	import _appId_.utils.displayMetrics.deviceBucket;
-	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.EnumScreen;
 
 	import flash.display3D.Context3DProfile;
@@ -46,7 +45,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __SMALLEST_WIDTH_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.SMALLEST_WIDTH , /(sw[0-9]{2,4}dp)/ , Math.min( STAGE.stageWidth / getDensityScale() , STAGE.stageHeight / getDensityScale() ) , function ( qualifierValue : String , testValue : String ) : Boolean
+		private const __SMALLEST_WIDTH_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.SMALLEST_WIDTH , /(sw[0-9]{2,4}dp)/ , Math.min( STARLING_STAGE.stageWidth , STARLING_STAGE.stageHeight ) , function ( qualifierValue : String , testValue : String ) : Boolean
 		{
 			function parseSWInt( s : String ) : int
 			{

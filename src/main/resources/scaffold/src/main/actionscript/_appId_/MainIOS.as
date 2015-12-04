@@ -1,11 +1,6 @@
 package _appId_
 {
-	import _appId_.resources.getBoolean;
-	import _appId_.utils.displayMetrics.getBucketFromDensity;
-	import _appId_.utils.displayMetrics.getDensityFromBucket;
-
-	import feathers.system.DeviceCapabilities;
-
+	import flash.events.InvokeEvent;
 	import flash.system.Capabilities;
 
 	/**
@@ -69,11 +64,13 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _onMainReady() : void
+		override protected function _init( e : InvokeEvent ) : void
 		{
-			if( !getBoolean( "ios_scale_drawables_to_physical_density" ) ) DeviceCapabilities.dpi = getDensityFromBucket( getBucketFromDensity( DeviceCapabilities.dpi ) );
+			// Uncomment if you don't want assets to be scaled to device physical density
+			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
+			//DeviceCapabilities.dpi = getDensityFromBucket( getBucketFromDensity( DeviceCapabilities.dpi ) );
 
-			super._onMainReady();
+			super._init( e );
 		}
 	}
 }

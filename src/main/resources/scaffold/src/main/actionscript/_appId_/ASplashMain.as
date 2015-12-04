@@ -6,6 +6,7 @@ package _appId_
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.InvokeEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -61,7 +62,20 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _initSplashScreen() : void
+		override protected function _onMainReady() : void
+		{
+			setTimeout( _cleanupSplashScreen , 1000 );
+
+			STAGE.autoOrients = _defaultAutoOrients;
+			if( STAGE.autoOrients ) ORIENTATION_MANAGER.updateStageOrientationFromDeviceOrientation();
+
+			super._onMainReady();
+		}
+
+		/**
+		 *
+		 */
+		protected function _initSplashScreen() : void
 		{
 			_splashScreenContainer = new Sprite();
 			STAGE.addChild( _splashScreenContainer );
@@ -75,19 +89,6 @@ package _appId_
 			_splashScreenContainer.addChild( _splashScreenLandscape );
 
 			ORIENTATION_MANAGER.deviceOrientationChanged.add( _orientationChanged );
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		override protected function _onMainReady() : void
-		{
-			setTimeout( _cleanupSplashScreen , 1000 );
-
-			STAGE.autoOrients = _defaultAutoOrients;
-			if( STAGE.autoOrients ) ORIENTATION_MANAGER.updateStageOrientationFromDeviceOrientation();
-
-			super._onMainReady();
 		}
 
 		/**
@@ -189,6 +190,16 @@ package _appId_
 		 */
 		protected function _splashScreenLandscapeLoaded( e : Event ) : void
 		{
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		override protected function _init( e : InvokeEvent ) : void
+		{
+			super._init( e );
+
+			_initSplashScreen();
 		}
 	}
 }
