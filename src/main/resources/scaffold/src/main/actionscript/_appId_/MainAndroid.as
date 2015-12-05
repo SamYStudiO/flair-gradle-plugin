@@ -3,14 +3,11 @@ package _appId_
 	import _appId_.actors.ORIENTATION_MANAGER;
 	import _appId_.actors.STAGE;
 
-	import feathers.system.DeviceCapabilities;
 	import feathers.utils.display.calculateScaleRatioToFit;
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
-
-	import net.samystudio.density.Density;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
@@ -65,9 +62,9 @@ package _appId_
 		 */
 		override protected function _init( e : InvokeEvent ) : void
 		{
-			// Comment if you don't want assets to be scaled to device physical density
+			// Uncomment if you want assets to be scaled to device physical density
 			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
-			if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
+			// if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
 			super._init( e );
 		}

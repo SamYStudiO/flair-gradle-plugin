@@ -5,7 +5,7 @@ package _appId_.utils.displayMetrics
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public function getDensity() : Number
+	internal function deviceDensity() : Number
 	{
 		return DeviceCapabilities.dpi;
 	}

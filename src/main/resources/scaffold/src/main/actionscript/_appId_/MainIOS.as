@@ -1,5 +1,9 @@
 package _appId_
 {
+	import _appId_.utils.displayMetrics.getDensityDpiFromPhysicalDensity;
+
+	import feathers.system.DeviceCapabilities;
+
 	import flash.events.InvokeEvent;
 	import flash.system.Capabilities;
 
@@ -66,9 +70,9 @@ package _appId_
 		 */
 		override protected function _init( e : InvokeEvent ) : void
 		{
-			// Uncomment if you don't want assets to be scaled to device physical density
+			// Comment if you want assets to be scaled to device physical density
 			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
-			//DeviceCapabilities.dpi = getDensityFromBucket( getBucketFromDensity( DeviceCapabilities.dpi ) );
+			DeviceCapabilities.dpi = getDensityDpiFromPhysicalDensity( DeviceCapabilities.dpi );
 
 			super._init( e );
 		}

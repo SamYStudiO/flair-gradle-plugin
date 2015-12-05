@@ -5,5 +5,5 @@ package _appId_.actors
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public const R : ResourceFileManager = ResourceFileManager.getInstance();
+	public const RESOURCE_MANAGER : ResourceFileManager = ResourceFileManager.getInstance();
 }

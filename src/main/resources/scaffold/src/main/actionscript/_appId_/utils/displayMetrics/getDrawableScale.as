@@ -1,15 +1,12 @@
 package _appId_.utils.displayMetrics
 {
-	import _appId_.actors.R;
+	import _appId_.actors.RESOURCE_MANAGER;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
 	public function getDrawableScale() : Number
 	{
-		var bucket : String = R.getDrawableBucket();
-		var drawableDensity : uint = getDensityFromBucket( bucket );
-
-		return drawableDensity / getDensityFromBucket( deviceBucket );
+		return RESOURCE_MANAGER.getDrawableDensityDpi() / densityDpi;
 	}
 }

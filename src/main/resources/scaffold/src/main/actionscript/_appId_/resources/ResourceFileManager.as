@@ -3,14 +3,32 @@ package _appId_.resources
 	import _appId_.actors.STARLING;
 	import _appId_.actors.STARLING_STAGE;
 	import _appId_.utils.device.deviceLocale;
-	import _appId_.utils.displayMetrics.EnumDensityBucket;
-	import _appId_.utils.displayMetrics.deviceBucket;
+	import _appId_.utils.displayMetrics.DENSITY_DEFAULT;
+	import _appId_.utils.displayMetrics.DENSITY_HDPI;
+	import _appId_.utils.displayMetrics.DENSITY_LDPI;
+	import _appId_.utils.displayMetrics.DENSITY_MDPI;
+	import _appId_.utils.displayMetrics.DENSITY_XHDPI;
+	import _appId_.utils.displayMetrics.DENSITY_XXHDPI;
+	import _appId_.utils.displayMetrics.DENSITY_XXXHDPI;
+	import _appId_.utils.displayMetrics.densityDpi;
 	import _appId_.view.EnumScreen;
 
 	import flash.display3D.Context3DProfile;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+
+	use namespace DENSITY_XXXHDPI;
+
+	use namespace DENSITY_XXHDPI;
+
+	use namespace DENSITY_XHDPI;
+
+	use namespace DENSITY_HDPI;
+
+	use namespace DENSITY_MDPI;
+
+	use namespace DENSITY_LDPI;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
@@ -58,7 +76,7 @@ package _appId_.resources
 		/**
 		 * TODO make 560 bucket a valid bucket (nexus 6)
 		 */
-		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , deviceBucket );
+		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , densityDpi );
 
 		/**
 		 *
@@ -172,8 +190,8 @@ package _appId_.resources
 				if( qualifier.name == EnumQualifier.DENSITY )
 				{
 					var d : int = int.MIN_VALUE;
-					var buckets : Array = [ EnumDensityBucket.LDPI , EnumDensityBucket.MDPI , EnumDensityBucket.HDPI , EnumDensityBucket.XHDPI , EnumDensityBucket.XXHDPI , EnumDensityBucket.XXXHDPI ];
-					var index : uint = buckets.indexOf( deviceBucket );
+					var buckets : Array = [ DENSITY_LDPI , DENSITY_MDPI , DENSITY_HDPI , DENSITY_XHDPI , DENSITY_XXHDPI , DENSITY_XXXHDPI ];
+					var index : uint = buckets.indexOf( densityDpi );
 					var has2x : Boolean;
 
 					for each ( directory in a )
@@ -282,7 +300,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getDrawableBucket() : String
+		public function getDrawableDensityDpi() : int
 		{
 			var v : Vector.<File> = getDrawables();
 
@@ -294,11 +312,28 @@ package _appId_.resources
 
 				if( test != null && test.length > 0 )
 				{
-					return test[ 0 ];
+					switch( test[ 0 ] )
+					{
+						case "ldpi" :
+							return DENSITY_LDPI;
+						case "mdp" :
+							return DENSITY_MDPI;
+						case "hdpi" :
+							return DENSITY_HDPI;
+						case "xhdpi" :
+							return DENSITY_XHDPI;
+						case "xxhdpi" :
+							return DENSITY_XXHDPI;
+						case "xxxhdpi" :
+							return DENSITY_XXXHDPI;
+
+						default :
+							return DENSITY_DEFAULT;
+					}
 				}
 			}
 
-			return EnumDensityBucket.MDPI;
+			return DENSITY_DEFAULT;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package _appId_.view.core
 {
-	import _appId_.actors.R;
+	import _appId_.actors.RESOURCE_MANAGER;
 	import _appId_.actors.STAGE;
 	import _appId_.resources.addAssetManager;
 	import _appId_.resources.removeAssetManager;
@@ -141,14 +141,14 @@ package _appId_.view.core
 		 */
 		protected function _addAssets() : void
 		{
-			var resourcesList : Vector.<File> = R.getResources( _screenID );
+			var resourcesList : Vector.<File> = RESOURCE_MANAGER.getResources( _screenID );
 
 			for each ( var file : File in resourcesList )
 			{
 				_assets.enqueue( file );
 			}
 
-			_assets.addXml( "values" , R.getValues( _screenID ) );
+			_assets.addXml( "values" , RESOURCE_MANAGER.getValues( _screenID ) );
 		}
 
 		/**
