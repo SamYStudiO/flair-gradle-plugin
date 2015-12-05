@@ -3,13 +3,7 @@ package _appId_.resources
 	import _appId_.actors.STARLING;
 	import _appId_.actors.STARLING_STAGE;
 	import _appId_.utils.device.deviceLocale;
-	import _appId_.utils.displayMetrics.DENSITY_DEFAULT;
-	import _appId_.utils.displayMetrics.DENSITY_HDPI;
-	import _appId_.utils.displayMetrics.DENSITY_LDPI;
-	import _appId_.utils.displayMetrics.DENSITY_MDPI;
-	import _appId_.utils.displayMetrics.DENSITY_XHDPI;
-	import _appId_.utils.displayMetrics.DENSITY_XXHDPI;
-	import _appId_.utils.displayMetrics.DENSITY_XXXHDPI;
+	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
 	import _appId_.view.EnumScreen;
 
@@ -17,18 +11,6 @@ package _appId_.resources
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-
-	use namespace DENSITY_XXXHDPI;
-
-	use namespace DENSITY_XXHDPI;
-
-	use namespace DENSITY_XHDPI;
-
-	use namespace DENSITY_HDPI;
-
-	use namespace DENSITY_MDPI;
-
-	use namespace DENSITY_LDPI;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
@@ -190,7 +172,7 @@ package _appId_.resources
 				if( qualifier.name == EnumQualifier.DENSITY )
 				{
 					var d : int = int.MIN_VALUE;
-					var buckets : Array = [ DENSITY_LDPI , DENSITY_MDPI , DENSITY_HDPI , DENSITY_XHDPI , DENSITY_XXHDPI , DENSITY_XXXHDPI ];
+					var buckets : Array = [ EnumDensityDpi.DENSITY_LDPI , EnumDensityDpi.DENSITY_MDPI , EnumDensityDpi.DENSITY_HDPI , EnumDensityDpi.DENSITY_XHDPI , EnumDensityDpi.DENSITY_XXHDPI , EnumDensityDpi.DENSITY_XXXHDPI ];
 					var index : uint = buckets.indexOf( densityDpi );
 					var has2x : Boolean;
 
@@ -312,28 +294,11 @@ package _appId_.resources
 
 				if( test != null && test.length > 0 )
 				{
-					switch( test[ 0 ] )
-					{
-						case "ldpi" :
-							return DENSITY_LDPI;
-						case "mdp" :
-							return DENSITY_MDPI;
-						case "hdpi" :
-							return DENSITY_HDPI;
-						case "xhdpi" :
-							return DENSITY_XHDPI;
-						case "xxhdpi" :
-							return DENSITY_XXHDPI;
-						case "xxxhdpi" :
-							return DENSITY_XXXHDPI;
-
-						default :
-							return DENSITY_DEFAULT;
-					}
+					return EnumDensityDpi[ "DENSITY_" + test[ 0 ].toUpperCase() ];
 				}
 			}
 
-			return DENSITY_DEFAULT;
+			return EnumDensityDpi.DENSITY_DEFAULT;
 		}
 	}
 }

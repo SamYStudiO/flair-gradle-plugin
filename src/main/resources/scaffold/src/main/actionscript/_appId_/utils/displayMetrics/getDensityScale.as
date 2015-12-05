@@ -5,6 +5,6 @@ package _appId_.utils.displayMetrics
 	 */
 	public function getDensityScale() : Number
 	{
-		return getDeviceDensity() / DENSITY_MDPI;
+		return getDeviceDensity() / EnumDensityDpi.DENSITY_DEFAULT;
 	}
 }
