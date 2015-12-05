@@ -63,7 +63,7 @@ package _appId_
 		override protected function _init( e : InvokeEvent ) : void
 		{
 			// Uncomment if you want assets to be scaled to device physical density
-			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxhdpi...)
+			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi...)
 			// if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
 
 			super._init( e );
