@@ -3,7 +3,7 @@ package _appId_.resources
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
 	 */
-	public final class EnumResource
+	public final class EnumResourceType
 	{
 		/**
 		 *
@@ -23,7 +23,7 @@ package _appId_.resources
 		/**
 		 * @private
 		 */
-		public function EnumResource()
+		public function EnumResourceType()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}

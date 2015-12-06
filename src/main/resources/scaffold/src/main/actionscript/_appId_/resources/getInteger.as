@@ -7,6 +7,6 @@ package _appId_.resources
 	 */
 	public function getInteger( id : String , groupID : String = EnumScreen.MAIN ) : int
 	{
-		return int( getAssetManager( groupID ).getXml( "values" ).integer.( @name == id ) );
+		return int( getAssetManager( groupID ).getXml( "values" )..integer.( @name == id ) );
 	}
 }

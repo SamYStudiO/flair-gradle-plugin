@@ -5,12 +5,13 @@ package _appId_.resources
 	import _appId_.utils.device.deviceLocale;
 	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
-	import _appId_.view.EnumScreen;
+	import _appId_.utils.displayMetrics.getDensityScale;
 
 	import flash.display3D.Context3DProfile;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.utils.Dictionary;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
@@ -58,7 +59,7 @@ package _appId_.resources
 		/**
 		 * TODO make 560 bucket a valid bucket (nexus 6)
 		 */
-		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , densityDpi );
+		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , _getBucketFromDensityDpi() );
 
 		/**
 		 *
@@ -76,58 +77,80 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getDrawables( screen : String = EnumScreen.MAIN ) : Vector.<File>
+		public function getDrawables() : Vector.<ResourceFile>
 		{
-			return getResource( EnumResource.DRAWABLE , screen );
+			return getResource( EnumResourceType.DRAWABLE );
 		}
 
 		/**
 		 *
 		 */
-		public function getValues( screen : String = EnumScreen.MAIN ) : XML
+		public function getValues() : Vector.<ResourceFile>
 		{
-			var v : Vector.<File> = getResource( EnumResource.VALUES , screen );
-			var output : XML = <root />;
-			var stream : FileStream = new FileStream();
+			var outputFile : File = File.applicationStorageDirectory.resolvePath( "resources/values.xml" );
 
-			for each ( var file : File in v )
+			if( !outputFile.exists )
 			{
-				stream.open( file , FileMode.READ );
-				output.appendChild( new XML( stream.readUTFBytes( stream.bytesAvailable ) ) );
+				var outputXML : XML = <root />;
+				var stream : FileStream = new FileStream();
+				var values : Vector.<ResourceFile> = getResource( EnumResourceType.VALUES );
+
+				for each ( var file : ResourceFile in values )
+				{
+					stream.open( file , FileMode.READ );
+					outputXML.appendChild( new XML( stream.readUTFBytes( stream.bytesAvailable ) ) );
+					stream.close();
+				}
+
+				stream.open( outputFile , FileMode.WRITE );
+				stream.writeUTFBytes( outputXML.toString() );
 				stream.close();
 			}
 
-			return output;
+			var v : Vector.<ResourceFile> = new Vector.<ResourceFile>();
+			v.push( ResourceFile.fromFile( outputFile , EnumResourceType.VALUES ) );
+
+			return v;
 		}
 
 		/**
 		 *
 		 */
-		public function getXML( screen : String = EnumScreen.MAIN ) : Vector.<File>
+		public function getXML() : Vector.<ResourceFile>
 		{
-			return getResource( EnumResource.XML , screen );
+			return getResource( EnumResourceType.XML );
 		}
 
 		/**
 		 *
 		 */
-		public function getResource( id : String , screen : String = EnumScreen.MAIN ) : Vector.<File>
+		public function getResource( resourceType : String ) : Vector.<ResourceFile>
 		{
-			screen = screen == null || screen == EnumScreen.MAIN ? "" : screen;
+			var resourceList : Dictionary = _getResourceList( resourceType );
+			var fileName : String;
+			var v : Vector.<ResourceFile> = new Vector.<ResourceFile>();
 
-			var resourceList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
-			var a : Array = [];
-			var qualifier : Qualifier;
-			var directory : File;
-			var test : Array;
-			var match : String;
-			var sw : Array = [];
-
-			files : for each ( directory in resourceList )
+			for( fileName in resourceList )
 			{
-				if( directory.isDirectory && directory.name.toLowerCase().indexOf( id ) == 0 )
-				{
+				var resourceNameList : Vector.<File> = resourceList[ fileName ];
+				var directoryList : Vector.<File> = new Vector.<File>;
+				var qualifier : Qualifier;
+				var test : Array;
+				var match : String;
+				var validDirectories : Vector.<File> = new Vector.<File>();
+				var file : File;
+				var directory : File;
+				var sw : Array = [];
 
+				for each ( file in resourceNameList )
+				{
+					directory = file.parent;
+
+					if( directoryList.indexOf( directory ) < 0 ) directoryList.push( directory );
+				}
+
+				directories : for each ( directory in directoryList )
+				{
 					for each ( qualifier in __QUALIFIERS )
 					{
 						if( qualifier.name == EnumQualifier.DENSITY ) continue;
@@ -136,9 +159,9 @@ package _appId_.resources
 
 						if( test != null && test.length > 0 )
 						{
-							match = test[ 0 ];
+							match = test[ 0 ].replace( /-/g , "" );
 
-							if( !qualifier.test( match ) ) continue files;
+							if( !qualifier.test( match ) ) continue directories;
 							else if( qualifier.name == EnumQualifier.SMALLEST_WIDTH )
 							{
 								sw.push( {file : directory , sw : int( match.replace( "sw" , "" ).replace( "dp" , "" ) )} );
@@ -146,123 +169,159 @@ package _appId_.resources
 						}
 					}
 
-					a.push( directory );
-				}
-			}
-
-			if( sw.length > 1 )
-			{
-				var max : Number = 0;
-
-				for each ( var o : Object in sw )
-				{
-					max = Math.max( max , o.sw );
+					validDirectories.push( directory );
 				}
 
-				for each ( o in sw )
+				if( sw.length > 1 )
 				{
-					if( o.sw != max ) a.removeAt( a.indexOf( o.file ) );
-				}
-			}
+					var max : Number = 0;
 
-			for each ( qualifier in __QUALIFIERS )
-			{
-				var b : Array = a.concat();
-
-				if( qualifier.name == EnumQualifier.DENSITY )
-				{
-					var d : int = int.MIN_VALUE;
-					var buckets : Array = [ EnumDensityDpi.DENSITY_LDPI , EnumDensityDpi.DENSITY_MDPI , EnumDensityDpi.DENSITY_HDPI , EnumDensityDpi.DENSITY_XHDPI , EnumDensityDpi.DENSITY_XXHDPI , EnumDensityDpi.DENSITY_XXXHDPI ];
-					var index : uint = buckets.indexOf( densityDpi );
-					var has2x : Boolean;
-
-					for each ( directory in a )
+					for each ( var o : Object in sw )
 					{
-						test = directory.name.match( qualifier.regexp );
+						max = Math.max( max , o.sw );
+					}
 
-						if( test != null && test.length > 0 )
+					for each ( o in sw )
+					{
+						if( o.sw != max ) validDirectories.removeAt( validDirectories.indexOf( o.file ) );
+					}
+				}
+
+				for each ( qualifier in __QUALIFIERS )
+				{
+					var b : Vector.<File> = validDirectories.concat();
+
+					if( qualifier.name == EnumQualifier.DENSITY )
+					{
+						var d : int = int.MIN_VALUE;
+						var buckets : Array = [ "ldpi" , "mdpi" , "hdpi" , "xhdpi" , "xxhdpi" , "xxxhdpi" ];
+
+						var index : uint = buckets.indexOf( _getBucketFromDensityDpi() );
+						var has2x : Boolean = false;
+						var hasNodpi : Boolean = false;
+
+						for each ( directory in validDirectories )
 						{
-							match = test[ 0 ];
+							if( directory.name.indexOf( "nodpi" ) > 0 )
+							{
+								hasNodpi = true;
+								break;
+							}
 
-							var matchIndex : int = buckets.indexOf( match );
-							var diff : int = matchIndex - index;
+							test = directory.name.match( qualifier.regexp );
 
-							d = d < 0 && diff > 0 ? diff : diff < 0 && d > 0 ? d : d < 0 && diff < 0 ? Math.max( diff , d ) : d > 0 && diff > 0 ? Math.min( diff , d ) : 0;
+							if( test != null && test.length > 0 )
+							{
+								match = test[ 0 ].replace( /-/g , "" );
 
-							if( diff == 2 ) has2x = true;
+								var matchIndex : int = buckets.indexOf( match );
+								var diff : int = matchIndex - index;
 
-							if( d == 0 ) break;
+								d = d < 0 && diff > 0 ? diff : diff < 0 && d > 0 ? d : d < 0 && diff < 0 ? Math.max( diff , d ) : d > 0 && diff > 0 ? Math.min( diff , d ) : 0;
+
+								if( diff == 2 ) has2x = true;
+
+								if( d == 0 ) break;
+							}
+						}
+
+						var bucket : String = hasNodpi ? "nodpi" : buckets[ index + ( d == 0 ? 0 : has2x ? 2 : d ) ];
+
+						for each ( directory in validDirectories )
+						{
+							if( directory.name.indexOf( "-" + bucket ) < 0 && directory.name.match( qualifier.regexp ) ) b.removeAt( b.indexOf( directory ) );
+						}
+					}
+					else
+					{
+						for each ( directory in validDirectories )
+						{
+							test = directory.name.match( qualifier.regexp );
+
+							if( test != null && test.length > 0 )
+							{
+								for each ( directory in validDirectories )
+								{
+									test = directory.name.match( qualifier.regexp );
+
+									if( ( test == null || test.length == 0 ) )
+									{
+										b.removeAt( b.indexOf( directory ) );
+									}
+								}
+
+								break;
+							}
 						}
 					}
 
-					var bucket : String = buckets[ index + ( d == 0 ? 0 : has2x ? 2 : d ) ];
-
-					for each ( directory in a )
-					{
-						if( directory.name.indexOf( "-" + bucket ) < 0 && directory.name.indexOf( "nodpi" ) < 0 && directory.name.match( qualifier.regexp ) ) b.removeAt( b.indexOf( directory ) );
-					}
+					validDirectories = b.concat();
 				}
-				else
+
+				directory = validDirectories.length > 0 ? validDirectories[ 0 ] : null;
+
+				if( directory )
 				{
-					for each ( directory in a )
+					var list : Array = directory.getDirectoryListing();
+
+					for each ( file in list )
 					{
-						test = directory.name.match( qualifier.regexp );
+						var name : String = file.name.split( "." )[ 0 ];
 
-						if( test != null && test.length > 0 )
+						if( !file.isDirectory && name == fileName )
 						{
-							match = test[ 0 ];
+							var ext : String = file.extension;
+							var atf : File;
+							var resourceFile : ResourceFile = ResourceFile.fromFile( file , resourceType );
+							var parentDirectory : File = file.parent;
+							var parentDirectoryName : String = parentDirectory.name;
+							var scale : Number = 1.0;
 
-							for each ( directory in a )
+							if( resourceType == EnumResourceType.DRAWABLE )
 							{
-								test = directory.name.match( qualifier.regexp );
 
-								if( test == null || test.length == 0 )
+								switch( true )
 								{
-									b.removeAt( b.indexOf( directory ) );
+									case parentDirectoryName == "drawable" || parentDirectoryName.indexOf( "-mdpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_MDPI / densityDpi * getDensityScale();
+										break;
+									case parentDirectoryName.indexOf( "-ldpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_LDPI / densityDpi * getDensityScale();
+										break;
+									case parentDirectoryName.indexOf( "-hdpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_HDPI / densityDpi * getDensityScale();
+										break;
+									case parentDirectoryName.indexOf( "-xhdpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_XHDPI / densityDpi * getDensityScale();
+										break;
+									case parentDirectoryName.indexOf( "-xxhdpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_XXHDPI / densityDpi * getDensityScale();
+										break;
+									case parentDirectoryName.indexOf( "-xxxhdpi" ) > 0 :
+										scale = EnumDensityDpi.DENSITY_XXXHDPI / densityDpi * getDensityScale();
+										break;
+
+									default :
+										scale = 1.0;
 								}
 							}
 
-							break;
-						}
-					}
-				}
+							resourceFile.drawableScale = scale;
 
-				a = b.concat();
-			}
+							if( ext == "atf" )
+							{
+								if( STARLING.profile == Context3DProfile.STANDARD_EXTENDED ) v.push( resourceFile )
+							}
+							else if( ext == "png" )
+							{
+								atf = file.parent.resolvePath( file.name.split( "." )[ 0 ] + ".atf" );
 
-			var v : Vector.<File> = new Vector.<File>();
-
-			if( a.length == 0 ) return v;
-
-			for each ( directory in a )
-			{
-				directory = screen == "" ? directory : directory.resolvePath( screen );
-
-				if( !directory.exists ) continue;
-
-				var list : Array = directory.getDirectoryListing();
-
-				for each ( var file : File in list )
-				{
-					if( !file.isDirectory )
-					{
-						var ext : String = file.name.toLowerCase().split( "." )[ 1 ];
-						var atf : File;
-						var png : File;
-
-						if( ext == "atf" )
-						{
-							if( STARLING.profile == Context3DProfile.STANDARD_EXTENDED ) v.push( file )
-						}
-						else if( ext == "png" )
-						{
-							atf = file.parent.resolvePath( file.name.split( "." )[ 0 ] + ".atf" );
-
-							if( STARLING.profile != Context3DProfile.STANDARD_EXTENDED || !atf.exists ) v.push( file )
-						}
-						else
-						{
-							v.push( file );
+								if( STARLING.profile != Context3DProfile.STANDARD_EXTENDED || !atf.exists ) v.push( resourceFile )
+							}
+							else
+							{
+								v.push( resourceFile );
+							}
 						}
 					}
 				}
@@ -274,31 +333,60 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getResources( screen : String = null ) : Vector.<File>
+		public function getResources() : Vector.<ResourceFile>
 		{
-			return getDrawables( screen ).concat( getXML( screen ) )
+			return getDrawables().concat( getXML() ).concat( getValues() )
 		}
 
 		/**
 		 *
 		 */
-		public function getDrawableDensityDpi() : int
+		private function _getBucketFromDensityDpi() : String
 		{
-			var v : Vector.<File> = getDrawables();
-
-			if( v.length > 0 )
+			switch( true )
 			{
-				var drawableDirectoryName : String = v[ 0 ].parent.name;
+				case densityDpi < 130 :
+					return "ldpi";
+				case densityDpi < 170 :
+					return "mdpi";
+				case densityDpi < 250 :
+					return "hdpi";
+				case densityDpi < 330 :
+					return "xhdpi";
+				case densityDpi < 490 :
+					return "xxhdpi";
+				default :
+					return "xxxhdpi";
+			}
 
-				var test : Array = drawableDirectoryName.match( __DENSITY_QUALIFIER.regexp );
+		}
 
-				if( test != null && test.length > 0 )
+		/**
+		 *
+		 */
+		private function _getResourceList( resourceType : String ) : Dictionary
+		{
+			var d : Dictionary = new Dictionary( true );
+			var directoryList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
+
+			for each ( var directory : File in directoryList )
+			{
+				if( directory.isDirectory && directory.name.toLowerCase().indexOf( resourceType ) == 0 )
 				{
-					return EnumDensityDpi[ "DENSITY_" + test[ 0 ].toUpperCase() ];
+					var fileList : Array = directory.getDirectoryListing();
+
+					for each ( var file : File in fileList )
+					{
+						var filename : String = file.name.split( "." )[ 0 ];
+
+						if( d[ filename ] == undefined ) d[ filename ] = new Vector.<File>();
+
+						d[ filename ].push( file );
+					}
 				}
 			}
 
-			return EnumDensityDpi.DENSITY_DEFAULT;
+			return d;
 		}
 	}
 }

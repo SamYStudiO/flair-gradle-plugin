@@ -2,18 +2,18 @@ package _appId_.view.core
 {
 	import _appId_.actors.RESOURCE_MANAGER;
 	import _appId_.actors.STAGE;
+	import _appId_.resources.ResourceFile;
 	import _appId_.resources.addAssetManager;
 	import _appId_.resources.removeAssetManager;
 	import _appId_.utils.displayMetrics.getDensityScale;
-	import _appId_.utils.displayMetrics.getDrawableScale;
 
 	import feathers.system.DeviceCapabilities;
 
-	import flash.filesystem.File;
 	import flash.system.Capabilities;
 
 	import org.osflash.signals.Signal;
 
+	import starling.textures.TextureOptions;
 	import starling.utils.AssetManager;
 
 	/**
@@ -133,7 +133,7 @@ package _appId_.view.core
 		 */
 		protected function _getAssetManager() : AssetManager
 		{
-			return new AssetManager( getDrawableScale() * getDensityScale() );
+			return new AssetManager( getDensityScale() );
 		}
 
 		/**
@@ -141,14 +141,12 @@ package _appId_.view.core
 		 */
 		protected function _addAssets() : void
 		{
-			var resourcesList : Vector.<File> = RESOURCE_MANAGER.getResources( _screenID );
+			var resourcesList : Vector.<ResourceFile> = RESOURCE_MANAGER.getResources();
 
-			for each ( var file : File in resourcesList )
+			for each ( var file : ResourceFile in resourcesList )
 			{
-				_assets.enqueue( file );
+				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale ) );
 			}
-
-			_assets.addXml( "values" , RESOURCE_MANAGER.getValues( _screenID ) );
 		}
 
 		/**
