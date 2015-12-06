@@ -25,9 +25,11 @@ class UpdateProperties extends DefaultTask
 
 		String moduleName = project.flair.moduleName
 
-		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) )
-		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) )
-		updatePropertiesFromFile( project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" ) , true )
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
+		tree.each { file ->
+
+			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file )
+		}
 
 		String commonResources = project.flair.commonResources
 		String androidResources = project.flair.androidResources
@@ -73,7 +75,7 @@ class UpdateProperties extends DefaultTask
 				{
 					replace = false
 
-					FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+					tree = project.fileTree( "${ moduleName }/src/main/resources/" )
 					String paths = ""
 
 					tree.each { file ->
@@ -103,7 +105,7 @@ class UpdateProperties extends DefaultTask
 							}
 						}
 					}
-					
+
 					out += paths
 				}
 
@@ -114,25 +116,23 @@ class UpdateProperties extends DefaultTask
 		iml.write( out )
 	}
 
-	private void updatePropertiesFromFile( File f )
-	{
-		updatePropertiesFromFile( f , false )
-	}
-
-	private void updatePropertiesFromFile( File f , Boolean desktop )
+	protected void updatePropertiesFromFile( File f )
 	{
 		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
+		String appName = project.flair.appName
 		String appAspectRatio = project.flair.appAspectRatio
 		String appAutoOrient = project.flair.appAutoOrient
 		String appDepthAndStencil = project.flair.appDepthAndStencil
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
+		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
 
 		if( desktop )
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
+					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 					.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 		}
@@ -140,6 +140,7 @@ class UpdateProperties extends DefaultTask
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
+					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 					.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 					.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
