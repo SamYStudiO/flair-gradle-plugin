@@ -30,6 +30,4 @@ public class FlairProperties
 	public String androidResources = "drawable-*/**"
 
 	public String desktopResources = "drawable-mdpi/**"
-
-	// TODO add device type choice (phone and/or tablet)
 }
