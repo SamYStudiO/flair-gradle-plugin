@@ -2,6 +2,7 @@ package com.flair.tasks
 
 import groovyx.net.http.HTTPBuilder
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 import static groovyx.net.http.ContentType.URLENC
@@ -40,9 +41,12 @@ public class VersionHuntingWriteVersion extends DefaultTask
 			if( it.indexOf( "build=" ) >= 0 ) build = it.replace( "build=" , "" )
 		}
 
-		writeApp( project.file( "${ moduleName }/src/main/resources/android/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
-		writeApp( project.file( "${ moduleName }/src/main/resources/ios/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
-		writeApp( project.file( "${ moduleName }/src/main/resources/desktop/app_descriptor.xml" ) , "${ major }.${ minor }.${ build }" )
+
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
+		tree.each { file ->
+
+			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) writeApp( file , "${ major }.${ minor }.${ build }" )
+		}
 	}
 
 	private void writeApp( File app , String version )
