@@ -141,9 +141,9 @@ package _appId_.view.core
 		 */
 		protected function _addAssets() : void
 		{
-			var resourcesList : Vector.<ResourceFile> = RESOURCE_MANAGER.getResources();
+			var resourceList : Vector.<ResourceFile> = RESOURCE_MANAGER.getResources( _screenID );
 
-			for each ( var file : ResourceFile in resourcesList )
+			for each ( var file : ResourceFile in resourceList )
 			{
 				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale ) );
 			}

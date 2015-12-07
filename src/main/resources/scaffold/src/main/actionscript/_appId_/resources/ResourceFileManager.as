@@ -6,6 +6,7 @@ package _appId_.resources
 	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
 	import _appId_.utils.displayMetrics.getDensityScale;
+	import _appId_.view.EnumScreen;
 
 	import flash.display3D.Context3DProfile;
 	import flash.filesystem.File;
@@ -77,23 +78,23 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getDrawables() : Vector.<ResourceFile>
+		public function getDrawables( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.DRAWABLE );
+			return getResource( EnumResourceType.DRAWABLE , screenID );
 		}
 
 		/**
 		 *
 		 */
-		public function getValues() : Vector.<ResourceFile>
+		public function getValues( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			var outputFile : File = File.applicationStorageDirectory.resolvePath( "resources/values.xml" );
+			var outputFile : File = File.applicationStorageDirectory.resolvePath( "resources/" + screenID + "/values.xml" );
 
 			if( !outputFile.exists )
 			{
 				var outputXML : XML = <root />;
 				var stream : FileStream = new FileStream();
-				var values : Vector.<ResourceFile> = getResource( EnumResourceType.VALUES );
+				var values : Vector.<ResourceFile> = getResource( EnumResourceType.VALUES , screenID );
 
 				for each ( var file : ResourceFile in values )
 				{
@@ -116,17 +117,17 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getXML() : Vector.<ResourceFile>
+		public function getXML( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.XML );
+			return getResource( EnumResourceType.XML , screenID );
 		}
 
 		/**
 		 *
 		 */
-		public function getResource( resourceType : String ) : Vector.<ResourceFile>
+		public function getResource( resourceType : String , screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			var resourceList : Dictionary = _getResourceList( resourceType );
+			var resourceList : Dictionary = _getResourceList( resourceType , screenID );
 			var fileName : String;
 			var v : Vector.<ResourceFile> = new Vector.<ResourceFile>();
 
@@ -144,7 +145,7 @@ package _appId_.resources
 
 				for each ( file in resourceNameList )
 				{
-					directory = file.parent;
+					directory = screenID == EnumScreen.MAIN ? file.parent : file.parent.parent;
 
 					if( directoryList.indexOf( directory ) < 0 ) directoryList.push( directory );
 				}
@@ -262,7 +263,7 @@ package _appId_.resources
 
 				if( directory )
 				{
-					var list : Array = directory.getDirectoryListing();
+					var list : Array = screenID == EnumScreen.MAIN ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
 
 					for each ( file in list )
 					{
@@ -273,13 +274,12 @@ package _appId_.resources
 							var ext : String = file.extension;
 							var atf : File;
 							var resourceFile : ResourceFile = ResourceFile.fromFile( file , resourceType );
-							var parentDirectory : File = file.parent;
+							var parentDirectory : File = screenID == EnumScreen.MAIN ? file.parent : file.parent.parent;
 							var parentDirectoryName : String = parentDirectory.name;
 							var scale : Number = 1.0;
 
 							if( resourceType == EnumResourceType.DRAWABLE )
 							{
-
 								switch( true )
 								{
 									case parentDirectoryName == "drawable" || parentDirectoryName.indexOf( "-mdpi" ) > 0 :
@@ -333,9 +333,9 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public function getResources() : Vector.<ResourceFile>
+		public function getResources( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			return getDrawables().concat( getXML() ).concat( getValues() )
+			return getDrawables( screenID ).concat( getXML( screenID ) ).concat( getValues( screenID ) )
 		}
 
 		/**
@@ -364,7 +364,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private function _getResourceList( resourceType : String ) : Dictionary
+		private function _getResourceList( resourceType : String , screenID : String = EnumScreen.MAIN ) : Dictionary
 		{
 			var d : Dictionary = new Dictionary( true );
 			var directoryList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
@@ -373,7 +373,7 @@ package _appId_.resources
 			{
 				if( directory.isDirectory && directory.name.toLowerCase().indexOf( resourceType ) == 0 )
 				{
-					var fileList : Array = directory.getDirectoryListing();
+					var fileList : Array = screenID == EnumScreen.MAIN ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
 
 					for each ( var file : File in fileList )
 					{
