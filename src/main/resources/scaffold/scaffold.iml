@@ -544,7 +544,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/1024x768.png" path-in-package="1024x768.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash.png" path-in-package="splash.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
@@ -583,7 +584,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/1024x768.png" path-in-package="1024x768.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash.png" path-in-package="splash.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
@@ -622,7 +624,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon48x48.png" path-in-package="icons/icon48x48.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash.png" path-in-package="1024x768.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash.png" path-in-package="splash.png" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
