@@ -15,7 +15,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -71,7 +71,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -127,7 +127,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -183,7 +183,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -239,7 +239,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -297,7 +297,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -353,7 +353,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -409,7 +409,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -468,7 +468,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -527,7 +527,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -566,7 +566,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -606,7 +606,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_19.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -647,7 +647,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/main/resources/desktop" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/resources/ios" />
     </content>
-    <orderEntry type="jdk" jdkName="flex_sdk_4.6_air_19.0" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="air_sdk_20.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="as3_libs" level="project" />
     <orderEntry type="library" exported="" name="libs_swc" level="project" />
