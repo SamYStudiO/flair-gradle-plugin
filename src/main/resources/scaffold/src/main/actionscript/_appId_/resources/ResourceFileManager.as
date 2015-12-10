@@ -58,7 +58,7 @@ package _appId_.resources
 		} );
 
 		/**
-		 * TODO make 560 bucket a valid bucket (nexus 6)
+		 *
 		 */
 		private const __DENSITY_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.DENSITY , /-(ldpi|mdpi|hdpi|xhdpi|xxhdpi|xxxhdpi)/ , _getBucketFromDensityDpi() );
 

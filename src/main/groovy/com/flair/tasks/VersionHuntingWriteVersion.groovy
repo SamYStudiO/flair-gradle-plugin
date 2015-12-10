@@ -47,9 +47,14 @@ public class VersionHuntingWriteVersion extends DefaultTask
 
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) writeApp( file , "${ major }.${ minor }.${ build }" )
 		}
+
+		File file = project.file( "${ moduleName }/${ moduleName }.iml" )
+		String content = file.getText( )
+		content = content.replaceAll( /_[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ , "_${ major }.${ minor }.${ build }" )
+		file.write( content )
 	}
 
-	private void writeApp( File app , String version )
+	protected void writeApp( File app , String version )
 	{
 		String content = app.getText( )
 

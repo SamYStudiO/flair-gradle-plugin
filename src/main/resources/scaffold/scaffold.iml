@@ -25,7 +25,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_dev">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_dev_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -81,7 +81,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_dev">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_dev_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -137,7 +137,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_preprod">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_preprod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -193,7 +193,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_preprod">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_preprod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -249,7 +249,7 @@
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_dev" />
-        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_dev">
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_dev_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
@@ -307,7 +307,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_prod">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_armv7_prod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -363,7 +363,7 @@
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_prod">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/android/app_descriptor.xml" package-file-name="${projectName}_x86_prod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon144x144.png" path-in-package="icons/icon144x144.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/android/icons/icon36x36.png" path-in-package="icons/icon36x36.png" />
@@ -420,7 +420,7 @@
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_preprod" />
-        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_preprod">
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_preprod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
@@ -479,7 +479,7 @@
         </compiler-options>
         <packaging-air-desktop />
         <packaging-android package-file-name="ios_prod" />
-        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_prod">
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/ios/app_descriptor.xml" package-file-name="${projectName}_prod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon1024x1024.png" path-in-package="icons/icon1024x1024.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/ios/icons/icon180x180.png" path-in-package="icons/icon180x180.png" />
@@ -535,7 +535,7 @@
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
-        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_dev">
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_dev_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon128x128.png" path-in-package="icons/icon128x128.png" />
@@ -575,7 +575,7 @@
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
-        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_preprod">
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_preprod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon128x128.png" path-in-package="icons/icon128x128.png" />
@@ -615,7 +615,7 @@
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
-        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_prod">
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/main/resources/desktop/app_descriptor.xml" package-file-name="${projectName}_prod_0.0.0">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon114x114.png" path-in-package="icons/icon114x114.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/desktop/icons/icon128x128.png" path-in-package="icons/icon128x128.png" />
