@@ -40,11 +40,6 @@ public class ProcessDesktopResources extends DefaultTask
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/android/splashs"
-			into "${ project.getBuildDir( ) }/"
-		}
-
-		project.copy {
 			from "${ moduleName }/src/main/resources/desktop/splashs"
 
 			into "${ project.getBuildDir( ) }/"
