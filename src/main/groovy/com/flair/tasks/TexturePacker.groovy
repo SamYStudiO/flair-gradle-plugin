@@ -20,9 +20,10 @@ class TexturePacker extends DefaultTask
 	public void generateTextures()
 	{
 		String moduleName = project.flair.moduleName
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+		Boolean generateATFTextures = project.flair.generateATFTextures
 
 		String toATF = ""
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
 
 		tree.each { file ->
 
@@ -37,51 +38,33 @@ class TexturePacker extends DefaultTask
 					standardOutput = output
 				}
 
-				println( ">>>>ee" + output.toString( ) + "<<<" )
-
 				if( output.toString( ).indexOf( "Output files are newer than the input files, nothing to do" ) < 0 ) toATF += file.getName( ).toLowerCase( ).split( "\\." )[ 0 ]
 			}
 		}
 
-		println( "toATF>" + toATF )
+		if( generateATFTextures )
+		{
+			String png2atf = new File( SDKManager.getPath( project ) + File.separator + "atftools" + File.separator + "png2atf.exe" ).getPath( )
 
-		String png2atf = new File( SDKManager.getPath( project ) + File.separator + "atftools" + File.separator + "png2atf.exe" ).getPath( )
+			tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
+				include "drawable*/**/*.png"
+			}
 
-		tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
-			include "**/drawable*/**/*.png"
-		}
+			tree.each { file ->
 
-		tree.each { file ->
-
-			println( ">" + file.getName( ) )
-
-			if( toATF.indexOf( file.getName( ).toLowerCase( ).replaceAll( "[0-9]+\\." , "\\." ).split( "\\." )[ 0 ] ) >= 0 )
-			{
-				println( "do" + file.getName( ) )
-				String input = file.getAbsolutePath( )
-				String output = input.replaceAll( "\\.png" , "\\.atf" )
-				//output = output.replaceAll( "-[dpihlmx]{4,7}" , "\$0-etc2" )
-
-				File directory = new File( output ).getParentFile(  )
-
-				println( ">>>>>>> " + directory.getPath(  ) )
-				if( !directory.exists( ) ) project.mkdir( directory )
-
-				/*File xml = project.file( input.replaceAll( "\\.png" , "\\.xml" ) )
-				if( xml.exists( ) )
+				if( toATF.indexOf( file.getName( ).toLowerCase( ).replaceAll( "[0-9]+\\." , "\\." ).split( "\\." )[ 0 ] ) >= 0 )
 				{
-					project.copy {
-						from xml
-						into directory
-					}
-				}*/
+					String input = file.getAbsolutePath( )
+					String output = input.replaceAll( "\\.png" , "\\.atf" )
 
-				println( png2atf )
-				println( input )
-				println( output )
-				project.exec {
-					commandLine "${ png2atf }" , "-c" , "e2" , "-n" , "0,0" , "-r" , "-i" , "${ input }" , "-o" , "${ output }"
-					ignoreExitValue = true
+					File directory = new File( output ).getParentFile( )
+
+					if( !directory.exists( ) ) project.mkdir( directory )
+
+					project.exec {
+						commandLine "${ png2atf }" , "-c" , "e2" , "-n" , "0,0" , "-r" , "-i" , "${ input }" , "-o" , "${ output }"
+						ignoreExitValue = true
+					}
 				}
 			}
 		}

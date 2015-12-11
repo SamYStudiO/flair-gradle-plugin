@@ -11,9 +11,9 @@ public class FlairProperties
 
 	public String appAspectRatio = "any"
 
-	public String appAutoOrient = "true"
+	public Boolean appAutoOrient = true
 
-	public String appDepthAndStencil = "false"
+	public Boolean appDepthAndStencil = false
 
 	public String moduleName = "app"
 
@@ -22,6 +22,8 @@ public class FlairProperties
 	public String versionHuntingID = ""
 
 	public String defaultLocale = "en"
+
+	public Boolean generateATFtextures = true
 
 	public String commonResources = "drawable/**,drawable-nodpi/**,values*/**,xml*/**"
 

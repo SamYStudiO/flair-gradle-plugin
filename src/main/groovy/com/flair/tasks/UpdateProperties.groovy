@@ -122,8 +122,8 @@ class UpdateProperties extends DefaultTask
 		String appId = project.flair.appId
 		String appName = project.flair.appName
 		String appAspectRatio = project.flair.appAspectRatio
-		String appAutoOrient = project.flair.appAutoOrient
-		String appDepthAndStencil = project.flair.appDepthAndStencil
+		String appAutoOrient = project.flair.appAutoOrient.toString( )
+		String appDepthAndStencil = project.flair.appDepthAndStencil.toString( )
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
 		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
