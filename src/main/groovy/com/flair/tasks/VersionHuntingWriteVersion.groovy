@@ -24,11 +24,12 @@ public class VersionHuntingWriteVersion extends DefaultTask
 		String url = project.flair.versionHuntingURL
 		String id = project.flair.versionHuntingID
 		String moduleName = project.flair.moduleName
+		String version = project.flair.appVersion
 
 		if( url.isEmpty( ) || id.isEmpty( ) ) throw new IllegalArgumentException( "Missing versionHuntingURL or versionHuntingID property add\nflair {\n	versionHuntingURL = \"url\"\n	versionHuntingID = \"id\"\n}\nto your build.gradle file." )
 
 		HTTPBuilder http = new HTTPBuilder( url )
-		def body = [ id_swf: id , inc: "false" ]
+		def body = [ id_swf: id , inc: "false" , version: version ]
 		String result = http.post( path: url , body: body , requestContentType: URLENC )
 
 		String major = "0";
@@ -51,6 +52,11 @@ public class VersionHuntingWriteVersion extends DefaultTask
 		File file = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String content = file.getText( )
 		content = content.replaceAll( /_[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ , "_${ major }.${ minor }.${ build }" )
+		file.write( content )
+
+		file = project.file( "build.gradle" )
+		content = file.getText( )
+		content = content.replaceAll( /(appVersion\s*=\s*)"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"/ , "\$1\"${ major }.${ minor }.${ build }\"" )
 		file.write( content )
 	}
 
