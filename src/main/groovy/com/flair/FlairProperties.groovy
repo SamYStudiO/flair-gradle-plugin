@@ -25,7 +25,7 @@ public class FlairProperties
 
 	public String defaultLocale = "en"
 
-	public Boolean generateATFtextures = true
+	public Boolean generateATFTextures = true
 
 	public String commonResources = "drawable/**,drawable-nodpi/**,values*/**,xml*/**"
 
