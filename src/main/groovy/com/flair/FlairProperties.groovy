@@ -9,6 +9,8 @@ public class FlairProperties
 
 	public String appName = ""
 
+	public String appVersion = "0.0.0"
+
 	public String appAspectRatio = "any"
 
 	public Boolean appAutoOrient = true
