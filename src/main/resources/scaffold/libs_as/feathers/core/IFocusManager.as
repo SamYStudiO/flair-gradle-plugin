@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import starling.display.DisplayObjectContainer;
@@ -23,12 +23,12 @@ package feathers.core
 		 * disabled when another focus manager has control, such as when a
 		 * modal pop-up is displayed.
 		 */
-		function get isEnabled() : Boolean;
+		function get isEnabled():Boolean;
 
 		/**
 		 * @private
 		 */
-		function set isEnabled( value : Boolean ) : void;
+		function set isEnabled(value:Boolean):void;
 
 		/**
 		 * The object that currently has focus. May return <code>null</code> if
@@ -39,17 +39,17 @@ package feathers.core
 		 * <listing version="3.0">
 		 * focusManager.focus = someObject;</listing>
 		 */
-		function get focus() : IFocusDisplayObject;
+		function get focus():IFocusDisplayObject;
 
 		/**
 		 * @private
 		 */
-		function set focus( value : IFocusDisplayObject ) : void;
+		function set focus(value:IFocusDisplayObject):void;
 
 		/**
 		 * The top-level container of the focus manager. This isn't necessarily
 		 * the root of the display list.
 		 */
-		function get root() : DisplayObjectContainer;
+		function get root():DisplayObjectContainer;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import feathers.events.CollectionEventType;
@@ -33,7 +33,7 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the collection has changed drastically, such as when
@@ -56,7 +56,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.RESET
 	 */
-	[Event(name="reset" , type="starling.events.Event")]
+	[Event(name="reset",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is added to the collection.
@@ -80,7 +80,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.ADD_ITEM
 	 */
-	[Event(name="addItem" , type="starling.events.Event")]
+	[Event(name="addItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is removed from the collection.
@@ -104,7 +104,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REMOVE_ITEM
 	 */
-	[Event(name="removeItem" , type="starling.events.Event")]
+	[Event(name="removeItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is replaced in the collection.
@@ -128,7 +128,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REPLACE_ITEM
 	 */
-	[Event(name="replaceItem" , type="starling.events.Event")]
+	[Event(name="replaceItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the <code>updateItemAt()</code> function is called on the
@@ -155,7 +155,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ITEM
 	 */
-	[Event(name="updateItem" , type="starling.events.Event")]
+	[Event(name="updateItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the <code>updateAll()</code> function is called on the
@@ -180,73 +180,17 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ALL
 	 */
-	[Event(name="updateAll" , type="starling.events.Event")]
+	[Event(name="updateAll",type="starling.events.Event")]
 	
 	/**
 	 * Wraps a two-dimensional data source with a common API for use with UI
 	 * controls that support this type of data.
-	 */ public class HierarchicalCollection extends EventDispatcher
+	 */
+	public class HierarchicalCollection extends EventDispatcher
 	{
-		/**
-		 * @private
-		 */
-		protected var _data : Object;
-
-		/**
-		 * The data source for this collection. May be any type of data, but a
-		 * <code>dataDescriptor</code> needs to be provided to translate from
-		 * the data source's APIs to something that can be understood by
-		 * <code>HierarchicalCollection</code>.
-		 */
-		public function get data() : Object
+		public function HierarchicalCollection(data:Object = null)
 		{
-			return _data;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set data( value : Object ) : void
-		{
-			if( this._data == value )
-			{
-				return;
-			}
-			this._data = value;
-			this.dispatchEventWith( CollectionEventType.RESET );
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _dataDescriptor : IHierarchicalCollectionDataDescriptor = new ArrayChildrenHierarchicalCollectionDataDescriptor();
-
-		/**
-		 * Describes the underlying data source by translating APIs.
-		 */
-		public function get dataDescriptor() : IHierarchicalCollectionDataDescriptor
-		{
-			return this._dataDescriptor;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set dataDescriptor( value : IHierarchicalCollectionDataDescriptor ) : void
-		{
-			if( this._dataDescriptor == value )
-			{
-				return;
-			}
-			this._dataDescriptor = value;
-			this.dispatchEventWith( CollectionEventType.RESET );
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		public function HierarchicalCollection( data : Object = null )
-		{
-			if( !data )
+			if(!data)
 			{
 				//default to an array if no data is provided
 				data = [];
@@ -255,20 +199,77 @@ package feathers.data
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _data:Object;
+
+		/**
+		 * The data source for this collection. May be any type of data, but a
+		 * <code>dataDescriptor</code> needs to be provided to translate from
+		 * the data source's APIs to something that can be understood by
+		 * <code>HierarchicalCollection</code>.
+		 */
+		public function get data():Object
+		{
+			return _data;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set data(value:Object):void
+		{
+			if(this._data == value)
+			{
+				return;
+			}
+			this._data = value;
+			this.dispatchEventWith(CollectionEventType.RESET);
+			this.dispatchEventWith(Event.CHANGE);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _dataDescriptor:IHierarchicalCollectionDataDescriptor = new ArrayChildrenHierarchicalCollectionDataDescriptor();
+
+		/**
+		 * Describes the underlying data source by translating APIs.
+		 */
+		public function get dataDescriptor():IHierarchicalCollectionDataDescriptor
+		{
+			return this._dataDescriptor;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set dataDescriptor(value:IHierarchicalCollectionDataDescriptor):void
+		{
+			if(this._dataDescriptor == value)
+			{
+				return;
+			}
+			this._dataDescriptor = value;
+			this.dispatchEventWith(CollectionEventType.RESET);
+			this.dispatchEventWith(Event.CHANGE);
+		}
+
+		/**
 		 * Determines if a node from the data source is a branch.
 		 */
-		public function isBranch( node : Object ) : Boolean
+		public function isBranch(node:Object):Boolean
 		{
-			return this._dataDescriptor.isBranch( node );
+			return this._dataDescriptor.isBranch(node);
 		}
 
 		/**
 		 * The number of items at the specified location in the collection.
 		 */
-		public function getLength( ...rest : Array ) : int
+		public function getLength(...rest:Array):int
 		{
-			rest.unshift( this._data );
-			return this._dataDescriptor.getLength.apply( null , rest );
+			rest.unshift(this._data);
+			return this._dataDescriptor.getLength.apply(null, rest);
 		}
 
 		/**
@@ -284,10 +285,10 @@ package feathers.data
 		 * 
 		 * @see #updateAll()
 		 */
-		public function updateItemAt( index : int , ...rest : Array ) : void
+		public function updateItemAt(index:int, ...rest:Array):void
 		{
-			rest.unshift( index );
-			this.dispatchEventWith( CollectionEventType.UPDATE_ITEM , false , rest );
+			rest.unshift(index);
+			this.dispatchEventWith(CollectionEventType.UPDATE_ITEM, false, rest);
 		}
 
 		/**
@@ -303,106 +304,106 @@ package feathers.data
 		 *
 		 * @see #updateItemAt()
 		 */
-		public function updateAll() : void
+		public function updateAll():void
 		{
-			this.dispatchEventWith( CollectionEventType.UPDATE_ALL );
+			this.dispatchEventWith(CollectionEventType.UPDATE_ALL);
 		}
 
 		/**
 		 * Returns the item at the specified location in the collection.
 		 */
-		public function getItemAt( index : int , ...rest : Array ) : Object
+		public function getItemAt(index:int, ...rest:Array):Object
 		{
-			rest.unshift( index );
-			rest.unshift( this._data );
-			return this._dataDescriptor.getItemAt.apply( null , rest );
+			rest.unshift(index);
+			rest.unshift(this._data);
+			return this._dataDescriptor.getItemAt.apply(null, rest);
 		}
 
 		/**
 		 * Determines which location the item appears at within the collection. If
 		 * the item isn't in the collection, returns <code>null</code>.
 		 */
-		public function getItemLocation( item : Object , result : Vector.<int> = null ) : Vector.<int>
+		public function getItemLocation(item:Object, result:Vector.<int> = null):Vector.<int>
 		{
-			return this._dataDescriptor.getItemLocation( this._data , item , result );
+			return this._dataDescriptor.getItemLocation(this._data, item, result);
 		}
 
 		/**
 		 * Adds an item to the collection, at the specified location.
 		 */
-		public function addItemAt( item : Object , index : int , ...rest : Array ) : void
+		public function addItemAt(item:Object, index:int, ...rest:Array):void
 		{
-			rest.unshift( index );
-			rest.unshift( item );
-			rest.unshift( this._data );
-			this._dataDescriptor.addItemAt.apply( null , rest );
-			this.dispatchEventWith( Event.CHANGE );
+			rest.unshift(index);
+			rest.unshift(item);
+			rest.unshift(this._data);
+			this._dataDescriptor.addItemAt.apply(null, rest);
+			this.dispatchEventWith(Event.CHANGE);
 			rest.shift();
 			rest.shift();
-			this.dispatchEventWith( CollectionEventType.ADD_ITEM , false , rest );
+			this.dispatchEventWith(CollectionEventType.ADD_ITEM, false, rest);
 		}
 
 		/**
 		 * Removes the item at the specified location from the collection and
 		 * returns it.
 		 */
-		public function removeItemAt( index : int , ...rest : Array ) : Object
+		public function removeItemAt(index:int, ...rest:Array):Object
 		{
-			rest.unshift( index );
-			rest.unshift( this._data );
-			var item : Object = this._dataDescriptor.removeItemAt.apply( null , rest );
-			this.dispatchEventWith( Event.CHANGE );
+			rest.unshift(index);
+			rest.unshift(this._data);
+			var item:Object = this._dataDescriptor.removeItemAt.apply(null, rest);
+			this.dispatchEventWith(Event.CHANGE);
 			rest.shift();
-			this.dispatchEventWith( CollectionEventType.REMOVE_ITEM , false , rest );
+			this.dispatchEventWith(CollectionEventType.REMOVE_ITEM, false, rest);
 			return item;
 		}
 
 		/**
 		 * Removes a specific item from the collection.
 		 */
-		public function removeItem( item : Object ) : void
+		public function removeItem(item:Object):void
 		{
-			var location : Vector.<int> = this.getItemLocation( item );
-			if( location )
+			var location:Vector.<int> = this.getItemLocation(item);
+			if(location)
 			{
 				//this is hacky. a future version probably won't use rest args.
-				var locationAsArray : Array = [];
-				var indexCount : int = location.length;
-				for( var i : int = 0; i < indexCount; i++ )
+				var locationAsArray:Array = [];
+				var indexCount:int = location.length;
+				for(var i:int = 0; i < indexCount; i++)
 				{
-					locationAsArray.push( location[ i ] );
+					locationAsArray.push(location[i]);
 				}
-				this.removeItemAt.apply( this , locationAsArray );
+				this.removeItemAt.apply(this, locationAsArray);
 			}
 		}
 
 		/**
 		 * Removes all items from the collection.
 		 */
-		public function removeAll() : void
+		public function removeAll():void
 		{
-			if( this.getLength() == 0 )
+			if(this.getLength() == 0)
 			{
 				return;
 			}
-			this._dataDescriptor.removeAll( this._data );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.RESET , false );
+			this._dataDescriptor.removeAll(this._data);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(CollectionEventType.RESET, false);
 		}
 
 		/**
 		 * Replaces the item at the specified location with a new item.
 		 */
-		public function setItemAt( item : Object , index : int , ...rest : Array ) : void
+		public function setItemAt(item:Object, index:int, ...rest:Array):void
 		{
-			rest.unshift( index );
-			rest.unshift( item );
-			rest.unshift( this._data );
-			this._dataDescriptor.setItemAt.apply( null , rest );
+			rest.unshift(index);
+			rest.unshift(item);
+			rest.unshift(this._data);
+			this._dataDescriptor.setItemAt.apply(null, rest);
 			rest.shift();
 			rest.shift();
-			this.dispatchEventWith( CollectionEventType.REPLACE_ITEM , false , rest );
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(CollectionEventType.REPLACE_ITEM, false, rest);
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
@@ -436,15 +437,15 @@ package feathers.data
 		 * @see http://doc.starling-framework.org/core/starling/display/DisplayObject.html#dispose() starling.display.DisplayObject.dispose()
 		 * @see http://doc.starling-framework.org/core/starling/textures/Texture.html#dispose() starling.textures.Texture.dispose()
 		 */
-		public function dispose( disposeGroup : Function , disposeItem : Function ) : void
+		public function dispose(disposeGroup:Function, disposeItem:Function):void
 		{
-			var groupCount : int = this.getLength();
-			var path : Array = [];
-			for( var i : int = 0; i < groupCount; i++ )
+			var groupCount:int = this.getLength();
+			var path:Array = [];
+			for(var i:int = 0; i < groupCount; i++)
 			{
-				var group : Object = this.getItemAt( i );
-				path[ 0 ] = i;
-				this.disposeGroupInternal( group , path , disposeGroup , disposeItem );
+				var group:Object = this.getItemAt(i);
+				path[0] = i;
+				this.disposeGroupInternal(group, path, disposeGroup, disposeItem);
 				path.length = 0;
 			}
 		}
@@ -452,25 +453,25 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected function disposeGroupInternal( group : Object , path : Array , disposeGroup : Function , disposeItem : Function ) : void
+		protected function disposeGroupInternal(group:Object, path:Array, disposeGroup:Function, disposeItem:Function):void
 		{
-			if( disposeGroup != null )
+			if(disposeGroup != null)
 			{
-				disposeGroup( group );
+				disposeGroup(group);
 			}
 
-			var itemCount : int = this.getLength.apply( this , path );
-			for( var i : int = 0; i < itemCount; i++ )
+			var itemCount:int = this.getLength.apply(this, path);
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				path[ path.length ] = i;
-				var item : Object = this.getItemAt.apply( this , path );
-				if( this.isBranch( item ) )
+				path[path.length] = i;
+				var item:Object = this.getItemAt.apply(this, path);
+				if(this.isBranch(item))
 				{
-					this.disposeGroupInternal( item , path , disposeGroup , disposeItem );
+					this.disposeGroupInternal(item, path, disposeGroup, disposeItem);
 				}
-				else if( disposeItem != null )
+				else if(disposeItem != null)
 				{
-					disposeItem( item );
+					disposeItem(item);
 				}
 				path.length--;
 			}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	/**
@@ -34,11 +34,12 @@ package feathers.media
 	 * 
 	 * @eventType feathers.events.MediaPlayerEventType.LOAD_PROGRESS
 	 */
-	[Event(name="loadProgress" , type="starling.events.Event")]
+	[Event(name="loadProgress",type="starling.events.Event")]
 
 	/**
 	 * A media player that loads its content progressively.
-	 */ public interface IProgressiveMediaPlayer extends IMediaPlayer
+	 */
+	public interface IProgressiveMediaPlayer extends IMediaPlayer
 	{
 		/**
 		 * The number of bytes loaded for the current media.
@@ -46,7 +47,7 @@ package feathers.media
 		 * @see #bytesTotal
 		 * @see #event:loadProgress feathers.events.MediaPlayerEventType.LOAD_PROGRESS
 		 */
-		function get bytesLoaded() : uint;
+		function get bytesLoaded():uint;
 
 		/**
 		 * The total number of bytes to load for the current media.
@@ -54,6 +55,6 @@ package feathers.media
 		 * @see #bytesLoaded
 		 * @see #event:loadProgress feathers.events.MediaPlayerEventType.LOAD_PROGRESS
 		 */
-		function get bytesTotal() : uint;
+		function get bytesTotal():uint;
 	}
 }

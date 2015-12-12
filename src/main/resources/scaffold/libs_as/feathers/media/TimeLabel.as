@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.controls.Label;
@@ -29,59 +29,64 @@ package feathers.media
 	public class TimeLabel extends Label implements IMediaPlayerControl
 	{
 		/**
+		 * @private
+		 */
+		private static const HELPER_POINT:Point = new Point();
+		
+		/**
+		 * The label displays only the current time of the media content.
+		 * 
+		 * @see #displayMode
+		 */
+		public static const DISPLAY_MODE_CURRENT_TIME:String = "currentTime";
+		
+		/**
+		 * The label displays only the total time of the media content.
+		 * 
+		 * @see #displayMode
+		 */
+		public static const DISPLAY_MODE_TOTAL_TIME:String = "totalTime";
+
+		/**
+		 * The label displays only the remaining time of the media content. In
+		 * other words, the total time minus the current time.
+		 * 
+		 * @see #displayMode
+		 */
+		public static const DISPLAY_MODE_REMAINING_TIME:String = "remainingTime";
+
+		/**
+		 * The label displays the current time of the media content, followed by
+		 * some text specified by the <code>delimiter</code> property, and
+		 * completed by the total time of the media content.
+		 * 
+		 * @see #displayMode
+		 */
+		public static const DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES:String = "currentAndTotalTimes";
+
+		/**
 		 * The default <code>IStyleProvider</code> for all
 		 * <code>TimeLabel</code> components.
 		 *
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected var _isToggled : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var touchPointID : int = -1;
-		/**
-		 * The label displays only the current time of the media content.
-		 *
-		 * @see #displayMode
-		 */
-		public static const DISPLAY_MODE_CURRENT_TIME : String = "currentTime";
-		/**
-		 * The label displays only the total time of the media content.
-		 *
-		 * @see #displayMode
-		 */
-		public static const DISPLAY_MODE_TOTAL_TIME : String = "totalTime";
-		/**
-		 * The label displays only the remaining time of the media content. In
-		 * other words, the total time minus the current time.
-		 *
-		 * @see #displayMode
-		 */
-		public static const DISPLAY_MODE_REMAINING_TIME : String = "remainingTime";
-		/**
-		 * The label displays the current time of the media content, followed by
-		 * some text specified by the <code>delimiter</code> property, and
-		 * completed by the total time of the media content.
-		 *
-		 * @see #displayMode
-		 */
-		public static const DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES : String = "currentAndTotalTimes";
+		public function TimeLabel()
+		{
+			this.addEventListener(TouchEvent.TOUCH, timeLabel_touchHandler);
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
-			if( TimeLabel.globalStyleProvider )
+			if(TimeLabel.globalStyleProvider)
 			{
 				return TimeLabel.globalStyleProvider;
 			}
@@ -91,12 +96,12 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _mediaPlayer : ITimedMediaPlayer;
+		protected var _mediaPlayer:ITimedMediaPlayer;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get mediaPlayer() : IMediaPlayer
+		public function get mediaPlayer():IMediaPlayer
 		{
 			return this._mediaPlayer;
 		}
@@ -104,22 +109,22 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set mediaPlayer( value : IMediaPlayer ) : void
+		public function set mediaPlayer(value:IMediaPlayer):void
 		{
-			if( this._mediaPlayer == value )
+			if(this._mediaPlayer == value)
 			{
 				return;
 			}
-			if( this._mediaPlayer )
+			if(this._mediaPlayer)
 			{
-				this._mediaPlayer.removeEventListener( MediaPlayerEventType.CURRENT_TIME_CHANGE , mediaPlayer_currentTimeChangeHandler );
-				this._mediaPlayer.removeEventListener( MediaPlayerEventType.TOTAL_TIME_CHANGE , mediaPlayer_totalTimeChangeHandler );
+				this._mediaPlayer.removeEventListener(MediaPlayerEventType.CURRENT_TIME_CHANGE, mediaPlayer_currentTimeChangeHandler);
+				this._mediaPlayer.removeEventListener(MediaPlayerEventType.TOTAL_TIME_CHANGE, mediaPlayer_totalTimeChangeHandler);
 			}
 			this._mediaPlayer = value as ITimedMediaPlayer;
-			if( this._mediaPlayer )
+			if(this._mediaPlayer)
 			{
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.CURRENT_TIME_CHANGE , mediaPlayer_currentTimeChangeHandler );
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.TOTAL_TIME_CHANGE , mediaPlayer_totalTimeChangeHandler );
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.CURRENT_TIME_CHANGE, mediaPlayer_currentTimeChangeHandler);
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.TOTAL_TIME_CHANGE, mediaPlayer_totalTimeChangeHandler);
 			}
 			this.updateText();
 		}
@@ -127,7 +132,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _delimiter : String = " / ";
+		protected var _delimiter:String = " / ";
 
 		/**
 		 * When the value of <code>displayMode</code> is
@@ -135,10 +140,10 @@ package feathers.media
 		 * text is inserted between the two times to separate them.
 		 *
 		 * @default " / "
-		 *
+		 * 
 		 * @see #DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES
 		 */
-		public function get delimiter() : String
+		public function get delimiter():String
 		{
 			return this._delimiter;
 		}
@@ -146,9 +151,9 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set delimiter( value : String ) : void
+		public function set delimiter(value:String):void
 		{
-			if( this._delimiter == value )
+			if(this._delimiter == value)
 			{
 				return;
 			}
@@ -159,19 +164,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _displayMode : String = DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES;
+		protected var _displayMode:String = DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES;
 
-		[Inspectable(type="String" , enumeration="currentAndTotalTimes,currentTime,totalTime,remainingTime")]
+		[Inspectable(type="String",enumeration="currentAndTotalTimes,currentTime,totalTime,remainingTime")]
 		/**
 		 * Determines how the time is displayed by the label.
 		 *
 		 * @default TimeLabel.DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES
-		 *
+		 * 
 		 * @see #DISPLAY_MODE_CURRENT_AND_TOTAL_TIMES
 		 * @see #DISPLAY_MODE_CURRENT_TIME
 		 * @see #DISPLAY_MODE_TOTAL_TIME
 		 * @see #DISPLAY_MODE_REMAINING_TIME
-		 */ public function get displayMode() : String
+		 */
+		public function get displayMode():String
 		{
 			return this._displayMode;
 		}
@@ -179,9 +185,9 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set displayMode( value : String ) : void
+		public function set displayMode(value:String):void
 		{
-			if( this._displayMode == value )
+			if(this._displayMode == value)
 			{
 				return;
 			}
@@ -195,7 +201,17 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _toggleDisplayMode : Boolean = false;
+		protected var _isToggled:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _toggleDisplayMode:Boolean = false;
 
 		/**
 		 * If the <code>displayMode</code> property is set to
@@ -207,10 +223,10 @@ package feathers.media
 		 * values, this property is ignored.
 		 *
 		 * @default false
-		 *
+		 * 
 		 * @see #displayMode
 		 */
-		public function get toggleDisplayMode() : Boolean
+		public function get toggleDisplayMode():Boolean
 		{
 			return this._toggleDisplayMode;
 		}
@@ -218,9 +234,9 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set toggleDisplayMode( value : Boolean ) : void
+		public function set toggleDisplayMode(value:Boolean):void
 		{
-			if( this._toggleDisplayMode == value )
+			if(this._toggleDisplayMode == value)
 			{
 				return;
 			}
@@ -229,24 +245,16 @@ package feathers.media
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function TimeLabel()
-		{
-			this.addEventListener( TouchEvent.TOUCH , timeLabel_touchHandler );
-		}
-
-		/**
 		 * @private
 		 */
-		protected function updateText() : void
+		protected function updateText():void
 		{
-			var currentTime : Number = this._mediaPlayer ? this._mediaPlayer.currentTime : 0;
-			var totalTime : Number = this._mediaPlayer ? this._mediaPlayer.totalTime : 0;
-			var displayMode : String = this._displayMode;
-			if( this._isToggled )
+			var currentTime:Number = this._mediaPlayer ? this._mediaPlayer.currentTime : 0;
+			var totalTime:Number = this._mediaPlayer ? this._mediaPlayer.totalTime : 0;
+			var displayMode:String = this._displayMode;
+			if(this._isToggled)
 			{
-				if( displayMode === DISPLAY_MODE_CURRENT_TIME )
+				if(displayMode === DISPLAY_MODE_CURRENT_TIME)
 				{
 					displayMode = DISPLAY_MODE_REMAINING_TIME;
 				}
@@ -255,26 +263,26 @@ package feathers.media
 					displayMode = DISPLAY_MODE_CURRENT_TIME;
 				}
 			}
-			switch( displayMode )
+			switch(displayMode)
 			{
 				case DISPLAY_MODE_CURRENT_TIME:
 				{
-					this.text = this.secondsToTimeString( currentTime );
+					this.text = this.secondsToTimeString(currentTime);
 					break;
 				}
 				case DISPLAY_MODE_TOTAL_TIME:
 				{
-					this.text = this.secondsToTimeString( totalTime );
+					this.text = this.secondsToTimeString(totalTime);
 					break;
 				}
 				case DISPLAY_MODE_REMAINING_TIME:
 				{
-					this.text = this.secondsToTimeString( currentTime - totalTime );
+					this.text = this.secondsToTimeString(currentTime - totalTime);
 					break;
 				}
 				default:
 				{
-					this.text = this.secondsToTimeString( currentTime ) + this._delimiter + this.secondsToTimeString( totalTime );
+					this.text = this.secondsToTimeString(currentTime) + this._delimiter + this.secondsToTimeString(totalTime);
 				}
 			}
 		}
@@ -282,26 +290,26 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function secondsToTimeString( seconds : Number ) : String
+		protected function secondsToTimeString(seconds:Number):String
 		{
-			var isNegative : Boolean = seconds < 0;
-			if( isNegative )
+			var isNegative:Boolean = seconds < 0;
+			if(isNegative)
 			{
 				seconds = -seconds;
 			}
-			var hours : int = int( seconds / 3600 );
-			var minutes : int = int( seconds / 60 );
-			seconds = int( seconds - (hours * 3600) - (minutes * 60) );
-			var time : String = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-			if( hours > 0 )
+			var hours:int = int(seconds / 3600);
+			var minutes:int = int(seconds / 60);
+			seconds = int(seconds - (hours * 3600) - (minutes * 60));
+			var time:String = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+			if(hours > 0)
 			{
-				if( minutes < 10 )
+				if(minutes < 10)
 				{
 					time = "0" + time;
 				}
 				time = hours + ":" + time;
 			}
-			if( isNegative )
+			if(isNegative)
 			{
 				time = "-" + time;
 			}
@@ -311,7 +319,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_currentTimeChangeHandler( event : Event ) : void
+		protected function mediaPlayer_currentTimeChangeHandler(event:Event):void
 		{
 			this.updateText();
 		}
@@ -319,7 +327,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_totalTimeChangeHandler( event : Event ) : void
+		protected function mediaPlayer_totalTimeChangeHandler(event:Event):void
 		{
 			this.updateText();
 		}
@@ -327,42 +335,43 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function timeLabel_touchHandler( event : TouchEvent ) : void
+		protected function timeLabel_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled || !this._toggleDisplayMode || !(this._displayMode === DISPLAY_MODE_CURRENT_TIME || this._displayMode === DISPLAY_MODE_CURRENT_TIME) )
+			if(!this._isEnabled || !this._toggleDisplayMode ||
+				!(this._displayMode === DISPLAY_MODE_CURRENT_TIME || this._displayMode === DISPLAY_MODE_CURRENT_TIME))
 			{
 				this.touchPointID = -1;
 				return;
 			}
 
-			if( this.touchPointID >= 0 )
+			if(this.touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this , null , this.touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this, null, this.touchPointID);
+				if(!touch)
 				{
 					//this should never happen
 					return;
 				}
 
-				if( touch.phase == TouchPhase.ENDED )
+				if(touch.phase == TouchPhase.ENDED)
 				{
-					touch.getLocation( this.stage , HELPER_POINT );
-					var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
-					if( isInBounds )
+					touch.getLocation(this.stage, HELPER_POINT);
+					var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+					if(isInBounds)
 					{
 						this._isToggled = !this._isToggled;
 						this.updateText();
 					}
 				}
-
+				return;
 			}
 			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this , TouchPhase.BEGAN );
-				if( touch )
+				touch = event.getTouch(this, TouchPhase.BEGAN);
+				if(touch)
 				{
 					this.touchPointID = touch.id;
-
+					return;
 				}
 			}
 		}

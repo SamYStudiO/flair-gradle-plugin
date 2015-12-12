@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.popups
 {
 	import feathers.core.IFeathersControl;
@@ -51,7 +51,7 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open" , type="starling.events.Event")]
+	[Event(name="open",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the pop-up content closes.
@@ -73,49 +73,53 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * Displays pop-up content as a desktop-style drop-down.
-	 */ public class DropDownPopUpContentManager extends EventDispatcher implements IPopUpContentManager
+	 */
+	public class DropDownPopUpContentManager extends EventDispatcher implements IPopUpContentManager
 	{
 		/**
 		 * @private
 		 */
-		private static const HELPER_RECTANGLE : Rectangle = new Rectangle();
+		private static const HELPER_RECTANGLE:Rectangle = new Rectangle();
+
 		/**
-		 * @private
-		 */
-		protected var content : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var source : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var _lastGlobalX : Number;
-		/**
-		 * @private
-		 */
-		protected var _lastGlobalY : Number;
-		/**
-		 * The pop-up content will be positioned below the source, if possible.
-		 *
+		 * The pop-up content will be positioned below the source, if possible. 
+		 * 
 		 * @see #primaryDirection
 		 */
-		public static const PRIMARY_DIRECTION_DOWN : String = "down";
+		public static const PRIMARY_DIRECTION_DOWN:String = "down";
+
 		/**
 		 * The pop-up content will be positioned above the source, if possible.
 		 *
 		 * @see #primaryDirection
 		 */
-		public static const PRIMARY_DIRECTION_UP : String = "up";
+		public static const PRIMARY_DIRECTION_UP:String = "up";
+		
+		/**
+		 * Constructor.
+		 */
+		public function DropDownPopUpContentManager()
+		{
+		}
+
+		/**
+		 * @private
+		 */
+		protected var content:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var source:DisplayObject;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get isOpen() : Boolean
+		public function get isOpen():Boolean
 		{
 			return this.content !== null;
 		}
@@ -123,7 +127,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _isModal : Boolean = false;
+		protected var _isModal:Boolean = false;
 
 		/**
 		 * Determines if the pop-up will be modal or not.
@@ -139,7 +143,7 @@ package feathers.controls.popups
 		 *
 		 * @default false
 		 */
-		public function get isModal() : Boolean
+		public function get isModal():Boolean
 		{
 			return this._isModal;
 		}
@@ -147,7 +151,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set isModal( value : Boolean ) : void
+		public function set isModal(value:Boolean):void
 		{
 			this._isModal = value;
 		}
@@ -155,7 +159,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _overlayFactory : Function;
+		protected var _overlayFactory:Function;
 
 		/**
 		 * If <code>isModal</code> is <code>true</code>, this function may be
@@ -178,10 +182,10 @@ package feathers.controls.popups
 		 * };</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see feathers.core.PopUpManager#overlayFactory
 		 */
-		public function get overlayFactory() : Function
+		public function get overlayFactory():Function
 		{
 			return this._overlayFactory;
 		}
@@ -189,7 +193,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set overlayFactory( value : Function ) : void
+		public function set overlayFactory(value:Function):void
 		{
 			this._overlayFactory = value;
 		}
@@ -197,12 +201,12 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _gap : Number = 0;
+		protected var _gap:Number = 0;
 
 		/**
 		 * The space, in pixels, between the source and the pop-up.
 		 */
-		public function get gap() : Number
+		public function get gap():Number
 		{
 			return this._gap;
 		}
@@ -210,7 +214,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set gap( value : Number ) : void
+		public function set gap(value:Number):void
 		{
 			this._gap = value;
 		}
@@ -218,17 +222,17 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _primaryDirection : String = PRIMARY_DIRECTION_DOWN;
+		protected var _primaryDirection:String = PRIMARY_DIRECTION_DOWN;
 
 		/**
 		 * The space, in pixels, between the source and the pop-up.
-		 *
+		 * 
 		 * @default DropDownPopUpContentManager.PRIMARY_DIRECTION_DOWN
-		 *
+		 * 
 		 * @see #PRIMARY_DIRECTION_DOWN
 		 * @see #PRIMARY_DIRECTION_UP
 		 */
-		public function get primaryDirection() : String
+		public function get primaryDirection():String
 		{
 			return this._primaryDirection;
 		}
@@ -236,7 +240,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set primaryDirection( value : String ) : void
+		public function set primaryDirection(value:String):void
 		{
 			this._primaryDirection = value;
 		}
@@ -244,7 +248,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _fitContentMinWidthToOrigin : Boolean = true;
+		protected var _fitContentMinWidthToOrigin:Boolean = true;
 
 		/**
 		 * If enabled, the pop-up content's <code>minWidth</code> property will
@@ -253,7 +257,7 @@ package feathers.controls.popups
 		 *
 		 * @default true
 		 */
-		public function get fitContentMinWidthToOrigin() : Boolean
+		public function get fitContentMinWidthToOrigin():Boolean
 		{
 			return this._fitContentMinWidthToOrigin;
 		}
@@ -261,83 +265,86 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set fitContentMinWidthToOrigin( value : Boolean ) : void
+		public function set fitContentMinWidthToOrigin(value:Boolean):void
 		{
 			this._fitContentMinWidthToOrigin = value;
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function DropDownPopUpContentManager()
-		{
-		}
+		protected var _lastGlobalX:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _lastGlobalY:Number;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function open( content : DisplayObject , source : DisplayObject ) : void
+		public function open(content:DisplayObject, source:DisplayObject):void
 		{
-			if( this.isOpen )
+			if(this.isOpen)
 			{
-				throw new IllegalOperationError( "Pop-up content is already open. Close the previous content before opening new content." );
+				throw new IllegalOperationError("Pop-up content is already open. Close the previous content before opening new content.");
 			}
 
 			this.content = content;
 			this.source = source;
-			PopUpManager.addPopUp( this.content , this._isModal , false , this._overlayFactory );
-			if( this.content is IFeathersControl )
+			PopUpManager.addPopUp(this.content, this._isModal, false, this._overlayFactory);
+			if(this.content is IFeathersControl)
 			{
-				this.content.addEventListener( FeathersEventType.RESIZE , content_resizeHandler );
+				this.content.addEventListener(FeathersEventType.RESIZE, content_resizeHandler);
 			}
-			this.content.addEventListener( Event.REMOVED_FROM_STAGE , content_removedFromStageHandler );
+			this.content.addEventListener(Event.REMOVED_FROM_STAGE, content_removedFromStageHandler);
 			this.layout();
-			var stage : Stage = this.source.stage;
-			stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			stage.addEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
-			stage.addEventListener( Event.ENTER_FRAME , stage_enterFrameHandler );
+			var stage:Stage = this.source.stage;
+			stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			stage.addEventListener(ResizeEvent.RESIZE, stage_resizeHandler);
+			stage.addEventListener(Event.ENTER_FRAME, stage_enterFrameHandler);
 
 			//using priority here is a hack so that objects higher up in the
 			//display list have a chance to cancel the event first.
-			var priority : int = -getDisplayObjectDepthFromStage( this.content );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler , false , priority , true );
-			this.dispatchEventWith( Event.OPEN );
+			var priority:int = -getDisplayObjectDepthFromStage(this.content);
+			Starling.current.nativeStage.addEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, priority, true);
+			this.dispatchEventWith(Event.OPEN);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function close() : void
+		public function close():void
 		{
-			if( !this.isOpen )
+			if(!this.isOpen)
 			{
 				return;
 			}
-			var content : DisplayObject = this.content;
+			var content:DisplayObject = this.content;
 			this.content = null;
 			this.source = null;
-			var stage : Stage = content.stage;
-			stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			stage.removeEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
-			stage.removeEventListener( Event.ENTER_FRAME , stage_enterFrameHandler );
-			var starling : Starling = stageToStarling( stage );
-			starling.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler );
-			if( content is IFeathersControl )
+			var stage:Stage = content.stage;
+			stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			stage.removeEventListener(ResizeEvent.RESIZE, stage_resizeHandler);
+			stage.removeEventListener(Event.ENTER_FRAME, stage_enterFrameHandler);
+			var starling:Starling = stageToStarling(stage);
+			starling.nativeStage.removeEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler);
+			if(content is IFeathersControl)
 			{
-				content.removeEventListener( FeathersEventType.RESIZE , content_resizeHandler );
+				content.removeEventListener(FeathersEventType.RESIZE, content_resizeHandler);
 			}
-			content.removeEventListener( Event.REMOVED_FROM_STAGE , content_removedFromStageHandler );
-			if( content.parent )
+			content.removeEventListener(Event.REMOVED_FROM_STAGE, content_removedFromStageHandler);
+			if(content.parent)
 			{
-				content.removeFromParent( false );
+				content.removeFromParent(false);
 			}
-			this.dispatchEventWith( Event.CLOSE );
+			this.dispatchEventWith(Event.CLOSE);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
 			this.close();
 		}
@@ -345,12 +352,12 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function layout() : void
+		protected function layout():void
 		{
-			if( this.source is IValidating )
+			if(this.source is IValidating)
 			{
-				IValidating( this.source ).validate();
-				if( !this.isOpen )
+				IValidating(this.source).validate();
+				if(!this.isOpen)
 				{
 					//it's possible that the source will close its pop-up during
 					//validation, so we should check for that.
@@ -358,83 +365,83 @@ package feathers.controls.popups
 				}
 			}
 
-			var sourceWidth : Number = this.source.width;
-			var hasSetBounds : Boolean = false;
-			var uiContent : IFeathersControl = this.content as IFeathersControl;
-			if( this._fitContentMinWidthToOrigin && uiContent && uiContent.minWidth < sourceWidth )
+			var sourceWidth:Number = this.source.width;
+			var hasSetBounds:Boolean = false;
+			var uiContent:IFeathersControl = this.content as IFeathersControl;
+			if(this._fitContentMinWidthToOrigin && uiContent && uiContent.minWidth < sourceWidth)
 			{
 				uiContent.minWidth = sourceWidth;
 				hasSetBounds = true;
 			}
-			if( this.content is IValidating )
+			if(this.content is IValidating)
 			{
 				uiContent.validate();
 			}
-			if( !hasSetBounds && this._fitContentMinWidthToOrigin && this.content.width < sourceWidth )
+			if(!hasSetBounds && this._fitContentMinWidthToOrigin && this.content.width < sourceWidth)
 			{
 				this.content.width = sourceWidth;
 			}
 
-			var stage : Stage = this.source.stage;
+			var stage:Stage = this.source.stage;
 			
 			//we need to be sure that the source is properly positioned before
 			//positioning the content relative to it.
-			var starling : Starling = stageToStarling( stage );
-			var validationQueue : ValidationQueue = ValidationQueue.forStarling( starling );
-			if( validationQueue && !validationQueue.isValidating )
+			var starling:Starling = stageToStarling(stage);
+			var validationQueue:ValidationQueue = ValidationQueue.forStarling(starling);
+			if(validationQueue && !validationQueue.isValidating)
 			{
 				//force a COMPLETE validation of everything
 				//but only if we're not already doing that...
-				validationQueue.advanceTime( 0 );
+				validationQueue.advanceTime(0);
 			}
 
-			var globalOrigin : Rectangle = this.source.getBounds( stage );
+			var globalOrigin:Rectangle = this.source.getBounds(stage);
 			this._lastGlobalX = globalOrigin.x;
 			this._lastGlobalY = globalOrigin.y;
 
-			var downSpace : Number = (stage.stageHeight - this.content.height) - (globalOrigin.y + globalOrigin.height + this._gap);
+			var downSpace:Number = (stage.stageHeight - this.content.height) - (globalOrigin.y + globalOrigin.height + this._gap);
 			//skip this if the primary direction is up
-			if( this._primaryDirection == PRIMARY_DIRECTION_DOWN && downSpace >= 0 )
+			if(this._primaryDirection == PRIMARY_DIRECTION_DOWN && downSpace >= 0)
 			{
-				layoutBelow( globalOrigin );
+				layoutBelow(globalOrigin);
 				return;
 			}
 
-			var upSpace : Number = globalOrigin.y - this._gap - this.content.height;
-			if( upSpace >= 0 )
+			var upSpace:Number = globalOrigin.y - this._gap - this.content.height;
+			if(upSpace >= 0)
 			{
-				layoutAbove( globalOrigin );
+				layoutAbove(globalOrigin);
 				return;
 			}
-
+			
 			//do what we skipped earlier if the primary direction is up
-			if( this._primaryDirection == PRIMARY_DIRECTION_UP && downSpace >= 0 )
+			if(this._primaryDirection == PRIMARY_DIRECTION_UP && downSpace >= 0)
 			{
-				layoutBelow( globalOrigin );
+				layoutBelow(globalOrigin);
 				return;
 			}
 
 			//worst case: pick the side that has the most available space
-			if( upSpace >= downSpace )
+			if(upSpace >= downSpace)
 			{
-				layoutAbove( globalOrigin );
+				layoutAbove(globalOrigin);
 			}
 			else
 			{
-				layoutBelow( globalOrigin );
+				layoutBelow(globalOrigin);
 			}
 
 			//the content is too big for the space, so we need to adjust it to
 			//fit properly
-			var newMaxHeight : Number = stage.stageHeight - (globalOrigin.y + globalOrigin.height);
-			if( uiContent )
+			var newMaxHeight:Number = stage.stageHeight - (globalOrigin.y + globalOrigin.height);
+			if(uiContent)
 			{
-				if( uiContent.maxHeight > newMaxHeight )
+				if(uiContent.maxHeight > newMaxHeight)
 				{
 					uiContent.maxHeight = newMaxHeight;
 				}
 			}
-			else if( this.content.height > newMaxHeight )
+			else if(this.content.height > newMaxHeight)
 			{
 				this.content.height = newMaxHeight;
 			}
@@ -443,15 +450,15 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function layoutAbove( globalOrigin : Rectangle ) : void
+		protected function layoutAbove(globalOrigin:Rectangle):void
 		{
-			var idealXPosition : Number = globalOrigin.x;
-			var xPosition : Number = this.content.stage.stageWidth - this.content.width;
-			if( xPosition > idealXPosition )
+			var idealXPosition:Number = globalOrigin.x;
+			var xPosition:Number = this.content.stage.stageWidth - this.content.width;
+			if(xPosition > idealXPosition)
 			{
 				xPosition = idealXPosition;
 			}
-			if( xPosition < 0 )
+			if(xPosition < 0)
 			{
 				xPosition = 0;
 			}
@@ -462,15 +469,15 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function layoutBelow( globalOrigin : Rectangle ) : void
+		protected function layoutBelow(globalOrigin:Rectangle):void
 		{
-			var idealXPosition : Number = globalOrigin.x;
-			var xPosition : Number = this.content.stage.stageWidth - this.content.width;
-			if( xPosition > idealXPosition )
+			var idealXPosition:Number = globalOrigin.x;
+			var xPosition:Number = this.content.stage.stageWidth - this.content.width;
+			if(xPosition > idealXPosition)
 			{
 				xPosition = idealXPosition;
 			}
-			if( xPosition < 0 )
+			if(xPosition < 0)
 			{
 				xPosition = 0;
 			}
@@ -481,7 +488,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function content_resizeHandler( event : Event ) : void
+		protected function content_resizeHandler(event:Event):void
 		{
 			this.layout();
 		}
@@ -489,10 +496,10 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function stage_enterFrameHandler( event : Event ) : void
+		protected function stage_enterFrameHandler(event:Event):void
 		{
-			this.source.getBounds( this.source.stage , HELPER_RECTANGLE );
-			if( HELPER_RECTANGLE.x != this._lastGlobalX || HELPER_RECTANGLE.y != this._lastGlobalY )
+			this.source.getBounds(this.source.stage, HELPER_RECTANGLE);
+			if(HELPER_RECTANGLE.x != this._lastGlobalX || HELPER_RECTANGLE.y != this._lastGlobalY)
 			{
 				this.layout();
 			}
@@ -501,7 +508,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function content_removedFromStageHandler( event : Event ) : void
+		protected function content_removedFromStageHandler(event:Event):void
 		{
 			this.close();
 		}
@@ -509,14 +516,14 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function nativeStage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function nativeStage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.isDefaultPrevented() )
+			if(event.isDefaultPrevented())
 			{
 				//someone else already handled this one
 				return;
 			}
-			if( event.keyCode != Keyboard.BACK && event.keyCode != Keyboard.ESCAPE )
+			if(event.keyCode != Keyboard.BACK && event.keyCode != Keyboard.ESCAPE)
 			{
 				return;
 			}
@@ -529,7 +536,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function stage_resizeHandler( event : ResizeEvent ) : void
+		protected function stage_resizeHandler(event:ResizeEvent):void
 		{
 			this.layout();
 		}
@@ -537,25 +544,25 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function stage_touchHandler( event : TouchEvent ) : void
+		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			var target : DisplayObject = DisplayObject( event.target );
-			if( this.content == target || (this.content is DisplayObjectContainer && DisplayObjectContainer( this.content ).contains( target )) )
+			var target:DisplayObject = DisplayObject(event.target);
+			if(this.content == target || (this.content is DisplayObjectContainer && DisplayObjectContainer(this.content).contains(target)))
 			{
 				return;
 			}
-			if( this.source == target || (this.source is DisplayObjectContainer && DisplayObjectContainer( this.source ).contains( target )) )
+			if(this.source == target || (this.source is DisplayObjectContainer && DisplayObjectContainer(this.source).contains(target)))
 			{
 				return;
 			}
-			if( !PopUpManager.isTopLevelPopUp( this.content ) )
+			if(!PopUpManager.isTopLevelPopUp(this.content))
 			{
 				return;
 			}
 			//any began touch is okay here. we don't need to check all touches
-			var stage : Stage = Stage( event.currentTarget );
-			var touch : Touch = event.getTouch( stage , TouchPhase.BEGAN );
-			if( !touch )
+			var stage:Stage = Stage(event.currentTarget);
+			var touch:Touch = event.getTouch(stage, TouchPhase.BEGAN);
+			if(!touch)
 			{
 				return;
 			}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -44,7 +44,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user starts dragging the scroll bar's thumb.
@@ -66,7 +66,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.BEGIN_INTERACTION
 	 */
-	[Event(name="beginInteraction" , type="starling.events.Event")]
+	[Event(name="beginInteraction",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user stops dragging the scroll bar's thumb.
@@ -88,7 +88,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.END_INTERACTION
 	 */
-	[Event(name="endInteraction" , type="starling.events.Event")]
+	[Event(name="endInteraction",type="starling.events.Event")]
 
 	/**
 	 * Select a value between a minimum and a maximum by dragging a thumb over
@@ -116,8 +116,40 @@ package feathers.controls
 	 *
 	 * @see ../../../help/simple-scroll-bar.html How to use the Feathers SimpleScrollBar component
 	 * @see feathers.controls.ScrollBar
-	 */ public class SimpleScrollBar extends FeathersControl implements IDirectionalScrollBar
+	 */
+	public class SimpleScrollBar extends FeathersControl implements IDirectionalScrollBar
 	{
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_THUMB_FACTORY:String = "thumbFactory";
+
+		/**
+		 * The scroll bar's thumb may be dragged horizontally (on the x-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_HORIZONTAL:String = "horizontal";
+
+		/**
+		 * The scroll bar's thumb may be dragged vertically (on the y-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_VERTICAL:String = "vertical";
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the thumb.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_THUMB:String = "feathers-simple-scroll-bar-thumb";
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>SimpleScrollBar</code>
 		 * components.
@@ -125,23 +157,25 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * @private
 		 */
-		protected static function defaultThumbFactory() : Button
+		protected static function defaultThumbFactory():Button
 		{
 			return new Button();
 		}
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_THUMB_FACTORY : String = "thumbFactory";
+		public function SimpleScrollBar()
+		{
+			super();
+			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
+		}
+
 		/**
 		 * The value added to the <code>styleNameList</code> of the thumb. This
 		 * variable is <code>protected</code> so that sub-classes can customize
@@ -154,15 +188,18 @@ package feathers.controls
 		 * @see #customThumbStyleName
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var thumbStyleName : String = DEFAULT_CHILD_STYLE_NAME_THUMB;
+		protected var thumbStyleName:String = DEFAULT_CHILD_STYLE_NAME_THUMB;
+
 		/**
 		 * @private
 		 */
-		protected var thumbOriginalWidth : Number = NaN;
+		protected var thumbOriginalWidth:Number = NaN;
+
 		/**
 		 * @private
 		 */
-		protected var thumbOriginalHeight : Number = NaN;
+		protected var thumbOriginalHeight:Number = NaN;
+
 		/**
 		 * The thumb sub-component.
 		 *
@@ -171,95 +208,17 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see #createThumb()
 		 */
-		protected var thumb : Button;
-		/**
-		 * @private
-		 */
-		protected var track : Quad;
-		/**
-		 * @private
-		 */
-		protected var currentRepeatAction : Function;
-		/**
-		 * @private
-		 */
-		protected var _repeatTimer : Timer;
-		/**
-		 * @private
-		 */
-		protected var isDragging : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _touchStartX : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _touchStartY : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _thumbStartX : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _thumbStartY : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _touchValue : Number;
-		/**
-		 * The scroll bar's thumb may be dragged horizontally (on the x-axis).
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * The scroll bar's thumb may be dragged vertically (on the y-axis).
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the thumb.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_THUMB : String = "feathers-simple-scroll-bar-thumb";
-		/**
-		 * Determines if the value should be clamped to the range between the
-		 * minimum and maximum. If <code>false</code> and the value is outside of the range,
-		 * the thumb will shrink as if the range were increasing.
-		 *
-		 * <p>In the following example, the clamping behavior is updated:</p>
-		 *
-		 * <listing version="3.0">
-		 * scrollBar.clampToRange = true;</listing>
-		 *
-		 * @default false
-		 */
-		public var clampToRange : Boolean = false;
-		/**
-		 * Determines if the scroll bar dispatches the <code>Event.CHANGE</code>
-		 * event every time the thumb moves, or only once it stops moving.
-		 *
-		 * <p>In the following example, live dragging is disabled:</p>
-		 *
-		 * <listing version="3.0">
-		 * scrollBar.liveDragging = false;</listing>
-		 *
-		 * @default true
-		 */
-		public var liveDragging : Boolean = true;
+		protected var thumb:Button;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected var track:Quad;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return SimpleScrollBar.globalStyleProvider;
 		}
@@ -267,9 +226,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _direction : String = DIRECTION_HORIZONTAL;
+		protected var _direction:String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String" , enumeration="horizontal,vertical")]
+		[Inspectable(type="String",enumeration="horizontal,vertical")]
 		/**
 		 * Determines if the scroll bar's thumb can be dragged horizontally or
 		 * vertically. When this value changes, the scroll bar's width and
@@ -284,7 +243,8 @@ package feathers.controls
 		 *
 		 * @see #DIRECTION_HORIZONTAL
 		 * @see #DIRECTION_VERTICAL
-		 */ public function get direction() : String
+		 */
+		public function get direction():String
 		{
 			return this._direction;
 		}
@@ -292,21 +252,35 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set direction( value : String ) : void
+		public function set direction(value:String):void
 		{
-			if( this._direction == value )
+			if(this._direction == value)
 			{
 				return;
 			}
 			this._direction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
+
+		/**
+		 * Determines if the value should be clamped to the range between the
+		 * minimum and maximum. If <code>false</code> and the value is outside of the range,
+		 * the thumb will shrink as if the range were increasing.
+		 *
+		 * <p>In the following example, the clamping behavior is updated:</p>
+		 *
+		 * <listing version="3.0">
+		 * scrollBar.clampToRange = true;</listing>
+		 *
+		 * @default false
+		 */
+		public var clampToRange:Boolean = false;
 
 		/**
 		 * @private
 		 */
-		protected var _value : Number = 0;
+		protected var _value:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -319,7 +293,7 @@ package feathers.controls
 		 * @see #page
 		 * @see #event:change
 		 */
-		public function get value() : Number
+		public function get value():Number
 		{
 			return this._value;
 		}
@@ -327,28 +301,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set value( newValue : Number ) : void
+		public function set value(newValue:Number):void
 		{
-			if( this.clampToRange )
+			if(this.clampToRange)
 			{
-				newValue = clamp( newValue , this._minimum , this._maximum );
+				newValue = clamp(newValue, this._minimum, this._maximum);
 			}
-			if( this._value == newValue )
+			if(this._value == newValue)
 			{
 				return;
 			}
 			this._value = newValue;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			if( this.liveDragging || !this.isDragging )
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			if(this.liveDragging || !this.isDragging)
 			{
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minimum : Number = 0;
+		protected var _minimum:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -358,7 +332,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #maximum
 		 */
-		public function get minimum() : Number
+		public function get minimum():Number
 		{
 			return this._minimum;
 		}
@@ -366,20 +340,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minimum( value : Number ) : void
+		public function set minimum(value:Number):void
 		{
-			if( this._minimum == value )
+			if(this._minimum == value)
 			{
 				return;
 			}
 			this._minimum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maximum : Number = 0;
+		protected var _maximum:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -389,7 +363,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #minimum
 		 */
-		public function get maximum() : Number
+		public function get maximum():Number
 		{
 			return this._maximum;
 		}
@@ -397,20 +371,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maximum( value : Number ) : void
+		public function set maximum(value:Number):void
 		{
-			if( this._maximum == value )
+			if(this._maximum == value)
 			{
 				return;
 			}
 			this._maximum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _step : Number = 0;
+		protected var _step:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -420,7 +394,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #page
 		 */
-		public function get step() : Number
+		public function get step():Number
 		{
 			return this._step;
 		}
@@ -428,7 +402,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set step( value : Number ) : void
+		public function set step(value:Number):void
 		{
 			this._step = value;
 		}
@@ -436,7 +410,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _page : Number = 0;
+		protected var _page:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -446,7 +420,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #step
 		 */
-		public function get page() : Number
+		public function get page():Number
 		{
 			return this._page;
 		}
@@ -454,14 +428,14 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set page( value : Number ) : void
+		public function set page(value:Number):void
 		{
-			if( this._page == value )
+			if(this._page == value)
 			{
 				return;
 			}
 			this._page = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
@@ -482,7 +456,7 @@ package feathers.controls
 		 * @see #paddingBottom
 		 * @see #paddingLeft
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -490,7 +464,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -501,7 +475,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, above the thumb.
@@ -513,7 +487,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -521,20 +495,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, to the right of the thumb.
@@ -546,7 +520,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -554,20 +528,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, below the thumb.
@@ -579,7 +553,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -587,20 +561,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, to the left of the thumb.
@@ -612,7 +586,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -620,20 +594,30 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _repeatDelay : Number = 0.05;
+		protected var currentRepeatAction:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _repeatTimer:Timer;
+
+		/**
+		 * @private
+		 */
+		protected var _repeatDelay:Number = 0.05;
 
 		/**
 		 * The time, in seconds, before actions are repeated. The first repeat
@@ -647,7 +631,7 @@ package feathers.controls
 		 *
 		 * @default 0.05
 		 */
-		public function get repeatDelay() : Number
+		public function get repeatDelay():Number
 		{
 			return this._repeatDelay;
 		}
@@ -655,20 +639,38 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set repeatDelay( value : Number ) : void
+		public function set repeatDelay(value:Number):void
 		{
-			if( this._repeatDelay == value )
+			if(this._repeatDelay == value)
 			{
 				return;
 			}
 			this._repeatDelay = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _thumbFactory : Function;
+		protected var isDragging:Boolean = false;
+
+		/**
+		 * Determines if the scroll bar dispatches the <code>Event.CHANGE</code>
+		 * event every time the thumb moves, or only once it stops moving.
+		 *
+		 * <p>In the following example, live dragging is disabled:</p>
+		 *
+		 * <listing version="3.0">
+		 * scrollBar.liveDragging = false;</listing>
+		 *
+		 * @default true
+		 */
+		public var liveDragging:Boolean = true;
+
+		/**
+		 * @private
+		 */
+		protected var _thumbFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's thumb sub-component.
@@ -698,7 +700,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #thumbProperties
 		 */
-		public function get thumbFactory() : Function
+		public function get thumbFactory():Function
 		{
 			return this._thumbFactory;
 		}
@@ -706,20 +708,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set thumbFactory( value : Function ) : void
+		public function set thumbFactory(value:Function):void
 		{
-			if( this._thumbFactory == value )
+			if(this._thumbFactory == value)
 			{
 				return;
 			}
 			this._thumbFactory = value;
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customThumbStyleName : String;
+		protected var _customThumbStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's thumb sub-component.
@@ -745,7 +747,7 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see #thumbProperties
 		 */
-		public function get customThumbStyleName() : String
+		public function get customThumbStyleName():String
 		{
 			return this._customThumbStyleName;
 		}
@@ -753,20 +755,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customThumbStyleName( value : String ) : void
+		public function set customThumbStyleName(value:String):void
 		{
-			if( this._customThumbStyleName == value )
+			if(this._customThumbStyleName == value)
 			{
 				return;
 			}
 			this._customThumbStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _thumbProperties : PropertyProxy;
+		protected var _thumbProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's thumb, and the
@@ -796,11 +798,11 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get thumbProperties() : Object
+		public function get thumbProperties():Object
 		{
-			if( !this._thumbProperties )
+			if(!this._thumbProperties)
 			{
-				this._thumbProperties = new PropertyProxy( thumbProperties_onChange );
+				this._thumbProperties = new PropertyProxy(thumbProperties_onChange);
 			}
 			return this._thumbProperties;
 		}
@@ -808,63 +810,84 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set thumbProperties( value : Object ) : void
+		public function set thumbProperties(value:Object):void
 		{
-			if( this._thumbProperties == value )
+			if(this._thumbProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._thumbProperties )
+			if(this._thumbProperties)
 			{
-				this._thumbProperties.removeOnChangeCallback( thumbProperties_onChange );
+				this._thumbProperties.removeOnChangeCallback(thumbProperties_onChange);
 			}
-			this._thumbProperties = PropertyProxy( value );
-			if( this._thumbProperties )
+			this._thumbProperties = PropertyProxy(value);
+			if(this._thumbProperties)
 			{
-				this._thumbProperties.addOnChangeCallback( thumbProperties_onChange );
+				this._thumbProperties.addOnChangeCallback(thumbProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function SimpleScrollBar()
-		{
-			super();
-			this.addEventListener( Event.REMOVED_FROM_STAGE , removedFromStageHandler );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		protected var _touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _touchStartX:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _touchStartY:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _thumbStartX:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _thumbStartY:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _touchValue:Number;
+
+		/**
+		 * @private
+		 */
+		override protected function initialize():void
 		{
-			if( !this.track )
+			if(!this.track)
 			{
-				this.track = new Quad( 10 , 10 , 0xff00ff );
+				this.track = new Quad(10, 10, 0xff00ff);
 				this.track.alpha = 0;
-				this.track.addEventListener( TouchEvent.TOUCH , track_touchHandler );
-				this.addChild( this.track );
+				this.track.addEventListener(TouchEvent.TOUCH, track_touchHandler);
+				this.addChild(this.track);
 			}
-			if( this._value < this._minimum )
+			if(this._value < this._minimum)
 			{
 				this.value = this._minimum;
 			}
-			else if( this._value > this._maximum )
+			else if(this._value > this._maximum)
 			{
 				this.value = this._maximum;
 			}
@@ -873,25 +896,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var thumbFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_THUMB_FACTORY );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA)
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var thumbFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_THUMB_FACTORY);
 
-			if( thumbFactoryInvalid )
+			if(thumbFactoryInvalid)
 			{
 				this.createThumb();
 			}
 
-			if( thumbFactoryInvalid || stylesInvalid )
+			if(thumbFactoryInvalid || stylesInvalid)
 			{
 				this.refreshThumbStyles();
 			}
 
-			if( dataInvalid || thumbFactoryInvalid || stateInvalid )
+			if(dataInvalid || thumbFactoryInvalid || stateInvalid)
 			{
 				this.thumb.isEnabled = this._isEnabled && this._maximum > this._minimum;
 			}
@@ -917,51 +940,52 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			if( this.thumbOriginalWidth !== this.thumbOriginalWidth || this.thumbOriginalHeight !== this.thumbOriginalHeight ) //isNaN
+			if(this.thumbOriginalWidth !== this.thumbOriginalWidth ||
+				this.thumbOriginalHeight !== this.thumbOriginalHeight) //isNaN
 			{
 				this.thumb.validate();
 				this.thumbOriginalWidth = this.thumb.width;
 				this.thumbOriginalHeight = this.thumb.height;
 			}
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			var range : Number = this._maximum - this._minimum;
-			var adjustedPage : Number = this._page;
-			if( adjustedPage === 0 )
+			var range:Number = this._maximum - this._minimum;
+			var adjustedPage:Number = this._page;
+			if(adjustedPage === 0)
 			{
 				//fall back to using step!
 				adjustedPage = this._step;
 			}
-			if( adjustedPage > range )
+			if(adjustedPage > range)
 			{
 				adjustedPage = range;
 			}
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
-				if( this._direction == DIRECTION_VERTICAL )
+				if(this._direction == DIRECTION_VERTICAL)
 				{
 					newWidth = this.thumbOriginalWidth;
 				}
 				else //horizontal
 				{
-					if( adjustedPage === 0 )
+					if(adjustedPage === 0)
 					{
 						newWidth = this.thumbOriginalWidth;
 					}
 					else
 					{
 						newWidth = this.thumbOriginalWidth * range / adjustedPage;
-						if( newWidth < this.thumbOriginalWidth )
+						if(newWidth < this.thumbOriginalWidth)
 						{
 							newWidth = this.thumbOriginalWidth;
 						}
@@ -969,18 +993,18 @@ package feathers.controls
 				}
 				newWidth += this._paddingLeft + this._paddingRight;
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
-				if( this._direction == DIRECTION_VERTICAL )
+				if(this._direction == DIRECTION_VERTICAL)
 				{
-					if( adjustedPage === 0 )
+					if(adjustedPage === 0)
 					{
 						newHeight = this.thumbOriginalHeight;
 					}
 					else
 					{
 						newHeight = this.thumbOriginalHeight * range / adjustedPage;
-						if( newHeight < this.thumbOriginalHeight )
+						if(newHeight < this.thumbOriginalHeight)
 						{
 							newHeight = this.thumbOriginalHeight;
 						}
@@ -992,7 +1016,7 @@ package feathers.controls
 				}
 				newHeight += this._paddingTop + this._paddingBottom;
 			}
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -1006,47 +1030,47 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see #customThumbStyleName
 		 */
-		protected function createThumb() : void
+		protected function createThumb():void
 		{
-			if( this.thumb )
+			if(this.thumb)
 			{
-				this.thumb.removeFromParent( true );
+				this.thumb.removeFromParent(true);
 				this.thumb = null;
 			}
 
-			var factory : Function = this._thumbFactory != null ? this._thumbFactory : defaultThumbFactory;
-			var thumbStyleName : String = this._customThumbStyleName != null ? this._customThumbStyleName : this.thumbStyleName;
-			this.thumb = Button( factory() );
-			this.thumb.styleNameList.add( thumbStyleName );
+			var factory:Function = this._thumbFactory != null ? this._thumbFactory : defaultThumbFactory;
+			var thumbStyleName:String = this._customThumbStyleName != null ? this._customThumbStyleName : this.thumbStyleName;
+			this.thumb = Button(factory());
+			this.thumb.styleNameList.add(thumbStyleName);
 			this.thumb.isFocusEnabled = false;
 			this.thumb.keepDownStateOnRollOut = true;
-			this.thumb.addEventListener( TouchEvent.TOUCH , thumb_touchHandler );
-			this.addChild( this.thumb );
+			this.thumb.addEventListener(TouchEvent.TOUCH, thumb_touchHandler);
+			this.addChild(this.thumb);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshThumbStyles() : void
+		protected function refreshThumbStyles():void
 		{
-			for( var propertyName : String in this._thumbProperties )
+			for(var propertyName:String in this._thumbProperties)
 			{
-				var propertyValue : Object = this._thumbProperties[ propertyName ];
-				this.thumb[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._thumbProperties[propertyName];
+				this.thumb[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layout() : void
+		protected function layout():void
 		{
 			this.track.width = this.actualWidth;
 			this.track.height = this.actualHeight;
 
-			var range : Number = this._maximum - this._minimum;
+			var range:Number = this._maximum - this._minimum;
 			this.thumb.visible = range > 0;
-			if( !this.thumb.visible )
+			if(!this.thumb.visible)
 			{
 				return;
 			}
@@ -1054,51 +1078,51 @@ package feathers.controls
 			//this will auto-size the thumb, if needed
 			this.thumb.validate();
 
-			var contentWidth : Number = this.actualWidth - this._paddingLeft - this._paddingRight;
-			var contentHeight : Number = this.actualHeight - this._paddingTop - this._paddingBottom;
-			var adjustedPage : Number = this._page;
-			if( this._page == 0 )
+			var contentWidth:Number = this.actualWidth - this._paddingLeft - this._paddingRight;
+			var contentHeight:Number = this.actualHeight - this._paddingTop - this._paddingBottom;
+			var adjustedPage:Number = this._page;
+			if(this._page == 0)
 			{
 				adjustedPage = this._step;
 			}
-			else if( adjustedPage > range )
+			else if(adjustedPage > range)
 			{
 				adjustedPage = range;
 			}
-			var valueOffset : Number = 0;
-			if( this._value < this._minimum )
+			var valueOffset:Number = 0;
+			if(this._value < this._minimum)
 			{
 				valueOffset = (this._minimum - this._value);
 			}
-			if( this._value > this._maximum )
+			if(this._value > this._maximum)
 			{
 				valueOffset = (this._value - this._maximum);
 			}
-			if( this._direction == DIRECTION_VERTICAL )
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				this.thumb.width = this.thumbOriginalWidth;
-				var thumbMinHeight : Number = this.thumb.minHeight > 0 ? this.thumb.minHeight : this.thumbOriginalHeight;
-				var thumbHeight : Number = contentHeight * adjustedPage / range;
-				var heightOffset : Number = contentHeight - thumbHeight;
-				if( heightOffset > thumbHeight )
+				var thumbMinHeight:Number = this.thumb.minHeight > 0 ? this.thumb.minHeight : this.thumbOriginalHeight;
+				var thumbHeight:Number = contentHeight * adjustedPage / range;
+				var heightOffset:Number = contentHeight - thumbHeight;
+				if(heightOffset > thumbHeight)
 				{
 					heightOffset = thumbHeight;
 				}
-				heightOffset *= valueOffset / (range * thumbHeight / contentHeight);
+				heightOffset *=  valueOffset / (range * thumbHeight / contentHeight);
 				thumbHeight -= heightOffset;
-				if( thumbHeight < thumbMinHeight )
+				if(thumbHeight < thumbMinHeight)
 				{
 					thumbHeight = thumbMinHeight;
 				}
 				this.thumb.height = thumbHeight;
 				this.thumb.x = this._paddingLeft + (this.actualWidth - this._paddingLeft - this._paddingRight - this.thumb.width) / 2;
-				var trackScrollableHeight : Number = contentHeight - this.thumb.height;
-				var thumbY : Number = trackScrollableHeight * (this._value - this._minimum) / range;
-				if( thumbY > trackScrollableHeight )
+				var trackScrollableHeight:Number = contentHeight - this.thumb.height;
+				var thumbY:Number = trackScrollableHeight * (this._value - this._minimum) / range;
+				if(thumbY > trackScrollableHeight)
 				{
 					thumbY = trackScrollableHeight;
 				}
-				else if( thumbY < 0 )
+				else if(thumbY < 0)
 				{
 					thumbY = 0;
 				}
@@ -1106,28 +1130,28 @@ package feathers.controls
 			}
 			else //horizontal
 			{
-				var thumbMinWidth : Number = this.thumb.minWidth > 0 ? this.thumb.minWidth : this.thumbOriginalWidth;
-				var thumbWidth : Number = contentWidth * adjustedPage / range;
-				var widthOffset : Number = contentWidth - thumbWidth;
-				if( widthOffset > thumbWidth )
+				var thumbMinWidth:Number = this.thumb.minWidth > 0 ? this.thumb.minWidth : this.thumbOriginalWidth;
+				var thumbWidth:Number = contentWidth * adjustedPage / range;
+				var widthOffset:Number = contentWidth - thumbWidth;
+				if(widthOffset > thumbWidth)
 				{
 					widthOffset = thumbWidth;
 				}
 				widthOffset *= valueOffset / (range * thumbWidth / contentWidth);
 				thumbWidth -= widthOffset;
-				if( thumbWidth < thumbMinWidth )
+				if(thumbWidth < thumbMinWidth)
 				{
 					thumbWidth = thumbMinWidth;
 				}
 				this.thumb.width = thumbWidth;
 				this.thumb.height = this.thumbOriginalHeight;
-				var trackScrollableWidth : Number = contentWidth - this.thumb.width;
-				var thumbX : Number = trackScrollableWidth * (this._value - this._minimum) / range;
-				if( thumbX > trackScrollableWidth )
+				var trackScrollableWidth:Number = contentWidth - this.thumb.width;
+				var thumbX:Number = trackScrollableWidth * (this._value - this._minimum) / range;
+				if(thumbX > trackScrollableWidth)
 				{
 					thumbX = trackScrollableWidth;
 				}
-				else if( thumbX < 0 )
+				else if(thumbX < 0)
 				{
 					thumbX = 0;
 				}
@@ -1142,26 +1166,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function locationToValue( location : Point ) : Number
+		protected function locationToValue(location:Point):Number
 		{
-			var percentage : Number = 0;
-			if( this._direction == DIRECTION_VERTICAL )
+			var percentage:Number = 0;
+			if(this._direction == DIRECTION_VERTICAL)
 			{
-				var trackScrollableHeight : Number = this.actualHeight - this.thumb.height - this._paddingTop - this._paddingBottom;
-				if( trackScrollableHeight > 0 )
+				var trackScrollableHeight:Number = this.actualHeight - this.thumb.height - this._paddingTop - this._paddingBottom;
+				if(trackScrollableHeight > 0)
 				{
-					var yOffset : Number = location.y - this._touchStartY - this._paddingTop;
-					var yPosition : Number = Math.min( Math.max( 0 , this._thumbStartY + yOffset ) , trackScrollableHeight );
+					var yOffset:Number = location.y - this._touchStartY - this._paddingTop;
+					var yPosition:Number = Math.min(Math.max(0, this._thumbStartY + yOffset), trackScrollableHeight);
 					percentage = yPosition / trackScrollableHeight;
 				}
 			}
 			else //horizontal
 			{
-				var trackScrollableWidth : Number = this.actualWidth - this.thumb.width - this._paddingLeft - this._paddingRight;
-				if( trackScrollableWidth > 0 )
+				var trackScrollableWidth:Number = this.actualWidth - this.thumb.width - this._paddingLeft - this._paddingRight;
+				if(trackScrollableWidth > 0)
 				{
-					var xOffset : Number = location.x - this._touchStartX - this._paddingLeft;
-					var xPosition : Number = Math.min( Math.max( 0 , this._thumbStartX + xOffset ) , trackScrollableWidth );
+					var xOffset:Number = location.x - this._touchStartX - this._paddingLeft;
+					var xPosition:Number = Math.min(Math.max(0, this._thumbStartX + xOffset), trackScrollableWidth);
 					percentage = xPosition / trackScrollableWidth;
 				}
 			}
@@ -1172,33 +1196,33 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function adjustPage() : void
+		protected function adjustPage():void
 		{
-			var range : Number = this._maximum - this._minimum;
-			var adjustedPage : Number = this._page;
-			if( adjustedPage === 0 )
+			var range:Number = this._maximum - this._minimum;
+			var adjustedPage:Number = this._page;
+			if(adjustedPage === 0)
 			{
 				adjustedPage = this._step;
 			}
-			if( adjustedPage > range )
+			if(adjustedPage > range)
 			{
 				adjustedPage = range;
 			}
-			if( this._touchValue < this._value )
+			if(this._touchValue < this._value)
 			{
-				var newValue : Number = Math.max( this._touchValue , this._value - adjustedPage );
-				if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+				var newValue:Number = Math.max(this._touchValue, this._value - adjustedPage);
+				if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 				{
-					newValue = roundToNearest( newValue , this._step );
+					newValue = roundToNearest(newValue, this._step);
 				}
 				this.value = newValue;
 			}
-			else if( this._touchValue > this._value )
+			else if(this._touchValue > this._value)
 			{
-				newValue = Math.min( this._touchValue , this._value + adjustedPage );
-				if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+				newValue = Math.min(this._touchValue, this._value + adjustedPage);
+				if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 				{
-					newValue = roundToNearest( newValue , this._step );
+					newValue = roundToNearest(newValue, this._step);
 				}
 				this.value = newValue;
 			}
@@ -1207,15 +1231,15 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function startRepeatTimer( action : Function ) : void
+		protected function startRepeatTimer(action:Function):void
 		{
 			this.currentRepeatAction = action;
-			if( this._repeatDelay > 0 )
+			if(this._repeatDelay > 0)
 			{
-				if( !this._repeatTimer )
+				if(!this._repeatTimer)
 				{
-					this._repeatTimer = new Timer( this._repeatDelay * 1000 );
-					this._repeatTimer.addEventListener( TimerEvent.TIMER , repeatTimer_timerHandler );
+					this._repeatTimer = new Timer(this._repeatDelay * 1000);
+					this._repeatTimer.addEventListener(TimerEvent.TIMER, repeatTimer_timerHandler);
 				}
 				else
 				{
@@ -1229,18 +1253,18 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function thumbProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function thumbProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removedFromStageHandler( event : Event ) : void
+		protected function removedFromStageHandler(event:Event):void
 		{
 			this._touchPointID = -1;
-			if( this._repeatTimer )
+			if(this._repeatTimer)
 			{
 				this._repeatTimer.stop();
 			}
@@ -1249,18 +1273,18 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function track_touchHandler( event : TouchEvent ) : void
+		protected function track_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.track , TouchPhase.ENDED , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this.track, TouchPhase.ENDED, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
@@ -1269,86 +1293,86 @@ package feathers.controls
 			}
 			else
 			{
-				touch = event.getTouch( this.track , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.track, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = touch.id;
-				touch.getLocation( this , HELPER_POINT );
+				touch.getLocation(this, HELPER_POINT);
 				this._touchStartX = HELPER_POINT.x;
 				this._touchStartY = HELPER_POINT.y;
 				this._thumbStartX = HELPER_POINT.x;
 				this._thumbStartY = HELPER_POINT.y;
-				this._touchValue = this.locationToValue( HELPER_POINT );
+				this._touchValue = this.locationToValue(HELPER_POINT);
 				this.adjustPage();
-				this.startRepeatTimer( this.adjustPage );
+				this.startRepeatTimer(this.adjustPage);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function thumb_touchHandler( event : TouchEvent ) : void
+		protected function thumb_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.thumb , null , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this.thumb, null, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
 
-				if( touch.phase == TouchPhase.MOVED )
+				if(touch.phase == TouchPhase.MOVED)
 				{
-					touch.getLocation( this , HELPER_POINT );
-					var newValue : Number = this.locationToValue( HELPER_POINT );
-					if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+					touch.getLocation(this, HELPER_POINT);
+					var newValue:Number = this.locationToValue(HELPER_POINT);
+					if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 					{
-						newValue = roundToNearest( newValue , this._step );
+						newValue = roundToNearest(newValue, this._step);
 					}
 					this.value = newValue;
 				}
-				else if( touch.phase == TouchPhase.ENDED )
+				else if(touch.phase == TouchPhase.ENDED)
 				{
 					this._touchPointID = -1;
 					this.isDragging = false;
-					if( !this.liveDragging )
+					if(!this.liveDragging)
 					{
-						this.dispatchEventWith( Event.CHANGE );
+						this.dispatchEventWith(Event.CHANGE);
 					}
-					this.dispatchEventWith( FeathersEventType.END_INTERACTION );
+					this.dispatchEventWith(FeathersEventType.END_INTERACTION);
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this.thumb , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.thumb, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
-				touch.getLocation( this , HELPER_POINT );
+				touch.getLocation(this, HELPER_POINT);
 				this._touchPointID = touch.id;
 				this._thumbStartX = this.thumb.x;
 				this._thumbStartY = this.thumb.y;
 				this._touchStartX = HELPER_POINT.x;
 				this._touchStartY = HELPER_POINT.y;
 				this.isDragging = true;
-				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function repeatTimer_timerHandler( event : TimerEvent ) : void
+		protected function repeatTimer_timerHandler(event:TimerEvent):void
 		{
-			if( this._repeatTimer.currentCount < 5 )
+			if(this._repeatTimer.currentCount < 5)
 			{
 				return;
 			}

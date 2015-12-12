@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import flash.errors.IllegalOperationError;
@@ -23,78 +23,78 @@ package feathers.data
 		public function VectorNumberListCollectionDataDescriptor()
 		{
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
-		public function getLength( data : Object ) : int
+		public function getLength(data:Object):int
 		{
-			this.checkForCorrectDataType( data );
+			this.checkForCorrectDataType(data);
 			return (data as Vector.<Number>).length;
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemAt( data : Object , index : int ) : Object
+		public function getItemAt(data:Object, index:int):Object
 		{
-			this.checkForCorrectDataType( data );
-			return (data as Vector.<Number>)[ index ];
+			this.checkForCorrectDataType(data);
+			return (data as Vector.<Number>)[index];
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function setItemAt(data:Object, item:Object, index:int):void
+		{
+			this.checkForCorrectDataType(data);
+			(data as Vector.<Number>)[index] = item as Number;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function addItemAt(data:Object, item:Object, index:int):void
+		{
+			this.checkForCorrectDataType(data);
+			(data as Vector.<Number>).splice(index, 0, item as Number);
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function removeItemAt(data:Object, index:int):Object
+		{
+			this.checkForCorrectDataType(data);
+			return (data as Vector.<Number>).splice(index, 1)[0];
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function setItemAt( data : Object , item : Object , index : int ) : void
+		public function removeAll(data:Object):void
 		{
-			this.checkForCorrectDataType( data );
-			(data as Vector.<Number>)[ index ] = item as Number;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function addItemAt( data : Object , item : Object , index : int ) : void
-		{
-			this.checkForCorrectDataType( data );
-			(data as Vector.<Number>).splice( index , 0 , item as Number );
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function removeItemAt( data : Object , index : int ) : Object
-		{
-			this.checkForCorrectDataType( data );
-			return (data as Vector.<Number>).splice( index , 1 )[ 0 ];
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function removeAll( data : Object ) : void
-		{
-			this.checkForCorrectDataType( data );
+			this.checkForCorrectDataType(data);
 			(data as Vector.<Number>).length = 0;
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
-		public function getItemIndex( data : Object , item : Object ) : int
+		public function getItemIndex(data:Object, item:Object):int
 		{
-			this.checkForCorrectDataType( data );
-			return (data as Vector.<Number>).indexOf( item as Number );
+			this.checkForCorrectDataType(data);
+			return (data as Vector.<Number>).indexOf(item as Number);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function checkForCorrectDataType( data : Object ) : void
+		protected function checkForCorrectDataType(data:Object):void
 		{
-			if( !(data is Vector.<Number>) )
+			if(!(data is Vector.<Number>))
 			{
-				throw new IllegalOperationError( "Expected Vector.<Number>. Received " + Object( data ).constructor + " instead." );
+				throw new IllegalOperationError("Expected Vector.<Number>. Received " + Object(data).constructor + " instead.");
 			}
 		}
 	}

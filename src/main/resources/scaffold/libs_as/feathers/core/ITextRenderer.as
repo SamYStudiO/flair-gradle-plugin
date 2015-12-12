@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import flash.geom.Point;
@@ -23,12 +23,12 @@ package feathers.core
 		 * be set on the <code>Label</code>, and it will be passed down to the
 		 * text renderer.</p>
 		 */
-		function get text() : String;
+		function get text():String;
 
 		/**
 		 * @private
 		 */
-		function set text( value : String ) : void;
+		function set text(value:String):void;
 
 		/**
 		 * Determines if the text wraps to the next line when it reaches the
@@ -38,17 +38,17 @@ package feathers.core
 		 * be set on the <code>Label</code>, and it will be passed down to the
 		 * text renderer automatically.</p>
 		 */
-		function get wordWrap() : Boolean;
+		function get wordWrap():Boolean;
 
 		/**
 		 * @private
 		 */
-		function set wordWrap( value : Boolean ) : void;
+		function set wordWrap(value:Boolean):void;
 
 		/**
 		 * Measures the text's bounds (without a full validation, if
 		 * possible).
 		 */
-		function measureText( result : Point = null ) : Point;
+		function measureText(result:Point = null):Point;
 	}
 }

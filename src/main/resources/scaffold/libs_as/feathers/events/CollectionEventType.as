@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.events
 {
 	/**
@@ -26,33 +26,33 @@ package feathers.events
 		/**
 		 * Dispatched when the data provider's source is completely replaced.
 		 */
-		public static const RESET : String = "reset";
+		public static const RESET:String = "reset";
 
 		/**
 		 * Dispatched when an item is added to the collection.
 		 */
-		public static const ADD_ITEM : String = "addItem";
+		public static const ADD_ITEM:String = "addItem";
 
 		/**
 		 * Dispatched when an item is removed from the collection.
 		 */
-		public static const REMOVE_ITEM : String = "removeItem";
+		public static const REMOVE_ITEM:String = "removeItem";
 
 		/**
 		 * Dispatched when an item is replaced in the collection with a
 		 * different item.
 		 */
-		public static const REPLACE_ITEM : String = "replaceItem";
+		public static const REPLACE_ITEM:String = "replaceItem";
 
 		/**
 		 * Dispatched when an item in the collection has changed.
 		 */
-		public static const UPDATE_ITEM : String = "updateItem";
+		public static const UPDATE_ITEM:String = "updateItem";
 
 		/**
 		 * Dispatched when all existing items in the collection have changed
 		 * (but they have not been replaced by different items).
 		 */
-		public static const UPDATE_ALL : String = "updateAll";
+		public static const UPDATE_ALL:String = "updateAll";
 	}
 }

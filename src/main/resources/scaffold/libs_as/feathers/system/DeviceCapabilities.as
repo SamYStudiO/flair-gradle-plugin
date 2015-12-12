@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.system
 {
 	import flash.display.Stage;
@@ -25,7 +25,7 @@ package feathers.system
 		 * @see #isTablet()
 		 * @see #isPhone()
 		 */
-		public static var tabletScreenMinimumInches : Number = 5;
+		public static var tabletScreenMinimumInches:Number = 5;
 
 		/**
 		 * A custom width, in pixels, to use for calculations of the device's
@@ -33,10 +33,9 @@ package feathers.system
 		 *
 		 * @default flash.display.Stage.fullScreenWidth
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of
-		 *     flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
 		 */
-		public static var screenPixelWidth : Number = NaN;
+		public static var screenPixelWidth:Number = NaN;
 
 		/**
 		 * A custom height, in pixels, to use for calculations of the device's
@@ -44,10 +43,9 @@ package feathers.system
 		 *
 		 * @default flash.display.Stage.fullScreenHeight
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of
-		 *     flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/Stage.html#fullScreenWidth Full description of flash.display.Stage.fullScreenWidth in Adobe's Flash Platform API Reference
 		 */
-		public static var screenPixelHeight : Number = NaN;
+		public static var screenPixelHeight:Number = NaN;
 		
 		/**
 		 * The screen density to be used by Feathers. Defaults to the value of
@@ -67,10 +65,9 @@ package feathers.system
 		 *
 		 * @default flash.system.Capabilities.screenDPI
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#screenDPI Full description of
-		 *     flash.system.Capabilities.screenDPI in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/system/Capabilities.html#screenDPI Full description of flash.system.Capabilities.screenDPI in Adobe's Flash Platform API Reference
 		 */
-		public static var dpi : int = Capabilities.screenDPI;
+		public static var dpi:int = Capabilities.screenDPI;
 
 		/**
 		 * Determines if this device is probably a tablet, based on the physical
@@ -82,19 +79,19 @@ package feathers.system
 		 * @see #screenPixelHeight
 		 * @see #isPhone()
 		 */
-		public static function isTablet( stage : Stage ) : Boolean
+		public static function isTablet(stage:Stage):Boolean
 		{
-			var screenWidth : Number = screenPixelWidth;
-			if( screenWidth !== screenWidth ) //isNaN
+			var screenWidth:Number = screenPixelWidth;
+			if(screenWidth !== screenWidth) //isNaN
 			{
 				screenWidth = stage.fullScreenWidth;
 			}
-			var screenHeight : Number = screenPixelHeight;
-			if( screenHeight !== screenHeight ) //isNaN
+			var screenHeight:Number = screenPixelHeight;
+			if(screenHeight !== screenHeight) //isNaN
 			{
 				screenHeight = stage.fullScreenHeight;
 			}
-			if( screenWidth < screenHeight )
+			if(screenWidth < screenHeight)
 			{
 				screenWidth = screenHeight;
 			}
@@ -108,9 +105,9 @@ package feathers.system
 		 *
 		 * @see #isTablet()
 		 */
-		public static function isPhone( stage : Stage ) : Boolean
+		public static function isPhone(stage:Stage):Boolean
 		{
-			return !isTablet( stage );
+			return !isTablet(stage);
 		}
 
 		/**
@@ -119,10 +116,10 @@ package feathers.system
 		 *
 		 * @see #screenPixelWidth
 		 */
-		public static function screenInchesX( stage : Stage ) : Number
+		public static function screenInchesX(stage:Stage):Number
 		{
-			var screenWidth : Number = screenPixelWidth;
-			if( screenWidth !== screenWidth ) //isNaN
+			var screenWidth:Number = screenPixelWidth;
+			if(screenWidth !== screenWidth) //isNaN
 			{
 				screenWidth = stage.fullScreenWidth;
 			}
@@ -135,10 +132,10 @@ package feathers.system
 		 *
 		 * @see #screenPixelHeight
 		 */
-		public static function screenInchesY( stage : Stage ) : Number
+		public static function screenInchesY(stage:Stage):Number
 		{
-			var screenHeight : Number = screenPixelHeight;
-			if( screenHeight !== screenHeight ) //isNaN
+			var screenHeight:Number = screenPixelHeight;
+			if(screenHeight !== screenHeight) //isNaN
 			{
 				screenHeight = stage.fullScreenHeight;
 			}

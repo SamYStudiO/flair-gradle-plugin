@@ -10,14 +10,14 @@
 
 package starling.errors
 {
-	/** A NotSupportedError is thrown when you attempt to use a feature that is not supported
-	 *  on the current platform. */
-	public class NotSupportedError extends Error
-	{
-		/** Creates a new NotSupportedError object. */
-		public function NotSupportedError( message : * = "" , id : * = 0 )
-		{
-			super( message , id );
-		}
-	}
+    /** A NotSupportedError is thrown when you attempt to use a feature that is not supported
+     *  on the current platform. */
+    public class NotSupportedError extends Error
+    {
+        /** Creates a new NotSupportedError object. */
+        public function NotSupportedError(message:* = "", id:* = 0)
+        {
+            super(message, id);
+        }
+    }
 }

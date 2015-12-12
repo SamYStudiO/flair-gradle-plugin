@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.dragDrop
 {
 	import starling.events.Event;
@@ -38,7 +38,7 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_ENTER
 	 */
-	[Event(name="dragEnter" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragEnter",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * Dispatched when the touch moves within the drop target's bounds.
@@ -67,7 +67,7 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_MOVE
 	 */
-	[Event(name="dragMove" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragMove",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * Dispatched when the touch exits the drop target's bounds or when
@@ -99,7 +99,7 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_EXIT
 	 */
-	[Event(name="dragExit" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragExit",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * Dispatched when an accepted drag is dropped on the target. Will
@@ -130,17 +130,17 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_DROP
 	 */
-	[Event(name="dragDrop" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragDrop",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * A display object that can accept data dropped by the drag and drop
 	 * manager.
 	 *
 	 * @see DragDropManager
-	 */ public interface IDropTarget
+	 */
+	public interface IDropTarget
 	{
-		function dispatchEventWith( type : String , bubbles : Boolean = false , data : Object = null ) : void;
-
-		function dispatchEvent( event : Event ) : void;
+		function dispatchEvent(event:Event):void;
+		function dispatchEventWith(type:String, bubbles:Boolean = false, data:Object = null):void;
 	}
 }

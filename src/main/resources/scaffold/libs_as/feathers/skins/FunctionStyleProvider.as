@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import feathers.core.IFeathersControl;
@@ -30,9 +30,17 @@ package feathers.skins
 	public class FunctionStyleProvider implements IStyleProvider
 	{
 		/**
+		 * Constructor.
+		 */
+		public function FunctionStyleProvider(skinFunction:Function)
+		{
+			this._styleFunction = skinFunction;
+		}
+
+		/**
 		 * @private
 		 */
-		protected var _styleFunction : Function;
+		protected var _styleFunction:Function;
 
 		/**
 		 * The target Feathers UI component is passed to this function when
@@ -41,7 +49,7 @@ package feathers.skins
 		 * <p>The function is expected to have the following signature:</p>
 		 * <pre>function( item:IFeathersControl ):void</pre>
 		 */
-		public function get styleFunction() : Function
+		public function get styleFunction():Function
 		{
 			return this._styleFunction;
 		}
@@ -49,29 +57,21 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		public function set styleFunction( value : Function ) : void
+		public function set styleFunction(value:Function):void
 		{
 			this._styleFunction = value;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function FunctionStyleProvider( skinFunction : Function )
-		{
-			this._styleFunction = skinFunction;
-		}
-
-		/**
 		 * @inheritDoc
 		 */
-		public function applyStyles( target : IFeathersControl ) : void
+		public function applyStyles(target:IFeathersControl):void
 		{
-			if( this._styleFunction == null )
+			if(this._styleFunction == null)
 			{
 				return;
 			}
-			this._styleFunction( target );
+			this._styleFunction(target);
 		}
 	}
 }

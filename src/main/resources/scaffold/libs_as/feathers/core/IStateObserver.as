@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	/**
@@ -14,8 +14,7 @@ package feathers.core
 	 */
 	public interface IStateObserver
 	{
-		function get stateContext() : IStateContext;
-
-		function set stateContext( value : IStateContext ) : void;
+		function get stateContext():IStateContext;
+		function set stateContext(value:IStateContext):void;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.controls.ToggleButton;
@@ -42,7 +42,7 @@ package feathers.media
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open" , type="starling.events.Event")]
+	[Event(name="open",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the pop-up volume slider is closed.
@@ -64,7 +64,7 @@ package feathers.media
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * A specialized toggle button that controls whether a media player's volume
@@ -72,8 +72,22 @@ package feathers.media
 	 *
 	 * @see ../../../help/sound-player.html How to use the Feathers SoundPlayer component
 	 * @see ../../../help/video-player.html How to use the Feathers VideoPlayer component
-	 */ public class MuteToggleButton extends ToggleButton implements IMediaPlayerControl
+	 */
+	public class MuteToggleButton extends ToggleButton implements IMediaPlayerControl
 	{
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY:String = "volumeSliderFactory";
+		
+		/**
+		 * The default value added to the <code>styleNameList</code> of the
+		 * pop-up volume slider.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_VOLUME_SLIDER:String = "feathers-volume-toggle-button-volume-slider";
+		
 		/**
 		 * The default <code>IStyleProvider</code> for all
 		 * <code>MuteToggleButton</code> components.
@@ -81,21 +95,28 @@ package feathers.media
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
-		
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
 		 * @private
 		 */
-		protected static function defaultVolumeSliderFactory() : VolumeSlider
+		protected static function defaultVolumeSliderFactory():VolumeSlider
 		{
-			var slider : VolumeSlider = new VolumeSlider();
+			var slider:VolumeSlider = new VolumeSlider();
 			slider.direction = VolumeSlider.DIRECTION_VERTICAL;
 			return slider;
 		}
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected static const INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY : String = "volumeSliderFactory";
+		public function MuteToggleButton()
+		{
+			super();
+			this.addEventListener(Event.CHANGE, muteToggleButton_changeHandler);
+			this.addEventListener(TouchEvent.TOUCH, muteToggleButton_touchHandler);
+		}
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * pop-up volume slider. This variable is <code>protected</code> so that
@@ -109,47 +130,37 @@ package feathers.media
 		 * @see #customListStyleName
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var volumeSliderStyleName : String = DEFAULT_CHILD_STYLE_NAME_VOLUME_SLIDER;
-		/**
-		 * @private
-		 */
-		protected var slider : VolumeSlider;
-		/**
-		 * @private
-		 */
-		protected var _oldVolume : Number;
-		/**
-		 * @private
-		 */
-		protected var _ignoreChanges : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _popUpTouchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _isOpenPopUpPending : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _isClosePopUpPending : Boolean = false;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the
-		 * pop-up volume slider.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_VOLUME_SLIDER : String = "feathers-volume-toggle-button-volume-slider";
+		protected var volumeSliderStyleName:String = DEFAULT_CHILD_STYLE_NAME_VOLUME_SLIDER;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected var slider:VolumeSlider;
+
+		/**
+		 * @private
+		 */
+		protected var _oldVolume:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _ignoreChanges:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _popUpTouchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return MuteToggleButton.globalStyleProvider;
 		}
@@ -157,12 +168,12 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _mediaPlayer : IAudioPlayer;
+		protected var _mediaPlayer:IAudioPlayer;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get mediaPlayer() : IMediaPlayer
+		public function get mediaPlayer():IMediaPlayer
 		{
 			return this._mediaPlayer;
 		}
@@ -170,25 +181,25 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set mediaPlayer( value : IMediaPlayer ) : void
+		public function set mediaPlayer(value:IMediaPlayer):void
 		{
-			if( this._mediaPlayer == value )
+			if(this._mediaPlayer == value)
 			{
 				return;
 			}
 			this._mediaPlayer = value as IAudioPlayer;
 			this.refreshVolumeFromMediaPlayer();
-			if( this._mediaPlayer )
+			if(this._mediaPlayer)
 			{
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.SOUND_TRANSFORM_CHANGE , mediaPlayer_soundTransformChangeHandler );
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.SOUND_TRANSFORM_CHANGE, mediaPlayer_soundTransformChangeHandler);
 			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _popUpContentManager : IPopUpContentManager;
+		protected var _popUpContentManager:IPopUpContentManager;
 
 		/**
 		 * A manager that handles the details of how to display the pop-up
@@ -201,7 +212,7 @@ package feathers.media
 		 *
 		 * @default null
 		 */
-		public function get popUpContentManager() : IPopUpContentManager
+		public function get popUpContentManager():IPopUpContentManager
 		{
 			return this._popUpContentManager;
 		}
@@ -209,32 +220,32 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set popUpContentManager( value : IPopUpContentManager ) : void
+		public function set popUpContentManager(value:IPopUpContentManager):void
 		{
-			if( this._popUpContentManager == value )
+			if(this._popUpContentManager == value)
 			{
 				return;
 			}
-			if( this._popUpContentManager is EventDispatcher )
+			if(this._popUpContentManager is EventDispatcher)
 			{
-				var dispatcher : EventDispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.removeEventListener( Event.OPEN , popUpContentManager_openHandler );
-				dispatcher.removeEventListener( Event.CLOSE , popUpContentManager_closeHandler );
+				var dispatcher:EventDispatcher = EventDispatcher(this._popUpContentManager);
+				dispatcher.removeEventListener(Event.OPEN, popUpContentManager_openHandler);
+				dispatcher.removeEventListener(Event.CLOSE, popUpContentManager_closeHandler);
 			}
 			this._popUpContentManager = value;
-			if( this._popUpContentManager is EventDispatcher )
+			if(this._popUpContentManager is EventDispatcher)
 			{
-				dispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.addEventListener( Event.OPEN , popUpContentManager_openHandler );
-				dispatcher.addEventListener( Event.CLOSE , popUpContentManager_closeHandler );
+				dispatcher = EventDispatcher(this._popUpContentManager);
+				dispatcher.addEventListener(Event.OPEN, popUpContentManager_openHandler);
+				dispatcher.addEventListener(Event.CLOSE, popUpContentManager_closeHandler);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _showVolumeSliderOnHover : Boolean = false;
+		protected var _showVolumeSliderOnHover:Boolean = false;
 
 		/**
 		 * Determines if a <code>VolumeSlider</code> component is displayed as a
@@ -252,7 +263,7 @@ package feathers.media
 		 *
 		 * @see feathers.media.VolumeSlider
 		 */
-		public function get showVolumeSliderOnHover() : Boolean
+		public function get showVolumeSliderOnHover():Boolean
 		{
 			return this._showVolumeSliderOnHover;
 		}
@@ -260,20 +271,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set showVolumeSliderOnHover( value : Boolean ) : void
+		public function set showVolumeSliderOnHover(value:Boolean):void
 		{
-			if( this._showVolumeSliderOnHover == value )
+			if(this._showVolumeSliderOnHover == value)
 			{
 				return;
 			}
 			this._showVolumeSliderOnHover = value;
-			this.invalidate( INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _volumeSliderFactory : Function;
+		protected var _volumeSliderFactory:Function;
 
 		/**
 		 * A function used to generate the button's pop-up volume slider
@@ -304,7 +315,7 @@ package feathers.media
 		 * @see #showVolumeSliderOnHover
 		 * @see #volumeSliderProperties
 		 */
-		public function get volumeSliderFactory() : Function
+		public function get volumeSliderFactory():Function
 		{
 			return this._volumeSliderFactory;
 		}
@@ -312,20 +323,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set volumeSliderFactory( value : Function ) : void
+		public function set volumeSliderFactory(value:Function):void
 		{
-			if( this._volumeSliderFactory == value )
+			if(this._volumeSliderFactory == value)
 			{
 				return;
 			}
 			this._volumeSliderFactory = value;
-			this.invalidate( INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customVolumeSliderStyleName : String;
+		protected var _customVolumeSliderStyleName:String;
 
 		/**
 		 * A style name to add to the button's volume slider sub-component.
@@ -352,7 +363,7 @@ package feathers.media
 		 * @see #volumeSliderFactory
 		 * @see #volumeSliderProperties
 		 */
-		public function get customVolumeSliderStyleName() : String
+		public function get customVolumeSliderStyleName():String
 		{
 			return this._customVolumeSliderStyleName;
 		}
@@ -360,20 +371,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set customVolumeSliderStyleName( value : String ) : void
+		public function set customVolumeSliderStyleName(value:String):void
 		{
-			if( this._customVolumeSliderStyleName == value )
+			if(this._customVolumeSliderStyleName == value)
 			{
 				return;
 			}
 			this._customVolumeSliderStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _volumeSliderProperties : PropertyProxy;
+		protected var _volumeSliderProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the button's pop-up volume
@@ -403,11 +414,11 @@ package feathers.media
 		 * @see #volumeSliderFactory
 		 * @see feathers.media.VolumeSlider
 		 */
-		public function get volumeSliderProperties() : Object
+		public function get volumeSliderProperties():Object
 		{
-			if( !this._volumeSliderProperties )
+			if(!this._volumeSliderProperties)
 			{
-				this._volumeSliderProperties = new PropertyProxy( childProperties_onChange );
+				this._volumeSliderProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._volumeSliderProperties;
 		}
@@ -415,100 +426,80 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		public function set volumeSliderProperties( value : Object ) : void
+		public function set volumeSliderProperties(value:Object):void
 		{
-			if( this._volumeSliderProperties == value )
+			if(this._volumeSliderProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._volumeSliderProperties )
+			if(this._volumeSliderProperties)
 			{
-				this._volumeSliderProperties.removeOnChangeCallback( childProperties_onChange );
+				this._volumeSliderProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._volumeSliderProperties = PropertyProxy( value );
-			if( this._volumeSliderProperties )
+			this._volumeSliderProperties = PropertyProxy(value);
+			if(this._volumeSliderProperties)
 			{
-				this._volumeSliderProperties.addOnChangeCallback( childProperties_onChange );
+				this._volumeSliderProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function MuteToggleButton()
-		{
-			super();
-			this.addEventListener( Event.CHANGE , muteToggleButton_changeHandler );
-			this.addEventListener( TouchEvent.TOUCH , muteToggleButton_touchHandler );
-		}
+		protected var _isOpenPopUpPending:Boolean = false;
 
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
-		override public function dispose() : void
-		{
-			if( this.slider )
-			{
-				this.closePopUp();
-				this.slider.mediaPlayer = null;
-				this.slider.dispose();
-				this.slider = null;
-			}
-			if( this._popUpContentManager )
-			{
-				this._popUpContentManager.dispose();
-				this._popUpContentManager = null;
-			}
-			super.dispose();
-		}
+		protected var _isClosePopUpPending:Boolean = false;
 
 		/**
 		 * Opens the pop-up list, if it isn't already open.
 		 */
-		public function openPopUp() : void
+		public function openPopUp():void
 		{
 			this._isClosePopUpPending = false;
-			if( this._popUpContentManager.isOpen )
+			if(this._popUpContentManager.isOpen)
 			{
 				return;
 			}
-			if( !this._isValidating && this.isInvalid() )
+			if(!this._isValidating && this.isInvalid())
 			{
 				this._isOpenPopUpPending = true;
 				return;
 			}
 			this._isOpenPopUpPending = false;
-			this._popUpContentManager.open( this.slider , this );
+			this._popUpContentManager.open(this.slider, this);
 			this.slider.validate();
 			this._popUpTouchPointID = -1;
-			this.slider.addEventListener( TouchEvent.TOUCH , volumeSlider_touchHandler );
+			this.slider.addEventListener(TouchEvent.TOUCH, volumeSlider_touchHandler);
 		}
 
 		/**
 		 * Closes the pop-up list, if it is open.
 		 */
-		public function closePopUp() : void
+		public function closePopUp():void
 		{
 			this._isOpenPopUpPending = false;
-			if( !this._popUpContentManager.isOpen )
+			if(!this._popUpContentManager.isOpen)
 			{
 				return;
 			}
-			if( !this._isValidating && this.isInvalid() )
+			if(!this._isValidating && this.isInvalid())
 			{
 				this._isClosePopUpPending = true;
 				return;
@@ -523,13 +514,33 @@ package feathers.media
 		}
 
 		/**
+		 * @inheritDoc
+		 */
+		override public function dispose():void
+		{
+			if(this.slider)
+			{
+				this.closePopUp();
+				this.slider.mediaPlayer = null;
+				this.slider.dispose();
+				this.slider = null;
+			}
+			if(this._popUpContentManager)
+			{
+				this._popUpContentManager.dispose();
+				this._popUpContentManager = null;
+			}
+			super.dispose();
+		}
+
+		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( !this._popUpContentManager )
+			if(!this._popUpContentManager)
 			{
-				var popUpContentManager : DropDownPopUpContentManager = new DropDownPopUpContentManager();
+				var popUpContentManager:DropDownPopUpContentManager = new DropDownPopUpContentManager();
 				popUpContentManager.fitContentMinWidthToOrigin = false;
 				popUpContentManager.primaryDirection = DropDownPopUpContentManager.PRIMARY_DIRECTION_UP;
 				this.popUpContentManager = popUpContentManager;
@@ -539,23 +550,23 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var volumeSliderFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY );
-
-			if( volumeSliderFactoryInvalid )
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var volumeSliderFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_VOLUME_SLIDER_FACTORY);
+			
+			if(volumeSliderFactoryInvalid)
 			{
 				this.createVolumeSlider();
 			}
 
-			if( this.slider && (volumeSliderFactoryInvalid || stylesInvalid) )
+			if(this.slider && (volumeSliderFactoryInvalid || stylesInvalid))
 			{
 				this.refreshVolumeSliderProperties();
 			}
-
+			
 			super.draw();
-
+			
 			this.handlePendingActions();
 		}
 
@@ -570,36 +581,36 @@ package feathers.media
 		 * @see #listFactory
 		 * @see #customListStyleName
 		 */
-		protected function createVolumeSlider() : void
+		protected function createVolumeSlider():void
 		{
-			if( this.slider )
+			if(this.slider)
 			{
-				this.slider.removeFromParent( false );
+				this.slider.removeFromParent(false);
 				//disposing separately because the slider may not have a parent
 				this.slider.dispose();
 				this.slider = null;
 			}
-			if( !this._showVolumeSliderOnHover )
+			if(!this._showVolumeSliderOnHover)
 			{
 				return;
 			}
 
-			var factory : Function = this._volumeSliderFactory != null ? this._volumeSliderFactory : defaultVolumeSliderFactory;
-			var volumeSliderStyleName : String = this._customVolumeSliderStyleName != null ? this._customVolumeSliderStyleName : this.volumeSliderStyleName;
-			this.slider = VolumeSlider( factory() );
+			var factory:Function = this._volumeSliderFactory != null ? this._volumeSliderFactory : defaultVolumeSliderFactory;
+			var volumeSliderStyleName:String = this._customVolumeSliderStyleName != null ? this._customVolumeSliderStyleName : this.volumeSliderStyleName;
+			this.slider = VolumeSlider(factory());
 			this.slider.focusOwner = this;
-			this.slider.styleNameList.add( volumeSliderStyleName );
+			this.slider.styleNameList.add(volumeSliderStyleName);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshVolumeSliderProperties() : void
+		protected function refreshVolumeSliderProperties():void
 		{
-			for( var propertyName : String in this._volumeSliderProperties )
+			for(var propertyName:String in this._volumeSliderProperties)
 			{
-				var propertyValue : Object = this._volumeSliderProperties[ propertyName ];
-				this.slider[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._volumeSliderProperties[propertyName];
+				this.slider[propertyName] = propertyValue;
 			}
 			this.slider.mediaPlayer = this._mediaPlayer;
 		}
@@ -607,13 +618,13 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function handlePendingActions() : void
+		protected function handlePendingActions():void
 		{
-			if( this._isOpenPopUpPending )
+			if(this._isOpenPopUpPending)
 			{
 				this.openPopUp();
 			}
-			if( this._isClosePopUpPending )
+			if(this._isClosePopUpPending)
 			{
 				this.closePopUp();
 			}
@@ -622,11 +633,11 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function refreshVolumeFromMediaPlayer() : void
+		protected function refreshVolumeFromMediaPlayer():void
 		{
-			var oldIgnoreChanges : Boolean = this._ignoreChanges;
+			var oldIgnoreChanges:Boolean = this._ignoreChanges;
 			this._ignoreChanges = true;
-			if( this._mediaPlayer )
+			if(this._mediaPlayer)
 			{
 				this.isSelected = this._mediaPlayer.soundTransform.volume == 0;
 			}
@@ -640,7 +651,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_soundTransformChangeHandler( event : Event ) : void
+		protected function mediaPlayer_soundTransformChangeHandler(event:Event):void
 		{
 			this.refreshVolumeFromMediaPlayer();
 		}
@@ -648,17 +659,17 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function muteToggleButton_changeHandler( event : Event ) : void
+		protected function muteToggleButton_changeHandler(event:Event):void
 		{
-			if( this._ignoreChanges || !this._mediaPlayer )
+			if(this._ignoreChanges || !this._mediaPlayer)
 			{
 				return;
 			}
-			var soundTransform : SoundTransform = this._mediaPlayer.soundTransform;
-			if( this._isSelected )
+			var soundTransform:SoundTransform = this._mediaPlayer.soundTransform;
+			if(this._isSelected)
 			{
 				this._oldVolume = soundTransform.volume;
-				if( this._oldVolume === 0 )
+				if(this._oldVolume === 0)
 				{
 					this._oldVolume = 1;
 				}
@@ -667,8 +678,8 @@ package feathers.media
 			}
 			else
 			{
-				var newVolume : Number = this._oldVolume;
-				if( newVolume !== newVolume ) //isNaN
+				var newVolume:Number = this._oldVolume;
+				if(newVolume !== newVolume) //isNaN
 				{
 					//volume was already zero, so we should fall back to some
 					//default value
@@ -682,31 +693,31 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function muteToggleButton_touchHandler( event : TouchEvent ) : void
+		protected function muteToggleButton_touchHandler(event:TouchEvent):void
 		{
-			if( !this.slider )
+			if(!this.slider)
 			{
 				this._touchPointID = -1;
 				return;
 			}
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this , null , this._touchPointID );
-				if( touch )
+				var touch:Touch = event.getTouch(this, null, this._touchPointID);
+				if(touch)
 				{
 					return;
 				}
 				this._touchPointID = -1;
-				touch = event.getTouch( this.slider );
-				if( this._popUpTouchPointID < 0 && !touch )
+				touch = event.getTouch(this.slider);
+				if(this._popUpTouchPointID < 0 && !touch)
 				{
 					this.closePopUp();
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this , TouchPhase.HOVER );
-				if( !touch )
+				touch = event.getTouch(this, TouchPhase.HOVER);
+				if(!touch)
 				{
 					return;
 				}
@@ -718,26 +729,26 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function volumeSlider_touchHandler( event : TouchEvent ) : void
+		protected function volumeSlider_touchHandler(event:TouchEvent):void
 		{
-			if( this._popUpTouchPointID >= 0 )
+			if(this._popUpTouchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.slider , null , this._popUpTouchPointID );
-				if( touch )
+				var touch:Touch = event.getTouch(this.slider, null, this._popUpTouchPointID);
+				if(touch)
 				{
 					return;
 				}
 				this._popUpTouchPointID = -1;
-				touch = event.getTouch( this );
-				if( this._touchPointID < 0 && !touch )
+				touch = event.getTouch(this);
+				if(this._touchPointID < 0 && !touch)
 				{
 					this.closePopUp();
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this.slider , TouchPhase.HOVER );
-				if( !touch )
+				touch = event.getTouch(this.slider, TouchPhase.HOVER);
+				if(!touch)
 				{
 					return;
 				}
@@ -748,18 +759,18 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function popUpContentManager_openHandler( event : Event ) : void
+		protected function popUpContentManager_openHandler(event:Event):void
 		{
-			this.dispatchEventWith( Event.OPEN );
+			this.dispatchEventWith(Event.OPEN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function popUpContentManager_closeHandler( event : Event ) : void
+		protected function popUpContentManager_closeHandler(event:Event):void
 		{
-			this.slider.removeEventListener( TouchEvent.TOUCH , volumeSlider_touchHandler );
-			this.dispatchEventWith( Event.CLOSE );
+			this.slider.removeEventListener(TouchEvent.TOUCH, volumeSlider_touchHandler);
+			this.dispatchEventWith(Event.CLOSE);
 		}
 	}
 }

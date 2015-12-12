@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import feathers.core.IFeathersControl;
@@ -30,15 +30,24 @@ package feathers.skins
 	public class AddOnFunctionStyleProvider implements IStyleProvider
 	{
 		/**
+		 * Constructor.
+		 */
+		public function AddOnFunctionStyleProvider(originalStyleProvider:IStyleProvider = null, addOnFunction:Function = null)
+		{
+			this._originalStyleProvider = originalStyleProvider;
+			this._addOnFunction = addOnFunction;
+		}
+
+		/**
 		 * @private
 		 */
-		protected var _originalStyleProvider : IStyleProvider;
+		protected var _originalStyleProvider:IStyleProvider;
 
 		/**
 		 * The <code>addOnFunction</code> will be called after the original
 		 * style provider applies its styles.
 		 */
-		public function get originalStyleProvider() : IStyleProvider
+		public function get originalStyleProvider():IStyleProvider
 		{
 			return this._originalStyleProvider;
 		}
@@ -46,7 +55,7 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		public function set originalStyleProvider( value : IStyleProvider ) : void
+		public function set originalStyleProvider(value:IStyleProvider):void
 		{
 			this._originalStyleProvider = value;
 		}
@@ -54,7 +63,7 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		protected var _addOnFunction : Function;
+		protected var _addOnFunction:Function;
 
 		/**
 		 * A function to call after applying the original style provider's
@@ -63,7 +72,7 @@ package feathers.skins
 		 * <p>The function is expected to have the following signature:</p>
 		 * <pre>function( item:IFeathersControl ):void</pre>
 		 */
-		public function get addOnFunction() : Function
+		public function get addOnFunction():Function
 		{
 			return this._addOnFunction;
 		}
@@ -71,7 +80,7 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		public function set addOnFunction( value : Function ) : void
+		public function set addOnFunction(value:Function):void
 		{
 			this._addOnFunction = value;
 		}
@@ -79,7 +88,7 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		protected var _callBeforeOriginalStyleProvider : Boolean = false;
+		protected var _callBeforeOriginalStyleProvider:Boolean = false;
 
 		/**
 		 * Determines if the add on function should be called before the
@@ -87,7 +96,7 @@ package feathers.skins
 		 *
 		 * @default false
 		 */
-		public function get callBeforeOriginalStyleProvider() : Boolean
+		public function get callBeforeOriginalStyleProvider():Boolean
 		{
 			return this._callBeforeOriginalStyleProvider;
 		}
@@ -95,38 +104,30 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		public function set callBeforeOriginalStyleProvider( value : Boolean ) : void
+		public function set callBeforeOriginalStyleProvider(value:Boolean):void
 		{
 			this._callBeforeOriginalStyleProvider = value;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function AddOnFunctionStyleProvider( originalStyleProvider : IStyleProvider = null , addOnFunction : Function = null )
-		{
-			this._originalStyleProvider = originalStyleProvider;
-			this._addOnFunction = addOnFunction;
-		}
-
-		/**
 		 * @inheritDoc
 		 */
-		public function applyStyles( target : IFeathersControl ) : void
+		public function applyStyles(target:IFeathersControl):void
 		{
-			if( this._callBeforeOriginalStyleProvider && this._addOnFunction !== null )
+			if(this._callBeforeOriginalStyleProvider && this._addOnFunction !== null)
 			{
-				this._addOnFunction( target );
+				this._addOnFunction(target);
 			}
-			if( this._originalStyleProvider )
+			if(this._originalStyleProvider)
 			{
-				this._originalStyleProvider.applyStyles( target );
+				this._originalStyleProvider.applyStyles(target);
 			}
-			if( !this._callBeforeOriginalStyleProvider && this._addOnFunction !== null )
+			if(!this._callBeforeOriginalStyleProvider && this._addOnFunction !== null)
 			{
-				this._addOnFunction( target );
+				this._addOnFunction(target);
 			}
 		}
+
 
 	}
 }

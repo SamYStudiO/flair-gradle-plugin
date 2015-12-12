@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import flash.utils.Dictionary;
@@ -18,6 +18,59 @@ package feathers.core
 	 */
 	public class PopUpManager
 	{
+		/**
+		 * @private
+		 */
+		protected static const _starlingToPopUpManager:Dictionary = new Dictionary(true);
+
+		/**
+		 * The default factory that creates a pop-up manager.
+		 *
+		 * @see feathers.core.DefaultPopUpManager
+		 */
+		public static function defaultPopUpManagerFactory():IPopUpManager
+		{
+			return new DefaultPopUpManager();
+		}
+
+		/**
+		 * Returns the <code>IPopUpManager</code> associated with the specified
+		 * <code>Starling</code> instance. If a pop-up manager hasn't been
+		 * created yet, it will be created using <code>PopUpManager.popUpManagerFactory</code>.
+		 *
+		 * <p>In the following example, a pop-up is added:</p>
+		 *
+		 * <listing version="3.0">
+		 * PopUpManager.forStarling( Starling.current ).addPopUp( popUp );</listing>
+		 *
+		 * @see #popUpManagerFactory
+		 */
+		public static function forStarling(starling:Starling):IPopUpManager
+		{
+			if(!starling)
+			{
+				throw new ArgumentError("PopUpManager not found. Starling cannot be null.");
+			}
+			var popUpManager:IPopUpManager = _starlingToPopUpManager[starling];
+			if(!popUpManager)
+			{
+				var factory:Function = PopUpManager.popUpManagerFactory;
+				if(factory === null)
+				{
+					factory = PopUpManager.defaultPopUpManagerFactory;
+				}
+				popUpManager = factory();
+				//this allows the factory to optionally set the root, but it
+				//also enforces the root being on the correct stage.
+				if(!popUpManager.root || !starling.stage.contains(popUpManager.root))
+				{
+					popUpManager.root = Starling.current.stage;
+				}
+				PopUpManager._starlingToPopUpManager[starling] = popUpManager;
+			}
+			return popUpManager;
+		}
+
 		/**
 		 * A function that creates a pop-up manager.
 		 *
@@ -41,8 +94,8 @@ package feathers.core
 		 *
 		 * @see feathers.core.IPopUpManager
 		 */
-		public static var popUpManagerFactory : Function = defaultPopUpManagerFactory;
-
+		public static var popUpManagerFactory:Function = defaultPopUpManagerFactory;
+		
 		/**
 		 * A function that returns a display object to use as an overlay for
 		 * modal pop-ups.
@@ -60,17 +113,28 @@ package feathers.core
 		 *     return overlay;
 		 * };</listing>
 		 */
-		public static function get overlayFactory() : Function
+		public static function get overlayFactory():Function
 		{
-			return PopUpManager.forStarling( Starling.current ).overlayFactory;
+			return PopUpManager.forStarling(Starling.current).overlayFactory;
 		}
 
 		/**
 		 * @private
 		 */
-		public static function set overlayFactory( value : Function ) : void
+		public static function set overlayFactory(value:Function):void
 		{
-			PopUpManager.forStarling( Starling.current ).overlayFactory = value;
+			PopUpManager.forStarling(Starling.current).overlayFactory = value;
+		}
+
+		/**
+		 * The default factory that creates overlays for modal pop-ups. Creates
+		 * an invisible <code>Quad</code>.
+		 *
+		 * @see http://doc.starling-framework.org/core/starling/display/Quad.html starling.display.Quad
+		 */
+		public static function defaultOverlayFactory():DisplayObject
+		{
+			return DefaultPopUpManager.defaultOverlayFactory();
 		}
 
 		/**
@@ -84,78 +148,19 @@ package feathers.core
 		 *
 		 * @default null
 		 */
-		public static function get root() : DisplayObjectContainer
+		public static function get root():DisplayObjectContainer
 		{
-			return PopUpManager.forStarling( Starling.current ).root;
+			return PopUpManager.forStarling(Starling.current).root;
 		}
 
 		/**
 		 * @private
 		 */
-		public static function set root( value : DisplayObjectContainer ) : void
+		public static function set root(value:DisplayObjectContainer):void
 		{
-			PopUpManager.forStarling( Starling.current ).root = value;
+			PopUpManager.forStarling(Starling.current).root = value;
 		}
-
-		/**
-		 * The default factory that creates a pop-up manager.
-		 *
-		 * @see feathers.core.DefaultPopUpManager
-		 */
-		public static function defaultPopUpManagerFactory() : IPopUpManager
-		{
-			return new DefaultPopUpManager();
-		}
-
-		/**
-		 * Returns the <code>IPopUpManager</code> associated with the specified
-		 * <code>Starling</code> instance. If a pop-up manager hasn't been
-		 * created yet, it will be created using <code>PopUpManager.popUpManagerFactory</code>.
-		 *
-		 * <p>In the following example, a pop-up is added:</p>
-		 *
-		 * <listing version="3.0">
-		 * PopUpManager.forStarling( Starling.current ).addPopUp( popUp );</listing>
-		 *
-		 * @see #popUpManagerFactory
-		 */
-		public static function forStarling( starling : Starling ) : IPopUpManager
-		{
-			if( !starling )
-			{
-				throw new ArgumentError( "PopUpManager not found. Starling cannot be null." );
-			}
-			var popUpManager : IPopUpManager = _starlingToPopUpManager[ starling ];
-			if( !popUpManager )
-			{
-				var factory : Function = PopUpManager.popUpManagerFactory;
-				if( factory === null )
-				{
-					factory = PopUpManager.defaultPopUpManagerFactory;
-				}
-				popUpManager = factory();
-				//this allows the factory to optionally set the root, but it
-				//also enforces the root being on the correct stage.
-				if( !popUpManager.root || !starling.stage.contains( popUpManager.root ) )
-				{
-					popUpManager.root = Starling.current.stage;
-				}
-				PopUpManager._starlingToPopUpManager[ starling ] = popUpManager;
-			}
-			return popUpManager;
-		}
-
-		/**
-		 * The default factory that creates overlays for modal pop-ups. Creates
-		 * an invisible <code>Quad</code>.
-		 *
-		 * @see http://doc.starling-framework.org/core/starling/display/Quad.html starling.display.Quad
-		 */
-		public static function defaultOverlayFactory() : DisplayObject
-		{
-			return DefaultPopUpManager.defaultOverlayFactory();
-		}
-
+		
 		/**
 		 * Adds a pop-up to the stage.
 		 *
@@ -178,17 +183,17 @@ package feathers.core
 		 * Regular Starling display objects do not dispatch a proper resize
 		 * event that the pop-up manager can listen to.</p>
 		 */
-		public static function addPopUp( popUp : DisplayObject , isModal : Boolean = true , isCentered : Boolean = true , customOverlayFactory : Function = null ) : DisplayObject
+		public static function addPopUp(popUp:DisplayObject, isModal:Boolean = true, isCentered:Boolean = true, customOverlayFactory:Function = null):DisplayObject
 		{
-			return PopUpManager.forStarling( Starling.current ).addPopUp( popUp , isModal , isCentered , customOverlayFactory );
+			return PopUpManager.forStarling(Starling.current).addPopUp(popUp, isModal, isCentered, customOverlayFactory);
 		}
-
+		
 		/**
 		 * Removes a pop-up from the stage.
 		 */
-		public static function removePopUp( popUp : DisplayObject , dispose : Boolean = false ) : DisplayObject
+		public static function removePopUp(popUp:DisplayObject, dispose:Boolean = false):DisplayObject
 		{
-			return PopUpManager.forStarling( Starling.current ).removePopUp( popUp , dispose );
+			return PopUpManager.forStarling(Starling.current).removePopUp(popUp, dispose);
 		}
 
 		/**
@@ -202,20 +207,20 @@ package feathers.core
 		 *     // do something
 		 * }</listing>
 		 */
-		public static function isPopUp( popUp : DisplayObject ) : Boolean
+		public static function isPopUp(popUp:DisplayObject):Boolean
 		{
-			return PopUpManager.forStarling( Starling.current ).isPopUp( popUp );
+			return PopUpManager.forStarling(Starling.current).isPopUp(popUp);
 		}
 
 		/**
 		 * Determines if a pop-up is above the highest overlay (of if there is
 		 * no overlay).
 		 */
-		public static function isTopLevelPopUp( popUp : DisplayObject ) : Boolean
+		public static function isTopLevelPopUp(popUp:DisplayObject):Boolean
 		{
-			return PopUpManager.forStarling( Starling.current ).isTopLevelPopUp( popUp );
+			return PopUpManager.forStarling(Starling.current).isTopLevelPopUp(popUp);
 		}
-
+		
 		/**
 		 * Centers a pop-up on the stage. Unlike the <code>isCentered</code>
 		 * argument passed to <code>PopUpManager.addPopUp()</code>, the pop-up
@@ -228,13 +233,9 @@ package feathers.core
 		 * <listing version="3.0">
 		 * PopUpManager.centerPopUp( displayObject );</listing>
 		 */
-		public static function centerPopUp( popUp : DisplayObject ) : void
+		public static function centerPopUp(popUp:DisplayObject):void
 		{
-			PopUpManager.forStarling( Starling.current ).centerPopUp( popUp );
+			PopUpManager.forStarling(Starling.current).centerPopUp(popUp);
 		}
-		/**
-		 * @private
-		 */
-		protected static const _starlingToPopUpManager : Dictionary = new Dictionary( true );
 	}
 }

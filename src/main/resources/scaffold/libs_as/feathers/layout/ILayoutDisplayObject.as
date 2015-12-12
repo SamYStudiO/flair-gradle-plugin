@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.layout
 {
 	import feathers.core.IFeathersDisplayObject;
@@ -14,23 +14,24 @@ package feathers.layout
 	 *
 	 * @eventType feathers.events.FeathersEventType.LAYOUT_DATA_CHANGE
 	 */
-	[Event(name="layoutDataChange" , type="starling.events.Event")]
+	[Event(name="layoutDataChange",type="starling.events.Event")]
 
 	/**
 	 * A display object that may be associated with extra data for use with
 	 * advanced layouts.
-	 */ public interface ILayoutDisplayObject extends IFeathersDisplayObject
+	 */
+	public interface ILayoutDisplayObject extends IFeathersDisplayObject
 	{
 		/**
 		 * Extra parameters associated with this display object that will be
 		 * used by the layout algorithm.
 		 */
-		function get layoutData() : ILayoutData;
+		function get layoutData():ILayoutData;
 
 		/**
 		 * @private
 		 */
-		function set layoutData( value : ILayoutData ) : void;
+		function set layoutData(value:ILayoutData):void;
 
 		/**
 		 * Determines if the ILayout should use this object or ignore it.
@@ -41,11 +42,11 @@ package feathers.layout
 		 * <listing version="3.0">
 		 * object.includeInLayout = false;</listing>
 		 */
-		function get includeInLayout() : Boolean;
+		function get includeInLayout():Boolean;
 
 		/**
 		 * @private
 		 */
-		function set includeInLayout( value : Boolean ) : void;
+		function set includeInLayout(value:Boolean):void;
 	}
 }

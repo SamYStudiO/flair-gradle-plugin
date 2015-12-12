@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.IScreenNavigatorItem;
@@ -40,9 +40,28 @@ package feathers.controls
 	public class StackScreenNavigatorItem implements IScreenNavigatorItem
 	{
 		/**
+		 * Constructor.
+		 *
+		 * @param screen The screen to display. Must be a <code>Class</code>, <code>Function</code>, or Starling display object.
+		 * @param pushEvents The screen navigator push a new screen when these events are dispatched.
+		 * @param popEvent An event that pops the screen from the top of the stack.
+		 * @param properties A set of key-value pairs to pass to the screen when it is shown.
+		 */
+		public function StackScreenNavigatorItem(screen:Object = null, pushEvents:Object = null, popEvent:String = null, properties:Object = null)
+		{
+			this._screen = screen;
+			this._pushEvents = pushEvents ? pushEvents : {};
+			if(popEvent)
+			{
+				this.addPopEvent(popEvent);
+			}
+			this._properties = properties ? properties : {};
+		}
+
+		/**
 		 * @private
 		 */
-		protected var _screen : Object;
+		protected var _screen:Object;
 
 		/**
 		 * The screen to be displayed by the <code>ScreenNavigator</code>. It
@@ -69,7 +88,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get screen() : Object
+		public function get screen():Object
 		{
 			return this._screen;
 		}
@@ -77,7 +96,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set screen( value : Object ) : void
+		public function set screen(value:Object):void
 		{
 			this._screen = value;
 		}
@@ -85,7 +104,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _pushEvents : Object;
+		protected var _pushEvents:Object;
 
 		/**
 		 * A set of key-value pairs representing actions that should be
@@ -101,7 +120,7 @@ package feathers.controls
 		 * @see #setFunctionForPushEvent()
 		 * @see #setScreenIDForPushEvent()
 		 */
-		public function get pushEvents() : Object
+		public function get pushEvents():Object
 		{
 			return this._pushEvents;
 		}
@@ -109,9 +128,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set pushEvents( value : Object ) : void
+		public function set pushEvents(value:Object):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = {};
 			}
@@ -121,7 +140,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _replaceEvents : Object;
+		protected var _replaceEvents:Object;
 
 		/**
 		 * A set of key-value pairs representing actions that should be
@@ -133,7 +152,7 @@ package feathers.controls
 		 *
 		 * @see #setScreenIDForReplaceEvent()
 		 */
-		public function get replaceEvents() : Object
+		public function get replaceEvents():Object
 		{
 			return this._replaceEvents;
 		}
@@ -141,9 +160,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set replaceEvents( value : Object ) : void
+		public function set replaceEvents(value:Object):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = {};
 			}
@@ -153,7 +172,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _popEvents : Vector.<String>;
+		protected var _popEvents:Vector.<String>;
 
 		/**
 		 * A list of events that will cause the screen navigator to pop this
@@ -162,7 +181,7 @@ package feathers.controls
 		 * @see #addPopEvent()
 		 * @see #removePopEvent()
 		 */
-		public function get popEvents() : Vector.<String>
+		public function get popEvents():Vector.<String>
 		{
 			return this._popEvents;
 		}
@@ -170,9 +189,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set popEvents( value : Vector.<String> ) : void
+		public function set popEvents(value:Vector.<String>):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = new <String>[];
 			}
@@ -182,7 +201,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _popToRootEvents : Vector.<String>;
+		protected var _popToRootEvents:Vector.<String>;
 
 		/**
 		 * A list of events that will cause the screen navigator to clear its
@@ -191,7 +210,7 @@ package feathers.controls
 		 * @see #addPopToRootEvent()
 		 * @see #removePopToRootEvent()
 		 */
-		public function get popToRootEvents() : Vector.<String>
+		public function get popToRootEvents():Vector.<String>
 		{
 			return this._popToRootEvents;
 		}
@@ -199,7 +218,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set popToRootEvents( value : Vector.<String> ) : void
+		public function set popToRootEvents(value:Vector.<String>):void
 		{
 			this._popToRootEvents = value;
 		}
@@ -207,7 +226,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _properties : Object;
+		protected var _properties:Object;
 
 		/**
 		 * A set of key-value pairs representing properties to be set on the
@@ -215,7 +234,7 @@ package feathers.controls
 		 * property, and a pair's value is the value to be passed to the
 		 * screen's property.
 		 */
-		public function get properties() : Object
+		public function get properties():Object
 		{
 			return this._properties;
 		}
@@ -223,9 +242,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set properties( value : Object ) : void
+		public function set properties(value:Object):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = {};
 			}
@@ -235,7 +254,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _pushTransition : Function;
+		protected var _pushTransition:Function;
 
 		/**
 		 * A custom push transition for this screen only. If <code>null</code>,
@@ -283,7 +302,7 @@ package feathers.controls
 		 * @see feathers.controls.StackScreenNavigator#pushTransition
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get pushTransition() : Function
+		public function get pushTransition():Function
 		{
 			return this._pushTransition;
 		}
@@ -291,7 +310,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set pushTransition( value : Function ) : void
+		public function set pushTransition(value:Function):void
 		{
 			this._pushTransition = value;
 		}
@@ -299,7 +318,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _popTransition : Function;
+		protected var _popTransition:Function;
 
 		/**
 		 * A custom pop transition for this screen only. If <code>null</code>,
@@ -347,7 +366,7 @@ package feathers.controls
 		 * @see feathers.controls.StackScreenNavigator#popTransition
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get popTransition() : Function
+		public function get popTransition():Function
 		{
 			return this._popTransition;
 		}
@@ -355,7 +374,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set popTransition( value : Function ) : void
+		public function set popTransition(value:Function):void
 		{
 			this._popTransition = value;
 		}
@@ -363,28 +382,9 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function get canDispose() : Boolean
+		public function get canDispose():Boolean
 		{
 			return !(this._screen is DisplayObject);
-		}
-
-		/**
-		 * Constructor.
-		 *
-		 * @param screen The screen to display. Must be a <code>Class</code>, <code>Function</code>, or Starling display object.
-		 * @param pushEvents The screen navigator push a new screen when these events are dispatched.
-		 * @param popEvent An event that pops the screen from the top of the stack.
-		 * @param properties A set of key-value pairs to pass to the screen when it is shown.
-		 */
-		public function StackScreenNavigatorItem( screen : Object = null , pushEvents : Object = null , popEvent : String = null , properties : Object = null )
-		{
-			this._screen = screen;
-			this._pushEvents = pushEvents ? pushEvents : {};
-			if( popEvent )
-			{
-				this.addPopEvent( popEvent );
-			}
-			this._properties = properties ? properties : {};
 		}
 
 		/**
@@ -401,9 +401,9 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setFunctionForPushEvent( eventType : String , action : Function ) : void
+		public function setFunctionForPushEvent(eventType:String, action:Function):void
 		{
-			this._pushEvents[ eventType ] = action;
+			this._pushEvents[eventType] = action;
 		}
 
 		/**
@@ -422,9 +422,9 @@ package feathers.controls
 		 * @see #clearPushEvent()
 		 * @see #pushEvents
 		 */
-		public function setScreenIDForPushEvent( eventType : String , screenID : String ) : void
+		public function setScreenIDForPushEvent(eventType:String, screenID:String):void
 		{
-			this._pushEvents[ eventType ] = screenID;
+			this._pushEvents[eventType] = screenID;
 		}
 
 		/**
@@ -433,9 +433,9 @@ package feathers.controls
 		 *
 		 * @see #pushEvents
 		 */
-		public function clearPushEvent( eventType : String ) : void
+		public function clearPushEvent(eventType:String):void
 		{
-			delete this._pushEvents[ eventType ];
+			delete this._pushEvents[eventType];
 		}
 
 		/**
@@ -453,13 +453,13 @@ package feathers.controls
 		 * @see #clearReplaceEvent()
 		 * @see #replaceEvents
 		 */
-		public function setScreenIDForReplaceEvent( eventType : String , screenID : String ) : void
+		public function setScreenIDForReplaceEvent(eventType:String, screenID:String):void
 		{
-			if( !this._replaceEvents )
+			if(!this._replaceEvents)
 			{
 				this._replaceEvents = {};
 			}
-			this._replaceEvents[ eventType ] = screenID;
+			this._replaceEvents[eventType] = screenID;
 		}
 
 		/**
@@ -468,13 +468,13 @@ package feathers.controls
 		 *
 		 * @see #replaceEvents
 		 */
-		public function clearReplaceEvent( eventType : String ) : void
+		public function clearReplaceEvent(eventType:String):void
 		{
-			if( !this._replaceEvents )
+			if(!this._replaceEvents)
 			{
 				return;
 			}
-			delete this._replaceEvents[ eventType ];
+			delete this._replaceEvents[eventType];
 		}
 
 		/**
@@ -491,18 +491,18 @@ package feathers.controls
 		 * @see #removePopEvent()
 		 * @see #popEvents
 		 */
-		public function addPopEvent( eventType : String ) : void
+		public function addPopEvent(eventType:String):void
 		{
-			if( !this._popEvents )
+			if(!this._popEvents)
 			{
 				this._popEvents = new <String>[];
 			}
-			var index : int = this._popEvents.indexOf( eventType );
-			if( index >= 0 )
+			var index:int = this._popEvents.indexOf(eventType);
+			if(index >= 0)
 			{
 				return;
 			}
-			this._popEvents[ this._popEvents.length ] = eventType;
+			this._popEvents[this._popEvents.length] = eventType;
 		}
 
 		/**
@@ -519,18 +519,18 @@ package feathers.controls
 		 * @see #addPopEvent()
 		 * @see #popEvents
 		 */
-		public function removePopEvent( eventType : String ) : void
+		public function removePopEvent(eventType:String):void
 		{
-			if( !this._popEvents )
+			if(!this._popEvents)
 			{
 				return;
 			}
-			var index : int = this._popEvents.indexOf( eventType );
-			if( index >= 0 )
+			var index:int = this._popEvents.indexOf(eventType);
+			if(index >= 0)
 			{
 				return;
 			}
-			this._popEvents.splice( index , 1 );
+			this._popEvents.splice(index, 1);
 		}
 
 		/**
@@ -547,18 +547,18 @@ package feathers.controls
 		 * @see #removePopToRootEvent()
 		 * @see #popToRootEvents
 		 */
-		public function addPopToRootEvent( eventType : String ) : void
+		public function addPopToRootEvent(eventType:String):void
 		{
-			if( !this._popToRootEvents )
+			if(!this._popToRootEvents)
 			{
 				this._popToRootEvents = new <String>[];
 			}
-			var index : int = this._popToRootEvents.indexOf( eventType );
-			if( index >= 0 )
+			var index:int = this._popToRootEvents.indexOf(eventType);
+			if(index >= 0)
 			{
 				return;
 			}
-			this._popToRootEvents[ this._popToRootEvents.length ] = eventType;
+			this._popToRootEvents[this._popToRootEvents.length] = eventType;
 		}
 
 		/**
@@ -575,48 +575,48 @@ package feathers.controls
 		 * @see #addPopToRootEvent()
 		 * @see #popToRootEvents
 		 */
-		public function removePopToRootEvent( eventType : String ) : void
+		public function removePopToRootEvent(eventType:String):void
 		{
-			if( !this._popToRootEvents )
+			if(!this._popToRootEvents)
 			{
 				return;
 			}
-			var index : int = this._popToRootEvents.indexOf( eventType );
-			if( index >= 0 )
+			var index:int = this._popToRootEvents.indexOf(eventType);
+			if(index >= 0)
 			{
 				return;
 			}
-			this._popToRootEvents.splice( index , 1 );
+			this._popToRootEvents.splice(index, 1);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function getScreen() : DisplayObject
+		public function getScreen():DisplayObject
 		{
-			var screenInstance : DisplayObject;
-			if( this._screen is Class )
+			var screenInstance:DisplayObject;
+			if(this._screen is Class)
 			{
-				var ScreenType : Class = Class( this._screen );
+				var ScreenType:Class = Class(this._screen);
 				screenInstance = new ScreenType();
 			}
-			else if( this._screen is Function )
+			else if(this._screen is Function)
 			{
-				screenInstance = DisplayObject( (this._screen as Function)() );
+				screenInstance = DisplayObject((this._screen as Function)());
 			}
 			else
 			{
-				screenInstance = DisplayObject( this._screen );
+				screenInstance = DisplayObject(this._screen);
 			}
-			if( !(screenInstance is DisplayObject) )
+			if(!(screenInstance is DisplayObject))
 			{
-				throw new ArgumentError( "StackScreenNavigatorItem \"getScreen()\" must return a Starling display object." );
+				throw new ArgumentError("StackScreenNavigatorItem \"getScreen()\" must return a Starling display object.");
 			}
-			if( this._properties )
+			if(this._properties)
 			{
-				for( var propertyName : String in this._properties )
+				for(var propertyName:String in this._properties)
 				{
-					screenInstance[ propertyName ] = this._properties[ propertyName ];
+					screenInstance[propertyName] = this._properties[propertyName];
 				}
 			}
 

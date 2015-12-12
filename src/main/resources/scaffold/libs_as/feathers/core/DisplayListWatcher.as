@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import flash.utils.Dictionary;
@@ -81,35 +81,16 @@ package feathers.core
 	public class DisplayListWatcher extends EventDispatcher
 	{
 		/**
-		 * @private
-		 * Tracks the objects that have been initialized. Uses weak keys so that
-		 * the tracked objects can be garbage collected.
+		 * Constructor.
+		 *
+		 * @param topLevelContainer		The root display object to watch (not necessarily Starling's stage or root object)
 		 */
-		protected var initializedObjects : Dictionary = new Dictionary( true );
-		/**
-		 * The root of the display list that is watched for added children.
-		 */
-		protected var root : DisplayObjectContainer;
-		/**
-		 * @private
-		 */
-		protected var _initializerNoNameTypeMap : Dictionary = new Dictionary( true );
-		/**
-		 * @private
-		 */
-		protected var _initializerNameTypeMap : Dictionary = new Dictionary( true );
-		/**
-		 * @private
-		 */
-		protected var _initializerSuperTypeMap : Dictionary = new Dictionary( true );
-		/**
-		 * @private
-		 */
-		protected var _initializerSuperTypes : Vector.<Class> = new <Class>[];
-		/**
-		 * @private
-		 */
-		protected var _excludedObjects : Vector.<DisplayObject>;
+		public function DisplayListWatcher(topLevelContainer:DisplayObjectContainer)
+		{
+			this.root = topLevelContainer;
+			this.root.addEventListener(Event.ADDED, addedHandler);
+		}
+		
 		/**
 		 * The minimum base class required before the AddedWatcher will check
 		 * to see if a particular display object has any initializers.
@@ -121,7 +102,8 @@ package feathers.core
 		 *
 		 * @default feathers.core.IFeathersControl
 		 */
-		public var requiredBaseClass : Class = IFeathersControl;
+		public var requiredBaseClass:Class = IFeathersControl;
+
 		/**
 		 * Determines if only the object added should be processed or if its
 		 * children should be processed recursively. Disabling this property
@@ -135,12 +117,19 @@ package feathers.core
 		 *
 		 * @default true
 		 */
-		public var processRecursively : Boolean = true;
+		public var processRecursively:Boolean = true;
+
+		/**
+		 * @private
+		 * Tracks the objects that have been initialized. Uses weak keys so that
+		 * the tracked objects can be garbage collected.
+		 */
+		protected var initializedObjects:Dictionary = new Dictionary(true);
 
 		/**
 		 * @private
 		 */
-		protected var _initializeOnce : Boolean = true;
+		protected var _initializeOnce:Boolean = true;
 
 		/**
 		 * Determines if objects added to the display list are initialized only
@@ -152,7 +141,7 @@ package feathers.core
 		 *
 		 * @default true
 		 */
-		public function get initializeOnce() : Boolean
+		public function get initializeOnce():Boolean
 		{
 			return this._initializeOnce;
 		}
@@ -160,16 +149,16 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		public function set initializeOnce( value : Boolean ) : void
+		public function set initializeOnce(value:Boolean):void
 		{
-			if( this._initializeOnce == value )
+			if(this._initializeOnce == value)
 			{
 				return;
 			}
 			this._initializeOnce = value;
-			if( value )
+			if(value)
 			{
-				this.initializedObjects = new Dictionary( true );
+				this.initializedObjects = new Dictionary(true);
 			}
 			else
 			{
@@ -178,48 +167,67 @@ package feathers.core
 		}
 
 		/**
-		 * Constructor.
-		 *
-		 * @param topLevelContainer        The root display object to watch (not necessarily Starling's stage or root object)
+		 * The root of the display list that is watched for added children.
 		 */
-		public function DisplayListWatcher( topLevelContainer : DisplayObjectContainer )
-		{
-			this.root = topLevelContainer;
-			this.root.addEventListener( Event.ADDED , addedHandler );
-		}
+		protected var root:DisplayObjectContainer;
+
+		/**
+		 * @private
+		 */
+		protected var _initializerNoNameTypeMap:Dictionary = new Dictionary(true);
+
+		/**
+		 * @private
+		 */
+		protected var _initializerNameTypeMap:Dictionary = new Dictionary(true);
+
+		/**
+		 * @private
+		 */
+		protected var _initializerSuperTypeMap:Dictionary = new Dictionary(true);
+
+		/**
+		 * @private
+		 */
+		protected var _initializerSuperTypes:Vector.<Class> = new <Class>[];
+
+		/**
+		 * @private
+		 */
+		protected var _excludedObjects:Vector.<DisplayObject>;
 
 		/**
 		 * Stops listening to the root and cleans up anything else that needs to
 		 * be disposed. If a <code>DisplayListWatcher</code> is extended for a
 		 * theme, it should also dispose textures and other assets.
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
-			if( this.root )
+			if(this.root)
 			{
-				this.root.removeEventListener( Event.ADDED , addedHandler );
+				this.root.removeEventListener(Event.ADDED, addedHandler);
 				this.root = null;
 			}
-			if( this._excludedObjects )
+			if(this._excludedObjects)
 			{
 				this._excludedObjects.length = 0;
 				this._excludedObjects = null;
 			}
-			for( var key : Object in this.initializedObjects )
+			for(var key:Object in this.initializedObjects)
 			{
-				delete this.initializedObjects[ key ];
+				delete this.initializedObjects[key];
 			}
-			for( key in this._initializerNameTypeMap )
+			for(key in this._initializerNameTypeMap)
 			{
-				delete this._initializerNameTypeMap[ key ];
+				delete this._initializerNameTypeMap[key];
 			}
-			for( key in this._initializerNoNameTypeMap )
+			for(key in this._initializerNoNameTypeMap)
 			{
-				delete this._initializerNoNameTypeMap[ key ];
+				delete this._initializerNoNameTypeMap[key];
 			}
-			for( key in this._initializerSuperTypeMap )
+			for(key in this._initializerSuperTypeMap)
 			{
-				delete this._initializerSuperTypeMap[ key ];
+				delete this._initializerSuperTypeMap[key];
 			}
 			this._initializerSuperTypes.length = 0;
 		}
@@ -228,13 +236,13 @@ package feathers.core
 		 * Excludes a display object, and all if its children (if any) from
 		 * being watched.
 		 */
-		public function exclude( target : DisplayObject ) : void
+		public function exclude(target:DisplayObject):void
 		{
-			if( !this._excludedObjects )
+			if(!this._excludedObjects)
 			{
 				this._excludedObjects = new <DisplayObject>[];
 			}
-			this._excludedObjects.push( target );
+			this._excludedObjects.push(target);
 		}
 
 		/**
@@ -248,121 +256,121 @@ package feathers.core
 		 *     // this display object won't be processed by the watcher
 		 * }</listing>
 		 */
-		public function isExcluded( target : DisplayObject ) : Boolean
+		public function isExcluded(target:DisplayObject):Boolean
 		{
-			if( !this._excludedObjects )
+			if(!this._excludedObjects)
 			{
 				return false;
 			}
 
-			var objectCount : int = this._excludedObjects.length;
-			for( var i : int = 0; i < objectCount; i++ )
+			var objectCount:int = this._excludedObjects.length;
+			for(var i:int = 0; i < objectCount; i++)
 			{
-				var object : DisplayObject = this._excludedObjects[ i ];
-				if( object is DisplayObjectContainer )
+				var object:DisplayObject = this._excludedObjects[i];
+				if(object is DisplayObjectContainer)
 				{
-					if( DisplayObjectContainer( object ).contains( target ) )
+					if(DisplayObjectContainer(object).contains(target))
 					{
 						return true;
 					}
 				}
-				else if( object == target )
+				else if(object == target)
 				{
 					return true;
 				}
 			}
 			return false;
 		}
-
+		
 		/**
 		 * Sets the initializer for a specific class.
 		 */
-		public function setInitializerForClass( type : Class , initializer : Function , withName : String = null ) : void
+		public function setInitializerForClass(type:Class, initializer:Function, withName:String = null):void
 		{
-			if( !withName )
+			if(!withName)
 			{
-				this._initializerNoNameTypeMap[ type ] = initializer;
+				this._initializerNoNameTypeMap[type] = initializer;
 				return;
 			}
-			var nameTable : Object = this._initializerNameTypeMap[ type ];
-			if( !nameTable )
+			var nameTable:Object = this._initializerNameTypeMap[type];
+			if(!nameTable)
 			{
-				this._initializerNameTypeMap[ type ] = nameTable = {};
+				this._initializerNameTypeMap[type] = nameTable = {};
 			}
-			nameTable[ withName ] = initializer;
+			nameTable[withName] = initializer;
 		}
 
 		/**
 		 * Sets an initializer for a specific class and any subclasses. This
 		 * option can potentially hurt performance, so use sparingly.
 		 */
-		public function setInitializerForClassAndSubclasses( type : Class , initializer : Function ) : void
+		public function setInitializerForClassAndSubclasses(type:Class, initializer:Function):void
 		{
-			var index : int = this._initializerSuperTypes.indexOf( type );
-			if( index < 0 )
+			var index:int = this._initializerSuperTypes.indexOf(type);
+			if(index < 0)
 			{
-				this._initializerSuperTypes.push( type );
+				this._initializerSuperTypes.push(type);
 			}
-			this._initializerSuperTypeMap[ type ] = initializer;
+			this._initializerSuperTypeMap[type] = initializer;
 		}
-
+		
 		/**
 		 * If an initializer exists for a specific class, it will be returned.
 		 */
-		public function getInitializerForClass( type : Class , withName : String = null ) : Function
+		public function getInitializerForClass(type:Class, withName:String = null):Function
 		{
-			if( !withName )
+			if(!withName)
 			{
-				return this._initializerNoNameTypeMap[ type ] as Function;
+				return this._initializerNoNameTypeMap[type] as Function;
 			}
-			var nameTable : Object = this._initializerNameTypeMap[ type ];
-			if( !nameTable )
+			var nameTable:Object = this._initializerNameTypeMap[type];
+			if(!nameTable)
 			{
 				return null;
 			}
-			return nameTable[ withName ] as Function;
+			return nameTable[withName] as Function;
 		}
 
 		/**
 		 * If an initializer exists for a specific class and its subclasses, the initializer will be returned.
 		 */
-		public function getInitializerForClassAndSubclasses( type : Class ) : Function
+		public function getInitializerForClassAndSubclasses(type:Class):Function
 		{
-			return this._initializerSuperTypeMap[ type ];
+			return this._initializerSuperTypeMap[type];
 		}
-
+		
 		/**
 		 * If an initializer exists for a specific class, it will be removed
 		 * completely.
 		 */
-		public function clearInitializerForClass( type : Class , withName : String = null ) : void
+		public function clearInitializerForClass(type:Class, withName:String = null):void
 		{
-			if( !withName )
+			if(!withName)
 			{
-				delete this._initializerNoNameTypeMap[ type ];
+				delete this._initializerNoNameTypeMap[type];
 				return;
 			}
 
-			var nameTable : Object = this._initializerNameTypeMap[ type ];
-			if( !nameTable )
+			var nameTable:Object = this._initializerNameTypeMap[type];
+			if(!nameTable)
 			{
 				return;
 			}
-			delete nameTable[ withName ];
-
+			delete nameTable[withName];
+			return;
 		}
 
 		/**
 		 * If an initializer exists for a specific class and its subclasses, the
 		 * initializer will be removed completely.
 		 */
-		public function clearInitializerForClassAndSubclasses( type : Class ) : void
+		public function clearInitializerForClassAndSubclasses(type:Class):void
 		{
-			delete this._initializerSuperTypeMap[ type ];
-			var index : int = this._initializerSuperTypes.indexOf( type );
-			if( index >= 0 )
+			delete this._initializerSuperTypeMap[type];
+			var index:int = this._initializerSuperTypes.indexOf(type);
+			if(index >= 0)
 			{
-				this._initializerSuperTypes.splice( index , 1 );
+				this._initializerSuperTypes.splice(index, 1);
 			}
 		}
 
@@ -375,105 +383,105 @@ package feathers.core
 		 * initialized again. However, it's children may be initialized, if they
 		 * haven't been initialized yet.</p>
 		 */
-		public function initializeObject( target : DisplayObject ) : void
+		public function initializeObject(target:DisplayObject):void
 		{
-			var targetAsRequiredBaseClass : DisplayObject = DisplayObject( target as requiredBaseClass );
-			if( targetAsRequiredBaseClass )
+			var targetAsRequiredBaseClass:DisplayObject = DisplayObject(target as requiredBaseClass);
+			if(targetAsRequiredBaseClass)
 			{
-				var isInitialized : Boolean = this._initializeOnce && this.initializedObjects[ targetAsRequiredBaseClass ];
-				if( !isInitialized )
+				var isInitialized:Boolean = this._initializeOnce && this.initializedObjects[targetAsRequiredBaseClass];
+				if(!isInitialized)
 				{
-					if( this.isExcluded( target ) )
+					if(this.isExcluded(target))
 					{
 						return;
 					}
 
-					if( this._initializeOnce )
+					if(this._initializeOnce)
 					{
-						this.initializedObjects[ targetAsRequiredBaseClass ] = true;
+						this.initializedObjects[targetAsRequiredBaseClass] = true;
 					}
-					this.processAllInitializers( target );
+					this.processAllInitializers(target);
 				}
 			}
 
-			if( this.processRecursively )
+			if(this.processRecursively)
 			{
-				var targetAsContainer : DisplayObjectContainer = target as DisplayObjectContainer;
-				if( targetAsContainer )
+				var targetAsContainer:DisplayObjectContainer = target as DisplayObjectContainer;
+				if(targetAsContainer)
 				{
-					var childCount : int = targetAsContainer.numChildren;
-					for( var i : int = 0; i < childCount; i++ )
+					var childCount:int = targetAsContainer.numChildren;
+					for(var i:int = 0; i < childCount; i++)
 					{
-						var child : DisplayObject = targetAsContainer.getChildAt( i );
-						this.initializeObject( child );
+						var child:DisplayObject = targetAsContainer.getChildAt(i);
+						this.initializeObject(child);
 					}
 				}
 			}
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function processAllInitializers(target:DisplayObject):void
+		{
+			var superTypeCount:int = this._initializerSuperTypes.length;
+			for(var i:int = 0; i < superTypeCount; i++)
+			{
+				var type:Class = this._initializerSuperTypes[i];
+				if(target is type)
+				{
+					this.applyAllStylesForTypeFromMaps(target, type, this._initializerSuperTypeMap);
+				}
+			}
+			type = Class(Object(target).constructor);
+			this.applyAllStylesForTypeFromMaps(target, type, this._initializerNoNameTypeMap, this._initializerNameTypeMap);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function processAllInitializers( target : DisplayObject ) : void
+		protected function applyAllStylesForTypeFromMaps(target:DisplayObject, type:Class, map:Dictionary, nameMap:Dictionary = null):void
 		{
-			var superTypeCount : int = this._initializerSuperTypes.length;
-			for( var i : int = 0; i < superTypeCount; i++ )
+			var initializer:Function;
+			var hasNameInitializer:Boolean = false;
+			if(target is IFeathersControl && nameMap)
 			{
-				var type : Class = this._initializerSuperTypes[ i ];
-				if( target is type )
+				var nameTable:Object = nameMap[type];
+				if(nameTable)
 				{
-					this.applyAllStylesForTypeFromMaps( target , type , this._initializerSuperTypeMap );
-				}
-			}
-			type = Class( Object( target ).constructor );
-			this.applyAllStylesForTypeFromMaps( target , type , this._initializerNoNameTypeMap , this._initializerNameTypeMap );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function applyAllStylesForTypeFromMaps( target : DisplayObject , type : Class , map : Dictionary , nameMap : Dictionary = null ) : void
-		{
-			var initializer : Function;
-			var hasNameInitializer : Boolean = false;
-			if( target is IFeathersControl && nameMap )
-			{
-				var nameTable : Object = nameMap[ type ];
-				if( nameTable )
-				{
-					var uiControl : IFeathersControl = IFeathersControl( target );
-					var styleNameList : TokenList = uiControl.styleNameList;
-					var nameCount : int = styleNameList.length;
-					for( var i : int = 0; i < nameCount; i++ )
+					var uiControl:IFeathersControl = IFeathersControl(target);
+					var styleNameList:TokenList = uiControl.styleNameList;
+					var nameCount:int = styleNameList.length;
+					for(var i:int = 0; i < nameCount; i++)
 					{
-						var name : String = styleNameList.item( i );
-						initializer = nameTable[ name ] as Function;
-						if( initializer != null )
+						var name:String = styleNameList.item(i);
+						initializer = nameTable[name] as Function;
+						if(initializer != null)
 						{
 							hasNameInitializer = true;
-							initializer( target );
+							initializer(target);
 						}
 					}
 				}
 			}
-			if( hasNameInitializer )
+			if(hasNameInitializer)
 			{
 				return;
 			}
 
-			initializer = map[ type ] as Function;
-			if( initializer != null )
+			initializer = map[type] as Function;
+			if(initializer != null)
 			{
-				initializer( target );
+				initializer(target);
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function addedHandler( event : Event ) : void
+		protected function addedHandler(event:Event):void
 		{
-			this.initializeObject( event.target as DisplayObject );
+			this.initializeObject(event.target as DisplayObject);
 		}
 	}
 }

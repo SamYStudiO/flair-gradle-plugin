@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.text
 {
 	import feathers.core.FocusManager;
@@ -57,7 +57,7 @@ package feathers.controls.text
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user presses the Enter key while the editor has
@@ -80,7 +80,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 */
-	[Event(name="enter" , type="starling.events.Event")]
+	[Event(name="enter",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text editor receives focus.
@@ -102,7 +102,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn" , type="starling.events.Event")]
+	[Event(name="focusIn",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text editor loses focus.
@@ -124,7 +124,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut" , type="starling.events.Event")]
+	[Event(name="focusOut",type="starling.events.Event")]
 
 	/**
 	 * Text that may be edited at runtime by the user with the
@@ -149,8 +149,24 @@ package feathers.controls.text
 	 * @see feathers.controls.TextInput
 	 * @see ../../../../help/text-editors.html Introduction to Feathers text editors
 	 * @see http://wiki.starling-framework.org/manual/displaying_text#bitmap_fonts Starling Wiki: Displaying Text with Bitmap Fonts
-	 */ public class BitmapFontTextEditor extends BitmapFontTextRenderer implements ITextEditor, INativeFocusOwner
+	 */
+	public class BitmapFontTextEditor extends BitmapFontTextRenderer implements ITextEditor, INativeFocusOwner
 	{
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		protected static const LINE_FEED:String = "\n";
+
+		/**
+		 * @private
+		 */
+		protected static const CARRIAGE_RETURN:String = "\r";
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>BitmapFontTextEditor</code>
 		 * components.
@@ -158,44 +174,24 @@ package feathers.controls.text
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const LINE_FEED : String = "\n";
-		/**
-		 * @private
-		 */
-		protected static const CARRIAGE_RETURN : String = "\r";
-		/**
-		 * @private
-		 */
-		protected var _unmaskedText : String;
-		/**
-		 * @private
-		 */
-		protected var _selectionAnchorIndex : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _scrollX : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _isWaitingToSetFocus : Boolean = false;
+		public function BitmapFontTextEditor()
+		{
+			super();
+			this._text = "";
+			this.isQuickHitAreaEnabled = true;
+			this.truncateToFit = false;
+			this.addEventListener(TouchEvent.TOUCH, textEditor_touchHandler);
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return globalStyleProvider;
 		}
@@ -203,12 +199,12 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _selectionSkin : DisplayObject;
+		protected var _selectionSkin:DisplayObject;
 
 		/**
 		 * The skin that indicates the currently selected range of text.
 		 */
-		public function get selectionSkin() : DisplayObject
+		public function get selectionSkin():DisplayObject
 		{
 			return this._selectionSkin;
 		}
@@ -216,35 +212,35 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set selectionSkin( value : DisplayObject ) : void
+		public function set selectionSkin(value:DisplayObject):void
 		{
-			if( this._selectionSkin == value )
+			if(this._selectionSkin == value)
 			{
 				return;
 			}
-			if( this._selectionSkin && this._selectionSkin.parent == this )
+			if(this._selectionSkin && this._selectionSkin.parent == this)
 			{
 				this._selectionSkin.removeFromParent();
 			}
 			this._selectionSkin = value;
-			if( this._selectionSkin )
+			if(this._selectionSkin)
 			{
 				this._selectionSkin.visible = false;
-				this.addChildAt( this._selectionSkin , 0 );
+				this.addChildAt(this._selectionSkin, 0);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _cursorSkin : DisplayObject;
+		protected var _cursorSkin:DisplayObject;
 
 		/**
 		 * The skin that indicates the current position where text may be
 		 * entered.
 		 */
-		public function get cursorSkin() : DisplayObject
+		public function get cursorSkin():DisplayObject
 		{
 			return this._cursorSkin;
 		}
@@ -252,29 +248,34 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set cursorSkin( value : DisplayObject ) : void
+		public function set cursorSkin(value:DisplayObject):void
 		{
-			if( this._cursorSkin == value )
+			if(this._cursorSkin == value)
 			{
 				return;
 			}
-			if( this._cursorSkin && this._cursorSkin.parent == this )
+			if(this._cursorSkin && this._cursorSkin.parent == this)
 			{
 				this._cursorSkin.removeFromParent();
 			}
 			this._cursorSkin = value;
-			if( this._cursorSkin )
+			if(this._cursorSkin)
 			{
 				this._cursorSkin.visible = false;
-				this.addChild( this._cursorSkin );
+				this.addChild(this._cursorSkin);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _displayAsPassword : Boolean = false; //asterisk
+		protected var _unmaskedText:String;
+
+		/**
+		 * @private
+		 */
+		protected var _displayAsPassword:Boolean = false;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
@@ -284,7 +285,7 @@ package feathers.controls.text
 		 * @see feathers.controls.TextInput#displayAsPassword
 		 * @see #passwordCharCode
 		 */
-		public function get displayAsPassword() : Boolean
+		public function get displayAsPassword():Boolean
 		{
 			return this._displayAsPassword;
 		}
@@ -292,14 +293,14 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set displayAsPassword( value : Boolean ) : void
+		public function set displayAsPassword(value:Boolean):void
 		{
-			if( this._displayAsPassword == value )
+			if(this._displayAsPassword == value)
 			{
 				return;
 			}
 			this._displayAsPassword = value;
-			if( this._displayAsPassword )
+			if(this._displayAsPassword)
 			{
 				this._unmaskedText = this._text;
 				this.refreshMaskedText();
@@ -309,13 +310,13 @@ package feathers.controls.text
 				this._text = this._unmaskedText;
 				this._unmaskedText = null;
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _passwordCharCode : int = 42;
+		protected var _passwordCharCode:int = 42; //asterisk
 
 		/**
 		 * The character code of the character used to display a password.
@@ -331,7 +332,7 @@ package feathers.controls.text
 		 *
 		 * @see #displayAsPassword
 		 */
-		public function get passwordCharCode() : int
+		public function get passwordCharCode():int
 		{
 			return this._passwordCharCode;
 		}
@@ -339,33 +340,33 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set passwordCharCode( value : int ) : void
+		public function set passwordCharCode(value:int):void
 		{
-			if( this._passwordCharCode == value )
+			if(this._passwordCharCode == value)
 			{
 				return;
 			}
 			this._passwordCharCode = value;
-			if( this._displayAsPassword )
+			if(this._displayAsPassword)
 			{
 				this.refreshMaskedText();
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isEditable : Boolean = true;
+		protected var _isEditable:Boolean = true;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#isEditable
 		 *
 		 * @see feathers.controls.TextInput#isEditable
 		 */
-		public function get isEditable() : Boolean
+		public function get isEditable():Boolean
 		{
 			return this._isEditable;
 		}
@@ -373,29 +374,29 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set isEditable( value : Boolean ) : void
+		public function set isEditable(value:Boolean):void
 		{
-			if( this._isEditable == value )
+			if(this._isEditable == value)
 			{
 				return;
 			}
 			this._isEditable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isSelectable : Boolean = true;
+		protected var _isSelectable:Boolean = true;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#isSelectable
 		 *
 		 * @see feathers.controls.TextInput#isSelectable
 		 */
-		public function get isSelectable() : Boolean
+		public function get isSelectable():Boolean
 		{
 			return this._isSelectable;
 		}
@@ -403,14 +404,14 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set isSelectable( value : Boolean ) : void
+		public function set isSelectable(value:Boolean):void
 		{
-			if( this._isSelectable == value )
+			if(this._isSelectable == value)
 			{
 				return;
 			}
 			this._isSelectable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -418,7 +419,7 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 */
-		public function get setTouchFocusOnEndedPhase() : Boolean
+		public function get setTouchFocusOnEndedPhase():Boolean
 		{
 			return false;
 		}
@@ -426,9 +427,9 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function get text() : String
+		override public function get text():String
 		{
-			if( this._displayAsPassword )
+			if(this._displayAsPassword)
 			{
 				return this._unmaskedText;
 			}
@@ -438,23 +439,23 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function set text( value : String ) : void
+		override public function set text(value:String):void
 		{
-			if( value === null )
+			if(value === null)
 			{
 				//don't allow null or undefined
 				value = "";
 			}
-			var currentValue : String = this._text;
-			if( this._displayAsPassword )
+			var currentValue:String = this._text;
+			if(this._displayAsPassword)
 			{
 				currentValue = this._unmaskedText;
 			}
-			if( currentValue == value )
+			if(currentValue == value)
 			{
 				return;
 			}
-			if( this._displayAsPassword )
+			if(this._displayAsPassword)
 			{
 				this._unmaskedText = value;
 				this.refreshMaskedText();
@@ -463,39 +464,39 @@ package feathers.controls.text
 			{
 				this._text = value;
 			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			var textLength : int = this._text.length;
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			var textLength:int = this._text.length;
 			//we need to account for the possibility that the text is in the
 			//middle of being selected when it changes
-			if( this._selectionAnchorIndex > textLength )
+			if(this._selectionAnchorIndex > textLength)
 			{
 				this._selectionAnchorIndex = textLength;
 			}
 			//then, we need to make sure the selected range is still valid
-			if( this._selectionBeginIndex > textLength )
+			if(this._selectionBeginIndex > textLength)
 			{
-				this.selectRange( textLength , textLength );
+				this.selectRange(textLength, textLength);
 			}
-			else if( this._selectionEndIndex > textLength )
+			else if(this._selectionEndIndex > textLength)
 			{
-				this.selectRange( this._selectionBeginIndex , textLength );
+				this.selectRange(this._selectionBeginIndex, textLength);
 			}
-			this.dispatchEventWith( starling.events.Event.CHANGE );
+			this.dispatchEventWith(starling.events.Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maxChars : int = 0;
+		protected var _maxChars:int = 0;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#maxChars
 		 *
 		 * @see feathers.controls.TextInput#maxChars
 		 */
-		public function get maxChars() : int
+		public function get maxChars():int
 		{
 			return this._maxChars;
 		}
@@ -503,31 +504,31 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set maxChars( value : int ) : void
+		public function set maxChars(value:int):void
 		{
-			if( this._maxChars == value )
+			if(this._maxChars == value)
 			{
 				return;
 			}
 			this._maxChars = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _restrict : TextInputRestrict;
+		protected var _restrict:TextInputRestrict;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#restrict
 		 *
 		 * @see feathers.controls.TextInput#restrict
 		 */
-		public function get restrict() : String
+		public function get restrict():String
 		{
-			if( !this._restrict )
+			if(!this._restrict)
 			{
 				return null;
 			}
@@ -537,44 +538,44 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set restrict( value : String ) : void
+		public function set restrict(value:String):void
 		{
-			if( this._restrict && this._restrict.restrict === value )
+			if(this._restrict && this._restrict.restrict === value)
 			{
 				return;
 			}
-			if( !this._restrict && value === null )
+			if(!this._restrict && value === null)
 			{
 				return;
 			}
-			if( value === null )
+			if(value === null)
 			{
 				this._restrict = null;
 			}
 			else
 			{
-				if( this._restrict )
+				if(this._restrict)
 				{
 					this._restrict.restrict = value;
 				}
 				else
 				{
 
-					this._restrict = new TextInputRestrict( value );
+					this._restrict = new TextInputRestrict(value);
 				}
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _selectionBeginIndex : int = 0;
+		protected var _selectionBeginIndex:int = 0;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get selectionBeginIndex() : int
+		public function get selectionBeginIndex():int
 		{
 			return this._selectionBeginIndex;
 		}
@@ -582,12 +583,12 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _selectionEndIndex : int = 0;
+		protected var _selectionEndIndex:int = 0;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get selectionEndIndex() : int
+		public function get selectionEndIndex():int
 		{
 			return this._selectionEndIndex;
 		}
@@ -595,86 +596,67 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _nativeFocus : Sprite;
+		protected var _selectionAnchorIndex:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _scrollX:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _nativeFocus:Sprite;
 
 		/**
 		 * @copy feathers.core.INativeFocusOwner#nativeFocus
 		 */
-		public function get nativeFocus() : InteractiveObject
+		public function get nativeFocus():InteractiveObject
 		{
 			return this._nativeFocus;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function BitmapFontTextEditor()
-		{
-			super();
-			this._text = "";
-			this.isQuickHitAreaEnabled = true;
-			this.truncateToFit = false;
-			this.addEventListener( TouchEvent.TOUCH , textEditor_touchHandler );
-		}
-
-		/**
 		 * @private
 		 */
-		override public function dispose() : void
-		{
-			if( this._nativeFocus && this._nativeFocus.parent )
-			{
-				this._nativeFocus.parent.removeChild( this._nativeFocus );
-			}
-			this._nativeFocus = null;
-			super.dispose();
-		}
-
-		/**
-		 * @private
-		 */
-		override public function render( support : RenderSupport , parentAlpha : Number ) : void
-		{
-			var oldBatchX : Number = this._batchX;
-			var oldCursorX : Number = this._cursorSkin.x;
-			this._batchX -= this._scrollX;
-			this._cursorSkin.x -= this._scrollX;
-			super.render( support , parentAlpha );
-			this._batchX = oldBatchX;
-			this._cursorSkin.x = oldCursorX;
-		}
+		protected var _isWaitingToSetFocus:Boolean = false;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function setFocus( position : Point = null ) : void
+		public function setFocus(position:Point = null):void
 		{
-			if( !this._isEditable && !this._isSelectable )
+			if(!this._isEditable && !this._isSelectable)
 			{
 				//if the text can't be edited or selected, then all focus is
 				//disabled.
 				return;
 			}
-			if( this._hasFocus && !position )
+			if(this._hasFocus && !position)
 			{
 				//we already have focus, and there isn't a touch position, we
 				//can ignore this because nothing would change
 				return;
 			}
-			if( this._nativeFocus )
+			if(this._nativeFocus)
 			{
-				if( !this._nativeFocus.parent )
+				if(!this._nativeFocus.parent)
 				{
-					Starling.current.nativeStage.addChild( this._nativeFocus );
+					Starling.current.nativeStage.addChild(this._nativeFocus);
 				}
-				var newIndex : int = -1;
-				if( position )
+				var newIndex:int = -1;
+				if(position)
 				{
-					newIndex = this.getSelectionIndexAtPoint( position.x , position.y );
+					newIndex = this.getSelectionIndexAtPoint(position.x, position.y);
 				}
-				if( newIndex >= 0 )
+				if(newIndex >= 0)
 				{
-					this.selectRange( newIndex , newIndex );
+					this.selectRange(newIndex, newIndex);
 				}
 				this.focusIn();
 			}
@@ -687,20 +669,20 @@ package feathers.controls.text
 		/**
 		 * @inheritDoc
 		 */
-		public function clearFocus() : void
+		public function clearFocus():void
 		{
-			if( !this._hasFocus )
+			if(!this._hasFocus)
 			{
 				return;
 			}
 			this._hasFocus = false;
 			this._cursorSkin.visible = false;
 			this._selectionSkin.visible = false;
-			this.stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			this.stage.removeEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
-			this.removeEventListener( starling.events.Event.ENTER_FRAME , hasFocus_enterFrameHandler );
-			var nativeStage : Stage = Starling.current.nativeStage;
-			if( nativeStage.focus === this._nativeFocus )
+			this.stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
+			this.removeEventListener(starling.events.Event.ENTER_FRAME, hasFocus_enterFrameHandler);
+			var nativeStage:Stage = Starling.current.nativeStage;
+			if(nativeStage.focus === this._nativeFocus)
 			{
 				//only clear the native focus when our native target has focus
 				//because otherwise another component may lose focus.
@@ -711,29 +693,29 @@ package feathers.controls.text
 				//with those text editors on Android.
 				nativeStage.focus = null;
 			}
-			this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+			this.dispatchEventWith(FeathersEventType.FOCUS_OUT);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function selectRange( beginIndex : int , endIndex : int ) : void
+		public function selectRange(beginIndex:int, endIndex:int):void
 		{
-			if( !this._isEditable && !this._isSelectable )
+			if(!this._isEditable && !this._isSelectable)
 			{
 				return;
 			}
-			if( endIndex < beginIndex )
+			if(endIndex < beginIndex)
 			{
-				var temp : int = endIndex;
+				var temp:int = endIndex;
 				endIndex = beginIndex;
 				beginIndex = temp;
 			}
 			this._selectionBeginIndex = beginIndex;
 			this._selectionEndIndex = endIndex;
-			if( beginIndex == endIndex )
+			if(beginIndex == endIndex)
 			{
-				if( beginIndex < 0 )
+				if(beginIndex < 0)
 				{
 					this._cursorSkin.visible = false;
 				}
@@ -748,15 +730,42 @@ package feathers.controls.text
 				this._cursorSkin.visible = false;
 				this._selectionSkin.visible = true;
 			}
-			this.invalidate( INVALIDATION_FLAG_SELECTED );
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override public function dispose():void
 		{
-			if( !this._nativeFocus )
+			if(this._nativeFocus && this._nativeFocus.parent)
+			{
+				this._nativeFocus.parent.removeChild(this._nativeFocus);
+			}
+			this._nativeFocus = null;
+			super.dispose();
+		}
+
+		/**
+		 * @private
+		 */
+		override public function render(support:RenderSupport, parentAlpha:Number):void
+		{
+			var oldBatchX:Number = this._batchX;
+			var oldCursorX:Number = this._cursorSkin.x;
+			this._batchX -= this._scrollX;
+			this._cursorSkin.x -= this._scrollX;
+			super.render(support, parentAlpha);
+			this._batchX = oldBatchX;
+			this._cursorSkin.x = oldCursorX;
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function initialize():void
+		{
+			if(!this._nativeFocus)
 			{
 				this._nativeFocus = new Sprite();
 				//let's ensure that this can only get focus through code
@@ -767,18 +776,18 @@ package feathers.controls.text
 				//adds support for mobile
 				this._nativeFocus.needsSoftKeyboard = true;
 			}
-			this._nativeFocus.addEventListener( flash.events.Event.CUT , nativeFocus_cutHandler , false , 0 , true );
-			this._nativeFocus.addEventListener( flash.events.Event.COPY , nativeFocus_copyHandler , false , 0 , true );
-			this._nativeFocus.addEventListener( flash.events.Event.PASTE , nativeFocus_pasteHandler , false , 0 , true );
-			this._nativeFocus.addEventListener( flash.events.Event.SELECT_ALL , nativeFocus_selectAllHandler , false , 0 , true );
-			this._nativeFocus.addEventListener( TextEvent.TEXT_INPUT , nativeFocus_textInputHandler , false , 0 , true );
-			if( !this._cursorSkin )
+			this._nativeFocus.addEventListener(flash.events.Event.CUT, nativeFocus_cutHandler, false, 0, true);
+			this._nativeFocus.addEventListener(flash.events.Event.COPY, nativeFocus_copyHandler, false, 0, true);
+			this._nativeFocus.addEventListener(flash.events.Event.PASTE, nativeFocus_pasteHandler, false, 0, true);
+			this._nativeFocus.addEventListener(flash.events.Event.SELECT_ALL, nativeFocus_selectAllHandler, false, 0, true);
+			this._nativeFocus.addEventListener(TextEvent.TEXT_INPUT, nativeFocus_textInputHandler, false, 0, true);
+			if(!this._cursorSkin)
 			{
-				this.cursorSkin = new Quad( 1 , 1 , 0x000000 );
+				this.cursorSkin = new Quad(1, 1, 0x000000);
 			}
-			if( !this._selectionSkin )
+			if(!this._selectionSkin)
 			{
-				this.selectionSkin = new Quad( 1 , 1 , 0x000000 );
+				this.selectionSkin = new Quad(1, 1, 0x000000);
 			}
 			super.initialize();
 		}
@@ -786,43 +795,43 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var selectionInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SELECTED );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var selectionInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SELECTED);
 			
 			super.draw();
-
-			if( dataInvalid || selectionInvalid )
+			
+			if(dataInvalid || selectionInvalid)
 			{
-				this.positionCursorAtCharIndex( this.getCursorIndexFromSelectionRange() );
+				this.positionCursorAtCharIndex(this.getCursorIndexFromSelectionRange());
 				this.positionSelectionBackground();
 			}
 
-			var clipRect : Rectangle = this.clipRect;
-			if( clipRect )
+			var clipRect:Rectangle = this.clipRect;
+			if(clipRect)
 			{
-				clipRect.setTo( 0 , 0 , this.actualWidth , this.actualHeight );
+				clipRect.setTo(0, 0, this.actualWidth, this.actualHeight);
 			}
 			else
 			{
-				this.clipRect = new Rectangle( 0 , 0 , this.actualWidth , this.actualHeight )
+				this.clipRect = new Rectangle(0, 0, this.actualWidth, this.actualHeight)
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function layoutCharacters( result : Point = null ) : Point
+		override protected function layoutCharacters(result:Point = null):Point
 		{
-			result = super.layoutCharacters( result );
-			if( this.explicitWidth === this.explicitWidth && //!isNaN
-					result.x > this.explicitWidth )
+			result = super.layoutCharacters(result);
+			if(this.explicitWidth === this.explicitWidth && //!isNaN
+				result.x > this.explicitWidth)
 			{
 				this._characterBatch.reset();
-				var oldTextAlign : String = this.currentTextFormat.align;
+				var oldTextAlign:String = this.currentTextFormat.align;
 				this.currentTextFormat.align = TextFormatAlign.LEFT;
-				result = super.layoutCharacters( result );
+				result = super.layoutCharacters(result);
 				this.currentTextFormat.align = oldTextAlign;
 			}
 			return result;
@@ -831,15 +840,15 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override protected function refreshTextFormat() : void
+		override protected function refreshTextFormat():void
 		{
 			super.refreshTextFormat();
-			if( this._cursorSkin )
+			if(this._cursorSkin)
 			{
-				var font : BitmapFont = this.currentTextFormat.font;
-				var customSize : Number = this.currentTextFormat.size;
-				var scale : Number = customSize / font.size;
-				if( scale !== scale ) //isNaN
+				var font:BitmapFont = this.currentTextFormat.font;
+				var customSize:Number = this.currentTextFormat.size;
+				var scale:Number = customSize / font.size;
+				if(scale !== scale) //isNaN
 				{
 					scale = 1;
 				}
@@ -850,12 +859,12 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshMaskedText() : void
+		protected function refreshMaskedText():void
 		{
 			this._text = "";
-			var textLength : int = this._unmaskedText.length;
-			var maskChar : String = String.fromCharCode( this._passwordCharCode );
-			for( var i : int = 0; i < textLength; i++ )
+			var textLength:int = this._unmaskedText.length;
+			var maskChar:String = String.fromCharCode(this._passwordCharCode);
+			for(var i:int = 0; i < textLength; i++)
 			{
 				this._text += maskChar;
 			}
@@ -864,56 +873,56 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function focusIn() : void
+		protected function focusIn():void
 		{
-			var showCursor : Boolean = this._selectionBeginIndex >= 0 && this._selectionBeginIndex == this._selectionEndIndex;
+			var showCursor:Boolean = this._selectionBeginIndex >= 0 && this._selectionBeginIndex == this._selectionEndIndex;
 			this._cursorSkin.visible = showCursor;
 			this._selectionSkin.visible = !showCursor;
-			if( !FocusManager.isEnabledForStage( this.stage ) )
+			if(!FocusManager.isEnabledForStage(this.stage))
 			{
 				//if there isn't a focus manager, we need to set focus manually
 				Starling.current.nativeStage.focus = this._nativeFocus;
 			}
 			this._nativeFocus.requestSoftKeyboard();
-			if( this._hasFocus )
+			if(this._hasFocus)
 			{
 				return;
 			}
 			//we're reusing this variable. since this isn't a display object
 			//that the focus manager can see, it's not being used anyway.
 			this._hasFocus = true;
-			this.stage.addEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
-			this.addEventListener( starling.events.Event.ENTER_FRAME , hasFocus_enterFrameHandler );
-			this.dispatchEventWith( FeathersEventType.FOCUS_IN );
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
+			this.addEventListener(starling.events.Event.ENTER_FRAME, hasFocus_enterFrameHandler);
+			this.dispatchEventWith(FeathersEventType.FOCUS_IN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function getSelectionIndexAtPoint( pointX : Number , pointY : Number ) : int
+		protected function getSelectionIndexAtPoint(pointX:Number, pointY:Number):int
 		{
-			if( !this._text || pointX <= 0 )
+			if(!this._text || pointX <= 0)
 			{
 				return 0;
 			}
-			var font : BitmapFont = this.currentTextFormat.font;
-			var customSize : Number = this.currentTextFormat.size;
-			var customLetterSpacing : Number = this.currentTextFormat.letterSpacing;
-			var isKerningEnabled : Boolean = this.currentTextFormat.isKerningEnabled;
-			var scale : Number = customSize / font.size;
-			if( scale !== scale ) //isNaN
+			var font:BitmapFont = this.currentTextFormat.font;
+			var customSize:Number = this.currentTextFormat.size;
+			var customLetterSpacing:Number = this.currentTextFormat.letterSpacing;
+			var isKerningEnabled:Boolean = this.currentTextFormat.isKerningEnabled;
+			var scale:Number = customSize / font.size;
+			if(scale !== scale) //isNaN
 			{
 				scale = 1;
 			}
-			var align : String = this.currentTextFormat.align;
-			if( align != TextFormatAlign.LEFT )
+			var align:String = this.currentTextFormat.align;
+			if(align != TextFormatAlign.LEFT)
 			{
-				var lineWidth : Number = this.measureText( HELPER_POINT ).x;
-				var hasExplicitWidth : Boolean = this.explicitWidth === this.explicitWidth; //!isNaN
-				var maxLineWidth : Number = hasExplicitWidth ? this.explicitWidth : this._maxWidth;
-				if( maxLineWidth > lineWidth )
+				var lineWidth:Number = this.measureText(HELPER_POINT).x;
+				var hasExplicitWidth:Boolean = this.explicitWidth === this.explicitWidth; //!isNaN
+				var maxLineWidth:Number = hasExplicitWidth ? this.explicitWidth : this._maxWidth;
+				if(maxLineWidth > lineWidth)
 				{
-					if( align == TextFormatAlign.RIGHT )
+					if(align == TextFormatAlign.RIGHT)
 					{
 						pointX -= maxLineWidth - lineWidth;
 					}
@@ -923,26 +932,27 @@ package feathers.controls.text
 					}
 				}
 			}
-			var currentX : Number = 0;
-			var previousCharID : Number = NaN;
-			var charCount : int = this._text.length;
-			for( var i : int = 0; i < charCount; i++ )
+			var currentX:Number = 0;
+			var previousCharID:Number = NaN;
+			var charCount:int = this._text.length;
+			for(var i:int = 0; i < charCount; i++)
 			{
-				var charID : int = this._text.charCodeAt( i );
-				var charData : BitmapChar = font.getChar( charID );
-				if( !charData )
+				var charID:int = this._text.charCodeAt(i);
+				var charData:BitmapChar = font.getChar(charID);
+				if(!charData)
 				{
 					continue;
 				}
-				var currentKerning : Number = 0;
-				if( isKerningEnabled && previousCharID === previousCharID ) //!isNaN
+				var currentKerning:Number = 0;
+				if(isKerningEnabled &&
+					previousCharID === previousCharID) //!isNaN
 				{
-					currentKerning = charData.getKerning( previousCharID ) * scale;
+					currentKerning = charData.getKerning(previousCharID) * scale;
 				}
-				var charWidth : Number = customLetterSpacing + currentKerning + charData.xAdvance * scale;
-				if( pointX >= currentX && pointX < (currentX + charWidth) )
+				var charWidth:Number = customLetterSpacing + currentKerning + charData.xAdvance * scale;
+				if(pointX >= currentX && pointX < (currentX + charWidth))
 				{
-					if( pointX > (currentX + charWidth / 2) )
+					if(pointX > (currentX + charWidth / 2))
 					{
 						return i + 1;
 					}
@@ -951,7 +961,7 @@ package feathers.controls.text
 				currentX += charWidth;
 				previousCharID = charID;
 			}
-			if( pointX >= currentX )
+			if(pointX >= currentX)
 			{
 				return this._text.length;
 			}
@@ -961,27 +971,27 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function getXPositionOfIndex( index : int ) : Number
+		protected function getXPositionOfIndex(index:int):Number
 		{
-			var font : BitmapFont = this.currentTextFormat.font;
-			var customSize : Number = this.currentTextFormat.size;
-			var customLetterSpacing : Number = this.currentTextFormat.letterSpacing;
-			var isKerningEnabled : Boolean = this.currentTextFormat.isKerningEnabled;
-			var scale : Number = customSize / font.size;
-			if( scale !== scale ) //isNaN
+			var font:BitmapFont = this.currentTextFormat.font;
+			var customSize:Number = this.currentTextFormat.size;
+			var customLetterSpacing:Number = this.currentTextFormat.letterSpacing;
+			var isKerningEnabled:Boolean = this.currentTextFormat.isKerningEnabled;
+			var scale:Number = customSize / font.size;
+			if(scale !== scale) //isNaN
 			{
 				scale = 1;
 			}
-			var xPositionOffset : Number = 0;
-			var align : String = this.currentTextFormat.align;
-			if( align != TextFormatAlign.LEFT )
+			var xPositionOffset:Number = 0;
+			var align:String = this.currentTextFormat.align;
+			if(align != TextFormatAlign.LEFT)
 			{
-				var lineWidth : Number = this.measureText( HELPER_POINT ).x;
-				var hasExplicitWidth : Boolean = this.explicitWidth === this.explicitWidth; //!isNaN
-				var maxLineWidth : Number = hasExplicitWidth ? this.explicitWidth : this._maxWidth;
-				if( maxLineWidth > lineWidth )
+				var lineWidth:Number = this.measureText(HELPER_POINT).x;
+				var hasExplicitWidth:Boolean = this.explicitWidth === this.explicitWidth; //!isNaN
+				var maxLineWidth:Number = hasExplicitWidth ? this.explicitWidth : this._maxWidth;
+				if(maxLineWidth > lineWidth)
 				{
-					if( align == TextFormatAlign.RIGHT )
+					if(align == TextFormatAlign.RIGHT)
 					{
 						xPositionOffset = maxLineWidth - lineWidth;
 					}
@@ -991,25 +1001,26 @@ package feathers.controls.text
 					}
 				}
 			}
-			var currentX : Number = 0;
-			var previousCharID : Number = NaN;
-			var charCount : int = this._text.length;
-			if( index < charCount )
+			var currentX:Number = 0;
+			var previousCharID:Number = NaN;
+			var charCount:int = this._text.length;
+			if(index < charCount)
 			{
 				charCount = index;
 			}
-			for( var i : int = 0; i < charCount; i++ )
+			for(var i:int = 0; i < charCount; i++)
 			{
-				var charID : int = this._text.charCodeAt( i );
-				var charData : BitmapChar = font.getChar( charID );
-				if( !charData )
+				var charID:int = this._text.charCodeAt(i);
+				var charData:BitmapChar = font.getChar(charID);
+				if(!charData)
 				{
 					continue;
 				}
-				var currentKerning : Number = 0;
-				if( isKerningEnabled && previousCharID === previousCharID ) //!isNaN
+				var currentKerning:Number = 0;
+				if(isKerningEnabled &&
+					previousCharID === previousCharID) //!isNaN
 				{
-					currentKerning = charData.getKerning( previousCharID ) * scale;
+					currentKerning = charData.getKerning(previousCharID) * scale;
 				}
 				currentX += customLetterSpacing + currentKerning + charData.xAdvance * scale;
 				previousCharID = charID;
@@ -1020,33 +1031,33 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function positionCursorAtCharIndex( index : int ) : void
+		protected function positionCursorAtCharIndex(index:int):void
 		{
-			if( index < 0 )
+			if(index < 0)
 			{
 				index = 0;
 			}
-			var cursorX : Number = this.getXPositionOfIndex( index );
-			cursorX = int( cursorX - (this._cursorSkin.width / 2) );
+			var cursorX:Number = this.getXPositionOfIndex(index);
+			cursorX = int(cursorX - (this._cursorSkin.width / 2));
 			this._cursorSkin.x = cursorX;
 			this._cursorSkin.y = 0;
 
 			//then we update the scroll to always show the cursor
-			var minScrollX : Number = cursorX + this._cursorSkin.width - this.actualWidth;
-			var maxScrollX : Number = this.getXPositionOfIndex( this._text.length ) - this.actualWidth;
-			if( maxScrollX < 0 )
+			var minScrollX:Number = cursorX + this._cursorSkin.width - this.actualWidth;
+			var maxScrollX:Number = this.getXPositionOfIndex(this._text.length) - this.actualWidth;
+			if(maxScrollX < 0)
 			{
 				maxScrollX = 0;
 			}
-			if( this._scrollX < minScrollX )
+			if(this._scrollX < minScrollX)
 			{
 				this._scrollX = minScrollX;
 			}
-			else if( this._scrollX > cursorX )
+			else if(this._scrollX > cursorX)
 			{
 				this._scrollX = cursorX;
 			}
-			if( this._scrollX > maxScrollX )
+			if(this._scrollX > maxScrollX)
 			{
 				this._scrollX = maxScrollX;
 			}
@@ -1055,10 +1066,10 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function getCursorIndexFromSelectionRange() : int
+		protected function getCursorIndexFromSelectionRange():int
 		{
-			var cursorIndex : int = this._selectionEndIndex;
-			if( this.touchPointID >= 0 && this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionEndIndex )
+			var cursorIndex:int = this._selectionEndIndex;
+			if(this.touchPointID >= 0 && this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionEndIndex)
 			{
 				cursorIndex = this._selectionBeginIndex;
 			}
@@ -1068,23 +1079,23 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function positionSelectionBackground() : void
+		protected function positionSelectionBackground():void
 		{
-			var font : BitmapFont = this.currentTextFormat.font;
-			var customSize : Number = this.currentTextFormat.size;
-			var scale : Number = customSize / font.size;
-			if( scale !== scale ) //isNaN
+			var font:BitmapFont = this.currentTextFormat.font;
+			var customSize:Number = this.currentTextFormat.size;
+			var scale:Number = customSize / font.size;
+			if(scale !== scale) //isNaN
 			{
 				scale = 1;
 			}
 
-			var startX : Number = this.getXPositionOfIndex( this._selectionBeginIndex ) - this._scrollX;
-			if( startX < 0 )
+			var startX:Number = this.getXPositionOfIndex(this._selectionBeginIndex) - this._scrollX;
+			if(startX < 0)
 			{
 				startX = 0;
 			}
-			var endX : Number = this.getXPositionOfIndex( this._selectionEndIndex ) - this._scrollX;
-			if( endX < 0 )
+			var endX:Number = this.getXPositionOfIndex(this._selectionEndIndex) - this._scrollX;
+			if(endX < 0)
 			{
 				endX = 0;
 			}
@@ -1097,116 +1108,117 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function getSelectedText() : String
+		protected function getSelectedText():String
 		{
-			if( this._selectionBeginIndex == this._selectionEndIndex )
+			if(this._selectionBeginIndex == this._selectionEndIndex)
 			{
 				return null;
 			}
-			return this._text.substr( this._selectionBeginIndex , this._selectionEndIndex - this._selectionBeginIndex );
+			return this._text.substr(this._selectionBeginIndex, this._selectionEndIndex - this._selectionBeginIndex);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function deleteSelectedText() : void
+		protected function deleteSelectedText():void
 		{
-			var currentValue : String = this._text;
-			if( this._displayAsPassword )
+			var currentValue:String = this._text;
+			if(this._displayAsPassword)
 			{
 				currentValue = this._unmaskedText;
 			}
-			this.text = currentValue.substr( 0 , this._selectionBeginIndex ) + currentValue.substr( this._selectionEndIndex );
-			this.selectRange( this._selectionBeginIndex , this._selectionBeginIndex );
+			this.text = currentValue.substr(0, this._selectionBeginIndex) + currentValue.substr(this._selectionEndIndex);
+			this.selectRange(this._selectionBeginIndex, this._selectionBeginIndex);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function replaceSelectedText( text : String ) : void
+		protected function replaceSelectedText(text:String):void
 		{
-			var currentValue : String = this._text;
-			if( this._displayAsPassword )
+			var currentValue:String = this._text;
+			if(this._displayAsPassword)
 			{
 				currentValue = this._unmaskedText;
 			}
-			var newText : String = currentValue.substr( 0 , this._selectionBeginIndex ) + text + currentValue.substr( this._selectionEndIndex );
-			if( this._maxChars > 0 && newText.length > this._maxChars )
+			var newText:String = currentValue.substr(0, this._selectionBeginIndex) + text + currentValue.substr(this._selectionEndIndex);
+			if(this._maxChars > 0 && newText.length > this._maxChars)
 			{
 				return;
 			}
 			this.text = newText;
-			var selectionIndex : int = this._selectionBeginIndex + text.length;
-			this.selectRange( selectionIndex , selectionIndex );
+			var selectionIndex:int = this._selectionBeginIndex + text.length;
+			this.selectRange(selectionIndex, selectionIndex);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function hasFocus_enterFrameHandler( event : starling.events.Event ) : void
+		protected function hasFocus_enterFrameHandler(event:starling.events.Event):void
 		{
-			var target : DisplayObject = this;
+			var target:DisplayObject = this;
 			do
 			{
-				if( !target.hasVisibleArea )
+				if(!target.hasVisibleArea)
 				{
 					this.clearFocus();
 					break;
 				}
 				target = target.parent;
-			} while( target )
+			}
+			while(target)
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textEditor_touchHandler( event : TouchEvent ) : void
+		protected function textEditor_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled || (!this._isEditable && !this._isSelectable) )
+			if(!this._isEnabled || (!this._isEditable && !this._isSelectable))
 			{
 				this.touchPointID = -1;
 				return;
 			}
-			if( this.touchPointID >= 0 )
+			if(this.touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this , null , this.touchPointID );
-				touch.getLocation( this , HELPER_POINT );
+				var touch:Touch = event.getTouch(this, null, this.touchPointID);
+				touch.getLocation(this, HELPER_POINT);
 				HELPER_POINT.x += this._scrollX;
-				this.selectRange( this._selectionAnchorIndex , this.getSelectionIndexAtPoint( HELPER_POINT.x , HELPER_POINT.y ) );
-				if( touch.phase == TouchPhase.ENDED )
+				this.selectRange(this._selectionAnchorIndex, this.getSelectionIndexAtPoint(HELPER_POINT.x, HELPER_POINT.y));
+				if(touch.phase == TouchPhase.ENDED)
 				{
 					this.touchPointID = -1;
-					if( this._selectionBeginIndex == this._selectionEndIndex )
+					if(this._selectionBeginIndex == this._selectionEndIndex)
 					{
 						this._selectionAnchorIndex = -1;
 					}
-					if( !FocusManager.isEnabledForStage( this.stage ) && this._hasFocus )
+					if(!FocusManager.isEnabledForStage(this.stage) && this._hasFocus)
 					{
-						this.stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
+						this.stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
 					}
 				}
 			}
 			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
 				this.touchPointID = touch.id;
-				touch.getLocation( this , HELPER_POINT );
+				touch.getLocation(this, HELPER_POINT);
 				HELPER_POINT.x += this._scrollX;
-				if( event.shiftKey )
+				if(event.shiftKey)
 				{
-					if( this._selectionAnchorIndex < 0 )
+					if(this._selectionAnchorIndex < 0)
 					{
 						this._selectionAnchorIndex = this._selectionBeginIndex;
 					}
-					this.selectRange( this._selectionAnchorIndex , this.getSelectionIndexAtPoint( HELPER_POINT.x , HELPER_POINT.y ) );
+					this.selectRange(this._selectionAnchorIndex, this.getSelectionIndexAtPoint(HELPER_POINT.x, HELPER_POINT.y));
 				}
 				else
 				{
-					this.setFocus( HELPER_POINT );
+					this.setFocus(HELPER_POINT);
 					this._selectionAnchorIndex = this._selectionBeginIndex;
 				}
 			}
@@ -1215,16 +1227,16 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function stage_touchHandler( event : TouchEvent ) : void
+		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			var touch : Touch = event.getTouch( this.stage , TouchPhase.BEGAN );
-			if( !touch ) //we only care about began touches
+			var touch:Touch = event.getTouch(this.stage, TouchPhase.BEGAN);
+			if(!touch) //we only care about began touches
 			{
 				return;
 			}
-			touch.getLocation( this.stage , HELPER_POINT );
-			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
-			if( isInBounds ) //if the touch is in the text editor, it's all good
+			touch.getLocation(this.stage, HELPER_POINT);
+			var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+			if(isInBounds) //if the touch is in the text editor, it's all good
 			{
 				return;
 			}
@@ -1235,225 +1247,229 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function stage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function stage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( !this._isEnabled || (!this._isEditable && !this._isSelectable) || this.touchPointID >= 0 || event.isDefaultPrevented() )
+			if(!this._isEnabled || (!this._isEditable && !this._isSelectable) ||
+				this.touchPointID >= 0 || event.isDefaultPrevented())
 			{
 				return;
 			}
 			//ignore select all, cut, copy, and paste
-			var charCode : uint = event.charCode;
-			if( event.ctrlKey && (charCode == 97 || charCode == 99 || charCode == 118 || charCode == 120) ) //a, c, p, and x
+			var charCode:uint = event.charCode;
+			if(event.ctrlKey && (charCode == 97 || charCode == 99 || charCode == 118 || charCode == 120)) //a, c, p, and x
 			{
 				return;
 			}
-			var newIndex : int = -1;
-			if( !FocusManager.isEnabledForStage( this.stage ) && event.keyCode == Keyboard.TAB )
+			var newIndex:int = -1;
+			if(!FocusManager.isEnabledForStage(this.stage) && event.keyCode == Keyboard.TAB)
 			{
 				this.clearFocus();
 				return;
 			}
-			else if( event.keyCode == Keyboard.HOME || event.keyCode == Keyboard.UP )
+			else if(event.keyCode == Keyboard.HOME || event.keyCode == Keyboard.UP)
 			{
 				newIndex = 0;
 			}
-			else if( event.keyCode == Keyboard.END || event.keyCode == Keyboard.DOWN )
+			else if(event.keyCode == Keyboard.END || event.keyCode == Keyboard.DOWN)
 			{
 				newIndex = this._text.length;
 			}
-			else if( event.keyCode == Keyboard.LEFT )
+			else if(event.keyCode == Keyboard.LEFT)
 			{
-				if( event.shiftKey )
+				if(event.shiftKey)
 				{
-					if( this._selectionAnchorIndex < 0 )
+					if(this._selectionAnchorIndex < 0)
 					{
 						this._selectionAnchorIndex = this._selectionBeginIndex;
 					}
-					if( this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionBeginIndex && this._selectionBeginIndex != this._selectionEndIndex )
+					if(this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionBeginIndex &&
+						this._selectionBeginIndex != this._selectionEndIndex)
 					{
 						newIndex = this._selectionEndIndex - 1;
-						this.selectRange( this._selectionBeginIndex , newIndex );
+						this.selectRange(this._selectionBeginIndex, newIndex);
 					}
 					else
 					{
 						newIndex = this._selectionBeginIndex - 1;
-						if( newIndex < 0 )
+						if(newIndex < 0)
 						{
 							newIndex = 0;
 						}
-						this.selectRange( newIndex , this._selectionEndIndex );
+						this.selectRange(newIndex, this._selectionEndIndex);
 					}
 					return;
 				}
-				else if( this._selectionBeginIndex != this._selectionEndIndex )
+				else if(this._selectionBeginIndex != this._selectionEndIndex)
 				{
 					newIndex = this._selectionBeginIndex;
 				}
 				else
 				{
-					if( event.altKey || event.ctrlKey )
+					if(event.altKey || event.ctrlKey)
 					{
-						newIndex = TextInputNavigation.findPreviousWordStartIndex( this._text , this._selectionBeginIndex );
+						newIndex = TextInputNavigation.findPreviousWordStartIndex(this._text, this._selectionBeginIndex);
 					}
 					else
 					{
 						newIndex = this._selectionBeginIndex - 1;
 					}
-					if( newIndex < 0 )
+					if(newIndex < 0)
 					{
 						newIndex = 0;
 					}
 				}
 			}
-			else if( event.keyCode == Keyboard.RIGHT )
+			else if(event.keyCode == Keyboard.RIGHT)
 			{
-				if( event.shiftKey )
+				if(event.shiftKey)
 				{
-					if( this._selectionAnchorIndex < 0 )
+					if(this._selectionAnchorIndex < 0)
 					{
 						this._selectionAnchorIndex = this._selectionBeginIndex;
 					}
-					if( this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionEndIndex && this._selectionBeginIndex != this._selectionEndIndex )
+					if(this._selectionAnchorIndex >= 0 && this._selectionAnchorIndex == this._selectionEndIndex &&
+						this._selectionBeginIndex != this._selectionEndIndex)
 					{
 						newIndex = this._selectionBeginIndex + 1;
-						this.selectRange( newIndex , this._selectionEndIndex );
+						this.selectRange(newIndex, this._selectionEndIndex);
 					}
 					else
 					{
 						newIndex = this._selectionEndIndex + 1;
-						if( newIndex < 0 || newIndex > this._text.length )
+						if(newIndex < 0 || newIndex > this._text.length)
 						{
 							newIndex = this._text.length;
 						}
-						this.selectRange( this._selectionBeginIndex , newIndex );
+						this.selectRange(this._selectionBeginIndex, newIndex);
 					}
 					return;
 				}
-				else if( this._selectionBeginIndex != this._selectionEndIndex )
+				else if(this._selectionBeginIndex != this._selectionEndIndex)
 				{
 					newIndex = this._selectionEndIndex;
 				}
 				else
 				{
-					if( event.altKey || event.ctrlKey )
+					if(event.altKey || event.ctrlKey)
 					{
-						newIndex = TextInputNavigation.findNextWordStartIndex( this._text , this._selectionEndIndex );
+						newIndex = TextInputNavigation.findNextWordStartIndex(this._text, this._selectionEndIndex);
 					}
 					else
 					{
 						newIndex = this._selectionEndIndex + 1;
 					}
-					if( newIndex < 0 || newIndex > this._text.length )
+					if(newIndex < 0 || newIndex > this._text.length)
 					{
 						newIndex = this._text.length;
 					}
 				}
 			}
-			if( newIndex < 0 )
+			if(newIndex < 0)
 			{
-				if( event.keyCode == Keyboard.ENTER )
+				if(event.keyCode == Keyboard.ENTER)
 				{
-					this.dispatchEventWith( FeathersEventType.ENTER );
+					this.dispatchEventWith(FeathersEventType.ENTER);
 					return;
 				}
 				//everything after this point edits the text, so return if the text
 				//editor isn't editable.
-				if( !this._isEditable )
+				if(!this._isEditable)
 				{
 					return;
 				}
-				var currentValue : String = this._text;
-				if( this._displayAsPassword )
+				var currentValue:String = this._text;
+				if(this._displayAsPassword)
 				{
 					currentValue = this._unmaskedText;
 				}
-				if( event.keyCode == Keyboard.DELETE )
+				if(event.keyCode == Keyboard.DELETE)
 				{
-					if( event.altKey || event.ctrlKey )
+					if(event.altKey || event.ctrlKey)
 					{
-						var nextWordStartIndex : int = TextInputNavigation.findNextWordStartIndex( this._text , this._selectionEndIndex );
-						this.text = currentValue.substr( 0 , this._selectionBeginIndex ) + currentValue.substr( nextWordStartIndex );
+						var nextWordStartIndex:int = TextInputNavigation.findNextWordStartIndex(this._text, this._selectionEndIndex);
+						this.text = currentValue.substr(0, this._selectionBeginIndex) + currentValue.substr(nextWordStartIndex);
 					}
-					else if( this._selectionBeginIndex != this._selectionEndIndex )
+					else if(this._selectionBeginIndex != this._selectionEndIndex)
 					{
 						this.deleteSelectedText();
 					}
-					else if( this._selectionEndIndex < currentValue.length )
+					else if(this._selectionEndIndex < currentValue.length)
 					{
-						this.text = currentValue.substr( 0 , this._selectionBeginIndex ) + currentValue.substr( this._selectionEndIndex + 1 );
+						this.text = currentValue.substr(0, this._selectionBeginIndex) + currentValue.substr(this._selectionEndIndex + 1);
 					}
 				}
-				else if( event.keyCode == Keyboard.BACKSPACE )
+				else if(event.keyCode == Keyboard.BACKSPACE)
 				{
-					if( event.altKey || event.ctrlKey )
+					if(event.altKey || event.ctrlKey)
 					{
-						newIndex = TextInputNavigation.findPreviousWordStartIndex( this._text , this._selectionBeginIndex );
-						this.text = currentValue.substr( 0 , newIndex ) + currentValue.substr( this._selectionEndIndex );
+						newIndex = TextInputNavigation.findPreviousWordStartIndex(this._text, this._selectionBeginIndex);
+						this.text = currentValue.substr(0, newIndex) + currentValue.substr(this._selectionEndIndex);
 					}
-					else if( this._selectionBeginIndex != this._selectionEndIndex )
+					else if(this._selectionBeginIndex != this._selectionEndIndex)
 					{
 						this.deleteSelectedText();
 					}
-					else if( this._selectionBeginIndex > 0 )
+					else if(this._selectionBeginIndex > 0)
 					{
 						newIndex = this._selectionBeginIndex - 1;
-						this.text = currentValue.substr( 0 , this._selectionBeginIndex - 1 ) + currentValue.substr( this._selectionEndIndex );
+						this.text = currentValue.substr(0, this._selectionBeginIndex - 1) + currentValue.substr(this._selectionEndIndex);
 					}
 				}
 			}
-			if( newIndex >= 0 )
+			if(newIndex >= 0)
 			{
 				this._selectionAnchorIndex = newIndex;
-				this.selectRange( newIndex , newIndex );
+				this.selectRange(newIndex, newIndex);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function nativeFocus_textInputHandler( event : TextEvent ) : void
+		protected function nativeFocus_textInputHandler(event:TextEvent):void
 		{
-			if( !this._isEditable || !this._isEnabled )
+			if(!this._isEditable || !this._isEnabled)
 			{
 				return;
 			}
-			var text : String = event.text;
-			if( text === CARRIAGE_RETURN || text === LINE_FEED )
+			var text:String = event.text;
+			if(text === CARRIAGE_RETURN || text === LINE_FEED)
 			{
 				//ignore new lines
 				return;
 			}
-			var charCode : int = text.charCodeAt( 0 );
-			if( !this._restrict || this._restrict.isCharacterAllowed( charCode ) )
+			var charCode:int = text.charCodeAt(0);
+			if(!this._restrict || this._restrict.isCharacterAllowed(charCode))
 			{
-				this.replaceSelectedText( text );
+				this.replaceSelectedText(text);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function nativeFocus_selectAllHandler( event : flash.events.Event ) : void
+		protected function nativeFocus_selectAllHandler(event:flash.events.Event):void
 		{
-			if( !this._isEnabled || (!this._isEditable && !this._isSelectable) )
+			if(!this._isEnabled || (!this._isEditable && !this._isSelectable))
 			{
 				return;
 			}
 			this._selectionAnchorIndex = 0;
-			this.selectRange( 0 , this._text.length );
+			this.selectRange(0, this._text.length);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function nativeFocus_cutHandler( event : flash.events.Event ) : void
+		protected function nativeFocus_cutHandler(event:flash.events.Event):void
 		{
-			if( !this._isEnabled || (!this._isEditable && !this._isSelectable) || this._selectionBeginIndex == this._selectionEndIndex || this._displayAsPassword )
+			if(!this._isEnabled || (!this._isEditable && !this._isSelectable) ||
+				this._selectionBeginIndex == this._selectionEndIndex || this._displayAsPassword)
 			{
 				return;
 			}
-			Clipboard.generalClipboard.setData( ClipboardFormats.TEXT_FORMAT , this.getSelectedText() );
-			if( !this._isEditable )
+			Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, this.getSelectedText());
+			if(!this._isEditable)
 			{
 				return;
 			}
@@ -1463,35 +1479,36 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function nativeFocus_copyHandler( event : flash.events.Event ) : void
+		protected function nativeFocus_copyHandler(event:flash.events.Event):void
 		{
-			if( !this._isEnabled || (!this._isEditable && !this._isSelectable) || this._selectionBeginIndex == this._selectionEndIndex || this._displayAsPassword )
+			if(!this._isEnabled || (!this._isEditable && !this._isSelectable) ||
+				this._selectionBeginIndex == this._selectionEndIndex || this._displayAsPassword)
 			{
 				return;
 			}
-			Clipboard.generalClipboard.setData( ClipboardFormats.TEXT_FORMAT , this.getSelectedText() );
+			Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, this.getSelectedText());
 		}
 
 		/**
 		 * @private
 		 */
-		protected function nativeFocus_pasteHandler( event : flash.events.Event ) : void
+		protected function nativeFocus_pasteHandler(event:flash.events.Event):void
 		{
-			if( !this._isEditable || !this._isEnabled )
+			if(!this._isEditable || !this._isEnabled)
 			{
 				return;
 			}
-			var pastedText : String = Clipboard.generalClipboard.getData( ClipboardFormats.TEXT_FORMAT ) as String;
-			if( pastedText === null )
+			var pastedText:String = Clipboard.generalClipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
+			if(pastedText === null)
 			{
 				//the clipboard doesn't contain any text to paste
 				return;
 			}
-			if( this._restrict )
+			if(this._restrict)
 			{
-				pastedText = this._restrict.filterText( pastedText );
+				pastedText = this._restrict.filterText(pastedText);
 			}
-			this.replaceSelectedText( pastedText );
+			this.replaceSelectedText(pastedText);
 		}
 	}
 }

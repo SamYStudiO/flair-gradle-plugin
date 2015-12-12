@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -54,62 +54,29 @@ package feathers.controls
 	public class LayoutGroup extends FeathersControl
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>LayoutGroup</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
-		/**
 		 * @private
 		 */
-		private static const HELPER_RECTANGLE : Rectangle = new Rectangle();
+		private static const HELPER_RECTANGLE:Rectangle = new Rectangle();
+
 		/**
 		 * Flag to indicate that the clipping has changed.
 		 */
-		protected static const INVALIDATION_FLAG_CLIPPING : String = "clipping";
-		/**
-		 * The items added to the group.
-		 */
-		protected var items : Vector.<DisplayObject> = new <DisplayObject>[];
-		/**
-		 * The view port bounds result object passed to the layout. Its values
-		 * should be set in <code>refreshViewPortBounds()</code>.
-		 */
-		protected var viewPortBounds : ViewPortBounds = new ViewPortBounds();
-		/**
-		 * @private
-		 */
-		protected var _layoutResult : LayoutBoundsResult = new LayoutBoundsResult();
-		/**
-		 * @private
-		 */
-		protected var originalBackgroundWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var originalBackgroundHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var currentBackgroundSkin : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var _ignoreChildChanges : Boolean = false;
+		protected static const INVALIDATION_FLAG_CLIPPING:String = "clipping";
+
 		/**
 		 * The layout group will auto size itself to fill the entire stage.
 		 *
 		 * @see #autoSizeMode
 		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
+
 		/**
 		 * The layout group will auto size itself to fit its content.
 		 *
 		 * @see #autoSizeMode
 		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
+
 		/**
 		 * An alternate style name to use with <code>LayoutGroup</code> to
 		 * allow a theme to give it a toolbar style. If a theme does not provide
@@ -130,12 +97,47 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_TOOLBAR : String = "feathers-toolbar-layout-group";
+		public static const ALTERNATE_STYLE_NAME_TOOLBAR:String = "feathers-toolbar-layout-group";
+
+		/**
+		 * The default <code>IStyleProvider</code> for all <code>LayoutGroup</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider:IStyleProvider;
+
+		/**
+		 * Constructor.
+		 */
+		public function LayoutGroup()
+		{
+			super();
+			this.addEventListener(Event.ADDED_TO_STAGE, layoutGroup_addedToStageHandler);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, layoutGroup_removedFromStageHandler);
+		}
+
+		/**
+		 * The items added to the group.
+		 */
+		protected var items:Vector.<DisplayObject> = new <DisplayObject>[];
+
+		/**
+		 * The view port bounds result object passed to the layout. Its values
+		 * should be set in <code>refreshViewPortBounds()</code>.
+		 */
+		protected var viewPortBounds:ViewPortBounds = new ViewPortBounds();
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected var _layoutResult:LayoutBoundsResult = new LayoutBoundsResult();
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return LayoutGroup.globalStyleProvider;
 		}
@@ -143,7 +145,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _layout : ILayout;
+		protected var _layout:ILayout;
 
 		/**
 		 * Controls the way that the group's children are positioned and sized.
@@ -158,7 +160,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get layout() : ILayout
+		public function get layout():ILayout
 		{
 			return this._layout;
 		}
@@ -166,34 +168,34 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set layout( value : ILayout ) : void
+		public function set layout(value:ILayout):void
 		{
-			if( this._layout == value )
+			if(this._layout == value)
 			{
 				return;
 			}
-			if( this._layout )
+			if(this._layout)
 			{
-				this._layout.removeEventListener( Event.CHANGE , layout_changeHandler );
+				this._layout.removeEventListener(Event.CHANGE, layout_changeHandler);
 			}
 			this._layout = value;
-			if( this._layout )
+			if(this._layout)
 			{
-				if( this._layout is IVirtualLayout )
+				if(this._layout is IVirtualLayout)
 				{
-					IVirtualLayout( this._layout ).useVirtualLayout = false;
+					IVirtualLayout(this._layout).useVirtualLayout = false;
 				}
-				this._layout.addEventListener( Event.CHANGE , layout_changeHandler );
+				this._layout.addEventListener(Event.CHANGE, layout_changeHandler);
 				//if we don't have a layout, nothing will need to be redrawn
-				this.invalidate( INVALIDATION_FLAG_LAYOUT );
+				this.invalidate(INVALIDATION_FLAG_LAYOUT);
 			}
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _clipContent : Boolean = false;
+		protected var _clipContent:Boolean = false;
 
 		/**
 		 * If true, the group will be clipped to its bounds. In other words,
@@ -210,7 +212,7 @@ package feathers.controls
 		 *
 		 * @default false
 		 */
-		public function get clipContent() : Boolean
+		public function get clipContent():Boolean
 		{
 			return this._clipContent;
 		}
@@ -218,24 +220,39 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set clipContent( value : Boolean ) : void
+		public function set clipContent(value:Boolean):void
 		{
-			if( this._clipContent == value )
+			if(this._clipContent == value)
 			{
 				return;
 			}
 			this._clipContent = value;
-			if( !value )
+			if(!value)
 			{
 				this.clipRect = null;
 			}
-			this.invalidate( INVALIDATION_FLAG_CLIPPING );
+			this.invalidate(INVALIDATION_FLAG_CLIPPING);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundSkin : DisplayObject;
+		protected var originalBackgroundWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var originalBackgroundHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var currentBackgroundSkin:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var _backgroundSkin:DisplayObject;
 
 		/**
 		 * The default background to display behind all content. The background
@@ -249,7 +266,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundSkin() : DisplayObject
+		public function get backgroundSkin():DisplayObject
 		{
 			return this._backgroundSkin;
 		}
@@ -257,24 +274,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set backgroundSkin( value : DisplayObject ) : void
+		public function set backgroundSkin(value:DisplayObject):void
 		{
-			if( this._backgroundSkin == value )
+			if(this._backgroundSkin == value)
 			{
 				return;
 			}
-			if( value && value.parent )
+			if(value && value.parent)
 			{
 				value.removeFromParent();
 			}
 			this._backgroundSkin = value;
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundDisabledSkin : DisplayObject;
+		protected var _backgroundDisabledSkin:DisplayObject;
 
 		/**
 		 * The background to display behind all content when the layout group is
@@ -288,7 +305,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundDisabledSkin() : DisplayObject
+		public function get backgroundDisabledSkin():DisplayObject
 		{
 			return this._backgroundDisabledSkin;
 		}
@@ -296,26 +313,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set backgroundDisabledSkin( value : DisplayObject ) : void
+		public function set backgroundDisabledSkin(value:DisplayObject):void
 		{
-			if( this._backgroundDisabledSkin == value )
+			if(this._backgroundDisabledSkin == value)
 			{
 				return;
 			}
-			if( value && value.parent )
+			if(value && value.parent)
 			{
 				value.removeFromParent();
 			}
 			this._backgroundDisabledSkin = value;
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _autoSizeMode : String = AUTO_SIZE_MODE_CONTENT;
+		protected var _autoSizeMode:String = AUTO_SIZE_MODE_CONTENT;
 
-		[Inspectable(type="String" , enumeration="stage,content")]
+		[Inspectable(type="String",enumeration="stage,content")]
 		/**
 		 * Determines how the layout group will set its own size when its
 		 * dimensions (width and height) aren't set explicitly.
@@ -330,7 +347,8 @@ package feathers.controls
 		 *
 		 * @see #AUTO_SIZE_MODE_STAGE
 		 * @see #AUTO_SIZE_MODE_CONTENT
-		 */ public function get autoSizeMode() : String
+		 */
+		public function get autoSizeMode():String
 		{
 			return this._autoSizeMode;
 		}
@@ -338,103 +356,98 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set autoSizeMode( value : String ) : void
+		public function set autoSizeMode(value:String):void
 		{
-			if( this._autoSizeMode == value )
+			if(this._autoSizeMode == value)
 			{
 				return;
 			}
 			this._autoSizeMode = value;
-			if( this.stage )
+			if(this.stage)
 			{
-				if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+				if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
 				{
-					this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
+					this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 				}
 				else
 				{
-					this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
+					this.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
 				}
 			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function LayoutGroup()
-		{
-			super();
-			this.addEventListener( Event.ADDED_TO_STAGE , layoutGroup_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE , layoutGroup_removedFromStageHandler );
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function addChildAt( child : DisplayObject , index : int ) : DisplayObject
+		protected var _ignoreChildChanges:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
-			if( child is IFeathersControl )
+			if(child is IFeathersControl)
 			{
-				child.addEventListener( FeathersEventType.RESIZE , child_resizeHandler );
+				child.addEventListener(FeathersEventType.RESIZE, child_resizeHandler);
 			}
-			if( child is ILayoutDisplayObject )
+			if(child is ILayoutDisplayObject)
 			{
-				child.addEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
+				child.addEventListener(FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler);
 			}
-			var oldIndex : int = this.items.indexOf( child );
-			if( oldIndex == index )
+			var oldIndex:int = this.items.indexOf(child);
+			if(oldIndex == index)
 			{
 				return child;
 			}
-			if( oldIndex >= 0 )
+			if(oldIndex >= 0)
 			{
-				this.items.splice( oldIndex , 1 );
+				this.items.splice(oldIndex, 1);
 			}
-			var itemCount : int = this.items.length;
-			if( index == itemCount )
+			var itemCount:int = this.items.length;
+			if(index == itemCount)
 			{
 				//faster than splice because it avoids gc
-				this.items[ index ] = child;
+				this.items[index] = child;
 			}
 			else
 			{
-				this.items.splice( index , 0 , child );
+				this.items.splice(index, 0, child);
 			}
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
-			return super.addChildAt( child , index );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
+			return super.addChildAt(child, index);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function removeChildAt( index : int , dispose : Boolean = false ) : DisplayObject
+		override public function removeChildAt(index:int, dispose:Boolean = false):DisplayObject
 		{
-			if( index >= 0 && index < this.items.length )
+			if(index >= 0 && index < this.items.length)
 			{
-				this.items.splice( index , 1 );
+				this.items.splice(index, 1);
 			}
-			var child : DisplayObject = super.removeChildAt( index , dispose );
-			if( child is IFeathersControl )
+			var child:DisplayObject = super.removeChildAt(index, dispose);
+			if(child is IFeathersControl)
 			{
-				child.removeEventListener( FeathersEventType.RESIZE , child_resizeHandler );
+				child.removeEventListener(FeathersEventType.RESIZE, child_resizeHandler);
 			}
-			if( child is ILayoutDisplayObject )
+			if(child is ILayoutDisplayObject)
 			{
-				child.removeEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
+				child.removeEventListener(FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler);
 			}
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 			return child;
 		}
 
 		/**
 		 * @private
 		 */
-		override public function setChildIndex( child : DisplayObject , index : int ) : void
+		override public function setChildIndex(child:DisplayObject, index:int):void
 		{
-			super.setChildIndex( child , index );
-			var oldIndex : int = this.items.indexOf( child );
-			if( oldIndex == index )
+			super.setChildIndex(child, index);
+			var oldIndex:int = this.items.indexOf(child);
+			if(oldIndex == index)
 			{
 				return;
 			}
@@ -442,55 +455,55 @@ package feathers.controls
 			//the super function already checks if oldIndex < 0, and throws an
 			//appropriate error, so no need to do it again!
 
-			this.items.splice( oldIndex , 1 );
-			this.items.splice( index , 0 , child );
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.items.splice(oldIndex, 1);
+			this.items.splice(index, 0, child);
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function swapChildrenAt( index1 : int , index2 : int ) : void
+		override public function swapChildrenAt(index1:int, index2:int):void
 		{
-			super.swapChildrenAt( index1 , index2 );
-			var child1 : DisplayObject = this.items[ index1 ];
-			var child2 : DisplayObject = this.items[ index2 ];
-			this.items[ index1 ] = child2;
-			this.items[ index2 ] = child1;
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			super.swapChildrenAt(index1, index2)
+			var child1:DisplayObject = this.items[index1];
+			var child2:DisplayObject = this.items[index2];
+			this.items[index1] = child2;
+			this.items[index2] = child1;
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function sortChildren( compareFunction : Function ) : void
+		override public function sortChildren(compareFunction:Function):void
 		{
-			super.sortChildren( compareFunction );
-			this.items.sort( compareFunction );
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			super.sortChildren(compareFunction);
+			this.items.sort(compareFunction);
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject
 		{
-			var localX : Number = localPoint.x;
-			var localY : Number = localPoint.y;
-			var result : DisplayObject = super.hitTest( localPoint , forTouch );
-			if( result )
+			var localX:Number = localPoint.x;
+			var localY:Number = localPoint.y;
+			var result:DisplayObject = super.hitTest(localPoint, forTouch);
+			if(result)
 			{
-				if( !this._isEnabled )
+				if(!this._isEnabled)
 				{
 					return this;
 				}
 				return result;
 			}
-			if( forTouch && (!this.visible || !this.touchable) )
+			if(forTouch && (!this.visible || !this.touchable))
 			{
 				return null;
 			}
-			if( this.currentBackgroundSkin && this._hitArea.contains( localX , localY ) )
+			if(this.currentBackgroundSkin && this._hitArea.contains(localX, localY))
 			{
 				return this;
 			}
@@ -500,46 +513,46 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport , parentAlpha : Number ) : void
+		override public function render(support:RenderSupport, parentAlpha:Number):void
 		{
-			if( this.currentBackgroundSkin && this.currentBackgroundSkin.hasVisibleArea )
+			if(this.currentBackgroundSkin && this.currentBackgroundSkin.hasVisibleArea)
 			{
-				var clipRect : Rectangle = this.clipRect;
-				if( clipRect )
+				var clipRect:Rectangle = this.clipRect;
+				if(clipRect)
 				{
-					clipRect = support.pushClipRect( this.getClipRect( stage , HELPER_RECTANGLE ) );
-					if( clipRect.isEmpty() )
+					clipRect = support.pushClipRect(this.getClipRect(stage, HELPER_RECTANGLE));
+					if(clipRect.isEmpty())
 					{
 						// empty clipping bounds - no need to render children.
 						support.popClipRect();
 						return;
 					}
 				}
-				var blendMode : String = this.blendMode;
+				var blendMode:String = this.blendMode;
 				support.pushMatrix();
-				support.transformMatrix( this.currentBackgroundSkin );
+				support.transformMatrix(this.currentBackgroundSkin);
 				support.blendMode = this.currentBackgroundSkin.blendMode;
-				this.currentBackgroundSkin.render( support , parentAlpha * this.alpha );
+				this.currentBackgroundSkin.render(support, parentAlpha * this.alpha);
 				support.blendMode = blendMode;
 				support.popMatrix();
-				if( clipRect )
+				if(clipRect)
 				{
 					support.popClipRect();
 				}
 			}
-			super.render( support , parentAlpha );
+			super.render(support, parentAlpha);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override public function dispose():void
 		{
-			if( this._backgroundSkin && this._backgroundSkin.parent !== this )
+			if(this._backgroundSkin && this._backgroundSkin.parent !== this)
 			{
 				this._backgroundSkin.dispose();
 			}
-			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent !== this )
+			if(this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent !== this)
 			{
 				this._backgroundDisabledSkin.dispose();
 			}
@@ -555,43 +568,43 @@ package feathers.controls
 		 * values change, but standard Starling display objects like
 		 * <code>Sprite</code> and <code>Image</code> do not.
 		 */
-		public function readjustLayout() : void
+		public function readjustLayout():void
 		{
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var clippingInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_CLIPPING );
+			var layoutInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_LAYOUT);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var clippingInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_CLIPPING);
 			//we don't have scrolling, but a subclass might
-			var scrollInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SCROLL );
-			var skinInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SKIN );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
+			var scrollInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SCROLL);
+			var skinInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SKIN);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
 
 			//scrolling only affects the layout is requiresLayoutOnScroll is true
-			if( !layoutInvalid && scrollInvalid && this._layout && this._layout.requiresLayoutOnScroll )
+			if(!layoutInvalid && scrollInvalid && this._layout && this._layout.requiresLayoutOnScroll)
 			{
 				layoutInvalid = true;
 			}
 
-			if( skinInvalid || stateInvalid )
+			if(skinInvalid || stateInvalid)
 			{
 				this.refreshBackgroundSkin();
 			}
 
-			if( sizeInvalid || layoutInvalid || skinInvalid || stateInvalid )
+			if(sizeInvalid || layoutInvalid || skinInvalid || stateInvalid)
 			{
 				this.refreshViewPortBounds();
-				if( this._layout )
+				if(this._layout)
 				{
-					var oldIgnoreChildChanges : Boolean = this._ignoreChildChanges;
+					var oldIgnoreChildChanges:Boolean = this._ignoreChildChanges;
 					this._ignoreChildChanges = true;
-					this._layout.layout( this.items , this.viewPortBounds , this._layoutResult );
+					this._layout.layout(this.items, this.viewPortBounds, this._layoutResult);
 					this._ignoreChildChanges = oldIgnoreChildChanges;
 				}
 				else
@@ -599,8 +612,8 @@ package feathers.controls
 					this.handleManualLayout();
 				}
 				this.handleLayoutResult();
-
-				if( this.currentBackgroundSkin )
+				
+				if(this.currentBackgroundSkin)
 				{
 					this.currentBackgroundSkin.width = this.actualWidth;
 					this.currentBackgroundSkin.height = this.actualHeight;
@@ -610,7 +623,7 @@ package feathers.controls
 				this.validateChildren();
 			}
 
-			if( sizeInvalid || clippingInvalid )
+			if(sizeInvalid || clippingInvalid)
 			{
 				this.refreshClipRect();
 			}
@@ -620,9 +633,9 @@ package feathers.controls
 		 * Choose the appropriate background skin based on the control's current
 		 * state.
 		 */
-		protected function refreshBackgroundSkin() : void
+		protected function refreshBackgroundSkin():void
 		{
-			if( !this._isEnabled && this._backgroundDisabledSkin )
+			if(!this._isEnabled && this._backgroundDisabledSkin)
 			{
 				this.currentBackgroundSkin = this._backgroundDisabledSkin;
 			}
@@ -630,13 +643,14 @@ package feathers.controls
 			{
 				this.currentBackgroundSkin = this._backgroundSkin
 			}
-			if( this.currentBackgroundSkin )
+			if(this.currentBackgroundSkin)
 			{
-				if( this.originalBackgroundWidth !== this.originalBackgroundWidth || this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
+				if(this.originalBackgroundWidth !== this.originalBackgroundWidth ||
+					this.originalBackgroundHeight !== this.originalBackgroundHeight) //isNaN
 				{
-					if( this.currentBackgroundSkin is IValidating )
+					if(this.currentBackgroundSkin is IValidating)
 					{
-						IValidating( this.currentBackgroundSkin ).validate();
+						IValidating(this.currentBackgroundSkin).validate();
 					}
 					this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 					this.originalBackgroundHeight = this.currentBackgroundSkin.height;
@@ -648,13 +662,14 @@ package feathers.controls
 		 * Refreshes the values in the <code>viewPortBounds</code> variable that
 		 * is passed to the layout.
 		 */
-		protected function refreshViewPortBounds() : void
+		protected function refreshViewPortBounds():void
 		{
 			this.viewPortBounds.x = 0;
 			this.viewPortBounds.y = 0;
 			this.viewPortBounds.scrollX = 0;
 			this.viewPortBounds.scrollY = 0;
-			if( this._autoSizeMode === AUTO_SIZE_MODE_STAGE && this.explicitWidth !== this.explicitWidth )
+			if(this._autoSizeMode === AUTO_SIZE_MODE_STAGE &&
+				this.explicitWidth !== this.explicitWidth)
 			{
 				this.viewPortBounds.explicitWidth = this.stage.stageWidth;
 			}
@@ -662,7 +677,8 @@ package feathers.controls
 			{
 				this.viewPortBounds.explicitWidth = this.explicitWidth;
 			}
-			if( this._autoSizeMode === AUTO_SIZE_MODE_STAGE && this.explicitHeight !== this.explicitHeight )
+			if(this._autoSizeMode === AUTO_SIZE_MODE_STAGE &&
+					this.explicitHeight !== this.explicitHeight)
 			{
 				this.viewPortBounds.explicitHeight = this.stage.stageHeight;
 			}
@@ -670,15 +686,23 @@ package feathers.controls
 			{
 				this.viewPortBounds.explicitHeight = this.explicitHeight;
 			}
-			var minWidth : Number = this._minWidth;
-			var minHeight : Number = this._minHeight;
-			if( this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
-					this.originalBackgroundWidth > minWidth )
+			var minWidth:Number = this.explicitMinWidth;
+			if(minWidth !== minWidth) //isNaN
+			{
+				minWidth = 0;
+			}
+			var minHeight:Number = this.explicitMinHeight;
+			if(minHeight !== minHeight) //isNaN
+			{
+				minHeight = 0;
+			}
+			if(this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
+				this.originalBackgroundWidth > minWidth)
 			{
 				minWidth = this.originalBackgroundWidth;
 			}
-			if( this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
-					this.originalBackgroundHeight > minHeight )
+			if(this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
+				this.originalBackgroundHeight > minHeight)
 			{
 				minHeight = this.originalBackgroundHeight;
 			}
@@ -691,49 +715,50 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function handleLayoutResult() : void
+		protected function handleLayoutResult():void
 		{
-			this.setSizeInternal( this._layoutResult.viewPortWidth , this._layoutResult.viewPortHeight , false );
+			this.setSizeInternal(this._layoutResult.viewPortWidth,
+					this._layoutResult.viewPortHeight, false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function handleManualLayout() : void
+		protected function handleManualLayout():void
 		{
-			var maxX : Number = this.viewPortBounds.explicitWidth;
-			if( maxX !== maxX ) //isNaN
+			var maxX:Number = this.viewPortBounds.explicitWidth;
+			if(maxX !== maxX) //isNaN
 			{
 				maxX = 0;
 			}
-			var maxY : Number = this.viewPortBounds.explicitHeight;
-			if( maxY !== maxY ) //isNaN
+			var maxY:Number = this.viewPortBounds.explicitHeight;
+			if(maxY !== maxY) //isNaN
 			{
 				maxY = 0;
 			}
-			var oldIgnoreChildChanges : Boolean = this._ignoreChildChanges;
+			var oldIgnoreChildChanges:Boolean = this._ignoreChildChanges;
 			this._ignoreChildChanges = true;
-			var itemCount : int = this.items.length;
-			for( var i : int = 0; i < itemCount; i++ )
+			var itemCount:int = this.items.length;
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				var item : DisplayObject = this.items[ i ];
-				if( item is ILayoutDisplayObject && !ILayoutDisplayObject( item ).includeInLayout )
+				var item:DisplayObject = this.items[i];
+				if(item is ILayoutDisplayObject && !ILayoutDisplayObject(item).includeInLayout)
 				{
 					continue;
 				}
-				if( item is IValidating )
+				if(item is IValidating)
 				{
-					IValidating( item ).validate();
+					IValidating(item).validate();
 				}
-				var itemMaxX : Number = item.x + item.width;
-				var itemMaxY : Number = item.y + item.height;
-				if( itemMaxX === itemMaxX && //!isNaN
-						itemMaxX > maxX )
+				var itemMaxX:Number = item.x + item.width;
+				var itemMaxY:Number = item.y + item.height;
+				if(itemMaxX === itemMaxX && //!isNaN
+					itemMaxX > maxX)
 				{
 					maxX = itemMaxX;
 				}
-				if( itemMaxY === itemMaxY && //!isNaN
-						itemMaxY > maxY )
+				if(itemMaxY === itemMaxY && //!isNaN
+					itemMaxY > maxY)
 				{
 					maxY = itemMaxY;
 				}
@@ -743,23 +768,23 @@ package feathers.controls
 			this._layoutResult.contentY = 0;
 			this._layoutResult.contentWidth = maxX;
 			this._layoutResult.contentHeight = maxY;
-			var minWidth : Number = this.viewPortBounds.minWidth;
-			var minHeight : Number = this.viewPortBounds.minHeight;
-			if( maxX < minWidth )
+			var minWidth:Number = this.viewPortBounds.minWidth;
+			var minHeight:Number = this.viewPortBounds.minHeight;
+			if(maxX < minWidth)
 			{
 				maxX = minWidth;
 			}
-			if( maxY < minHeight )
+			if(maxY < minHeight)
 			{
 				maxY = minHeight;
 			}
-			var maxWidth : Number = this.viewPortBounds.maxWidth;
-			var maxHeight : Number = this.viewPortBounds.maxHeight;
-			if( maxX > maxWidth )
+			var maxWidth:Number = this.viewPortBounds.maxWidth;
+			var maxHeight:Number = this.viewPortBounds.maxHeight;
+			if(maxX > maxWidth)
 			{
 				maxX = maxWidth;
 			}
-			if( maxY > maxHeight )
+			if(maxY > maxHeight)
 			{
 				maxY = maxHeight;
 			}
@@ -770,19 +795,19 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function validateChildren() : void
+		protected function validateChildren():void
 		{
-			if( this.currentBackgroundSkin is IValidating )
+			if(this.currentBackgroundSkin is IValidating)
 			{
-				IValidating( this.currentBackgroundSkin ).validate();
+				IValidating(this.currentBackgroundSkin).validate();
 			}
-			var itemCount : int = this.items.length;
-			for( var i : int = 0; i < itemCount; i++ )
+			var itemCount:int = this.items.length;
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				var item : DisplayObject = this.items[ i ];
-				if( item is IValidating )
+				var item:DisplayObject = this.items[i];
+				if(item is IValidating)
 				{
-					IValidating( item ).validate();
+					IValidating(item).validate();
 				}
 			}
 		}
@@ -790,15 +815,15 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function refreshClipRect() : void
+		protected function refreshClipRect():void
 		{
-			if( !this._clipContent )
+			if(!this._clipContent)
 			{
 				return;
 			}
 
-			var clipRect : Rectangle = this.clipRect;
-			if( !clipRect )
+			var clipRect:Rectangle = this.clipRect;
+			if(!clipRect)
 			{
 				clipRect = new Rectangle();
 			}
@@ -812,60 +837,60 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutGroup_addedToStageHandler( event : Event ) : void
+		protected function layoutGroup_addedToStageHandler(event:Event):void
 		{
-			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
 			{
-				this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
+				this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layoutGroup_removedFromStageHandler( event : Event ) : void
+		protected function layoutGroup_removedFromStageHandler(event:Event):void
 		{
-			this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
+			this.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layout_changeHandler( event : Event ) : void
+		protected function layout_changeHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function child_resizeHandler( event : Event ) : void
+		protected function child_resizeHandler(event:Event):void
 		{
-			if( this._ignoreChildChanges )
-			{
-				return;
-			}
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function child_layoutDataChangeHandler( event : Event ) : void
-		{
-			if( this._ignoreChildChanges )
+			if(this._ignoreChildChanges)
 			{
 				return;
 			}
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stage_resizeHandler( event : Event ) : void
+		protected function child_layoutDataChangeHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			if(this._ignoreChildChanges)
+			{
+				return;
+			}
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
+		}
+
+		/**
+		 * @private
+		 */
+		protected function stage_resizeHandler(event:Event):void
+		{
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 	}
 }

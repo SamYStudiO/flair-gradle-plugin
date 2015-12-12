@@ -1,17 +1,17 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.skins.IStyleProvider;
 
 	import flash.errors.IllegalOperationError;
 
-	[Exclude(name="isToggle" , kind="property")]
+	[Exclude(name="isToggle",kind="property")]
 
 	/**
 	 * A toggle control that contains a label and a box that may be checked
@@ -29,22 +29,16 @@ package feathers.controls
 	 *
 	 * @see ../../../help/check.html How to use the Feathers Check component
 	 * @see feathers.controls.ToggleSwitch
-	 */ public class Check extends ToggleButton
+	 */
+	public class Check extends ToggleButton
 	{
-		/**
-		 * The default <code>IStyleProvider</code> for all <code>Check</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
 		/**
 		 * The default value added to the <code>styleNameList</code> of the label.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LABEL : String = "feathers-check-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_LABEL:String = "feathers-check-label";
+		
 		/**
 		 * @copy feathers.controls.Button#STATE_UP
 		 *
@@ -52,7 +46,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_UP : String = "up";
+		public static const STATE_UP:String = "up";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DOWN
 		 *
@@ -60,7 +55,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DOWN : String = "down";
+		public static const STATE_DOWN:String = "down";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_HOVER
 		 *
@@ -68,7 +64,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_HOVER : String = "hover";
+		public static const STATE_HOVER:String = "hover";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DISABLED
 		 *
@@ -76,7 +73,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DISABLED : String = "disabled";
+		public static const STATE_DISABLED:String = "disabled";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_UP_AND_SELECTED
 		 *
@@ -84,7 +82,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_UP_AND_SELECTED : String = "upAndSelected";
+		public static const STATE_UP_AND_SELECTED:String = "upAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DOWN_AND_SELECTED
 		 *
@@ -92,7 +91,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DOWN_AND_SELECTED : String = "downAndSelected";
+		public static const STATE_DOWN_AND_SELECTED:String = "downAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_HOVER_AND_SELECTED
 		 *
@@ -100,7 +100,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_HOVER_AND_SELECTED : String = "hoverAndSelected";
+		public static const STATE_HOVER_AND_SELECTED:String = "hoverAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DISABLED_AND_SELECTED
 		 *
@@ -108,31 +109,36 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DISABLED_AND_SELECTED : String = "disabledAndSelected";
+		public static const STATE_DISABLED_AND_SELECTED:String = "disabledAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_TOP
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_TOP : String = "top";
+		public static const ICON_POSITION_TOP:String = "top";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT : String = "right";
+		public static const ICON_POSITION_RIGHT:String = "right";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_BOTTOM
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_BOTTOM : String = "bottom";
+		public static const ICON_POSITION_BOTTOM:String = "bottom";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_LEFT
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_LEFT : String = "left";
+		public static const ICON_POSITION_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_MANUAL
 		 *
@@ -140,71 +146,72 @@ package feathers.controls
 		 * @see #iconOffsetX
 		 * @see #iconOffsetY
 		 */
-		public static const ICON_POSITION_MANUAL : String = "manual";
+		public static const ICON_POSITION_MANUAL:String = "manual";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_LEFT_BASELINE
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_LEFT_BASELINE : String = "leftBaseline";
+		public static const ICON_POSITION_LEFT_BASELINE:String = "leftBaseline";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT_BASELINE
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT_BASELINE : String = "rightBaseline";
+		public static const ICON_POSITION_RIGHT_BASELINE:String = "rightBaseline";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_LEFT
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_CENTER
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_RIGHT
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_TOP
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_MIDDLE
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_BOTTOM
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
+		
 		/**
-		 * @private
+		 * The default <code>IStyleProvider</code> for all <code>Check</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return Check.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		override public function set isToggle( value : Boolean ) : void
-		{
-			throw IllegalOperationError( "CheckBox isToggle must always be true." );
-		}
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * Constructor.
@@ -214,6 +221,22 @@ package feathers.controls
 			super();
 			this.labelStyleName = DEFAULT_CHILD_STYLE_NAME_LABEL;
 			super.isToggle = true;
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return Check.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function set isToggle(value:Boolean):void
+		{
+			throw IllegalOperationError("CheckBox isToggle must always be true.");
 		}
 	}
 }

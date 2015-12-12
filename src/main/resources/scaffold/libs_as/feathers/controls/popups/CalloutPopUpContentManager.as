@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.popups
 {
 	import feathers.controls.Callout;
@@ -35,7 +35,7 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open" , type="starling.events.Event")]
+	[Event(name="open",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the pop-up content closes.
@@ -57,23 +57,23 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * Displays pop-up content (such as the List in a PickerList) in a Callout.
 	 *
 	 * @see feathers.controls.PickerList
 	 * @see feathers.controls.Callout
-	 */ public class CalloutPopUpContentManager extends EventDispatcher implements IPopUpContentManager
+	 */
+	public class CalloutPopUpContentManager extends EventDispatcher implements IPopUpContentManager
 	{
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var content : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var callout : Callout;
+		public function CalloutPopUpContentManager()
+		{
+		}
+
 		/**
 		 * The factory used to create the <code>Callout</code> instance. If
 		 * <code>null</code>, <code>Callout.calloutFactory()</code> will be used.
@@ -86,7 +86,8 @@ package feathers.controls.popups
 		 *
 		 * @default null
 		 */
-		public var calloutFactory : Function;
+		public var calloutFactory:Function;
+
 		/**
 		 * The direction of the callout.
 		 *
@@ -107,7 +108,8 @@ package feathers.controls.popups
 		 *
 		 * @default Callout.DIRECTION_ANY
 		 */
-		public var direction : String = Callout.DIRECTION_ANY;
+		public var direction:String = Callout.DIRECTION_ANY;
+
 		/**
 		 * Determines if the callout will be modal or not.
 		 *
@@ -122,45 +124,48 @@ package feathers.controls.popups
 		 *
 		 * @default true
 		 */
-		public var isModal : Boolean = true;
+		public var isModal:Boolean = true;
+
+		/**
+		 * @private
+		 */
+		protected var content:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var callout:Callout;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get isOpen() : Boolean
+		public function get isOpen():Boolean
 		{
 			return this.content !== null;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function CalloutPopUpContentManager()
-		{
-		}
-
-		/**
 		 * @inheritDoc
 		 */
-		public function open( content : DisplayObject , source : DisplayObject ) : void
+		public function open(content:DisplayObject, source:DisplayObject):void
 		{
-			if( this.isOpen )
+			if(this.isOpen)
 			{
-				throw new IllegalOperationError( "Pop-up content is already open. Close the previous content before opening new content." );
+				throw new IllegalOperationError("Pop-up content is already open. Close the previous content before opening new content.");
 			}
 
 			this.content = content;
-			this.callout = Callout.show( content , source , this.direction , this.isModal , this.calloutFactory );
-			this.callout.addEventListener( Event.REMOVED_FROM_STAGE , callout_removedFromStageHandler );
-			this.dispatchEventWith( Event.OPEN );
+			this.callout = Callout.show(content, source, this.direction, this.isModal, this.calloutFactory);
+			this.callout.addEventListener(Event.REMOVED_FROM_STAGE, callout_removedFromStageHandler);
+			this.dispatchEventWith(Event.OPEN);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function close() : void
+		public function close():void
 		{
-			if( !this.isOpen )
+			if(!this.isOpen)
 			{
 				return;
 			}
@@ -170,7 +175,7 @@ package feathers.controls.popups
 		/**
 		 * @inheritDoc
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
 			this.close();
 		}
@@ -178,21 +183,21 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function cleanup() : void
+		protected function cleanup():void
 		{
 			this.content = null;
 			this.callout.content = null;
-			this.callout.removeEventListener( Event.REMOVED_FROM_STAGE , callout_removedFromStageHandler );
+			this.callout.removeEventListener(Event.REMOVED_FROM_STAGE, callout_removedFromStageHandler);
 			this.callout = null;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function callout_removedFromStageHandler( event : Event ) : void
+		protected function callout_removedFromStageHandler(event:Event):void
 		{
 			this.cleanup();
-			this.dispatchEventWith( Event.CLOSE );
+			this.dispatchEventWith(Event.CLOSE);
 		}
 	}
 }

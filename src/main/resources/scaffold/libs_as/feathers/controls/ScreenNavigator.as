@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.BaseScreenNavigator;
@@ -34,34 +34,40 @@ package feathers.controls
 	public class ScreenNavigator extends BaseScreenNavigator
 	{
 		/**
+		 * The screen navigator will auto size itself to fill the entire stage.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
+
+		/**
+		 * The screen navigator will auto size itself to fit its content.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
+
+		/**
 		 * The default <code>IStyleProvider</code> for all <code>ScreenNavigator</code>
 		 * components.
 		 *
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _screenEvents : Object = {};
-		/**
-		 * The screen navigator will auto size itself to fill the entire stage.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * The screen navigator will auto size itself to fit its content.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+		public function ScreenNavigator()
+		{
+			super();
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return ScreenNavigator.globalStyleProvider;
 		}
@@ -69,7 +75,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _transition : Function;
+		protected var _transition:Function;
 
 		/**
 		 * Typically used to provide some kind of animation or visual effect,
@@ -117,7 +123,7 @@ package feathers.controls
 		 * @see #clearScreen()
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get transition() : Function
+		public function get transition():Function
 		{
 			return this._transition;
 		}
@@ -125,9 +131,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set transition( value : Function ) : void
+		public function set transition(value:Function):void
 		{
-			if( this._transition == value )
+			if(this._transition == value)
 			{
 				return;
 			}
@@ -135,12 +141,9 @@ package feathers.controls
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function ScreenNavigator()
-		{
-			super();
-		}
+		protected var _screenEvents:Object = {};
 
 		/**
 		 * Registers a new screen with a string identifier that can be used
@@ -149,9 +152,9 @@ package feathers.controls
 		 *
 		 * @see #removeScreen()
 		 */
-		public function addScreen( id : String , item : ScreenNavigatorItem ) : void
+		public function addScreen(id:String, item:ScreenNavigatorItem):void
 		{
-			this.addScreenInternal( id , item );
+			this.addScreenInternal(id, item);
 		}
 
 		/**
@@ -161,20 +164,20 @@ package feathers.controls
 		 * @see #removeAllScreens()
 		 * @see #addScreen()
 		 */
-		public function removeScreen( id : String ) : ScreenNavigatorItem
+		public function removeScreen(id:String):ScreenNavigatorItem
 		{
-			return ScreenNavigatorItem( this.removeScreenInternal( id ) );
+			return ScreenNavigatorItem(this.removeScreenInternal(id));
 		}
 
 		/**
 		 * Returns the <code>ScreenNavigatorItem</code> instance with the
 		 * specified identifier.
 		 */
-		public function getScreen( id : String ) : ScreenNavigatorItem
+		public function getScreen(id:String):ScreenNavigatorItem
 		{
-			if( this._screens.hasOwnProperty( id ) )
+			if(this._screens.hasOwnProperty(id))
 			{
-				return ScreenNavigatorItem( this._screens[ id ] );
+				return ScreenNavigatorItem(this._screens[id]);
 			}
 			return null;
 		}
@@ -189,13 +192,13 @@ package feathers.controls
 		 *
 		 * @see #transition
 		 */
-		public function showScreen( id : String , transition : Function = null ) : DisplayObject
+		public function showScreen(id:String, transition:Function = null):DisplayObject
 		{
-			if( transition === null )
+			if(transition === null)
 			{
 				transition = this._transition;
 			}
-			return this.showScreenInternal( id , transition );
+			return this.showScreenInternal(id, transition);
 		}
 
 		/**
@@ -207,109 +210,109 @@ package feathers.controls
 		 *
 		 * @see #transition
 		 */
-		public function clearScreen( transition : Function = null ) : void
+		public function clearScreen(transition:Function = null):void
 		{
-			if( transition == null )
+			if(transition == null)
 			{
 				transition = this._transition;
 			}
-			this.clearScreenInternal( transition );
-			this.dispatchEventWith( FeathersEventType.CLEAR );
+			this.clearScreenInternal(transition);
+			this.dispatchEventWith(FeathersEventType.CLEAR);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function prepareActiveScreen() : void
+		override protected function prepareActiveScreen():void
 		{
-			var item : ScreenNavigatorItem = ScreenNavigatorItem( this._screens[ this._activeScreenID ] );
-			var events : Object = item.events;
-			var savedScreenEvents : Object = {};
-			for( var eventName : String in events )
+			var item:ScreenNavigatorItem = ScreenNavigatorItem(this._screens[this._activeScreenID]);
+			var events:Object = item.events;
+			var savedScreenEvents:Object = {};
+			for(var eventName:String in events)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = events[ eventName ];
-				if( eventAction is Function )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = events[eventName];
+				if(eventAction is Function)
 				{
-					if( signal )
+					if(signal)
 					{
-						signal.add( eventAction as Function );
+						signal.add(eventAction as Function);
 					}
 					else
 					{
-						this._activeScreen.addEventListener( eventName , eventAction as Function );
+						this._activeScreen.addEventListener(eventName, eventAction as Function);
 					}
 				}
-				else if( eventAction is String )
+				else if(eventAction is String)
 				{
-					if( signal )
+					if(signal)
 					{
-						var eventListener : Function = this.createShowScreenSignalListener( eventAction as String , signal );
-						signal.add( eventListener );
+						var eventListener:Function = this.createShowScreenSignalListener(eventAction as String, signal);
+						signal.add(eventListener);
 					}
 					else
 					{
-						eventListener = this.createShowScreenEventListener( eventAction as String );
-						this._activeScreen.addEventListener( eventName , eventListener );
+						eventListener = this.createShowScreenEventListener(eventAction as String);
+						this._activeScreen.addEventListener(eventName, eventListener);
 					}
-					savedScreenEvents[ eventName ] = eventListener;
+					savedScreenEvents[eventName] = eventListener;
 				}
 				else
 				{
-					throw new TypeError( "Unknown event action defined for screen:" , eventAction.toString() );
+					throw new TypeError("Unknown event action defined for screen:", eventAction.toString());
 				}
 			}
-			this._screenEvents[ this._activeScreenID ] = savedScreenEvents;
+			this._screenEvents[this._activeScreenID] = savedScreenEvents;
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function cleanupActiveScreen() : void
+		override protected function cleanupActiveScreen():void
 		{
-			var item : ScreenNavigatorItem = ScreenNavigatorItem( this._screens[ this._activeScreenID ] );
-			var events : Object = item.events;
-			var savedScreenEvents : Object = this._screenEvents[ this._activeScreenID ];
-			for( var eventName : String in events )
+			var item:ScreenNavigatorItem = ScreenNavigatorItem(this._screens[this._activeScreenID]);
+			var events:Object = item.events;
+			var savedScreenEvents:Object = this._screenEvents[this._activeScreenID];
+			for(var eventName:String in events)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = events[ eventName ];
-				if( eventAction is Function )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = events[eventName];
+				if(eventAction is Function)
 				{
-					if( signal )
+					if(signal)
 					{
-						signal.remove( eventAction as Function );
+						signal.remove(eventAction as Function);
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName , eventAction as Function );
+						this._activeScreen.removeEventListener(eventName, eventAction as Function);
 					}
 				}
-				else if( eventAction is String )
+				else if(eventAction is String)
 				{
-					var eventListener : Function = savedScreenEvents[ eventName ] as Function;
-					if( signal )
+					var eventListener:Function = savedScreenEvents[eventName] as Function;
+					if(signal)
 					{
-						signal.remove( eventListener );
+						signal.remove(eventListener);
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName , eventListener );
+						this._activeScreen.removeEventListener(eventName, eventListener);
 					}
 				}
 			}
-			this._screenEvents[ this._activeScreenID ] = null;
+			this._screenEvents[this._activeScreenID] = null;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function createShowScreenEventListener( screenID : String ) : Function
+		protected function createShowScreenEventListener(screenID:String):Function
 		{
-			var self : ScreenNavigator = this;
-			var eventListener : Function = function ( event : Event ) : void
+			var self:ScreenNavigator = this;
+			var eventListener:Function = function(event:Event):void
 			{
-				self.showScreen( screenID );
+				self.showScreen(screenID);
 			};
 
 			return eventListener;
@@ -318,22 +321,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createShowScreenSignalListener( screenID : String , signal : Object ) : Function
+		protected function createShowScreenSignalListener(screenID:String, signal:Object):Function
 		{
-			var self : ScreenNavigator = this;
-			if( signal.valueClasses.length == 1 )
+			var self:ScreenNavigator = this;
+			if(signal.valueClasses.length == 1)
 			{
 				//shortcut to avoid the allocation of the rest array
-				var signalListener : Function = function ( arg0 : Object ) : void
+				var signalListener:Function = function(arg0:Object):void
 				{
-					self.showScreen( screenID );
+					self.showScreen(screenID);
 				};
 			}
 			else
 			{
-				signalListener = function ( ...rest : Array ) : void
+				signalListener = function(...rest:Array):void
 				{
-					self.showScreen( screenID );
+					self.showScreen(screenID);
 				};
 			}
 

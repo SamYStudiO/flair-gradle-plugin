@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.renderers
 {
 	import feathers.controls.GroupedList;
@@ -27,114 +27,123 @@ package feathers.controls.renderers
 	public class DefaultGroupedListHeaderOrFooterRenderer extends FeathersControl implements IGroupedListHeaderRenderer, IGroupedListFooterRenderer
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>DefaultGroupedListHeaderOrFooterRenderer</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
-
-		/**
-		 * @private
-		 */
-		protected static function defaultImageLoaderFactory() : ImageLoader
-		{
-			return new ImageLoader();
-		}
-		/**
-		 * The value added to the <code>styleNameList</code> of the content
-		 * label text renderer.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var contentLabelStyleName : String = DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL;
-		/**
-		 * @private
-		 */
-		protected var contentImage : ImageLoader;
-		/**
-		 * @private
-		 */
-		protected var contentLabel : ITextRenderer;
-		/**
-		 * @private
-		 */
-		protected var content : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var originalBackgroundWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var originalBackgroundHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var currentBackgroundSkin : DisplayObject;
-		/**
 		 * The content will be aligned horizontally to the left edge of the renderer.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
+
 		/**
 		 * The content will be aligned horizontally to the center of the renderer.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
+
 		/**
 		 * The content will be aligned horizontally to the right edge of the renderer.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
+
 		/**
 		 * The content will be justified horizontally, filling the entire width
 		 * of the renderer, minus padding.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_JUSTIFY : String = "justify";
+		public static const HORIZONTAL_ALIGN_JUSTIFY:String = "justify";
+
 		/**
 		 * The content will be aligned vertically to the top edge of the renderer.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+
 		/**
 		 * The content will be aligned vertically to the middle of the renderer.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+
 		/**
 		 * The content will be aligned vertically to the bottom edge of the renderer.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
+
 		/**
 		 * The content will be justified vertically, filling the entire height
 		 * of the renderer, minus padding.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
+		public static const VERTICAL_ALIGN_JUSTIFY:String = "justify";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * content label.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL : String = "feathers-header-footer-renderer-content-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL:String = "feathers-header-footer-renderer-content-label";
+
+		/**
+		 * The default <code>IStyleProvider</code> for all <code>DefaultGroupedListHeaderOrFooterRenderer</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected static function defaultImageLoaderFactory():ImageLoader
+		{
+			return new ImageLoader();
+		}
+
+		/**
+		 * Constructor.
+		 */
+		public function DefaultGroupedListHeaderOrFooterRenderer()
+		{
+			super();
+		}
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the content
+		 * label text renderer.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var contentLabelStyleName:String = DEFAULT_CHILD_STYLE_NAME_CONTENT_LABEL;
+
+		/**
+		 * @private
+		 */
+		protected var contentImage:ImageLoader;
+
+		/**
+		 * @private
+		 */
+		protected var contentLabel:ITextRenderer;
+
+		/**
+		 * @private
+		 */
+		protected var content:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return DefaultGroupedListHeaderOrFooterRenderer.globalStyleProvider;
 		}
@@ -142,12 +151,12 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _data : Object;
+		protected var _data:Object;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get data() : Object
+		public function get data():Object
 		{
 			return this._data;
 		}
@@ -155,25 +164,25 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set data( value : Object ) : void
+		public function set data(value:Object):void
 		{
-			if( this._data == value )
+			if(this._data == value)
 			{
 				return;
 			}
 			this._data = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _groupIndex : int = -1;
+		protected var _groupIndex:int = -1;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get groupIndex() : int
+		public function get groupIndex():int
 		{
 			return this._groupIndex;
 		}
@@ -181,7 +190,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set groupIndex( value : int ) : void
+		public function set groupIndex(value:int):void
 		{
 			this._groupIndex = value;
 		}
@@ -189,12 +198,12 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _layoutIndex : int = -1;
+		protected var _layoutIndex:int = -1;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get layoutIndex() : int
+		public function get layoutIndex():int
 		{
 			return this._layoutIndex;
 		}
@@ -202,7 +211,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set layoutIndex( value : int ) : void
+		public function set layoutIndex(value:int):void
 		{
 			this._layoutIndex = value;
 		}
@@ -210,12 +219,12 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _owner : GroupedList;
+		protected var _owner:GroupedList;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get owner() : GroupedList
+		public function get owner():GroupedList
 		{
 			return this._owner;
 		}
@@ -223,25 +232,25 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set owner( value : GroupedList ) : void
+		public function set owner(value:GroupedList):void
 		{
-			if( this._owner == value )
+			if(this._owner == value)
 			{
 				return;
 			}
 			this._owner = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _factoryID : String;
+		protected var _factoryID:String;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get factoryID() : String
+		public function get factoryID():String
 		{
 			return this._factoryID;
 		}
@@ -249,7 +258,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set factoryID( value : String ) : void
+		public function set factoryID(value:String):void
 		{
 			this._factoryID = value;
 		}
@@ -257,9 +266,9 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_LEFT;
+		protected var _horizontalAlign:String = HORIZONTAL_ALIGN_LEFT;
 
-		[Inspectable(type="String" , enumeration="left,center,right,justify")]
+		[Inspectable(type="String",enumeration="left,center,right,justify")]
 		/**
 		 * The location where the renderer's content is aligned horizontally
 		 * (on the x-axis).
@@ -276,7 +285,8 @@ package feathers.controls.renderers
 		 * @see #HORIZONTAL_ALIGN_CENTER
 		 * @see #HORIZONTAL_ALIGN_RIGHT
 		 * @see #HORIZONTAL_ALIGN_JUSTIFY
-		 */ public function get horizontalAlign() : String
+		 */
+		public function get horizontalAlign():String
 		{
 			return this._horizontalAlign;
 		}
@@ -284,22 +294,22 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set horizontalAlign( value : String ) : void
+		public function set horizontalAlign(value:String):void
 		{
-			if( this._horizontalAlign == value )
+			if(this._horizontalAlign == value)
 			{
 				return;
 			}
 			this._horizontalAlign = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
+		protected var _verticalAlign:String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String",enumeration="top,middle,bottom,justify")]
 		/**
 		 * The location where the renderer's content is aligned vertically (on
 		 * the y-axis).
@@ -316,7 +326,8 @@ package feathers.controls.renderers
 		 * @see #VERTICAL_ALIGN_MIDDLE
 		 * @see #VERTICAL_ALIGN_BOTTOM
 		 * @see #VERTICAL_ALIGN_JUSTIFY
-		 */ public function get verticalAlign() : String
+		 */
+		public function get verticalAlign():String
 		{
 			return _verticalAlign;
 		}
@@ -324,20 +335,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set verticalAlign( value : String ) : void
+		public function set verticalAlign(value:String):void
 		{
-			if( this._verticalAlign == value )
+			if(this._verticalAlign == value)
 			{
 				return;
 			}
 			this._verticalAlign = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentField : String = "content";
+		protected var _contentField:String = "content";
 
 		/**
 		 * The field in the item that contains a display object to be positioned
@@ -368,7 +379,7 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentField() : String
+		public function get contentField():String
 		{
 			return this._contentField;
 		}
@@ -376,20 +387,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentField( value : String ) : void
+		public function set contentField(value:String):void
 		{
-			if( this._contentField == value )
+			if(this._contentField == value)
 			{
 				return;
 			}
 			this._contentField = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentFunction : Function;
+		protected var _contentFunction:Function;
 
 		/**
 		 * A function that returns a display object to be positioned in the
@@ -432,7 +443,7 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentFunction() : Function
+		public function get contentFunction():Function
 		{
 			return this._contentFunction;
 		}
@@ -440,20 +451,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentFunction( value : Function ) : void
+		public function set contentFunction(value:Function):void
 		{
-			if( this._contentFunction == value )
+			if(this._contentFunction == value)
 			{
 				return;
 			}
 			this._contentFunction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentSourceField : String = "source";
+		protected var _contentSourceField:String = "source";
 
 		/**
 		 * The field in the data that contains a <code>starling.textures.Texture</code>
@@ -493,7 +504,7 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentSourceField() : String
+		public function get contentSourceField():String
 		{
 			return this._contentSourceField;
 		}
@@ -501,20 +512,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentSourceField( value : String ) : void
+		public function set contentSourceField(value:String):void
 		{
-			if( this._contentSourceField == value )
+			if(this._contentSourceField == value)
 			{
 				return;
 			}
 			this._contentSourceField = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentSourceFunction : Function;
+		protected var _contentSourceFunction:Function;
 
 		/**
 		 * A function used to generate a <code>starling.textures.Texture</code>
@@ -563,7 +574,7 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentSourceFunction() : Function
+		public function get contentSourceFunction():Function
 		{
 			return this._contentSourceFunction;
 		}
@@ -571,20 +582,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentSourceFunction( value : Function ) : void
+		public function set contentSourceFunction(value:Function):void
 		{
-			if( this.contentSourceFunction == value )
+			if(this.contentSourceFunction == value)
 			{
 				return;
 			}
 			this._contentSourceFunction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentLabelField : String = "label";
+		protected var _contentLabelField:String = "label";
 
 		/**
 		 * The field in the item that contains a string to be displayed in a
@@ -623,7 +634,7 @@ package feathers.controls.renderers
 		 * @see #contentSourceField
 		 * @see #contentSourceFunction
 		 */
-		public function get contentLabelField() : String
+		public function get contentLabelField():String
 		{
 			return this._contentLabelField;
 		}
@@ -631,20 +642,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentLabelField( value : String ) : void
+		public function set contentLabelField(value:String):void
 		{
-			if( this._contentLabelField == value )
+			if(this._contentLabelField == value)
 			{
 				return;
 			}
 			this._contentLabelField = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentLabelFunction : Function;
+		protected var _contentLabelFunction:Function;
 
 		/**
 		 * A function that returns a string to be displayed in a
@@ -689,7 +700,7 @@ package feathers.controls.renderers
 		 * @see #contentSourceField
 		 * @see #contentSourceFunction
 		 */
-		public function get contentLabelFunction() : Function
+		public function get contentLabelFunction():Function
 		{
 			return this._contentLabelFunction;
 		}
@@ -697,20 +708,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentLabelFunction( value : Function ) : void
+		public function set contentLabelFunction(value:Function):void
 		{
-			if( this._contentLabelFunction == value )
+			if(this._contentLabelFunction == value)
 			{
 				return;
 			}
 			this._contentLabelFunction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentLoaderFactory : Function = defaultImageLoaderFactory;
+		protected var _contentLoaderFactory:Function = defaultImageLoaderFactory;
 
 		/**
 		 * A function that generates an <code>ImageLoader</code> that uses the result
@@ -736,7 +747,7 @@ package feathers.controls.renderers
 		 * @see #contentSourceField
 		 * @see #contentSourceFunction
 		 */
-		public function get contentLoaderFactory() : Function
+		public function get contentLoaderFactory():Function
 		{
 			return this._contentLoaderFactory;
 		}
@@ -744,20 +755,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentLoaderFactory( value : Function ) : void
+		public function set contentLoaderFactory(value:Function):void
 		{
-			if( this._contentLoaderFactory == value )
+			if(this._contentLoaderFactory == value)
 			{
 				return;
 			}
 			this._contentLoaderFactory = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentLabelFactory : Function;
+		protected var _contentLabelFactory:Function;
 
 		/**
 		 * A function that generates an <code>ITextRenderer</code> that uses the result
@@ -783,7 +794,7 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentLabelFactory() : Function
+		public function get contentLabelFactory():Function
 		{
 			return this._contentLabelFactory;
 		}
@@ -791,20 +802,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentLabelFactory( value : Function ) : void
+		public function set contentLabelFactory(value:Function):void
 		{
-			if( this._contentLabelFactory == value )
+			if(this._contentLabelFactory == value)
 			{
 				return;
 			}
 			this._contentLabelFactory = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customContentLabelStyleName : String;
+		protected var _customContentLabelStyleName:String;
 
 		/**
 		 * A style name to add to the renderer's label text renderer
@@ -821,8 +832,7 @@ package feathers.controls.renderers
 		 * provide different styles than the default:</p>
 		 *
 		 * <listing version="3.0">
-		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-header-or-footer-label",
-		 * setCustomHeaderOrFooterLabelStyles );</listing>
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-header-or-footer-label", setCustomHeaderOrFooterLabelStyles );</listing>
 		 *
 		 * @default null
 		 *
@@ -830,7 +840,7 @@ package feathers.controls.renderers
 		 * @see feathers.core.FeathersControl#styleNameList
 		 * @see #contentLabelFactory
 		 */
-		public function get customContentLabelStyleName() : String
+		public function get customContentLabelStyleName():String
 		{
 			return this._customContentLabelStyleName;
 		}
@@ -838,20 +848,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set customContentLabelStyleName( value : String ) : void
+		public function set customContentLabelStyleName(value:String):void
 		{
-			if( this._customContentLabelStyleName == value )
+			if(this._customContentLabelStyleName == value)
 			{
 				return;
 			}
 			this._customContentLabelStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _contentLabelProperties : PropertyProxy;
+		protected var _contentLabelProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the content label text renderer
@@ -870,7 +880,7 @@ package feathers.controls.renderers
 		 *
 		 * <p>In the following example, a custom content label properties are
 		 * customized:</p>
-		 *
+		 * 
 		 * <listing version="3.0">
 		 * renderer.contentLabelProperties.textFormat = new TextFormat( "Source Sans Pro", 16, 0x333333 );
 		 * renderer.contentLabelProperties.embedFonts = true;</listing>
@@ -881,11 +891,11 @@ package feathers.controls.renderers
 		 * @see #contentLabelField
 		 * @see #contentLabelFunction
 		 */
-		public function get contentLabelProperties() : Object
+		public function get contentLabelProperties():Object
 		{
-			if( !this._contentLabelProperties )
+			if(!this._contentLabelProperties)
 			{
-				this._contentLabelProperties = new PropertyProxy( contentLabelProperties_onChange );
+				this._contentLabelProperties = new PropertyProxy(contentLabelProperties_onChange);
 			}
 			return this._contentLabelProperties;
 		}
@@ -893,41 +903,56 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set contentLabelProperties( value : Object ) : void
+		public function set contentLabelProperties(value:Object):void
 		{
-			if( this._contentLabelProperties == value )
+			if(this._contentLabelProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._contentLabelProperties )
+			if(this._contentLabelProperties)
 			{
-				this._contentLabelProperties.removeOnChangeCallback( contentLabelProperties_onChange );
+				this._contentLabelProperties.removeOnChangeCallback(contentLabelProperties_onChange);
 			}
-			this._contentLabelProperties = PropertyProxy( value );
-			if( this._contentLabelProperties )
+			this._contentLabelProperties = PropertyProxy(value);
+			if(this._contentLabelProperties)
 			{
-				this._contentLabelProperties.addOnChangeCallback( contentLabelProperties_onChange );
+				this._contentLabelProperties.addOnChangeCallback(contentLabelProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundSkin : DisplayObject;
+		protected var originalBackgroundWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var originalBackgroundHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var currentBackgroundSkin:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var _backgroundSkin:DisplayObject;
 
 		/**
 		 * A background to behind the component's content.
@@ -940,7 +965,7 @@ package feathers.controls.renderers
 		 *
 		 * @default null
 		 */
-		public function get backgroundSkin() : DisplayObject
+		public function get backgroundSkin():DisplayObject
 		{
 			return this._backgroundSkin;
 		}
@@ -948,30 +973,30 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set backgroundSkin( value : DisplayObject ) : void
+		public function set backgroundSkin(value:DisplayObject):void
 		{
-			if( this._backgroundSkin == value )
+			if(this._backgroundSkin == value)
 			{
 				return;
 			}
 
-			if( this._backgroundSkin && this._backgroundSkin != this._backgroundDisabledSkin )
+			if(this._backgroundSkin && this._backgroundSkin != this._backgroundDisabledSkin)
 			{
-				this.removeChild( this._backgroundSkin );
+				this.removeChild(this._backgroundSkin);
 			}
 			this._backgroundSkin = value;
-			if( this._backgroundSkin && this._backgroundSkin.parent != this )
+			if(this._backgroundSkin && this._backgroundSkin.parent != this)
 			{
 				this._backgroundSkin.visible = false;
-				this.addChildAt( this._backgroundSkin , 0 );
+				this.addChildAt(this._backgroundSkin, 0);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundDisabledSkin : DisplayObject;
+		protected var _backgroundDisabledSkin:DisplayObject;
 
 		/**
 		 * A background to display when the component is disabled.
@@ -984,7 +1009,7 @@ package feathers.controls.renderers
 		 *
 		 * @default null
 		 */
-		public function get backgroundDisabledSkin() : DisplayObject
+		public function get backgroundDisabledSkin():DisplayObject
 		{
 			return this._backgroundDisabledSkin;
 		}
@@ -992,24 +1017,24 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set backgroundDisabledSkin( value : DisplayObject ) : void
+		public function set backgroundDisabledSkin(value:DisplayObject):void
 		{
-			if( this._backgroundDisabledSkin == value )
+			if(this._backgroundDisabledSkin == value)
 			{
 				return;
 			}
 
-			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin != this._backgroundSkin )
+			if(this._backgroundDisabledSkin && this._backgroundDisabledSkin != this._backgroundSkin)
 			{
-				this.removeChild( this._backgroundDisabledSkin );
+				this.removeChild(this._backgroundDisabledSkin);
 			}
 			this._backgroundDisabledSkin = value;
-			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this )
+			if(this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this)
 			{
 				this._backgroundDisabledSkin.visible = false;
-				this.addChildAt( this._backgroundDisabledSkin , 0 );
+				this.addChildAt(this._backgroundDisabledSkin, 0);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1025,7 +1050,7 @@ package feathers.controls.renderers
 		 *
 		 * @default 0
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -1033,7 +1058,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -1044,7 +1069,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's top edge and
@@ -1057,7 +1082,7 @@ package feathers.controls.renderers
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -1065,20 +1090,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's right edge
@@ -1091,7 +1116,7 @@ package feathers.controls.renderers
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -1099,20 +1124,20 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's bottom edge
@@ -1125,7 +1150,7 @@ package feathers.controls.renderers
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -1133,33 +1158,33 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's left edge
 		 * and the component's content.
-		 *
+		 * 
 		 * <p>In the following example, the left padding is set to 20 pixels:</p>
-		 *
+		 * 
 		 * <listing version="3.0">
 		 * renderer.paddingLeft = 20;</listing>
-		 *
+		 * 
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -1167,97 +1192,42 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function DefaultGroupedListHeaderOrFooterRenderer()
-		{
-			super();
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override public function dispose():void
 		{
 			//the content may have come from outside of this class. it's up
 			//to that code to dispose of the content. in fact, if we disposed
 			//of it here, we might screw something up!
-			if( this.content )
+			if(this.content)
 			{
 				this.content.removeFromParent();
 			}
 
 			//however, we need to dispose these, if they exist, since we made
 			//them here.
-			if( this.contentImage )
+			if(this.contentImage)
 			{
 				this.contentImage.dispose();
 				this.contentImage = null;
 			}
-			if( this.contentLabel )
+			if(this.contentLabel)
 			{
-				DisplayObject( this.contentLabel ).dispose();
+				DisplayObject(this.contentLabel).dispose();
 				this.contentLabel = null;
 			}
 			super.dispose();
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function draw() : void
-		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-
-			if( stylesInvalid || stateInvalid )
-			{
-				this.refreshBackgroundSkin();
-			}
-
-			if( dataInvalid )
-			{
-				this.commitData();
-			}
-
-			if( dataInvalid || stylesInvalid )
-			{
-				this.refreshContentLabelStyles();
-			}
-
-			if( dataInvalid || stateInvalid )
-			{
-				this.refreshEnabled();
-			}
-
-			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
-
-			if( dataInvalid || stylesInvalid || sizeInvalid )
-			{
-				this.layout();
-			}
-
-			if( sizeInvalid || stylesInvalid || stateInvalid )
-			{
-				if( this.currentBackgroundSkin )
-				{
-					this.currentBackgroundSkin.width = this.actualWidth;
-					this.currentBackgroundSkin.height = this.actualHeight;
-				}
-			}
 		}
 
 		/**
@@ -1274,66 +1244,113 @@ package feathers.controls.renderers
 		 *     <li><code>contentField</code></li>
 		 * </ol>
 		 */
-		protected function itemToContent( item : Object ) : DisplayObject
+		protected function itemToContent(item:Object):DisplayObject
 		{
-			if( this._contentSourceFunction != null )
+			if(this._contentSourceFunction != null)
 			{
-				var source : Object = this._contentSourceFunction( item );
-				this.refreshContentSource( source );
+				var source:Object = this._contentSourceFunction(item);
+				this.refreshContentSource(source);
 				return this.contentImage;
 			}
-			else if( this._contentSourceField != null && item && item.hasOwnProperty( this._contentSourceField ) )
+			else if(this._contentSourceField != null && item && item.hasOwnProperty(this._contentSourceField))
 			{
-				source = item[ this._contentSourceField ];
-				this.refreshContentSource( source );
+				source = item[this._contentSourceField];
+				this.refreshContentSource(source);
 				return this.contentImage;
 			}
-			else if( this._contentLabelFunction != null )
+			else if(this._contentLabelFunction != null)
 			{
-				var labelResult : Object = this._contentLabelFunction( item );
-				if( labelResult is String )
+				var labelResult:Object = this._contentLabelFunction(item);
+				if(labelResult is String)
 				{
-					this.refreshContentLabel( labelResult as String );
+					this.refreshContentLabel(labelResult as String);
 				}
 				else
 				{
-					this.refreshContentLabel( labelResult.toString() );
+					this.refreshContentLabel(labelResult.toString());
 				}
-				return DisplayObject( this.contentLabel );
+				return DisplayObject(this.contentLabel);
 			}
-			else if( this._contentLabelField != null && item && item.hasOwnProperty( this._contentLabelField ) )
+			else if(this._contentLabelField != null && item && item.hasOwnProperty(this._contentLabelField))
 			{
-				labelResult = item[ this._contentLabelField ];
-				if( labelResult is String )
+				labelResult = item[this._contentLabelField];
+				if(labelResult is String)
 				{
-					this.refreshContentLabel( labelResult as String );
+					this.refreshContentLabel(labelResult as String);
 				}
 				else
 				{
-					this.refreshContentLabel( labelResult.toString() );
+					this.refreshContentLabel(labelResult.toString());
 				}
-				return DisplayObject( this.contentLabel );
+				return DisplayObject(this.contentLabel);
 			}
-			else if( this._contentFunction != null )
+			else if(this._contentFunction != null)
 			{
-				return this._contentFunction( item ) as DisplayObject;
+				return this._contentFunction(item) as DisplayObject;
 			}
-			else if( this._contentField != null && item && item.hasOwnProperty( this._contentField ) )
+			else if(this._contentField != null && item && item.hasOwnProperty(this._contentField))
 			{
-				return item[ this._contentField ] as DisplayObject;
+				return item[this._contentField] as DisplayObject;
 			}
-			else if( item is String )
+			else if(item is String)
 			{
-				this.refreshContentLabel( item as String );
-				return DisplayObject( this.contentLabel );
+				this.refreshContentLabel(item as String);
+				return DisplayObject(this.contentLabel);
 			}
-			else if( item )
+			else if(item)
 			{
-				this.refreshContentLabel( item.toString() );
-				return DisplayObject( this.contentLabel );
+				this.refreshContentLabel(item.toString());
+				return DisplayObject(this.contentLabel);
 			}
 
 			return null;
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function draw():void
+		{
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+
+			if(stylesInvalid || stateInvalid)
+			{
+				this.refreshBackgroundSkin();
+			}
+
+			if(dataInvalid)
+			{
+				this.commitData();
+			}
+
+			if(dataInvalid || stylesInvalid)
+			{
+				this.refreshContentLabelStyles();
+			}
+
+			if(dataInvalid || stateInvalid)
+			{
+				this.refreshEnabled();
+			}
+
+			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
+
+			if(dataInvalid || stylesInvalid || sizeInvalid)
+			{
+				this.layout();
+			}
+
+			if(sizeInvalid || stylesInvalid || stateInvalid)
+			{
+				if(this.currentBackgroundSkin)
+				{
+					this.currentBackgroundSkin.width = this.actualWidth;
+					this.currentBackgroundSkin.height = this.actualHeight;
+				}
+			}
 		}
 
 		/**
@@ -1352,88 +1369,88 @@ package feathers.controls.renderers
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
-			if( !this.content )
+			if(!this.content)
 			{
-				return this.setSizeInternal( 0 , 0 , false );
+				return this.setSizeInternal(0, 0, false);
 			}
-			if( this.contentLabel )
+			if(this.contentLabel)
 			{
 				//special case for label to allow word wrap
-				var labelMaxWidth : Number = this.explicitWidth;
-				if( needsWidth )
+				var labelMaxWidth:Number = this.explicitWidth;
+				if(needsWidth)
 				{
 					labelMaxWidth = this._maxWidth;
 				}
 				this.contentLabel.maxWidth = labelMaxWidth - this._paddingLeft - this._paddingRight;
 			}
-			if( this._horizontalAlign == HORIZONTAL_ALIGN_JUSTIFY )
+			if(this._horizontalAlign == HORIZONTAL_ALIGN_JUSTIFY)
 			{
 				this.content.width = this.explicitWidth - this._paddingLeft - this._paddingRight;
 			}
-			if( this._verticalAlign == VERTICAL_ALIGN_JUSTIFY )
+			if(this._verticalAlign == VERTICAL_ALIGN_JUSTIFY)
 			{
 				this.content.height = this.explicitHeight - this._paddingTop - this._paddingBottom;
 			}
-			if( this.content is IValidating )
+			if(this.content is IValidating)
 			{
-				IValidating( this.content ).validate();
+				IValidating(this.content).validate();
 			}
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
 				newWidth = this.content.width + this._paddingLeft + this._paddingRight;
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
-						this.originalBackgroundWidth > newWidth )
+				if(this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
+					this.originalBackgroundWidth > newWidth)
 				{
 					newWidth = this.originalBackgroundWidth;
 				}
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
 				newHeight = this.content.height + this._paddingTop + this._paddingBottom;
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
-						this.originalBackgroundHeight > newHeight )
+				if(this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
+					this.originalBackgroundHeight > newHeight)
 				{
 					newHeight = this.originalBackgroundHeight;
 				}
 			}
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshBackgroundSkin() : void
+		protected function refreshBackgroundSkin():void
 		{
 			this.currentBackgroundSkin = this._backgroundSkin;
-			if( !this._isEnabled && this._backgroundDisabledSkin )
+			if(!this._isEnabled && this._backgroundDisabledSkin)
 			{
-				if( this._backgroundSkin )
+				if(this._backgroundSkin)
 				{
 					this._backgroundSkin.visible = false;
 				}
 				this.currentBackgroundSkin = this._backgroundDisabledSkin;
 			}
-			else if( this._backgroundDisabledSkin )
+			else if(this._backgroundDisabledSkin)
 			{
 				this._backgroundDisabledSkin.visible = false;
 			}
-			if( this.currentBackgroundSkin )
+			if(this.currentBackgroundSkin)
 			{
-				if( this.originalBackgroundWidth !== this.originalBackgroundWidth ) //isNaN
+				if(this.originalBackgroundWidth !== this.originalBackgroundWidth) //isNaN
 				{
 					this.originalBackgroundWidth = this.currentBackgroundSkin.width;
 				}
-				if( this.originalBackgroundHeight !== this.originalBackgroundHeight ) //isNaN
+				if(this.originalBackgroundHeight !== this.originalBackgroundHeight) //isNaN
 				{
 					this.originalBackgroundHeight = this.currentBackgroundSkin.height;
 				}
@@ -1444,27 +1461,27 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function commitData() : void
+		protected function commitData():void
 		{
-			if( this._owner )
+			if(this._owner)
 			{
-				var newContent : DisplayObject = this.itemToContent( this._data );
-				if( newContent != this.content )
+				var newContent:DisplayObject = this.itemToContent(this._data);
+				if(newContent != this.content)
 				{
-					if( this.content )
+					if(this.content)
 					{
 						this.content.removeFromParent();
 					}
 					this.content = newContent;
-					if( this.content )
+					if(this.content)
 					{
-						this.addChild( this.content );
+						this.addChild(this.content);
 					}
 				}
 			}
 			else
 			{
-				if( this.content )
+				if(this.content)
 				{
 					this.content.removeFromParent();
 					this.content = null;
@@ -1475,9 +1492,9 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function refreshContentSource( source : Object ) : void
+		protected function refreshContentSource(source:Object):void
 		{
-			if( !this.contentImage )
+			if(!this.contentImage)
 			{
 				this.contentImage = this._contentLoaderFactory();
 			}
@@ -1487,22 +1504,22 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function refreshContentLabel( label : String ) : void
+		protected function refreshContentLabel(label:String):void
 		{
-			if( label !== null )
+			if(label !== null)
 			{
-				if( !this.contentLabel )
+				if(!this.contentLabel)
 				{
-					var factory : Function = this._contentLabelFactory != null ? this._contentLabelFactory : FeathersControl.defaultTextRendererFactory;
-					this.contentLabel = ITextRenderer( factory() );
-					var contentLabelStyleName : String = this._customContentLabelStyleName != null ? this._customContentLabelStyleName : this.contentLabelStyleName;
-					FeathersControl( this.contentLabel ).styleNameList.add( contentLabelStyleName );
+					var factory:Function = this._contentLabelFactory != null ? this._contentLabelFactory : FeathersControl.defaultTextRendererFactory;
+					this.contentLabel = ITextRenderer(factory());
+					var contentLabelStyleName:String = this._customContentLabelStyleName != null ? this._customContentLabelStyleName : this.contentLabelStyleName;
+					FeathersControl(this.contentLabel).styleNameList.add(contentLabelStyleName);
 				}
 				this.contentLabel.text = label;
 			}
-			else if( this.contentLabel )
+			else if(this.contentLabel)
 			{
-				DisplayObject( this.contentLabel ).removeFromParent( true );
+				DisplayObject(this.contentLabel).removeFromParent(true);
 				this.contentLabel = null;
 			}
 		}
@@ -1510,45 +1527,45 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function refreshEnabled() : void
+		protected function refreshEnabled():void
 		{
-			if( this.content is IFeathersControl )
+			if(this.content is IFeathersControl)
 			{
-				IFeathersControl( this.content ).isEnabled = this._isEnabled;
+				IFeathersControl(this.content).isEnabled = this._isEnabled;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshContentLabelStyles() : void
+		protected function refreshContentLabelStyles():void
 		{
-			if( !this.contentLabel )
+			if(!this.contentLabel)
 			{
 				return;
 			}
-			for( var propertyName : String in this._contentLabelProperties )
+			for(var propertyName:String in this._contentLabelProperties)
 			{
-				var propertyValue : Object = this._contentLabelProperties[ propertyName ];
-				this.contentLabel[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._contentLabelProperties[propertyName];
+				this.contentLabel[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layout() : void
+		protected function layout():void
 		{
-			if( !this.content )
+			if(!this.content)
 			{
 				return;
 			}
 
-			if( this.contentLabel )
+			if(this.contentLabel)
 			{
 				this.contentLabel.maxWidth = this.actualWidth - this._paddingLeft - this._paddingRight;
 			}
-			switch( this._horizontalAlign )
+			switch(this._horizontalAlign)
 			{
 				case HORIZONTAL_ALIGN_CENTER:
 				{
@@ -1572,7 +1589,7 @@ package feathers.controls.renderers
 				}
 			}
 
-			switch( this._verticalAlign )
+			switch(this._verticalAlign)
 			{
 				case VERTICAL_ALIGN_TOP:
 				{
@@ -1601,9 +1618,9 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function contentLabelProperties_onChange( proxy : PropertyProxy , name : String ) : void
+		protected function contentLabelProperties_onChange(proxy:PropertyProxy, name:String):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 	}
 }

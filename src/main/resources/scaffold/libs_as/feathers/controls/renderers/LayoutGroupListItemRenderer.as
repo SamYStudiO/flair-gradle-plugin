@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.renderers
 {
 	import feathers.controls.LayoutGroup;
@@ -40,139 +40,7 @@ package feathers.controls.renderers
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
-
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return LayoutGroupListItemRenderer.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _index : int = -1;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get index() : int
-		{
-			return this._index;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set index( value : int ) : void
-		{
-			this._index = value;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _owner : List;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get owner() : List
-		{
-			return this._owner;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set owner( value : List ) : void
-		{
-			if( this._owner == value )
-			{
-				return;
-			}
-			this._owner = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _data : Object;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get data() : Object
-		{
-			return this._data;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set data( value : Object ) : void
-		{
-			if( this._data == value )
-			{
-				return;
-			}
-			this._data = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			//LayoutGroup doesn't know about INVALIDATION_FLAG_DATA, so we need
-			//set set another flag that it understands.
-			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _isSelected : Boolean;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get isSelected() : Boolean
-		{
-			return this._isSelected;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set isSelected( value : Boolean ) : void
-		{
-			if( this._isSelected == value )
-			{
-				return;
-			}
-			this._isSelected = value;
-			this.invalidate( INVALIDATION_FLAG_SELECTED );
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _factoryID : String;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get factoryID() : String
-		{
-			return this._factoryID;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set factoryID( value : String ) : void
-		{
-			this._factoryID = value;
-		}
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * Constructor.
@@ -185,7 +53,139 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return LayoutGroupListItemRenderer.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _index:int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get index():int
+		{
+			return this._index;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set index(value:int):void
+		{
+			this._index = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _owner:List;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get owner():List
+		{
+			return this._owner;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set owner(value:List):void
+		{
+			if(this._owner == value)
+			{
+				return;
+			}
+			this._owner = value;
+			this.invalidate(INVALIDATION_FLAG_DATA);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _data:Object;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get data():Object
+		{
+			return this._data;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set data(value:Object):void
+		{
+			if(this._data == value)
+			{
+				return;
+			}
+			this._data = value;
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			//LayoutGroup doesn't know about INVALIDATION_FLAG_DATA, so we need
+			//set set another flag that it understands.
+			this.invalidate(INVALIDATION_FLAG_SIZE);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _isSelected:Boolean;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get isSelected():Boolean
+		{
+			return this._isSelected;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set isSelected(value:Boolean):void
+		{
+			if(this._isSelected == value)
+			{
+				return;
+			}
+			this._isSelected = value;
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
+			this.dispatchEventWith(Event.CHANGE);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _factoryID:String;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get factoryID():String
+		{
+			return this._factoryID;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set factoryID(value:String):void
+		{
+			this._factoryID = value;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose():void
 		{
 			this.owner = null;
 			super.dispose();
@@ -194,19 +194,19 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var scrollInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SCROLL );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var scrollInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SCROLL);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var layoutInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_LAYOUT);
 
-			if( dataInvalid )
+			if(dataInvalid)
 			{
 				this.commitData();
 			}
 
-			if( scrollInvalid || sizeInvalid || layoutInvalid )
+			if(scrollInvalid || sizeInvalid || layoutInvalid)
 			{
 				this._ignoreChildChanges = true;
 				this.preLayout();
@@ -215,7 +215,7 @@ package feathers.controls.renderers
 
 			super.draw();
 
-			if( scrollInvalid || sizeInvalid || layoutInvalid )
+			if(scrollInvalid || sizeInvalid || layoutInvalid)
 			{
 				this._ignoreChildChanges = true;
 				this.postLayout();
@@ -243,7 +243,7 @@ package feathers.controls.renderers
 		 *
 		 * @see #postLayout()
 		 */
-		protected function preLayout() : void
+		protected function preLayout():void
 		{
 
 		}
@@ -265,7 +265,7 @@ package feathers.controls.renderers
 		 *
 		 * @see #preLayout()
 		 */
-		protected function postLayout() : void
+		protected function postLayout():void
 		{
 
 		}
@@ -276,7 +276,7 @@ package feathers.controls.renderers
 		 *
 		 * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
 		 */
-		protected function commitData() : void
+		protected function commitData():void
 		{
 
 		}

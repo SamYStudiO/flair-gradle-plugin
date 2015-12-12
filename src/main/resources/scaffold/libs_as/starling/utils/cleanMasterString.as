@@ -18,8 +18,8 @@ package starling.utils
      *  @return The input string, but with a master string only one character larger than it.
      *  @author Jackson Dunstan, JacksonDunstan.com
      */
-    public function cleanMasterString( str : String ) : String
+    public function cleanMasterString(str:String):String
     {
-        return ("_" + str).substr( 1 );
+        return ("_" + str).substr(1);
     }
 }

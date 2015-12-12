@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.renderers
 {
 	import feathers.controls.*;
@@ -32,7 +32,7 @@ package feathers.controls.renderers
 	 *
 	 * @eventType starling.events.Event.TRIGGERED
 	 */
-	[Event(name="triggered" , type="starling.events.Event")]
+	[Event(name="triggered",type="starling.events.Event")]
 
 	/**
 	 * Interface to implement a renderer for a list item.
@@ -46,12 +46,12 @@ package feathers.controls.renderers
 		 *
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
-		function get data() : Object;
+		function get data():Object;
 		
 		/**
 		 * @private
 		 */
-		function set data( value : Object ) : void;
+		function set data(value:Object):void;
 		
 		/**
 		 * The index (numeric position, starting from zero) of the item within
@@ -61,35 +61,35 @@ package feathers.controls.renderers
 		 *
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
-		function get index() : int;
+		function get index():int;
 		
 		/**
 		 * @private
 		 */
-		function set index( value : int ) : void;
+		function set index(value:int):void;
 		
 		/**
 		 * The list that contains this item renderer.
 		 *
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
-		function get owner() : List;
+		function get owner():List;
 		
 		/**
 		 * @private
 		 */
-		function set owner( value : List ) : void;
+		function set owner(value:List):void;
 
 		/**
 		 * The ID of the factory used to create this item renderer.
 		 *
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
-		function get factoryID() : String;
+		function get factoryID():String;
 
 		/**
 		 * @private
 		 */
-		function set factoryID( value : String ) : void;
+		function set factoryID(value:String):void;
 	}
 }

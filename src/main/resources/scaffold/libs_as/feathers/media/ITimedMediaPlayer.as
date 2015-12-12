@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	/**
@@ -29,7 +29,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.TOTAL_TIME_CHANGE
 	 */
-	[Event(name="totalTimeChange" , type="starling.events.Event")]
+	[Event(name="totalTimeChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media player's current playhead time changes.
@@ -53,7 +53,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.CURRENT_TIME_CHANGE
 	 */
-	[Event(name="currentTimeChange" , type="starling.events.Event")]
+	[Event(name="currentTimeChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media player's playback state changes, such as when
@@ -78,7 +78,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.PLAYBACK_STATE_CHANGE
 	 */
-	[Event(name="playbackStageChange" , type="starling.events.Event")]
+	[Event(name="playbackStageChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media has played to its end.
@@ -100,32 +100,33 @@ package feathers.media
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * An interface for media players that play timed content.
-	 */ public interface ITimedMediaPlayer extends IMediaPlayer
+	 */
+	public interface ITimedMediaPlayer extends IMediaPlayer
 	{
 		/**
 		 * The current position of the playhead, in seconds.
 		 *
 		 * @see #event:currentTimeChange feathers.events.MediaPlayerEventType.CURRENT_TIME_CHANGE
 		 */
-		function get currentTime() : Number;
+		function get currentTime():Number;
 
 		/**
 		 * The maximum position of the playhead, in seconds.
 		 *
 		 * @see #event:totalTimeChange feathers.events.MediaPlayerEventType.TOTAL_TIME_CHANGE
 		 */
-		function get totalTime() : Number;
+		function get totalTime():Number;
 
 		/**
 		 * Determines if the media content is currently playing.
 		 *
 		 * @see #event:playbackStateChange feathers.events.MediaPlayerEventType.PLAYBACK_STATE_CHANGE
 		 */
-		function get isPlaying() : Boolean;
+		function get isPlaying():Boolean;
 
 		/**
 		 * Toggles the media content between playing and paused states.
@@ -134,7 +135,7 @@ package feathers.media
 		 * @see #play()
 		 * @see #pause()
 		 */
-		function togglePlayPause() : void;
+		function togglePlayPause():void;
 
 		/**
 		 * Plays the media content.
@@ -143,7 +144,7 @@ package feathers.media
 		 * @see #pause()
 		 * @see #stop()
 		 */
-		function play() : void;
+		function play():void;
 
 		/**
 		 * Pauses the media content.
@@ -151,7 +152,7 @@ package feathers.media
 		 * @see #isPlaying
 		 * @see #play()
 		 */
-		function pause() : void;
+		function pause():void;
 
 		/**
 		 * Stops the media content and returns the playhead to the beginning.
@@ -160,11 +161,11 @@ package feathers.media
 		 * @see #play()
 		 * @see #pause()
 		 */
-		function stop() : void;
+		function stop():void;
 
 		/**
 		 * Seeks the media content to a specific position, in seconds.
 		 */
-		function seek( seconds : Number ) : void;
+		function seek(seconds:Number):void;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.layout
 {
 	import starling.display.DisplayObject;
@@ -14,7 +14,7 @@ package feathers.layout
 	/**
 	 * @inheritDoc
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Extra, optional data used by an <code>AnchorLayout</code> instance to
@@ -22,12 +22,28 @@ package feathers.layout
 	 *
 	 * @see AnchorLayout
 	 * @see ILayoutDisplayObject
-	 */ public class AnchorLayoutData extends EventDispatcher implements ILayoutData
+	 */
+	public class AnchorLayoutData extends EventDispatcher implements ILayoutData
 	{
+		/**
+		 * Constructor.
+		 */
+		public function AnchorLayoutData(top:Number = NaN, right:Number = NaN,
+			bottom:Number = NaN, left:Number = NaN, horizontalCenter:Number = NaN,
+			verticalCenter:Number = NaN)
+		{
+			this.top = top;
+			this.right = right;
+			this.bottom = bottom;
+			this.left = left;
+			this.horizontalCenter = horizontalCenter;
+			this.verticalCenter = verticalCenter;
+		}
+
 		/**
 		 * @private
 		 */
-		protected var _percentWidth : Number = NaN;
+		protected var _percentWidth:Number = NaN;
 
 		/**
 		 * The width of the layout object, as a percentage of the container's
@@ -37,7 +53,7 @@ package feathers.layout
 		 *
 		 * @default NaN
 		 */
-		public function get percentWidth() : Number
+		public function get percentWidth():Number
 		{
 			return this._percentWidth;
 		}
@@ -45,20 +61,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set percentWidth( value : Number ) : void
+		public function set percentWidth(value:Number):void
 		{
-			if( this._percentWidth == value )
+			if(this._percentWidth == value)
 			{
 				return;
 			}
 			this._percentWidth = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _percentHeight : Number = NaN;
+		protected var _percentHeight:Number = NaN;
 
 		/**
 		 * The height of the layout object, as a percentage of the container's
@@ -68,7 +84,7 @@ package feathers.layout
 		 *
 		 * @default NaN
 		 */
-		public function get percentHeight() : Number
+		public function get percentHeight():Number
 		{
 			return this._percentHeight;
 		}
@@ -76,20 +92,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set percentHeight( value : Number ) : void
+		public function set percentHeight(value:Number):void
 		{
-			if( this._percentHeight == value )
+			if(this._percentHeight == value)
 			{
 				return;
 			}
 			this._percentHeight = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _topAnchorDisplayObject : DisplayObject;
+		protected var _topAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The top edge of the layout object will be relative to this anchor.
@@ -100,7 +116,7 @@ package feathers.layout
 		 *
 		 * @see #top
 		 */
-		public function get topAnchorDisplayObject() : DisplayObject
+		public function get topAnchorDisplayObject():DisplayObject
 		{
 			return this._topAnchorDisplayObject;
 		}
@@ -108,20 +124,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set topAnchorDisplayObject( value : DisplayObject ) : void
+		public function set topAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._topAnchorDisplayObject == value )
+			if(this._topAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._topAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _top : Number = NaN;
+		protected var _top:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the top edge relative to the top
@@ -133,7 +149,7 @@ package feathers.layout
 		 *
 		 * @see #topAnchorDisplayObject
 		 */
-		public function get top() : Number
+		public function get top():Number
 		{
 			return this._top;
 		}
@@ -141,20 +157,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set top( value : Number ) : void
+		public function set top(value:Number):void
 		{
-			if( this._top == value )
+			if(this._top == value)
 			{
 				return;
 			}
 			this._top = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _rightAnchorDisplayObject : DisplayObject;
+		protected var _rightAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The right edge of the layout object will be relative to this anchor.
@@ -165,7 +181,7 @@ package feathers.layout
 		 *
 		 * @see #right
 		 */
-		public function get rightAnchorDisplayObject() : DisplayObject
+		public function get rightAnchorDisplayObject():DisplayObject
 		{
 			return this._rightAnchorDisplayObject;
 		}
@@ -173,20 +189,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set rightAnchorDisplayObject( value : DisplayObject ) : void
+		public function set rightAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._rightAnchorDisplayObject == value )
+			if(this._rightAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._rightAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _right : Number = NaN;
+		protected var _right:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the right edge relative to the right
@@ -198,7 +214,7 @@ package feathers.layout
 		 *
 		 * @see #rightAnchorDisplayObject
 		 */
-		public function get right() : Number
+		public function get right():Number
 		{
 			return this._right;
 		}
@@ -206,20 +222,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set right( value : Number ) : void
+		public function set right(value:Number):void
 		{
-			if( this._right == value )
+			if(this._right == value)
 			{
 				return;
 			}
 			this._right = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _bottomAnchorDisplayObject : DisplayObject;
+		protected var _bottomAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The bottom edge of the layout object will be relative to this anchor.
@@ -230,7 +246,7 @@ package feathers.layout
 		 *
 		 * @see #bottom
 		 */
-		public function get bottomAnchorDisplayObject() : DisplayObject
+		public function get bottomAnchorDisplayObject():DisplayObject
 		{
 			return this._bottomAnchorDisplayObject;
 		}
@@ -238,20 +254,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set bottomAnchorDisplayObject( value : DisplayObject ) : void
+		public function set bottomAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._bottomAnchorDisplayObject == value )
+			if(this._bottomAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._bottomAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _bottom : Number = NaN;
+		protected var _bottom:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the bottom edge relative to the bottom
@@ -263,7 +279,7 @@ package feathers.layout
 		 *
 		 * @see #bottomAnchorDisplayObject
 		 */
-		public function get bottom() : Number
+		public function get bottom():Number
 		{
 			return this._bottom;
 		}
@@ -271,20 +287,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set bottom( value : Number ) : void
+		public function set bottom(value:Number):void
 		{
-			if( this._bottom == value )
+			if(this._bottom == value)
 			{
 				return;
 			}
 			this._bottom = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _leftAnchorDisplayObject : DisplayObject;
+		protected var _leftAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The left edge of the layout object will be relative to this anchor.
@@ -295,7 +311,7 @@ package feathers.layout
 		 *
 		 * @see #left
 		 */
-		public function get leftAnchorDisplayObject() : DisplayObject
+		public function get leftAnchorDisplayObject():DisplayObject
 		{
 			return this._leftAnchorDisplayObject;
 		}
@@ -303,20 +319,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set leftAnchorDisplayObject( value : DisplayObject ) : void
+		public function set leftAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._leftAnchorDisplayObject == value )
+			if(this._leftAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._leftAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _left : Number = NaN;
+		protected var _left:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the left edge relative to the left
@@ -328,7 +344,7 @@ package feathers.layout
 		 *
 		 * @see #leftAnchorDisplayObject
 		 */
-		public function get left() : Number
+		public function get left():Number
 		{
 			return this._left;
 		}
@@ -336,20 +352,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set left( value : Number ) : void
+		public function set left(value:Number):void
 		{
-			if( this._left == value )
+			if(this._left == value)
 			{
 				return;
 			}
 			this._left = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _horizontalCenterAnchorDisplayObject : DisplayObject;
+		protected var _horizontalCenterAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The horizontal center of the layout object will be relative to this
@@ -360,7 +376,7 @@ package feathers.layout
 		 *
 		 * @see #horizontalCenter
 		 */
-		public function get horizontalCenterAnchorDisplayObject() : DisplayObject
+		public function get horizontalCenterAnchorDisplayObject():DisplayObject
 		{
 			return this._horizontalCenterAnchorDisplayObject;
 		}
@@ -368,20 +384,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set horizontalCenterAnchorDisplayObject( value : DisplayObject ) : void
+		public function set horizontalCenterAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._horizontalCenterAnchorDisplayObject == value )
+			if(this._horizontalCenterAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._horizontalCenterAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _horizontalCenter : Number = NaN;
+		protected var _horizontalCenter:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the horizontal center relative to the
@@ -394,7 +410,7 @@ package feathers.layout
 		 *
 		 * @see #horizontalCenterAnchorDisplayObject
 		 */
-		public function get horizontalCenter() : Number
+		public function get horizontalCenter():Number
 		{
 			return this._horizontalCenter;
 		}
@@ -402,20 +418,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set horizontalCenter( value : Number ) : void
+		public function set horizontalCenter(value:Number):void
 		{
-			if( this._horizontalCenter == value )
+			if(this._horizontalCenter == value)
 			{
 				return;
 			}
 			this._horizontalCenter = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _verticalCenterAnchorDisplayObject : DisplayObject;
+		protected var _verticalCenterAnchorDisplayObject:DisplayObject;
 
 		/**
 		 * The vertical center of the layout object will be relative to this
@@ -426,7 +442,7 @@ package feathers.layout
 		 *
 		 * @see #verticalCenter
 		 */
-		public function get verticalCenterAnchorDisplayObject() : DisplayObject
+		public function get verticalCenterAnchorDisplayObject():DisplayObject
 		{
 			return this._verticalCenterAnchorDisplayObject;
 		}
@@ -434,20 +450,20 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set verticalCenterAnchorDisplayObject( value : DisplayObject ) : void
+		public function set verticalCenterAnchorDisplayObject(value:DisplayObject):void
 		{
-			if( this._verticalCenterAnchorDisplayObject == value )
+			if(this._verticalCenterAnchorDisplayObject == value)
 			{
 				return;
 			}
 			this._verticalCenterAnchorDisplayObject = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _verticalCenter : Number = NaN;
+		protected var _verticalCenter:Number = NaN;
 
 		/**
 		 * The position, in pixels, of the vertical center relative to the
@@ -460,7 +476,7 @@ package feathers.layout
 		 *
 		 * @see #verticalCenterAnchorDisplayObject
 		 */
-		public function get verticalCenter() : Number
+		public function get verticalCenter():Number
 		{
 			return this._verticalCenter;
 		}
@@ -468,27 +484,14 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set verticalCenter( value : Number ) : void
+		public function set verticalCenter(value:Number):void
 		{
-			if( this._verticalCenter == value )
+			if(this._verticalCenter == value)
 			{
 				return;
 			}
 			this._verticalCenter = value;
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function AnchorLayoutData( top : Number = NaN , right : Number = NaN , bottom : Number = NaN , left : Number = NaN , horizontalCenter : Number = NaN , verticalCenter : Number = NaN )
-		{
-			this.top = top;
-			this.right = right;
-			this.bottom = bottom;
-			this.left = left;
-			this.horizontalCenter = horizontalCenter;
-			this.verticalCenter = verticalCenter;
+			this.dispatchEventWith(Event.CHANGE);
 		}
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.events.MediaPlayerEventType;
@@ -33,7 +33,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.TOTAL_TIME_CHANGE
 	 */
-	[Event(name="totalTimeChange" , type="starling.events.Event")]
+	[Event(name="totalTimeChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media player's current playhead time changes.
@@ -57,7 +57,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.CURRENT_TIME_CHANGE
 	 */
-	[Event(name="currentTimeChange" , type="starling.events.Event")]
+	[Event(name="currentTimeChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media player's playback state changes, such as when
@@ -82,7 +82,7 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.PLAYBACK_STATE_CHANGE
 	 */
-	[Event(name="playbackStageChange" , type="starling.events.Event")]
+	[Event(name="playbackStageChange",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the media completes playback because the current time has
@@ -105,24 +105,37 @@ package feathers.media
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * An abstract superclass for media players that should implement the
 	 * <code>feathers.media.ITimedMediaPlayer</code> interface.
-	 */ public class BaseTimedMediaPlayer extends BaseMediaPlayer implements ITimedMediaPlayer
+	 */
+	public class BaseTimedMediaPlayer extends BaseMediaPlayer implements ITimedMediaPlayer
 	{
+		/**
+		 * Constructor.
+		 */
+		public function BaseTimedMediaPlayer()
+		{
+			super();
+			if(Object(this).constructor === BaseTimedMediaPlayer)
+			{
+				throw new AbstractClassError();
+			}
+		}
+
 		/**
 		 * @private
 		 */
-		protected var _isPlaying : Boolean = false;
+		protected var _isPlaying:Boolean = false;
 
 		/**
 		 * @inheritDoc
 		 *
 		 * @see #event:playbackStateChange feathers.events.MediaPlayerEventType.PLAYBACK_STATE_CHANGE
 		 */
-		public function get isPlaying() : Boolean
+		public function get isPlaying():Boolean
 		{
 			return this._isPlaying;
 		}
@@ -130,14 +143,14 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _currentTime : Number = 0;
+		protected var _currentTime:Number = 0;
 
 		/**
 		 * @inheritDoc
 		 *
 		 * @see #event:currentTimeChange feathers.events.MediaPlayerEventType.CURRENT_TIME_CHANGE
 		 */
-		public function get currentTime() : Number
+		public function get currentTime():Number
 		{
 			return this._currentTime;
 		}
@@ -145,28 +158,16 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected var _totalTime : Number = 0;
+		protected var _totalTime:Number = 0;
 
 		/**
 		 * @inheritDoc
 		 *
 		 * @see #event:totalTimeChange feathers.events.MediaPlayerEventType.TOTAL_TIME_CHANGE
 		 */
-		public function get totalTime() : Number
+		public function get totalTime():Number
 		{
 			return this._totalTime;
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function BaseTimedMediaPlayer()
-		{
-			super();
-			if( Object( this ).constructor === BaseTimedMediaPlayer )
-			{
-				throw new AbstractClassError();
-			}
 		}
 
 		/**
@@ -176,9 +177,9 @@ package feathers.media
 		 * @see #play()
 		 * @see #pause()
 		 */
-		public function togglePlayPause() : void
+		public function togglePlayPause():void
 		{
-			if( this._isPlaying )
+			if(this._isPlaying)
 			{
 				this.pause();
 			}
@@ -195,15 +196,15 @@ package feathers.media
 		 * @see #pause()
 		 * @see #stop()
 		 */
-		public function play() : void
+		public function play():void
 		{
-			if( this._isPlaying )
+			if(this._isPlaying)
 			{
 				return;
 			}
 			this.playMedia();
 			this._isPlaying = true;
-			this.dispatchEventWith( MediaPlayerEventType.PLAYBACK_STATE_CHANGE );
+			this.dispatchEventWith(MediaPlayerEventType.PLAYBACK_STATE_CHANGE);
 		}
 
 		/**
@@ -212,15 +213,15 @@ package feathers.media
 		 * @see #isPlaying
 		 * @see #play()
 		 */
-		public function pause() : void
+		public function pause():void
 		{
-			if( !this._isPlaying )
+			if(!this._isPlaying)
 			{
 				return;
 			}
 			this.pauseMedia();
 			this._isPlaying = false;
-			this.dispatchEventWith( MediaPlayerEventType.PLAYBACK_STATE_CHANGE );
+			this.dispatchEventWith(MediaPlayerEventType.PLAYBACK_STATE_CHANGE);
 		}
 
 		/**
@@ -230,19 +231,19 @@ package feathers.media
 		 * @see #play()
 		 * @see #pause()
 		 */
-		public function stop() : void
+		public function stop():void
 		{
 			this.pause();
-			this.seek( 0 );
+			this.seek(0);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function seek( seconds : Number ) : void
+		public function seek(seconds:Number):void
 		{
-			this.seekMedia( seconds );
-			this.dispatchEventWith( MediaPlayerEventType.CURRENT_TIME_CHANGE );
+			this.seekMedia(seconds);
+			this.dispatchEventWith(MediaPlayerEventType.CURRENT_TIME_CHANGE);
 		}
 
 		/**
@@ -250,9 +251,9 @@ package feathers.media
 		 * are expected override this function with a custom implementation for
 		 * their specific type of media content.
 		 */
-		protected function playMedia() : void
+		protected function playMedia():void
 		{
-
+			
 		}
 
 		/**
@@ -260,7 +261,7 @@ package feathers.media
 		 * expected override this function with a custom implementation for
 		 * their specific type of media content.
 		 */
-		protected function pauseMedia() : void
+		protected function pauseMedia():void
 		{
 
 		}
@@ -270,7 +271,7 @@ package feathers.media
 		 * time, in seconds. Subclasses are expected override this function with
 		 * a custom implementation for their specific type of media content.
 		 */
-		protected function seekMedia( seconds : Number ) : void
+		protected function seekMedia(seconds:Number):void
 		{
 
 		}

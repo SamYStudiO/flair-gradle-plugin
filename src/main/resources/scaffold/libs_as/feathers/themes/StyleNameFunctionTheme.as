@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.themes
 {
 	import feathers.skins.StyleNameFunctionStyleProvider;
@@ -23,11 +23,6 @@ package feathers.themes
 	public class StyleNameFunctionTheme extends EventDispatcher
 	{
 		/**
-		 * @private
-		 */
-		protected var _registry : StyleProviderRegistry;
-
-		/**
 		 * Constructor.
 		 */
 		public function StyleNameFunctionTheme()
@@ -36,11 +31,16 @@ package feathers.themes
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _registry:StyleProviderRegistry;
+
+		/**
 		 * Disposes the theme.
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
-			if( this._registry )
+			if(this._registry)
 			{
 				this._registry.dispose();
 				this._registry = null;
@@ -51,15 +51,15 @@ package feathers.themes
 		 * Returns a <code>StyleNameFunctionStyleProvider</code> to be passed to
 		 * the specified class.
 		 */
-		public function getStyleProviderForClass( type : Class ) : StyleNameFunctionStyleProvider
+		public function getStyleProviderForClass(type:Class):StyleNameFunctionStyleProvider
 		{
-			return StyleNameFunctionStyleProvider( this._registry.getStyleProvider( type ) );
+			return StyleNameFunctionStyleProvider(this._registry.getStyleProvider(type));
 		}
 
 		/**
 		 * @private
 		 */
-		protected function createRegistry() : void
+		protected function createRegistry():void
 		{
 			this._registry = new StyleProviderRegistry();
 		}

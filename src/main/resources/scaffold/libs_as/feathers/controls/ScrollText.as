@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.TextFieldViewPort;
@@ -50,7 +50,7 @@ package feathers.controls
 	 *
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/events/TextEvent.html#LINK flash.events.TextEvent.LINK
 	 */
-	[Event(name="triggered" , type="starling.events.Event")]
+	[Event(name="triggered",type="starling.events.Event")]
 
 	/**
 	 * Displays long passages of text in a scrollable container using the
@@ -76,8 +76,124 @@ package feathers.controls
 	 *
 	 * @see ../../../help/scroll-text.html How to use the Feathers ScrollText component
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html flash.text.TextField
-	 */ public class ScrollText extends Scroller
+	 */
+	public class ScrollText extends Scroller
 	{
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_AUTO:String = "auto";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_ON:String = "on";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
+		 *
+		 * @see feathers.controls.Scroller#horizontalScrollPolicy
+		 * @see feathers.controls.Scroller#verticalScrollPolicy
+		 */
+		public static const SCROLL_POLICY_OFF:String = "off";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT:String = "float";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED:String = "fixed";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT:String = "fixedFloat";
+
+		/**
+		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
+		 *
+		 * @see feathers.controls.Scroller#scrollBarDisplayMode
+		 */
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE:String = "none";
+
+		/**
+		 * The vertical scroll bar will be positioned on the right.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT:String = "right";
+
+		/**
+		 * The vertical scroll bar will be positioned on the left.
+		 *
+		 * @see feathers.controls.Scroller#verticalScrollBarPosition
+		 */
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT:String = "left";
+
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH:String = "touch";
+
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_MOUSE:String = "mouse";
+
+		/**
+		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
+		 *
+		 * @see feathers.controls.Scroller#interactionMode
+		 */
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS:String = "touchAndScrollBars";
+
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL:String = "vertical";
+
+		/**
+		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
+		 *
+		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
+		 */
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL:String = "horizontal";
+
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_NORMAL:Number = 0.998;
+
+		/**
+		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
+		 *
+		 * @see feathers.controls.Scroller#decelerationRate
+		 */
+		public static const DECELERATION_RATE_FAST:Number = 0.99;
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>ScrollText</code>
 		 * components.
@@ -85,131 +201,28 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var textViewPort : TextFieldViewPort;
-		/**
-		 * @private
-		 */
-		protected var _textPaddingTop : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _textPaddingRight : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _textPaddingBottom : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _textPaddingLeft : Number = 0;
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_ON : String = "on";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
-		 *
-		 * @see feathers.controls.Scroller#horizontalScrollPolicy
-		 * @see feathers.controls.Scroller#verticalScrollPolicy
-		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT : String = "fixedFloat";
-		/**
-		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
-		 *
-		 * @see feathers.controls.Scroller#scrollBarDisplayMode
-		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
-		/**
-		 * The vertical scroll bar will be positioned on the right.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
-		/**
-		 * The vertical scroll bar will be positioned on the left.
-		 *
-		 * @see feathers.controls.Scroller#verticalScrollBarPosition
-		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
-		/**
-		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
-		 *
-		 * @see feathers.controls.Scroller#interactionMode
-		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
-		/**
-		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
-		 *
-		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
-		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
-		/**
-		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
-		 *
-		 * @see feathers.controls.Scroller#decelerationRate
-		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
+		public function ScrollText()
+		{
+			super();
+			this.textViewPort = new TextFieldViewPort();
+			this.textViewPort.addEventListener(Event.TRIGGERED, textViewPort_triggeredHandler);
+			this.viewPort = this.textViewPort;
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected var textViewPort:TextFieldViewPort;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return ScrollText.globalStyleProvider;
 		}
@@ -217,7 +230,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _text : String = "";
+		protected var _text:String = "";
 
 		/**
 		 * The text to display. If <code>isHTML</code> is <code>true</code>, the
@@ -233,7 +246,7 @@ package feathers.controls
 		 *
 		 * @see #isHTML
 		 */
-		public function get text() : String
+		public function get text():String
 		{
 			return this._text;
 		}
@@ -241,24 +254,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set text( value : String ) : void
+		public function set text(value:String):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = "";
 			}
-			if( this._text == value )
+			if(this._text == value)
 			{
 				return;
 			}
 			this._text = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isHTML : Boolean = false;
+		protected var _isHTML:Boolean = false;
 
 		/**
 		 * Determines if the TextField should display the text as HTML or not.
@@ -274,7 +287,7 @@ package feathers.controls
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#htmlText flash.text.TextField.htmlText
 		 * @see #text
 		 */
-		public function get isHTML() : Boolean
+		public function get isHTML():Boolean
 		{
 			return this._isHTML;
 		}
@@ -282,20 +295,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isHTML( value : Boolean ) : void
+		public function set isHTML(value:Boolean):void
 		{
-			if( this._isHTML == value )
+			if(this._isHTML == value)
 			{
 				return;
 			}
 			this._isHTML = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _textFormat : TextFormat;
+		protected var _textFormat:TextFormat;
 
 		/**
 		 * The font and styles used to draw the text.
@@ -310,7 +323,7 @@ package feathers.controls
 		 * @see #disabledTextFormat
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextFormat.html flash.text.TextFormat
 		 */
-		public function get textFormat() : TextFormat
+		public function get textFormat():TextFormat
 		{
 			return this._textFormat;
 		}
@@ -318,20 +331,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set textFormat( value : TextFormat ) : void
+		public function set textFormat(value:TextFormat):void
 		{
-			if( this._textFormat == value )
+			if(this._textFormat == value)
 			{
 				return;
 			}
 			this._textFormat = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _disabledTextFormat : TextFormat;
+		protected var _disabledTextFormat:TextFormat;
 
 		/**
 		 * The font and styles used to draw the text when the component is disabled.
@@ -347,7 +360,7 @@ package feathers.controls
 		 * @see #textFormat
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextFormat.html flash.text.TextFormat
 		 */
-		public function get disabledTextFormat() : TextFormat
+		public function get disabledTextFormat():TextFormat
 		{
 			return this._disabledTextFormat;
 		}
@@ -355,20 +368,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set disabledTextFormat( value : TextFormat ) : void
+		public function set disabledTextFormat(value:TextFormat):void
 		{
-			if( this._disabledTextFormat == value )
+			if(this._disabledTextFormat == value)
 			{
 				return;
 			}
 			this._disabledTextFormat = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _styleSheet : StyleSheet;
+		protected var _styleSheet:StyleSheet;
 
 		/**
 		 * The <code>StyleSheet</code> object to pass to the TextField.
@@ -393,12 +406,11 @@ package feathers.controls
 		 *
 		 * @default null
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#styleSheet Full description of
-		 *     flash.text.TextField.styleSheet in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#styleSheet Full description of flash.text.TextField.styleSheet in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/StyleSheet.html flash.text.StyleSheet
 		 * @see #isHTML
 		 */
-		public function get styleSheet() : StyleSheet
+		public function get styleSheet():StyleSheet
 		{
 			return this._styleSheet;
 		}
@@ -406,20 +418,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set styleSheet( value : StyleSheet ) : void
+		public function set styleSheet(value:StyleSheet):void
 		{
-			if( this._styleSheet == value )
+			if(this._styleSheet == value)
 			{
 				return;
 			}
 			this._styleSheet = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _embedFonts : Boolean = false;
+		protected var _embedFonts:Boolean = false;
 
 		/**
 		 * Determines if the TextField should use an embedded font or not. If
@@ -434,10 +446,9 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of
-		 *     flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
 		 */
-		public function get embedFonts() : Boolean
+		public function get embedFonts():Boolean
 		{
 			return this._embedFonts;
 		}
@@ -445,20 +456,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set embedFonts( value : Boolean ) : void
+		public function set embedFonts(value:Boolean):void
 		{
-			if( this._embedFonts == value )
+			if(this._embedFonts == value)
 			{
 				return;
 			}
 			this._embedFonts = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _antiAliasType : String = AntiAliasType.ADVANCED;
+		private var _antiAliasType:String = AntiAliasType.ADVANCED;
 
 		/**
 		 * The type of anti-aliasing used for this text field, defined as
@@ -471,11 +482,10 @@ package feathers.controls
 		 *
 		 * @default flash.text.AntiAliasType.ADVANCED
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of
-		 *     flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/AntiAliasType.html flash.text.AntiAliasType
 		 */
-		public function get antiAliasType() : String
+		public function get antiAliasType():String
 		{
 			return this._antiAliasType;
 		}
@@ -483,20 +493,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set antiAliasType( value : String ) : void
+		public function set antiAliasType(value:String):void
 		{
-			if( this._antiAliasType == value )
+			if(this._antiAliasType == value)
 			{
 				return;
 			}
 			this._antiAliasType = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _background : Boolean = false;
+		private var _background:Boolean = false;
 
 		/**
 		 * Specifies whether the text field has a background fill. Use the
@@ -511,11 +521,10 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of
-		 *     flash.text.TextField.background in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of flash.text.TextField.background in Adobe's Flash Platform API Reference
 		 * @see #backgroundColor
 		 */
-		public function get background() : Boolean
+		public function get background():Boolean
 		{
 			return this._background;
 		}
@@ -523,20 +532,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set background( value : Boolean ) : void
+		public function set background(value:Boolean):void
 		{
-			if( this._background == value )
+			if(this._background == value)
 			{
 				return;
 			}
 			this._background = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _backgroundColor : uint = 0xffffff;
+		private var _backgroundColor:uint = 0xffffff;
 
 		/**
 		 * The color of the text field background that is displayed if the
@@ -550,11 +559,10 @@ package feathers.controls
 		 *
 		 * @default 0xffffff
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of
-		 *     flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
 		 * @see #background
 		 */
-		public function get backgroundColor() : uint
+		public function get backgroundColor():uint
 		{
 			return this._backgroundColor;
 		}
@@ -562,20 +570,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set backgroundColor( value : uint ) : void
+		public function set backgroundColor(value:uint):void
 		{
-			if( this._backgroundColor == value )
+			if(this._backgroundColor == value)
 			{
 				return;
 			}
 			this._backgroundColor = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _border : Boolean = false;
+		private var _border:Boolean = false;
 
 		/**
 		 * Specifies whether the text field has a border. Use the
@@ -589,11 +597,10 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of
-		 *     flash.text.TextField.border in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of flash.text.TextField.border in Adobe's Flash Platform API Reference
 		 * @see #borderColor
 		 */
-		public function get border() : Boolean
+		public function get border():Boolean
 		{
 			return this._border;
 		}
@@ -601,20 +608,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set border( value : Boolean ) : void
+		public function set border(value:Boolean):void
 		{
-			if( this._border == value )
+			if(this._border == value)
 			{
 				return;
 			}
 			this._border = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _borderColor : uint = 0x000000;
+		private var _borderColor:uint = 0x000000;
 
 		/**
 		 * The color of the text field border that is displayed if the
@@ -628,11 +635,10 @@ package feathers.controls
 		 *
 		 * @default 0x000000
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of
-		 *     flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
 		 * @see #border
 		 */
-		public function get borderColor() : uint
+		public function get borderColor():uint
 		{
 			return this._borderColor;
 		}
@@ -640,20 +646,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set borderColor( value : uint ) : void
+		public function set borderColor(value:uint):void
 		{
-			if( this._borderColor == value )
+			if(this._borderColor == value)
 			{
 				return;
 			}
 			this._borderColor = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _cacheAsBitmap : Boolean = true;
+		private var _cacheAsBitmap:Boolean = true;
 
 		/**
 		 * If set to <code>true</code>, an internal bitmap representation of the
@@ -667,10 +673,9 @@ package feathers.controls
 		 *
 		 * @default true
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObject.html#cacheAsBitmap Full description of
-		 *     flash.display.DisplayObject.cacheAsBitmap in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/display/DisplayObject.html#cacheAsBitmap Full description of flash.display.DisplayObject.cacheAsBitmap in Adobe's Flash Platform API Reference
 		 */
-		public function get cacheAsBitmap() : Boolean
+		public function get cacheAsBitmap():Boolean
 		{
 			return this._cacheAsBitmap;
 		}
@@ -678,20 +683,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set cacheAsBitmap( value : Boolean ) : void
+		public function set cacheAsBitmap(value:Boolean):void
 		{
-			if( this._cacheAsBitmap == value )
+			if(this._cacheAsBitmap == value)
 			{
 				return;
 			}
 			this._cacheAsBitmap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _condenseWhite : Boolean = false;
+		private var _condenseWhite:Boolean = false;
 
 		/**
 		 * A boolean value that specifies whether extra white space (spaces,
@@ -704,11 +709,10 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#condenseWhite Full description of
-		 *     flash.text.TextField.condenseWhite in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#condenseWhite Full description of flash.text.TextField.condenseWhite in Adobe's Flash Platform API Reference
 		 * @see #isHTML
 		 */
-		public function get condenseWhite() : Boolean
+		public function get condenseWhite():Boolean
 		{
 			return this._condenseWhite;
 		}
@@ -716,20 +720,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set condenseWhite( value : Boolean ) : void
+		public function set condenseWhite(value:Boolean):void
 		{
-			if( this._condenseWhite == value )
+			if(this._condenseWhite == value)
 			{
 				return;
 			}
 			this._condenseWhite = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _displayAsPassword : Boolean = false;
+		private var _displayAsPassword:Boolean = false;
 
 		/**
 		 * Specifies whether the text field is a password text field that hides
@@ -743,10 +747,9 @@ package feathers.controls
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of
-		 *     flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
 		 */
-		public function get displayAsPassword() : Boolean
+		public function get displayAsPassword():Boolean
 		{
 			return this._displayAsPassword;
 		}
@@ -754,20 +757,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set displayAsPassword( value : Boolean ) : void
+		public function set displayAsPassword(value:Boolean):void
 		{
-			if( this._displayAsPassword == value )
+			if(this._displayAsPassword == value)
 			{
 				return;
 			}
 			this._displayAsPassword = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _gridFitType : String = GridFitType.PIXEL;
+		private var _gridFitType:String = GridFitType.PIXEL;
 
 		/**
 		 * Determines whether Flash Player forces strong horizontal and vertical
@@ -783,12 +786,11 @@ package feathers.controls
 		 *
 		 * @default flash.text.GridFitType.PIXEL
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of
-		 *     flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/GridFitType.html flash.text.GridFitType
 		 * @see #antiAliasType
 		 */
-		public function get gridFitType() : String
+		public function get gridFitType():String
 		{
 			return this._gridFitType;
 		}
@@ -796,20 +798,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set gridFitType( value : String ) : void
+		public function set gridFitType(value:String):void
 		{
-			if( this._gridFitType == value )
+			if(this._gridFitType == value)
 			{
 				return;
 			}
 			this._gridFitType = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _sharpness : Number = 0;
+		private var _sharpness:Number = 0;
 
 		/**
 		 * The sharpness of the glyph edges in this text field. This property
@@ -825,11 +827,10 @@ package feathers.controls
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of
-		 *     flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
-		public function get sharpness() : Number
+		public function get sharpness():Number
 		{
 			return this._sharpness;
 		}
@@ -837,22 +838,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set sharpness( value : Number ) : void
+		public function set sharpness(value:Number):void
 		{
-			if( this._sharpness == value )
+			if(this._sharpness == value)
 			{
 				return;
 			}
 			this._sharpness = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _thickness : Number = 0;
-
-		//no setter for padding because the one in Scroller is acceptable
+		private var _thickness:Number = 0;
 
 		/**
 		 * The thickness of the glyph edges in this text field. This property
@@ -868,11 +867,10 @@ package feathers.controls
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of
-		 *     flash.text.TextField.thickness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of flash.text.TextField.thickness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
-		public function get thickness() : Number
+		public function get thickness():Number
 		{
 			return this._thickness;
 		}
@@ -880,23 +878,30 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set thickness( value : Number ) : void
+		public function set thickness(value:Number):void
 		{
-			if( this._thickness == value )
+			if(this._thickness == value)
 			{
 				return;
 			}
 			this._thickness = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function get padding() : Number
+		override public function get padding():Number
 		{
 			return this._textPaddingTop;
 		}
+
+		//no setter for padding because the one in Scroller is acceptable
+
+		/**
+		 * @private
+		 */
+		protected var _textPaddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's top edge and
@@ -909,7 +914,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		override public function get paddingTop() : Number
+		override public function get paddingTop():Number
 		{
 			return this._textPaddingTop;
 		}
@@ -917,15 +922,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set paddingTop( value : Number ) : void
+		override public function set paddingTop(value:Number):void
 		{
-			if( this._textPaddingTop == value )
+			if(this._textPaddingTop == value)
 			{
 				return;
 			}
 			this._textPaddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _textPaddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's right edge and
@@ -936,7 +946,7 @@ package feathers.controls
 		 * <listing version="3.0">
 		 * scrollText.paddingRight = 20;</listing>
 		 */
-		override public function get paddingRight() : Number
+		override public function get paddingRight():Number
 		{
 			return this._textPaddingRight;
 		}
@@ -944,15 +954,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set paddingRight( value : Number ) : void
+		override public function set paddingRight(value:Number):void
 		{
-			if( this._textPaddingRight == value )
+			if(this._textPaddingRight == value)
 			{
 				return;
 			}
 			this._textPaddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _textPaddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's bottom edge and
@@ -963,7 +978,7 @@ package feathers.controls
 		 * <listing version="3.0">
 		 * scrollText.paddingBottom = 20;</listing>
 		 */
-		override public function get paddingBottom() : Number
+		override public function get paddingBottom():Number
 		{
 			return this._textPaddingBottom;
 		}
@@ -971,15 +986,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set paddingBottom( value : Number ) : void
+		override public function set paddingBottom(value:Number):void
 		{
-			if( this._textPaddingBottom == value )
+			if(this._textPaddingBottom == value)
 			{
 				return;
 			}
 			this._textPaddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _textPaddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the component's left edge and
@@ -990,7 +1010,7 @@ package feathers.controls
 		 * <listing version="3.0">
 		 * scrollText.paddingLeft = 20;</listing>
 		 */
-		override public function get paddingLeft() : Number
+		override public function get paddingLeft():Number
 		{
 			return this._textPaddingLeft;
 		}
@@ -998,25 +1018,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set paddingLeft( value : Number ) : void
+		override public function set paddingLeft(value:Number):void
 		{
-			if( this._textPaddingLeft == value )
+			if(this._textPaddingLeft == value)
 			{
 				return;
 			}
 			this._textPaddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _visible : Boolean = true;
+		protected var _visible:Boolean = true;
 
 		/**
 		 * @private
 		 */
-		override public function get visible() : Boolean
+		override public function get visible():Boolean
 		{
 			return this._visible;
 		}
@@ -1024,25 +1044,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set visible( value : Boolean ) : void
+		override public function set visible(value:Boolean):void
 		{
-			if( this._visible == value )
+			if(this._visible == value)
 			{
 				return;
 			}
 			this._visible = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _alpha : Number = 1;
+		protected var _alpha:Number = 1;
 
 		/**
 		 * @private
 		 */
-		override public function get alpha() : Number
+		override public function get alpha():Number
 		{
 			return this._alpha;
 		}
@@ -1050,52 +1070,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set alpha( value : Number ) : void
+		override public function set alpha(value:Number):void
 		{
-			if( this._alpha == value )
+			if(this._alpha == value)
 			{
 				return;
 			}
 			this._alpha = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function get hasVisibleArea() : Boolean
+		override public function get hasVisibleArea():Boolean
 		{
 			return true;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function ScrollText()
-		{
-			super();
-			this.textViewPort = new TextFieldViewPort();
-			this.textViewPort.addEventListener( Event.TRIGGERED , textViewPort_triggeredHandler );
-			this.viewPort = this.textViewPort;
-		}
-
-		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var scrollInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SCROLL );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var scrollInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SCROLL);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
 
-			if( dataInvalid )
+			if(dataInvalid)
 			{
 				this.textViewPort.text = this._text;
 				this.textViewPort.isHTML = this._isHTML;
 			}
 
-			if( stylesInvalid )
+			if(stylesInvalid)
 			{
 				this.textViewPort.antiAliasType = this._antiAliasType;
 				this.textViewPort.background = this._background;
@@ -1126,9 +1135,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textViewPort_triggeredHandler( event : Event , link : String ) : void
+		protected function textViewPort_triggeredHandler(event:Event, link:String):void
 		{
-			this.dispatchEventWith( Event.TRIGGERED , false , link );
+			this.dispatchEventWith(Event.TRIGGERED, false, link);
 		}
 	}
 }

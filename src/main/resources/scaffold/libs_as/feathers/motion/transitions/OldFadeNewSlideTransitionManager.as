@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.motion.transitions
 {
 	import feathers.controls.IScreen;
@@ -39,44 +39,67 @@ package feathers.motion.transitions
 	public class OldFadeNewSlideTransitionManager
 	{
 		/**
+		 * Constructor.
+		 */
+		public function OldFadeNewSlideTransitionManager(navigator:ScreenNavigator, quickStackScreenClass:Class = null, quickStackScreenID:String = null)
+		{
+			if(!navigator)
+			{
+				throw new ArgumentError("ScreenNavigator cannot be null.");
+			}
+			this.navigator = navigator;
+			var quickStack:String;
+			if(quickStackScreenClass)
+			{
+				quickStack = getQualifiedClassName(quickStackScreenClass);
+			}
+			if(quickStack && quickStackScreenID)
+			{
+				quickStack += "~" + quickStackScreenID;
+			}
+			if(quickStack)
+			{
+				this._stack.push(quickStack);
+			}
+			this.navigator.transition = this.onTransition;
+		}
+
+		/**
 		 * The <code>ScreenNavigator</code> being managed.
 		 */
-		protected var navigator : ScreenNavigator;
-		/**
-		 * @private
-		 */
-		protected var _stack : Vector.<String> = new <String>[];
-		/**
-		 * @private
-		 */
-		protected var _pushSlideTransition : Function;
-		/**
-		 * @private
-		 */
-		protected var _popSlideTransition : Function;
-		/**
-		 * @private
-		 */
-		protected var _crossfadeTransition : Function;
-		/**
-		 * Determines if the next transition should be skipped. After the
-		 * transition, this value returns to <code>false</code>.
-		 *
-		 * @default false
-		 */
-		public var skipNextTransition : Boolean = false;
+		protected var navigator:ScreenNavigator;
 
 		/**
 		 * @private
 		 */
-		protected var _duration : Number = 0.25;
+		protected var _stack:Vector.<String> = new <String>[];
+
+		/**
+		 * @private
+		 */
+		protected var _pushSlideTransition:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _popSlideTransition:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _crossfadeTransition:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _duration:Number = 0.25;
 
 		/**
 		 * The duration of the transition, measured in seconds.
 		 *
 		 * @default 0.25
 		 */
-		public function get duration() : Number
+		public function get duration():Number
 		{
 			return this._duration;
 		}
@@ -84,9 +107,9 @@ package feathers.motion.transitions
 		/**
 		 * @private
 		 */
-		public function set duration( value : Number ) : void
+		public function set duration(value:Number):void
 		{
-			if( this._duration == value )
+			if(this._duration == value)
 			{
 				return;
 			}
@@ -99,7 +122,7 @@ package feathers.motion.transitions
 		/**
 		 * @private
 		 */
-		protected var _delay : Number = 0.1;
+		protected var _delay:Number = 0.1;
 
 		/**
 		 * A delay before the transition starts, measured in seconds. This may
@@ -108,7 +131,7 @@ package feathers.motion.transitions
 		 *
 		 * @default 0.1
 		 */
-		public function get delay() : Number
+		public function get delay():Number
 		{
 			return this._delay;
 		}
@@ -116,9 +139,9 @@ package feathers.motion.transitions
 		/**
 		 * @private
 		 */
-		public function set delay( value : Number ) : void
+		public function set delay(value:Number):void
 		{
-			if( this._delay == value )
+			if(this._delay == value)
 			{
 				return;
 			}
@@ -131,14 +154,14 @@ package feathers.motion.transitions
 		/**
 		 * @private
 		 */
-		protected var _ease : Object = Transitions.EASE_OUT;
+		protected var _ease:Object = Transitions.EASE_OUT;
 
 		/**
 		 * The easing function to use.
 		 *
 		 * @default starling.animation.Transitions.EASE_OUT
 		 */
-		public function get ease() : Object
+		public function get ease():Object
 		{
 			return this._ease;
 		}
@@ -146,9 +169,9 @@ package feathers.motion.transitions
 		/**
 		 * @private
 		 */
-		public function set ease( value : Object ) : void
+		public function set ease(value:Object):void
 		{
-			if( this._ease == value )
+			if(this._ease == value)
 			{
 				return;
 			}
@@ -159,104 +182,86 @@ package feathers.motion.transitions
 		}
 
 		/**
-		 * Constructor.
+		 * Determines if the next transition should be skipped. After the
+		 * transition, this value returns to <code>false</code>.
+		 *
+		 * @default false
 		 */
-		public function OldFadeNewSlideTransitionManager( navigator : ScreenNavigator , quickStackScreenClass : Class = null , quickStackScreenID : String = null )
-		{
-			if( !navigator )
-			{
-				throw new ArgumentError( "ScreenNavigator cannot be null." );
-			}
-			this.navigator = navigator;
-			var quickStack : String;
-			if( quickStackScreenClass )
-			{
-				quickStack = getQualifiedClassName( quickStackScreenClass );
-			}
-			if( quickStack && quickStackScreenID )
-			{
-				quickStack += "~" + quickStackScreenID;
-			}
-			if( quickStack )
-			{
-				this._stack.push( quickStack );
-			}
-			this.navigator.transition = this.onTransition;
-		}
-
+		public var skipNextTransition:Boolean = false;
+		
 		/**
 		 * Removes all saved classes from the stack that are used to determine
 		 * which side of the <code>ScreenNavigator</code> the new screen will
 		 * slide in from.
 		 */
-		public function clearStack() : void
+		public function clearStack():void
 		{
 			this._stack.length = 0;
 		}
-
+		
 		/**
 		 * The function passed to the <code>transition</code> property of the
 		 * <code>ScreenNavigator</code>.
 		 */
-		protected function onTransition( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
+		protected function onTransition(oldScreen:DisplayObject, newScreen:DisplayObject, onComplete:Function):void
 		{
-			if( this.skipNextTransition )
+			if(this.skipNextTransition)
 			{
 				this.skipNextTransition = false;
-				if( newScreen )
+				if(newScreen)
 				{
 					newScreen.x = 0;
 				}
-				if( onComplete != null )
+				if(onComplete != null)
 				{
 					onComplete();
 				}
 				return;
 			}
 
-			if( oldScreen )
+			if(oldScreen)
 			{
-				if( this._crossfadeTransition === null )
+				if(this._crossfadeTransition === null)
 				{
-					this._crossfadeTransition = Fade.createCrossfadeTransition( this._duration , this._ease , {delay : this._delay} );
+					this._crossfadeTransition = Fade.createCrossfadeTransition(this._duration, this._ease, {delay: this._delay});
 				}
-				this._crossfadeTransition( oldScreen , null , onComplete );
+				this._crossfadeTransition(oldScreen, null, onComplete);
 				onComplete = null;
 			}
-			if( !newScreen )
+			if(!newScreen)
 			{
 				return;
 			}
-			var newScreenClassAndID : String = getQualifiedClassName( newScreen );
-			if( newScreen is IScreen )
+			var newScreenClassAndID:String = getQualifiedClassName(newScreen);
+			if(newScreen is IScreen)
 			{
-				newScreenClassAndID += "~" + IScreen( newScreen ).screenID;
+				newScreenClassAndID += "~" + IScreen(newScreen).screenID;
 			}
-			var stackIndex : int = this._stack.indexOf( newScreenClassAndID );
-			if( stackIndex < 0 ) //push
+			var stackIndex:int = this._stack.indexOf(newScreenClassAndID);
+			if(stackIndex < 0) //push
 			{
-				var oldScreenClassAndID : String = getQualifiedClassName( oldScreen );
-				if( oldScreen is IScreen )
+				var oldScreenClassAndID:String = getQualifiedClassName(oldScreen);
+				if(oldScreen is IScreen)
 				{
-					oldScreenClassAndID += "~" + IScreen( oldScreen ).screenID;
+					oldScreenClassAndID += "~" + IScreen(oldScreen).screenID;
 				}
-				this._stack.push( oldScreenClassAndID );
+				this._stack.push(oldScreenClassAndID);
 
-				if( this._pushSlideTransition === null )
+				if(this._pushSlideTransition === null)
 				{
-					this._pushSlideTransition = Slide.createSlideLeftTransition( this._duration , this._ease , {delay : this._delay} );
+					this._pushSlideTransition = Slide.createSlideLeftTransition(this._duration, this._ease, {delay: this._delay});
 				}
-				this._pushSlideTransition( null , newScreen , onComplete );
+				this._pushSlideTransition(null, newScreen, onComplete);
 			}
 			else //pop
 			{
 				this._stack.length = stackIndex;
 
-				if( this._popSlideTransition === null )
+				if(this._popSlideTransition === null)
 				{
-					this._popSlideTransition = Slide.createSlideRightTransition( this._duration , this._ease , {delay : this._delay} );
+					this._popSlideTransition = Slide.createSlideRightTransition(this._duration, this._ease, {delay: this._delay});
 				}
-				this._popSlideTransition( null , newScreen , onComplete );
+				this._popSlideTransition(null, newScreen, onComplete);
 			}
 			newScreen.alpha = 1;
 		}

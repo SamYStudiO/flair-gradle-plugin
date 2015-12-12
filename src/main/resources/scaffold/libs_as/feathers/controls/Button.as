@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -55,7 +55,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.TRIGGERED
 	 */
-	[Event(name="triggered" , type="starling.events.Event")]
+	[Event(name="triggered",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the button is pressed for a long time. The property
@@ -90,7 +90,7 @@ package feathers.controls
 	 * @see #isLongPressEnabled
 	 * @see #longPressDuration
 	 */
-	[Event(name="longPress" , type="starling.events.Event")]
+	[Event(name="longPress",type="starling.events.Event")]
 	
 	/**
 	 * Dispatched when the display object's state changes.
@@ -114,7 +114,7 @@ package feathers.controls
 	 * 
 	 * @see #currentState
 	 */
-	[Event(name="stateChange" , type="starling.events.Event")]
+	[Event(name="stateChange",type="starling.events.Event")]
 
 	/**
 	 * A push button control that may be triggered when pressed and released.
@@ -129,105 +129,21 @@ package feathers.controls
 	 * this.addChild( button );</listing>
 	 *
 	 * @see ../../../help/button.html How to use the Feathers Button component
-	 */ public class Button extends FeathersControl implements IFocusDisplayObject, IStateContext, ITextBaselineControl
+	 */
+	public class Button extends FeathersControl implements IFocusDisplayObject, IStateContext, ITextBaselineControl
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>Button</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
-		/**
 		 * @private
 		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * The value added to the <code>styleNameList</code> of the label text
-		 * renderer. This variable is <code>protected</code> so that sub-classes
-		 * can customize the label text renderer style name in their
-		 * constructors instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_LABEL</code>.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var labelStyleName : String = DEFAULT_CHILD_STYLE_NAME_LABEL;
-		/**
-		 * The text renderer for the button's label.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #label
-		 * @see #labelFactory
-		 * @see #createLabel()
-		 */
-		protected var labelTextRenderer : ITextRenderer;
-		/**
-		 * The currently visible skin. The value will be <code>null</code> if
-		 * there is no currently visible skin.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var currentSkin : DisplayObject;
-		/**
-		 * The currently visible icon. The value will be <code>null</code> if
-		 * there is no currently visible icon.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var currentIcon : DisplayObject;
-		/**
-		 * The saved ID of the currently active touch. The value will be
-		 * <code>-1</code> if there is no currently active touch.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _originalSkinWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _originalSkinHeight : Number = NaN;
-		/**
-		 * @private
-		 * Chooses an appropriate skin based on the state and the selection.
-		 */
-		protected var _skinSelector : StateWithToggleValueSelector = new StateWithToggleValueSelector();
-		/**
-		 * @private
-		 */
-		protected var _labelPropertiesSelector : StateWithToggleValueSelector = new StateWithToggleValueSelector();
-		/**
-		 * @private
-		 */
-		protected var _iconSelector : StateWithToggleValueSelector = new StateWithToggleValueSelector();
-		/**
-		 * @private
-		 * Used for determining the duration of a long press.
-		 */
-		protected var _touchBeginTime : int;
-		/**
-		 * @private
-		 */
-		protected var _longPressGlobalPosition : Point;
-		/**
-		 * @private
-		 */
-		protected var _hasLongPressed : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _ignoreIconResizes : Boolean = false;
+		private static const HELPER_POINT:Point = new Point();
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the label.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LABEL : String = "feathers-button-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_LABEL:String = "feathers-button-label";
+
 		/**
 		 * An alternate style name to use with <code>Button</code> to allow a
 		 * theme to give it a more prominent, "call-to-action" style. If a theme
@@ -248,7 +164,8 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_CALL_TO_ACTION_BUTTON : String = "feathers-call-to-action-button";
+		public static const ALTERNATE_STYLE_NAME_CALL_TO_ACTION_BUTTON:String = "feathers-call-to-action-button";
+
 		/**
 		 * An alternate style name to use with <code>Button</code> to allow a
 		 * theme to give it a less prominent, "quiet" style. If a theme does not
@@ -269,7 +186,8 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_QUIET_BUTTON : String = "feathers-quiet-button";
+		public static const ALTERNATE_STYLE_NAME_QUIET_BUTTON:String = "feathers-quiet-button";
+
 		/**
 		 * An alternate style name to use with <code>Button</code> to allow a
 		 * theme to give it a highly prominent, "danger" style. An example would
@@ -292,7 +210,8 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_DANGER_BUTTON : String = "feathers-danger-button";
+		public static const ALTERNATE_STYLE_NAME_DANGER_BUTTON:String = "feathers-danger-button";
+
 		/**
 		 * An alternate style name to use with <code>Button</code> to allow a
 		 * theme to give it a "back button" style, perhaps with an arrow
@@ -314,7 +233,8 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_BACK_BUTTON : String = "feathers-back-button";
+		public static const ALTERNATE_STYLE_NAME_BACK_BUTTON:String = "feathers-back-button";
+
 		/**
 		 * An alternate style name to use with <code>Button</code> to allow a
 		 * theme to give it a "forward" button style, perhaps with an arrow
@@ -336,7 +256,8 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_FORWARD_BUTTON : String = "feathers-forward-button";
+		public static const ALTERNATE_STYLE_NAME_FORWARD_BUTTON:String = "feathers-forward-button";
+		
 		/**
 		 * Identifier for the button's up state. Can be used for styling purposes.
 		 *
@@ -344,7 +265,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_UP : String = "up";
+		public static const STATE_UP:String = "up";
+		
 		/**
 		 * Identifier for the button's down state. Can be used for styling purposes.
 		 *
@@ -352,7 +274,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DOWN : String = "down";
+		public static const STATE_DOWN:String = "down";
+
 		/**
 		 * Identifier for the button's hover state. Can be used for styling purposes.
 		 *
@@ -360,7 +283,8 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_HOVER : String = "hover";
+		public static const STATE_HOVER:String = "hover";
+		
 		/**
 		 * Identifier for the button's disabled state. Can be used for styling purposes.
 		 *
@@ -368,31 +292,36 @@ package feathers.controls
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DISABLED : String = "disabled";
+		public static const STATE_DISABLED:String = "disabled";
+		
 		/**
 		 * The icon will be positioned above the label.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_TOP : String = "top";
+		public static const ICON_POSITION_TOP:String = "top";
+		
 		/**
 		 * The icon will be positioned to the right of the label.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT : String = "right";
+		public static const ICON_POSITION_RIGHT:String = "right";
+		
 		/**
 		 * The icon will be positioned below the label.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_BOTTOM : String = "bottom";
+		public static const ICON_POSITION_BOTTOM:String = "bottom";
+		
 		/**
 		 * The icon will be positioned to the left of the label.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_LEFT : String = "left";
+		public static const ICON_POSITION_LEFT:String = "left";
+
 		/**
 		 * The icon will be positioned manually with no relation to the position
 		 * of the label. Use <code>iconOffsetX</code> and <code>iconOffsetY</code>
@@ -402,146 +331,188 @@ package feathers.controls
 		 * @see #iconOffsetX
 		 * @see #iconOffsetY
 		 */
-		public static const ICON_POSITION_MANUAL : String = "manual";
+		public static const ICON_POSITION_MANUAL:String = "manual";
+		
 		/**
 		 * The icon will be positioned to the left the label, and the bottom of
 		 * the icon will be aligned to the baseline of the label text.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_LEFT_BASELINE : String = "leftBaseline";
+		public static const ICON_POSITION_LEFT_BASELINE:String = "leftBaseline";
+		
 		/**
 		 * The icon will be positioned to the right the label, and the bottom of
 		 * the icon will be aligned to the baseline of the label text.
 		 *
 		 * @see #iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT_BASELINE : String = "rightBaseline";
+		public static const ICON_POSITION_RIGHT_BASELINE:String = "rightBaseline";
+		
 		/**
 		 * The icon and label will be aligned horizontally to the left edge of the button.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
+		
 		/**
 		 * The icon and label will be aligned horizontally to the center of the button.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
+		
 		/**
 		 * The icon and label will be aligned horizontally to the right edge of the button.
 		 *
 		 * @see #horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
+		
 		/**
 		 * The icon and label will be aligned vertically to the top edge of the button.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+		
 		/**
 		 * The icon and label will be aligned vertically to the middle of the button.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+		
 		/**
 		 * The icon and label will be aligned vertically to the bottom edge of the button.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
-		/**
-		 * Determines if a pressed button should remain in the down state if a
-		 * touch moves outside of the button's bounds. Useful for controls like
-		 * <code>Slider</code> and <code>ToggleSwitch</code> to keep a thumb in
-		 * the down state while it is dragged around.
-		 *
-		 * <p>The following example ensures that the button's down state remains
-		 * active when the button is pressed but the touch moves outside the
-		 * button's bounds:</p>
-		 *
-		 * <listing version="3.0">
-		 * button.keepDownStateOnRollOut = true;</listing>
-		 */
-		public var keepDownStateOnRollOut : Boolean = false;
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
 
 		/**
-		 * @private
+		 * The default <code>IStyleProvider</code> for all <code>Button</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		public static var globalStyleProvider:IStyleProvider;
+		
+		/**
+		 * Constructor.
+		 */
+		public function Button()
 		{
-			return Button.globalStyleProvider;
+			super();
+			this.isQuickHitAreaEnabled = true;
+			this.addEventListener(TouchEvent.TOUCH, button_touchHandler);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, button_removedFromStageHandler);
 		}
 
 		/**
-		 * @private
+		 * The value added to the <code>styleNameList</code> of the label text
+		 * renderer. This variable is <code>protected</code> so that sub-classes
+		 * can customize the label text renderer style name in their
+		 * constructors instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_LABEL</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var _stateNames : Vector.<String> = new <String>
-				[ STATE_UP , STATE_DOWN , STATE_HOVER , STATE_DISABLED ];
-
+		protected var labelStyleName:String = DEFAULT_CHILD_STYLE_NAME_LABEL;
+		
 		/**
-		 * A list of all valid touch state names for use with <code>currentState</code>.
+		 * The text renderer for the button's label.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 *
-		 * @see #currentState
+		 * @see #label
+		 * @see #labelFactory
+		 * @see #createLabel()
 		 */
-		protected function get stateNames() : Vector.<String>
-		{
-			return this._stateNames;
-		}
+		protected var labelTextRenderer:ITextRenderer;
+		
+		/**
+		 * The currently visible skin. The value will be <code>null</code> if
+		 * there is no currently visible skin.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var currentSkin:DisplayObject;
+		
+		/**
+		 * The currently visible icon. The value will be <code>null</code> if
+		 * there is no currently visible icon.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var currentIcon:DisplayObject;
+		
+		/**
+		 * The saved ID of the currently active touch. The value will be
+		 * <code>-1</code> if there is no currently active touch.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var touchPointID:int = -1;
 
 		/**
 		 * @private
 		 */
-		override public function set isEnabled( value : Boolean ) : void
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
-			if( this._isEnabled == value )
+			return Button.globalStyleProvider;
+		}
+		
+		/**
+		 * @private
+		 */
+		override public function set isEnabled(value:Boolean):void
+		{
+			if(this._isEnabled == value)
 			{
 				return;
 			}
 			super.isEnabled = value;
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this.touchable = false;
-				this.changeState( STATE_DISABLED );
+				this.changeState(STATE_DISABLED);
 				this.touchPointID = -1;
 			}
 			else
 			{
 				//might be in another state for some reason
 				//let's only change to up if needed
-				if( this._currentState == STATE_DISABLED )
+				if(this._currentState == STATE_DISABLED)
 				{
-					this.changeState( STATE_UP );
+					this.changeState(STATE_UP);
 				}
 				this.touchable = true;
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _currentState : String = STATE_UP;
+		protected var _currentState:String = STATE_UP;
 		
 		/**
 		 * The current state of the button.
-		 *
+		 * 
 		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
 		 */
-		public function get currentState() : String
+		public function get currentState():String
 		{
 			return this._currentState;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _label : String = null;
-
+		protected var _label:String = null;
+		
 		/**
 		 * The text displayed on the button.
 		 *
@@ -552,29 +523,29 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get label() : String
+		public function get label():String
 		{
 			return this._label;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set label( value : String ) : void
+		public function set label(value:String):void
 		{
-			if( this._label == value )
+			if(this._label == value)
 			{
 				return;
 			}
 			this._label = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _hasLabelTextRenderer : Boolean = true;
-		
+		protected var _hasLabelTextRenderer:Boolean = true;
+
 		/**
 		 * Determines if the button's label text renderer is created or not.
 		 * Useful for button sub-components that may not display text, like
@@ -587,7 +558,7 @@ package feathers.controls
 		 *
 		 * @default true
 		 */
-		public function get hasLabelTextRenderer() : Boolean
+		public function get hasLabelTextRenderer():Boolean
 		{
 			return this._hasLabelTextRenderer;
 		}
@@ -595,22 +566,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set hasLabelTextRenderer( value : Boolean ) : void
+		public function set hasLabelTextRenderer(value:Boolean):void
 		{
-			if( this._hasLabelTextRenderer == value )
+			if(this._hasLabelTextRenderer == value)
 			{
 				return;
 			}
 			this._hasLabelTextRenderer = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _iconPosition : String = ICON_POSITION_LEFT;
+		protected var _iconPosition:String = ICON_POSITION_LEFT;
 
-		[Inspectable(type="String" , enumeration="top,right,bottom,left,rightBaseline,leftBaseline,manual")]
+		[Inspectable(type="String",enumeration="top,right,bottom,left,rightBaseline,leftBaseline,manual")]
 		/**
 		 * The location of the icon, relative to the label.
 		 *
@@ -631,34 +602,35 @@ package feathers.controls
 		 * @see #ICON_POSITION_RIGHT_BASELINE
 		 * @see #ICON_POSITION_LEFT_BASELINE
 		 * @see #ICON_POSITION_MANUAL
-		 */ public function get iconPosition() : String
+		 */
+		public function get iconPosition():String
 		{
 			return this._iconPosition;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set iconPosition( value : String ) : void
+		public function set iconPosition(value:String):void
 		{
-			if( this._iconPosition == value )
+			if(this._iconPosition == value)
 			{
 				return;
 			}
 			this._iconPosition = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _gap : Number = 0;
-
+		protected var _gap:Number = 0;
+		
 		/**
 		 * The space, in pixels, between the icon and the label. Applies to
 		 * either horizontal or vertical spacing, depending on the value of
 		 * <code>iconPosition</code>.
-		 *
+		 * 
 		 * <p>If <code>gap</code> is set to <code>Number.POSITIVE_INFINITY</code>,
 		 * the label and icon will be positioned as far apart as possible. In
 		 * other words, they will be positioned at the edges of the button,
@@ -673,32 +645,32 @@ package feathers.controls
 		 * button.gap = 50;</listing>
 		 *
 		 * @default 0
-		 *
+		 * 
 		 * @see #iconPosition
 		 * @see #minGap
 		 */
-		public function get gap() : Number
+		public function get gap():Number
 		{
 			return this._gap;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set gap( value : Number ) : void
+		public function set gap(value:Number):void
 		{
-			if( this._gap == value )
+			if(this._gap == value)
 			{
 				return;
 			}
 			this._gap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minGap : Number = 0;
+		protected var _minGap:Number = 0;
 
 		/**
 		 * If the value of the <code>gap</code> property is
@@ -717,7 +689,7 @@ package feathers.controls
 		 *
 		 * @see #gap
 		 */
-		public function get minGap() : Number
+		public function get minGap():Number
 		{
 			return this._minGap;
 		}
@@ -725,22 +697,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minGap( value : Number ) : void
+		public function set minGap(value:Number):void
 		{
-			if( this._minGap == value )
+			if(this._minGap == value)
 			{
 				return;
 			}
 			this._minGap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _horizontalAlign : String = HORIZONTAL_ALIGN_CENTER;
+		protected var _horizontalAlign:String = HORIZONTAL_ALIGN_CENTER;
 
-		[Inspectable(type="String" , enumeration="left,center,right")]
+		[Inspectable(type="String",enumeration="left,center,right")]
 		/**
 		 * The location where the button's content is aligned horizontally (on
 		 * the x-axis).
@@ -755,30 +727,31 @@ package feathers.controls
 		 * @see #HORIZONTAL_ALIGN_LEFT
 		 * @see #HORIZONTAL_ALIGN_CENTER
 		 * @see #HORIZONTAL_ALIGN_RIGHT
-		 */ public function get horizontalAlign() : String
+		 */
+		public function get horizontalAlign():String
 		{
 			return this._horizontalAlign;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set horizontalAlign( value : String ) : void
+		public function set horizontalAlign(value:String):void
 		{
-			if( this._horizontalAlign == value )
+			if(this._horizontalAlign == value)
 			{
 				return;
 			}
 			this._horizontalAlign = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
+		protected var _verticalAlign:String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String" , enumeration="top,middle,bottom")]
+		[Inspectable(type="String",enumeration="top,middle,bottom")]
 		/**
 		 * The location where the button's content is aligned vertically (on
 		 * the y-axis).
@@ -793,22 +766,23 @@ package feathers.controls
 		 * @see #VERTICAL_ALIGN_TOP
 		 * @see #VERTICAL_ALIGN_MIDDLE
 		 * @see #VERTICAL_ALIGN_BOTTOM
-		 */ public function get verticalAlign() : String
+		 */
+		public function get verticalAlign():String
 		{
 			return _verticalAlign;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set verticalAlign( value : String ) : void
+		public function set verticalAlign(value:String):void
 		{
-			if( this._verticalAlign == value )
+			if(this._verticalAlign == value)
 			{
 				return;
 			}
 			this._verticalAlign = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -830,7 +804,7 @@ package feathers.controls
 		 * @see #paddingBottom
 		 * @see #paddingLeft
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -838,7 +812,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -849,7 +823,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the button's top edge and the
@@ -863,7 +837,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -871,20 +845,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the button's right edge and the
@@ -898,7 +872,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -906,20 +880,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the button's bottom edge and
@@ -933,7 +907,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -941,20 +915,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the button's left edge and the
@@ -968,7 +942,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -976,21 +950,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _labelOffsetX : Number = 0;
-		
+		protected var _labelOffsetX:Number = 0;
+
 		/**
 		 * Offsets the x position of the label by a certain number of pixels.
 		 * This does not affect the measurement of the button. The button will
@@ -1007,7 +981,7 @@ package feathers.controls
 		 *
 		 * @see #labelOffsetY
 		 */
-		public function get labelOffsetX() : Number
+		public function get labelOffsetX():Number
 		{
 			return this._labelOffsetX;
 		}
@@ -1015,20 +989,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set labelOffsetX( value : Number ) : void
+		public function set labelOffsetX(value:Number):void
 		{
-			if( this._labelOffsetX == value )
+			if(this._labelOffsetX == value)
 			{
 				return;
 			}
 			this._labelOffsetX = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _labelOffsetY : Number = 0;
+		protected var _labelOffsetY:Number = 0;
 
 		/**
 		 * Offsets the y position of the label by a certain number of pixels.
@@ -1046,7 +1020,7 @@ package feathers.controls
 		 *
 		 * @see #labelOffsetX
 		 */
-		public function get labelOffsetY() : Number
+		public function get labelOffsetY():Number
 		{
 			return this._labelOffsetY;
 		}
@@ -1054,20 +1028,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set labelOffsetY( value : Number ) : void
+		public function set labelOffsetY(value:Number):void
 		{
-			if( this._labelOffsetY == value )
+			if(this._labelOffsetY == value)
 			{
 				return;
 			}
 			this._labelOffsetY = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _iconOffsetX : Number = 0;
+		protected var _iconOffsetX:Number = 0;
 
 		/**
 		 * Offsets the x position of the icon by a certain number of pixels.
@@ -1085,7 +1059,7 @@ package feathers.controls
 		 *
 		 * @see #iconOffsetY
 		 */
-		public function get iconOffsetX() : Number
+		public function get iconOffsetX():Number
 		{
 			return this._iconOffsetX;
 		}
@@ -1093,20 +1067,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set iconOffsetX( value : Number ) : void
+		public function set iconOffsetX(value:Number):void
 		{
-			if( this._iconOffsetX == value )
+			if(this._iconOffsetX == value)
 			{
 				return;
 			}
 			this._iconOffsetX = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _iconOffsetY : Number = 0;
+		protected var _iconOffsetY:Number = 0;
 
 		/**
 		 * Offsets the y position of the icon by a certain number of pixels.
@@ -1124,7 +1098,7 @@ package feathers.controls
 		 *
 		 * @see #iconOffsetX
 		 */
-		public function get iconOffsetY() : Number
+		public function get iconOffsetY():Number
 		{
 			return this._iconOffsetY;
 		}
@@ -1132,20 +1106,65 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set iconOffsetY( value : Number ) : void
+		public function set iconOffsetY(value:Number):void
 		{
-			if( this._iconOffsetY == value )
+			if(this._iconOffsetY == value)
 			{
 				return;
 			}
 			this._iconOffsetY = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+		
+		/**
+		 * Determines if a pressed button should remain in the down state if a
+		 * touch moves outside of the button's bounds. Useful for controls like
+		 * <code>Slider</code> and <code>ToggleSwitch</code> to keep a thumb in
+		 * the down state while it is dragged around.
+		 *
+		 * <p>The following example ensures that the button's down state remains
+		 * active when the button is pressed but the touch moves outside the
+		 * button's bounds:</p>
+		 *
+		 * <listing version="3.0">
+		 * button.keepDownStateOnRollOut = true;</listing>
+		 */
+		public var keepDownStateOnRollOut:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _stateNames:Vector.<String> = new <String>
+		[
+			STATE_UP, STATE_DOWN, STATE_HOVER, STATE_DISABLED
+		];
+
+		/**
+		 * A list of all valid touch state names for use with <code>currentState</code>.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #currentState
+		 */
+		protected function get stateNames():Vector.<String>
+		{
+			return this._stateNames;
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _stateToSkinFunction : Function;
+		protected var _originalSkinWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _originalSkinHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _stateToSkinFunction:Function;
 
 		/**
 		 * Returns a skin for the current state. Can be used instead of
@@ -1161,7 +1180,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get stateToSkinFunction() : Function
+		public function get stateToSkinFunction():Function
 		{
 			return this._stateToSkinFunction;
 		}
@@ -1169,21 +1188,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set stateToSkinFunction( value : Function ) : void
+		public function set stateToSkinFunction(value:Function):void
 		{
-			if( this._stateToSkinFunction == value )
+			if(this._stateToSkinFunction == value)
 			{
 				return;
 			}
 			this._stateToSkinFunction = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _stateToIconFunction : Function;
-		
+		protected var _stateToIconFunction:Function;
+
 		/**
 		 * Returns an icon for the current state. Can be used instead of
 		 * individual icon properties for different states, like
@@ -1198,7 +1217,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get stateToIconFunction() : Function
+		public function get stateToIconFunction():Function
 		{
 			return this._stateToIconFunction;
 		}
@@ -1206,21 +1225,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set stateToIconFunction( value : Function ) : void
+		public function set stateToIconFunction(value:Function):void
 		{
-			if( this._stateToIconFunction == value )
+			if(this._stateToIconFunction == value)
 			{
 				return;
 			}
 			this._stateToIconFunction = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _stateToLabelPropertiesFunction : Function;
-		
+		protected var _stateToLabelPropertiesFunction:Function;
+
 		/**
 		 * Returns a text format for the current state.
 		 *
@@ -1229,7 +1248,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get stateToLabelPropertiesFunction() : Function
+		public function get stateToLabelPropertiesFunction():Function
 		{
 			return this._stateToLabelPropertiesFunction;
 		}
@@ -1237,16 +1256,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set stateToLabelPropertiesFunction( value : Function ) : void
+		public function set stateToLabelPropertiesFunction(value:Function):void
 		{
-			if( this._stateToLabelPropertiesFunction == value )
+			if(this._stateToLabelPropertiesFunction == value)
 			{
 				return;
 			}
 			this._stateToLabelPropertiesFunction = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
+		/**
+		 * @private
+		 * Chooses an appropriate skin based on the state and the selection.
+		 */
+		protected var _skinSelector:StateWithToggleValueSelector = new StateWithToggleValueSelector();
+		
 		/**
 		 * The skin used when no other skin is defined for the current state.
 		 * Intended to be used when multiple states should share the same skin.
@@ -1265,24 +1290,24 @@ package feathers.controls
 		 * @see #setSkinForState()
 		 * @see #stateToSkinFunction
 		 */
-		public function get defaultSkin() : DisplayObject
+		public function get defaultSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.defaultValue );
+			return DisplayObject(this._skinSelector.defaultValue);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set defaultSkin( value : DisplayObject ) : void
+		public function set defaultSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.defaultValue == value )
+			if(this._skinSelector.defaultValue == value)
 			{
 				return;
 			}
 			this._skinSelector.defaultValue = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The skin used for the button's up state. If <code>null</code>, then
 		 * <code>defaultSkin</code> is used instead.
@@ -1296,29 +1321,29 @@ package feathers.controls
 		 * button.upSkin = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultSkin
 		 * @see #setSkinForState()
 		 * @see #STATE_UP
 		 */
-		public function get upSkin() : DisplayObject
+		public function get upSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_UP , false ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_UP, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set upSkin( value : DisplayObject ) : void
+		public function set upSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_UP , false ) == value )
+			if(this._skinSelector.getValueForState(STATE_UP, false) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_UP , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_UP, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The skin used for the button's down state. If <code>null</code>, then
 		 * <code>defaultSkin</code> is used instead.
@@ -1332,27 +1357,27 @@ package feathers.controls
 		 * button.downSkin = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultSkin
 		 * @see #setSkinForState()
 		 * @see #STATE_DOWN
 		 */
-		public function get downSkin() : DisplayObject
+		public function get downSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DOWN , false ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_DOWN, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set downSkin( value : DisplayObject ) : void
+		public function set downSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_DOWN , false ) == value )
+			if(this._skinSelector.getValueForState(STATE_DOWN, false) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_DOWN , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_DOWN, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1373,24 +1398,24 @@ package feathers.controls
 		 * @see #setSkinForState()
 		 * @see #STATE_HOVER
 		 */
-		public function get hoverSkin() : DisplayObject
+		public function get hoverSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_HOVER , false ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_HOVER, false));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set hoverSkin( value : DisplayObject ) : void
+		public function set hoverSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_HOVER , false ) == value )
+			if(this._skinSelector.getValueForState(STATE_HOVER, false) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_HOVER , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_HOVER, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The skin used for the button's disabled state. If <code>null</code>,
 		 * then <code>defaultSkin</code> is used instead.
@@ -1404,34 +1429,34 @@ package feathers.controls
 		 * button.disabledSkin = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultSkin
 		 * @see #setSkinForState()
 		 * @see #STATE_DISABLED
 		 */
-		public function get disabledSkin() : DisplayObject
+		public function get disabledSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DISABLED , false ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_DISABLED, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set disabledSkin( value : DisplayObject ) : void
+		public function set disabledSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_DISABLED , false ) == value )
+			if(this._skinSelector.getValueForState(STATE_DISABLED, false) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_DISABLED , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_DISABLED, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _labelFactory : Function;
-		
+		protected var _labelFactory:Function;
+
 		/**
 		 * A function used to instantiate the button's label text renderer
 		 * sub-component. By default, the button will use the global text
@@ -1459,7 +1484,7 @@ package feathers.controls
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
 		 */
-		public function get labelFactory() : Function
+		public function get labelFactory():Function
 		{
 			return this._labelFactory;
 		}
@@ -1467,21 +1492,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set labelFactory( value : Function ) : void
+		public function set labelFactory(value:Function):void
 		{
-			if( this._labelFactory == value )
+			if(this._labelFactory == value)
 			{
 				return;
 			}
 			this._labelFactory = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customLabelStyleName : String;
-		
+		protected var _customLabelStyleName:String;
+
 		/**
 		 * A style name to add to the button's label text renderer
 		 * sub-component. Typically used by a theme to provide different styles
@@ -1497,8 +1522,7 @@ package feathers.controls
 		 * provide different styles than the default:</p>
 		 *
 		 * <listing version="3.0">
-		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-button-label", setCustomButtonLabelStyles
-		 * );</listing>
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-button-label", setCustomButtonLabelStyles );</listing>
 		 *
 		 * @default null
 		 *
@@ -1506,7 +1530,7 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleNameList
 		 * @see #labelFactory
 		 */
-		public function get customLabelStyleName() : String
+		public function get customLabelStyleName():String
 		{
 			return this._customLabelStyleName;
 		}
@@ -1514,16 +1538,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customLabelStyleName( value : String ) : void
+		public function set customLabelStyleName(value:String):void
 		{
-			if( this._customLabelStyleName == value )
+			if(this._customLabelStyleName == value)
 			{
 				return;
 			}
 			this._customLabelStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
-
+		
+		/**
+		 * @private
+		 */
+		protected var _labelPropertiesSelector:StateWithToggleValueSelector = new StateWithToggleValueSelector();
+		
 		/**
 		 * An object that stores properties for the button's label text renderer
 		 * when no specific properties are defined for the button's current
@@ -1548,39 +1577,39 @@ package feathers.controls
 		 * @see feathers.core.ITextRenderer
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public function get defaultLabelProperties() : Object
+		public function get defaultLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.defaultValue );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.defaultValue);
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
+				value = new PropertyProxy(childProperties_onChange);
 				this._labelPropertiesSelector.defaultValue = value;
 			}
 			return value;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set defaultLabelProperties( value : Object ) : void
+		public function set defaultLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.defaultValue );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.defaultValue);
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
 			this._labelPropertiesSelector.defaultValue = value;
-			if( value )
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * An object that stores properties for the button's label text renderer
 		 * when the button is in the <code>Button.STATE_UP</code> state, and the
@@ -1603,39 +1632,39 @@ package feathers.controls
 		 * @see #defaultLabelProperties
 		 * @see #STATE_UP
 		 */
-		public function get upLabelProperties() : Object
+		public function get upLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , false ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_UP, false));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_UP , false );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_UP, false);
 			}
 			return value;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set upLabelProperties( value : Object ) : void
+		public function set upLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , false ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_UP, false));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_UP , false );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_UP, false);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * An object that stores properties for the button's label text renderer
 		 * when the button is in the <code>Button.STATE_DOWN</code> state, and
@@ -1658,37 +1687,37 @@ package feathers.controls
 		 * @see #defaultLabelProperties
 		 * @see #STATE_DOWN
 		 */
-		public function get downLabelProperties() : Object
+		public function get downLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , false ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DOWN, false));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , false );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_DOWN, false);
 			}
 			return value;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set downLabelProperties( value : Object ) : void
+		public function set downLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , false ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DOWN, false));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , false );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_DOWN, false);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1713,13 +1742,13 @@ package feathers.controls
 		 * @see #defaultLabelProperties
 		 * @see #STATE_HOVER
 		 */
-		public function get hoverLabelProperties() : Object
+		public function get hoverLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , false ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_HOVER, false));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , false );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_HOVER, false);
 			}
 			return value;
 		}
@@ -1727,25 +1756,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set hoverLabelProperties( value : Object ) : void
+		public function set hoverLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , false ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_HOVER, false));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , false );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_HOVER, false);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * An object that stores properties for the button's label text renderer
 		 * when the button is in the <code>Button.STATE_DISABLED</code> state,
@@ -1768,39 +1797,44 @@ package feathers.controls
 		 * @see #defaultLabelProperties
 		 * @see #STATE_DISABLED
 		 */
-		public function get disabledLabelProperties() : Object
+		public function get disabledLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , false ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DISABLED, false));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , false );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_DISABLED, false);
 			}
 			return value;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set disabledLabelProperties( value : Object ) : void
+		public function set disabledLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , false ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DISABLED, false));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , false );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_DISABLED, false);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
+		/**
+		 * @private
+		 */
+		protected var _iconSelector:StateWithToggleValueSelector = new StateWithToggleValueSelector();
+		
 		/**
 		 * The icon used when no other icon is defined for the current state.
 		 * Intended to be used when multiple states should share the same icon.
@@ -1819,24 +1853,24 @@ package feathers.controls
 		 * @see #setIconForState()
 		 * @see #stateToIconFunction
 		 */
-		public function get defaultIcon() : DisplayObject
+		public function get defaultIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.defaultValue );
+			return DisplayObject(this._iconSelector.defaultValue);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set defaultIcon( value : DisplayObject ) : void
+		public function set defaultIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.defaultValue == value )
+			if(this._iconSelector.defaultValue == value)
 			{
 				return;
 			}
 			this._iconSelector.defaultValue = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The icon used for the button's up state. If <code>null</code>, then
 		 * <code>defaultIcon</code> is used instead.
@@ -1850,29 +1884,29 @@ package feathers.controls
 		 * button.upIcon = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultIcon
 		 * @see #setIconForState()
 		 * @see #STATE_UP
 		 */
-		public function get upIcon() : DisplayObject
+		public function get upIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_UP , false ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_UP, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set upIcon( value : DisplayObject ) : void
+		public function set upIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_UP , false ) == value )
+			if(this._iconSelector.getValueForState(STATE_UP, false) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_UP , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_UP, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The icon used for the button's down state. If <code>null</code>, then
 		 * <code>defaultIcon</code> is used instead.
@@ -1886,27 +1920,27 @@ package feathers.controls
 		 * button.downIcon = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultIcon
 		 * @see #setIconForState()
 		 * @see #STATE_DOWN
 		 */
-		public function get downIcon() : DisplayObject
+		public function get downIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DOWN , false ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_DOWN, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set downIcon( value : DisplayObject ) : void
+		public function set downIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_DOWN , false ) == value )
+			if(this._iconSelector.getValueForState(STATE_DOWN, false) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_DOWN , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_DOWN, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1927,24 +1961,24 @@ package feathers.controls
 		 * @see #setIconForState()
 		 * @see #STATE_HOVER
 		 */
-		public function get hoverIcon() : DisplayObject
+		public function get hoverIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_HOVER , false ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_HOVER, false));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set hoverIcon( value : DisplayObject ) : void
+		public function set hoverIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_HOVER , false ) == value )
+			if(this._iconSelector.getValueForState(STATE_HOVER, false) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_HOVER , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_HOVER, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * The icon used for the button's disabled state. If <code>null</code>, then
 		 * <code>defaultIcon</code> is used instead.
@@ -1958,33 +1992,49 @@ package feathers.controls
 		 * button.disabledIcon = new Image( texture );</listing>
 		 *
 		 * @default null
-		 *
+		 * 
 		 * @see #defaultIcon
 		 * @see #setIconForState()
 		 * @see #STATE_DISABLED
 		 */
-		public function get disabledIcon() : DisplayObject
+		public function get disabledIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DISABLED , false ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_DISABLED, false));
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set disabledIcon( value : DisplayObject ) : void
+		public function set disabledIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_DISABLED , false ) == value )
+			if(this._iconSelector.getValueForState(STATE_DISABLED, false) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_DISABLED , false );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_DISABLED, false);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
+		 * Used for determining the duration of a long press.
 		 */
-		protected var _longPressDuration : Number = 0.5;
+		protected var _touchBeginTime:int;
+
+		/**
+		 * @private
+		 */
+		protected var _longPressGlobalPosition:Point;
+
+		/**
+		 * @private
+		 */
+		protected var _hasLongPressed:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _longPressDuration:Number = 0.5;
 
 		/**
 		 * The duration, in seconds, of a long press.
@@ -1999,7 +2049,7 @@ package feathers.controls
 		 * @see #event:longPress
 		 * @see #isLongPressEnabled
 		 */
-		public function get longPressDuration() : Number
+		public function get longPressDuration():Number
 		{
 			return this._longPressDuration;
 		}
@@ -2007,7 +2057,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set longPressDuration( value : Number ) : void
+		public function set longPressDuration(value:Number):void
 		{
 			this._longPressDuration = value;
 		}
@@ -2015,7 +2065,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _isLongPressEnabled : Boolean = false;
+		protected var _isLongPressEnabled:Boolean = false;
 
 		/**
 		 * Determines if <code>FeathersEventType.LONG_PRESS</code> will be
@@ -2035,7 +2085,7 @@ package feathers.controls
 		 * @see #event:longPress
 		 * @see #longPressDuration
 		 */
-		public function get isLongPressEnabled() : Boolean
+		public function get isLongPressEnabled():Boolean
 		{
 			return this._isLongPressEnabled;
 		}
@@ -2043,19 +2093,19 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isLongPressEnabled( value : Boolean ) : void
+		public function set isLongPressEnabled(value:Boolean):void
 		{
 			this._isLongPressEnabled = value;
-			if( !value )
+			if(!value)
 			{
-				this.removeEventListener( Event.ENTER_FRAME , longPress_enterFrameHandler );
+				this.removeEventListener(Event.ENTER_FRAME, longPress_enterFrameHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _scaleWhenDown : Number = 1;
+		protected var _scaleWhenDown:Number = 1;
 
 		/**
 		 * The button renders at this scale in the down state.
@@ -2067,7 +2117,7 @@ package feathers.controls
 		 *
 		 * @default 1
 		 */
-		public function get scaleWhenDown() : Number
+		public function get scaleWhenDown():Number
 		{
 			return this._scaleWhenDown;
 		}
@@ -2075,7 +2125,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set scaleWhenDown( value : Number ) : void
+		public function set scaleWhenDown(value:Number):void
 		{
 			this._scaleWhenDown = value;
 		}
@@ -2083,7 +2133,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _scaleWhenHovering : Number = 1;
+		protected var _scaleWhenHovering:Number = 1;
 
 		/**
 		 * The button renders at this scale in the hover state.
@@ -2095,7 +2145,7 @@ package feathers.controls
 		 *
 		 * @default 1
 		 */
-		public function get scaleWhenHovering() : Number
+		public function get scaleWhenHovering():Number
 		{
 			return this._scaleWhenHovering;
 		}
@@ -2103,7 +2153,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set scaleWhenHovering( value : Number ) : void
+		public function set scaleWhenHovering(value:Number):void
 		{
 			this._scaleWhenHovering = value;
 		}
@@ -2111,9 +2161,9 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function get baseline() : Number
+		public function get baseline():Number
 		{
-			if( !this.labelTextRenderer )
+			if(!this.labelTextRenderer)
 			{
 				return this.scaledActualHeight;
 			}
@@ -2121,67 +2171,62 @@ package feathers.controls
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function Button()
-		{
-			super();
-			this.isQuickHitAreaEnabled = true;
-			this.addEventListener( TouchEvent.TOUCH , button_touchHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE , button_removedFromStageHandler );
-		}
+		protected var _ignoreIconResizes:Boolean = false;
 
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport , parentAlpha : Number ) : void
+		override public function render(support:RenderSupport, parentAlpha:Number):void
 		{
-			var scale : Number = 1;
-			if( this._currentState == STATE_DOWN )
+			var scale:Number = 1;
+			if(this._currentState == STATE_DOWN)
 			{
 				scale = this._scaleWhenDown;
 			}
-			else if( this._currentState == STATE_HOVER )
+			else if(this._currentState == STATE_HOVER)
 			{
 				scale = this._scaleWhenHovering;
 			}
-			if( scale !== 1 )
+			if(scale !== 1)
 			{
-				support.translateMatrix( Math.round( (1 - scale) / 2 * this.actualWidth ) , Math.round( (1 - scale) / 2 * this.actualHeight ) );
-				support.scaleMatrix( scale , scale );
+				support.translateMatrix(Math.round((1 - scale) / 2 * this.actualWidth),
+					Math.round((1 - scale) / 2 * this.actualHeight));
+				support.scaleMatrix(scale, scale);
 			}
-			super.render( support , parentAlpha );
+			super.render(support, parentAlpha);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override public function dispose():void
 		{
-			var skin : DisplayObject = this._skinSelector.defaultValue as DisplayObject;
+			var skin:DisplayObject = this._skinSelector.defaultValue as DisplayObject;
 			//we don't dispose it if the button is the parent because it'll
 			//already get disposed in super.dispose()
-			if( skin && skin.parent !== this )
+			if(skin && skin.parent !== this)
 			{
 				skin.dispose();
 			}
-			for each( var state : String in this.stateNames )
+			for each(var state:String in this.stateNames)
 			{
-				skin = this._skinSelector.getValueForState( state , false ) as DisplayObject;
-				if( skin && skin.parent !== this )
+				skin = this._skinSelector.getValueForState(state, false) as DisplayObject;
+				if(skin && skin.parent !== this)
 				{
 					skin.dispose();
 				}
 			}
 			skin = this._iconSelector.defaultValue as DisplayObject;
-			if( skin && skin.parent !== this )
+			if(skin && skin.parent !== this)
 			{
 				skin.dispose();
 			}
-			for each( state in this.stateNames )
+			for each(state in this.stateNames)
 			{
-				skin = this._iconSelector.getValueForState( state , false ) as DisplayObject;
-				if( skin && skin.parent !== this )
+				skin = this._iconSelector.getValueForState(state, false) as DisplayObject;
+				if(skin && skin.parent !== this)
 				{
 					skin.dispose();
 				}
@@ -2198,17 +2243,17 @@ package feathers.controls
 		 * 
 		 * @see #defaultSkin
 		 */
-		public function setSkinForState( state : String , skin : DisplayObject ) : void
+		public function setSkinForState(state:String, skin:DisplayObject):void
 		{
-			if( skin )
+			if(skin)
 			{
-				this._skinSelector.setValueForState( skin , state );
+				this._skinSelector.setValueForState(skin, state);
 			}
 			else
 			{
-				this._skinSelector.clearValueForState( state );
+				this._skinSelector.clearValueForState(state);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -2220,65 +2265,65 @@ package feathers.controls
 		 *
 		 * @see #defaultIcon
 		 */
-		public function setIconForState( state : String , icon : DisplayObject ) : void
+		public function setIconForState(state:String, icon:DisplayObject):void
 		{
-			if( icon )
+			if(icon)
 			{
-				this._iconSelector.setValueForState( icon , state );
+				this._iconSelector.setValueForState(icon, state);
 			}
 			else
 			{
-				this._iconSelector.clearValueForState( state );
+				this._iconSelector.clearValueForState(state);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var textRendererInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_TEXT_RENDERER );
-			var focusInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_FOCUS );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var textRendererInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_TEXT_RENDERER);
+			var focusInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_FOCUS);
 
-			if( textRendererInvalid )
+			if(textRendererInvalid)
 			{
 				this.createLabel();
 			}
-
-			if( textRendererInvalid || stateInvalid || dataInvalid )
+			
+			if(textRendererInvalid || stateInvalid || dataInvalid)
 			{
 				this.refreshLabel();
 			}
 
-			if( stylesInvalid || stateInvalid )
+			if(stylesInvalid || stateInvalid)
 			{
 				this.refreshSkin();
 				this.refreshIcon();
 			}
 
-			if( textRendererInvalid || stylesInvalid || stateInvalid )
+			if(textRendererInvalid || stylesInvalid || stateInvalid)
 			{
 				this.refreshLabelStyles();
 			}
 
 			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
-
-			if( stylesInvalid || stateInvalid || sizeInvalid )
+			
+			if(stylesInvalid || stateInvalid || sizeInvalid)
 			{
 				this.scaleSkin();
 			}
-
-			if( textRendererInvalid || stylesInvalid || stateInvalid || dataInvalid || sizeInvalid )
+			
+			if(textRendererInvalid || stylesInvalid || stateInvalid || dataInvalid || sizeInvalid)
 			{
 				this.layoutContent();
 			}
 
-			if( sizeInvalid || focusInvalid )
+			if(sizeInvalid || focusInvalid)
 			{
 				this.refreshFocusIndicator();
 			}
@@ -2300,32 +2345,33 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
-			this.refreshMaxLabelSize( true );
-			if( this.labelTextRenderer )
+			this.refreshMaxLabelSize(true);
+			if(this.labelTextRenderer)
 			{
-				this.labelTextRenderer.measureText( HELPER_POINT );
+				this.labelTextRenderer.measureText(HELPER_POINT);
 			}
 			else
 			{
-				HELPER_POINT.setTo( 0 , 0 );
+				HELPER_POINT.setTo(0, 0);
 			}
-			var newWidth : Number = this.explicitWidth;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			if(needsWidth)
 			{
-				if( this.currentIcon && this.label )
+				if(this.currentIcon && this.label)
 				{
-					if( this._iconPosition != ICON_POSITION_TOP && this._iconPosition != ICON_POSITION_BOTTOM && this._iconPosition != ICON_POSITION_MANUAL )
+					if(this._iconPosition != ICON_POSITION_TOP && this._iconPosition != ICON_POSITION_BOTTOM &&
+						this._iconPosition != ICON_POSITION_MANUAL)
 					{
-						var adjustedGap : Number = this._gap;
-						if( adjustedGap == Number.POSITIVE_INFINITY )
+						var adjustedGap:Number = this._gap;
+						if(adjustedGap == Number.POSITIVE_INFINITY)
 						{
 							adjustedGap = this._minGap;
 						}
@@ -2333,44 +2379,44 @@ package feathers.controls
 					}
 					else
 					{
-						newWidth = Math.max( this.currentIcon.width , HELPER_POINT.x );
+						newWidth = Math.max(this.currentIcon.width, HELPER_POINT.x);
 					}
 				}
-				else if( this.currentIcon )
+				else if(this.currentIcon)
 				{
 					newWidth = this.currentIcon.width;
 				}
-				else if( this.label )
+				else if(this.label)
 				{
 					newWidth = HELPER_POINT.x;
 				}
 				newWidth += this._paddingLeft + this._paddingRight;
-				if( newWidth !== newWidth ) //isNaN
+				if(newWidth !== newWidth) //isNaN
 				{
 					newWidth = this._originalSkinWidth;
-					if( newWidth != newWidth )
+					if(newWidth != newWidth)
 					{
 						newWidth = 0;
 					}
 				}
-				else if( this._originalSkinWidth === this._originalSkinWidth ) //!isNaN
+				else if(this._originalSkinWidth === this._originalSkinWidth) //!isNaN
 				{
-					if( this._originalSkinWidth > newWidth )
+					if(this._originalSkinWidth > newWidth)
 					{
 						newWidth = this._originalSkinWidth;
 					}
 				}
 			}
 
-			var newHeight : Number = this.explicitHeight;
-			if( needsHeight )
+			var newHeight:Number = this.explicitHeight;
+			if(needsHeight)
 			{
-				if( this.currentIcon && this.label )
+				if(this.currentIcon && this.label)
 				{
-					if( this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM )
+					if(this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM)
 					{
 						adjustedGap = this._gap;
-						if( adjustedGap == Number.POSITIVE_INFINITY )
+						if(adjustedGap == Number.POSITIVE_INFINITY)
 						{
 							adjustedGap = this._minGap;
 						}
@@ -2378,36 +2424,36 @@ package feathers.controls
 					}
 					else
 					{
-						newHeight = Math.max( this.currentIcon.height , HELPER_POINT.y );
+						newHeight = Math.max(this.currentIcon.height, HELPER_POINT.y);
 					}
 				}
-				else if( this.currentIcon )
+				else if(this.currentIcon)
 				{
 					newHeight = this.currentIcon.height;
 				}
-				else if( this.label )
+				else if(this.label)
 				{
 					newHeight = HELPER_POINT.y;
 				}
 				newHeight += this._paddingTop + this._paddingBottom;
-				if( newHeight != newHeight )
+				if(newHeight != newHeight)
 				{
 					newHeight = this._originalSkinHeight;
-					if( newHeight != newHeight )
+					if(newHeight != newHeight)
 					{
 						newHeight = 0;
 					}
 				}
-				else if( this._originalSkinHeight === this._originalSkinHeight ) //!isNaN
+				else if(this._originalSkinHeight === this._originalSkinHeight) //!isNaN
 				{
-					if( this._originalSkinHeight > newHeight )
+					if(this._originalSkinHeight > newHeight)
 					{
 						newHeight = this._originalSkinHeight;
 					}
 				}
 			}
 
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -2420,52 +2466,52 @@ package feathers.controls
 		 * @see #labelTextRenderer
 		 * @see #labelFactory
 		 */
-		protected function createLabel() : void
+		protected function createLabel():void
 		{
-			if( this.labelTextRenderer )
+			if(this.labelTextRenderer)
 			{
-				this.removeChild( DisplayObject( this.labelTextRenderer ) , true );
+				this.removeChild(DisplayObject(this.labelTextRenderer), true);
 				this.labelTextRenderer = null;
 			}
 
-			if( this._hasLabelTextRenderer )
+			if(this._hasLabelTextRenderer)
 			{
-				var factory : Function = this._labelFactory != null ? this._labelFactory : FeathersControl.defaultTextRendererFactory;
-				this.labelTextRenderer = ITextRenderer( factory() );
-				var labelStyleName : String = this._customLabelStyleName != null ? this._customLabelStyleName : this.labelStyleName;
-				this.labelTextRenderer.styleNameList.add( labelStyleName );
-				if( this.labelTextRenderer is IStateObserver )
+				var factory:Function = this._labelFactory != null ? this._labelFactory : FeathersControl.defaultTextRendererFactory;
+				this.labelTextRenderer = ITextRenderer(factory());
+				var labelStyleName:String = this._customLabelStyleName != null ? this._customLabelStyleName : this.labelStyleName;
+				this.labelTextRenderer.styleNameList.add(labelStyleName);
+				if(this.labelTextRenderer is IStateObserver)
 				{
-					IStateObserver( this.labelTextRenderer ).stateContext = this;
+					IStateObserver(this.labelTextRenderer).stateContext = this;
 				}
-				this.addChild( DisplayObject( this.labelTextRenderer ) );
+				this.addChild(DisplayObject(this.labelTextRenderer));
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function changeState( state : String ) : void
+		protected function changeState(state:String):void
 		{
-			if( this._currentState == state )
+			if(this._currentState == state)
 			{
 				return;
 			}
-			if( this.stateNames.indexOf( state ) < 0 )
+			if(this.stateNames.indexOf(state) < 0)
 			{
-				throw new ArgumentError( "Invalid state: " + state + "." );
+				throw new ArgumentError("Invalid state: " + state + ".");
 			}
 			this._currentState = state;
-			this.invalidate( INVALIDATION_FLAG_STATE );
-			this.dispatchEventWith( FeathersEventType.STATE_CHANGE );
+			this.invalidate(INVALIDATION_FLAG_STATE);
+			this.dispatchEventWith(FeathersEventType.STATE_CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshLabel() : void
+		protected function refreshLabel():void
 		{
-			if( !this.labelTextRenderer )
+			if(!this.labelTextRenderer)
 			{
 				return;
 			}
@@ -2479,185 +2525,186 @@ package feathers.controls
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function refreshSkin() : void
+		protected function refreshSkin():void
 		{
-			var oldSkin : DisplayObject = this.currentSkin;
-			if( this._stateToSkinFunction != null )
+			var oldSkin:DisplayObject = this.currentSkin;
+			if(this._stateToSkinFunction != null)
 			{
-				this.currentSkin = DisplayObject( this._stateToSkinFunction( this , this._currentState , oldSkin ) );
+				this.currentSkin = DisplayObject(this._stateToSkinFunction(this, this._currentState, oldSkin));
 			}
 			else
 			{
-				this.currentSkin = DisplayObject( this._skinSelector.updateValue( this , this._currentState , this.currentSkin ) );
+				this.currentSkin = DisplayObject(this._skinSelector.updateValue(this, this._currentState, this.currentSkin));
 			}
-			if( this.currentSkin != oldSkin )
+			if(this.currentSkin != oldSkin)
 			{
-				if( oldSkin )
+				if(oldSkin)
 				{
-					if( oldSkin is IStateObserver )
+					if(oldSkin is IStateObserver)
 					{
-						IStateObserver( oldSkin ).stateContext = null;
+						IStateObserver(oldSkin).stateContext = null;
 					}
-					this.removeChild( oldSkin , false );
+					this.removeChild(oldSkin, false);
 				}
-				if( this.currentSkin )
+				if(this.currentSkin)
 				{
-					if( this.currentSkin is IStateObserver )
+					if(this.currentSkin is IStateObserver)
 					{
-						IStateObserver( this.currentSkin ).stateContext = this;
+						IStateObserver(this.currentSkin).stateContext = this;
 					}
-					this.addChildAt( this.currentSkin , 0 );
+					this.addChildAt(this.currentSkin, 0);
 				}
 			}
-			if( this.currentSkin && (this._originalSkinWidth !== this._originalSkinWidth || //isNaN
-					this._originalSkinHeight !== this._originalSkinHeight) )
+			if(this.currentSkin &&
+				(this._originalSkinWidth !== this._originalSkinWidth || //isNaN
+				this._originalSkinHeight !== this._originalSkinHeight))
 			{
-				if( this.currentSkin is IValidating )
+				if(this.currentSkin is IValidating)
 				{
-					IValidating( this.currentSkin ).validate();
+					IValidating(this.currentSkin).validate();
 				}
 				this._originalSkinWidth = this.currentSkin.width;
 				this._originalSkinHeight = this.currentSkin.height;
 			}
 		}
-
+		
 		/**
 		 * Sets the <code>currentIcon</code> property.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function refreshIcon() : void
+		protected function refreshIcon():void
 		{
-			var oldIcon : DisplayObject = this.currentIcon;
-			if( this._stateToIconFunction != null )
+			var oldIcon:DisplayObject = this.currentIcon;
+			if(this._stateToIconFunction != null)
 			{
-				this.currentIcon = DisplayObject( this._stateToIconFunction( this , this._currentState , oldIcon ) );
+				this.currentIcon = DisplayObject(this._stateToIconFunction(this, this._currentState, oldIcon));
 			}
 			else
 			{
-				this.currentIcon = DisplayObject( this._iconSelector.updateValue( this , this._currentState , this.currentIcon ) );
+				this.currentIcon = DisplayObject(this._iconSelector.updateValue(this, this._currentState, this.currentIcon));
 			}
-			if( this.currentIcon is IFeathersControl )
+			if(this.currentIcon is IFeathersControl)
 			{
-				IFeathersControl( this.currentIcon ).isEnabled = this._isEnabled;
+				IFeathersControl(this.currentIcon).isEnabled = this._isEnabled;
 			}
-			if( this.currentIcon != oldIcon )
+			if(this.currentIcon != oldIcon)
 			{
-				if( oldIcon )
+				if(oldIcon)
 				{
-					if( oldIcon is IFeathersControl )
+					if(oldIcon is IFeathersControl)
 					{
-						IFeathersControl( oldIcon ).removeEventListener( FeathersEventType.RESIZE , currentIcon_resizeHandler );
+						IFeathersControl(oldIcon).removeEventListener(FeathersEventType.RESIZE, currentIcon_resizeHandler);
 					}
-					if( oldIcon is IStateObserver )
+					if(oldIcon is IStateObserver)
 					{
-						IStateObserver( oldIcon ).stateContext = null;
+						IStateObserver(oldIcon).stateContext = null;
 					}
-					this.removeChild( oldIcon , false );
+					this.removeChild(oldIcon, false);
 				}
-				if( this.currentIcon )
+				if(this.currentIcon)
 				{
-					if( this.currentIcon is IStateObserver )
+					if(this.currentIcon is IStateObserver)
 					{
-						IStateObserver( this.currentIcon ).stateContext = this;
+						IStateObserver(this.currentIcon).stateContext = this;
 					}
 					//we want the icon to appear below the label text renderer
-					var index : int = this.numChildren;
-					if( this.labelTextRenderer )
+					var index:int = this.numChildren;
+					if(this.labelTextRenderer)
 					{
-						index = this.getChildIndex( DisplayObject( this.labelTextRenderer ) );
+						index = this.getChildIndex(DisplayObject(this.labelTextRenderer));
 					}
-					this.addChildAt( this.currentIcon , index );
-					if( this.currentIcon is IFeathersControl )
+					this.addChildAt(this.currentIcon, index);
+					if(this.currentIcon is IFeathersControl)
 					{
-						IFeathersControl( this.currentIcon ).addEventListener( FeathersEventType.RESIZE , currentIcon_resizeHandler );
+						IFeathersControl(this.currentIcon).addEventListener(FeathersEventType.RESIZE, currentIcon_resizeHandler);
 					}
 				}
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function refreshLabelStyles() : void
+		protected function refreshLabelStyles():void
 		{
-			if( !this.labelTextRenderer )
+			if(!this.labelTextRenderer)
 			{
 				return;
 			}
-			if( this._stateToLabelPropertiesFunction != null )
+			if(this._stateToLabelPropertiesFunction != null)
 			{
-				var properties : Object = this._stateToLabelPropertiesFunction( this , this._currentState );
+				var properties:Object = this._stateToLabelPropertiesFunction(this, this._currentState);
 			}
 			else
 			{
-				properties = this._labelPropertiesSelector.updateValue( this , this._currentState );
+				properties = this._labelPropertiesSelector.updateValue(this, this._currentState);
 			}
-			for( var propertyName : String in properties )
+			for(var propertyName:String in properties)
 			{
-				var propertyValue : Object = properties[ propertyName ];
-				this.labelTextRenderer[ propertyName ] = propertyValue;
+				var propertyValue:Object = properties[propertyName];
+				this.labelTextRenderer[propertyName] = propertyValue;
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function scaleSkin() : void
+		protected function scaleSkin():void
 		{
-			if( !this.currentSkin )
+			if(!this.currentSkin)
 			{
 				return;
 			}
 			this.currentSkin.x = 0;
 			this.currentSkin.y = 0;
-			if( this.currentSkin.width != this.actualWidth )
+			if(this.currentSkin.width != this.actualWidth)
 			{
 				this.currentSkin.width = this.actualWidth;
 			}
-			if( this.currentSkin.height != this.actualHeight )
+			if(this.currentSkin.height != this.actualHeight)
 			{
 				this.currentSkin.height = this.actualHeight;
 			}
-			if( this.currentSkin is IValidating )
+			if(this.currentSkin is IValidating)
 			{
-				IValidating( this.currentSkin ).validate();
+				IValidating(this.currentSkin).validate();
 			}
 		}
-
+		
 		/**
 		 * Positions and sizes the button's content.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function layoutContent() : void
+		protected function layoutContent():void
 		{
-			var oldIgnoreIconResizes : Boolean = this._ignoreIconResizes;
+			var oldIgnoreIconResizes:Boolean = this._ignoreIconResizes;
 			this._ignoreIconResizes = true;
-			this.refreshMaxLabelSize( false );
-			if( this._label && this.labelTextRenderer && this.currentIcon )
+			this.refreshMaxLabelSize(false);
+			if(this._label && this.labelTextRenderer && this.currentIcon)
 			{
 				this.labelTextRenderer.validate();
-				this.positionSingleChild( DisplayObject( this.labelTextRenderer ) );
-				if( this._iconPosition != ICON_POSITION_MANUAL )
+				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
+				if(this._iconPosition != ICON_POSITION_MANUAL)
 				{
 					this.positionLabelAndIcon();
 				}
 
 			}
-			else if( this._label && this.labelTextRenderer && !this.currentIcon )
+			else if(this._label && this.labelTextRenderer && !this.currentIcon)
 			{
 				this.labelTextRenderer.validate();
-				this.positionSingleChild( DisplayObject( this.labelTextRenderer ) );
+				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
 			}
-			else if( (!this._label || !this.labelTextRenderer) && this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL )
+			else if((!this._label || !this.labelTextRenderer) && this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL)
 			{
-				this.positionSingleChild( this.currentIcon );
+				this.positionSingleChild(this.currentIcon);
 			}
 
-			if( this.currentIcon )
+			if(this.currentIcon)
 			{
-				if( this._iconPosition == ICON_POSITION_MANUAL )
+				if(this._iconPosition == ICON_POSITION_MANUAL)
 				{
 					this.currentIcon.x = this._paddingLeft;
 					this.currentIcon.y = this._paddingTop;
@@ -2665,7 +2712,7 @@ package feathers.controls
 				this.currentIcon.x += this._iconOffsetX;
 				this.currentIcon.y += this._iconOffsetY;
 			}
-			if( this._label && this.labelTextRenderer )
+			if(this._label && this.labelTextRenderer)
 			{
 				this.labelTextRenderer.x += this._labelOffsetX;
 				this.labelTextRenderer.y += this._labelOffsetY;
@@ -2676,199 +2723,200 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function refreshMaxLabelSize( forMeasurement : Boolean ) : void
+		protected function refreshMaxLabelSize(forMeasurement:Boolean):void
 		{
-			if( this.currentIcon is IValidating )
+			if(this.currentIcon is IValidating)
 			{
-				IValidating( this.currentIcon ).validate();
+				IValidating(this.currentIcon).validate();
 			}
-			var calculatedWidth : Number = this.actualWidth;
-			var calculatedHeight : Number = this.actualHeight;
-			if( forMeasurement )
+			var calculatedWidth:Number = this.actualWidth;
+			var calculatedHeight:Number = this.actualHeight;
+			if(forMeasurement)
 			{
 				calculatedWidth = this.explicitWidth;
-				if( calculatedWidth !== calculatedWidth ) //isNaN
+				if(calculatedWidth !== calculatedWidth) //isNaN
 				{
 					calculatedWidth = this._maxWidth;
 				}
 				calculatedHeight = this.explicitHeight;
-				if( calculatedHeight !== calculatedHeight ) //isNaN
+				if(calculatedHeight !== calculatedHeight) //isNaN
 				{
 					calculatedHeight = this._maxHeight;
 				}
 			}
-			if( this._label && this.labelTextRenderer )
+			if(this._label && this.labelTextRenderer)
 			{
 				this.labelTextRenderer.maxWidth = calculatedWidth - this._paddingLeft - this._paddingRight;
 				this.labelTextRenderer.maxHeight = calculatedHeight - this._paddingTop - this._paddingBottom;
-				if( this.currentIcon )
+				if(this.currentIcon)
 				{
-					var adjustedGap : Number = this._gap;
-					if( adjustedGap == Number.POSITIVE_INFINITY )
+					var adjustedGap:Number = this._gap;
+					if(adjustedGap == Number.POSITIVE_INFINITY)
 					{
 						adjustedGap = this._minGap;
 					}
-					if( this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE || this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE )
+					if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE ||
+						this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
 					{
 						this.labelTextRenderer.maxWidth -= (this.currentIcon.width + adjustedGap);
 					}
-					if( this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM )
+					if(this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM)
 					{
 						this.labelTextRenderer.maxHeight -= (this.currentIcon.height + adjustedGap);
 					}
 				}
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function positionSingleChild( displayObject : DisplayObject ) : void
+		protected function positionSingleChild(displayObject:DisplayObject):void
 		{
-			if( this._horizontalAlign == HORIZONTAL_ALIGN_LEFT )
+			if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
 			{
 				displayObject.x = this._paddingLeft;
 			}
-			else if( this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT )
+			else if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
 			{
 				displayObject.x = this.actualWidth - this._paddingRight - displayObject.width;
 			}
 			else //center
 			{
-				displayObject.x = this._paddingLeft + Math.round( (this.actualWidth - this._paddingLeft - this._paddingRight - displayObject.width) / 2 );
+				displayObject.x = this._paddingLeft + Math.round((this.actualWidth - this._paddingLeft - this._paddingRight - displayObject.width) / 2);
 			}
-			if( this._verticalAlign == VERTICAL_ALIGN_TOP )
+			if(this._verticalAlign == VERTICAL_ALIGN_TOP)
 			{
 				displayObject.y = this._paddingTop;
 			}
-			else if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+			else if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
 			{
 				displayObject.y = this.actualHeight - this._paddingBottom - displayObject.height;
 			}
 			else //middle
 			{
-				displayObject.y = this._paddingTop + Math.round( (this.actualHeight - this._paddingTop - this._paddingBottom - displayObject.height) / 2 );
+				displayObject.y = this._paddingTop + Math.round((this.actualHeight - this._paddingTop - this._paddingBottom - displayObject.height) / 2);
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function positionLabelAndIcon() : void
+		protected function positionLabelAndIcon():void
 		{
-			if( this._iconPosition == ICON_POSITION_TOP )
+			if(this._iconPosition == ICON_POSITION_TOP)
 			{
-				if( this._gap == Number.POSITIVE_INFINITY )
+				if(this._gap == Number.POSITIVE_INFINITY)
 				{
 					this.currentIcon.y = this._paddingTop;
 					this.labelTextRenderer.y = this.actualHeight - this._paddingBottom - this.labelTextRenderer.height;
 				}
 				else
 				{
-					if( this._verticalAlign == VERTICAL_ALIGN_TOP )
+					if(this._verticalAlign == VERTICAL_ALIGN_TOP)
 					{
 						this.labelTextRenderer.y += this.currentIcon.height + this._gap;
 					}
-					else if( this._verticalAlign == VERTICAL_ALIGN_MIDDLE )
+					else if(this._verticalAlign == VERTICAL_ALIGN_MIDDLE)
 					{
-						this.labelTextRenderer.y += Math.round( (this.currentIcon.height + this._gap) / 2 );
+						this.labelTextRenderer.y += Math.round((this.currentIcon.height + this._gap) / 2);
 					}
 					this.currentIcon.y = this.labelTextRenderer.y - this.currentIcon.height - this._gap;
 				}
 			}
-			else if( this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE )
+			else if(this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
 			{
-				if( this._gap == Number.POSITIVE_INFINITY )
+				if(this._gap == Number.POSITIVE_INFINITY)
 				{
 					this.labelTextRenderer.x = this._paddingLeft;
 					this.currentIcon.x = this.actualWidth - this._paddingRight - this.currentIcon.width;
 				}
 				else
 				{
-					if( this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT )
+					if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
 					{
 						this.labelTextRenderer.x -= this.currentIcon.width + this._gap;
 					}
-					else if( this._horizontalAlign == HORIZONTAL_ALIGN_CENTER )
+					else if(this._horizontalAlign == HORIZONTAL_ALIGN_CENTER)
 					{
-						this.labelTextRenderer.x -= Math.round( (this.currentIcon.width + this._gap) / 2 );
+						this.labelTextRenderer.x -= Math.round((this.currentIcon.width + this._gap) / 2);
 					}
 					this.currentIcon.x = this.labelTextRenderer.x + this.labelTextRenderer.width + this._gap;
 				}
 			}
-			else if( this._iconPosition == ICON_POSITION_BOTTOM )
+			else if(this._iconPosition == ICON_POSITION_BOTTOM)
 			{
-				if( this._gap == Number.POSITIVE_INFINITY )
+				if(this._gap == Number.POSITIVE_INFINITY)
 				{
 					this.labelTextRenderer.y = this._paddingTop;
 					this.currentIcon.y = this.actualHeight - this._paddingBottom - this.currentIcon.height;
 				}
 				else
 				{
-					if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+					if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
 					{
 						this.labelTextRenderer.y -= this.currentIcon.height + this._gap;
 					}
-					else if( this._verticalAlign == VERTICAL_ALIGN_MIDDLE )
+					else if(this._verticalAlign == VERTICAL_ALIGN_MIDDLE)
 					{
-						this.labelTextRenderer.y -= Math.round( (this.currentIcon.height + this._gap) / 2 );
+						this.labelTextRenderer.y -= Math.round((this.currentIcon.height + this._gap) / 2);
 					}
 					this.currentIcon.y = this.labelTextRenderer.y + this.labelTextRenderer.height + this._gap;
 				}
 			}
-			else if( this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE )
+			else if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE)
 			{
-				if( this._gap == Number.POSITIVE_INFINITY )
+				if(this._gap == Number.POSITIVE_INFINITY)
 				{
 					this.currentIcon.x = this._paddingLeft;
 					this.labelTextRenderer.x = this.actualWidth - this._paddingRight - this.labelTextRenderer.width;
 				}
 				else
 				{
-					if( this._horizontalAlign == HORIZONTAL_ALIGN_LEFT )
+					if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
 					{
 						this.labelTextRenderer.x += this._gap + this.currentIcon.width;
 					}
-					else if( this._horizontalAlign == HORIZONTAL_ALIGN_CENTER )
+					else if(this._horizontalAlign == HORIZONTAL_ALIGN_CENTER)
 					{
-						this.labelTextRenderer.x += Math.round( (this._gap + this.currentIcon.width) / 2 );
+						this.labelTextRenderer.x += Math.round((this._gap + this.currentIcon.width) / 2);
 					}
 					this.currentIcon.x = this.labelTextRenderer.x - this._gap - this.currentIcon.width;
 				}
 			}
-
-			if( this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_RIGHT )
+			
+			if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_RIGHT)
 			{
-				if( this._verticalAlign == VERTICAL_ALIGN_TOP )
+				if(this._verticalAlign == VERTICAL_ALIGN_TOP)
 				{
 					this.currentIcon.y = this._paddingTop;
 				}
-				else if( this._verticalAlign == VERTICAL_ALIGN_BOTTOM )
+				else if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
 				{
 					this.currentIcon.y = this.actualHeight - this._paddingBottom - this.currentIcon.height;
 				}
 				else
 				{
-					this.currentIcon.y = this._paddingTop + Math.round( (this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2 );
+					this.currentIcon.y = this._paddingTop + Math.round((this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2);
 				}
 			}
-			else if( this._iconPosition == ICON_POSITION_LEFT_BASELINE || this._iconPosition == ICON_POSITION_RIGHT_BASELINE )
+			else if(this._iconPosition == ICON_POSITION_LEFT_BASELINE || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
 			{
 				this.currentIcon.y = this.labelTextRenderer.y + (this.labelTextRenderer.baseline) - this.currentIcon.height;
 			}
 			else //top or bottom
 			{
-				if( this._horizontalAlign == HORIZONTAL_ALIGN_LEFT )
+				if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
 				{
 					this.currentIcon.x = this._paddingLeft;
 				}
-				else if( this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT )
+				else if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
 				{
 					this.currentIcon.x = this.actualWidth - this._paddingRight - this.currentIcon.width;
 				}
 				else
 				{
-					this.currentIcon.x = this._paddingLeft + Math.round( (this.actualWidth - this._paddingLeft - this._paddingRight - this.currentIcon.width) / 2 );
+					this.currentIcon.x = this._paddingLeft + Math.round((this.actualWidth - this._paddingLeft - this._paddingRight - this.currentIcon.width) / 2);
 				}
 			}
 		}
@@ -2876,156 +2924,177 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function resetTouchState( touch : Touch = null ) : void
+		protected function resetTouchState(touch:Touch = null):void
 		{
 			this.touchPointID = -1;
-			this.removeEventListener( Event.ENTER_FRAME , longPress_enterFrameHandler );
-			if( this._isEnabled )
+			this.removeEventListener(Event.ENTER_FRAME, longPress_enterFrameHandler);
+			if(this._isEnabled)
 			{
-				this.changeState( STATE_UP );
+				this.changeState(STATE_UP);
 			}
 			else
 			{
-				this.changeState( STATE_DISABLED );
+				this.changeState(STATE_DISABLED);
 			}
 		}
 
 		/**
 		 * Triggers the button.
 		 */
-		protected function trigger() : void
+		protected function trigger():void
 		{
-			this.dispatchEventWith( Event.TRIGGERED );
+			this.dispatchEventWith(Event.TRIGGERED);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function childProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function currentIcon_resizeHandler() : void
+		override protected function focusInHandler(event:Event):void
 		{
-			if( this._ignoreIconResizes )
+			super.focusInHandler(event);
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
+			this.stage.addEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function focusOutHandler(event:Event):void
+		{
+			super.focusOutHandler(event);
+			this.stage.removeEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
+			this.stage.removeEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
+
+			if(this.touchPointID >= 0)
 			{
-				return;
+				this.touchPointID = -1;
+				if(this._isEnabled)
+				{
+					this.changeState(STATE_UP);
+				}
+				else
+				{
+					this.changeState(STATE_DISABLED);
+				}
 			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
 		}
 
 		/**
 		 * @private
 		 */
-		protected function button_removedFromStageHandler( event : Event ) : void
+		protected function button_removedFromStageHandler(event:Event):void
 		{
 			this.resetTouchState();
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function button_touchHandler( event : TouchEvent ) : void
+		protected function button_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this.touchPointID = -1;
 				return;
 			}
 
-			if( this.touchPointID >= 0 )
+			if(this.touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this , null , this.touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this, null, this.touchPointID);
+				if(!touch)
 				{
 					//this should never happen
 					return;
 				}
 
-				touch.getLocation( this.stage , HELPER_POINT );
-				var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
-				if( touch.phase == TouchPhase.MOVED )
+				touch.getLocation(this.stage, HELPER_POINT);
+				var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+				if(touch.phase == TouchPhase.MOVED)
 				{
-					if( this._isLongPressEnabled )
+					if(this._isLongPressEnabled)
 					{
 						this._longPressGlobalPosition.x = touch.globalX;
 						this._longPressGlobalPosition.y = touch.globalY;
 					}
-					if( isInBounds || this.keepDownStateOnRollOut )
+					if(isInBounds || this.keepDownStateOnRollOut)
 					{
-						this.changeState( STATE_DOWN );
+						this.changeState(STATE_DOWN);
 					}
 					else
 					{
-						this.changeState( STATE_UP );
+						this.changeState(STATE_UP);
 					}
 				}
-				else if( touch.phase == TouchPhase.ENDED )
+				else if(touch.phase == TouchPhase.ENDED)
 				{
-					this.resetTouchState( touch );
+					this.resetTouchState(touch);
 					//we we dispatched a long press, then triggered and change
 					//won't be able to happen until the next touch begins
-					if( !this._hasLongPressed && isInBounds )
+					if(!this._hasLongPressed && isInBounds)
 					{
 						this.trigger();
 					}
 				}
-
+				return;
 			}
 			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this , TouchPhase.BEGAN );
-				if( touch )
+				touch = event.getTouch(this, TouchPhase.BEGAN);
+				if(touch)
 				{
-					this.changeState( STATE_DOWN );
+					this.changeState(STATE_DOWN);
 					this.touchPointID = touch.id;
-					if( this._isLongPressEnabled )
+					if(this._isLongPressEnabled)
 					{
 						this._touchBeginTime = getTimer();
-						if( this._longPressGlobalPosition )
+						if(this._longPressGlobalPosition)
 						{
 							this._longPressGlobalPosition.x = touch.globalX;
 							this._longPressGlobalPosition.y = touch.globalY;
 						}
 						else
 						{
-							this._longPressGlobalPosition = new Point( touch.globalX , touch.globalY );
+							this._longPressGlobalPosition = new Point(touch.globalX, touch.globalY);
 						}
 						this._hasLongPressed = false;
-						this.addEventListener( Event.ENTER_FRAME , longPress_enterFrameHandler );
+						this.addEventListener(Event.ENTER_FRAME, longPress_enterFrameHandler);
 					}
 					return;
 				}
-				touch = event.getTouch( this , TouchPhase.HOVER );
-				if( touch )
+				touch = event.getTouch(this, TouchPhase.HOVER);
+				if(touch)
 				{
-					this.changeState( STATE_HOVER );
+					this.changeState(STATE_HOVER);
 					return;
 				}
 
 				//end of hover
-				this.changeState( STATE_UP );
+				this.changeState(STATE_UP);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function longPress_enterFrameHandler( event : Event ) : void
+		protected function longPress_enterFrameHandler(event:Event):void
 		{
-			var accumulatedTime : Number = (getTimer() - this._touchBeginTime) / 1000;
-			if( accumulatedTime >= this._longPressDuration )
+			var accumulatedTime:Number = (getTimer() - this._touchBeginTime) / 1000;
+			if(accumulatedTime >= this._longPressDuration)
 			{
-				this.removeEventListener( Event.ENTER_FRAME , longPress_enterFrameHandler );
-				var isInBounds : Boolean = this.contains( this.stage.hitTest( this._longPressGlobalPosition , true ) );
-				if( isInBounds )
+				this.removeEventListener(Event.ENTER_FRAME, longPress_enterFrameHandler);
+				var isInBounds:Boolean = this.contains(this.stage.hitTest(this._longPressGlobalPosition, true));
+				if(isInBounds)
 				{
 					this._hasLongPressed = true;
-					this.dispatchEventWith( FeathersEventType.LONG_PRESS );
+					this.dispatchEventWith(FeathersEventType.LONG_PRESS);
 				}
 			}
 		}
@@ -3033,27 +3102,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function stage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function stage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.keyCode == Keyboard.ESCAPE )
+			if(event.keyCode == Keyboard.ESCAPE)
 			{
 				this.touchPointID = -1;
-				this.changeState( STATE_UP );
+				this.changeState(STATE_UP);
 			}
-			if( this.touchPointID >= 0 || event.keyCode != Keyboard.SPACE )
+			if(this.touchPointID >= 0 || event.keyCode != Keyboard.SPACE)
 			{
 				return;
 			}
 			this.touchPointID = int.MAX_VALUE;
-			this.changeState( STATE_DOWN );
+			this.changeState(STATE_DOWN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stage_keyUpHandler( event : KeyboardEvent ) : void
+		protected function stage_keyUpHandler(event:KeyboardEvent):void
 		{
-			if( this.touchPointID != int.MAX_VALUE || event.keyCode != Keyboard.SPACE )
+			if(this.touchPointID != int.MAX_VALUE || event.keyCode != Keyboard.SPACE)
 			{
 				return;
 			}
@@ -3064,34 +3133,13 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function focusInHandler( event : Event ) : void
+		protected function currentIcon_resizeHandler():void
 		{
-			super.focusInHandler( event );
-			this.stage.addEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
-			this.stage.addEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function focusOutHandler( event : Event ) : void
-		{
-			super.focusOutHandler( event );
-			this.stage.removeEventListener( KeyboardEvent.KEY_DOWN , stage_keyDownHandler );
-			this.stage.removeEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
-
-			if( this.touchPointID >= 0 )
+			if(this._ignoreIconResizes)
 			{
-				this.touchPointID = -1;
-				if( this._isEnabled )
-				{
-					this.changeState( STATE_UP );
-				}
-				else
-				{
-					this.changeState( STATE_DISABLED );
-				}
+				return;
 			}
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 	}
 }

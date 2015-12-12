@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import flash.media.SoundTransform;
@@ -31,11 +31,12 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.SOUND_TRANSFORM_CHANGE
 	 */
-	[Event(name="soundTransformChange" , type="starling.events.Event")]
+	[Event(name="soundTransformChange",type="starling.events.Event")]
 
 	/**
 	 * An interface for media players that play audio content.
-	 */ public interface IAudioPlayer extends ITimedMediaPlayer
+	 */
+	public interface IAudioPlayer extends ITimedMediaPlayer
 	{
 		/**
 		 * Controls properties of the currently playing audio, like volume and
@@ -44,11 +45,11 @@ package feathers.media
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/media/SoundTransform.html flash.media.SoundTransform
 		 * @see #event:soundTransformChange feathers.events.MediaPlayerEventType.SOUND_TRANSFORM_CHANGE
 		 */
-		function get soundTransform() : SoundTransform;
+		function get soundTransform():SoundTransform;
 
 		/**
 		 * @private
 		 */
-		function set soundTransform( value : SoundTransform ) : void;
+		function set soundTransform(value:SoundTransform):void;
 	}
 }

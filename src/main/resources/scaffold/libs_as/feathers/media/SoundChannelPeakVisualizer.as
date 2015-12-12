@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.core.FeathersControl;
@@ -32,85 +32,8 @@ package feathers.media
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
-		/**
-		 * @private
-		 */
-		protected var leftPeakBar : Quad;
-		/**
-		 * @private
-		 */
-		protected var rightPeakBar : Quad;
-
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return SoundChannelPeakVisualizer.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _gap : Number = 0;
-
-		/**
-		 * The gap, in pixels, between the bars.
-		 */
-		public function get gap() : Number
-		{
-			return this._gap;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set gap( value : Number ) : void
-		{
-			if( this._gap == value )
-			{
-				return;
-			}
-			this._gap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _mediaPlayer : SoundPlayer;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get mediaPlayer() : IMediaPlayer
-		{
-			return this._mediaPlayer;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set mediaPlayer( value : IMediaPlayer ) : void
-		{
-			if( this._mediaPlayer == value )
-			{
-				return;
-			}
-			if( this._mediaPlayer )
-			{
-				this._mediaPlayer.removeEventListener( MediaPlayerEventType.PLAYBACK_STATE_CHANGE , mediaPlayer_playbackStateChange );
-			}
-			this._mediaPlayer = value as SoundPlayer;
-			if( this._mediaPlayer )
-			{
-				this.handlePlaybackStateChange();
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.PLAYBACK_STATE_CHANGE , mediaPlayer_playbackStateChange );
-			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
-
+		public static var globalStyleProvider:IStyleProvider;
+		
 		/**
 		 * Constructor.
 		 */
@@ -121,7 +44,86 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return SoundChannelPeakVisualizer.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var leftPeakBar:Quad;
+
+		/**
+		 * @private
+		 */
+		protected var rightPeakBar:Quad;
+
+		/**
+		 * @private
+		 */
+		protected var _gap:Number = 0;
+
+		/**
+		 * The gap, in pixels, between the bars.
+		 */
+		public function get gap():Number
+		{
+			return this._gap;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set gap(value:Number):void
+		{
+			if(this._gap == value)
+			{
+				return;
+			}
+			this._gap = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _mediaPlayer:SoundPlayer;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get mediaPlayer():IMediaPlayer
+		{
+			return this._mediaPlayer;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set mediaPlayer(value:IMediaPlayer):void
+		{
+			if(this._mediaPlayer == value)
+			{
+				return;
+			}
+			if(this._mediaPlayer)
+			{
+				this._mediaPlayer.removeEventListener(MediaPlayerEventType.PLAYBACK_STATE_CHANGE, mediaPlayer_playbackStateChange);
+			}
+			this._mediaPlayer = value as SoundPlayer;
+			if(this._mediaPlayer)
+			{
+				this.handlePlaybackStateChange();
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.PLAYBACK_STATE_CHANGE, mediaPlayer_playbackStateChange);
+			}
+			this.invalidate(INVALIDATION_FLAG_DATA);
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose():void
 		{
 			this.mediaPlayer = null;
 			super.dispose();
@@ -130,31 +132,31 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( !this.leftPeakBar )
+			if(!this.leftPeakBar)
 			{
-				this.leftPeakBar = new Quad( 1 , 1 );
-				this.addChild( this.leftPeakBar );
+				this.leftPeakBar = new Quad(1, 1);
+				this.addChild(this.leftPeakBar);
 			}
-			if( !this.rightPeakBar )
+			if(!this.rightPeakBar)
 			{
-				this.rightPeakBar = new Quad( 1 , 1 );
-				this.addChild( this.rightPeakBar );
+				this.rightPeakBar = new Quad(1, 1);
+				this.addChild(this.rightPeakBar);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
 			this.autoSizeIfNeeded();
-
-			if( this._mediaPlayer && this._mediaPlayer.soundChannel )
+			
+			if(this._mediaPlayer && this._mediaPlayer.soundChannel)
 			{
-				var soundChannel : SoundChannel = this._mediaPlayer.soundChannel;
-				var maxHeight : Number = this.actualHeight - 1;
+				var soundChannel:SoundChannel = this._mediaPlayer.soundChannel;
+				var maxHeight:Number = this.actualHeight - 1;
 				this.leftPeakBar.height = 1 + maxHeight * soundChannel.leftPeak;
 				this.rightPeakBar.height = 1 + maxHeight * soundChannel.rightPeak;
 			}
@@ -163,7 +165,7 @@ package feathers.media
 				this.leftPeakBar.height = 1;
 				this.rightPeakBar.height = 1;
 			}
-			var barWidth : Number = (this.actualWidth / 2) - this._gap;
+			var barWidth:Number = (this.actualWidth / 2) - this._gap;
 			this.leftPeakBar.y = this.actualHeight - this.leftPeakBar.height;
 			this.leftPeakBar.width = barWidth;
 			this.rightPeakBar.x = barWidth + this._gap;
@@ -175,46 +177,46 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
-			var newWidth : Number = this.explicitWidth;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			if(needsWidth)
 			{
 				newWidth = 4 + this._gap;
 			}
-			var newHeight : Number = this.explicitHeight;
-			if( needsHeight )
+			var newHeight:Number = this.explicitHeight;
+			if(needsHeight)
 			{
 				newHeight = 3;
 			}
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function handlePlaybackStateChange() : void
+		protected function handlePlaybackStateChange():void
 		{
-			if( this._mediaPlayer.isPlaying )
+			if(this._mediaPlayer.isPlaying)
 			{
-				this.addEventListener( Event.ENTER_FRAME , peakVisualizer_enterFrameHandler );
+				this.addEventListener(Event.ENTER_FRAME, peakVisualizer_enterFrameHandler);
 			}
 			else
 			{
-				this.removeEventListener( Event.ENTER_FRAME , peakVisualizer_enterFrameHandler );
+				this.removeEventListener(Event.ENTER_FRAME, peakVisualizer_enterFrameHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_playbackStateChange( event : Event ) : void
+		protected function mediaPlayer_playbackStateChange(event:Event):void
 		{
 			this.handlePlaybackStateChange();
 		}
@@ -222,9 +224,9 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function peakVisualizer_enterFrameHandler( event : Event ) : void
+		protected function peakVisualizer_enterFrameHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 	}
 }

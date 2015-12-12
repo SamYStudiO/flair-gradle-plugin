@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.utils.touch
 {
 	import feathers.events.FeathersEventType;
@@ -54,28 +54,23 @@ package feathers.utils.touch
 	public class LongPress
 	{
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _touchLastGlobalPosition : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected var _touchBeginTime : int;
+		public function LongPress(target:DisplayObject = null)
+		{
+			this.target = target;
+		}
 
 		/**
 		 * @private
 		 */
-		protected var _target : DisplayObject;
+		protected var _target:DisplayObject;
 
 		/**
 		 * The target component that should dispatch
 		 * <code>FeathersEventType.LONG_PRESS</code> when tapped.
 		 */
-		public function get target() : DisplayObject
+		public function get target():DisplayObject
 		{
 			return this._target;
 		}
@@ -83,30 +78,30 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		public function set target( value : DisplayObject ) : void
+		public function set target(value:DisplayObject):void
 		{
-			if( this._target == value )
+			if(this._target == value)
 			{
 				return;
 			}
-			if( this._target )
+			if(this._target)
 			{
-				this._target.removeEventListener( TouchEvent.TOUCH , target_touchHandler );
+				this._target.removeEventListener(TouchEvent.TOUCH, target_touchHandler);
 			}
 			this._target = value;
-			if( this._target )
+			if(this._target)
 			{
 				//if we're changing targets, and a touch is active, we want to
 				//clear it.
 				this._touchPointID = -1;
-				this._target.addEventListener( TouchEvent.TOUCH , target_touchHandler );
+				this._target.addEventListener(TouchEvent.TOUCH, target_touchHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _longPressDuration : Number = 0.5;
+		protected var _longPressDuration:Number = 0.5;
 
 		/**
 		 * The duration, in seconds, of a long press.
@@ -118,7 +113,7 @@ package feathers.utils.touch
 		 *
 		 * @default 0.5
 		 */
-		public function get longPressDuration() : Number
+		public function get longPressDuration():Number
 		{
 			return this._longPressDuration;
 		}
@@ -126,7 +121,7 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		public function set longPressDuration( value : Number ) : void
+		public function set longPressDuration(value:Number):void
 		{
 			this._longPressDuration = value;
 		}
@@ -134,13 +129,28 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		protected var _isEnabled : Boolean = true;
+		protected var _touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _touchLastGlobalPosition:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		protected var _touchBeginTime:int;
+
+		/**
+		 * @private
+		 */
+		protected var _isEnabled:Boolean = true;
 
 		/**
 		 * May be set to <code>false</code> to disable the triggered event
 		 * temporarily until set back to <code>true</code>.
 		 */
-		public function get isEnabled() : Boolean
+		public function get isEnabled():Boolean
 		{
 			return this._isEnabled;
 		}
@@ -148,14 +158,14 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		public function set isEnabled( value : Boolean ) : void
+		public function set isEnabled(value:Boolean):void
 		{
-			if( this._isEnabled === value )
+			if(this._isEnabled === value)
 			{
 				return;
 			}
 			this._isEnabled = value;
-			if( !value )
+			if(!value)
 			{
 				this._touchPointID = -1;
 			}
@@ -164,11 +174,11 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		protected var _tapToTrigger : TapToTrigger;
+		protected var _tapToTrigger:TapToTrigger;
 
 		/**
 		 */
-		public function get tapToTrigger() : TapToTrigger
+		public function get tapToTrigger():TapToTrigger
 		{
 			return this._tapToTrigger;
 		}
@@ -176,7 +186,7 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		public function set tapToTrigger( value : TapToTrigger ) : void
+		public function set tapToTrigger(value:TapToTrigger):void
 		{
 			this._tapToTrigger = value;
 		}
@@ -184,11 +194,11 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		protected var _tapToSelect : TapToSelect;
+		protected var _tapToSelect:TapToSelect;
 
 		/**
 		 */
-		public function get tapToSelect() : TapToSelect
+		public function get tapToSelect():TapToSelect
 		{
 			return this._tapToSelect;
 		}
@@ -196,55 +206,47 @@ package feathers.utils.touch
 		/**
 		 * @private
 		 */
-		public function set tapToSelect( value : TapToSelect ) : void
+		public function set tapToSelect(value:TapToSelect):void
 		{
 			this._tapToSelect = value
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function LongPress( target : DisplayObject = null )
-		{
-			this.target = target;
-		}
-
-		/**
 		 * @private
 		 */
-		protected function target_touchHandler( event : TouchEvent ) : void
+		protected function target_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
 				//a touch has begun, so we'll ignore all other touches.
-				var touch : Touch = event.getTouch( this._target , null , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this._target, null, this._touchPointID);
+				if(!touch)
 				{
 					//this should not happen.
 					return;
 				}
 
-				if( touch.phase == TouchPhase.MOVED )
+				if(touch.phase == TouchPhase.MOVED)
 				{
 					this._touchLastGlobalPosition.x = touch.globalX;
 					this._touchLastGlobalPosition.y = touch.globalY;
 				}
-				else if( touch.phase == TouchPhase.ENDED )
+				else if(touch.phase == TouchPhase.ENDED)
 				{
-					this._target.removeEventListener( Event.ENTER_FRAME , target_enterFrameHandler );
+					this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 					
 					//re-enable the other events
-					if( this._tapToTrigger )
+					if(this._tapToTrigger)
 					{
 						this._tapToTrigger.isEnabled = true;
 					}
-					if( this._tapToSelect )
+					if(this._tapToSelect)
 					{
 						this._tapToSelect.isEnabled = true;
 					}
@@ -253,13 +255,13 @@ package feathers.utils.touch
 					//new one.
 					this._touchPointID = -1;
 				}
-
+				return;
 			}
 			else
 			{
 				//we aren't tracking another touch, so let's look for a new one.
-				touch = event.getTouch( DisplayObject( this._target ) , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(DisplayObject(this._target), TouchPhase.BEGAN);
+				if(!touch)
 				{
 					//we only care about the began phase. ignore all other
 					//phases when we don't have a saved touch ID.
@@ -272,44 +274,44 @@ package feathers.utils.touch
 				//save the position so that we can do a final hit test
 				this._touchLastGlobalPosition.x = touch.globalX;
 				this._touchLastGlobalPosition.y = touch.globalY;
-
+				
 				this._touchBeginTime = getTimer();
-				this._target.addEventListener( Event.ENTER_FRAME , target_enterFrameHandler );
+				this._target.addEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function target_enterFrameHandler( event : Event ) : void
+		protected function target_enterFrameHandler(event:Event):void
 		{
-			var accumulatedTime : Number = (getTimer() - this._touchBeginTime) / 1000;
-			if( accumulatedTime >= this._longPressDuration )
+			var accumulatedTime:Number = (getTimer() - this._touchBeginTime) / 1000;
+			if(accumulatedTime >= this._longPressDuration)
 			{
-				this._target.removeEventListener( Event.ENTER_FRAME , target_enterFrameHandler );
+				this._target.removeEventListener(Event.ENTER_FRAME, target_enterFrameHandler);
 
-				var stage : Stage = this._target.stage;
-				if( this._target is DisplayObjectContainer )
+				var stage:Stage = this._target.stage;
+				if(this._target is DisplayObjectContainer)
 				{
-					var isInBounds : Boolean = DisplayObjectContainer( this._target ).contains( stage.hitTest( this._touchLastGlobalPosition , true ) );
+					var isInBounds:Boolean = DisplayObjectContainer(this._target).contains(stage.hitTest(this._touchLastGlobalPosition, true));
 				}
 				else
 				{
-					isInBounds = this._target === stage.hitTest( this._touchLastGlobalPosition , true );
+					isInBounds = this._target === stage.hitTest(this._touchLastGlobalPosition, true);
 				}
-				if( isInBounds )
+				if(isInBounds)
 				{
 					//disable the other events
-					if( this._tapToTrigger )
+					if(this._tapToTrigger)
 					{
 						this._tapToTrigger.isEnabled = false;
 					}
-					if( this._tapToSelect )
+					if(this._tapToSelect)
 					{
 						this._tapToSelect.isEnabled = false;
 					}
 
-					this._target.dispatchEventWith( FeathersEventType.LONG_PRESS );
+					this._target.dispatchEventWith(FeathersEventType.LONG_PRESS);
 				}
 			}
 		}

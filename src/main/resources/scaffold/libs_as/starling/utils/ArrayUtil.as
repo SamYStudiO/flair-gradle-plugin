@@ -10,61 +10,57 @@
 
 package starling.utils
 {
-	import starling.errors.AbstractClassError;
+    import starling.errors.AbstractClassError;
 
-	/** A utility class containing methods related to the Array class.
-	 *
-	 *  <p>Many methods of the Array class cause the creation of temporary objects, which is
-	 *  problematic for any code that repeats very often. The utility methods in this class
-	 *  can be used to avoid that.</p> */
-	public class ArrayUtil
-	{
-		/** Inserts an element into the array at the specified index.
-		 *  You can use a negative integer to specify a position relative to the end of the
-		 *  array (for example, -1 will insert at the very end). If <code>index</code> is
-		 *  higher than the array length, gaps are filled up with <code>null</code> values. */
-		public static function insertAt( array : Array , index : int , object : Object ) : void
-		{
-			var i : int;
-			var length : uint = array.length;
+    /** A utility class containing methods related to the Array class.
+     *
+     *  <p>Many methods of the Array class cause the creation of temporary objects, which is
+     *  problematic for any code that repeats very often. The utility methods in this class
+     *  can be used to avoid that.</p> */
+    public class ArrayUtil
+    {
+        /** @private */
+        public function ArrayUtil() { throw new AbstractClassError(); }
 
-			if( index < 0 ) index += length + 1;
-			if( index < 0 ) index = 0;
+        /** Inserts an element into the array at the specified index.
+         *  You can use a negative integer to specify a position relative to the end of the
+         *  array (for example, -1 will insert at the very end). If <code>index</code> is
+         *  higher than the array length, gaps are filled up with <code>null</code> values. */
+        public static function insertAt(array:Array, index:int, object:Object):void
+        {
+            var i:int;
+            var length:uint = array.length;
 
-			for( i = index - 1; i >= length; --i )
-				array[ i ] = null;
+            if (index < 0) index += length + 1;
+            if (index < 0) index = 0;
 
-			for( i = length; i > index; --i )
-				array[ i ] = array[ int( i - 1 ) ];
+            for (i = index - 1; i >= length; --i)
+                array[i] = null;
 
-			array[ index ] = object;
-		}
+            for (i = length; i > index; --i)
+                array[i] = array[int(i-1)];
 
-		/** Removes the element at the specified index from the array.
-		 *  You can use a negative integer to specify a position relative to the end of the
-		 *  array (for example, -1 will remove the last element). */
-		public static function removeAt( array : Array , index : int ) : Object
-		{
-			var i : int;
-			var length : uint = array.length;
+            array[index] = object;
+        }
 
-			if( index < 0 ) index += length;
-			if( index < 0 ) index = 0;
-			else if( index >= length ) index = length - 1;
+        /** Removes the element at the specified index from the array.
+         *  You can use a negative integer to specify a position relative to the end of the
+         *  array (for example, -1 will remove the last element). */
+        public static function removeAt(array:Array, index:int):Object
+        {
+            var i:int;
+            var length:uint = array.length;
 
-			var object : Object = array[ index ];
+            if (index < 0) index += length;
+            if (index < 0) index = 0; else if (index >= length) index = length - 1;
 
-			for( i = index + 1; i < length; ++i )
-				array[ int( i - 1 ) ] = array[ i ];
+            var object:Object = array[index];
 
-			array.length = length - 1;
-			return object;
-		}
+            for (i = index+1; i < length; ++i)
+                array[int(i-1)] = array[i];
 
-		/** @private */
-		public function ArrayUtil()
-		{
-			throw new AbstractClassError();
-		}
-	}
+            array.length = length - 1;
+            return object;
+        }
+    }
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -30,54 +30,40 @@ package feathers.controls
 	public class ProgressBar extends FeathersControl
 	{
 		/**
+		 * The progress bar fills horizontally (on the x-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_HORIZONTAL:String = "horizontal";
+
+		/**
+		 * The progress bar fills vertically (on the y-axis).
+		 *
+		 * @see #direction
+		 */
+		public static const DIRECTION_VERTICAL:String = "vertical";
+
+		/**
 		 * The default <code>IStyleProvider</code> for all <code>ProgressBar</code>
 		 * components.
 		 *
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _originalBackgroundWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _originalBackgroundHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var currentBackground : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected var _originalFillWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _originalFillHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var currentFill : DisplayObject;
-		/**
-		 * The progress bar fills horizontally (on the x-axis).
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
-		/**
-		 * The progress bar fills vertically (on the y-axis).
-		 *
-		 * @see #direction
-		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
+		public function ProgressBar()
+		{
+			super();
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return ProgressBar.globalStyleProvider;
 		}
@@ -85,9 +71,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _direction : String = DIRECTION_HORIZONTAL;
+		protected var _direction:String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String" , enumeration="horizontal,vertical")]
+		[Inspectable(type="String",enumeration="horizontal,vertical")]
 		/**
 		 * Determines the direction that the progress bar fills. When this value
 		 * changes, the progress bar's width and height values do not change
@@ -102,7 +88,8 @@ package feathers.controls
 		 *
 		 * @see #DIRECTION_HORIZONTAL
 		 * @see #DIRECTION_VERTICAL
-		 */ public function get direction() : String
+		 */
+		public function get direction():String
 		{
 			return this._direction;
 		}
@@ -110,20 +97,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set direction( value : String ) : void
+		public function set direction(value:String):void
 		{
-			if( this._direction == value )
+			if(this._direction == value)
 			{
 				return;
 			}
 			this._direction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _value : Number = 0;
+		protected var _value:Number = 0;
 
 		/**
 		 * The value of the progress bar, between the minimum and maximum.
@@ -140,7 +127,7 @@ package feathers.controls
 		 * @see #minimum
 		 * @see #maximum
 		 */
-		public function get value() : Number
+		public function get value():Number
 		{
 			return this._value;
 		}
@@ -148,21 +135,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set value( newValue : Number ) : void
+		public function set value(newValue:Number):void
 		{
-			newValue = clamp( newValue , this._minimum , this._maximum );
-			if( this._value == newValue )
+			newValue = clamp(newValue, this._minimum, this._maximum);
+			if(this._value == newValue)
 			{
 				return;
 			}
 			this._value = newValue;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minimum : Number = 0;
+		protected var _minimum:Number = 0;
 
 		/**
 		 * The progress bar's value will not go lower than the minimum.
@@ -179,7 +166,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #maximum
 		 */
-		public function get minimum() : Number
+		public function get minimum():Number
 		{
 			return this._minimum;
 		}
@@ -187,20 +174,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minimum( value : Number ) : void
+		public function set minimum(value:Number):void
 		{
-			if( this._minimum == value )
+			if(this._minimum == value)
 			{
 				return;
 			}
 			this._minimum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maximum : Number = 1;
+		protected var _maximum:Number = 1;
 
 		/**
 		 * The progress bar's value will not go higher than the maximum.
@@ -217,7 +204,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #minimum
 		 */
-		public function get maximum() : Number
+		public function get maximum():Number
 		{
 			return this._maximum;
 		}
@@ -225,20 +212,35 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maximum( value : Number ) : void
+		public function set maximum(value:Number):void
 		{
-			if( this._maximum == value )
+			if(this._maximum == value)
 			{
 				return;
 			}
 			this._maximum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundSkin : DisplayObject;
+		protected var _originalBackgroundWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _originalBackgroundHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var currentBackground:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var _backgroundSkin:DisplayObject;
 
 		/**
 		 * The primary background to display.
@@ -251,7 +253,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundSkin() : DisplayObject
+		public function get backgroundSkin():DisplayObject
 		{
 			return this._backgroundSkin;
 		}
@@ -259,30 +261,30 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set backgroundSkin( value : DisplayObject ) : void
+		public function set backgroundSkin(value:DisplayObject):void
 		{
-			if( this._backgroundSkin == value )
+			if(this._backgroundSkin == value)
 			{
 				return;
 			}
 
-			if( this._backgroundSkin && this._backgroundSkin != this._backgroundDisabledSkin )
+			if(this._backgroundSkin && this._backgroundSkin != this._backgroundDisabledSkin)
 			{
-				this.removeChild( this._backgroundSkin );
+				this.removeChild(this._backgroundSkin);
 			}
 			this._backgroundSkin = value;
-			if( this._backgroundSkin && this._backgroundSkin.parent != this )
+			if(this._backgroundSkin && this._backgroundSkin.parent != this)
 			{
 				this._backgroundSkin.visible = false;
-				this.addChildAt( this._backgroundSkin , 0 );
+				this.addChildAt(this._backgroundSkin, 0);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _backgroundDisabledSkin : DisplayObject;
+		protected var _backgroundDisabledSkin:DisplayObject;
 
 		/**
 		 * A background to display when the progress bar is disabled.
@@ -295,7 +297,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundDisabledSkin() : DisplayObject
+		public function get backgroundDisabledSkin():DisplayObject
 		{
 			return this._backgroundDisabledSkin;
 		}
@@ -303,30 +305,45 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set backgroundDisabledSkin( value : DisplayObject ) : void
+		public function set backgroundDisabledSkin(value:DisplayObject):void
 		{
-			if( this._backgroundDisabledSkin == value )
+			if(this._backgroundDisabledSkin == value)
 			{
 				return;
 			}
 
-			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin != this._backgroundSkin )
+			if(this._backgroundDisabledSkin && this._backgroundDisabledSkin != this._backgroundSkin)
 			{
-				this.removeChild( this._backgroundDisabledSkin );
+				this.removeChild(this._backgroundDisabledSkin);
 			}
 			this._backgroundDisabledSkin = value;
-			if( this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this )
+			if(this._backgroundDisabledSkin && this._backgroundDisabledSkin.parent != this)
 			{
 				this._backgroundDisabledSkin.visible = false;
-				this.addChildAt( this._backgroundDisabledSkin , 0 );
+				this.addChildAt(this._backgroundDisabledSkin, 0);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _fillSkin : DisplayObject;
+		protected var _originalFillWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _originalFillHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var currentFill:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected var _fillSkin:DisplayObject;
 
 		/**
 		 * The primary fill to display.
@@ -352,7 +369,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get fillSkin() : DisplayObject
+		public function get fillSkin():DisplayObject
 		{
 			return this._fillSkin;
 		}
@@ -360,30 +377,30 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set fillSkin( value : DisplayObject ) : void
+		public function set fillSkin(value:DisplayObject):void
 		{
-			if( this._fillSkin == value )
+			if(this._fillSkin == value)
 			{
 				return;
 			}
 
-			if( this._fillSkin && this._fillSkin != this._fillDisabledSkin )
+			if(this._fillSkin && this._fillSkin != this._fillDisabledSkin)
 			{
-				this.removeChild( this._fillSkin );
+				this.removeChild(this._fillSkin);
 			}
 			this._fillSkin = value;
-			if( this._fillSkin && this._fillSkin.parent != this )
+			if(this._fillSkin && this._fillSkin.parent != this)
 			{
 				this._fillSkin.visible = false;
-				this.addChild( this._fillSkin );
+				this.addChild(this._fillSkin);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _fillDisabledSkin : DisplayObject;
+		protected var _fillDisabledSkin:DisplayObject;
 
 		/**
 		 * A fill to display when the progress bar is disabled.
@@ -396,7 +413,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get fillDisabledSkin() : DisplayObject
+		public function get fillDisabledSkin():DisplayObject
 		{
 			return this._fillDisabledSkin;
 		}
@@ -404,24 +421,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set fillDisabledSkin( value : DisplayObject ) : void
+		public function set fillDisabledSkin(value:DisplayObject):void
 		{
-			if( this._fillDisabledSkin == value )
+			if(this._fillDisabledSkin == value)
 			{
 				return;
 			}
 
-			if( this._fillDisabledSkin && this._fillDisabledSkin != this._fillSkin )
+			if(this._fillDisabledSkin && this._fillDisabledSkin != this._fillSkin)
 			{
-				this.removeChild( this._fillDisabledSkin );
+				this.removeChild(this._fillDisabledSkin);
 			}
 			this._fillDisabledSkin = value;
-			if( this._fillDisabledSkin && this._fillDisabledSkin.parent != this )
+			if(this._fillDisabledSkin && this._fillDisabledSkin.parent != this)
 			{
 				this._fillDisabledSkin.visible = false;
-				this.addChild( this._fillDisabledSkin );
+				this.addChild(this._fillDisabledSkin);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -442,7 +459,7 @@ package feathers.controls
 		 * @see #paddingBottom
 		 * @see #paddingLeft
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -450,7 +467,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -461,7 +478,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the progress bar's top edge and
@@ -474,7 +491,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -482,20 +499,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the progress bar's right edge
@@ -508,7 +525,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -516,20 +533,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the progress bar's bottom edge
@@ -542,7 +559,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -550,20 +567,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the progress bar's left edge
@@ -576,7 +593,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -584,34 +601,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function ProgressBar()
-		{
-			super();
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
 
-			if( stylesInvalid || stateInvalid )
+			if(stylesInvalid || stateInvalid)
 			{
 				this.refreshBackground();
 				this.refreshFill();
@@ -638,47 +647,47 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
-			var newWidth : Number = needsWidth ? this._originalBackgroundWidth : this.explicitWidth;
-			var newHeight : Number = needsHeight ? this._originalBackgroundHeight : this.explicitHeight;
-			return this.setSizeInternal( newWidth , newHeight , false );
+			var newWidth:Number = needsWidth ? this._originalBackgroundWidth : this.explicitWidth;
+			var newHeight:Number = needsHeight ? this._originalBackgroundHeight  : this.explicitHeight;
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshBackground() : void
+		protected function refreshBackground():void
 		{
 			this.currentBackground = this._backgroundSkin;
-			if( this._backgroundDisabledSkin )
+			if(this._backgroundDisabledSkin)
 			{
-				if( this._isEnabled )
+				if(this._isEnabled)
 				{
 					this._backgroundDisabledSkin.visible = false;
 				}
 				else
 				{
 					this.currentBackground = this._backgroundDisabledSkin;
-					if( this._backgroundSkin )
+					if(this._backgroundSkin)
 					{
 						this._backgroundSkin.visible = false;
 					}
 				}
 			}
-			if( this.currentBackground )
+			if(this.currentBackground)
 			{
-				if( this._originalBackgroundWidth !== this._originalBackgroundWidth ) //isNaN
+				if(this._originalBackgroundWidth !== this._originalBackgroundWidth) //isNaN
 				{
 					this._originalBackgroundWidth = this.currentBackground.width;
 				}
-				if( this._originalBackgroundHeight !== this._originalBackgroundHeight ) //isNaN
+				if(this._originalBackgroundHeight !== this._originalBackgroundHeight) //isNaN
 				{
 					this._originalBackgroundHeight = this.currentBackground.height;
 				}
@@ -689,31 +698,31 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function refreshFill() : void
+		protected function refreshFill():void
 		{
 			this.currentFill = this._fillSkin;
-			if( this._fillDisabledSkin )
+			if(this._fillDisabledSkin)
 			{
-				if( this._isEnabled )
+				if(this._isEnabled)
 				{
 					this._fillDisabledSkin.visible = false;
 				}
 				else
 				{
 					this.currentFill = this._fillDisabledSkin;
-					if( this._backgroundSkin )
+					if(this._backgroundSkin)
 					{
 						this._fillSkin.visible = false;
 					}
 				}
 			}
-			if( this.currentFill )
+			if(this.currentFill)
 			{
-				if( this._originalFillWidth !== this._originalFillWidth ) //isNaN
+				if(this._originalFillWidth !== this._originalFillWidth) //isNaN
 				{
 					this._originalFillWidth = this.currentFill.width;
 				}
-				if( this._originalFillHeight !== this._originalFillHeight ) //isNaN
+				if(this._originalFillHeight !== this._originalFillHeight) //isNaN
 				{
 					this._originalFillHeight = this.currentFill.height;
 				}
@@ -724,40 +733,40 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutChildren() : void
+		protected function layoutChildren():void
 		{
-			if( this.currentBackground )
+			if(this.currentBackground)
 			{
 				this.currentBackground.width = this.actualWidth;
 				this.currentBackground.height = this.actualHeight;
 			}
 
-			if( this._minimum === this._maximum )
+			if(this._minimum === this._maximum)
 			{
-				var percentage : Number = 1;
+				var percentage:Number = 1;
 			}
 			else
 			{
 				percentage = (this._value - this._minimum) / (this._maximum - this._minimum);
-				if( percentage < 0 )
+				if(percentage < 0)
 				{
 					percentage = 0;
 				}
-				else if( percentage > 1 )
+				else if(percentage > 1)
 				{
 					percentage = 1;
 				}
 			}
-			if( this._direction == DIRECTION_VERTICAL )
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				this.currentFill.width = this.actualWidth - this._paddingLeft - this._paddingRight;
-				this.currentFill.height = Math.round( this._originalFillHeight + percentage * (this.actualHeight - this._paddingTop - this._paddingBottom - this._originalFillHeight) );
+				this.currentFill.height = Math.round(this._originalFillHeight + percentage * (this.actualHeight - this._paddingTop - this._paddingBottom - this._originalFillHeight));
 				this.currentFill.x = this._paddingLeft;
 				this.currentFill.y = this.actualHeight - this._paddingBottom - this.currentFill.height;
 			}
 			else //horizontal
 			{
-				this.currentFill.width = Math.round( this._originalFillWidth + percentage * (this.actualWidth - this._paddingLeft - this._paddingRight - this._originalFillWidth) );
+				this.currentFill.width = Math.round(this._originalFillWidth + percentage * (this.actualWidth - this._paddingLeft - this._paddingRight - this._originalFillWidth));
 				this.currentFill.height = this.actualHeight - this._paddingTop - this._paddingBottom;
 				this.currentFill.x = this._paddingLeft;
 				this.currentFill.y = this._paddingTop;

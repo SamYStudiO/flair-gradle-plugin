@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.controls.ToggleButton;
@@ -22,14 +22,6 @@ package feathers.media
 	 */
 	public class PlayPauseToggleButton extends ToggleButton implements IMediaPlayerControl
 	{
-		/**
-		 * The default <code>IStyleProvider</code> for all
-		 * <code>PlayPauseToggleButton</code> components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
 		/**
 		 * An alternate style name to use with
 		 * <code>PlayPauseToggleButton</code> to allow a theme to give it an
@@ -51,80 +43,17 @@ package feathers.media
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_OVERLAY_PLAY_PAUSE_TOGGLE_BUTTON : String = "feathers-overlay-play-pause-toggle-button";
+		public static const ALTERNATE_STYLE_NAME_OVERLAY_PLAY_PAUSE_TOGGLE_BUTTON:String = "feathers-overlay-play-pause-toggle-button";
 		
 		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return PlayPauseToggleButton.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _mediaPlayer : ITimedMediaPlayer;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get mediaPlayer() : IMediaPlayer
-		{
-			return this._mediaPlayer;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set mediaPlayer( value : IMediaPlayer ) : void
-		{
-			if( this._mediaPlayer == value )
-			{
-				return;
-			}
-			if( this._mediaPlayer )
-			{
-				this._mediaPlayer.removeEventListener( MediaPlayerEventType.PLAYBACK_STATE_CHANGE , mediaPlayer_playbackStateChangeHandler );
-			}
-			this._mediaPlayer = value as ITimedMediaPlayer;
-			this.refreshState();
-			if( this._mediaPlayer )
-			{
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.PLAYBACK_STATE_CHANGE , mediaPlayer_playbackStateChangeHandler );
-			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _touchableWhenPlaying : Boolean = true;
-
-		/**
-		 * Determines if the button may be touched when the media player is
-		 * playing its content. In other words, this button will only work when
-		 * the content is paused.
+		 * The default <code>IStyleProvider</code> for all
+		 * <code>PlayPauseToggleButton</code> components.
 		 *
-		 * @default true
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public function get touchableWhenPlaying() : Boolean
-		{
-			return this._touchableWhenPlaying;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set touchableWhenPlaying( value : Boolean ) : void
-		{
-			if( this._touchableWhenPlaying == value )
-			{
-				return;
-			}
-			this._touchableWhenPlaying = value;
-		}
-
+		public static var globalStyleProvider:IStyleProvider;
+		
 		/**
 		 * Constructor.
 		 */
@@ -135,15 +64,87 @@ package feathers.media
 			//we'll update isSelected based on events dispatched by the media
 			//player
 			this.isToggle = false;
-			this.addEventListener( Event.TRIGGERED , playPlayButton_triggeredHandler );
+			this.addEventListener(Event.TRIGGERED, playPlayButton_triggeredHandler);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshState() : void
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
-			if( !this._mediaPlayer )
+			return PlayPauseToggleButton.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _mediaPlayer:ITimedMediaPlayer;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get mediaPlayer():IMediaPlayer
+		{
+			return this._mediaPlayer;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set mediaPlayer(value:IMediaPlayer):void
+		{
+			if(this._mediaPlayer == value)
+			{
+				return;
+			}
+			if(this._mediaPlayer)
+			{
+				this._mediaPlayer.removeEventListener(MediaPlayerEventType.PLAYBACK_STATE_CHANGE, mediaPlayer_playbackStateChangeHandler);
+			}
+			this._mediaPlayer = value as ITimedMediaPlayer;
+			this.refreshState();
+			if(this._mediaPlayer)
+			{
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.PLAYBACK_STATE_CHANGE, mediaPlayer_playbackStateChangeHandler);
+			}
+			this.invalidate(INVALIDATION_FLAG_DATA);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _touchableWhenPlaying:Boolean = true;
+
+		/**
+		 * Determines if the button may be touched when the media player is
+		 * playing its content. In other words, this button will only work when
+		 * the content is paused.
+		 * 
+		 * @default true
+		 */
+		public function get touchableWhenPlaying():Boolean
+		{
+			return this._touchableWhenPlaying;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set touchableWhenPlaying(value:Boolean):void
+		{
+			if(this._touchableWhenPlaying == value)
+			{
+				return;
+			}
+			this._touchableWhenPlaying = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshState():void
+		{
+			if(!this._mediaPlayer)
 			{
 				this.isSelected = false;
 				return;
@@ -155,7 +156,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function playPlayButton_triggeredHandler( event : Event ) : void
+		protected function playPlayButton_triggeredHandler(event:Event):void
 		{
 			this._mediaPlayer.togglePlayPause();
 		}
@@ -163,7 +164,7 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_playbackStateChangeHandler( event : Event ) : void
+		protected function mediaPlayer_playbackStateChangeHandler(event:Event):void
 		{
 			this.refreshState();
 		}

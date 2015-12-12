@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.IValidating;
@@ -63,14 +63,28 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
+		/**
+		 * Constructor.
+		 */
+		public function SpinnerList()
+		{
+			super();
+			this._scrollBarDisplayMode = SCROLL_BAR_DISPLAY_MODE_NONE;
+			this._snapToPages = true;
+			this._snapOnComplete = true;
+			this.decelerationRate = Scroller.DECELERATION_RATE_FAST;
+			this.addEventListener(Event.TRIGGERED, spinnerList_triggeredHandler);
+			this.addEventListener(FeathersEventType.SCROLL_COMPLETE, spinnerList_scrollCompleteHandler);
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
-			if( SpinnerList.globalStyleProvider )
+			if(SpinnerList.globalStyleProvider)
 			{
 				return SpinnerList.globalStyleProvider;
 			}
@@ -84,11 +98,11 @@ package feathers.controls
 		 *
 		 * @throws ArgumentError SpinnerList requires snapToPages to be true.
 		 */
-		override public function set snapToPages( value : Boolean ) : void
+		override public function set snapToPages(value:Boolean):void
 		{
-			if( !value )
+			if(!value)
 			{
-				throw new ArgumentError( "SpinnerList requires snapToPages to be true." );
+				throw new ArgumentError("SpinnerList requires snapToPages to be true.");
 			}
 			super.snapToPages = value;
 		}
@@ -100,11 +114,11 @@ package feathers.controls
 		 *
 		 * @throws ArgumentError SpinnerList requires allowMultipleSelection to be false.
 		 */
-		override public function set allowMultipleSelection( value : Boolean ) : void
+		override public function set allowMultipleSelection(value:Boolean):void
 		{
-			if( value )
+			if(value)
 			{
-				throw new ArgumentError( "SpinnerList requires allowMultipleSelection to be false." );
+				throw new ArgumentError("SpinnerList requires allowMultipleSelection to be false.");
 			}
 			super.allowMultipleSelection = value;
 		}
@@ -116,11 +130,11 @@ package feathers.controls
 		 *
 		 * @throws ArgumentError SpinnerList requires isSelectable to be true.
 		 */
-		override public function set isSelectable( value : Boolean ) : void
+		override public function set isSelectable(value:Boolean):void
 		{
-			if( !value )
+			if(!value)
 			{
-				throw new ArgumentError( "SpinnerList requires isSelectable to be true." );
+				throw new ArgumentError("SpinnerList requires isSelectable to be true.");
 			}
 			super.snapToPages = value;
 		}
@@ -128,11 +142,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set layout( value : ILayout ) : void
+		override public function set layout(value:ILayout):void
 		{
-			if( value && !(value is ISpinnerLayout) )
+			if(value && !(value is ISpinnerLayout))
 			{
-				throw new ArgumentError( "SpinnerList requires layouts to implement the ISpinnerLayout interface." );
+				throw new ArgumentError("SpinnerList requires layouts to implement the ISpinnerLayout interface.");
 			}
 			super.layout = value;
 		}
@@ -140,11 +154,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set selectedIndex( value : int ) : void
+		override public function set selectedIndex(value:int):void
 		{
-			if( this._selectedIndex != value )
+			if(this._selectedIndex != value)
 			{
-				this.scrollToDisplayIndex( value , 0 );
+				this.scrollToDisplayIndex(value, 0);
 			}
 			super.selectedIndex = value;
 		}
@@ -152,14 +166,14 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set dataProvider( value : ListCollection ) : void
+		override public function set dataProvider(value:ListCollection):void
 		{
-			if( this._dataProvider == value )
+			if(this._dataProvider == value)
 			{
 				return;
 			}
 			super.dataProvider = value;
-			if( !this._dataProvider || this._dataProvider.length == 0 )
+			if(!this._dataProvider || this._dataProvider.length == 0)
 			{
 				this.selectedIndex = -1;
 			}
@@ -172,7 +186,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _selectionOverlaySkin : DisplayObject;
+		protected var _selectionOverlaySkin:DisplayObject;
 
 		/**
 		 * An optional skin to display in the horizontal or vertical center of
@@ -191,7 +205,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get selectionOverlaySkin() : DisplayObject
+		public function get selectionOverlaySkin():DisplayObject
 		{
 			return this._selectionOverlaySkin;
 		}
@@ -199,53 +213,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set selectionOverlaySkin( value : DisplayObject ) : void
+		public function set selectionOverlaySkin(value:DisplayObject):void
 		{
-			if( this._selectionOverlaySkin == value )
+			if(this._selectionOverlaySkin == value)
 			{
 				return;
 			}
-			if( this._selectionOverlaySkin && this._selectionOverlaySkin.parent == this )
+			if(this._selectionOverlaySkin && this._selectionOverlaySkin.parent == this)
 			{
-				this.removeRawChildInternal( this._selectionOverlaySkin );
+				this.removeRawChildInternal(this._selectionOverlaySkin);
 			}
 			this._selectionOverlaySkin = value;
-			if( this._selectionOverlaySkin )
+			if(this._selectionOverlaySkin)
 			{
-				this.addRawChildInternal( this._selectionOverlaySkin );
+				this.addRawChildInternal(this._selectionOverlaySkin);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function SpinnerList()
-		{
-			super();
-			this._scrollBarDisplayMode = SCROLL_BAR_DISPLAY_MODE_NONE;
-			this._snapToPages = true;
-			this._snapOnComplete = true;
-			this.decelerationRate = Scroller.DECELERATION_RATE_FAST;
-			this.addEventListener( Event.TRIGGERED , spinnerList_triggeredHandler );
-			this.addEventListener( FeathersEventType.SCROLL_COMPLETE , spinnerList_scrollCompleteHandler );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( this._layout == null )
+			if(this._layout == null)
 			{
-				if( this._hasElasticEdges && this._verticalScrollPolicy == SCROLL_POLICY_AUTO && this._scrollBarDisplayMode != SCROLL_BAR_DISPLAY_MODE_FIXED )
+				if(this._hasElasticEdges &&
+					this._verticalScrollPolicy == SCROLL_POLICY_AUTO &&
+					this._scrollBarDisplayMode != SCROLL_BAR_DISPLAY_MODE_FIXED)
 				{
 					//so that the elastic edges work even when the max scroll
 					//position is 0, similar to iOS.
 					this.verticalScrollPolicy = SCROLL_POLICY_ON;
 				}
 
-				var layout : VerticalSpinnerLayout = new VerticalSpinnerLayout();
+				var layout:VerticalSpinnerLayout = new VerticalSpinnerLayout();
 				layout.useVirtualLayout = true;
 				layout.padding = 0;
 				layout.gap = 0;
@@ -260,36 +262,36 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function refreshMinAndMaxScrollPositions() : void
+		override protected function refreshMinAndMaxScrollPositions():void
 		{
 			super.refreshMinAndMaxScrollPositions();
-			if( this._maxVerticalScrollPosition != this._minVerticalScrollPosition )
+			if(this._maxVerticalScrollPosition != this._minVerticalScrollPosition)
 			{
-				this.actualPageHeight = ISpinnerLayout( this._layout ).snapInterval;
+				this.actualPageHeight = ISpinnerLayout(this._layout).snapInterval;
 			}
-			else if( this._maxHorizontalScrollPosition != this._minHorizontalScrollPosition )
+			else if(this._maxHorizontalScrollPosition != this._minHorizontalScrollPosition)
 			{
-				this.actualPageWidth = ISpinnerLayout( this._layout ).snapInterval;
+				this.actualPageWidth = ISpinnerLayout(this._layout).snapInterval;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function handlePendingScroll() : void
+		override protected function handlePendingScroll():void
 		{
-			if( this.pendingItemIndex >= 0 )
+			if(this.pendingItemIndex >= 0)
 			{
-				var itemIndex : int = this.pendingItemIndex;
+				var itemIndex:int = this.pendingItemIndex;
 				this.pendingItemIndex = -1;
-				if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
+				if(this._maxVerticalPageIndex != this._minVerticalPageIndex)
 				{
-					this.pendingVerticalPageIndex = this.calculateNearestPageIndexForItem( itemIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
+					this.pendingVerticalPageIndex = this.calculateNearestPageIndexForItem(itemIndex, this._verticalPageIndex, this._maxVerticalPageIndex);
 					this.hasPendingVerticalPageIndex = this.pendingVerticalPageIndex !== this._verticalPageIndex;
 				}
-				else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
+				else if(this._maxHorizontalPageIndex != this._minHorizontalPageIndex)
 				{
-					this.pendingHorizontalPageIndex = this.calculateNearestPageIndexForItem( itemIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
+					this.pendingHorizontalPageIndex = this.calculateNearestPageIndexForItem(itemIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex);
 					this.hasPendingHorizontalPageIndex = this.pendingHorizontalPageIndex !== this._horizontalPageIndex;
 				}
 			}
@@ -299,28 +301,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function layoutChildren() : void
+		override protected function layoutChildren():void
 		{
 			super.layoutChildren();
 
-			if( this._selectionOverlaySkin )
+			if(this._selectionOverlaySkin)
 			{
-				if( this._selectionOverlaySkin is IValidating )
+				if(this._selectionOverlaySkin is IValidating)
 				{
-					IValidating( this._selectionOverlaySkin ).validate();
+					IValidating(this._selectionOverlaySkin).validate();
 				}
-				if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
+				if(this._maxVerticalPageIndex != this._minVerticalPageIndex)
 				{
 					this._selectionOverlaySkin.width = this.actualWidth - this._leftViewPortOffset - this._rightViewPortOffset;
 					this._selectionOverlaySkin.height = this.actualPageHeight;
 					this._selectionOverlaySkin.x = this._leftViewPortOffset;
-					this._selectionOverlaySkin.y = Math.round( this._topViewPortOffset + (this.actualHeight - this._topViewPortOffset - this._bottomViewPortOffset - this.actualPageHeight) / 2 );
+					this._selectionOverlaySkin.y = Math.round(this._topViewPortOffset + (this.actualHeight - this._topViewPortOffset - this._bottomViewPortOffset - this.actualPageHeight) / 2);
 				}
-				else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
+				else if(this._maxHorizontalPageIndex != this._minHorizontalPageIndex)
 				{
 					this._selectionOverlaySkin.width = this.actualPageWidth;
 					this._selectionOverlaySkin.height = this.actualHeight - this._topViewPortOffset - this._bottomViewPortOffset;
-					this._selectionOverlaySkin.x = Math.round( this._leftViewPortOffset + (this.actualWidth - this._leftViewPortOffset - this._rightViewPortOffset - this.actualPageWidth) / 2 );
+					this._selectionOverlaySkin.x = Math.round(this._leftViewPortOffset + (this.actualWidth - this._leftViewPortOffset - this._rightViewPortOffset - this.actualPageWidth) / 2);
 					this._selectionOverlaySkin.y = this._topViewPortOffset;
 				}
 			}
@@ -329,26 +331,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function calculateNearestPageIndexForItem( itemIndex : int , currentPageIndex : int , maxPageIndex : int ) : int
+		protected function calculateNearestPageIndexForItem(itemIndex:int, currentPageIndex:int, maxPageIndex:int):int
 		{
-			if( maxPageIndex != int.MAX_VALUE )
+			if(maxPageIndex != int.MAX_VALUE)
 			{
 				return itemIndex;
 			}
-			var itemCount : int = this._dataProvider.length;
-			var fullDataProviderOffsets : int = currentPageIndex / itemCount;
-			var currentItemIndex : int = currentPageIndex % itemCount;
-			if( itemIndex < currentItemIndex )
+			var itemCount:int = this._dataProvider.length;
+			var fullDataProviderOffsets:int = currentPageIndex / itemCount;
+			var currentItemIndex:int = currentPageIndex % itemCount;
+			if(itemIndex < currentItemIndex)
 			{
-				var previousPageIndex : Number = fullDataProviderOffsets * itemCount + itemIndex;
-				var nextPageIndex : Number = (fullDataProviderOffsets + 1) * itemCount + itemIndex;
+				var previousPageIndex:Number = fullDataProviderOffsets * itemCount + itemIndex;
+				var nextPageIndex:Number = (fullDataProviderOffsets + 1) * itemCount + itemIndex;
 			}
 			else
 			{
 				previousPageIndex = (fullDataProviderOffsets - 1) * itemCount + itemIndex;
 				nextPageIndex = fullDataProviderOffsets * itemCount + itemIndex;
 			}
-			if( (nextPageIndex - currentPageIndex) < (currentPageIndex - previousPageIndex) )
+			if((nextPageIndex - currentPageIndex) < (currentPageIndex - previousPageIndex))
 			{
 				return nextPageIndex;
 			}
@@ -358,36 +360,18 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function spinnerList_triggeredHandler( event : Event , item : Object ) : void
+		protected function spinnerList_scrollCompleteHandler(event:Event):void
 		{
-			var itemIndex : int = this._dataProvider.getItemIndex( item );
-			if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
+			var itemCount:int = this._dataProvider.length;
+			if(this._maxVerticalPageIndex != this._minVerticalPageIndex)
 			{
-				itemIndex = this.calculateNearestPageIndexForItem( itemIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
-				this.throwToPage( this._horizontalPageIndex , itemIndex , this._pageThrowDuration );
+				var pageIndex:int = this._verticalPageIndex % itemCount;
 			}
-			else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
-			{
-				itemIndex = this.calculateNearestPageIndexForItem( itemIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
-				this.throwToPage( itemIndex , this._verticalPageIndex );
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected function spinnerList_scrollCompleteHandler( event : Event ) : void
-		{
-			var itemCount : int = this._dataProvider.length;
-			if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
-			{
-				var pageIndex : int = this._verticalPageIndex % itemCount;
-			}
-			else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
+			else if(this._maxHorizontalPageIndex != this._minHorizontalPageIndex)
 			{
 				pageIndex = this._horizontalPageIndex % itemCount;
 			}
-			if( pageIndex < 0 )
+			if(pageIndex < 0)
 			{
 				pageIndex = itemCount + pageIndex;
 			}
@@ -397,57 +381,75 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function stage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function spinnerList_triggeredHandler(event:Event, item:Object):void
 		{
-			if( !this._dataProvider )
+			var itemIndex:int = this._dataProvider.getItemIndex(item);
+			if(this._maxVerticalPageIndex != this._minVerticalPageIndex)
+			{
+				itemIndex = this.calculateNearestPageIndexForItem(itemIndex, this._verticalPageIndex, this._maxVerticalPageIndex);
+				this.throwToPage(this._horizontalPageIndex, itemIndex, this._pageThrowDuration);
+			}
+			else if(this._maxHorizontalPageIndex != this._minHorizontalPageIndex)
+			{
+				itemIndex = this.calculateNearestPageIndexForItem(itemIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex);
+				this.throwToPage(itemIndex, this._verticalPageIndex);
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function stage_keyDownHandler(event:KeyboardEvent):void
+		{
+			if(!this._dataProvider)
 			{
 				return;
 			}
-			var changedSelection : Boolean = false;
-			if( event.keyCode == Keyboard.HOME )
+			var changedSelection:Boolean = false;
+			if(event.keyCode == Keyboard.HOME)
 			{
-				if( this._dataProvider.length > 0 )
+				if(this._dataProvider.length > 0)
 				{
 					this.selectedIndex = 0;
 					changedSelection = true;
 				}
 			}
-			else if( event.keyCode == Keyboard.END )
+			else if(event.keyCode == Keyboard.END)
 			{
 				this.selectedIndex = this._dataProvider.length - 1;
 				changedSelection = true;
 			}
-			else if( event.keyCode == Keyboard.UP )
+			else if(event.keyCode == Keyboard.UP)
 			{
-				var newIndex : int = this._selectedIndex - 1;
-				if( newIndex < 0 )
+				var newIndex:int = this._selectedIndex - 1;
+				if(newIndex < 0)
 				{
 					newIndex = this._dataProvider.length + newIndex;
 				}
 				this.selectedIndex = newIndex;
 				changedSelection = true;
 			}
-			else if( event.keyCode == Keyboard.DOWN )
+			else if(event.keyCode == Keyboard.DOWN)
 			{
 				newIndex = this._selectedIndex + 1;
-				if( newIndex >= this._dataProvider.length )
+				if(newIndex >= this._dataProvider.length)
 				{
 					newIndex -= this._dataProvider.length;
 				}
 				this.selectedIndex = newIndex;
 				changedSelection = true;
 			}
-			if( changedSelection )
+			if(changedSelection)
 			{
-				if( this._maxVerticalPageIndex != this._minVerticalPageIndex )
+				if(this._maxVerticalPageIndex != this._minVerticalPageIndex)
 				{
-					var pageIndex : int = this.calculateNearestPageIndexForItem( this._selectedIndex , this._verticalPageIndex , this._maxVerticalPageIndex );
-					this.throwToPage( this._horizontalPageIndex , pageIndex , this._pageThrowDuration );
+					var pageIndex:int = this.calculateNearestPageIndexForItem(this._selectedIndex, this._verticalPageIndex, this._maxVerticalPageIndex);
+					this.throwToPage(this._horizontalPageIndex, pageIndex, this._pageThrowDuration);
 				}
-				else if( this._maxHorizontalPageIndex != this._minHorizontalPageIndex )
+				else if(this._maxHorizontalPageIndex != this._minHorizontalPageIndex)
 				{
-					pageIndex = this.calculateNearestPageIndexForItem( this._selectedIndex , this._horizontalPageIndex , this._maxHorizontalPageIndex );
-					this.throwToPage( pageIndex , this._verticalPageIndex );
+					pageIndex = this.calculateNearestPageIndexForItem(this._selectedIndex, this._horizontalPageIndex, this._maxHorizontalPageIndex);
+					this.throwToPage(pageIndex, this._verticalPageIndex);
 				}
 			}
 		}

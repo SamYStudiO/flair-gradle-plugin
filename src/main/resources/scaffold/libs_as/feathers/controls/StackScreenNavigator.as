@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.BaseScreenNavigator;
@@ -35,54 +35,41 @@ package feathers.controls
 	public class StackScreenNavigator extends BaseScreenNavigator
 	{
 		/**
+		 * The screen navigator will auto size itself to fill the entire stage.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
+
+		/**
+		 * The screen navigator will auto size itself to fit its content.
+		 *
+		 * @see #autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
+
+		/**
 		 * The default <code>IStyleProvider</code> for all <code>StackScreenNavigator</code>
 		 * components.
 		 *
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _stack : Vector.<StackItem> = new <StackItem>[];
-		/**
-		 * @private
-		 */
-		protected var _pushScreenEvents : Object = {};
-		/**
-		 * @private
-		 */
-		protected var _replaceScreenEvents : Object;
-		/**
-		 * @private
-		 */
-		protected var _popScreenEvents : Vector.<String>;
-		/**
-		 * @private
-		 */
-		protected var _popToRootScreenEvents : Vector.<String>;
-		/**
-		 * @private
-		 */
-		protected var _tempRootScreenID : String;
-		/**
-		 * The screen navigator will auto size itself to fill the entire stage.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * The screen navigator will auto size itself to fit its content.
-		 *
-		 * @see #autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+		public function StackScreenNavigator()
+		{
+			super();
+			this.addEventListener(FeathersEventType.INITIALIZE, stackScreenNavigator_initializeHandler);
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return StackScreenNavigator.globalStyleProvider;
 		}
@@ -90,12 +77,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _pushTransition : Function;
+		protected var _pushTransition:Function;
 
 		/**
 		 * Typically used to provide some kind of animation or visual effect,
 		 * this function that is called when the screen navigator pushes a new
-		 * screen onto the stack.
+		 * screen onto the stack. 
 		 *
 		 * <p>In the following example, the screen navigator is given a push
 		 * transition that slides the screens to the left:</p>
@@ -138,7 +125,7 @@ package feathers.controls
 		 * @see #pushScreen()
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get pushTransition() : Function
+		public function get pushTransition():Function
 		{
 			return this._pushTransition;
 		}
@@ -146,9 +133,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set pushTransition( value : Function ) : void
+		public function set pushTransition(value:Function):void
 		{
-			if( this._pushTransition == value )
+			if(this._pushTransition == value)
 			{
 				return;
 			}
@@ -158,7 +145,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _popTransition : Function;
+		protected var _popTransition:Function;
 
 		/**
 		 * Typically used to provide some kind of animation or visual effect,
@@ -206,7 +193,7 @@ package feathers.controls
 		 * @see #popScreen()
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get popTransition() : Function
+		public function get popTransition():Function
 		{
 			return this._popTransition;
 		}
@@ -214,9 +201,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set popTransition( value : Function ) : void
+		public function set popTransition(value:Function):void
 		{
-			if( this._popTransition == value )
+			if(this._popTransition == value)
 			{
 				return;
 			}
@@ -226,7 +213,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _popToRootTransition : Function = null;
+		protected var _popToRootTransition:Function = null;
 
 		/**
 		 * Typically used to provide some kind of animation or visual effect, a
@@ -278,7 +265,7 @@ package feathers.controls
 		 * @see #popToRootScreen()
 		 * @see ../../../help/transitions.html Transitions for Feathers screen navigators
 		 */
-		public function get popToRootTransition() : Function
+		public function get popToRootTransition():Function
 		{
 			return this._popToRootTransition;
 		}
@@ -286,9 +273,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set popToRootTransition( value : Function ) : void
+		public function set popToRootTransition(value:Function):void
 		{
-			if( this._popToRootTransition == value )
+			if(this._popToRootTransition == value)
 			{
 				return;
 			}
@@ -298,19 +285,49 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function get stackCount() : int
+		protected var _stack:Vector.<StackItem> = new <StackItem>[];
+
+		/**
+		 * @private
+		 */
+		public function get stackCount():int
 		{
-			var stackLength : int = this._stack.length;
-			if( stackLength > 0 )
+			var stackLength:int = this._stack.length;
+			if(stackLength > 0)
 			{
 				return this._stack.length + 1;
 			}
-			if( this._activeScreen )
+			if(this._activeScreen)
 			{
 				return 1;
 			}
 			return 0;
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _pushScreenEvents:Object = {};
+
+		/**
+		 * @private
+		 */
+		protected var _replaceScreenEvents:Object;
+
+		/**
+		 * @private
+		 */
+		protected var _popScreenEvents:Vector.<String>;
+
+		/**
+		 * @private
+		 */
+		protected var _popToRootScreenEvents:Vector.<String>;
+
+		/**
+		 * @private
+		 */
+		protected var _tempRootScreenID:String;
 
 		/**
 		 * Sets the first screen at the bottom of the stack, or the root screen.
@@ -327,43 +344,43 @@ package feathers.controls
 		 *
 		 * @see #popToRootScreen()
 		 */
-		public function get rootScreenID() : String
+		public function get rootScreenID():String
 		{
-			if( this._tempRootScreenID !== null )
+			if(this._tempRootScreenID !== null)
 			{
 				return this._tempRootScreenID;
 			}
-			else if( this._stack.length == 0 )
+			else if(this._stack.length == 0)
 			{
 				return this._activeScreenID;
 			}
-			return this._stack[ 0 ].id;
+			return this._stack[0].id;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set rootScreenID( value : String ) : void
+		public function set rootScreenID(value:String):void
 		{
-			if( this._isInitialized )
+			if(this._isInitialized)
 			{
 				//we may have delayed showing the root screen until after
 				//initialization, but this property could be set between when
 				//_isInitialized is set to true and when the screen is actually
-				//shown, so we need to clear this variable, just in case.
+				//shown, so we need to clear this variable, just in case. 
 				this._tempRootScreenID = null;
-
+				
 				//this clears the whole stack and starts fresh
 				this._stack.length = 0;
-				if( value !== null )
+				if(value !== null)
 				{
 					//show without a transition because we're not navigating.
 					//we're forcibly replacing the root screen.
-					this.showScreenInternal( value , null );
+					this.showScreenInternal(value, null);
 				}
 				else
 				{
-					this.clearScreenInternal( null );
+					this.clearScreenInternal(null);
 				}
 			}
 			else
@@ -373,33 +390,15 @@ package feathers.controls
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function StackScreenNavigator()
-		{
-			super();
-			this.addEventListener( FeathersEventType.INITIALIZE , stackScreenNavigator_initializeHandler );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function removeAllScreens() : void
-		{
-			this._stack.length = 0;
-			super.removeAllScreens();
-		}
-
-		/**
 		 * Registers a new screen with a string identifier that can be used
 		 * to reference the screen in other calls, like <code>removeScreen()</code>
 		 * or <code>pushScreen()</code>.
 		 *
 		 * @see #removeScreen()
 		 */
-		public function addScreen( id : String , item : StackScreenNavigatorItem ) : void
+		public function addScreen(id:String, item:StackScreenNavigatorItem):void
 		{
-			this.addScreenInternal( id , item );
+			this.addScreenInternal(id, item);
 		}
 
 		/**
@@ -409,29 +408,38 @@ package feathers.controls
 		 * @see #removeAllScreens()
 		 * @see #addScreen()
 		 */
-		public function removeScreen( id : String ) : StackScreenNavigatorItem
+		public function removeScreen(id:String):StackScreenNavigatorItem
 		{
-			var stackCount : int = this._stack.length;
-			for( var i : int = stackCount - 1; i >= 0; i-- )
+			var stackCount:int = this._stack.length;
+			for(var i:int = stackCount - 1; i >= 0; i--)
 			{
-				var item : StackItem = this._stack[ i ];
-				if( item.id == id )
+				var item:StackItem = this._stack[i];
+				if(item.id == id)
 				{
-					this._stack.splice( i , 1 );
+					this._stack.splice(i, 1);
 				}
 			}
-			return StackScreenNavigatorItem( this.removeScreenInternal( id ) );
+			return StackScreenNavigatorItem(this.removeScreenInternal(id));
+		}
+
+		/**
+		 * @private
+		 */
+		override public function removeAllScreens():void
+		{
+			this._stack.length = 0;
+			super.removeAllScreens();
 		}
 
 		/**
 		 * Returns the <code>StackScreenNavigatorItem</code> instance with the
 		 * specified identifier.
 		 */
-		public function getScreen( id : String ) : StackScreenNavigatorItem
+		public function getScreen(id:String):StackScreenNavigatorItem
 		{
-			if( this._screens.hasOwnProperty( id ) )
+			if(this._screens.hasOwnProperty(id))
 			{
-				return StackScreenNavigatorItem( this._screens[ id ] );
+				return StackScreenNavigatorItem(this._screens[id]);
 			}
 			return null;
 		}
@@ -452,12 +460,12 @@ package feathers.controls
 		 *
 		 * @see #pushTransition
 		 */
-		public function pushScreen( id : String , savedPreviousScreenProperties : Object = null , transition : Function = null ) : DisplayObject
+		public function pushScreen(id:String, savedPreviousScreenProperties:Object = null, transition:Function = null):DisplayObject
 		{
-			if( transition === null )
+			if(transition === null)
 			{
-				var item : StackScreenNavigatorItem = this.getScreen( id );
-				if( item && item.pushTransition !== null )
+				var item:StackScreenNavigatorItem = this.getScreen(id);
+				if(item && item.pushTransition !== null)
 				{
 					transition = item.pushTransition;
 				}
@@ -466,15 +474,15 @@ package feathers.controls
 					transition = this.pushTransition;
 				}
 			}
-			if( this._activeScreenID )
+			if(this._activeScreenID)
 			{
-				this._stack[ this._stack.length ] = new StackItem( this._activeScreenID , savedPreviousScreenProperties );
+				this._stack[this._stack.length] = new StackItem(this._activeScreenID, savedPreviousScreenProperties);
 			}
-			else if( savedPreviousScreenProperties )
+			else if(savedPreviousScreenProperties)
 			{
-				throw new ArgumentError( "Cannot save properties for the previous screen because there is no previous screen." );
+				throw new ArgumentError("Cannot save properties for the previous screen because there is no previous screen.");
 			}
-			return this.showScreenInternal( id , transition );
+			return this.showScreenInternal(id, transition);
 		}
 
 		/**
@@ -490,16 +498,16 @@ package feathers.controls
 		 *
 		 * @see #popTransition
 		 */
-		public function popScreen( transition : Function = null ) : DisplayObject
+		public function popScreen(transition:Function = null):DisplayObject
 		{
-			if( this._stack.length == 0 )
+			if(this._stack.length == 0)
 			{
 				return this._activeScreen;
 			}
-			if( transition === null )
+			if(transition === null)
 			{
-				var screenItem : StackScreenNavigatorItem = this.getScreen( this._activeScreenID );
-				if( screenItem && screenItem.popTransition !== null )
+				var screenItem:StackScreenNavigatorItem = this.getScreen(this._activeScreenID);
+				if(screenItem && screenItem.popTransition !== null)
 				{
 					transition = screenItem.popTransition;
 				}
@@ -508,8 +516,8 @@ package feathers.controls
 					transition = this.popTransition;
 				}
 			}
-			var stackItem : StackItem = this._stack.pop();
-			return this.showScreenInternal( stackItem.id , transition , stackItem.properties );
+			var stackItem:StackItem = this._stack.pop();
+			return this.showScreenInternal(stackItem.id, transition, stackItem.properties);
 		}
 
 		/**
@@ -526,23 +534,23 @@ package feathers.controls
 		 * @see #popToRootTransition
 		 * @see #popTransition
 		 */
-		public function popToRootScreen( transition : Function = null ) : DisplayObject
+		public function popToRootScreen(transition:Function = null):DisplayObject
 		{
-			if( this._stack.length == 0 )
+			if(this._stack.length == 0)
 			{
 				return this._activeScreen;
 			}
-			if( transition == null )
+			if(transition == null)
 			{
 				transition = this.popToRootTransition;
-				if( transition == null )
+				if(transition == null)
 				{
 					transition = this.popTransition;
 				}
 			}
-			var item : StackItem = this._stack[ 0 ];
+			var item:StackItem = this._stack[0];
 			this._stack.length = 0;
-			return this.showScreenInternal( item.id , transition , item.properties );
+			return this.showScreenInternal(item.id, transition, item.properties);
 		}
 
 		/**
@@ -554,19 +562,19 @@ package feathers.controls
 		 *
 		 * @see #popTransition
 		 */
-		public function popAll( transition : Function = null ) : void
+		public function popAll(transition:Function = null):void
 		{
-			if( !this._activeScreen )
+			if(!this._activeScreen)
 			{
 				return;
 			}
-			if( transition == null )
+			if(transition == null)
 			{
 				transition = this.popTransition;
 			}
-			var item : StackItem = this._stack[ 0 ];
+			var item:StackItem = this._stack[0];
 			this._stack.length = 0;
-			this.clearScreenInternal( transition );
+			this.clearScreenInternal(transition);
 		}
 
 		/**
@@ -584,18 +592,18 @@ package feathers.controls
 		 * @see #popToRootTransition
 		 * @see #popTransition
 		 */
-		public function popToRootScreenAndReplace( id : String , transition : Function = null ) : DisplayObject
+		public function popToRootScreenAndReplace(id:String, transition:Function = null):DisplayObject
 		{
-			if( transition == null )
+			if(transition == null)
 			{
 				transition = this.popToRootTransition;
-				if( transition == null )
+				if(transition == null)
 				{
 					transition = this.popTransition;
 				}
 			}
 			this._stack.length = 0;
-			return this.showScreenInternal( id , transition );
+			return this.showScreenInternal(id, transition);
 		}
 
 		/**
@@ -613,12 +621,12 @@ package feathers.controls
 		 *
 		 * @see #pushTransition
 		 */
-		public function replaceScreen( id : String , transition : Function = null ) : DisplayObject
+		public function replaceScreen(id:String, transition:Function = null):DisplayObject
 		{
-			if( transition === null )
+			if(transition === null)
 			{
-				var item : StackScreenNavigatorItem = this.getScreen( id );
-				if( item && item.pushTransition !== null )
+				var item:StackScreenNavigatorItem = this.getScreen(id);
+				if(item && item.pushTransition !== null)
 				{
 					transition = item.pushTransition;
 				}
@@ -627,211 +635,211 @@ package feathers.controls
 					transition = this.pushTransition;
 				}
 			}
-			return this.showScreenInternal( id , transition );
+			return this.showScreenInternal(id, transition);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function prepareActiveScreen() : void
+		override protected function prepareActiveScreen():void
 		{
-			var item : StackScreenNavigatorItem = StackScreenNavigatorItem( this._screens[ this._activeScreenID ] );
-			this.addPushEventsToActiveScreen( item );
-			this.addReplaceEventsToActiveScreen( item );
-			this.addPopEventsToActiveScreen( item );
-			this.addPopToRootEventsToActiveScreen( item );
+			var item:StackScreenNavigatorItem = StackScreenNavigatorItem(this._screens[this._activeScreenID]);
+			this.addPushEventsToActiveScreen(item);
+			this.addReplaceEventsToActiveScreen(item);
+			this.addPopEventsToActiveScreen(item);
+			this.addPopToRootEventsToActiveScreen(item);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function cleanupActiveScreen() : void
+		override protected function cleanupActiveScreen():void
 		{
-			var item : StackScreenNavigatorItem = StackScreenNavigatorItem( this._screens[ this._activeScreenID ] );
-			this.removePushEventsFromActiveScreen( item );
-			this.removeReplaceEventsFromActiveScreen( item );
-			this.removePopEventsFromActiveScreen( item );
-			this.removePopToRootEventsFromActiveScreen( item );
+			var item:StackScreenNavigatorItem = StackScreenNavigatorItem(this._screens[this._activeScreenID]);
+			this.removePushEventsFromActiveScreen(item);
+			this.removeReplaceEventsFromActiveScreen(item);
+			this.removePopEventsFromActiveScreen(item);
+			this.removePopToRootEventsFromActiveScreen(item);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function addPushEventsToActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function addPushEventsToActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			var events : Object = item.pushEvents;
-			var savedScreenEvents : Object = {};
-			for( var eventName : String in events )
+			var events:Object = item.pushEvents;
+			var savedScreenEvents:Object = {};
+			for(var eventName:String in events)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = events[ eventName ];
-				if( eventAction is Function )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = events[eventName];
+				if(eventAction is Function)
 				{
-					if( signal )
+					if(signal)
 					{
-						signal.add( eventAction as Function );
+						signal.add(eventAction as Function);
 					}
 					else
 					{
-						this._activeScreen.addEventListener( eventName , eventAction as Function );
+						this._activeScreen.addEventListener(eventName, eventAction as Function);
 					}
 				}
-				else if( eventAction is String )
+				else if(eventAction is String)
 				{
-					if( signal )
+					if(signal)
 					{
-						var eventListener : Function = this.createPushScreenSignalListener( eventAction as String , signal );
-						signal.add( eventListener );
+						var eventListener:Function = this.createPushScreenSignalListener(eventAction as String, signal);
+						signal.add(eventListener);
 					}
 					else
 					{
-						eventListener = this.createPushScreenEventListener( eventAction as String );
-						this._activeScreen.addEventListener( eventName , eventListener );
+						eventListener = this.createPushScreenEventListener(eventAction as String);
+						this._activeScreen.addEventListener(eventName, eventListener);
 					}
-					savedScreenEvents[ eventName ] = eventListener;
+					savedScreenEvents[eventName] = eventListener;
 				}
 				else
 				{
-					throw new TypeError( "Unknown push event action defined for screen:" , eventAction.toString() );
+					throw new TypeError("Unknown push event action defined for screen:", eventAction.toString());
 				}
 			}
-			this._pushScreenEvents[ this._activeScreenID ] = savedScreenEvents;
+			this._pushScreenEvents[this._activeScreenID] = savedScreenEvents;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removePushEventsFromActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function removePushEventsFromActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			var pushEvents : Object = item.pushEvents;
-			var savedScreenEvents : Object = this._pushScreenEvents[ this._activeScreenID ];
-			for( var eventName : String in pushEvents )
+			var pushEvents:Object = item.pushEvents;
+			var savedScreenEvents:Object = this._pushScreenEvents[this._activeScreenID];
+			for(var eventName:String in pushEvents)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = pushEvents[ eventName ];
-				if( eventAction is Function )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = pushEvents[eventName];
+				if(eventAction is Function)
 				{
-					if( signal )
+					if(signal)
 					{
-						signal.remove( eventAction as Function );
+						signal.remove(eventAction as Function);
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName , eventAction as Function );
+						this._activeScreen.removeEventListener(eventName, eventAction as Function);
 					}
 				}
-				else if( eventAction is String )
+				else if(eventAction is String)
 				{
-					var eventListener : Function = savedScreenEvents[ eventName ] as Function;
-					if( signal )
+					var eventListener:Function = savedScreenEvents[eventName] as Function;
+					if(signal)
 					{
-						signal.remove( eventListener );
+						signal.remove(eventListener);
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName , eventListener );
+						this._activeScreen.removeEventListener(eventName, eventListener);
 					}
 				}
 			}
-			this._pushScreenEvents[ this._activeScreenID ] = null;
+			this._pushScreenEvents[this._activeScreenID] = null;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function addReplaceEventsToActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function addReplaceEventsToActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			var events : Object = item.replaceEvents;
-			if( !events )
+			var events:Object = item.replaceEvents;
+			if(!events)
 			{
 				return;
 			}
-			var savedScreenEvents : Object = {};
-			for( var eventName : String in events )
+			var savedScreenEvents:Object = {};
+			for(var eventName:String in events)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = events[ eventName ];
-				if( eventAction is String )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = events[eventName];
+				if(eventAction is String)
 				{
-					if( signal )
+					if(signal)
 					{
-						var eventListener : Function = this.createReplaceScreenSignalListener( eventAction as String , signal );
-						signal.add( eventListener );
+						var eventListener:Function = this.createReplaceScreenSignalListener(eventAction as String, signal);
+						signal.add(eventListener);
 					}
 					else
 					{
-						eventListener = this.createReplaceScreenEventListener( eventAction as String );
-						this._activeScreen.addEventListener( eventName , eventListener );
+						eventListener = this.createReplaceScreenEventListener(eventAction as String);
+						this._activeScreen.addEventListener(eventName, eventListener);
 					}
-					savedScreenEvents[ eventName ] = eventListener;
+					savedScreenEvents[eventName] = eventListener;
 				}
 				else
 				{
-					throw new TypeError( "Unknown replace event action defined for screen:" , eventAction.toString() );
+					throw new TypeError("Unknown replace event action defined for screen:", eventAction.toString());
 				}
 			}
-			if( !this._replaceScreenEvents )
+			if(!this._replaceScreenEvents)
 			{
 				this._replaceScreenEvents = {};
 			}
-			this._replaceScreenEvents[ this._activeScreenID ] = savedScreenEvents;
+			this._replaceScreenEvents[this._activeScreenID] = savedScreenEvents;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removeReplaceEventsFromActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function removeReplaceEventsFromActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			var replaceEvents : Object = item.replaceEvents;
-			if( !replaceEvents )
+			var replaceEvents:Object = item.replaceEvents;
+			if(!replaceEvents)
 			{
 				return;
 			}
-			var savedScreenEvents : Object = this._replaceScreenEvents[ this._activeScreenID ];
-			for( var eventName : String in replaceEvents )
+			var savedScreenEvents:Object = this._replaceScreenEvents[this._activeScreenID];
+			for(var eventName:String in replaceEvents)
 			{
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				var eventAction : Object = replaceEvents[ eventName ];
-				if( eventAction is String )
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				var eventAction:Object = replaceEvents[eventName];
+				if(eventAction is String)
 				{
-					var eventListener : Function = savedScreenEvents[ eventName ] as Function;
-					if( signal )
+					var eventListener:Function = savedScreenEvents[eventName] as Function;
+					if(signal)
 					{
-						signal.remove( eventListener );
+						signal.remove(eventListener);
 					}
 					else
 					{
-						this._activeScreen.removeEventListener( eventName , eventListener );
+						this._activeScreen.removeEventListener(eventName, eventListener);
 					}
 				}
 			}
-			this._replaceScreenEvents[ this._activeScreenID ] = null;
+			this._replaceScreenEvents[this._activeScreenID] = null;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function addPopEventsToActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function addPopEventsToActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			if( !item.popEvents )
+			if(!item.popEvents)
 			{
 				return;
 			}
 			//creating a copy because this array could change before the screen
 			//is removed.
-			var popEvents : Vector.<String> = item.popEvents.slice();
-			var eventCount : int = popEvents.length;
-			for( var i : int = 0; i < eventCount; i++ )
+			var popEvents:Vector.<String> = item.popEvents.slice();
+			var eventCount:int = popEvents.length;
+			for(var i:int = 0; i < eventCount; i++)
 			{
-				var eventName : String = popEvents[ i ];
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				if( signal )
+				var eventName:String = popEvents[i];
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				if(signal)
 				{
-					signal.add( popSignalListener );
+					signal.add(popSignalListener);
 				}
 				else
 				{
-					this._activeScreen.addEventListener( eventName , popEventListener );
+					this._activeScreen.addEventListener(eventName, popEventListener);
 				}
 			}
 			this._popScreenEvents = popEvents;
@@ -840,24 +848,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function removePopEventsFromActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function removePopEventsFromActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			if( !this._popScreenEvents )
+			if(!this._popScreenEvents)
 			{
 				return;
 			}
-			var eventCount : int = this._popScreenEvents.length;
-			for( var i : int = 0; i < eventCount; i++ )
+			var eventCount:int = this._popScreenEvents.length;
+			for(var i:int = 0; i < eventCount; i++)
 			{
-				var eventName : String = this._popScreenEvents[ i ];
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				if( signal )
+				var eventName:String = this._popScreenEvents[i];
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				if(signal)
 				{
-					signal.remove( popSignalListener );
+					signal.remove(popSignalListener);
 				}
 				else
 				{
-					this._activeScreen.removeEventListener( eventName , popEventListener );
+					this._activeScreen.removeEventListener(eventName, popEventListener);
 				}
 			}
 			this._popScreenEvents = null;
@@ -866,24 +874,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function removePopToRootEventsFromActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function removePopToRootEventsFromActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			if( !this._popToRootScreenEvents )
+			if(!this._popToRootScreenEvents)
 			{
 				return;
 			}
-			var eventCount : int = this._popToRootScreenEvents.length;
-			for( var i : int = 0; i < eventCount; i++ )
+			var eventCount:int = this._popToRootScreenEvents.length;
+			for(var i:int = 0; i < eventCount; i++)
 			{
-				var eventName : String = this._popToRootScreenEvents[ i ];
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				if( signal )
+				var eventName:String = this._popToRootScreenEvents[i];
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				if(signal)
 				{
-					signal.remove( popToRootSignalListener );
+					signal.remove(popToRootSignalListener);
 				}
 				else
 				{
-					this._activeScreen.removeEventListener( eventName , popToRootEventListener );
+					this._activeScreen.removeEventListener(eventName, popToRootEventListener);
 				}
 			}
 			this._popToRootScreenEvents = null;
@@ -892,27 +900,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function addPopToRootEventsToActiveScreen( item : StackScreenNavigatorItem ) : void
+		protected function addPopToRootEventsToActiveScreen(item:StackScreenNavigatorItem):void
 		{
-			if( !item.popToRootEvents )
+			if(!item.popToRootEvents)
 			{
 				return;
 			}
 			//creating a copy because this array could change before the screen
 			//is removed.
-			var popToRootEvents : Vector.<String> = item.popToRootEvents.slice();
-			var eventCount : int = popToRootEvents.length;
-			for( var i : int = 0; i < eventCount; i++ )
+			var popToRootEvents:Vector.<String> = item.popToRootEvents.slice();
+			var eventCount:int = popToRootEvents.length;
+			for(var i:int = 0; i < eventCount; i++)
 			{
-				var eventName : String = popToRootEvents[ i ];
-				var signal : Object = this._activeScreen.hasOwnProperty( eventName ) ? (this._activeScreen[ eventName ] as BaseScreenNavigator.SIGNAL_TYPE) : null;
-				if( signal )
+				var eventName:String = popToRootEvents[i];
+				var signal:Object = this._activeScreen.hasOwnProperty(eventName) ? (this._activeScreen[eventName] as BaseScreenNavigator.SIGNAL_TYPE) : null;
+				if(signal)
 				{
-					signal.add( popToRootSignalListener );
+					signal.add(popToRootSignalListener);
 				}
 				else
 				{
-					this._activeScreen.addEventListener( eventName , popToRootEventListener );
+					this._activeScreen.addEventListener(eventName, popToRootEventListener);
 				}
 			}
 			this._popToRootScreenEvents = popToRootEvents;
@@ -921,12 +929,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createPushScreenEventListener( screenID : String ) : Function
+		protected function createPushScreenEventListener(screenID:String):Function
 		{
-			var self : StackScreenNavigator = this;
-			var eventListener : Function = function ( event : Event , data : Object ) : void
+			var self:StackScreenNavigator = this;
+			var eventListener:Function = function(event:Event, data:Object):void
 			{
-				self.pushScreen( screenID , data );
+				self.pushScreen(screenID, data);
 			};
 
 			return eventListener;
@@ -935,27 +943,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createPushScreenSignalListener( screenID : String , signal : Object ) : Function
+		protected function createPushScreenSignalListener(screenID:String, signal:Object):Function
 		{
-			var self : StackScreenNavigator = this;
-			if( signal.valueClasses.length == 1 )
+			var self:StackScreenNavigator = this;
+			if(signal.valueClasses.length == 1)
 			{
 				//shortcut to avoid the allocation of the rest array
-				var signalListener : Function = function ( arg0 : Object ) : void
+				var signalListener:Function = function(arg0:Object):void
 				{
-					self.pushScreen( screenID , arg0 );
+					self.pushScreen(screenID, arg0);
 				};
 			}
 			else
 			{
-				signalListener = function ( ...rest : Array ) : void
+				signalListener = function(...rest:Array):void
 				{
-					var data : Object;
-					if( rest.length > 0 )
+					var data:Object;
+					if(rest.length > 0)
 					{
-						data = rest[ 0 ];
+						data = rest[0];
 					}
-					self.pushScreen( screenID , data );
+					self.pushScreen(screenID, data);
 				};
 			}
 
@@ -965,12 +973,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createReplaceScreenEventListener( screenID : String ) : Function
+		protected function createReplaceScreenEventListener(screenID:String):Function
 		{
-			var self : StackScreenNavigator = this;
-			var eventListener : Function = function ( event : Event ) : void
+			var self:StackScreenNavigator = this;
+			var eventListener:Function = function(event:Event):void
 			{
-				self.replaceScreen( screenID );
+				self.replaceScreen(screenID);
 			};
 
 			return eventListener;
@@ -979,22 +987,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function createReplaceScreenSignalListener( screenID : String , signal : Object ) : Function
+		protected function createReplaceScreenSignalListener(screenID:String, signal:Object):Function
 		{
-			var self : StackScreenNavigator = this;
-			if( signal.valueClasses.length == 0 )
+			var self:StackScreenNavigator = this;
+			if(signal.valueClasses.length == 0)
 			{
 				//shortcut to avoid the allocation of the rest array
-				var signalListener : Function = function () : void
+				var signalListener:Function = function():void
 				{
-					self.replaceScreen( screenID );
+					self.replaceScreen(screenID);
 				};
 			}
 			else
 			{
-				signalListener = function ( ...rest : Array ) : void
+				signalListener = function(...rest:Array):void
 				{
-					self.replaceScreen( screenID );
+					self.replaceScreen(screenID);
 				};
 			}
 
@@ -1004,7 +1012,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function popSignalListener( ...rest : Array ) : void
+		protected function popEventListener(event:Event):void
 		{
 			this.popScreen();
 		}
@@ -1012,15 +1020,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function popToRootSignalListener( ...rest : Array ) : void
-		{
-			this.popToRootScreen();
-		}
-
-		/**
-		 * @private
-		 */
-		protected function popEventListener( event : Event ) : void
+		protected function popSignalListener(...rest:Array):void
 		{
 			this.popScreen();
 		}
@@ -1028,7 +1028,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function popToRootEventListener( event : Event ) : void
+		protected function popToRootEventListener(event:Event):void
 		{
 			this.popToRootScreen();
 		}
@@ -1036,13 +1036,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function stackScreenNavigator_initializeHandler( event : Event ) : void
+		protected function popToRootSignalListener(...rest:Array):void
 		{
-			if( this._tempRootScreenID !== null )
+			this.popToRootScreen();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function stackScreenNavigator_initializeHandler(event:Event):void
+		{
+			if(this._tempRootScreenID !== null)
 			{
-				var screenID : String = this._tempRootScreenID;
+				var screenID:String = this._tempRootScreenID;
 				this._tempRootScreenID = null;
-				this.showScreenInternal( screenID , null );
+				this.showScreenInternal(screenID, null);
 			}
 		}
 	}
@@ -1050,12 +1058,12 @@ package feathers.controls
 
 final class StackItem
 {
-	public function StackItem( id : String , properties : Object )
+	public function StackItem(id:String, properties:Object)
 	{
 		this.id = id;
 		this.properties = properties;
 	}
 
-	public var id : String;
-	public var properties : Object;
+	public var id:String;
+	public var properties:Object;
 }

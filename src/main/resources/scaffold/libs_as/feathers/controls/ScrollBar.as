@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -44,7 +44,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user starts interacting with the scroll bar's thumb,
@@ -67,7 +67,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.BEGIN_INTERACTION
 	 */
-	[Event(name="beginInteraction" , type="starling.events.Event")]
+	[Event(name="beginInteraction",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user stops interacting with the scroll bar's thumb,
@@ -90,7 +90,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.END_INTERACTION
 	 */
-	[Event(name="endInteraction" , type="starling.events.Event")]
+	[Event(name="endInteraction",type="starling.events.Event")]
 
 	/**
 	 * Select a value between a minimum and a maximum by dragging a thumb over
@@ -113,266 +113,53 @@ package feathers.controls
 	 *
 	 * @see ../../../help/scroll-bar.html How to use the Feathers ScrollBar component
 	 * @see feathers.controls.SimpleScrollBar
-	 */ public class ScrollBar extends FeathersControl implements IDirectionalScrollBar
+	 */
+	public class ScrollBar extends FeathersControl implements IDirectionalScrollBar
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>ScrollBar</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
+		 * @private
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		private static const HELPER_POINT:Point = new Point();
 
 		/**
 		 * @private
 		 */
-		protected static function defaultThumbFactory() : Button
-		{
-			return new Button();
-		}
+		protected static const INVALIDATION_FLAG_THUMB_FACTORY:String = "thumbFactory";
 
 		/**
 		 * @private
 		 */
-		protected static function defaultMinimumTrackFactory() : Button
-		{
-			return new Button();
-		}
+		protected static const INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY:String = "minimumTrackFactory";
 
 		/**
 		 * @private
 		 */
-		protected static function defaultMaximumTrackFactory() : Button
-		{
-			return new Button();
-		}
+		protected static const INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY:String = "maximumTrackFactory";
 
 		/**
 		 * @private
 		 */
-		protected static function defaultDecrementButtonFactory() : Button
-		{
-			return new Button();
-		}
+		protected static const INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY:String = "decrementButtonFactory";
 
 		/**
 		 * @private
 		 */
-		protected static function defaultIncrementButtonFactory() : Button
-		{
-			return new Button();
-		}
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_THUMB_FACTORY : String = "thumbFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY : String = "minimumTrackFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY : String = "maximumTrackFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY : String = "decrementButtonFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY : String = "incrementButtonFactory";
-		/**
-		 * The value added to the <code>styleNameList</code> of the minimum
-		 * track. This variable is <code>protected</code> so that sub-classes
-		 * can customize the minimum track style name in their constructors
-		 * instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK</code>.
-		 *
-		 * <p>To customize the minimum track style name without subclassing, see
-		 * <code>customMinimumTrackStyleName</code>.</p>
-		 *
-		 * @see #customMinimumTrackStyleName
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var minimumTrackStyleName : String = DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK;
-		/**
-		 * The value added to the <code>styleNameList</code> of the maximum
-		 * track. This variable is <code>protected</code> so that sub-classes
-		 * can customize the maximum track style name in their constructors
-		 * instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK</code>.
-		 *
-		 * <p>To customize the maximum track style name without subclassing, see
-		 * <code>customMaximumTrackStyleName</code>.</p>
-		 *
-		 * @see #customMaximumTrackStyleName
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var maximumTrackStyleName : String = DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK;
-		/**
-		 * The value added to the <code>styleNameList</code> of the thumb. This
-		 * variable is <code>protected</code> so that sub-classes can customize
-		 * the thumb style name in their constructors instead of using the
-		 * default style name defined by <code>DEFAULT_CHILD_STYLE_NAME_THUMB</code>.
-		 *
-		 * <p>To customize the thumb style name without subclassing, see
-		 * <code>customThumbStyleName</code>.</p>
-		 *
-		 * @see #customThumbStyleName
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var thumbStyleName : String = DEFAULT_CHILD_STYLE_NAME_THUMB;
-		/**
-		 * The value added to the <code>styleNameList</code> of the decrement
-		 * button. This variable is <code>protected</code> so that sub-classes
-		 * can customize the decrement button style name in their constructors
-		 * instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON</code>.
-		 *
-		 * <p>To customize the decrement button style name without subclassing,
-		 * see <code>customDecrementButtonStyleName</code>.</p>
-		 *
-		 * @see #customDecrementButtonStyleName
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var decrementButtonStyleName : String = DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON;
-		/**
-		 * The value added to the <code>styleNameList</code> of the increment
-		 * button. This variable is <code>protected</code> so that sub-classes
-		 * can customize the increment button style name in their constructors
-		 * instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON</code>.
-		 *
-		 * <p>To customize the increment button style name without subclassing,
-		 * see <code>customIncrementButtonName</code>.</p>
-		 *
-		 * @see #customIncrementButtonStyleName
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var incrementButtonStyleName : String = DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON;
-		/**
-		 * @private
-		 */
-		protected var thumbOriginalWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var thumbOriginalHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var minimumTrackOriginalWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var minimumTrackOriginalHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var maximumTrackOriginalWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var maximumTrackOriginalHeight : Number = NaN;
-		/**
-		 * The scroll bar's decrement button sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #decrementButtonFactory
-		 * @see #createDecrementButton()
-		 */
-		protected var decrementButton : Button;
-		/**
-		 * The scroll bar's increment button sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #incrementButtonFactory
-		 * @see #createIncrementButton()
-		 */
-		protected var incrementButton : Button;
-		/**
-		 * The scroll bar's thumb sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #thumbFactory
-		 * @see #createThumb()
-		 */
-		protected var thumb : Button;
-		/**
-		 * The scroll bar's minimum track sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #minimumTrackFactory
-		 * @see #createMinimumTrack()
-		 */
-		protected var minimumTrack : Button;
-		/**
-		 * The scroll bar's maximum track sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #maximumTrackFactory
-		 * @see #createMaximumTrack()
-		 */
-		protected var maximumTrack : Button;
-		/**
-		 * @private
-		 */
-		protected var currentRepeatAction : Function;
-		/**
-		 * @private
-		 */
-		protected var _repeatTimer : Timer;
-		/**
-		 * @private
-		 */
-		protected var isDragging : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _touchStartX : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _touchStartY : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _thumbStartX : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _thumbStartY : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _touchValue : Number;
+		protected static const INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY:String = "incrementButtonFactory";
+
 		/**
 		 * The scroll bar's thumb may be dragged horizontally (on the x-axis).
 		 *
 		 * @see #direction
 		 */
-		public static const DIRECTION_HORIZONTAL : String = "horizontal";
+		public static const DIRECTION_HORIZONTAL:String = "horizontal";
+
 		/**
 		 * The scroll bar's thumb may be dragged vertically (on the y-axis).
 		 *
 		 * @see #direction
 		 */
-		public static const DIRECTION_VERTICAL : String = "vertical";
+		public static const DIRECTION_VERTICAL:String = "vertical";
+
 		/**
 		 * The scroll bar has only one track, that fills the full length of the
 		 * scroll bar. In this layout mode, the "minimum" track is displayed and
@@ -381,7 +168,8 @@ package feathers.controls
 		 *
 		 * @see #trackLayoutMode
 		 */
-		public static const TRACK_LAYOUT_MODE_SINGLE : String = "single";
+		public static const TRACK_LAYOUT_MODE_SINGLE:String = "single";
+
 		/**
 		 * The scroll bar has two tracks, stretching to fill each side of the
 		 * scroll bar with the thumb in the middle. The tracks will be resized
@@ -400,58 +188,263 @@ package feathers.controls
 		 * @see feathers.display.Scale3Image
 		 * @see feathers.display.TiledImage
 		 */
-		public static const TRACK_LAYOUT_MODE_MIN_MAX : String = "minMax";
+		public static const TRACK_LAYOUT_MODE_MIN_MAX:String = "minMax";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the minimum
 		 * track.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK : String = "feathers-scroll-bar-minimum-track";
+		public static const DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK:String = "feathers-scroll-bar-minimum-track";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the maximum
 		 * track.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK : String = "feathers-scroll-bar-maximum-track";
+		public static const DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK:String = "feathers-scroll-bar-maximum-track";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the thumb.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_THUMB : String = "feathers-scroll-bar-thumb";
+		public static const DEFAULT_CHILD_STYLE_NAME_THUMB:String = "feathers-scroll-bar-thumb";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the decrement
 		 * button.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON : String = "feathers-scroll-bar-decrement-button";
+		public static const DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON:String = "feathers-scroll-bar-decrement-button";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the increment
 		 * button.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON : String = "feathers-scroll-bar-increment-button";
+		public static const DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON:String = "feathers-scroll-bar-increment-button";
+
 		/**
-		 * Determines if the scroll bar dispatches the <code>Event.CHANGE</code>
-		 * event every time the thumb moves, or only once it stops moving.
+		 * The default <code>IStyleProvider</code> for all <code>ScrollBar</code>
+		 * components.
 		 *
-		 * <p>In the following example, live dragging is disabled:</p>
-		 *
-		 * <listing version="3.0">
-		 * scrollBar.liveDragging = false;</listing>
-		 *
-		 * @default true
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public var liveDragging : Boolean = true;
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected static function defaultThumbFactory():Button
+		{
+			return new Button();
+		}
+
+		/**
+		 * @private
+		 */
+		protected static function defaultMinimumTrackFactory():Button
+		{
+			return new Button();
+		}
+
+		/**
+		 * @private
+		 */
+		protected static function defaultMaximumTrackFactory():Button
+		{
+			return new Button();
+		}
+
+		/**
+		 * @private
+		 */
+		protected static function defaultDecrementButtonFactory():Button
+		{
+			return new Button();
+		}
+
+		/**
+		 * @private
+		 */
+		protected static function defaultIncrementButtonFactory():Button
+		{
+			return new Button();
+		}
+
+		/**
+		 * Constructor.
+		 */
+		public function ScrollBar()
+		{
+			super();
+			this.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
+		}
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the minimum
+		 * track. This variable is <code>protected</code> so that sub-classes
+		 * can customize the minimum track style name in their constructors
+		 * instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK</code>.
+		 *
+		 * <p>To customize the minimum track style name without subclassing, see
+		 * <code>customMinimumTrackStyleName</code>.</p>
+		 *
+		 * @see #customMinimumTrackStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var minimumTrackStyleName:String = DEFAULT_CHILD_STYLE_NAME_MINIMUM_TRACK;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the maximum
+		 * track. This variable is <code>protected</code> so that sub-classes
+		 * can customize the maximum track style name in their constructors
+		 * instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK</code>.
+		 *
+		 * <p>To customize the maximum track style name without subclassing, see
+		 * <code>customMaximumTrackStyleName</code>.</p>
+		 *
+		 * @see #customMaximumTrackStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var maximumTrackStyleName:String = DEFAULT_CHILD_STYLE_NAME_MAXIMUM_TRACK;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the thumb. This
+		 * variable is <code>protected</code> so that sub-classes can customize
+		 * the thumb style name in their constructors instead of using the
+		 * default style name defined by <code>DEFAULT_CHILD_STYLE_NAME_THUMB</code>.
+		 *
+		 * <p>To customize the thumb style name without subclassing, see
+		 * <code>customThumbStyleName</code>.</p>
+		 *
+		 * @see #customThumbStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var thumbStyleName:String = DEFAULT_CHILD_STYLE_NAME_THUMB;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the decrement
+		 * button. This variable is <code>protected</code> so that sub-classes
+		 * can customize the decrement button style name in their constructors
+		 * instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON</code>.
+		 *
+		 * <p>To customize the decrement button style name without subclassing,
+		 * see <code>customDecrementButtonStyleName</code>.</p>
+		 *
+		 * @see #customDecrementButtonStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var decrementButtonStyleName:String = DEFAULT_CHILD_STYLE_NAME_DECREMENT_BUTTON;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the increment
+		 * button. This variable is <code>protected</code> so that sub-classes
+		 * can customize the increment button style name in their constructors
+		 * instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON</code>.
+		 *
+		 * <p>To customize the increment button style name without subclassing,
+		 * see <code>customIncrementButtonName</code>.</p>
+		 *
+		 * @see #customIncrementButtonStyleName
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var incrementButtonStyleName:String = DEFAULT_CHILD_STYLE_NAME_INCREMENT_BUTTON;
+
+		/**
+		 * @private
+		 */
+		protected var thumbOriginalWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var thumbOriginalHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var minimumTrackOriginalWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var minimumTrackOriginalHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var maximumTrackOriginalWidth:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var maximumTrackOriginalHeight:Number = NaN;
+
+		/**
+		 * The scroll bar's decrement button sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #decrementButtonFactory
+		 * @see #createDecrementButton()
+		 */
+		protected var decrementButton:Button;
+
+		/**
+		 * The scroll bar's increment button sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #incrementButtonFactory
+		 * @see #createIncrementButton()
+		 */
+		protected var incrementButton:Button;
+
+		/**
+		 * The scroll bar's thumb sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #thumbFactory
+		 * @see #createThumb()
+		 */
+		protected var thumb:Button;
+
+		/**
+		 * The scroll bar's minimum track sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #minimumTrackFactory
+		 * @see #createMinimumTrack()
+		 */
+		protected var minimumTrack:Button;
+
+		/**
+		 * The scroll bar's maximum track sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #maximumTrackFactory
+		 * @see #createMaximumTrack()
+		 */
+		protected var maximumTrack:Button;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return ScrollBar.globalStyleProvider;
 		}
@@ -459,9 +452,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _direction : String = DIRECTION_HORIZONTAL;
+		protected var _direction:String = DIRECTION_HORIZONTAL;
 
-		[Inspectable(type="String" , enumeration="horizontal,vertical")]
+		[Inspectable(type="String",enumeration="horizontal,vertical")]
 		/**
 		 * Determines if the scroll bar's thumb can be dragged horizontally or
 		 * vertically. When this value changes, the scroll bar's width and
@@ -476,7 +469,8 @@ package feathers.controls
 		 *
 		 * @see #DIRECTION_HORIZONTAL
 		 * @see #DIRECTION_VERTICAL
-		 */ public function get direction() : String
+		 */
+		public function get direction():String
 		{
 			return this._direction;
 		}
@@ -484,25 +478,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set direction( value : String ) : void
+		public function set direction(value:String):void
 		{
-			if( this._direction == value )
+			if(this._direction == value)
 			{
 				return;
 			}
 			this._direction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			this.invalidate( INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY );
-			this.invalidate( INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY );
-			this.invalidate( INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY );
-			this.invalidate( INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY );
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			this.invalidate(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
+			this.invalidate(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
+			this.invalidate(INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY);
+			this.invalidate(INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY);
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _value : Number = 0;
+		protected var _value:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -515,7 +509,7 @@ package feathers.controls
 		 * @see #page
 		 * @see #event:change
 		 */
-		public function get value() : Number
+		public function get value():Number
 		{
 			return this._value;
 		}
@@ -523,25 +517,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set value( newValue : Number ) : void
+		public function set value(newValue:Number):void
 		{
-			newValue = clamp( newValue , this._minimum , this._maximum );
-			if( this._value == newValue )
+			newValue = clamp(newValue, this._minimum, this._maximum);
+			if(this._value == newValue)
 			{
 				return;
 			}
 			this._value = newValue;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			if( this.liveDragging || !this.isDragging )
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			if(this.liveDragging || !this.isDragging)
 			{
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minimum : Number = 0;
+		protected var _minimum:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -551,7 +545,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #maximum
 		 */
-		public function get minimum() : Number
+		public function get minimum():Number
 		{
 			return this._minimum;
 		}
@@ -559,20 +553,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minimum( value : Number ) : void
+		public function set minimum(value:Number):void
 		{
-			if( this._minimum == value )
+			if(this._minimum == value)
 			{
 				return;
 			}
 			this._minimum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maximum : Number = 0;
+		protected var _maximum:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -582,7 +576,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #minimum
 		 */
-		public function get maximum() : Number
+		public function get maximum():Number
 		{
 			return this._maximum;
 		}
@@ -590,20 +584,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maximum( value : Number ) : void
+		public function set maximum(value:Number):void
 		{
-			if( this._maximum == value )
+			if(this._maximum == value)
 			{
 				return;
 			}
 			this._maximum = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _step : Number = 0;
+		protected var _step:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -613,7 +607,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #page
 		 */
-		public function get step() : Number
+		public function get step():Number
 		{
 			return this._step;
 		}
@@ -621,7 +615,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set step( value : Number ) : void
+		public function set step(value:Number):void
 		{
 			this._step = value;
 		}
@@ -629,7 +623,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _page : Number = 0;
+		protected var _page:Number = 0;
 
 		/**
 		 * @inheritDoc
@@ -639,7 +633,7 @@ package feathers.controls
 		 * @see #value
 		 * @see #step
 		 */
-		public function get page() : Number
+		public function get page():Number
 		{
 			return this._page;
 		}
@@ -647,14 +641,14 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set page( value : Number ) : void
+		public function set page(value:Number):void
 		{
-			if( this._page == value )
+			if(this._page == value)
 			{
 				return;
 			}
 			this._page = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
@@ -675,7 +669,7 @@ package feathers.controls
 		 * @see #paddingBottom
 		 * @see #paddingLeft
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -683,7 +677,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -694,7 +688,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, above the content, not
@@ -707,7 +701,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -715,20 +709,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, to the right of the content, not
@@ -741,7 +735,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -749,20 +743,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, below the content, not
@@ -775,7 +769,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -783,20 +777,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, to the left of the content, not
@@ -809,7 +803,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -817,20 +811,30 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _repeatDelay : Number = 0.05;
+		protected var currentRepeatAction:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _repeatTimer:Timer;
+
+		/**
+		 * @private
+		 */
+		protected var _repeatDelay:Number = 0.05;
 
 		/**
 		 * The time, in seconds, before actions are repeated. The first repeat
@@ -844,7 +848,7 @@ package feathers.controls
 		 *
 		 * @default 0.05
 		 */
-		public function get repeatDelay() : Number
+		public function get repeatDelay():Number
 		{
 			return this._repeatDelay;
 		}
@@ -852,22 +856,40 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set repeatDelay( value : Number ) : void
+		public function set repeatDelay(value:Number):void
 		{
-			if( this._repeatDelay == value )
+			if(this._repeatDelay == value)
 			{
 				return;
 			}
 			this._repeatDelay = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _trackLayoutMode : String = TRACK_LAYOUT_MODE_SINGLE;
+		protected var isDragging:Boolean = false;
 
-		[Inspectable(type="String" , enumeration="single,minMax")]
+		/**
+		 * Determines if the scroll bar dispatches the <code>Event.CHANGE</code>
+		 * event every time the thumb moves, or only once it stops moving.
+		 *
+		 * <p>In the following example, live dragging is disabled:</p>
+		 *
+		 * <listing version="3.0">
+		 * scrollBar.liveDragging = false;</listing>
+		 *
+		 * @default true
+		 */
+		public var liveDragging:Boolean = true;
+
+		/**
+		 * @private
+		 */
+		protected var _trackLayoutMode:String = TRACK_LAYOUT_MODE_SINGLE;
+
+		[Inspectable(type="String",enumeration="single,minMax")]
 		/**
 		 * Determines how the minimum and maximum track skins are positioned and
 		 * sized.
@@ -881,7 +903,8 @@ package feathers.controls
 		 *
 		 * @see #TRACK_LAYOUT_MODE_SINGLE
 		 * @see #TRACK_LAYOUT_MODE_MIN_MAX
-		 */ public function get trackLayoutMode() : String
+		 */
+		public function get trackLayoutMode():String
 		{
 			return this._trackLayoutMode;
 		}
@@ -889,20 +912,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set trackLayoutMode( value : String ) : void
+		public function set trackLayoutMode(value:String):void
 		{
-			if( this._trackLayoutMode == value )
+			if(this._trackLayoutMode == value)
 			{
 				return;
 			}
 			this._trackLayoutMode = value;
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minimumTrackFactory : Function;
+		protected var _minimumTrackFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's minimum track
@@ -932,7 +955,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #minimumTrackProperties
 		 */
-		public function get minimumTrackFactory() : Function
+		public function get minimumTrackFactory():Function
 		{
 			return this._minimumTrackFactory;
 		}
@@ -940,20 +963,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minimumTrackFactory( value : Function ) : void
+		public function set minimumTrackFactory(value:Function):void
 		{
-			if( this._minimumTrackFactory == value )
+			if(this._minimumTrackFactory == value)
 			{
 				return;
 			}
 			this._minimumTrackFactory = value;
-			this.invalidate( INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customMinimumTrackStyleName : String;
+		protected var _customMinimumTrackStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's minimum track sub-component.
@@ -979,7 +1002,7 @@ package feathers.controls
 		 * @see #minimumTrackFactory
 		 * @see #minimumTrackProperties
 		 */
-		public function get customMinimumTrackStyleName() : String
+		public function get customMinimumTrackStyleName():String
 		{
 			return this._customMinimumTrackStyleName;
 		}
@@ -987,20 +1010,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customMinimumTrackStyleName( value : String ) : void
+		public function set customMinimumTrackStyleName(value:String):void
 		{
-			if( this._customMinimumTrackStyleName == value )
+			if(this._customMinimumTrackStyleName == value)
 			{
 				return;
 			}
 			this._customMinimumTrackStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _minimumTrackProperties : PropertyProxy;
+		protected var _minimumTrackProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's "minimum"
@@ -1030,11 +1053,11 @@ package feathers.controls
 		 * @see #minimumTrackFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get minimumTrackProperties() : Object
+		public function get minimumTrackProperties():Object
 		{
-			if( !this._minimumTrackProperties )
+			if(!this._minimumTrackProperties)
 			{
-				this._minimumTrackProperties = new PropertyProxy( minimumTrackProperties_onChange );
+				this._minimumTrackProperties = new PropertyProxy(minimumTrackProperties_onChange);
 			}
 			return this._minimumTrackProperties;
 		}
@@ -1042,41 +1065,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set minimumTrackProperties( value : Object ) : void
+		public function set minimumTrackProperties(value:Object):void
 		{
-			if( this._minimumTrackProperties == value )
+			if(this._minimumTrackProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._minimumTrackProperties )
+			if(this._minimumTrackProperties)
 			{
-				this._minimumTrackProperties.removeOnChangeCallback( minimumTrackProperties_onChange );
+				this._minimumTrackProperties.removeOnChangeCallback(minimumTrackProperties_onChange);
 			}
-			this._minimumTrackProperties = PropertyProxy( value );
-			if( this._minimumTrackProperties )
+			this._minimumTrackProperties = PropertyProxy(value);
+			if(this._minimumTrackProperties)
 			{
-				this._minimumTrackProperties.addOnChangeCallback( minimumTrackProperties_onChange );
+				this._minimumTrackProperties.addOnChangeCallback(minimumTrackProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maximumTrackFactory : Function;
+		protected var _maximumTrackFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's maximum track
@@ -1106,7 +1129,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #maximumTrackProperties
 		 */
-		public function get maximumTrackFactory() : Function
+		public function get maximumTrackFactory():Function
 		{
 			return this._maximumTrackFactory;
 		}
@@ -1114,20 +1137,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maximumTrackFactory( value : Function ) : void
+		public function set maximumTrackFactory(value:Function):void
 		{
-			if( this._maximumTrackFactory == value )
+			if(this._maximumTrackFactory == value)
 			{
 				return;
 			}
 			this._maximumTrackFactory = value;
-			this.invalidate( INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customMaximumTrackStyleName : String;
+		protected var _customMaximumTrackStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's maximum track sub-component.
@@ -1153,7 +1176,7 @@ package feathers.controls
 		 * @see #maximumTrackFactory
 		 * @see #maximumTrackProperties
 		 */
-		public function get customMaximumTrackStyleName() : String
+		public function get customMaximumTrackStyleName():String
 		{
 			return this._customMaximumTrackStyleName;
 		}
@@ -1161,20 +1184,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customMaximumTrackStyleName( value : String ) : void
+		public function set customMaximumTrackStyleName(value:String):void
 		{
-			if( this._customMaximumTrackStyleName == value )
+			if(this._customMaximumTrackStyleName == value)
 			{
 				return;
 			}
 			this._customMaximumTrackStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maximumTrackProperties : PropertyProxy;
+		protected var _maximumTrackProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's "maximum"
@@ -1204,11 +1227,11 @@ package feathers.controls
 		 * @see #maximumTrackFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get maximumTrackProperties() : Object
+		public function get maximumTrackProperties():Object
 		{
-			if( !this._maximumTrackProperties )
+			if(!this._maximumTrackProperties)
 			{
-				this._maximumTrackProperties = new PropertyProxy( maximumTrackProperties_onChange );
+				this._maximumTrackProperties = new PropertyProxy(maximumTrackProperties_onChange);
 			}
 			return this._maximumTrackProperties;
 		}
@@ -1216,41 +1239,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maximumTrackProperties( value : Object ) : void
+		public function set maximumTrackProperties(value:Object):void
 		{
-			if( this._maximumTrackProperties == value )
+			if(this._maximumTrackProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._maximumTrackProperties )
+			if(this._maximumTrackProperties)
 			{
-				this._maximumTrackProperties.removeOnChangeCallback( maximumTrackProperties_onChange );
+				this._maximumTrackProperties.removeOnChangeCallback(maximumTrackProperties_onChange);
 			}
-			this._maximumTrackProperties = PropertyProxy( value );
-			if( this._maximumTrackProperties )
+			this._maximumTrackProperties = PropertyProxy(value);
+			if(this._maximumTrackProperties)
 			{
-				this._maximumTrackProperties.addOnChangeCallback( maximumTrackProperties_onChange );
+				this._maximumTrackProperties.addOnChangeCallback(maximumTrackProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _thumbFactory : Function;
+		protected var _thumbFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's thumb sub-component.
@@ -1280,7 +1303,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #thumbProperties
 		 */
-		public function get thumbFactory() : Function
+		public function get thumbFactory():Function
 		{
 			return this._thumbFactory;
 		}
@@ -1288,20 +1311,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set thumbFactory( value : Function ) : void
+		public function set thumbFactory(value:Function):void
 		{
-			if( this._thumbFactory == value )
+			if(this._thumbFactory == value)
 			{
 				return;
 			}
 			this._thumbFactory = value;
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customThumbStyleName : String;
+		protected var _customThumbStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's thumb sub-component.
@@ -1327,7 +1350,7 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see #thumbProperties
 		 */
-		public function get customThumbStyleName() : String
+		public function get customThumbStyleName():String
 		{
 			return this._customThumbStyleName;
 		}
@@ -1335,20 +1358,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customThumbStyleName( value : String ) : void
+		public function set customThumbStyleName(value:String):void
 		{
-			if( this._customThumbStyleName == value )
+			if(this._customThumbStyleName == value)
 			{
 				return;
 			}
 			this._customThumbStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_THUMB_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_THUMB_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _thumbProperties : PropertyProxy;
+		protected var _thumbProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's thumb, and the
@@ -1378,11 +1401,11 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get thumbProperties() : Object
+		public function get thumbProperties():Object
 		{
-			if( !this._thumbProperties )
+			if(!this._thumbProperties)
 			{
-				this._thumbProperties = new PropertyProxy( thumbProperties_onChange );
+				this._thumbProperties = new PropertyProxy(thumbProperties_onChange);
 			}
 			return this._thumbProperties;
 		}
@@ -1390,41 +1413,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set thumbProperties( value : Object ) : void
+		public function set thumbProperties(value:Object):void
 		{
-			if( this._thumbProperties == value )
+			if(this._thumbProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._thumbProperties )
+			if(this._thumbProperties)
 			{
-				this._thumbProperties.removeOnChangeCallback( thumbProperties_onChange );
+				this._thumbProperties.removeOnChangeCallback(thumbProperties_onChange);
 			}
-			this._thumbProperties = PropertyProxy( value );
-			if( this._thumbProperties )
+			this._thumbProperties = PropertyProxy(value);
+			if(this._thumbProperties)
 			{
-				this._thumbProperties.addOnChangeCallback( thumbProperties_onChange );
+				this._thumbProperties.addOnChangeCallback(thumbProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _decrementButtonFactory : Function;
+		protected var _decrementButtonFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's decrement button
@@ -1454,7 +1477,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #decrementButtonProperties
 		 */
-		public function get decrementButtonFactory() : Function
+		public function get decrementButtonFactory():Function
 		{
 			return this._decrementButtonFactory;
 		}
@@ -1462,20 +1485,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set decrementButtonFactory( value : Function ) : void
+		public function set decrementButtonFactory(value:Function):void
 		{
-			if( this._decrementButtonFactory == value )
+			if(this._decrementButtonFactory == value)
 			{
 				return;
 			}
 			this._decrementButtonFactory = value;
-			this.invalidate( INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customDecrementButtonStyleName : String;
+		protected var _customDecrementButtonStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's decrement button
@@ -1501,7 +1524,7 @@ package feathers.controls
 		 * @see #decrementButtonFactory
 		 * @see #decrementButtonProperties
 		 */
-		public function get customDecrementButtonStyleName() : String
+		public function get customDecrementButtonStyleName():String
 		{
 			return this._customDecrementButtonStyleName;
 		}
@@ -1509,20 +1532,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customDecrementButtonStyleName( value : String ) : void
+		public function set customDecrementButtonStyleName(value:String):void
 		{
-			if( this._customDecrementButtonStyleName == value )
+			if(this._customDecrementButtonStyleName == value)
 			{
 				return;
 			}
 			this._customDecrementButtonStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _decrementButtonProperties : PropertyProxy;
+		protected var _decrementButtonProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's decrement
@@ -1553,11 +1576,11 @@ package feathers.controls
 		 * @see #decrementButtonFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get decrementButtonProperties() : Object
+		public function get decrementButtonProperties():Object
 		{
-			if( !this._decrementButtonProperties )
+			if(!this._decrementButtonProperties)
 			{
-				this._decrementButtonProperties = new PropertyProxy( decrementButtonProperties_onChange );
+				this._decrementButtonProperties = new PropertyProxy(decrementButtonProperties_onChange);
 			}
 			return this._decrementButtonProperties;
 		}
@@ -1565,41 +1588,41 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set decrementButtonProperties( value : Object ) : void
+		public function set decrementButtonProperties(value:Object):void
 		{
-			if( this._decrementButtonProperties == value )
+			if(this._decrementButtonProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._decrementButtonProperties )
+			if(this._decrementButtonProperties)
 			{
-				this._decrementButtonProperties.removeOnChangeCallback( decrementButtonProperties_onChange );
+				this._decrementButtonProperties.removeOnChangeCallback(decrementButtonProperties_onChange);
 			}
-			this._decrementButtonProperties = PropertyProxy( value );
-			if( this._decrementButtonProperties )
+			this._decrementButtonProperties = PropertyProxy(value);
+			if(this._decrementButtonProperties)
 			{
-				this._decrementButtonProperties.addOnChangeCallback( decrementButtonProperties_onChange );
+				this._decrementButtonProperties.addOnChangeCallback(decrementButtonProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _incrementButtonFactory : Function;
+		protected var _incrementButtonFactory:Function;
 
 		/**
 		 * A function used to generate the scroll bar's increment button
@@ -1629,7 +1652,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #incrementButtonProperties
 		 */
-		public function get incrementButtonFactory() : Function
+		public function get incrementButtonFactory():Function
 		{
 			return this._incrementButtonFactory;
 		}
@@ -1637,20 +1660,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set incrementButtonFactory( value : Function ) : void
+		public function set incrementButtonFactory(value:Function):void
 		{
-			if( this._incrementButtonFactory == value )
+			if(this._incrementButtonFactory == value)
 			{
 				return;
 			}
 			this._incrementButtonFactory = value;
-			this.invalidate( INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customIncrementButtonStyleName : String;
+		protected var _customIncrementButtonStyleName:String;
 
 		/**
 		 * A style name to add to the scroll bar's increment button
@@ -1676,7 +1699,7 @@ package feathers.controls
 		 * @see #incrementButtonFactory
 		 * @see #incrementButtonProperties
 		 */
-		public function get customIncrementButtonStyleName() : String
+		public function get customIncrementButtonStyleName():String
 		{
 			return this._customIncrementButtonStyleName;
 		}
@@ -1684,20 +1707,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customIncrementButtonStyleName( value : String ) : void
+		public function set customIncrementButtonStyleName(value:String):void
 		{
-			if( this._customIncrementButtonStyleName == value )
+			if(this._customIncrementButtonStyleName == value)
 			{
 				return;
 			}
 			this._customIncrementButtonStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _incrementButtonProperties : PropertyProxy;
+		protected var _incrementButtonProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the scroll bar's increment
@@ -1728,11 +1751,11 @@ package feathers.controls
 		 * @see #incrementButtonFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get incrementButtonProperties() : Object
+		public function get incrementButtonProperties():Object
 		{
-			if( !this._incrementButtonProperties )
+			if(!this._incrementButtonProperties)
 			{
-				this._incrementButtonProperties = new PropertyProxy( incrementButtonProperties_onChange );
+				this._incrementButtonProperties = new PropertyProxy(incrementButtonProperties_onChange);
 			}
 			return this._incrementButtonProperties;
 		}
@@ -1740,56 +1763,77 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set incrementButtonProperties( value : Object ) : void
+		public function set incrementButtonProperties(value:Object):void
 		{
-			if( this._incrementButtonProperties == value )
+			if(this._incrementButtonProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._incrementButtonProperties )
+			if(this._incrementButtonProperties)
 			{
-				this._incrementButtonProperties.removeOnChangeCallback( incrementButtonProperties_onChange );
+				this._incrementButtonProperties.removeOnChangeCallback(incrementButtonProperties_onChange);
 			}
-			this._incrementButtonProperties = PropertyProxy( value );
-			if( this._incrementButtonProperties )
+			this._incrementButtonProperties = PropertyProxy(value);
+			if(this._incrementButtonProperties)
 			{
-				this._incrementButtonProperties.addOnChangeCallback( incrementButtonProperties_onChange );
+				this._incrementButtonProperties.addOnChangeCallback(incrementButtonProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function ScrollBar()
-		{
-			super();
-			this.addEventListener( Event.REMOVED_FROM_STAGE , removedFromStageHandler );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		protected var _touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _touchStartX:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _touchStartY:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _thumbStartX:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _thumbStartY:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _touchValue:Number;
+
+		/**
+		 * @private
+		 */
+		override protected function initialize():void
 		{
-			if( this._value < this._minimum )
+			if(this._value < this._minimum)
 			{
 				this.value = this._minimum;
 			}
-			else if( this._value > this._maximum )
+			else if(this._value > this._maximum)
 			{
 				this.value = this._maximum;
 			}
@@ -1798,79 +1842,79 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
-			var thumbFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_THUMB_FACTORY );
-			var minimumTrackFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY );
-			var maximumTrackFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY );
-			var incrementButtonFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY );
-			var decrementButtonFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var layoutInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_LAYOUT);
+			var thumbFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_THUMB_FACTORY);
+			var minimumTrackFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_MINIMUM_TRACK_FACTORY);
+			var maximumTrackFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_MAXIMUM_TRACK_FACTORY);
+			var incrementButtonFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_INCREMENT_BUTTON_FACTORY);
+			var decrementButtonFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DECREMENT_BUTTON_FACTORY);
 
-			if( thumbFactoryInvalid )
+			if(thumbFactoryInvalid)
 			{
 				this.createThumb();
 			}
-			if( minimumTrackFactoryInvalid )
+			if(minimumTrackFactoryInvalid)
 			{
 				this.createMinimumTrack();
 			}
-			if( maximumTrackFactoryInvalid || layoutInvalid )
+			if(maximumTrackFactoryInvalid || layoutInvalid)
 			{
 				this.createMaximumTrack();
 			}
-			if( decrementButtonFactoryInvalid )
+			if(decrementButtonFactoryInvalid)
 			{
 				this.createDecrementButton();
 			}
-			if( incrementButtonFactoryInvalid )
+			if(incrementButtonFactoryInvalid)
 			{
 				this.createIncrementButton();
 			}
 
-			if( thumbFactoryInvalid || stylesInvalid )
+			if(thumbFactoryInvalid || stylesInvalid)
 			{
 				this.refreshThumbStyles();
 			}
-			if( minimumTrackFactoryInvalid || stylesInvalid )
+			if(minimumTrackFactoryInvalid || stylesInvalid)
 			{
 				this.refreshMinimumTrackStyles();
 			}
-			if( (maximumTrackFactoryInvalid || stylesInvalid || layoutInvalid) && this.maximumTrack )
+			if((maximumTrackFactoryInvalid || stylesInvalid || layoutInvalid) && this.maximumTrack)
 			{
 				this.refreshMaximumTrackStyles();
 			}
-			if( decrementButtonFactoryInvalid || stylesInvalid )
+			if(decrementButtonFactoryInvalid || stylesInvalid)
 			{
 				this.refreshDecrementButtonStyles();
 			}
-			if( incrementButtonFactoryInvalid || stylesInvalid )
+			if(incrementButtonFactoryInvalid || stylesInvalid)
 			{
 				this.refreshIncrementButtonStyles();
 			}
 
-			var isEnabled : Boolean = this._isEnabled && this._maximum > this._minimum;
-			if( dataInvalid || stateInvalid || thumbFactoryInvalid )
+			var isEnabled:Boolean = this._isEnabled && this._maximum > this._minimum;
+			if(dataInvalid || stateInvalid || thumbFactoryInvalid)
 			{
 				this.thumb.isEnabled = isEnabled;
 			}
-			if( dataInvalid || stateInvalid || minimumTrackFactoryInvalid )
+			if(dataInvalid || stateInvalid || minimumTrackFactoryInvalid)
 			{
 				this.minimumTrack.isEnabled = isEnabled;
 			}
-			if( (dataInvalid || stateInvalid || maximumTrackFactoryInvalid || layoutInvalid) && this.maximumTrack )
+			if((dataInvalid || stateInvalid || maximumTrackFactoryInvalid || layoutInvalid) && this.maximumTrack)
 			{
 				this.maximumTrack.isEnabled = isEnabled;
 			}
-			if( dataInvalid || stateInvalid || decrementButtonFactoryInvalid )
+			if(dataInvalid || stateInvalid || decrementButtonFactoryInvalid)
 			{
 				this.decrementButton.isEnabled = isEnabled;
 			}
-			if( dataInvalid || stateInvalid || incrementButtonFactoryInvalid )
+			if(dataInvalid || stateInvalid || incrementButtonFactoryInvalid)
 			{
 				this.incrementButton.isEnabled = isEnabled;
 			}
@@ -1896,27 +1940,27 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			if( this.minimumTrackOriginalWidth !== this.minimumTrackOriginalWidth || //isNaN
-					this.minimumTrackOriginalHeight !== this.minimumTrackOriginalHeight ) //isNaN
+			if(this.minimumTrackOriginalWidth !== this.minimumTrackOriginalWidth || //isNaN
+				this.minimumTrackOriginalHeight !== this.minimumTrackOriginalHeight) //isNaN
 			{
 				this.minimumTrack.validate();
 				this.minimumTrackOriginalWidth = this.minimumTrack.width;
 				this.minimumTrackOriginalHeight = this.minimumTrack.height;
 			}
-			if( this.maximumTrack )
+			if(this.maximumTrack)
 			{
-				if( this.maximumTrackOriginalWidth !== this.maximumTrackOriginalWidth || //isNaN
-						this.maximumTrackOriginalHeight !== this.maximumTrackOriginalHeight ) //isNaN
+				if(this.maximumTrackOriginalWidth !== this.maximumTrackOriginalWidth || //isNaN
+					this.maximumTrackOriginalHeight !== this.maximumTrackOriginalHeight) //isNaN
 				{
 					this.maximumTrack.validate();
 					this.maximumTrackOriginalWidth = this.maximumTrack.width;
 					this.maximumTrackOriginalHeight = this.maximumTrack.height;
 				}
 			}
-			if( this.thumbOriginalWidth !== this.thumbOriginalWidth || //isNaN
-					this.thumbOriginalHeight !== this.thumbOriginalHeight ) //isNaN
+			if(this.thumbOriginalWidth !== this.thumbOriginalWidth || //isNaN
+				this.thumbOriginalHeight !== this.thumbOriginalHeight) //isNaN
 			{
 				this.thumb.validate();
 				this.thumbOriginalWidth = this.thumb.width;
@@ -1925,22 +1969,22 @@ package feathers.controls
 			this.decrementButton.validate();
 			this.incrementButton.validate();
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
-				if( this._direction == DIRECTION_VERTICAL )
+				if(this._direction == DIRECTION_VERTICAL)
 				{
-					if( this.maximumTrack )
+					if(this.maximumTrack)
 					{
-						newWidth = Math.max( this.minimumTrackOriginalWidth , this.maximumTrackOriginalWidth );
+						newWidth = Math.max(this.minimumTrackOriginalWidth, this.maximumTrackOriginalWidth);
 					}
 					else
 					{
@@ -1949,9 +1993,9 @@ package feathers.controls
 				}
 				else //horizontal
 				{
-					if( this.maximumTrack )
+					if(this.maximumTrack)
 					{
-						newWidth = Math.min( this.minimumTrackOriginalWidth , this.maximumTrackOriginalWidth ) + this.thumb.width / 2;
+						newWidth = Math.min(this.minimumTrackOriginalWidth, this.maximumTrackOriginalWidth) + this.thumb.width / 2;
 					}
 					else
 					{
@@ -1960,13 +2004,13 @@ package feathers.controls
 					newWidth += this.incrementButton.width + this.decrementButton.width;
 				}
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
-				if( this._direction == DIRECTION_VERTICAL )
+				if(this._direction == DIRECTION_VERTICAL)
 				{
-					if( this.maximumTrack )
+					if(this.maximumTrack)
 					{
-						newHeight = Math.min( this.minimumTrackOriginalHeight , this.maximumTrackOriginalHeight ) + this.thumb.height / 2;
+						newHeight = Math.min(this.minimumTrackOriginalHeight, this.maximumTrackOriginalHeight) + this.thumb.height / 2;
 					}
 					else
 					{
@@ -1976,9 +2020,9 @@ package feathers.controls
 				}
 				else //horizontal
 				{
-					if( this.maximumTrack )
+					if(this.maximumTrack)
 					{
-						newHeight = Math.max( this.minimumTrackOriginalHeight , this.maximumTrackOriginalHeight );
+						newHeight = Math.max(this.minimumTrackOriginalHeight, this.maximumTrackOriginalHeight);
 					}
 					else
 					{
@@ -1986,7 +2030,7 @@ package feathers.controls
 					}
 				}
 			}
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -2000,22 +2044,22 @@ package feathers.controls
 		 * @see #thumbFactory
 		 * @see #customThumbStyleName
 		 */
-		protected function createThumb() : void
+		protected function createThumb():void
 		{
-			if( this.thumb )
+			if(this.thumb)
 			{
-				this.thumb.removeFromParent( true );
+				this.thumb.removeFromParent(true);
 				this.thumb = null;
 			}
 
-			var factory : Function = this._thumbFactory != null ? this._thumbFactory : defaultThumbFactory;
-			var thumbStyleName : String = this._customThumbStyleName != null ? this._customThumbStyleName : this.thumbStyleName;
-			this.thumb = Button( factory() );
-			this.thumb.styleNameList.add( thumbStyleName );
+			var factory:Function = this._thumbFactory != null ? this._thumbFactory : defaultThumbFactory;
+			var thumbStyleName:String = this._customThumbStyleName != null ? this._customThumbStyleName : this.thumbStyleName;
+			this.thumb = Button(factory());
+			this.thumb.styleNameList.add(thumbStyleName);
 			this.thumb.keepDownStateOnRollOut = true;
 			this.thumb.isFocusEnabled = false;
-			this.thumb.addEventListener( TouchEvent.TOUCH , thumb_touchHandler );
-			this.addChild( this.thumb );
+			this.thumb.addEventListener(TouchEvent.TOUCH, thumb_touchHandler);
+			this.addChild(this.thumb);
 		}
 
 		/**
@@ -2029,22 +2073,22 @@ package feathers.controls
 		 * @see #minimumTrackFactory
 		 * @see #customMinimumTrackStyleName
 		 */
-		protected function createMinimumTrack() : void
+		protected function createMinimumTrack():void
 		{
-			if( this.minimumTrack )
+			if(this.minimumTrack)
 			{
-				this.minimumTrack.removeFromParent( true );
+				this.minimumTrack.removeFromParent(true);
 				this.minimumTrack = null;
 			}
 
-			var factory : Function = this._minimumTrackFactory != null ? this._minimumTrackFactory : defaultMinimumTrackFactory;
-			var minimumTrackStyleName : String = this._customMinimumTrackStyleName != null ? this._customMinimumTrackStyleName : this.minimumTrackStyleName;
-			this.minimumTrack = Button( factory() );
-			this.minimumTrack.styleNameList.add( minimumTrackStyleName );
+			var factory:Function = this._minimumTrackFactory != null ? this._minimumTrackFactory : defaultMinimumTrackFactory;
+			var minimumTrackStyleName:String = this._customMinimumTrackStyleName != null ? this._customMinimumTrackStyleName : this.minimumTrackStyleName;
+			this.minimumTrack = Button(factory());
+			this.minimumTrack.styleNameList.add(minimumTrackStyleName);
 			this.minimumTrack.keepDownStateOnRollOut = true;
 			this.minimumTrack.isFocusEnabled = false;
-			this.minimumTrack.addEventListener( TouchEvent.TOUCH , track_touchHandler );
-			this.addChildAt( this.minimumTrack , 0 );
+			this.minimumTrack.addEventListener(TouchEvent.TOUCH, track_touchHandler);
+			this.addChildAt(this.minimumTrack, 0);
 		}
 
 		/**
@@ -2059,27 +2103,27 @@ package feathers.controls
 		 * @see #maximumTrackFactory
 		 * @see #customMaximumTrackStyleName
 		 */
-		protected function createMaximumTrack() : void
+		protected function createMaximumTrack():void
 		{
-			if( this._trackLayoutMode == TRACK_LAYOUT_MODE_MIN_MAX )
+			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_MIN_MAX)
 			{
-				if( this.maximumTrack )
+				if(this.maximumTrack)
 				{
-					this.maximumTrack.removeFromParent( true );
+					this.maximumTrack.removeFromParent(true);
 					this.maximumTrack = null;
 				}
-				var factory : Function = this._maximumTrackFactory != null ? this._maximumTrackFactory : defaultMaximumTrackFactory;
-				var maximumTrackStyleName : String = this._customMaximumTrackStyleName != null ? this._customMaximumTrackStyleName : this.maximumTrackStyleName;
-				this.maximumTrack = Button( factory() );
-				this.maximumTrack.styleNameList.add( maximumTrackStyleName );
+				var factory:Function = this._maximumTrackFactory != null ? this._maximumTrackFactory : defaultMaximumTrackFactory;
+				var maximumTrackStyleName:String = this._customMaximumTrackStyleName != null ? this._customMaximumTrackStyleName : this.maximumTrackStyleName;
+				this.maximumTrack = Button(factory());
+				this.maximumTrack.styleNameList.add(maximumTrackStyleName);
 				this.maximumTrack.keepDownStateOnRollOut = true;
 				this.maximumTrack.isFocusEnabled = false;
-				this.maximumTrack.addEventListener( TouchEvent.TOUCH , track_touchHandler );
-				this.addChildAt( this.maximumTrack , 1 );
+				this.maximumTrack.addEventListener(TouchEvent.TOUCH, track_touchHandler);
+				this.addChildAt(this.maximumTrack, 1);
 			}
-			else if( this.maximumTrack ) //single
+			else if(this.maximumTrack) //single
 			{
-				this.maximumTrack.removeFromParent( true );
+				this.maximumTrack.removeFromParent(true);
 				this.maximumTrack = null;
 			}
 		}
@@ -2095,22 +2139,22 @@ package feathers.controls
 		 * @see #decrementButtonFactory
 		 * @see #customDecremenButtonStyleName
 		 */
-		protected function createDecrementButton() : void
+		protected function createDecrementButton():void
 		{
-			if( this.decrementButton )
+			if(this.decrementButton)
 			{
-				this.decrementButton.removeFromParent( true );
+				this.decrementButton.removeFromParent(true);
 				this.decrementButton = null;
 			}
 
-			var factory : Function = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
-			var decrementButtonStyleName : String = this._customDecrementButtonStyleName != null ? this._customDecrementButtonStyleName : this.decrementButtonStyleName;
-			this.decrementButton = Button( factory() );
-			this.decrementButton.styleNameList.add( decrementButtonStyleName );
+			var factory:Function = this._decrementButtonFactory != null ? this._decrementButtonFactory : defaultDecrementButtonFactory;
+			var decrementButtonStyleName:String = this._customDecrementButtonStyleName != null ? this._customDecrementButtonStyleName : this.decrementButtonStyleName;
+			this.decrementButton = Button(factory());
+			this.decrementButton.styleNameList.add(decrementButtonStyleName);
 			this.decrementButton.keepDownStateOnRollOut = true;
 			this.decrementButton.isFocusEnabled = false;
-			this.decrementButton.addEventListener( TouchEvent.TOUCH , decrementButton_touchHandler );
-			this.addChild( this.decrementButton );
+			this.decrementButton.addEventListener(TouchEvent.TOUCH, decrementButton_touchHandler);
+			this.addChild(this.decrementButton);
 		}
 
 		/**
@@ -2124,97 +2168,97 @@ package feathers.controls
 		 * @see #incrementButtonFactory
 		 * @see #customIncrementButtonStyleName
 		 */
-		protected function createIncrementButton() : void
+		protected function createIncrementButton():void
 		{
-			if( this.incrementButton )
+			if(this.incrementButton)
 			{
-				this.incrementButton.removeFromParent( true );
+				this.incrementButton.removeFromParent(true);
 				this.incrementButton = null;
 			}
 
-			var factory : Function = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
-			var incrementButtonStyleName : String = this._customIncrementButtonStyleName != null ? this._customIncrementButtonStyleName : this.incrementButtonStyleName;
-			this.incrementButton = Button( factory() );
-			this.incrementButton.styleNameList.add( incrementButtonStyleName );
+			var factory:Function = this._incrementButtonFactory != null ? this._incrementButtonFactory : defaultIncrementButtonFactory;
+			var incrementButtonStyleName:String = this._customIncrementButtonStyleName != null ? this._customIncrementButtonStyleName : this.incrementButtonStyleName;
+			this.incrementButton = Button(factory());
+			this.incrementButton.styleNameList.add(incrementButtonStyleName);
 			this.incrementButton.keepDownStateOnRollOut = true;
 			this.incrementButton.isFocusEnabled = false;
-			this.incrementButton.addEventListener( TouchEvent.TOUCH , incrementButton_touchHandler );
-			this.addChild( this.incrementButton );
+			this.incrementButton.addEventListener(TouchEvent.TOUCH, incrementButton_touchHandler);
+			this.addChild(this.incrementButton);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshThumbStyles() : void
+		protected function refreshThumbStyles():void
 		{
-			for( var propertyName : String in this._thumbProperties )
+			for(var propertyName:String in this._thumbProperties)
 			{
-				var propertyValue : Object = this._thumbProperties[ propertyName ];
-				this.thumb[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._thumbProperties[propertyName];
+				this.thumb[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshMinimumTrackStyles() : void
+		protected function refreshMinimumTrackStyles():void
 		{
-			for( var propertyName : String in this._minimumTrackProperties )
+			for(var propertyName:String in this._minimumTrackProperties)
 			{
-				var propertyValue : Object = this._minimumTrackProperties[ propertyName ];
-				this.minimumTrack[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._minimumTrackProperties[propertyName];
+				this.minimumTrack[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshMaximumTrackStyles() : void
+		protected function refreshMaximumTrackStyles():void
 		{
-			if( !this.maximumTrack )
+			if(!this.maximumTrack)
 			{
 				return;
 			}
-			for( var propertyName : String in this._maximumTrackProperties )
+			for(var propertyName:String in this._maximumTrackProperties)
 			{
-				var propertyValue : Object = this._maximumTrackProperties[ propertyName ];
-				this.maximumTrack[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._maximumTrackProperties[propertyName];
+				this.maximumTrack[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshDecrementButtonStyles() : void
+		protected function refreshDecrementButtonStyles():void
 		{
-			for( var propertyName : String in this._decrementButtonProperties )
+			for(var propertyName:String in this._decrementButtonProperties)
 			{
-				var propertyValue : Object = this._decrementButtonProperties[ propertyName ];
-				this.decrementButton[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._decrementButtonProperties[propertyName];
+				this.decrementButton[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshIncrementButtonStyles() : void
+		protected function refreshIncrementButtonStyles():void
 		{
-			for( var propertyName : String in this._incrementButtonProperties )
+			for(var propertyName:String in this._incrementButtonProperties)
 			{
-				var propertyValue : Object = this._incrementButtonProperties[ propertyName ];
-				this.incrementButton[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._incrementButtonProperties[propertyName];
+				this.incrementButton[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layout() : void
+		protected function layout():void
 		{
 			this.layoutStepButtons();
 			this.layoutThumb();
 
-			if( this._trackLayoutMode == TRACK_LAYOUT_MODE_MIN_MAX )
+			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_MIN_MAX)
 			{
 				this.layoutTrackWithMinMax();
 			}
@@ -2227,9 +2271,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutStepButtons() : void
+		protected function layoutStepButtons():void
 		{
-			if( this._direction == DIRECTION_VERTICAL )
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				this.decrementButton.x = (this.actualWidth - this.decrementButton.width) / 2;
 				this.decrementButton.y = 0;
@@ -2243,7 +2287,7 @@ package feathers.controls
 				this.incrementButton.x = this.actualWidth - this.incrementButton.width;
 				this.incrementButton.y = (this.actualHeight - this.incrementButton.height) / 2;
 			}
-			var showButtons : Boolean = this._maximum != this._minimum;
+			var showButtons:Boolean = this._maximum != this._minimum;
 			this.decrementButton.visible = showButtons;
 			this.incrementButton.visible = showButtons;
 		}
@@ -2251,11 +2295,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutThumb() : void
+		protected function layoutThumb():void
 		{
-			var range : Number = this._maximum - this._minimum;
+			var range:Number = this._maximum - this._minimum;
 			this.thumb.visible = range > 0 && range < Number.POSITIVE_INFINITY && this._isEnabled;
-			if( !this.thumb.visible )
+			if(!this.thumb.visible)
 			{
 				return;
 			}
@@ -2263,35 +2307,35 @@ package feathers.controls
 			//this will auto-size the thumb, if needed
 			this.thumb.validate();
 
-			var contentWidth : Number = this.actualWidth - this._paddingLeft - this._paddingRight;
-			var contentHeight : Number = this.actualHeight - this._paddingTop - this._paddingBottom;
-			var adjustedPage : Number = this._page;
-			if( this._page == 0 )
+			var contentWidth:Number = this.actualWidth - this._paddingLeft - this._paddingRight;
+			var contentHeight:Number = this.actualHeight - this._paddingTop - this._paddingBottom;
+			var adjustedPage:Number = this._page;
+			if(this._page == 0)
 			{
 				adjustedPage = this._step;
 			}
-			if( adjustedPage > range )
+			if(adjustedPage > range)
 			{
 				adjustedPage = range;
 			}
-			if( this._direction == DIRECTION_VERTICAL )
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				contentHeight -= (this.decrementButton.height + this.incrementButton.height);
-				var thumbMinHeight : Number = this.thumb.minHeight > 0 ? this.thumb.minHeight : this.thumbOriginalHeight;
+				var thumbMinHeight:Number = this.thumb.minHeight > 0 ? this.thumb.minHeight : this.thumbOriginalHeight;
 				this.thumb.width = this.thumbOriginalWidth;
-				this.thumb.height = Math.max( thumbMinHeight , contentHeight * adjustedPage / range );
-				var trackScrollableHeight : Number = contentHeight - this.thumb.height;
+				this.thumb.height = Math.max(thumbMinHeight, contentHeight * adjustedPage / range);
+				var trackScrollableHeight:Number = contentHeight - this.thumb.height;
 				this.thumb.x = this._paddingLeft + (this.actualWidth - this._paddingLeft - this._paddingRight - this.thumb.width) / 2;
-				this.thumb.y = this.decrementButton.height + this._paddingTop + Math.max( 0 , Math.min( trackScrollableHeight , trackScrollableHeight * (this._value - this._minimum) / range ) );
+				this.thumb.y = this.decrementButton.height + this._paddingTop + Math.max(0, Math.min(trackScrollableHeight, trackScrollableHeight * (this._value - this._minimum) / range));
 			}
 			else //horizontal
 			{
 				contentWidth -= (this.decrementButton.width + this.decrementButton.width);
-				var thumbMinWidth : Number = this.thumb.minWidth > 0 ? this.thumb.minWidth : this.thumbOriginalWidth;
-				this.thumb.width = Math.max( thumbMinWidth , contentWidth * adjustedPage / range );
+				var thumbMinWidth:Number = this.thumb.minWidth > 0 ? this.thumb.minWidth : this.thumbOriginalWidth;
+				this.thumb.width = Math.max(thumbMinWidth, contentWidth * adjustedPage / range);
 				this.thumb.height = this.thumbOriginalHeight;
-				var trackScrollableWidth : Number = contentWidth - this.thumb.width;
-				this.thumb.x = this.decrementButton.width + this._paddingLeft + Math.max( 0 , Math.min( trackScrollableWidth , trackScrollableWidth * (this._value - this._minimum) / range ) );
+				var trackScrollableWidth:Number = contentWidth - this.thumb.width;
+				this.thumb.x = this.decrementButton.width + this._paddingLeft + Math.max(0, Math.min(trackScrollableWidth, trackScrollableWidth * (this._value - this._minimum) / range));
 				this.thumb.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - this.thumb.height) / 2;
 			}
 		}
@@ -2299,20 +2343,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutTrackWithMinMax() : void
+		protected function layoutTrackWithMinMax():void
 		{
-			var range : Number = this._maximum - this._minimum;
+			var range:Number = this._maximum - this._minimum;
 			this.minimumTrack.touchable = range > 0 && range < Number.POSITIVE_INFINITY;
-			if( this.maximumTrack )
+			if(this.maximumTrack)
 			{
 				this.maximumTrack.touchable = range > 0 && range < Number.POSITIVE_INFINITY;
 			}
 
-			var showButtons : Boolean = this._maximum != this._minimum;
-			if( this._direction == DIRECTION_VERTICAL )
+			var showButtons:Boolean = this._maximum != this._minimum;
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				this.minimumTrack.x = 0;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.y = this.decrementButton.height;
 				}
@@ -2326,7 +2370,7 @@ package feathers.controls
 				this.maximumTrack.x = 0;
 				this.maximumTrack.y = this.minimumTrack.y + this.minimumTrack.height;
 				this.maximumTrack.width = this.actualWidth;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.maximumTrack.height = this.actualHeight - this.incrementButton.height - this.maximumTrack.y;
 				}
@@ -2337,7 +2381,7 @@ package feathers.controls
 			}
 			else //horizontal
 			{
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.x = this.decrementButton.width;
 				}
@@ -2351,7 +2395,7 @@ package feathers.controls
 
 				this.maximumTrack.x = this.minimumTrack.x + this.minimumTrack.width;
 				this.maximumTrack.y = 0;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.maximumTrack.width = this.actualWidth - this.incrementButton.width - this.maximumTrack.x;
 				}
@@ -2370,16 +2414,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutTrackWithSingle() : void
+		protected function layoutTrackWithSingle():void
 		{
-			var range : Number = this._maximum - this._minimum;
+			var range:Number = this._maximum - this._minimum;
 			this.minimumTrack.touchable = range > 0 && range < Number.POSITIVE_INFINITY;
 
-			var showButtons : Boolean = this._maximum != this._minimum;
-			if( this._direction == DIRECTION_VERTICAL )
+			var showButtons:Boolean = this._maximum != this._minimum;
+			if(this._direction == DIRECTION_VERTICAL)
 			{
 				this.minimumTrack.x = 0;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.y = this.decrementButton.height;
 				}
@@ -2388,7 +2432,7 @@ package feathers.controls
 					this.minimumTrack.y = 0;
 				}
 				this.minimumTrack.width = this.actualWidth;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.height = this.actualHeight - this.minimumTrack.y - this.incrementButton.height;
 				}
@@ -2399,7 +2443,7 @@ package feathers.controls
 			}
 			else //horizontal
 			{
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.x = this.decrementButton.width;
 				}
@@ -2408,7 +2452,7 @@ package feathers.controls
 					this.minimumTrack.x = 0;
 				}
 				this.minimumTrack.y = 0;
-				if( showButtons )
+				if(showButtons)
 				{
 					this.minimumTrack.width = this.actualWidth - this.minimumTrack.x - this.incrementButton.width;
 				}
@@ -2426,26 +2470,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function locationToValue( location : Point ) : Number
+		protected function locationToValue(location:Point):Number
 		{
-			var percentage : Number = 0;
-			if( this._direction == DIRECTION_VERTICAL )
+			var percentage:Number = 0;
+			if(this._direction == DIRECTION_VERTICAL)
 			{
-				var trackScrollableHeight : Number = this.actualHeight - this.thumb.height - this.decrementButton.height - this.incrementButton.height - this._paddingTop - this._paddingBottom;
-				if( trackScrollableHeight > 0 )
+				var trackScrollableHeight:Number = this.actualHeight - this.thumb.height - this.decrementButton.height - this.incrementButton.height - this._paddingTop - this._paddingBottom;
+				if(trackScrollableHeight > 0)
 				{
-					var yOffset : Number = location.y - this._touchStartY - this._paddingTop;
-					var yPosition : Number = Math.min( Math.max( 0 , this._thumbStartY + yOffset - this.decrementButton.height ) , trackScrollableHeight );
+					var yOffset:Number = location.y - this._touchStartY - this._paddingTop;
+					var yPosition:Number = Math.min(Math.max(0, this._thumbStartY + yOffset - this.decrementButton.height), trackScrollableHeight);
 					percentage = yPosition / trackScrollableHeight;
 				}
 			}
 			else //horizontal
 			{
-				var trackScrollableWidth : Number = this.actualWidth - this.thumb.width - this.decrementButton.width - this.incrementButton.width - this._paddingLeft - this._paddingRight;
-				if( trackScrollableWidth > 0 )
+				var trackScrollableWidth:Number = this.actualWidth - this.thumb.width - this.decrementButton.width - this.incrementButton.width - this._paddingLeft - this._paddingRight;
+				if(trackScrollableWidth > 0)
 				{
-					var xOffset : Number = location.x - this._touchStartX - this._paddingLeft;
-					var xPosition : Number = Math.min( Math.max( 0 , this._thumbStartX + xOffset - this.decrementButton.width ) , trackScrollableWidth );
+					var xOffset:Number = location.x - this._touchStartX - this._paddingLeft;
+					var xPosition:Number = Math.min(Math.max(0, this._thumbStartX + xOffset - this.decrementButton.width), trackScrollableWidth);
 					percentage = xPosition / trackScrollableWidth;
 				}
 			}
@@ -2456,7 +2500,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function decrement() : void
+		protected function decrement():void
 		{
 			this.value -= this._step;
 		}
@@ -2464,7 +2508,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function increment() : void
+		protected function increment():void
 		{
 			this.value += this._step;
 		}
@@ -2472,33 +2516,33 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function adjustPage() : void
+		protected function adjustPage():void
 		{
-			var range : Number = this._maximum - this._minimum;
-			var adjustedPage : Number = this._page;
-			if( this._page == 0 )
+			var range:Number = this._maximum - this._minimum;
+			var adjustedPage:Number = this._page;
+			if(this._page == 0)
 			{
 				adjustedPage = this._step;
 			}
-			if( adjustedPage > range )
+			if(adjustedPage > range)
 			{
 				adjustedPage = range;
 			}
-			if( this._touchValue < this._value )
+			if(this._touchValue < this._value)
 			{
-				var newValue : Number = Math.max( this._touchValue , this._value - adjustedPage );
-				if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+				var newValue:Number = Math.max(this._touchValue, this._value - adjustedPage);
+				if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 				{
-					newValue = roundToNearest( newValue , this._step );
+					newValue = roundToNearest(newValue, this._step);
 				}
 				this.value = newValue;
 			}
-			else if( this._touchValue > this._value )
+			else if(this._touchValue > this._value)
 			{
-				newValue = Math.min( this._touchValue , this._value + adjustedPage );
-				if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+				newValue = Math.min(this._touchValue, this._value + adjustedPage);
+				if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 				{
-					newValue = roundToNearest( newValue , this._step );
+					newValue = roundToNearest(newValue, this._step);
 				}
 				this.value = newValue;
 			}
@@ -2507,15 +2551,15 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function startRepeatTimer( action : Function ) : void
+		protected function startRepeatTimer(action:Function):void
 		{
 			this.currentRepeatAction = action;
-			if( this._repeatDelay > 0 )
+			if(this._repeatDelay > 0)
 			{
-				if( !this._repeatTimer )
+				if(!this._repeatTimer)
 				{
-					this._repeatTimer = new Timer( this._repeatDelay * 1000 );
-					this._repeatTimer.addEventListener( TimerEvent.TIMER , repeatTimer_timerHandler );
+					this._repeatTimer = new Timer(this._repeatDelay * 1000);
+					this._repeatTimer.addEventListener(TimerEvent.TIMER, repeatTimer_timerHandler);
 				}
 				else
 				{
@@ -2529,50 +2573,50 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function thumbProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function thumbProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function minimumTrackProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function minimumTrackProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function maximumTrackProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function maximumTrackProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function decrementButtonProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function decrementButtonProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function incrementButtonProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function incrementButtonProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removedFromStageHandler( event : Event ) : void
+		protected function removedFromStageHandler(event:Event):void
 		{
 			this._touchPointID = -1;
-			if( this._repeatTimer )
+			if(this._repeatTimer)
 			{
 				this._repeatTimer.stop();
 			}
@@ -2581,181 +2625,181 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function track_touchHandler( event : TouchEvent ) : void
+		protected function track_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			var track : DisplayObject = DisplayObject( event.currentTarget );
-			if( this._touchPointID >= 0 )
+			var track:DisplayObject = DisplayObject(event.currentTarget);
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( track , TouchPhase.ENDED , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(track, TouchPhase.ENDED, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = -1;
 				this._repeatTimer.stop();
-				this.dispatchEventWith( FeathersEventType.END_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.END_INTERACTION);
 			}
 			else
 			{
-				touch = event.getTouch( track , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(track, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = touch.id;
-				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
-				touch.getLocation( this , HELPER_POINT );
+				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
+				touch.getLocation(this, HELPER_POINT);
 				this._touchStartX = HELPER_POINT.x;
 				this._touchStartY = HELPER_POINT.y;
 				this._thumbStartX = HELPER_POINT.x;
 				this._thumbStartY = HELPER_POINT.y;
-				this._touchValue = this.locationToValue( HELPER_POINT );
+				this._touchValue = this.locationToValue(HELPER_POINT);
 				this.adjustPage();
-				this.startRepeatTimer( this.adjustPage );
+				this.startRepeatTimer(this.adjustPage);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function thumb_touchHandler( event : TouchEvent ) : void
+		protected function thumb_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.thumb , null , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this.thumb, null, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
-				if( touch.phase == TouchPhase.MOVED )
+				if(touch.phase == TouchPhase.MOVED)
 				{
-					touch.getLocation( this , HELPER_POINT );
-					var newValue : Number = this.locationToValue( HELPER_POINT );
-					if( this._step != 0 && newValue != this._maximum && newValue != this._minimum )
+					touch.getLocation(this, HELPER_POINT);
+					var newValue:Number = this.locationToValue(HELPER_POINT);
+					if(this._step != 0 && newValue != this._maximum && newValue != this._minimum)
 					{
-						newValue = roundToNearest( newValue , this._step );
+						newValue = roundToNearest(newValue, this._step);
 					}
 					this.value = newValue;
 				}
-				else if( touch.phase == TouchPhase.ENDED )
+				else if(touch.phase == TouchPhase.ENDED)
 				{
 					this._touchPointID = -1;
 					this.isDragging = false;
-					if( !this.liveDragging )
+					if(!this.liveDragging)
 					{
-						this.dispatchEventWith( Event.CHANGE );
+						this.dispatchEventWith(Event.CHANGE);
 					}
-					this.dispatchEventWith( FeathersEventType.END_INTERACTION );
+					this.dispatchEventWith(FeathersEventType.END_INTERACTION);
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this.thumb , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.thumb, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
-				touch.getLocation( this , HELPER_POINT );
+				touch.getLocation(this, HELPER_POINT);
 				this._touchPointID = touch.id;
 				this._thumbStartX = this.thumb.x;
 				this._thumbStartY = this.thumb.y;
 				this._touchStartX = HELPER_POINT.x;
 				this._touchStartY = HELPER_POINT.y;
 				this.isDragging = true;
-				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function decrementButton_touchHandler( event : TouchEvent ) : void
+		protected function decrementButton_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.decrementButton , TouchPhase.ENDED , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this.decrementButton, TouchPhase.ENDED, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = -1;
 				this._repeatTimer.stop();
-				this.dispatchEventWith( FeathersEventType.END_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.END_INTERACTION);
 			}
 			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this.decrementButton , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.decrementButton, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = touch.id;
-				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
 				this.decrement();
-				this.startRepeatTimer( this.decrement );
+				this.startRepeatTimer(this.decrement);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function incrementButton_touchHandler( event : TouchEvent ) : void
+		protected function incrementButton_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this.incrementButton , TouchPhase.ENDED , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this.incrementButton, TouchPhase.ENDED, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = -1;
 				this._repeatTimer.stop();
-				this.dispatchEventWith( FeathersEventType.END_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.END_INTERACTION);
 			}
 			else //if we get here, we don't have a saved touch ID yet
 			{
-				touch = event.getTouch( this.incrementButton , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.incrementButton, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = touch.id;
-				this.dispatchEventWith( FeathersEventType.BEGIN_INTERACTION );
+				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
 				this.increment();
-				this.startRepeatTimer( this.increment );
+				this.startRepeatTimer(this.increment);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function repeatTimer_timerHandler( event : TimerEvent ) : void
+		protected function repeatTimer_timerHandler(event:TimerEvent):void
 		{
-			if( this._repeatTimer.currentCount < 5 )
+			if(this._repeatTimer.currentCount < 5)
 			{
 				return;
 			}

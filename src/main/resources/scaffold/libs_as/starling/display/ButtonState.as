@@ -15,19 +15,19 @@ package starling.display
     /** A class that provides constant values for the states of the Button class. */
     public class ButtonState
     {
-        /** The button's default state. */
-        public static const UP : String = "up";
-        /** The button is pressed. */
-        public static const DOWN : String = "down";
-        /** The mouse hovers over the button. */
-        public static const OVER : String = "over";
-        /** The button was disabled altogether. */
-        public static const DISABLED : String = "disabled";
-
         /** @private */
-        public function ButtonState()
-        {
-            throw new AbstractClassError();
-        }
+        public function ButtonState() { throw new AbstractClassError(); }
+
+        /** The button's default state. */
+        public static const UP:String = "up";
+
+        /** The button is pressed. */
+        public static const DOWN:String = "down";
+
+        /** The mouse hovers over the button. */
+        public static const OVER:String = "over";
+
+        /** The button was disabled altogether. */
+        public static const DISABLED:String = "disabled";
     }
 }

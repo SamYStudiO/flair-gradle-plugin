@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	/**
@@ -27,17 +27,18 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.STATE_CHANGE
 	 */
-	[Event(name="stateChange" , type="starling.events.Event")]
+	[Event(name="stateChange",type="starling.events.Event")]
 
 	/**
 	 * An object with multiple states.
-	 */ public interface IStateContext extends IFeathersEventDispatcher
+	 */
+	public interface IStateContext extends IFeathersEventDispatcher
 	{
 		/**
 		 * The object's current state.
 		 * 
 		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
 		 */
-		function get currentState() : String;
+		function get currentState():String;
 	}
 }

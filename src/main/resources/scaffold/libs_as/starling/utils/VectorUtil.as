@@ -10,136 +10,130 @@
 
 package starling.utils
 {
-	import starling.errors.AbstractClassError;
+    import starling.errors.AbstractClassError;
 
-	/** A utility class containing methods related to the Vector class.
-	 *
-	 *  <p>Many methods of the Vector class cause the creation of temporary objects, which is
-	 *  problematic for any code that repeats very often. The utility methods in this class
-	 *  can be used to avoid that.</p> */
-	public class VectorUtil
-	{
-		/** Inserts a value into the 'int'-Vector at the specified index. Supports negative
-		 *  indices (counting from the end); gaps will be filled up with zeroes. */
-		public static function insertIntAt( vector : Vector.<int> , index : int , value : int ) : void
-		{
-			var i : int;
-			var length : uint = vector.length;
+    /** A utility class containing methods related to the Vector class.
+     *
+     *  <p>Many methods of the Vector class cause the creation of temporary objects, which is
+     *  problematic for any code that repeats very often. The utility methods in this class
+     *  can be used to avoid that.</p> */
+    public class VectorUtil
+    {
+        /** @private */
+        public function VectorUtil() { throw new AbstractClassError(); }
 
-			if( index < 0 ) index += length + 1;
-			if( index < 0 ) index = 0;
+        /** Inserts a value into the 'int'-Vector at the specified index. Supports negative
+         *  indices (counting from the end); gaps will be filled up with zeroes. */
+        public static function insertIntAt(vector:Vector.<int>, index:int, value:int):void
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			for( i = index - 1; i >= length; --i )
-				vector[ i ] = 0;
+            if (index < 0) index += length + 1;
+            if (index < 0) index = 0;
 
-			for( i = length; i > index; --i )
-				vector[ i ] = vector[ i - 1 ];
+            for (i = index - 1; i >= length; --i)
+                vector[i] = 0;
 
-			vector[ index ] = value;
-		}
+            for (i = length; i > index; --i)
+                vector[i] = vector[i-1];
 
-		/** Removes the value at the specified index from the 'int'-Vector. Pass a negative
-		 *  index to specify a position relative to the end of the vector. */
-		public static function removeIntAt( vector : Vector.<int> , index : int ) : int
-		{
-			var i : int;
-			var length : uint = vector.length;
+            vector[index] = value;
+        }
 
-			if( index < 0 ) index += length;
-			if( index < 0 ) index = 0;
-			else if( index >= length ) index = length - 1;
+        /** Removes the value at the specified index from the 'int'-Vector. Pass a negative
+         *  index to specify a position relative to the end of the vector. */
+        public static function removeIntAt(vector:Vector.<int>, index:int):int
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			var value : int = vector[ index ];
+            if (index < 0) index += length;
+            if (index < 0) index = 0; else if (index >= length) index = length - 1;
 
-			for( i = index + 1; i < length; ++i )
-				vector[ i - 1 ] = vector[ i ];
+            var value:int = vector[index];
 
-			vector.length = length - 1;
-			return value;
-		}
+            for (i = index+1; i < length; ++i)
+                vector[i-1] = vector[i];
 
-		/** Inserts a value into the 'uint'-Vector at the specified index. Supports negative
-		 *  indices (counting from the end); gaps will be filled up with zeroes. */
-		public static function insertUnsignedIntAt( vector : Vector.<uint> , index : int , value : uint ) : void
-		{
-			var i : int;
-			var length : uint = vector.length;
+            vector.length = length - 1;
+            return value;
+        }
 
-			if( index < 0 ) index += length + 1;
-			if( index < 0 ) index = 0;
+        /** Inserts a value into the 'uint'-Vector at the specified index. Supports negative
+         *  indices (counting from the end); gaps will be filled up with zeroes. */
+        public static function insertUnsignedIntAt(vector:Vector.<uint>, index:int, value:uint):void
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			for( i = index - 1; i >= length; --i )
-				vector[ i ] = 0;
+            if (index < 0) index += length + 1;
+            if (index < 0) index = 0;
 
-			for( i = length; i > index; --i )
-				vector[ i ] = vector[ i - 1 ];
+            for (i = index - 1; i >= length; --i)
+                vector[i] = 0;
 
-			vector[ index ] = value;
-		}
+            for (i = length; i > index; --i)
+                vector[i] = vector[i-1];
 
-		/** Removes the value at the specified index from the 'int'-Vector. Pass a negative
-		 *  index to specify a position relative to the end of the vector. */
-		public static function removeUnsignedIntAt( vector : Vector.<uint> , index : int ) : uint
-		{
-			var i : int;
-			var length : uint = vector.length;
+            vector[index] = value;
+        }
 
-			if( index < 0 ) index += length;
-			if( index < 0 ) index = 0;
-			else if( index >= length ) index = length - 1;
+        /** Removes the value at the specified index from the 'int'-Vector. Pass a negative
+         *  index to specify a position relative to the end of the vector. */
+        public static function removeUnsignedIntAt(vector:Vector.<uint>, index:int):uint
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			var value : uint = vector[ index ];
+            if (index < 0) index += length;
+            if (index < 0) index = 0; else if (index >= length) index = length - 1;
 
-			for( i = index + 1; i < length; ++i )
-				vector[ i - 1 ] = vector[ i ];
+            var value:uint = vector[index];
 
-			vector.length = length - 1;
-			return value;
-		}
+            for (i = index+1; i < length; ++i)
+                vector[i-1] = vector[i];
 
-		/** Inserts a value into the 'Number'-Vector at the specified index. Supports negative
-		 *  indices (counting from the end); gaps will be filled up with <code>NaN</code> values. */
-		public static function insertNumberAt( vector : Vector.<Number> , index : int , value : Number ) : void
-		{
-			var i : int;
-			var length : uint = vector.length;
+            vector.length = length - 1;
+            return value;
+        }
 
-			if( index < 0 ) index += length + 1;
-			if( index < 0 ) index = 0;
+        /** Inserts a value into the 'Number'-Vector at the specified index. Supports negative
+         *  indices (counting from the end); gaps will be filled up with <code>NaN</code> values. */
+        public static function insertNumberAt(vector:Vector.<Number>, index:int, value:Number):void
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			for( i = index - 1; i >= length; --i )
-				vector[ i ] = NaN;
+            if (index < 0) index += length + 1;
+            if (index < 0) index = 0;
 
-			for( i = length; i > index; --i )
-				vector[ i ] = vector[ i - 1 ];
+            for (i = index - 1; i >= length; --i)
+                vector[i] = NaN;
 
-			vector[ index ] = value;
-		}
+            for (i = length; i > index; --i)
+                vector[i] = vector[i-1];
 
-		/** Removes the value at the specified index from the 'Number'-Vector. Pass a negative
-		 *  index to specify a position relative to the end of the vector. */
-		public static function removeNumberAt( vector : Vector.<Number> , index : int ) : Number
-		{
-			var i : int;
-			var length : uint = vector.length;
+            vector[index] = value;
+        }
 
-			if( index < 0 ) index += length;
-			if( index < 0 ) index = 0;
-			else if( index >= length ) index = length - 1;
+        /** Removes the value at the specified index from the 'Number'-Vector. Pass a negative
+         *  index to specify a position relative to the end of the vector. */
+        public static function removeNumberAt(vector:Vector.<Number>, index:int):Number
+        {
+            var i:int;
+            var length:uint = vector.length;
 
-			var value : Number = vector[ index ];
+            if (index < 0) index += length;
+            if (index < 0) index = 0; else if (index >= length) index = length - 1;
 
-			for( i = index + 1; i < length; ++i )
-				vector[ i - 1 ] = vector[ i ];
+            var value:Number = vector[index];
 
-			vector.length = length - 1;
-			return value;
-		}
+            for (i = index+1; i < length; ++i)
+                vector[i-1] = vector[i];
 
-		/** @private */
-		public function VectorUtil()
-		{
-			throw new AbstractClassError();
-		}
-	}
+            vector.length = length - 1;
+            return value;
+        }
+    }
 }

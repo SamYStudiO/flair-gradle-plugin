@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.layout
 {
 	import flash.geom.Point;
@@ -25,12 +25,12 @@ package feathers.layout
 		 * <code>false</code>. In those cases, the virtual layout options
 		 * will be ignored.
 		 */
-		function get useVirtualLayout() : Boolean;
+		function get useVirtualLayout():Boolean;
 
 		/**
 		 * @private
 		 */
-		function set useVirtualLayout( value : Boolean ) : void;
+		function set useVirtualLayout(value:Boolean):void;
 
 		/**
 		 * Used internally by a component that supports layout virtualization,
@@ -42,12 +42,12 @@ package feathers.layout
 		 * have no effect. It is meant to be used by the component, and the
 		 * component will replace any value you pass to this property.
 		 */
-		function get typicalItem() : DisplayObject;
+		function get typicalItem():DisplayObject;
 
 		/**
 		 * @private
 		 */
-		function set typicalItem( value : DisplayObject ) : void;
+		function set typicalItem(value:DisplayObject):void;
 
 		/**
 		 * Used internally by a component, such as <code>List</code>, to measure
@@ -63,7 +63,7 @@ package feathers.layout
 		 * @see #typicalItemWidth
 		 * @see #typicalItemHeight
 		 */
-		function measureViewPort( itemCount : int , viewPortBounds : ViewPortBounds = null , result : Point = null ) : Point;
+		function measureViewPort(itemCount:int, viewPortBounds:ViewPortBounds = null, result:Point = null):Point;
 
 		/**
 		 * Used internally by a component, such as <code>List</code>, to
@@ -78,6 +78,6 @@ package feathers.layout
 		 * not call this function. It is meant for developers creating custom
 		 * components only.</p>
 		 */
-		function getVisibleIndicesAtScrollPosition( scrollX : Number , scrollY : Number , width : Number , height : Number , itemCount : int , result : Vector.<int> = null ) : Vector.<int>;
+		function getVisibleIndicesAtScrollPosition(scrollX:Number, scrollY:Number, width:Number, height:Number, itemCount:int, result:Vector.<int> = null):Vector.<int>;
 	}
 }

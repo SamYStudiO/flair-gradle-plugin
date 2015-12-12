@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	/**
@@ -22,11 +22,11 @@ package feathers.controls
 		 * @see feathers.controls.SimpleScrollBar#DIRECTION_HORIZONTAL
 		 * @see feathers.controls.SimpleScrollBar#DIRECTION_VERTICAL
 		 */
-		function get direction() : String;
+		function get direction():String;
 
 		/**
 		 * @private
 		 */
-		function set direction( value : String ) : void;
+		function set direction(value:String):void;
 	}
 }

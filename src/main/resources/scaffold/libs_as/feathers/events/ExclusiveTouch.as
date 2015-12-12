@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.events
 {
 	import flash.utils.Dictionary;
@@ -23,7 +23,7 @@ package feathers.events
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Allows a component to claim exclusive access to a touch to avoid
@@ -37,110 +37,115 @@ package feathers.events
 	 * objects are nested, the inner object will always have precedence.
 	 * However, from a usability perspective, this is generally the expected
 	 * behavior, so this restriction isn't expected to cause any issues.</p>
-	 */ public class ExclusiveTouch extends EventDispatcher
+	 */
+	public class ExclusiveTouch extends EventDispatcher
 	{
+		/**
+		 * @private
+		 */
+		protected static const stageToObject:Dictionary = new Dictionary(true);
+
 		/**
 		 * Retrieves the exclusive touch manager for the specified stage.
 		 */
-		public static function forStage( stage : Stage ) : ExclusiveTouch
+		public static function forStage(stage:Stage):ExclusiveTouch
 		{
-			if( !stage )
+			if(!stage)
 			{
-				throw new ArgumentError( "Stage cannot be null." );
+				throw new ArgumentError("Stage cannot be null.");
 			}
-			var object : ExclusiveTouch = ExclusiveTouch( stageToObject[ stage ] );
-			if( object )
+			var object:ExclusiveTouch = ExclusiveTouch(stageToObject[stage]);
+			if(object)
 			{
 				return object;
 			}
-			object = new ExclusiveTouch( stage );
-			stageToObject[ stage ] = object;
+			object = new ExclusiveTouch(stage);
+			stageToObject[stage] = object;
 			return object;
 		}
 
 		/**
 		 * Disposes the exclusive touch manager for the specified stage.
 		 */
-		public static function disposeForStage( stage : Stage ) : void
+		public static function disposeForStage(stage:Stage):void
 		{
-			delete stageToObject[ stage ];
+			delete stageToObject[stage];
 		}
-		/**
-		 * @private
-		 */
-		protected static const stageToObject : Dictionary = new Dictionary( true );
-		/**
-		 * @private
-		 */
-		protected var _stageListenerCount : int = 0;
-		/**
-		 * @private
-		 */
-		protected var _stage : Stage;
-		/**
-		 * @private
-		 */
-		protected var _claims : Dictionary = new Dictionary();
 
 		/**
 		 * Constructor.
 		 * @param stage
 		 */
-		public function ExclusiveTouch( stage : Stage )
+		public function ExclusiveTouch(stage:Stage)
 		{
-			if( !stage )
+			if(!stage)
 			{
-				throw new ArgumentError( "Stage cannot be null." );
+				throw new ArgumentError("Stage cannot be null.");
 			}
 			this._stage = stage;
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _stageListenerCount:int = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _stage:Stage;
+
+		/**
+		 * @private
+		 */
+		protected var _claims:Dictionary = new Dictionary();
 
 		/**
 		 * Allows a display object to claim a touch by its ID. Returns
 		 * <code>true</code> if the touch is claimed. Returns <code>false</code>
 		 * if the touch was previously claimed by another display object.
 		 */
-		public function claimTouch( touchID : int , target : DisplayObject ) : Boolean
+		public function claimTouch(touchID:int, target:DisplayObject):Boolean
 		{
-			if( !target )
+			if(!target)
 			{
-				throw new ArgumentError( "Target cannot be null." );
+				throw new ArgumentError("Target cannot be null.");
 			}
-			if( target.stage != this._stage )
+			if(target.stage != this._stage)
 			{
-				throw new ArgumentError( "Target cannot claim a touch on the selected stage because it appears on a different stage." );
+				throw new ArgumentError("Target cannot claim a touch on the selected stage because it appears on a different stage.");
 			}
-			if( touchID < 0 )
+			if(touchID < 0)
 			{
-				throw new ArgumentError( "Invalid touch. Touch ID must be >= 0." );
+				throw new ArgumentError("Invalid touch. Touch ID must be >= 0.");
 			}
-			var existingTarget : DisplayObject = DisplayObject( this._claims[ touchID ] );
-			if( existingTarget )
+			var existingTarget:DisplayObject = DisplayObject(this._claims[touchID]);
+			if(existingTarget)
 			{
 				return false;
 			}
-			this._claims[ touchID ] = target;
-			if( this._stageListenerCount == 0 )
+			this._claims[touchID] = target;
+			if(this._stageListenerCount == 0)
 			{
-				this._stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
+				this._stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
 			}
 			this._stageListenerCount++;
-			this.dispatchEventWith( Event.CHANGE , false , touchID );
+			this.dispatchEventWith(Event.CHANGE, false, touchID);
 			return true;
 		}
 
 		/**
 		 * Removes a claim to the touch with the specified ID.
 		 */
-		public function removeClaim( touchID : int ) : void
+		public function removeClaim(touchID:int):void
 		{
-			var existingTarget : DisplayObject = DisplayObject( this._claims[ touchID ] );
-			if( !existingTarget )
+			var existingTarget:DisplayObject = DisplayObject(this._claims[touchID]);
+			if(!existingTarget)
 			{
 				return;
 			}
-			delete this._claims[ touchID ];
-			this.dispatchEventWith( Event.CHANGE , false , touchID );
+			delete this._claims[touchID];
+			this.dispatchEventWith(Event.CHANGE, false, touchID);
 		}
 
 		/**
@@ -148,34 +153,34 @@ package feathers.events
 		 * ID. If no touch claims the touch with the specified ID, returns
 		 * <code>null</code>.
 		 */
-		public function getClaim( touchID : int ) : DisplayObject
+		public function getClaim(touchID:int):DisplayObject
 		{
-			if( touchID < 0 )
+			if(touchID < 0)
 			{
-				throw new ArgumentError( "Invalid touch. Touch ID must be >= 0." );
+				throw new ArgumentError("Invalid touch. Touch ID must be >= 0.");
 			}
-			return DisplayObject( this._claims[ touchID ] );
+			return DisplayObject(this._claims[touchID]);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stage_touchHandler( event : TouchEvent ) : void
+		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			for( var key : Object in this._claims )
+			for(var key:Object in this._claims)
 			{
-				var touchID : int = key as int;
-				var touch : Touch = event.getTouch( this._stage , TouchPhase.ENDED , touchID );
-				if( !touch )
+				var touchID:int = key as int;
+				var touch:Touch = event.getTouch(this._stage, TouchPhase.ENDED, touchID);
+				if(!touch)
 				{
 					continue;
 				}
-				delete this._claims[ key ];
+				delete this._claims[key];
 				this._stageListenerCount--;
 			}
-			if( this._stageListenerCount == 0 )
+			if(this._stageListenerCount == 0)
 			{
-				this._stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
+				this._stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	/**
@@ -27,14 +27,15 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Minimum requirements for a scroll bar to be usable with a <code>Scroller</code>
 	 * component.
 	 *
 	 * @see Scroller
-	 */ public interface IScrollBar extends IRange
+	 */
+	public interface IScrollBar extends IRange
 	{
 		/**
 		 * The amount the scroll bar value must change to get from one "page" to
@@ -53,11 +54,11 @@ package feathers.controls
 		 * scrollBar.page = 10
 		 * scrollBar.value = 12;</listing>
 		 */
-		function get page() : Number;
+		function get page():Number;
 
 		/**
 		 * @private
 		 */
-		function set page( value : Number ) : void;
+		function set page(value:Number):void;
 	}
 }

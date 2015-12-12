@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	/**
@@ -27,7 +27,7 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn" , type="starling.events.Event")]
+	[Event(name="focusIn",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the display object loses focus.
@@ -49,24 +49,25 @@ package feathers.core
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut" , type="starling.events.Event")]
+	[Event(name="focusOut",type="starling.events.Event")]
 
 	/**
 	 * A component that can receive focus if a focus manager is enabled.
 	 *
 	 * @see ../../../help/focus.html Keyboard focus management in Feathers
-	 */ public interface IFocusDisplayObject extends IFeathersDisplayObject
+	 */
+	public interface IFocusDisplayObject extends IFeathersDisplayObject
 	{
 		/**
 		 * The current focus manager for this component. May be
 		 * <code>null</code> if no focus manager is enabled.
 		 */
-		function get focusManager() : IFocusManager;
+		function get focusManager():IFocusManager;
 
 		/**
 		 * @private
 		 */
-		function set focusManager( value : IFocusManager ) : void;
+		function set focusManager(value:IFocusManager):void;
 
 		/**
 		 * Determines if this component can receive focus.
@@ -76,12 +77,12 @@ package feathers.core
 		 * <listing version="3.0">
 		 * object.isFocusEnabled = false;</listing>
 		 */
-		function get isFocusEnabled() : Boolean;
+		function get isFocusEnabled():Boolean;
 
 		/**
 		 * @private
 		 */
-		function set isFocusEnabled( value : Boolean ) : void;
+		function set isFocusEnabled(value:Boolean):void;
 
 		/**
 		 * The next object that will receive focus when the tab key is pressed
@@ -93,12 +94,12 @@ package feathers.core
 		 * <listing version="3.0">
 		 * object.nextTabFocus = otherObject;</listing>
 		 */
-		function get nextTabFocus() : IFocusDisplayObject;
+		function get nextTabFocus():IFocusDisplayObject;
 
 		/**
 		 * @private
 		 */
-		function set nextTabFocus( value : IFocusDisplayObject ) : void;
+		function set nextTabFocus(value:IFocusDisplayObject):void;
 
 		/**
 		 * The previous object that will receive focus when the tab key is
@@ -111,12 +112,12 @@ package feathers.core
 		 * <listing version="3.0">
 		 * object.previousTabFocus = otherObject;</listing>
 		 */
-		function get previousTabFocus() : IFocusDisplayObject;
+		function get previousTabFocus():IFocusDisplayObject;
 
 		/**
 		 * @private
 		 */
-		function set previousTabFocus( value : IFocusDisplayObject ) : void;
+		function set previousTabFocus(value:IFocusDisplayObject):void;
 
 		/**
 		 * Used for associating focusable display objects that are not direct
@@ -128,12 +129,12 @@ package feathers.core
 		 * <listing version="3.0">
 		 * object.focusOwner = otherObject;</listing>
 		 */
-		function get focusOwner() : IFocusDisplayObject;
+		function get focusOwner():IFocusDisplayObject;
 
 		/**
 		 * @private
 		 */
-		function set focusOwner( value : IFocusDisplayObject ) : void;
+		function set focusOwner(value:IFocusDisplayObject):void;
 
 		/**
 		 * If the object has focus, an additional visual indicator may
@@ -151,7 +152,7 @@ package feathers.core
 		 * @see #hideFocus()
 		 * @see feathers.core.IFocusManager#focus
 		 */
-		function showFocus() : void;
+		function showFocus():void;
 
 		/**
 		 * If the visual indicator of focus has been displayed by
@@ -165,6 +166,6 @@ package feathers.core
 		 * @see #showFocus()
 		 * @see feathers.core.IFocusManager#focus
 		 */
-		function hideFocus() : void;
+		function hideFocus():void;
 	}
 }

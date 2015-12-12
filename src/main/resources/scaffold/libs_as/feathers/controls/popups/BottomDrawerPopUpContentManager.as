@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.popups
 {
 	import feathers.controls.Button;
@@ -21,11 +21,8 @@ package feathers.controls.popups
 
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
-
 	import starling.core.Starling;
-
 	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Stage;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
@@ -54,7 +51,7 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open" , type="starling.events.Event")]
+	[Event(name="open",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the pop-up content closes.
@@ -76,41 +73,50 @@ package feathers.controls.popups
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * Displays pop-up content as a mobile-style drawer that opens from the
 	 * bottom of the stage.
-	 */ public class BottomDrawerPopUpContentManager extends EventDispatcher implements IPersistentPopUpContentManager, IPopUpContentManagerWithPrompt
+	 */
+	public class BottomDrawerPopUpContentManager extends EventDispatcher implements IPersistentPopUpContentManager, IPopUpContentManagerWithPrompt
 	{
 		/**
 		 * @private
 		 */
-		private static const HELPER_POINT : Point = new Point();
+		private static const HELPER_POINT:Point = new Point();
+		
+		/**
+		 * Constructor.
+		 */
+		public function BottomDrawerPopUpContentManager()
+		{
+			super();
+		}
+
 		/**
 		 * @private
 		 */
-		protected var panel : Panel;
+		protected var panel:Panel;
+
 		/**
 		 * @private
 		 */
-		protected var content : DisplayObject;
+		protected var content:DisplayObject;
+
 		/**
 		 * @private
 		 */
-		protected var isClosing : Boolean = false;
+		protected var isClosing:Boolean = false;
+
 		/**
-		 * @private
+		 * @inheritDoc
 		 */
-		protected var touchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var openTween : Tween;
-		/**
-		 * @private
-		 */
-		protected var closeTween : Tween;
+		public function get isOpen():Boolean
+		{
+			return this.content !== null;
+		}
+
 		/**
 		 * Adds a style name to the panel that wraps the content.
 		 *
@@ -121,24 +127,16 @@ package feathers.controls.popups
 		 *
 		 * @default null
 		 */
-		public var customPanelStyleName : String;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get isOpen() : Boolean
-		{
-			return this.content !== null;
-		}
+		public var customPanelStyleName:String;
 
 		/**
 		 * @private
 		 */
-		protected var _prompt : String;
+		protected var _prompt:String;
 
 		/**
 		 * A prompt to display in the panel's title.
-		 *
+		 * 
 		 * <p>Note: If using this manager with a component that has its own
 		 * prompt (like <code>PickerList</code>), this value may be overridden
 		 * by the component.</p>
@@ -150,7 +148,7 @@ package feathers.controls.popups
 		 *
 		 * @default null
 		 */
-		public function get prompt() : String
+		public function get prompt():String
 		{
 			return this._prompt;
 		}
@@ -158,7 +156,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set prompt( value : String ) : void
+		public function set prompt(value:String):void
 		{
 			this._prompt = value;
 		}
@@ -166,7 +164,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _closeButtonLabel : String = "Done";
+		protected var _closeButtonLabel:String = "Done";
 
 		/**
 		 * The text to display in the label of the close button.
@@ -178,7 +176,7 @@ package feathers.controls.popups
 		 *
 		 * @default "Done"
 		 */
-		public function get closeButtonLabel() : String
+		public function get closeButtonLabel():String
 		{
 			return this._closeButtonLabel;
 		}
@@ -186,7 +184,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set closeButtonLabel( value : String ) : void
+		public function set closeButtonLabel(value:String):void
 		{
 			this._closeButtonLabel = value;
 		}
@@ -194,7 +192,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _openOrCloseDuration : Number = 0.5;
+		protected var _openOrCloseDuration:Number = 0.5;
 
 		/**
 		 * The duration, in seconds, of the animation to open or close the
@@ -207,7 +205,7 @@ package feathers.controls.popups
 		 *
 		 * @default 0.5
 		 */
-		public function get openOrCloseDuration() : Number
+		public function get openOrCloseDuration():Number
 		{
 			return this._openOrCloseDuration;
 		}
@@ -215,7 +213,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set openOrCloseDuration( value : Number ) : void
+		public function set openOrCloseDuration(value:Number):void
 		{
 			this._openOrCloseDuration = value;
 		}
@@ -223,7 +221,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected var _openOrCloseEase : Object = Transitions.EASE_OUT;
+		protected var _openOrCloseEase:Object = Transitions.EASE_OUT;
 
 		/**
 		 * The easing function used for opening or closing the pop-up.
@@ -238,7 +236,7 @@ package feathers.controls.popups
 		 * @see http://doc.starling-framework.org/core/starling/animation/Transitions.html starling.animation.Transitions
 		 * @see #openOrCloseDuration
 		 */
-		public function get openOrCloseEase() : Object
+		public function get openOrCloseEase():Object
 		{
 			return this._openOrCloseEase;
 		}
@@ -246,100 +244,107 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		public function set openOrCloseEase( value : Object ) : void
+		public function set openOrCloseEase(value:Object):void
 		{
 			this._openOrCloseEase = value;
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function BottomDrawerPopUpContentManager()
-		{
-			super();
-		}
+		protected var touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var openTween:Tween;
+
+		/**
+		 * @private
+		 */
+		protected var closeTween:Tween;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function open( content : DisplayObject , source : DisplayObject ) : void
+		public function open(content:DisplayObject, source:DisplayObject):void
 		{
-			if( this.isOpen )
+			if(this.isOpen)
 			{
-				throw new IllegalOperationError( "Pop-up content is already open. Close the previous content before opening new content." );
+				throw new IllegalOperationError("Pop-up content is already open. Close the previous content before opening new content.");
 			}
 
 			this.content = content;
-
-			var layout : VerticalLayout = new VerticalLayout();
+			
+			var layout:VerticalLayout = new VerticalLayout();
 			layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
-
+			
 			this.panel = new Panel();
-			if( this.customPanelStyleName )
+			if(this.customPanelStyleName)
 			{
-				this.panel.styleNameList.add( this.customPanelStyleName );
+				this.panel.styleNameList.add(this.customPanelStyleName);
 			}
 			this.panel.title = this._prompt;
 			this.panel.layout = layout;
 			this.panel.headerFactory = headerFactory;
 			this.panel.touchable = false;
-			this.panel.addChild( content );
-			PopUpManager.addPopUp( this.panel , true , false );
+			this.panel.addChild(content);
+			PopUpManager.addPopUp(this.panel, true, false);
 			this.layout();
-
-			this.panel.addEventListener( Event.REMOVED_FROM_STAGE , panel_removedFromStageHandler );
-
-			var stage : Stage = Starling.current.stage;
-			stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			stage.addEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
+			
+			this.panel.addEventListener(Event.REMOVED_FROM_STAGE, panel_removedFromStageHandler);
+			
+			var stage:Stage = Starling.current.stage;
+			stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			stage.addEventListener(ResizeEvent.RESIZE, stage_resizeHandler);
 
 			//using priority here is a hack so that objects higher up in the
 			//display list have a chance to cancel the event first.
-			var priority : int = -getDisplayObjectDepthFromStage( this.panel );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler , false , priority , true );
+			var priority:int = -getDisplayObjectDepthFromStage(this.panel);
+			Starling.current.nativeStage.addEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, priority, true);
 
 			this.panel.y = this.panel.stage.stageHeight;
-			this.openTween = new Tween( this.panel , this.openOrCloseDuration , this.openOrCloseEase );
-			this.openTween.moveTo( 0 , this.panel.stage.stageHeight - this.panel.height );
+			this.openTween = new Tween(this.panel, this.openOrCloseDuration, this.openOrCloseEase);
+			this.openTween.moveTo(0, this.panel.stage.stageHeight - this.panel.height);
 			this.openTween.onComplete = openTween_onComplete;
-			Starling.juggler.add( this.openTween );
+			Starling.juggler.add(this.openTween);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function close() : void
+		public function close():void
 		{
-			if( !this.isOpen || this.isClosing )
+			if(!this.isOpen || this.isClosing)
 			{
 				return;
 			}
 
-			if( this.openTween )
+			if(this.openTween)
 			{
-				Starling.juggler.remove( this.openTween );
+				Starling.juggler.remove(this.openTween);
 				this.openTween = null;
 			}
-			if( this.content.stage )
+			if(this.content.stage)
 			{
 				this.isClosing = true;
 				this.panel.touchable = false;
-				this.closeTween = new Tween( this.panel , this.openOrCloseDuration , this.openOrCloseEase );
-				this.closeTween.moveTo( 0 , this.panel.stage.stageHeight );
+				this.closeTween = new Tween(this.panel, this.openOrCloseDuration, this.openOrCloseEase);
+				this.closeTween.moveTo(0, this.panel.stage.stageHeight);
 				this.closeTween.onComplete = closeTween_onComplete;
-				Starling.juggler.add( this.closeTween );
+				Starling.juggler.add(this.closeTween);
 			}
 			else
 			{
 				this.cleanup();
-				this.dispatchEventWith( Event.CLOSE );
+				this.dispatchEventWith(Event.CLOSE);
 			}
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
 			this.close();
 		}
@@ -347,20 +352,20 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function headerFactory() : Header
+		protected function headerFactory():Header
 		{
-			var header : Header = new Header();
-			var closeButton : Button = new Button();
+			var header:Header = new Header();
+			var closeButton:Button = new Button();
 			closeButton.label = this.closeButtonLabel;
-			closeButton.addEventListener( Event.TRIGGERED , closeButton_triggeredHandler );
-			header.rightItems = new <DisplayObject>[ closeButton ];
+			closeButton.addEventListener(Event.TRIGGERED, closeButton_triggeredHandler);
+			header.rightItems = new <DisplayObject>[closeButton];
 			return header;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function layout() : void
+		protected function layout():void
 		{
 			this.panel.width = this.panel.stage.stageWidth;
 			this.panel.x = 0;
@@ -372,21 +377,21 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function cleanup() : void
+		protected function cleanup():void
 		{
-			var stage : Stage = Starling.current.stage;
-			stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			stage.removeEventListener( ResizeEvent.RESIZE , stage_resizeHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler );
+			var stage:Stage = Starling.current.stage;
+			stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			stage.removeEventListener(ResizeEvent.RESIZE, stage_resizeHandler);
+			Starling.current.nativeStage.removeEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler);
 
-			if( this.panel )
+			if(this.panel)
 			{
-				this.panel.removeEventListener( Event.REMOVED_FROM_STAGE , panel_removedFromStageHandler );
-				if( this.panel.contains( this.content ) )
+				this.panel.removeEventListener(Event.REMOVED_FROM_STAGE, panel_removedFromStageHandler);
+				if(this.panel.contains(this.content))
 				{
-					this.panel.removeChild( this.content , false );
+					this.panel.removeChild(this.content, false);
 				}
-				this.panel.removeFromParent( true );
+				this.panel.removeFromParent(true);
 				this.panel = null;
 			}
 			this.content = null;
@@ -395,28 +400,28 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function openTween_onComplete() : void
+		protected function openTween_onComplete():void
 		{
 			this.openTween = null;
 			this.panel.touchable = true;
-			this.dispatchEventWith( Event.OPEN );
+			this.dispatchEventWith(Event.OPEN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function closeTween_onComplete() : void
+		protected function closeTween_onComplete():void
 		{
 			this.isClosing = false;
 			this.closeTween = null;
 			this.cleanup();
-			this.dispatchEventWith( Event.CLOSE );
+			this.dispatchEventWith(Event.CLOSE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function closeButton_triggeredHandler( event : Event ) : void
+		protected function closeButton_triggeredHandler(event:Event):void
 		{
 			this.close();
 		}
@@ -424,7 +429,7 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function panel_removedFromStageHandler( event : Event ) : void
+		protected function panel_removedFromStageHandler(event:Event):void
 		{
 			this.close();
 		}
@@ -432,14 +437,14 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function nativeStage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function nativeStage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.isDefaultPrevented() )
+			if(event.isDefaultPrevented())
 			{
 				//someone else already handled this one
 				return;
 			}
-			if( event.keyCode != Keyboard.BACK && event.keyCode != Keyboard.ESCAPE )
+			if(event.keyCode != Keyboard.BACK && event.keyCode != Keyboard.ESCAPE)
 			{
 				return;
 			}
@@ -452,20 +457,20 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function stage_resizeHandler( event : ResizeEvent ) : void
+		protected function stage_resizeHandler(event:ResizeEvent):void
 		{
-			if( this.closeTween )
+			if(this.closeTween)
 			{
-				this.closeTween.advanceTime( this.closeTween.totalTime );
+				this.closeTween.advanceTime(this.closeTween.totalTime);
 				//the onComplete callback will remove the panel, so no layout is
 				//required.
 				return;
 			}
 
-			if( this.openTween )
+			if(this.openTween)
 			{
 				//just stop the animation and go to the final layout
-				Starling.juggler.remove( this.openTween );
+				Starling.juggler.remove(this.openTween);
 				this.openTween = null;
 			}
 			this.layout();
@@ -474,23 +479,23 @@ package feathers.controls.popups
 		/**
 		 * @private
 		 */
-		protected function stage_touchHandler( event : TouchEvent ) : void
+		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			if( !PopUpManager.isTopLevelPopUp( this.panel ) )
+			if(!PopUpManager.isTopLevelPopUp(this.panel))
 			{
 				return;
 			}
-			var stage : Stage = Starling.current.stage;
-			if( this.touchPointID >= 0 )
+			var stage:Stage = Starling.current.stage;
+			if(this.touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( stage , TouchPhase.ENDED , this.touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(stage, TouchPhase.ENDED, this.touchPointID);
+				if(!touch)
 				{
 					return;
 				}
-				touch.getLocation( stage , HELPER_POINT );
-				var hitTestResult : DisplayObject = stage.hitTest( HELPER_POINT , true );
-				if( !this.panel.contains( hitTestResult ) )
+				touch.getLocation(stage, HELPER_POINT);
+				var hitTestResult:DisplayObject = stage.hitTest(HELPER_POINT, true);
+				if(!this.panel.contains(hitTestResult))
 				{
 					this.touchPointID = -1;
 					this.close();
@@ -498,14 +503,14 @@ package feathers.controls.popups
 			}
 			else
 			{
-				touch = event.getTouch( stage , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(stage, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
-				touch.getLocation( stage , HELPER_POINT );
-				hitTestResult = stage.hitTest( HELPER_POINT , true );
-				if( this.panel.contains( hitTestResult ) )
+				touch.getLocation(stage, HELPER_POINT);
+				hitTestResult = stage.hitTest(HELPER_POINT, true);
+				if(this.panel.contains(hitTestResult))
 				{
 					return;
 				}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import flash.utils.Dictionary;
@@ -17,26 +17,15 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		protected static function defaultStyleProviderFactory() : IStyleProvider
+		protected static const GLOBAL_STYLE_PROVIDER_PROPERTY_NAME:String = "globalStyleProvider";
+
+		/**
+		 * @private
+		 */
+		protected static function defaultStyleProviderFactory():IStyleProvider
 		{
 			return new StyleNameFunctionStyleProvider();
 		}
-		/**
-		 * @private
-		 */
-		protected static const GLOBAL_STYLE_PROVIDER_PROPERTY_NAME : String = "globalStyleProvider";
-		/**
-		 * @private
-		 */
-		protected var _registerGlobally : Boolean;
-		/**
-		 * @private
-		 */
-		protected var _styleProviderFactory : Function;
-		/**
-		 * @private
-		 */
-		protected var _classToStyleProvider : Dictionary = new Dictionary( true );
 
 		/**
 		 * Constructor.
@@ -50,14 +39,13 @@ package feathers.skins
 		 * signature:</p>
 		 * <pre>function():IStyleProvider</pre>
 		 *
-		 * @param registerGlobally            Determines if the registry sets the static <code>globalStyleProvider</code> property.
-		 * @param styleProviderFactory        An optional function that creates a new style provider. If <code>null</code>, a
-		 *     <code>StyleNameFunctionStyleProvider</code> will be created.
+		 * @param registerGlobally			Determines if the registry sets the static <code>globalStyleProvider</code> property.
+		 * @param styleProviderFactory		An optional function that creates a new style provider. If <code>null</code>, a <code>StyleNameFunctionStyleProvider</code> will be created.
 		 */
-		public function StyleProviderRegistry( registerGlobally : Boolean = true , styleProviderFactory : Function = null )
+		public function StyleProviderRegistry(registerGlobally:Boolean = true, styleProviderFactory:Function = null)
 		{
 			this._registerGlobally = registerGlobally;
-			if( styleProviderFactory === null )
+			if(styleProviderFactory === null)
 			{
 				this._styleProviderFactory = defaultStyleProviderFactory;
 			}
@@ -69,17 +57,32 @@ package feathers.skins
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _registerGlobally:Boolean;
+
+		/**
+		 * @private
+		 */
+		protected var _styleProviderFactory:Function;
+
+		/**
+		 * @private
+		 */
+		protected var _classToStyleProvider:Dictionary = new Dictionary(true);
+
+		/**
 		 * Disposes the theme.
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
 			//clear the global style providers, but only if they still match the
 			//ones that the theme created. a developer could replace the global
 			//style providers with different ones.
-			for( var untypedType : Object in this._classToStyleProvider )
+			for(var untypedType:Object in this._classToStyleProvider)
 			{
-				var type : Class = Class( untypedType );
-				this.clearStyleProvider( type );
+				var type:Class = Class(untypedType);
+				this.clearStyleProvider(type);
 			}
 			this._classToStyleProvider = null;
 		}
@@ -91,20 +94,20 @@ package feathers.skins
 		 * provider will be passed to the static <code>globalStyleProvider</code>
 		 * property of the specified class.
 		 *
-		 * @param forClass                    The style provider is registered for this class.
-		 * @param styleProviderFactory        A factory used to create the style provider.
+		 * @param forClass					The style provider is registered for this class.
+		 * @param styleProviderFactory		A factory used to create the style provider.
 		 */
-		public function getStyleProvider( forClass : Class ) : IStyleProvider
+		public function getStyleProvider(forClass:Class):IStyleProvider
 		{
-			this.validateComponentClass( forClass );
-			var styleProvider : IStyleProvider = IStyleProvider( this._classToStyleProvider[ forClass ] );
-			if( !styleProvider )
+			this.validateComponentClass(forClass);
+			var styleProvider:IStyleProvider = IStyleProvider(this._classToStyleProvider[forClass]);
+			if(!styleProvider)
 			{
 				styleProvider = this._styleProviderFactory();
-				this._classToStyleProvider[ forClass ] = styleProvider;
-				if( this._registerGlobally )
+				this._classToStyleProvider[forClass] = styleProvider;
+				if(this._registerGlobally)
 				{
-					forClass[ GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ] = styleProvider;
+					forClass[GLOBAL_STYLE_PROVIDER_PROPERTY_NAME] = styleProvider;
 				}
 			}
 			return styleProvider;
@@ -117,21 +120,22 @@ package feathers.skins
 		 * If it contains a different value, then it will be left unchanged to
 		 * avoid conflicts with other registries or code.
 		 *
-		 * @param forClass        The style provider is registered for this class.
+		 * @param forClass		The style provider is registered for this class.
 		 */
-		public function clearStyleProvider( forClass : Class ) : void
+		public function clearStyleProvider(forClass:Class):void
 		{
-			this.validateComponentClass( forClass );
-			if( forClass in this._classToStyleProvider )
+			this.validateComponentClass(forClass);
+			if(forClass in this._classToStyleProvider)
 			{
-				var styleProvider : IStyleProvider = IStyleProvider( this._classToStyleProvider[ forClass ] );
-				delete this._classToStyleProvider[ forClass ];
-				if( this._registerGlobally && forClass[ GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ] === styleProvider )
+				var styleProvider:IStyleProvider = IStyleProvider(this._classToStyleProvider[forClass]);
+				delete this._classToStyleProvider[forClass];
+				if(this._registerGlobally &&
+					forClass[GLOBAL_STYLE_PROVIDER_PROPERTY_NAME] === styleProvider)
 				{
 					//something else may have changed the global style provider
 					//after this registry set it, so we check if it's equal
 					//before setting to null.
-					forClass[ GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ] = null;
+					forClass[GLOBAL_STYLE_PROVIDER_PROPERTY_NAME] = null;
 				}
 			}
 		}
@@ -139,13 +143,13 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		protected function validateComponentClass( type : Class ) : void
+		protected function validateComponentClass(type:Class):void
 		{
-			if( !this._registerGlobally || Object( type ).hasOwnProperty( GLOBAL_STYLE_PROVIDER_PROPERTY_NAME ) )
+			if(!this._registerGlobally || Object(type).hasOwnProperty(GLOBAL_STYLE_PROVIDER_PROPERTY_NAME))
 			{
 				return;
 			}
-			throw ArgumentError( "Class " + type + " must have a " + GLOBAL_STYLE_PROVIDER_PROPERTY_NAME + " static property to support themes." );
+			throw ArgumentError("Class " + type + " must have a " + GLOBAL_STYLE_PROVIDER_PROPERTY_NAME + " static property to support themes.");
 		}
 	}
 }

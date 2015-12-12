@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	/**
@@ -21,7 +21,7 @@ package feathers.core
 		 * <p>Used by the validation system to validate components from the
 		 * top down</p>.
 		 */
-		function get depth() : int;
+		function get depth():int;
 
 		/**
 		 * Immediately validates the display object, if it is invalid. The
@@ -30,6 +30,6 @@ package feathers.core
 		 * display object is rendered. This allows multiple properties to be
 		 * changed at a time without requiring a full update every time.
 		 */
-		function validate() : void;
+		function validate():void;
 	}
 }

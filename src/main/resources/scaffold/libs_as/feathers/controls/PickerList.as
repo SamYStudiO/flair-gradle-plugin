@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.popups.CalloutPopUpContentManager;
@@ -54,7 +54,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.OPEN
 	 */
-	[Event(name="open" , type="starling.events.Event")]
+	[Event(name="open",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the pop-up list is closed.
@@ -76,7 +76,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the selected item changes.
@@ -98,7 +98,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Displays a button that may be triggered to display a pop-up list.
@@ -133,8 +133,34 @@ package feathers.controls
 	 * this.addChild( list );</listing>
 	 *
 	 * @see ../../../help/picker-list.html How to use the Feathers PickerList component
-	 */ public class PickerList extends FeathersControl implements IFocusDisplayObject
+	 */
+	public class PickerList extends FeathersControl implements IFocusDisplayObject
 	{
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_BUTTON_FACTORY:String = "buttonFactory";
+
+		/**
+		 * @private
+		 */
+		protected static const INVALIDATION_FLAG_LIST_FACTORY:String = "listFactory";
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the button.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON:String = "feathers-picker-list-button";
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the pop-up
+		 * list.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_LIST:String = "feathers-picker-list-list";
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>PickerList</code>
 		 * components.
@@ -142,12 +168,12 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * @private
 		 */
-		protected static function defaultButtonFactory() : Button
+		protected static function defaultButtonFactory():Button
 		{
 			return new Button();
 		}
@@ -155,18 +181,19 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected static function defaultListFactory() : List
+		protected static function defaultListFactory():List
 		{
 			return new List();
 		}
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected static const INVALIDATION_FLAG_BUTTON_FACTORY : String = "buttonFactory";
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_LIST_FACTORY : String = "listFactory";
+		public function PickerList()
+		{
+			super();
+		}
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * button. This variable is <code>protected</code> so that sub-classes
@@ -180,7 +207,8 @@ package feathers.controls
 		 * @see #customButtonStyleName
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var buttonStyleName : String = DEFAULT_CHILD_STYLE_NAME_BUTTON;
+		protected var buttonStyleName:String = DEFAULT_CHILD_STYLE_NAME_BUTTON;
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * pop-up list. This variable is <code>protected</code> so that
@@ -194,7 +222,8 @@ package feathers.controls
 		 * @see #customListStyleName
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var listStyleName : String = DEFAULT_CHILD_STYLE_NAME_LIST;
+		protected var listStyleName:String = DEFAULT_CHILD_STYLE_NAME_LIST;
+
 		/**
 		 * The button sub-component.
 		 *
@@ -203,7 +232,8 @@ package feathers.controls
 		 * @see #buttonFactory
 		 * @see #createButton()
 		 */
-		protected var button : Button;
+		protected var button:Button;
+
 		/**
 		 * The list sub-component.
 		 *
@@ -212,65 +242,20 @@ package feathers.controls
 		 * @see #listFactory
 		 * @see #createList()
 		 */
-		protected var list : List;
-		/**
-		 * @private
-		 */
-		protected var _ignoreSelectionChanges : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _typicalItemWidth : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _typicalItemHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _isOpenListPending : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _isCloseListPending : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _buttonHasFocus : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _buttonTouchPointID : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _listIsOpenOnTouchBegan : Boolean = false;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the button.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON : String = "feathers-picker-list-button";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the pop-up
-		 * list.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LIST : String = "feathers-picker-list-list";
-		
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return PickerList.globalStyleProvider;
-		}
+		protected var list:List;
 
 		/**
 		 * @private
 		 */
-		protected var _dataProvider : ListCollection;
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return PickerList.globalStyleProvider;
+		}
+		
+		/**
+		 * @private
+		 */
+		protected var _dataProvider:ListCollection;
 		
 		/**
 		 * The collection of data displayed by the list.
@@ -297,38 +282,38 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get dataProvider() : ListCollection
+		public function get dataProvider():ListCollection
 		{
 			return this._dataProvider;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set dataProvider( value : ListCollection ) : void
+		public function set dataProvider(value:ListCollection):void
 		{
-			if( this._dataProvider == value )
+			if(this._dataProvider == value)
 			{
 				return;
 			}
-			var oldSelectedIndex : int = this.selectedIndex;
-			var oldSelectedItem : Object = this.selectedItem;
-			if( this._dataProvider )
+			var oldSelectedIndex:int = this.selectedIndex;
+			var oldSelectedItem:Object = this.selectedItem;
+			if(this._dataProvider)
 			{
-				this._dataProvider.removeEventListener( CollectionEventType.RESET , dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.ADD_ITEM , dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_multipleEventHandler );
-				this._dataProvider.removeEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.removeEventListener(CollectionEventType.RESET, dataProvider_multipleEventHandler);
+				this._dataProvider.removeEventListener(CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.removeEventListener(CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.removeEventListener(CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler);
 			}
 			this._dataProvider = value;
-			if( this._dataProvider )
+			if(this._dataProvider)
 			{
-				this._dataProvider.addEventListener( CollectionEventType.RESET , dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.ADD_ITEM , dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REMOVE_ITEM , dataProvider_multipleEventHandler );
-				this._dataProvider.addEventListener( CollectionEventType.REPLACE_ITEM , dataProvider_multipleEventHandler );
+				this._dataProvider.addEventListener(CollectionEventType.RESET, dataProvider_multipleEventHandler);
+				this._dataProvider.addEventListener(CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.addEventListener(CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.addEventListener(CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler);
 			}
-			if( !this._dataProvider || this._dataProvider.length == 0 )
+			if(!this._dataProvider || this._dataProvider.length == 0)
 			{
 				this.selectedIndex = -1;
 			}
@@ -338,18 +323,23 @@ package feathers.controls
 			}
 			//this ensures that Event.CHANGE will dispatch for selectedItem
 			//changing, even if selectedIndex has not changed.
-			if( this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem )
+			if(this.selectedIndex == oldSelectedIndex && this.selectedItem != oldSelectedItem)
 			{
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _selectedIndex : int = -1;
-
+		protected var _ignoreSelectionChanges:Boolean = false;
+		
+		/**
+		 * @private
+		 */
+		protected var _selectedIndex:int = -1;
+		
 		/**
 		 * The index of the currently selected item. Returns <code>-1</code> if
 		 * no item is selected.
@@ -380,25 +370,25 @@ package feathers.controls
 		 *
 		 * @see #selectedItem
 		 */
-		public function get selectedIndex() : int
+		public function get selectedIndex():int
 		{
 			return this._selectedIndex;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set selectedIndex( value : int ) : void
+		public function set selectedIndex(value:int):void
 		{
-			if( this._selectedIndex == value )
+			if(this._selectedIndex == value)
 			{
 				return;
 			}
 			this._selectedIndex = value;
-			this.invalidate( INVALIDATION_FLAG_SELECTED );
-			this.dispatchEventWith( Event.CHANGE );
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
+			this.dispatchEventWith(Event.CHANGE);
 		}
-
+		
 		/**
 		 * The currently selected item. Returns <code>null</code> if no item is
 		 * selected.
@@ -429,32 +419,32 @@ package feathers.controls
 		 *
 		 * @see #selectedIndex
 		 */
-		public function get selectedItem() : Object
+		public function get selectedItem():Object
 		{
-			if( !this._dataProvider || this._selectedIndex < 0 || this._selectedIndex >= this._dataProvider.length )
+			if(!this._dataProvider || this._selectedIndex < 0 || this._selectedIndex >= this._dataProvider.length)
 			{
 				return null;
 			}
-			return this._dataProvider.getItemAt( this._selectedIndex );
+			return this._dataProvider.getItemAt(this._selectedIndex);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set selectedItem( value : Object ) : void
+		public function set selectedItem(value:Object):void
 		{
-			if( !this._dataProvider )
+			if(!this._dataProvider)
 			{
 				this.selectedIndex = -1;
 				return;
 			}
-			this.selectedIndex = this._dataProvider.getItemIndex( value );
+			this.selectedIndex = this._dataProvider.getItemIndex(value);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _prompt : String;
+		protected var _prompt:String;
 
 		/**
 		 * Text displayed by the button sub-component when no items are
@@ -469,7 +459,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get prompt() : String
+		public function get prompt():String
 		{
 			return this._prompt;
 		}
@@ -477,20 +467,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set prompt( value : String ) : void
+		public function set prompt(value:String):void
 		{
-			if( this._prompt == value )
+			if(this._prompt == value)
 			{
 				return;
 			}
 			this._prompt = value;
-			this.invalidate( INVALIDATION_FLAG_SELECTED );
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _labelField : String = "label";
+		protected var _labelField:String = "label";
 		
 		/**
 		 * The field in the selected item that contains the label text to be
@@ -514,28 +504,28 @@ package feathers.controls
 		 *
 		 * @see #labelFunction
 		 */
-		public function get labelField() : String
+		public function get labelField():String
 		{
 			return this._labelField;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set labelField( value : String ) : void
+		public function set labelField(value:String):void
 		{
-			if( this._labelField == value )
+			if(this._labelField == value)
 			{
 				return;
 			}
 			this._labelField = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _labelFunction : Function;
+		protected var _labelFunction:Function;
 
 		/**
 		 * A function used to generate label text for the selected item
@@ -568,24 +558,24 @@ package feathers.controls
 		 *
 		 * @see #labelField
 		 */
-		public function get labelFunction() : Function
+		public function get labelFunction():Function
 		{
 			return this._labelFunction;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set labelFunction( value : Function ) : void
+		public function set labelFunction(value:Function):void
 		{
 			this._labelFunction = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _popUpContentManager : IPopUpContentManager;
+		protected var _popUpContentManager:IPopUpContentManager;
 		
 		/**
 		 * A manager that handles the details of how to display the pop-up list.
@@ -597,41 +587,51 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get popUpContentManager() : IPopUpContentManager
+		public function get popUpContentManager():IPopUpContentManager
 		{
 			return this._popUpContentManager;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set popUpContentManager( value : IPopUpContentManager ) : void
+		public function set popUpContentManager(value:IPopUpContentManager):void
 		{
-			if( this._popUpContentManager == value )
+			if(this._popUpContentManager == value)
 			{
 				return;
 			}
-			if( this._popUpContentManager is EventDispatcher )
+			if(this._popUpContentManager is EventDispatcher)
 			{
-				var dispatcher : EventDispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.removeEventListener( Event.OPEN , popUpContentManager_openHandler );
-				dispatcher.removeEventListener( Event.CLOSE , popUpContentManager_closeHandler );
+				var dispatcher:EventDispatcher = EventDispatcher(this._popUpContentManager);
+				dispatcher.removeEventListener(Event.OPEN, popUpContentManager_openHandler);
+				dispatcher.removeEventListener(Event.CLOSE, popUpContentManager_closeHandler);
 			}
 			this._popUpContentManager = value;
-			if( this._popUpContentManager is EventDispatcher )
+			if(this._popUpContentManager is EventDispatcher)
 			{
-				dispatcher = EventDispatcher( this._popUpContentManager );
-				dispatcher.addEventListener( Event.OPEN , popUpContentManager_openHandler );
-				dispatcher.addEventListener( Event.CLOSE , popUpContentManager_closeHandler );
+				dispatcher = EventDispatcher(this._popUpContentManager);
+				dispatcher.addEventListener(Event.OPEN, popUpContentManager_openHandler);
+				dispatcher.addEventListener(Event.CLOSE, popUpContentManager_closeHandler);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _typicalItem : Object = null;
+		protected var _typicalItemWidth:Number = NaN;
 
+		/**
+		 * @private
+		 */
+		protected var _typicalItemHeight:Number = NaN;
+		
+		/**
+		 * @private
+		 */
+		protected var _typicalItem:Object = null;
+		
 		/**
 		 * Used to auto-size the list. If the list's width or height is NaN, the
 		 * list will try to automatically pick an ideal size. This item is
@@ -646,30 +646,30 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get typicalItem() : Object
+		public function get typicalItem():Object
 		{
 			return this._typicalItem;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set typicalItem( value : Object ) : void
+		public function set typicalItem(value:Object):void
 		{
-			if( this._typicalItem == value )
+			if(this._typicalItem == value)
 			{
 				return;
 			}
 			this._typicalItem = value;
 			this._typicalItemWidth = NaN;
 			this._typicalItemHeight = NaN;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _buttonFactory : Function;
+		protected var _buttonFactory:Function;
 
 		/**
 		 * A function used to generate the picker list's button sub-component.
@@ -699,7 +699,7 @@ package feathers.controls
 		 * @see feathers.controls.Button
 		 * @see #buttonProperties
 		 */
-		public function get buttonFactory() : Function
+		public function get buttonFactory():Function
 		{
 			return this._buttonFactory;
 		}
@@ -707,21 +707,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set buttonFactory( value : Function ) : void
+		public function set buttonFactory(value:Function):void
 		{
-			if( this._buttonFactory == value )
+			if(this._buttonFactory == value)
 			{
 				return;
 			}
 			this._buttonFactory = value;
-			this.invalidate( INVALIDATION_FLAG_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_BUTTON_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customButtonStyleName : String;
-		
+		protected var _customButtonStyleName:String;
+
 		/**
 		 * A style name to add to the picker list's button sub-component.
 		 * Typically used by a theme to provide different styles to different
@@ -746,7 +746,7 @@ package feathers.controls
 		 * @see #buttonFactory
 		 * @see #buttonProperties
 		 */
-		public function get customButtonStyleName() : String
+		public function get customButtonStyleName():String
 		{
 			return this._customButtonStyleName;
 		}
@@ -754,21 +754,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customButtonStyleName( value : String ) : void
+		public function set customButtonStyleName(value:String):void
 		{
-			if( this._customButtonStyleName == value )
+			if(this._customButtonStyleName == value)
 			{
 				return;
 			}
 			this._customButtonStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_BUTTON_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_BUTTON_FACTORY);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _buttonProperties : PropertyProxy;
-
+		protected var _buttonProperties:PropertyProxy;
+		
 		/**
 		 * An object that stores properties for the picker's button
 		 * sub-component, and the properties will be passed down to the button
@@ -798,53 +798,53 @@ package feathers.controls
 		 * @see #buttonFactory
 		 * @see feathers.controls.Button
 		 */
-		public function get buttonProperties() : Object
+		public function get buttonProperties():Object
 		{
-			if( !this._buttonProperties )
+			if(!this._buttonProperties)
 			{
-				this._buttonProperties = new PropertyProxy( childProperties_onChange );
+				this._buttonProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._buttonProperties;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set buttonProperties( value : Object ) : void
+		public function set buttonProperties(value:Object):void
 		{
-			if( this._buttonProperties == value )
+			if(this._buttonProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._buttonProperties )
+			if(this._buttonProperties)
 			{
-				this._buttonProperties.removeOnChangeCallback( childProperties_onChange );
+				this._buttonProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._buttonProperties = PropertyProxy( value );
-			if( this._buttonProperties )
+			this._buttonProperties = PropertyProxy(value);
+			if(this._buttonProperties)
 			{
-				this._buttonProperties.addOnChangeCallback( childProperties_onChange );
+				this._buttonProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _listFactory : Function;
+		protected var _listFactory:Function;
 
 		/**
 		 * A function used to generate the picker list's pop-up list
@@ -873,7 +873,7 @@ package feathers.controls
 		 * @see feathers.controls.List
 		 * @see #listProperties
 		 */
-		public function get listFactory() : Function
+		public function get listFactory():Function
 		{
 			return this._listFactory;
 		}
@@ -881,21 +881,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set listFactory( value : Function ) : void
+		public function set listFactory(value:Function):void
 		{
-			if( this._listFactory == value )
+			if(this._listFactory == value)
 			{
 				return;
 			}
 			this._listFactory = value;
-			this.invalidate( INVALIDATION_FLAG_LIST_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_LIST_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customListStyleName : String;
-		
+		protected var _customListStyleName:String;
+
 		/**
 		 * A style name to add to the picker list's list sub-component.
 		 * Typically used by a theme to provide different styles to different
@@ -920,7 +920,7 @@ package feathers.controls
 		 * @see #listFactory
 		 * @see #listProperties
 		 */
-		public function get customListStyleName() : String
+		public function get customListStyleName():String
 		{
 			return this._customListStyleName;
 		}
@@ -928,21 +928,21 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customListStyleName( value : String ) : void
+		public function set customListStyleName(value:String):void
 		{
-			if( this._customListStyleName == value )
+			if(this._customListStyleName == value)
 			{
 				return;
 			}
 			this._customListStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_LIST_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_LIST_FACTORY);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _listProperties : PropertyProxy;
-
+		protected var _listProperties:PropertyProxy;
+		
 		/**
 		 * An object that stores properties for the picker's pop-up list
 		 * sub-component, and the properties will be passed down to the pop-up
@@ -971,53 +971,53 @@ package feathers.controls
 		 * @see #listFactory
 		 * @see feathers.controls.List
 		 */
-		public function get listProperties() : Object
+		public function get listProperties():Object
 		{
-			if( !this._listProperties )
+			if(!this._listProperties)
 			{
-				this._listProperties = new PropertyProxy( childProperties_onChange );
+				this._listProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._listProperties;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set listProperties( value : Object ) : void
+		public function set listProperties(value:Object):void
 		{
-			if( this._listProperties == value )
+			if(this._listProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._listProperties )
+			if(this._listProperties)
 			{
-				this._listProperties.removeOnChangeCallback( childProperties_onChange );
+				this._listProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._listProperties = PropertyProxy( value );
-			if( this._listProperties )
+			this._listProperties = PropertyProxy(value);
+			if(this._listProperties)
 			{
-				this._listProperties.addOnChangeCallback( childProperties_onChange );
+				this._listProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _toggleButtonOnOpenAndClose : Boolean = false;
+		protected var _toggleButtonOnOpenAndClose:Boolean = false;
 
 		/**
 		 * Determines if the <code>isSelected</code> property of the picker
@@ -1037,7 +1037,7 @@ package feathers.controls
 		 * @see feathers.core.IToggle
 		 * @see feathers.controls.ToggleButton
 		 */
-		public function get toggleButtonOnOpenAndClose() : Boolean
+		public function get toggleButtonOnOpenAndClose():Boolean
 		{
 			return this._toggleButtonOnOpenAndClose;
 		}
@@ -1045,22 +1045,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set toggleButtonOnOpenAndClose( value : Boolean ) : void
+		public function set toggleButtonOnOpenAndClose(value:Boolean):void
 		{
-			if( this._toggleButtonOnOpenAndClose == value )
+			if(this._toggleButtonOnOpenAndClose == value)
 			{
 				return;
 			}
 			this._toggleButtonOnOpenAndClose = value;
-			if( this.button is IToggle )
+			if(this.button is IToggle)
 			{
-				if( this._toggleButtonOnOpenAndClose && this._popUpContentManager.isOpen )
+				if(this._toggleButtonOnOpenAndClose && this._popUpContentManager.isOpen)
 				{
-					IToggle( this.button ).isSelected = true;
+					IToggle(this.button).isSelected = true;
 				}
 				else
 				{
-					IToggle( this.button ).isSelected = false;
+					IToggle(this.button).isSelected = false;
 				}
 			}
 		}
@@ -1068,9 +1068,9 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function get baseline() : Number
+		public function get baseline():Number
 		{
-			if( !this.button )
+			if(!this.button)
 			{
 				return this.scaledActualHeight;
 			}
@@ -1078,25 +1078,137 @@ package feathers.controls
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function PickerList()
+		protected var _isOpenListPending:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _isCloseListPending:Boolean = false;
+		
+		/**
+		 * Using <code>labelField</code> and <code>labelFunction</code>,
+		 * generates a label from the selected item to be displayed by the
+		 * picker list's button control.
+		 *
+		 * <p><strong>Important:</strong> This value only affects the selected
+		 * item displayed by the picker list's button control. It will <em>not</em>
+		 * affect the label text of the pop-up list's item renderers.</p>
+		 */
+		public function itemToLabel(item:Object):String
 		{
-			super();
+			if(this._labelFunction != null)
+			{
+				var labelResult:Object = this._labelFunction(item);
+				if(labelResult is String)
+				{
+					return labelResult as String;
+				}
+				return labelResult.toString();
+			}
+			else if(this._labelField != null && item && item.hasOwnProperty(this._labelField))
+			{
+				labelResult = item[this._labelField];
+				if(labelResult is String)
+				{
+					return labelResult as String;
+				}
+				return labelResult.toString();
+			}
+			else if(item is String)
+			{
+				return item as String;
+			}
+			else if(item)
+			{
+				return item.toString();
+			}
+			return "";
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _buttonHasFocus:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _buttonTouchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _listIsOpenOnTouchBegan:Boolean = false;
+
+		/**
+		 * Opens the pop-up list, if it isn't already open.
+		 */
+		public function openList():void
+		{
+			this._isCloseListPending = false;
+			if(this._popUpContentManager.isOpen)
+			{
+				return;
+			}
+			if(!this._isValidating && this.isInvalid())
+			{
+				this._isOpenListPending = true;
+				return;
+			}
+			this._isOpenListPending = false;
+			if(this._popUpContentManager is IPopUpContentManagerWithPrompt)
+			{
+				IPopUpContentManagerWithPrompt(this._popUpContentManager).prompt = this._prompt;
+			}
+			this._popUpContentManager.open(this.list, this);
+			this.list.scrollToDisplayIndex(this._selectedIndex);
+			this.list.validate();
+			if(this._focusManager)
+			{
+				this._focusManager.focus = this.list;
+				this.stage.addEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
+				this.list.addEventListener(FeathersEventType.FOCUS_OUT, list_focusOutHandler);
+			}
+		}
+
+		/**
+		 * Closes the pop-up list, if it is open.
+		 */
+		public function closeList():void
+		{
+			this._isOpenListPending = false;
+			if(!this._popUpContentManager.isOpen)
+			{
+				return;
+			}
+			if(!this._isValidating && this.isInvalid())
+			{
+				this._isCloseListPending = true;
+				return;
+			}
+			this._isCloseListPending = false;
+			this.list.validate();
+			//don't clean up anything from openList() in closeList(). The list
+			//may be closed by removing it from the PopUpManager, which would
+			//result in closeList() never being called.
+			//instead, clean up in the Event.REMOVED_FROM_STAGE listener.
+			this._popUpContentManager.close();
+		}
+		
+		/**
 		 * @inheritDoc
 		 */
-		override public function dispose() : void
+		override public function dispose():void
 		{
-			if( this.list )
+			if(this.list)
 			{
 				this.closeList();
 				this.list.dispose();
 				this.list = null;
 			}
-			if( this._popUpContentManager )
+			if(this._popUpContentManager)
 			{
 				this._popUpContentManager.dispose();
 				this._popUpContentManager = null;
@@ -1111,9 +1223,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function showFocus() : void
+		override public function showFocus():void
 		{
-			if( !this.button )
+			if(!this.button)
 			{
 				return;
 			}
@@ -1123,122 +1235,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function hideFocus() : void
+		override public function hideFocus():void
 		{
-			if( !this.button )
+			if(!this.button)
 			{
 				return;
 			}
 			this.button.hideFocus();
 		}
-
-		/**
-		 * Using <code>labelField</code> and <code>labelFunction</code>,
-		 * generates a label from the selected item to be displayed by the
-		 * picker list's button control.
-		 *
-		 * <p><strong>Important:</strong> This value only affects the selected
-		 * item displayed by the picker list's button control. It will <em>not</em>
-		 * affect the label text of the pop-up list's item renderers.</p>
-		 */
-		public function itemToLabel( item : Object ) : String
-		{
-			if( this._labelFunction != null )
-			{
-				var labelResult : Object = this._labelFunction( item );
-				if( labelResult is String )
-				{
-					return labelResult as String;
-				}
-				return labelResult.toString();
-			}
-			else if( this._labelField != null && item && item.hasOwnProperty( this._labelField ) )
-			{
-				labelResult = item[ this._labelField ];
-				if( labelResult is String )
-				{
-					return labelResult as String;
-				}
-				return labelResult.toString();
-			}
-			else if( item is String )
-			{
-				return item as String;
-			}
-			else if( item )
-			{
-				return item.toString();
-			}
-			return "";
-		}
-
-		/**
-		 * Opens the pop-up list, if it isn't already open.
-		 */
-		public function openList() : void
-		{
-			this._isCloseListPending = false;
-			if( this._popUpContentManager.isOpen )
-			{
-				return;
-			}
-			if( !this._isValidating && this.isInvalid() )
-			{
-				this._isOpenListPending = true;
-				return;
-			}
-			this._isOpenListPending = false;
-			if( this._popUpContentManager is IPopUpContentManagerWithPrompt )
-			{
-				IPopUpContentManagerWithPrompt( this._popUpContentManager ).prompt = this._prompt;
-			}
-			this._popUpContentManager.open( this.list , this );
-			this.list.scrollToDisplayIndex( this._selectedIndex );
-			this.list.validate();
-			if( this._focusManager )
-			{
-				this._focusManager.focus = this.list;
-				this.stage.addEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
-				this.list.addEventListener( FeathersEventType.FOCUS_OUT , list_focusOutHandler );
-			}
-		}
-
-		/**
-		 * Closes the pop-up list, if it is open.
-		 */
-		public function closeList() : void
-		{
-			this._isOpenListPending = false;
-			if( !this._popUpContentManager.isOpen )
-			{
-				return;
-			}
-			if( !this._isValidating && this.isInvalid() )
-			{
-				this._isCloseListPending = true;
-				return;
-			}
-			this._isCloseListPending = false;
-			this.list.validate();
-			//don't clean up anything from openList() in closeList(). The list
-			//may be closed by removing it from the PopUpManager, which would
-			//result in closeList() never being called.
-			//instead, clean up in the Event.REMOVED_FROM_STAGE listener.
-			this._popUpContentManager.close();
-		}
-
+		
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( !this._popUpContentManager )
+			if(!this._popUpContentManager)
 			{
-				if( SystemUtil.isDesktop )
+				if(SystemUtil.isDesktop)
 				{
 					this.popUpContentManager = new DropDownPopUpContentManager();
 				}
-				else if( DeviceCapabilities.isTablet( Starling.current.nativeStage ) )
+				else if(DeviceCapabilities.isTablet(Starling.current.nativeStage))
 				{
 					this.popUpContentManager = new CalloutPopUpContentManager();
 				}
@@ -1253,73 +1270,73 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var selectionInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SELECTED );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var buttonFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_BUTTON_FACTORY );
-			var listFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LIST_FACTORY );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var selectionInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SELECTED);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var buttonFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_BUTTON_FACTORY);
+			var listFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_LIST_FACTORY);
 
-			if( buttonFactoryInvalid )
+			if(buttonFactoryInvalid)
 			{
 				this.createButton();
 			}
 
-			if( listFactoryInvalid )
+			if(listFactoryInvalid)
 			{
 				this.createList();
 			}
-
-			if( buttonFactoryInvalid || stylesInvalid || selectionInvalid )
+			
+			if(buttonFactoryInvalid || stylesInvalid || selectionInvalid)
 			{
 				//this section asks the button to auto-size again, if our
 				//explicit dimensions aren't set.
 				//set this before buttonProperties is used because it might
 				//contain width or height changes.
-				if( this.explicitWidth !== this.explicitWidth ) //isNaN
+				if(this.explicitWidth !== this.explicitWidth) //isNaN
 				{
 					this.button.width = NaN;
 				}
-				if( this.explicitHeight !== this.explicitHeight ) //isNaN
+				if(this.explicitHeight !== this.explicitHeight) //isNaN
 				{
 					this.button.height = NaN;
 				}
 			}
 
-			if( buttonFactoryInvalid || stylesInvalid )
+			if(buttonFactoryInvalid || stylesInvalid)
 			{
 				this._typicalItemWidth = NaN;
 				this._typicalItemHeight = NaN;
 				this.refreshButtonProperties();
 			}
 
-			if( listFactoryInvalid || stylesInvalid )
+			if(listFactoryInvalid || stylesInvalid)
 			{
 				this.refreshListProperties();
 			}
-
-			if( listFactoryInvalid || dataInvalid )
+			
+			if(listFactoryInvalid || dataInvalid)
 			{
-				var oldIgnoreSelectionChanges : Boolean = this._ignoreSelectionChanges;
+				var oldIgnoreSelectionChanges:Boolean = this._ignoreSelectionChanges;
 				this._ignoreSelectionChanges = true;
 				this.list.dataProvider = this._dataProvider;
 				this._ignoreSelectionChanges = oldIgnoreSelectionChanges;
 			}
-
-			if( buttonFactoryInvalid || listFactoryInvalid || stateInvalid )
+			
+			if(buttonFactoryInvalid || listFactoryInvalid || stateInvalid)
 			{
 				this.button.isEnabled = this._isEnabled;
 				this.list.isEnabled = this._isEnabled;
 			}
 
-			if( buttonFactoryInvalid || dataInvalid || selectionInvalid )
+			if(buttonFactoryInvalid || dataInvalid || selectionInvalid)
 			{
 				this.refreshButtonLabel();
 			}
-			if( listFactoryInvalid || dataInvalid || selectionInvalid )
+			if(listFactoryInvalid || dataInvalid || selectionInvalid)
 			{
 				oldIgnoreSelectionChanges = this._ignoreSelectionChanges;
 				this._ignoreSelectionChanges = true;
@@ -1329,12 +1346,12 @@ package feathers.controls
 
 			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
 
-			if( buttonFactoryInvalid || stylesInvalid || sizeInvalid || selectionInvalid )
+			if(buttonFactoryInvalid || stylesInvalid || sizeInvalid || selectionInvalid)
 			{
 				this.layout();
 			}
 
-			if( this.list.stage )
+			if(this.list.stage)
 			{
 				//final validation to avoid juggler next frame issues
 				//only validate if it's on the display list, though, because the
@@ -1364,29 +1381,29 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			var buttonWidth : Number;
-			var buttonHeight : Number;
-			if( this._typicalItem )
+			var buttonWidth:Number;
+			var buttonHeight:Number;
+			if(this._typicalItem)
 			{
-				if( this._typicalItemWidth !== this._typicalItemWidth || //isNaN
-						this._typicalItemHeight !== this._typicalItemHeight ) //isNaN
+				if(this._typicalItemWidth !== this._typicalItemWidth || //isNaN
+					this._typicalItemHeight !== this._typicalItemHeight) //isNaN
 				{
-					var oldWidth : Number = this.button.width;
-					var oldHeight : Number = this.button.height;
+					var oldWidth:Number = this.button.width;
+					var oldHeight:Number = this.button.height;
 					this.button.width = NaN;
 					this.button.height = NaN;
-					if( this._typicalItem )
+					if(this._typicalItem)
 					{
-						this.button.label = this.itemToLabel( this._typicalItem );
+						this.button.label = this.itemToLabel(this._typicalItem);
 					}
 					this.button.validate();
 					this._typicalItemWidth = this.button.width;
@@ -1405,11 +1422,11 @@ package feathers.controls
 				buttonHeight = this.button.height;
 			}
 
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
-				if( buttonWidth === buttonWidth ) //!isNaN
+				if(buttonWidth === buttonWidth) //!isNaN
 				{
 					newWidth = buttonWidth;
 				}
@@ -1418,9 +1435,9 @@ package feathers.controls
 					newWidth = 0;
 				}
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
-				if( buttonHeight === buttonHeight ) //!isNaN
+				if(buttonHeight === buttonHeight) //!isNaN
 				{
 					newHeight = buttonHeight;
 				}
@@ -1430,7 +1447,7 @@ package feathers.controls
 				}
 			}
 
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -1444,26 +1461,26 @@ package feathers.controls
 		 * @see #buttonFactory
 		 * @see #customButtonStyleName
 		 */
-		protected function createButton() : void
+		protected function createButton():void
 		{
-			if( this.button )
+			if(this.button)
 			{
-				this.button.removeFromParent( true );
+				this.button.removeFromParent(true);
 				this.button = null;
 			}
 
-			var factory : Function = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
-			var buttonStyleName : String = this._customButtonStyleName != null ? this._customButtonStyleName : this.buttonStyleName;
-			this.button = Button( factory() );
-			if( this.button is ToggleButton )
+			var factory:Function = this._buttonFactory != null ? this._buttonFactory : defaultButtonFactory;
+			var buttonStyleName:String = this._customButtonStyleName != null ? this._customButtonStyleName : this.buttonStyleName;
+			this.button = Button(factory());
+			if(this.button is ToggleButton)
 			{
 				//we'll control the value of isSelected manually
-				ToggleButton( this.button ).isToggle = false;
+				ToggleButton(this.button).isToggle = false;
 			}
-			this.button.styleNameList.add( buttonStyleName );
-			this.button.addEventListener( TouchEvent.TOUCH , button_touchHandler );
-			this.button.addEventListener( Event.TRIGGERED , button_triggeredHandler );
-			this.addChild( this.button );
+			this.button.styleNameList.add(buttonStyleName);
+			this.button.addEventListener(TouchEvent.TOUCH, button_touchHandler);
+			this.button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
+			this.addChild(this.button);
 		}
 
 		/**
@@ -1477,69 +1494,69 @@ package feathers.controls
 		 * @see #listFactory
 		 * @see #customListStyleName
 		 */
-		protected function createList() : void
+		protected function createList():void
 		{
-			if( this.list )
+			if(this.list)
 			{
-				this.list.removeFromParent( false );
+				this.list.removeFromParent(false);
 				//disposing separately because the list may not have a parent
 				this.list.dispose();
 				this.list = null;
 			}
 
-			var factory : Function = this._listFactory != null ? this._listFactory : defaultListFactory;
-			var listStyleName : String = this._customListStyleName != null ? this._customListStyleName : this.listStyleName;
-			this.list = List( factory() );
+			var factory:Function = this._listFactory != null ? this._listFactory : defaultListFactory;
+			var listStyleName:String = this._customListStyleName != null ? this._customListStyleName : this.listStyleName;
+			this.list = List(factory());
 			this.list.focusOwner = this;
-			this.list.styleNameList.add( listStyleName );
-			this.list.addEventListener( Event.CHANGE , list_changeHandler );
-			this.list.addEventListener( Event.TRIGGERED , list_triggeredHandler );
-			this.list.addEventListener( Event.REMOVED_FROM_STAGE , list_removedFromStageHandler );
+			this.list.styleNameList.add(listStyleName);
+			this.list.addEventListener(Event.CHANGE, list_changeHandler);
+			this.list.addEventListener(Event.TRIGGERED, list_triggeredHandler);
+			this.list.addEventListener(Event.REMOVED_FROM_STAGE, list_removedFromStageHandler);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function refreshButtonLabel() : void
+		protected function refreshButtonLabel():void
 		{
-			if( this._selectedIndex >= 0 )
+			if(this._selectedIndex >= 0)
 			{
-				this.button.label = this.itemToLabel( this.selectedItem );
+				this.button.label = this.itemToLabel(this.selectedItem);
 			}
 			else
 			{
 				this.button.label = this._prompt;
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function refreshButtonProperties() : void
+		protected function refreshButtonProperties():void
 		{
-			for( var propertyName : String in this._buttonProperties )
+			for(var propertyName:String in this._buttonProperties)
 			{
-				var propertyValue : Object = this._buttonProperties[ propertyName ];
-				this.button[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._buttonProperties[propertyName];
+				this.button[propertyName] = propertyValue;
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function refreshListProperties():void
+		{
+			for(var propertyName:String in this._listProperties)
+			{
+				var propertyValue:Object = this._listProperties[propertyName];
+				this.list[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshListProperties() : void
-		{
-			for( var propertyName : String in this._listProperties )
-			{
-				var propertyValue : Object = this._listProperties[ propertyName ];
-				this.list[ propertyName ] = propertyValue;
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		protected function layout() : void
+		protected function layout():void
 		{
 			this.button.width = this.actualWidth;
 			this.button.height = this.actualHeight;
@@ -1551,13 +1568,13 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function handlePendingActions() : void
+		protected function handlePendingActions():void
 		{
-			if( this._isOpenListPending )
+			if(this._isOpenListPending)
 			{
 				this.openList();
 			}
-			if( this._isCloseListPending )
+			if(this._isCloseListPending)
 			{
 				this.closeList();
 			}
@@ -1566,31 +1583,43 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy , name : String ) : void
+		override protected function focusInHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			super.focusInHandler(event);
+			this._buttonHasFocus = true;
+			this.button.dispatchEventWith(FeathersEventType.FOCUS_IN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function dataProvider_multipleEventHandler() : void
+		override protected function focusOutHandler(event:Event):void
 		{
-			//we need to ensure that the pop-up list has received the new
-			//selected index, or it might update the selected index to an
-			//incorrect value after an item is added, removed, or replaced.
-			this.validate();
-		}
-
-		/**
-		 * @private
-		 */
-		protected function button_touchHandler( event : TouchEvent ) : void
-		{
-			if( this._buttonTouchPointID >= 0 )
+			if(this._buttonHasFocus)
 			{
-				var touch : Touch = event.getTouch( this.button , TouchPhase.ENDED , this._buttonTouchPointID );
-				if( !touch )
+				this.button.dispatchEventWith(FeathersEventType.FOCUS_OUT);
+				this._buttonHasFocus = false;
+			}
+			super.focusOutHandler(event);
+		}
+
+		/**
+		 * @private
+		 */
+		protected function childProperties_onChange(proxy:PropertyProxy, name:String):void
+		{
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected function button_touchHandler(event:TouchEvent):void
+		{
+			if(this._buttonTouchPointID >= 0)
+			{
+				var touch:Touch = event.getTouch(this.button, TouchPhase.ENDED, this._buttonTouchPointID);
+				if(!touch)
 				{
 					return;
 				}
@@ -1603,8 +1632,8 @@ package feathers.controls
 			}
 			else
 			{
-				touch = event.getTouch( this.button , TouchPhase.BEGAN );
-				if( !touch )
+				touch = event.getTouch(this.button, TouchPhase.BEGAN);
+				if(!touch)
 				{
 					return;
 				}
@@ -1612,30 +1641,31 @@ package feathers.controls
 				this._listIsOpenOnTouchBegan = this._popUpContentManager.isOpen;
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function button_triggeredHandler( event : Event ) : void
+		protected function button_triggeredHandler(event:Event):void
 		{
-			if( this._focusManager && this._listIsOpenOnTouchBegan )
+			if(this._focusManager && this._listIsOpenOnTouchBegan)
 			{
 				return;
 			}
-			if( this._popUpContentManager.isOpen )
+			if(this._popUpContentManager.isOpen)
 			{
 				this.closeList();
 				return;
 			}
 			this.openList();
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function list_changeHandler( event : Event ) : void
+		protected function list_changeHandler(event:Event):void
 		{
-			if( this._ignoreSelectionChanges || this._popUpContentManager is IPersistentPopUpContentManager )
+			if(this._ignoreSelectionChanges ||
+				this._popUpContentManager is IPersistentPopUpContentManager)
 			{
 				return;
 			}
@@ -1645,49 +1675,49 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function popUpContentManager_openHandler( event : Event ) : void
+		protected function popUpContentManager_openHandler(event:Event):void
 		{
-			if( this._toggleButtonOnOpenAndClose && this.button is IToggle )
+			if(this._toggleButtonOnOpenAndClose && this.button is IToggle)
 			{
-				IToggle( this.button ).isSelected = true;
+				IToggle(this.button).isSelected = true;
 			}
-			this.dispatchEventWith( Event.OPEN );
+			this.dispatchEventWith(Event.OPEN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function popUpContentManager_closeHandler( event : Event ) : void
+		protected function popUpContentManager_closeHandler(event:Event):void
 		{
-			if( this._popUpContentManager is IPersistentPopUpContentManager )
+			if(this._popUpContentManager is IPersistentPopUpContentManager)
 			{
 				this.selectedIndex = this.list.selectedIndex;
 			}
-			if( this._toggleButtonOnOpenAndClose && this.button is IToggle )
+			if(this._toggleButtonOnOpenAndClose && this.button is IToggle)
 			{
-				IToggle( this.button ).isSelected = false;
+				IToggle(this.button).isSelected = false;
 			}
-			this.dispatchEventWith( Event.CLOSE );
+			this.dispatchEventWith(Event.CLOSE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function list_removedFromStageHandler( event : Event ) : void
+		protected function list_removedFromStageHandler(event:Event):void
 		{
-			if( this._focusManager )
+			if(this._focusManager)
 			{
-				this.list.stage.removeEventListener( KeyboardEvent.KEY_UP , stage_keyUpHandler );
-				this.list.removeEventListener( FeathersEventType.FOCUS_OUT , list_focusOutHandler );
+				this.list.stage.removeEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
+				this.list.removeEventListener(FeathersEventType.FOCUS_OUT, list_focusOutHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function list_focusOutHandler( event : Event ) : void
+		protected function list_focusOutHandler(event:Event):void
 		{
-			if( !this._popUpContentManager.isOpen )
+			if(!this._popUpContentManager.isOpen)
 			{
 				return;
 			}
@@ -1697,9 +1727,10 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function list_triggeredHandler( event : Event ) : void
+		protected function list_triggeredHandler(event:Event):void
 		{
-			if( !this._isEnabled || this._popUpContentManager is IPersistentPopUpContentManager )
+			if(!this._isEnabled ||
+				this._popUpContentManager is IPersistentPopUpContentManager)
 			{
 				return;
 			}
@@ -1709,39 +1740,27 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function stage_keyUpHandler( event : KeyboardEvent ) : void
+		protected function dataProvider_multipleEventHandler():void
 		{
-			if( !this._popUpContentManager.isOpen )
+			//we need to ensure that the pop-up list has received the new
+			//selected index, or it might update the selected index to an
+			//incorrect value after an item is added, removed, or replaced.
+			this.validate();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function stage_keyUpHandler(event:KeyboardEvent):void
+		{
+			if(!this._popUpContentManager.isOpen)
 			{
 				return;
 			}
-			if( event.keyCode == Keyboard.ENTER )
+			if(event.keyCode == Keyboard.ENTER)
 			{
 				this.closeList();
 			}
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function focusInHandler( event : Event ) : void
-		{
-			super.focusInHandler( event );
-			this._buttonHasFocus = true;
-			this.button.dispatchEventWith( FeathersEventType.FOCUS_IN );
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function focusOutHandler( event : Event ) : void
-		{
-			if( this._buttonHasFocus )
-			{
-				this.button.dispatchEventWith( FeathersEventType.FOCUS_OUT );
-				this._buttonHasFocus = false;
-			}
-			super.focusOutHandler( event );
 		}
 	}
 }

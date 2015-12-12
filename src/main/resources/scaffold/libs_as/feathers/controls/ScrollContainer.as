@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.LayoutViewPort;
@@ -40,7 +40,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.SCROLL
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * A generic container that supports layout, scrolling, and a background
@@ -68,30 +68,9 @@ package feathers.controls
 	 *
 	 * @see ../../../help/scroll-container.html How to use the Feathers ScrollContainer component
 	 * @see feathers.controls.LayoutGroup
-	 */ public class ScrollContainer extends Scroller implements IScrollContainer, IFocusContainer
+	 */
+	public class ScrollContainer extends Scroller implements IScrollContainer, IFocusContainer
 	{
-		/**
-		 * The default <code>IStyleProvider</code> for all <code>ScrollContainer</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
-		/**
-		 * A flag that indicates if the display list functions like <code>addChild()</code>
-		 * and <code>removeChild()</code> will be passed to the internal view
-		 * port.
-		 */
-		protected var displayListBypassEnabled : Boolean = true;
-		/**
-		 * @private
-		 */
-		protected var layoutViewPort : LayoutViewPort;
-		/**
-		 * @private
-		 */
-		protected var _ignoreChildChanges : Boolean = false;
 		/**
 		 * An alternate style name to use with <code>ScrollContainer</code> to
 		 * allow a theme to give it a toolbar style. If a theme does not provide
@@ -112,123 +91,174 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_TOOLBAR : String = "feathers-toolbar-scroll-container";
+		public static const ALTERNATE_STYLE_NAME_TOOLBAR:String = "feathers-toolbar-scroll-container";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_POLICY_AUTO
 		 *
 		 * @see feathers.controls.Scroller#horizontalScrollPolicy
 		 * @see feathers.controls.Scroller#verticalScrollPolicy
 		 */
-		public static const SCROLL_POLICY_AUTO : String = "auto";
+		public static const SCROLL_POLICY_AUTO:String = "auto";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_POLICY_ON
 		 *
 		 * @see feathers.controls.Scroller#horizontalScrollPolicy
 		 * @see feathers.controls.Scroller#verticalScrollPolicy
 		 */
-		public static const SCROLL_POLICY_ON : String = "on";
+		public static const SCROLL_POLICY_ON:String = "on";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_POLICY_OFF
 		 *
 		 * @see feathers.controls.Scroller#horizontalScrollPolicy
 		 * @see feathers.controls.Scroller#verticalScrollPolicy
 		 */
-		public static const SCROLL_POLICY_OFF : String = "off";
+		public static const SCROLL_POLICY_OFF:String = "off";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FLOAT
 		 *
 		 * @see feathers.controls.Scroller#scrollBarDisplayMode
 		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT : String = "float";
+		public static const SCROLL_BAR_DISPLAY_MODE_FLOAT:String = "float";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED
 		 *
 		 * @see feathers.controls.Scroller#scrollBarDisplayMode
 		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED : String = "fixed";
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED:String = "fixed";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT
 		 *
 		 * @see feathers.controls.Scroller#scrollBarDisplayMode
 		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT : String = "fixedFloat";
+		public static const SCROLL_BAR_DISPLAY_MODE_FIXED_FLOAT:String = "fixedFloat";
+
 		/**
 		 * @copy feathers.controls.Scroller#SCROLL_BAR_DISPLAY_MODE_NONE
 		 *
 		 * @see feathers.controls.Scroller#scrollBarDisplayMode
 		 */
-		public static const SCROLL_BAR_DISPLAY_MODE_NONE : String = "none";
+		public static const SCROLL_BAR_DISPLAY_MODE_NONE:String = "none";
+
 		/**
 		 * The vertical scroll bar will be positioned on the right.
 		 *
 		 * @see feathers.controls.Scroller#verticalScrollBarPosition
 		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT : String = "right";
+		public static const VERTICAL_SCROLL_BAR_POSITION_RIGHT:String = "right";
+
 		/**
 		 * The vertical scroll bar will be positioned on the left.
 		 *
 		 * @see feathers.controls.Scroller#verticalScrollBarPosition
 		 */
-		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT : String = "left";
+		public static const VERTICAL_SCROLL_BAR_POSITION_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH
 		 *
 		 * @see feathers.controls.Scroller#interactionMode
 		 */
-		public static const INTERACTION_MODE_TOUCH : String = "touch";
+		public static const INTERACTION_MODE_TOUCH:String = "touch";
+
 		/**
 		 * @copy feathers.controls.Scroller#INTERACTION_MODE_MOUSE
 		 *
 		 * @see feathers.controls.Scroller#interactionMode
 		 */
-		public static const INTERACTION_MODE_MOUSE : String = "mouse";
+		public static const INTERACTION_MODE_MOUSE:String = "mouse";
+
 		/**
 		 * @copy feathers.controls.Scroller#INTERACTION_MODE_TOUCH_AND_SCROLL_BARS
 		 *
 		 * @see feathers.controls.Scroller#interactionMode
 		 */
-		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS : String = "touchAndScrollBars";
+		public static const INTERACTION_MODE_TOUCH_AND_SCROLL_BARS:String = "touchAndScrollBars";
+
 		/**
 		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL
 		 *
 		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
 		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL : String = "vertical";
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_VERTICAL:String = "vertical";
+
 		/**
 		 * @copy feathers.controls.Scroller#MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL
 		 *
 		 * @see feathers.controls.Scroller#verticalMouseWheelScrollDirection
 		 */
-		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL : String = "horizontal";
+		public static const MOUSE_WHEEL_SCROLL_DIRECTION_HORIZONTAL:String = "horizontal";
+
 		/**
 		 * @copy feathers.controls.Scroller#DECELERATION_RATE_NORMAL
 		 *
 		 * @see feathers.controls.Scroller#decelerationRate
 		 */
-		public static const DECELERATION_RATE_NORMAL : Number = 0.998;
+		public static const DECELERATION_RATE_NORMAL:Number = 0.998;
+
 		/**
 		 * @copy feathers.controls.Scroller#DECELERATION_RATE_FAST
 		 *
 		 * @see feathers.controls.Scroller#decelerationRate
 		 */
-		public static const DECELERATION_RATE_FAST : Number = 0.99;
+		public static const DECELERATION_RATE_FAST:Number = 0.99;
+
 		/**
 		 * The container will auto size itself to fill the entire stage.
 		 *
 		 * @see #autoSizeMode
 		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
+		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
+
 		/**
 		 * The container will auto size itself to fit its content.
 		 *
 		 * @see #autoSizeMode
 		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
+		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
+
+		/**
+		 * The default <code>IStyleProvider</code> for all <code>ScrollContainer</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider:IStyleProvider;
+
+		/**
+		 * Constructor.
+		 */
+		public function ScrollContainer()
+		{
+			super();
+			this.layoutViewPort = new LayoutViewPort();
+			this.viewPort = this.layoutViewPort;
+			this.addEventListener(Event.ADDED_TO_STAGE, scrollContainer_addedToStageHandler);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, scrollContainer_removedFromStageHandler);
+		}
+
+		/**
+		 * A flag that indicates if the display list functions like <code>addChild()</code>
+		 * and <code>removeChild()</code> will be passed to the internal view
+		 * port.
+		 */
+		protected var displayListBypassEnabled:Boolean = true;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		protected var layoutViewPort:LayoutViewPort;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return ScrollContainer.globalStyleProvider;
 		}
@@ -236,7 +266,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _isChildFocusEnabled : Boolean = true;
+		protected var _isChildFocusEnabled:Boolean = true;
 
 		/**
 		 * @copy feathers.core.IFocusContainer#isChildFocusEnabled
@@ -245,7 +275,7 @@ package feathers.controls
 		 *
 		 * @see #isFocusEnabled
 		 */
-		public function get isChildFocusEnabled() : Boolean
+		public function get isChildFocusEnabled():Boolean
 		{
 			return this._isEnabled && this._isChildFocusEnabled;
 		}
@@ -253,7 +283,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isChildFocusEnabled( value : Boolean ) : void
+		public function set isChildFocusEnabled(value:Boolean):void
 		{
 			this._isChildFocusEnabled = value;
 		}
@@ -261,7 +291,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _layout : ILayout;
+		protected var _layout:ILayout;
 
 		/**
 		 * Controls the way that the container's children are positioned and
@@ -277,7 +307,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get layout() : ILayout
+		public function get layout():ILayout
 		{
 			return this._layout;
 		}
@@ -285,22 +315,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set layout( value : ILayout ) : void
+		public function set layout(value:ILayout):void
 		{
-			if( this._layout == value )
+			if(this._layout == value)
 			{
 				return;
 			}
 			this._layout = value;
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _autoSizeMode : String = AUTO_SIZE_MODE_CONTENT;
+		protected var _autoSizeMode:String = AUTO_SIZE_MODE_CONTENT;
 
-		[Inspectable(type="String" , enumeration="stage,content")]
+		[Inspectable(type="String",enumeration="stage,content")]
 		/**
 		 * Determines how the container will set its own size when its
 		 * dimensions (width and height) aren't set explicitly.
@@ -315,7 +345,8 @@ package feathers.controls
 		 *
 		 * @see #AUTO_SIZE_MODE_STAGE
 		 * @see #AUTO_SIZE_MODE_CONTENT
-		 */ public function get autoSizeMode() : String
+		 */
+		public function get autoSizeMode():String
 		{
 			return this._autoSizeMode;
 		}
@@ -323,199 +354,101 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set autoSizeMode( value : String ) : void
+		public function set autoSizeMode(value:String):void
 		{
-			if( this._autoSizeMode == value )
+			if(this._autoSizeMode == value)
 			{
 				return;
 			}
 			this._autoSizeMode = value;
 			this._measureViewPort = this._autoSizeMode != AUTO_SIZE_MODE_STAGE;
-			if( this.stage )
+			if(this.stage)
 			{
-				if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+				if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
 				{
-					this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
+					this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 				}
 				else
 				{
-					this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
+					this.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
 				}
 			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function get numChildren() : int
+		protected var _ignoreChildChanges:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		override public function get numChildren():int
 		{
-			if( !this.displayListBypassEnabled )
+			if(!this.displayListBypassEnabled)
 			{
 				return super.numChildren;
 			}
-			return DisplayObjectContainer( this.viewPort ).numChildren;
+			return DisplayObjectContainer(this.viewPort).numChildren;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get numRawChildren() : int
+		public function get numRawChildren():int
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			var result : int = super.numChildren;
+			var result:int = super.numChildren;
 			this.displayListBypassEnabled = oldBypass;
 			return result;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function ScrollContainer()
-		{
-			super();
-			this.layoutViewPort = new LayoutViewPort();
-			this.viewPort = this.layoutViewPort;
-			this.addEventListener( Event.ADDED_TO_STAGE , scrollContainer_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE , scrollContainer_removedFromStageHandler );
-		}
-
-		/**
 		 * @private
 		 */
-		override public function getChildByName( name : String ) : DisplayObject
+		override public function getChildByName(name:String):DisplayObject
 		{
-			if( !this.displayListBypassEnabled )
+			if(!this.displayListBypassEnabled)
 			{
-				return super.getChildByName( name );
+				return super.getChildByName(name);
 			}
-			return DisplayObjectContainer( this.viewPort ).getChildByName( name );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function getChildAt( index : int ) : DisplayObject
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				return super.getChildAt( index );
-			}
-			return DisplayObjectContainer( this.viewPort ).getChildAt( index );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function addChild( child : DisplayObject ) : DisplayObject
-		{
-			return this.addChildAt( child , this.numChildren );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function addChildAt( child : DisplayObject , index : int ) : DisplayObject
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				return super.addChildAt( child , index );
-			}
-			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).addChildAt( child , index );
-			if( result is IFeathersControl )
-			{
-				result.addEventListener( Event.RESIZE , child_resizeHandler );
-			}
-			if( result is ILayoutDisplayObject )
-			{
-				result.addEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
-			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
-			return result;
-		}
-
-		/**
-		 * @private
-		 */
-		override public function removeChildAt( index : int , dispose : Boolean = false ) : DisplayObject
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				return super.removeChildAt( index , dispose );
-			}
-			var result : DisplayObject = DisplayObjectContainer( this.viewPort ).removeChildAt( index , dispose );
-			if( result is IFeathersControl )
-			{
-				result.removeEventListener( Event.RESIZE , child_resizeHandler );
-			}
-			if( result is ILayoutDisplayObject )
-			{
-				result.removeEventListener( FeathersEventType.LAYOUT_DATA_CHANGE , child_layoutDataChangeHandler );
-			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
-			return result;
-		}
-
-		/**
-		 * @private
-		 */
-		override public function getChildIndex( child : DisplayObject ) : int
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				return super.getChildIndex( child );
-			}
-			return DisplayObjectContainer( this.viewPort ).getChildIndex( child );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function setChildIndex( child : DisplayObject , index : int ) : void
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				super.setChildIndex( child , index );
-				return;
-			}
-			DisplayObjectContainer( this.viewPort ).setChildIndex( child , index );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function swapChildrenAt( index1 : int , index2 : int ) : void
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				super.swapChildrenAt( index1 , index2 );
-				return;
-			}
-			DisplayObjectContainer( this.viewPort ).swapChildrenAt( index1 , index2 );
-		}
-
-		/**
-		 * @private
-		 */
-		override public function sortChildren( compareFunction : Function ) : void
-		{
-			if( !this.displayListBypassEnabled )
-			{
-				super.sortChildren( compareFunction );
-				return;
-			}
-			DisplayObjectContainer( this.viewPort ).sortChildren( compareFunction );
+			return DisplayObjectContainer(this.viewPort).getChildByName(name);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function getRawChildByName( name : String ) : DisplayObject
+		public function getRawChildByName(name:String):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			var child : DisplayObject = super.getChildByName( name );
+			var child:DisplayObject = super.getChildByName(name);
+			this.displayListBypassEnabled = oldBypass;
+			return child;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function getChildAt(index:int):DisplayObject
+		{
+			if(!this.displayListBypassEnabled)
+			{
+				return super.getChildAt(index);
+			}
+			return DisplayObjectContainer(this.viewPort).getChildAt(index);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function getRawChildAt(index:int):DisplayObject
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
+			this.displayListBypassEnabled = false;
+			var child:DisplayObject = super.getChildAt(index);
 			this.displayListBypassEnabled = oldBypass;
 			return child;
 		}
@@ -523,133 +456,224 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function getRawChildAt( index : int ) : DisplayObject
+		public function addRawChild(child:DisplayObject):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			var child : DisplayObject = super.getChildAt( index );
-			this.displayListBypassEnabled = oldBypass;
-			return child;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function addRawChild( child : DisplayObject ) : DisplayObject
-		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
-			this.displayListBypassEnabled = false;
-			if( child.parent == this )
+			if(child.parent == this)
 			{
-				super.setChildIndex( child , super.numChildren );
+				super.setChildIndex(child, super.numChildren);
 			}
 			else
 			{
-				child = super.addChildAt( child , super.numChildren );
+				child = super.addChildAt(child, super.numChildren);
 			}
 			this.displayListBypassEnabled = oldBypass;
 			return child;
 		}
 
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
-		public function addRawChildAt( child : DisplayObject , index : int ) : DisplayObject
+		override public function addChild(child:DisplayObject):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
-			this.displayListBypassEnabled = false;
-			child = super.addChildAt( child , index );
-			this.displayListBypassEnabled = oldBypass;
-			return child;
+			return this.addChildAt(child, this.numChildren);
 		}
 
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
-		public function removeRawChild( child : DisplayObject , dispose : Boolean = false ) : DisplayObject
+		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
-			this.displayListBypassEnabled = false;
-			var index : int = super.getChildIndex( child );
-			if( index >= 0 )
+			if(!this.displayListBypassEnabled)
 			{
-				super.removeChildAt( index , dispose );
+				return super.addChildAt(child, index);
+			}
+			var result:DisplayObject = DisplayObjectContainer(this.viewPort).addChildAt(child, index);
+			if(result is IFeathersControl)
+			{
+				result.addEventListener(Event.RESIZE, child_resizeHandler);
+			}
+			if(result is ILayoutDisplayObject)
+			{
+				result.addEventListener(FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler);
+			}
+			this.invalidate(INVALIDATION_FLAG_SIZE);
+			return result;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function addRawChildAt(child:DisplayObject, index:int):DisplayObject
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
+			this.displayListBypassEnabled = false;
+			child = super.addChildAt(child, index);
+			this.displayListBypassEnabled = oldBypass;
+			return child;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function removeRawChild(child:DisplayObject, dispose:Boolean = false):DisplayObject
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
+			this.displayListBypassEnabled = false;
+			var index:int = super.getChildIndex(child);
+			if(index >= 0)
+			{
+				super.removeChildAt(index, dispose);
 			}
 			this.displayListBypassEnabled = oldBypass;
 			return child;
 		}
 
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
-		public function removeRawChildAt( index : int , dispose : Boolean = false ) : DisplayObject
+		override public function removeChildAt(index:int, dispose:Boolean = false):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
-			this.displayListBypassEnabled = false;
-			var child : DisplayObject = super.removeChildAt( index , dispose );
-			this.displayListBypassEnabled = oldBypass;
-			return child;
+			if(!this.displayListBypassEnabled)
+			{
+				return super.removeChildAt(index, dispose);
+			}
+			var result:DisplayObject = DisplayObjectContainer(this.viewPort).removeChildAt(index, dispose);
+			if(result is IFeathersControl)
+			{
+				result.removeEventListener(Event.RESIZE, child_resizeHandler);
+			}
+			if(result is ILayoutDisplayObject)
+			{
+				result.removeEventListener(FeathersEventType.LAYOUT_DATA_CHANGE, child_layoutDataChangeHandler);
+			}
+			this.invalidate(INVALIDATION_FLAG_SIZE);
+			return result;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function getRawChildIndex( child : DisplayObject ) : int
+		public function removeRawChildAt(index:int, dispose:Boolean = false):DisplayObject
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			var index : int = super.getChildIndex( child );
+			var child:DisplayObject =  super.removeChildAt(index, dispose);
+			this.displayListBypassEnabled = oldBypass;
+			return child;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function getChildIndex(child:DisplayObject):int
+		{
+			if(!this.displayListBypassEnabled)
+			{
+				return super.getChildIndex(child);
+			}
+			return DisplayObjectContainer(this.viewPort).getChildIndex(child);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function getRawChildIndex(child:DisplayObject):int
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
+			this.displayListBypassEnabled = false;
+			var index:int = super.getChildIndex(child);
 			this.displayListBypassEnabled = oldBypass;
 			return index;
 		}
 
 		/**
-		 * @inheritDoc
+		 * @private
 		 */
-		public function setRawChildIndex( child : DisplayObject , index : int ) : void
+		override public function setChildIndex(child:DisplayObject, index:int):void
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
-			this.displayListBypassEnabled = false;
-			super.setChildIndex( child , index );
-			this.displayListBypassEnabled = oldBypass;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function swapRawChildren( child1 : DisplayObject , child2 : DisplayObject ) : void
-		{
-			var index1 : int = this.getRawChildIndex( child1 );
-			var index2 : int = this.getRawChildIndex( child2 );
-			if( index1 < 0 || index2 < 0 )
+			if(!this.displayListBypassEnabled)
 			{
-				throw new ArgumentError( "Not a child of this container" );
+				super.setChildIndex(child, index);
+				return;
 			}
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			DisplayObjectContainer(this.viewPort).setChildIndex(child, index);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function setRawChildIndex(child:DisplayObject, index:int):void
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			this.swapRawChildrenAt( index1 , index2 );
+			super.setChildIndex(child, index);
 			this.displayListBypassEnabled = oldBypass;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function swapRawChildrenAt( index1 : int , index2 : int ) : void
+		public function swapRawChildren(child1:DisplayObject, child2:DisplayObject):void
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var index1:int = this.getRawChildIndex(child1);
+			var index2:int = this.getRawChildIndex(child2);
+			if(index1 < 0 || index2 < 0)
+			{
+				throw new ArgumentError("Not a child of this container");
+			}
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			super.swapChildrenAt( index1 , index2 );
+			this.swapRawChildrenAt(index1, index2);
 			this.displayListBypassEnabled = oldBypass;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function swapChildrenAt(index1:int, index2:int):void
+		{
+			if(!this.displayListBypassEnabled)
+			{
+				super.swapChildrenAt(index1, index2);
+				return;
+			}
+			DisplayObjectContainer(this.viewPort).swapChildrenAt(index1, index2);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function sortRawChildren( compareFunction : Function ) : void
+		public function swapRawChildrenAt(index1:int, index2:int):void
 		{
-			var oldBypass : Boolean = this.displayListBypassEnabled;
+			var oldBypass:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			super.sortChildren( compareFunction );
+			super.swapChildrenAt(index1, index2);
+			this.displayListBypassEnabled = oldBypass;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function sortChildren(compareFunction:Function):void
+		{
+			if(!this.displayListBypassEnabled)
+			{
+				super.sortChildren(compareFunction);
+				return;
+			}
+			DisplayObjectContainer(this.viewPort).sortChildren(compareFunction);
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function sortRawChildren(compareFunction:Function):void
+		{
+			var oldBypass:Boolean = this.displayListBypassEnabled;
+			this.displayListBypassEnabled = false;
+			super.sortChildren(compareFunction);
 			this.displayListBypassEnabled = oldBypass;
 		}
 
@@ -661,29 +685,29 @@ package feathers.controls
 		 * width and height values change, but standard Starling display objects
 		 * like <code>Sprite</code> and <code>Image</code> do not.
 		 */
-		public function readjustLayout() : void
+		public function readjustLayout():void
 		{
 			this.layoutViewPort.readjustLayout();
-			this.invalidate( INVALIDATION_FLAG_SIZE );
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var layoutInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_LAYOUT );
+			var layoutInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_LAYOUT);
 
-			if( layoutInvalid )
+			if(layoutInvalid)
 			{
-				if( this._layout is IVirtualLayout )
+				if(this._layout is IVirtualLayout)
 				{
-					IVirtualLayout( this._layout ).useVirtualLayout = false;
+					IVirtualLayout(this._layout).useVirtualLayout = false;
 				}
 				this.layoutViewPort.layout = this._layout;
 			}
 
-			var oldIgnoreChildChanges : Boolean = this._ignoreChildChanges;
+			var oldIgnoreChildChanges:Boolean = this._ignoreChildChanges;
 			this._ignoreChildChanges = true;
 			super.draw();
 			this._ignoreChildChanges = oldIgnoreChildChanges;
@@ -692,17 +716,17 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function autoSizeIfNeeded() : Boolean
+		override protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
-			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
 			{
-				return this.setSizeInternal( this.stage.stageWidth , this.stage.stageHeight , false );
+				return this.setSizeInternal(this.stage.stageWidth, this.stage.stageHeight, false);
 			}
 			return super.autoSizeIfNeeded();
 		}
@@ -710,52 +734,52 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function scrollContainer_addedToStageHandler( event : Event ) : void
+		protected function scrollContainer_addedToStageHandler(event:Event):void
 		{
-			if( this._autoSizeMode == AUTO_SIZE_MODE_STAGE )
+			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
 			{
-				this.stage.addEventListener( Event.RESIZE , stage_resizeHandler );
+				this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function scrollContainer_removedFromStageHandler( event : Event ) : void
+		protected function scrollContainer_removedFromStageHandler(event:Event):void
 		{
-			this.stage.removeEventListener( Event.RESIZE , stage_resizeHandler );
+			this.stage.removeEventListener(Event.RESIZE, stage_resizeHandler);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function child_resizeHandler( event : Event ) : void
+		protected function child_resizeHandler(event:Event):void
 		{
-			if( this._ignoreChildChanges )
-			{
-				return;
-			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
-		}
-
-		/**
-		 * @private
-		 */
-		protected function child_layoutDataChangeHandler( event : Event ) : void
-		{
-			if( this._ignoreChildChanges )
+			if(this._ignoreChildChanges)
 			{
 				return;
 			}
-			this.invalidate( INVALIDATION_FLAG_SIZE );
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stage_resizeHandler( event : Event ) : void
+		protected function child_layoutDataChangeHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_SIZE );
+			if(this._ignoreChildChanges)
+			{
+				return;
+			}
+			this.invalidate(INVALIDATION_FLAG_SIZE);
+		}
+
+		/**
+		 * @private
+		 */
+		protected function stage_resizeHandler(event:Event):void
+		{
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 	}
 }

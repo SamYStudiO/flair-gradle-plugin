@@ -1,14 +1,13 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.IGroupedToggle;
-	import feathers.core.IToggle;
 	import feathers.core.PropertyProxy;
 	import feathers.core.ToggleGroup;
 	import feathers.events.FeathersEventType;
@@ -44,7 +43,7 @@ package feathers.controls
 	 * @see #isSelected
 	 * @see #isToggle
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * A button that may be selected and deselected when triggered.
@@ -59,8 +58,178 @@ package feathers.controls
 	 * this.addChild( button );</listing>
 	 *
 	 * @see ../../../help/toggle-button.html How to use the Feathers ToggleButton component
-	 */ public class ToggleButton extends Button implements IGroupedToggle
+	 */
+	public class ToggleButton extends Button implements IGroupedToggle
 	{
+		/**
+		 * @copy feathers.controls.Button#STATE_UP
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_UP:String = "up";
+
+		/**
+		 * @copy feathers.controls.Button#STATE_DOWN
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DOWN:String = "down";
+
+		/**
+		 * @copy feathers.controls.Button#STATE_HOVER
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_HOVER:String = "hover";
+
+		/**
+		 * @copy feathers.controls.Button#STATE_DISABLED
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DISABLED:String = "disabled";
+
+		/**
+		 * Identifier for the toggle button's up state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_UP_AND_SELECTED:String = "upAndSelected";
+
+		/**
+		 * Identifier for the toggle button's down state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DOWN_AND_SELECTED:String = "downAndSelected";
+
+		/**
+		 * Identifier for the toggle button's hover state when selected. Can be
+		 * used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_HOVER_AND_SELECTED:String = "hoverAndSelected";
+
+		/**
+		 * Identifier for the toggle button's disabled state when selected. Can
+		 * be used for styling purposes.
+		 *
+		 * @see #stateToSkinFunction
+		 * @see #stateToIconFunction
+		 * @see #stateToLabelPropertiesFunction
+		 */
+		public static const STATE_DISABLED_AND_SELECTED:String = "disabledAndSelected";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_TOP
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_TOP:String = "top";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_RIGHT:String = "right";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_BOTTOM
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_BOTTOM:String = "bottom";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_LEFT
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_LEFT:String = "left";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_MANUAL
+		 *
+		 * @see #iconPosition
+		 * @see #iconOffsetX
+		 * @see #iconOffsetY
+		 */
+		public static const ICON_POSITION_MANUAL:String = "manual";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_LEFT_BASELINE
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_LEFT_BASELINE:String = "leftBaseline";
+
+		/**
+		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT_BASELINE
+		 *
+		 * @see #iconPosition
+		 */
+		public static const ICON_POSITION_RIGHT_BASELINE:String = "rightBaseline";
+
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_LEFT
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
+
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_CENTER
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
+
+		/**
+		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_RIGHT
+		 *
+		 * @see #horizontalAlign
+		 */
+		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
+
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_TOP
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_MIDDLE
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+
+		/**
+		 * @copy feathers.controls.Button#VERTICAL_ALIGN_BOTTOM
+		 *
+		 * @see #verticalAlign
+		 */
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
+		
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>ToggleButton</code>
 		 * components. If <code>null</code>, falls back to using
@@ -70,162 +239,22 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleProvider
 		 * @see feathers.controls.Button#globalStyleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @copy feathers.controls.Button#STATE_UP
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
+		 * Constructor.
 		 */
-		public static const STATE_UP : String = "up";
-		/**
-		 * @copy feathers.controls.Button#STATE_DOWN
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_DOWN : String = "down";
-		/**
-		 * @copy feathers.controls.Button#STATE_HOVER
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_HOVER : String = "hover";
-		/**
-		 * @copy feathers.controls.Button#STATE_DISABLED
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_DISABLED : String = "disabled";
-		/**
-		 * Identifier for the toggle button's up state when selected. Can be
-		 * used for styling purposes.
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_UP_AND_SELECTED : String = "upAndSelected";
-		/**
-		 * Identifier for the toggle button's down state when selected. Can be
-		 * used for styling purposes.
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_DOWN_AND_SELECTED : String = "downAndSelected";
-		/**
-		 * Identifier for the toggle button's hover state when selected. Can be
-		 * used for styling purposes.
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_HOVER_AND_SELECTED : String = "hoverAndSelected";
-		/**
-		 * Identifier for the toggle button's disabled state when selected. Can
-		 * be used for styling purposes.
-		 *
-		 * @see #stateToSkinFunction
-		 * @see #stateToIconFunction
-		 * @see #stateToLabelPropertiesFunction
-		 */
-		public static const STATE_DISABLED_AND_SELECTED : String = "disabledAndSelected";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_TOP
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_TOP : String = "top";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_RIGHT : String = "right";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_BOTTOM
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_BOTTOM : String = "bottom";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_LEFT
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_MANUAL
-		 *
-		 * @see #iconPosition
-		 * @see #iconOffsetX
-		 * @see #iconOffsetY
-		 */
-		public static const ICON_POSITION_MANUAL : String = "manual";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_LEFT_BASELINE
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_LEFT_BASELINE : String = "leftBaseline";
-		/**
-		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT_BASELINE
-		 *
-		 * @see #iconPosition
-		 */
-		public static const ICON_POSITION_RIGHT_BASELINE : String = "rightBaseline";
-		/**
-		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_LEFT
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
-		/**
-		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_CENTER
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
-		/**
-		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_RIGHT
-		 *
-		 * @see #horizontalAlign
-		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
-		/**
-		 * @copy feathers.controls.Button#VERTICAL_ALIGN_TOP
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
-		/**
-		 * @copy feathers.controls.Button#VERTICAL_ALIGN_MIDDLE
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
-		/**
-		 * @copy feathers.controls.Button#VERTICAL_ALIGN_BOTTOM
-		 *
-		 * @see #verticalAlign
-		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		public function ToggleButton()
+		{
+			super();
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
-			if( ToggleButton.globalStyleProvider )
+			if(ToggleButton.globalStyleProvider)
 			{
 				return ToggleButton.globalStyleProvider;
 			}
@@ -235,9 +264,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function get currentState() : String
+		override public function get currentState():String
 		{
-			if( this._isSelected )
+			if(this._isSelected)
 			{
 				return super.currentState + "AndSelected";
 			}
@@ -247,7 +276,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _isToggle : Boolean = true;
+		protected var _isToggle:Boolean = true;
 
 		/**
 		 * Determines if the button may be selected or deselected as a result of
@@ -265,7 +294,7 @@ package feathers.controls
 		 * @see #isSelected
 		 * @see #event:triggered Event.TRIGGERED
 		 */
-		public function get isToggle() : Boolean
+		public function get isToggle():Boolean
 		{
 			return this._isToggle;
 		}
@@ -273,7 +302,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isToggle( value : Boolean ) : void
+		public function set isToggle(value:Boolean):void
 		{
 			this._isToggle = value;
 		}
@@ -281,7 +310,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _isSelected : Boolean = false;
+		protected var _isSelected:Boolean = false;
 
 		/**
 		 * Indicates if the button is selected or not. The button may be
@@ -303,7 +332,7 @@ package feathers.controls
 		 * @see #event:change Event.CHANGE
 		 * @see #isToggle
 		 */
-		public function get isSelected() : Boolean
+		public function get isSelected():Boolean
 		{
 			return this._isSelected;
 		}
@@ -311,28 +340,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isSelected( value : Boolean ) : void
+		public function set isSelected(value:Boolean):void
 		{
-			if( this._isSelected == value )
+			if(this._isSelected == value)
 			{
 				return;
 			}
 			this._isSelected = value;
-			this.invalidate( INVALIDATION_FLAG_SELECTED );
-			this.invalidate( INVALIDATION_FLAG_STATE );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( FeathersEventType.STATE_CHANGE );
+			this.invalidate(INVALIDATION_FLAG_SELECTED);
+			this.invalidate(INVALIDATION_FLAG_STATE);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(FeathersEventType.STATE_CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _toggleGroup : ToggleGroup;
+		protected var _toggleGroup:ToggleGroup;
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get toggleGroup() : ToggleGroup
+		public function get toggleGroup():ToggleGroup
 		{
 			return this._toggleGroup;
 		}
@@ -340,20 +369,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set toggleGroup( value : ToggleGroup ) : void
+		public function set toggleGroup(value:ToggleGroup):void
 		{
-			if( this._toggleGroup == value )
+			if(this._toggleGroup == value)
 			{
 				return;
 			}
-			if( this._toggleGroup && this._toggleGroup.hasItem( this ) )
+			if(this._toggleGroup && this._toggleGroup.hasItem(this))
 			{
-				this._toggleGroup.removeItem( this );
+				this._toggleGroup.removeItem(this);
 			}
 			this._toggleGroup = value;
-			if( this._toggleGroup && !this._toggleGroup.hasItem( this ) )
+			if(this._toggleGroup && !this._toggleGroup.hasItem(this))
 			{
-				this._toggleGroup.addItem( this );
+				this._toggleGroup.addItem(this);
 			}
 		}
 
@@ -380,22 +409,22 @@ package feathers.controls
 		 * @see #selectedHoverSkin
 		 * @see #selectedDisabledSkin
 		 */
-		public function get defaultSelectedSkin() : DisplayObject
+		public function get defaultSelectedSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.defaultSelectedValue );
+			return DisplayObject(this._skinSelector.defaultSelectedValue);
 		}
 
 		/**
 		 * @private
 		 */
-		public function set defaultSelectedSkin( value : DisplayObject ) : void
+		public function set defaultSelectedSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.defaultSelectedValue == value )
+			if(this._skinSelector.defaultSelectedValue == value)
 			{
 				return;
 			}
 			this._skinSelector.defaultSelectedValue = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -418,22 +447,22 @@ package feathers.controls
 		 * @see #defaultSelectedSkin
 		 * @see #STATE_UP
 		 */
-		public function get selectedUpSkin() : DisplayObject
+		public function get selectedUpSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_UP , true ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_UP, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedUpSkin( value : DisplayObject ) : void
+		public function set selectedUpSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_UP , true ) == value )
+			if(this._skinSelector.getValueForState(STATE_UP, true) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_UP , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_UP, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -456,22 +485,22 @@ package feathers.controls
 		 * @see #defaultSelectedSkin
 		 * @see #STATE_DOWN
 		 */
-		public function get selectedDownSkin() : DisplayObject
+		public function get selectedDownSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DOWN , true ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_DOWN, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedDownSkin( value : DisplayObject ) : void
+		public function set selectedDownSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_DOWN , true ) == value )
+			if(this._skinSelector.getValueForState(STATE_DOWN, true) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_DOWN , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_DOWN, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -494,22 +523,22 @@ package feathers.controls
 		 * @see #defaultSelectedSkin
 		 * @see #STATE_HOVER
 		 */
-		public function get selectedHoverSkin() : DisplayObject
+		public function get selectedHoverSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_HOVER , true ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_HOVER, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedHoverSkin( value : DisplayObject ) : void
+		public function set selectedHoverSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_HOVER , true ) == value )
+			if(this._skinSelector.getValueForState(STATE_HOVER, true) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_HOVER , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_HOVER, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -532,22 +561,22 @@ package feathers.controls
 		 * @see #defaultSelectedSkin
 		 * @see #STATE_DISABLED
 		 */
-		public function get selectedDisabledSkin() : DisplayObject
+		public function get selectedDisabledSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DISABLED , true ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_DISABLED, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedDisabledSkin( value : DisplayObject ) : void
+		public function set selectedDisabledSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_DISABLED , true ) == value )
+			if(this._skinSelector.getValueForState(STATE_DISABLED, true) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_DISABLED , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._skinSelector.setValueForState(value, STATE_DISABLED, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -574,12 +603,12 @@ package feathers.controls
 		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 */
-		public function get defaultSelectedLabelProperties() : Object
+		public function get defaultSelectedLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.defaultSelectedValue );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.defaultSelectedValue);
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
+				value = new PropertyProxy(childProperties_onChange);
 				this._labelPropertiesSelector.defaultSelectedValue = value;
 			}
 			return value;
@@ -588,23 +617,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set defaultSelectedLabelProperties( value : Object ) : void
+		public function set defaultSelectedLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.defaultSelectedValue );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.defaultSelectedValue);
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
 			this._labelPropertiesSelector.defaultSelectedValue = value;
-			if( value )
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -632,13 +661,13 @@ package feathers.controls
 		 * @see #upLabelProperties
 		 * @see #STATE_UP
 		 */
-		public function get selectedUpLabelProperties() : Object
+		public function get selectedUpLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , true ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_UP, true));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_UP , true );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_UP, true);
 			}
 			return value;
 		}
@@ -646,23 +675,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set selectedUpLabelProperties( value : Object ) : void
+		public function set selectedUpLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_UP , true ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_UP, true));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_UP , true );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_UP, true);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -690,13 +719,13 @@ package feathers.controls
 		 * @see #downLabelProperties
 		 * @see #STATE_DOWN
 		 */
-		public function get selectedDownLabelProperties() : Object
+		public function get selectedDownLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , true ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DOWN, true));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , true );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_DOWN, true);
 			}
 			return value;
 		}
@@ -704,23 +733,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set selectedDownLabelProperties( value : Object ) : void
+		public function set selectedDownLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DOWN , true ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DOWN, true));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_DOWN , true );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_DOWN, true);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -748,13 +777,13 @@ package feathers.controls
 		 * @see #hoverLabelProperties
 		 * @see #STATE_HOVER
 		 */
-		public function get selectedHoverLabelProperties() : Object
+		public function get selectedHoverLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , true ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_HOVER, true));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , true );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_HOVER, true);
 			}
 			return value;
 		}
@@ -762,23 +791,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set selectedHoverLabelProperties( value : Object ) : void
+		public function set selectedHoverLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_HOVER , true ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_HOVER, true));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_HOVER , true );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_HOVER, true);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -806,13 +835,13 @@ package feathers.controls
 		 * @see #disabledLabelProperties
 		 * @see #STATE_DISABLED
 		 */
-		public function get selectedDisabledLabelProperties() : Object
+		public function get selectedDisabledLabelProperties():Object
 		{
-			var value : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , true ) );
-			if( !value )
+			var value:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DISABLED, true));
+			if(!value)
 			{
-				value = new PropertyProxy( childProperties_onChange );
-				this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , true );
+				value = new PropertyProxy(childProperties_onChange);
+				this._labelPropertiesSelector.setValueForState(value, STATE_DISABLED, true);
 			}
 			return value;
 		}
@@ -820,23 +849,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set selectedDisabledLabelProperties( value : Object ) : void
+		public function set selectedDisabledLabelProperties(value:Object):void
 		{
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			var oldValue : PropertyProxy = PropertyProxy( this._labelPropertiesSelector.getValueForState( STATE_DISABLED , true ) );
-			if( oldValue )
+			var oldValue:PropertyProxy = PropertyProxy(this._labelPropertiesSelector.getValueForState(STATE_DISABLED, true));
+			if(oldValue)
 			{
-				oldValue.removeOnChangeCallback( childProperties_onChange );
+				oldValue.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._labelPropertiesSelector.setValueForState( value , STATE_DISABLED , true );
-			if( value )
+			this._labelPropertiesSelector.setValueForState(value, STATE_DISABLED, true);
+			if(value)
 			{
-				PropertyProxy( value ).addOnChangeCallback( childProperties_onChange );
+				PropertyProxy(value).addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -862,22 +891,22 @@ package feathers.controls
 		 * @see #selectedHoverIcon
 		 * @see #selectedDisabledIcon
 		 */
-		public function get defaultSelectedIcon() : DisplayObject
+		public function get defaultSelectedIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.defaultSelectedValue );
+			return DisplayObject(this._iconSelector.defaultSelectedValue);
 		}
 
 		/**
 		 * @private
 		 */
-		public function set defaultSelectedIcon( value : DisplayObject ) : void
+		public function set defaultSelectedIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.defaultSelectedValue == value )
+			if(this._iconSelector.defaultSelectedValue == value)
 			{
 				return;
 			}
 			this._iconSelector.defaultSelectedValue = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -900,22 +929,22 @@ package feathers.controls
 		 * @see #defaultSelectedIcon
 		 * @see #STATE_UP
 		 */
-		public function get selectedUpIcon() : DisplayObject
+		public function get selectedUpIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_UP , true ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_UP, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedUpIcon( value : DisplayObject ) : void
+		public function set selectedUpIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_UP , true ) == value )
+			if(this._iconSelector.getValueForState(STATE_UP, true) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_UP , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_UP, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -938,22 +967,22 @@ package feathers.controls
 		 * @see #defaultSelectedIcon
 		 * @see #STATE_DOWN
 		 */
-		public function get selectedDownIcon() : DisplayObject
+		public function get selectedDownIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DOWN , true ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_DOWN, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedDownIcon( value : DisplayObject ) : void
+		public function set selectedDownIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_DOWN , true ) == value )
+			if(this._iconSelector.getValueForState(STATE_DOWN, true) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_DOWN , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_DOWN, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -976,22 +1005,22 @@ package feathers.controls
 		 * @see #defaultSelectedIcon
 		 * @see #STATE_HOVER
 		 */
-		public function get selectedHoverIcon() : DisplayObject
+		public function get selectedHoverIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_HOVER , true ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_HOVER, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedHoverIcon( value : DisplayObject ) : void
+		public function set selectedHoverIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_HOVER , true ) == value )
+			if(this._iconSelector.getValueForState(STATE_HOVER, true) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_HOVER , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_HOVER, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1014,61 +1043,53 @@ package feathers.controls
 		 * @see #defaultSelectedIcon
 		 * @see #STATE_DISABLED
 		 */
-		public function get selectedDisabledIcon() : DisplayObject
+		public function get selectedDisabledIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DISABLED , true ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_DISABLED, true));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set selectedDisabledIcon( value : DisplayObject ) : void
+		public function set selectedDisabledIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_DISABLED , true ) == value )
+			if(this._iconSelector.getValueForState(STATE_DISABLED, true) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_DISABLED , true );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function ToggleButton()
-		{
-			super();
+			this._iconSelector.setValueForState(value, STATE_DISABLED, true);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override public function dispose():void
 		{
-			var skin : DisplayObject = this._skinSelector.defaultSelectedValue as DisplayObject;
-			if( skin )
+			var skin:DisplayObject = this._skinSelector.defaultSelectedValue as DisplayObject;
+			if(skin)
 			{
 				skin.dispose();
 			}
-			for each( var state : String in this.stateNames )
+			for each(var state:String in this.stateNames)
 			{
-				skin = this._skinSelector.getValueForState( state , true ) as DisplayObject;
+				skin = this._skinSelector.getValueForState(state, true) as DisplayObject;
 				//it'll get disposed in super.dispose() if it's a child
-				if( skin && skin.parent !== this )
+				if(skin && skin.parent !== this)
 				{
 					skin.dispose();
 				}
 			}
 			skin = this._iconSelector.defaultSelectedValue as DisplayObject;
-			if( skin )
+			if(skin)
 			{
 				skin.dispose();
 			}
-			for each( state in this.stateNames )
+			for each(state in this.stateNames)
 			{
-				skin = this._iconSelector.getValueForState( state , true ) as DisplayObject;
+				skin = this._iconSelector.getValueForState(state, true) as DisplayObject;
 				//it'll get disposed in super.dispose() if it's a child
-				if( skin && skin.parent !== this )
+				if(skin && skin.parent !== this)
 				{
 					skin.dispose();
 				}
@@ -1079,10 +1100,10 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function trigger() : void
+		override protected function trigger():void
 		{
 			super.trigger();
-			if( this._isToggle )
+			if(this._isToggle)
 			{
 				this.isSelected = !this._isSelected;
 			}

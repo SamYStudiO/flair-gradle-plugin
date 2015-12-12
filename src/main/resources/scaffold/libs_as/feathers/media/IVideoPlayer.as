@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	/**
@@ -31,24 +31,25 @@ package feathers.media
 	 *
 	 * @eventType feathers.events.MediaPlayerEventType.DIMENSIONS_CHANGE
 	 */
-	[Event(name="dimensionsChange" , type="starling.events.Event")]
+	[Event(name="dimensionsChange",type="starling.events.Event")]
 
 	/**
 	 * An interface media players that play video content.
-	 */ public interface IVideoPlayer extends IAudioPlayer
+	 */
+	public interface IVideoPlayer extends IAudioPlayer
 	{
 		/**
 		 * The original, native width of the loaded video.
 		 * 
 		 * @see #event:dimensionsChange feathers.events.MediaPlayerEventType.DIMENSIONS_CHANGE
 		 */
-		function get nativeWidth() : Number;
+		function get nativeWidth():Number;
 		
 		/**
 		 * The original, native height of the loaded video.
 		 *
 		 * @see #event:dimensionsChange feathers.events.MediaPlayerEventType.DIMENSIONS_CHANGE
 		 */
-		function get nativeHeight() : Number;
+		function get nativeHeight():Number;
 	}
 }

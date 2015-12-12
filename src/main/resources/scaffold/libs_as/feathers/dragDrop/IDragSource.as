@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.dragDrop
 {
 	import starling.events.Event;
@@ -34,7 +34,7 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_START
 	 */
-	[Event(name="dragStart" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragStart",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * Dispatched when the drop has been completed or when the drag has been
@@ -62,16 +62,16 @@ package feathers.dragDrop
 	 *
 	 * @eventType feathers.events.DragDropEvent.DRAG_COMPLETE
 	 */
-	[Event(name="dragComplete" , type="feathers.events.DragDropEvent")]
+	[Event(name="dragComplete",type="feathers.events.DragDropEvent")]
 
 	/**
 	 * An object that can initiate drag actions with the drag and drop manager.
 	 *
 	 * @see DragDropManager
-	 */ public interface IDragSource
+	 */
+	public interface IDragSource
 	{
-		function dispatchEventWith( type : String , bubbles : Boolean = false , data : Object = null ) : void;
-
-		function dispatchEvent( event : Event ) : void;
+		function dispatchEvent(event:Event):void;
+		function dispatchEventWith(type:String, bubbles:Boolean = false, data:Object = null):void;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.IFeathersControl;
@@ -28,72 +28,72 @@ package feathers.controls
 		 * <code>Scroller</code> rather than delegating the call to the view
 		 * port.
 		 */
-		function get numRawChildren() : int;
+		function get numRawChildren():int;
 
 		/**
 		 * Gets the name of a direct child of the <code>Scroller</code> rather
 		 * than delegating the call to the view port.
 		 */
-		function getRawChildByName( name : String ) : DisplayObject;
+		function getRawChildByName(name:String):DisplayObject;
 
 		/**
 		 * Gets the index of a direct child of the <code>Scroller</code> rather
 		 * than delegating the call to the view port.
 		 */
-		function getRawChildIndex( child : DisplayObject ) : int;
+		function getRawChildIndex(child:DisplayObject):int;
 
 		/**
 		 * Gets the direct child of the <code>Scroller</code> at a specific
 		 * index rather than delegating the call to the view port.
 		 */
-		function getRawChildAt( index : int ) : DisplayObject;
+		function getRawChildAt(index:int):DisplayObject;
 
 		/**
 		 * Sets the index of a direct child of the <code>Scroller</code> rather
 		 * than delegating the call to the view port.
 		 */
-		function setRawChildIndex( child : DisplayObject , index : int ) : void;
+		function setRawChildIndex(child:DisplayObject, index:int):void;
 
 		/**
 		 * Adds a child to the <code>Scroller</code> rather than delegating the
 		 * call to the view port.
 		 */
-		function addRawChild( child : DisplayObject ) : DisplayObject;
+		function addRawChild(child:DisplayObject):DisplayObject;
 
 		/**
 		 * Adds a child to the <code>Scroller</code> at a specific index rather
 		 * than delegating the call to the view port.
 		 */
-		function addRawChildAt( child : DisplayObject , index : int ) : DisplayObject;
+		function addRawChildAt(child:DisplayObject, index:int):DisplayObject;
 
 		/**
 		 * Removes a child from the <code>Scroller</code> rather than delegating
 		 * the call to the view port.
 		 */
-		function removeRawChild( child : DisplayObject , dispose : Boolean = false ) : DisplayObject;
+		function removeRawChild(child:DisplayObject, dispose:Boolean = false):DisplayObject;
 
 		/**
 		 * Removes a child from the <code>Scroller</code> at a specific index
 		 * rather than delegating the call to the view port.
 		 */
-		function removeRawChildAt( index : int , dispose : Boolean = false ) : DisplayObject;
+		function removeRawChildAt(index:int, dispose:Boolean = false):DisplayObject;
 
 		/**
 		 * Swaps the children of the <code>Scroller</code> rather than
 		 * delegating the call to the view port.
 		 */
-		function swapRawChildren( child1 : DisplayObject , child2 : DisplayObject ) : void;
+		function swapRawChildren(child1:DisplayObject, child2:DisplayObject):void;
 
 		/**
 		 * Swaps the children of the <code>Scroller</code> rather than
 		 * delegating the call to the view port.
 		 */
-		function swapRawChildrenAt( index1 : int , index2 : int ) : void;
+		function swapRawChildrenAt(index1:int, index2:int):void;
 
 		/**
 		 * Sorts the children of the <code>Scroller</code> rather than
 		 * delegating the call to the view port.
 		 */
-		function sortRawChildren( compareFunction : Function ) : void;
+		function sortRawChildren(compareFunction:Function):void;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.dragDrop
 {
 	/**
@@ -15,11 +15,6 @@ package feathers.dragDrop
 	public class DragData
 	{
 		/**
-		 * @private
-		 */
-		protected var _data : Object = {};
-
-		/**
 		 * Constructor.
 		 */
 		public function DragData()
@@ -27,21 +22,26 @@ package feathers.dragDrop
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _data:Object = {};
+
+		/**
 		 * Determines if the specified data format is available.
 		 */
-		public function hasDataForFormat( format : String ) : Boolean
+		public function hasDataForFormat(format:String):Boolean
 		{
-			return this._data.hasOwnProperty( format );
+			return this._data.hasOwnProperty(format);
 		}
 
 		/**
 		 * Returns data for the specified format.
 		 */
-		public function getDataForFormat( format : String ) : *
+		public function getDataForFormat(format:String):*
 		{
-			if( this._data.hasOwnProperty( format ) )
+			if(this._data.hasOwnProperty(format))
 			{
-				return this._data[ format ];
+				return this._data[format];
 			}
 			return undefined;
 		}
@@ -49,22 +49,22 @@ package feathers.dragDrop
 		/**
 		 * Saves data for the specified format.
 		 */
-		public function setDataForFormat( format : String , data : * ) : void
+		public function setDataForFormat(format:String, data:*):void
 		{
-			this._data[ format ] = data;
+			this._data[format] = data;
 		}
 
 		/**
 		 * Removes all data for the specified format.
 		 */
-		public function clearDataForFormat( format : String ) : *
+		public function clearDataForFormat(format:String):*
 		{
-			var data : * = undefined;
-			if( this._data.hasOwnProperty( format ) )
+			var data:* = undefined;
+			if(this._data.hasOwnProperty(format))
 			{
-				data = this._data[ format ];
+				data = this._data[format];
 			}
-			delete this._data[ format ];
+			delete this._data[format];
 			return data;
 
 		}

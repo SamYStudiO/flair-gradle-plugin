@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.dragDrop
 {
 	import feathers.core.PopUpManager;
@@ -33,44 +33,13 @@ package feathers.dragDrop
 	{
 		/**
 		 * @private
-		 * The current target of the current drag.
 		 */
-		protected static var dropTarget : IDropTarget;
-		/**
-		 * @private
-		 * Indicates if the current drag has been accepted by the dropTarget.
-		 */
-		protected static var isAccepted : Boolean = false;
-		/**
-		 * @private
-		 * The avatar for the current drag data.
-		 */
-		protected static var avatar : DisplayObject;
-		/**
-		 * @private
-		 */
-		protected static var avatarOffsetX : Number;
-		/**
-		 * @private
-		 */
-		protected static var avatarOffsetY : Number;
-		/**
-		 * @private
-		 */
-		protected static var dropTargetLocalX : Number;
-		/**
-		 * @private
-		 */
-		protected static var dropTargetLocalY : Number;
-		/**
-		 * @private
-		 */
-		protected static var avatarOldTouchable : Boolean;
+		private static const HELPER_POINT:Point = new Point();
 
 		/**
 		 * @private
 		 */
-		protected static var _touchPointID : int = -1;
+		protected static var _touchPointID:int = -1;
 
 		/**
 		 * The ID of the touch that initiated the current drag. Returns <code>-1</code>
@@ -78,7 +47,7 @@ package feathers.dragDrop
 		 * knowing the touch ID is useful if additional actions need to happen
 		 * using the same touch.
 		 */
-		public static function get touchPointID() : int
+		public static function get touchPointID():int
 		{
 			return _touchPointID;
 		}
@@ -86,12 +55,12 @@ package feathers.dragDrop
 		/**
 		 * @private
 		 */
-		protected static var _dragSource : IDragSource;
+		protected static var _dragSource:IDragSource;
 
 		/**
 		 * The <code>IDragSource</code> that started the current drag.
 		 */
-		public static function get dragSource() : IDragSource
+		public static function get dragSource():IDragSource
 		{
 			return _dragSource;
 		}
@@ -99,44 +68,87 @@ package feathers.dragDrop
 		/**
 		 * @private
 		 */
-		protected static var _dragData : DragData;
-
-		/**
-		 * The data associated with the current drag. Returns <code>null</code>
-		 * if there is not a current drag.
-		 */
-		public static function get dragData() : DragData
-		{
-			return _dragData;
-		}
+		protected static var _dragData:DragData;
 
 		/**
 		 * Determines if the drag and drop manager is currently handling a drag.
 		 * Only one drag may be active at a time.
 		 */
-		public static function get isDragging() : Boolean
+		public static function get isDragging():Boolean
 		{
 			return _dragData != null;
 		}
+
+		/**
+		 * The data associated with the current drag. Returns <code>null</code>
+		 * if there is not a current drag.
+		 */
+		public static function get dragData():DragData
+		{
+			return _dragData;
+		}
+
+		/**
+		 * @private
+		 * The current target of the current drag.
+		 */
+		protected static var dropTarget:IDropTarget;
+
+		/**
+		 * @private
+		 * Indicates if the current drag has been accepted by the dropTarget.
+		 */
+		protected static var isAccepted:Boolean = false;
+
+		/**
+		 * @private
+		 * The avatar for the current drag data.
+		 */
+		protected static var avatar:DisplayObject;
+
+		/**
+		 * @private
+		 */
+		protected static var avatarOffsetX:Number;
+
+		/**
+		 * @private
+		 */
+		protected static var avatarOffsetY:Number;
+
+		/**
+		 * @private
+		 */
+		protected static var dropTargetLocalX:Number;
+
+		/**
+		 * @private
+		 */
+		protected static var dropTargetLocalY:Number;
+
+		/**
+		 * @private
+		 */
+		protected static var avatarOldTouchable:Boolean;
 
 		/**
 		 * Starts a new drag. If another drag is currently active, it is
 		 * immediately cancelled. Includes an optional "avatar", a visual
 		 * representation of the data that is being dragged.
 		 */
-		public static function startDrag( source : IDragSource , touch : Touch , data : DragData , dragAvatar : DisplayObject = null , dragAvatarOffsetX : Number = 0 , dragAvatarOffsetY : Number = 0 ) : void
+		public static function startDrag(source:IDragSource, touch:Touch, data:DragData, dragAvatar:DisplayObject = null, dragAvatarOffsetX:Number = 0, dragAvatarOffsetY:Number = 0):void
 		{
-			if( isDragging )
+			if(isDragging)
 			{
 				cancelDrag();
 			}
-			if( !source )
+			if(!source)
 			{
-				throw new ArgumentError( "Drag source cannot be null." );
+				throw new ArgumentError("Drag source cannot be null.");
 			}
-			if( !data )
+			if(!data)
 			{
-				throw new ArgumentError( "Drag data cannot be null." );
+				throw new ArgumentError("Drag data cannot be null.");
 			}
 			_dragSource = source;
 			_dragData = data;
@@ -144,20 +156,20 @@ package feathers.dragDrop
 			avatar = dragAvatar;
 			avatarOffsetX = dragAvatarOffsetX;
 			avatarOffsetY = dragAvatarOffsetY;
-			touch.getLocation( Starling.current.stage , HELPER_POINT );
-			if( avatar )
+			touch.getLocation(Starling.current.stage, HELPER_POINT);
+			if(avatar)
 			{
 				avatarOldTouchable = avatar.touchable;
 				avatar.touchable = false;
 				avatar.x = HELPER_POINT.x + avatarOffsetX;
 				avatar.y = HELPER_POINT.y + avatarOffsetY;
-				PopUpManager.addPopUp( avatar , false , false );
+				PopUpManager.addPopUp(avatar, false, false);
 			}
-			Starling.current.stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler , false , 0 , true );
-			_dragSource.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_START , data , false ) );
+			Starling.current.stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			Starling.current.nativeStage.addEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler, false, 0, true);
+			_dragSource.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_START, data, false));
 
-			updateDropTarget( HELPER_POINT );
+			updateDropTarget(HELPER_POINT);
 		}
 
 		/**
@@ -165,11 +177,11 @@ package feathers.dragDrop
 		 * drop. Meant to be called in a listener for the target's
 		 * <code>DragDropEvent.DRAG_ENTER</code> event.
 		 */
-		public static function acceptDrag( target : IDropTarget ) : void
+		public static function acceptDrag(target:IDropTarget):void
 		{
-			if( dropTarget != target )
+			if(dropTarget != target)
 			{
-				throw new ArgumentError( "Drop target cannot accept a drag at this time. Acceptance may only happen after the DragDropEvent.DRAG_ENTER event is dispatched and before the DragDropEvent.DRAG_EXIT event is dispatched." );
+				throw new ArgumentError("Drop target cannot accept a drag at this time. Acceptance may only happen after the DragDropEvent.DRAG_ENTER event is dispatched and before the DragDropEvent.DRAG_EXIT event is dispatched.");
 			}
 			isAccepted = true;
 		}
@@ -177,52 +189,52 @@ package feathers.dragDrop
 		/**
 		 * Immediately cancels the current drag.
 		 */
-		public static function cancelDrag() : void
+		public static function cancelDrag():void
 		{
-			if( !isDragging )
+			if(!isDragging)
 			{
 				return;
 			}
-			completeDrag( false );
+			completeDrag(false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected static function completeDrag( isDropped : Boolean ) : void
+		protected static function completeDrag(isDropped:Boolean):void
 		{
-			if( !isDragging )
+			if(!isDragging)
 			{
-				throw new IllegalOperationError( "Drag cannot be completed because none is currently active." );
+				throw new IllegalOperationError("Drag cannot be completed because none is currently active.");
 			}
-			if( dropTarget )
+			if(dropTarget)
 			{
-				dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_EXIT , _dragData , false , dropTargetLocalX , dropTargetLocalY ) );
+				dropTarget.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_EXIT, _dragData, false, dropTargetLocalX, dropTargetLocalY));
 				dropTarget = null;
 			}
-			var source : IDragSource = _dragSource;
-			var data : DragData = _dragData;
+			var source:IDragSource = _dragSource;
+			var data:DragData = _dragData;
 			cleanup();
-			source.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_COMPLETE , data , isDropped ) );
+			source.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_COMPLETE, data, isDropped));
 		}
 
 		/**
 		 * @private
 		 */
-		protected static function cleanup() : void
+		protected static function cleanup():void
 		{
-			if( avatar )
+			if(avatar)
 			{
 				//may have been removed from parent already in the drop listener
-				if( PopUpManager.isPopUp( avatar ) )
+				if(PopUpManager.isPopUp(avatar))
 				{
-					PopUpManager.removePopUp( avatar );
+					PopUpManager.removePopUp(avatar);
 				}
 				avatar.touchable = avatarOldTouchable;
 				avatar = null;
 			}
-			Starling.current.stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , nativeStage_keyDownHandler );
+			Starling.current.stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			Starling.current.nativeStage.removeEventListener(KeyboardEvent.KEY_DOWN, nativeStage_keyDownHandler);
 			_dragSource = null;
 			_dragData = null;
 		}
@@ -230,51 +242,47 @@ package feathers.dragDrop
 		/**
 		 * @private
 		 */
-		protected static function updateDropTarget( location : Point ) : void
+		protected static function updateDropTarget(location:Point):void
 		{
-			var target : DisplayObject = Starling.current.stage.hitTest( location , true );
-			while( target && !(target is IDropTarget) )
+			var target:DisplayObject = Starling.current.stage.hitTest(location, true);
+			while(target && !(target is IDropTarget))
 			{
 				target = target.parent;
 			}
-			if( target )
+			if(target)
 			{
-				target.globalToLocal( location , location );
+				target.globalToLocal(location, location);
 			}
-			if( target != dropTarget )
+			if(target != dropTarget)
 			{
-				if( dropTarget )
+				if(dropTarget)
 				{
 					//notice that we can reuse the previously saved location
-					dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_EXIT , _dragData , false , dropTargetLocalX , dropTargetLocalY ) );
+					dropTarget.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_EXIT, _dragData, false, dropTargetLocalX, dropTargetLocalY));
 				}
-				dropTarget = IDropTarget( target );
+				dropTarget = IDropTarget(target);
 				isAccepted = false;
-				if( dropTarget )
+				if(dropTarget)
 				{
 					dropTargetLocalX = location.x;
 					dropTargetLocalY = location.y;
-					dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_ENTER , _dragData , false , dropTargetLocalX , dropTargetLocalY ) );
+					dropTarget.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_ENTER, _dragData, false, dropTargetLocalX, dropTargetLocalY));
 				}
 			}
-			else if( dropTarget )
+			else if(dropTarget)
 			{
 				dropTargetLocalX = location.x;
 				dropTargetLocalY = location.y;
-				dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_MOVE , _dragData , false , dropTargetLocalX , dropTargetLocalY ) );
+				dropTarget.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_MOVE, _dragData, false, dropTargetLocalX, dropTargetLocalY));
 			}
 		}
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
 
 		/**
 		 * @private
 		 */
-		protected static function nativeStage_keyDownHandler( event : KeyboardEvent ) : void
+		protected static function nativeStage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.BACK )
+			if(event.keyCode == Keyboard.ESCAPE || event.keyCode == Keyboard.BACK)
 			{
 				event.preventDefault();
 				cancelDrag();
@@ -284,35 +292,35 @@ package feathers.dragDrop
 		/**
 		 * @private
 		 */
-		protected static function stage_touchHandler( event : TouchEvent ) : void
+		protected static function stage_touchHandler(event:TouchEvent):void
 		{
-			var stage : Stage = Starling.current.stage;
-			var touch : Touch = event.getTouch( stage , null , _touchPointID );
-			if( !touch )
+			var stage:Stage = Starling.current.stage;
+			var touch:Touch = event.getTouch(stage, null, _touchPointID);
+			if(!touch)
 			{
 				return;
 			}
-			if( touch.phase == TouchPhase.MOVED )
+			if(touch.phase == TouchPhase.MOVED)
 			{
-				touch.getLocation( stage , HELPER_POINT );
-				if( avatar )
+				touch.getLocation(stage, HELPER_POINT);
+				if(avatar)
 				{
 					avatar.x = HELPER_POINT.x + avatarOffsetX;
 					avatar.y = HELPER_POINT.y + avatarOffsetY;
 				}
-				updateDropTarget( HELPER_POINT );
+				updateDropTarget(HELPER_POINT);
 			}
-			else if( touch.phase == TouchPhase.ENDED )
+			else if(touch.phase == TouchPhase.ENDED)
 			{
 				_touchPointID = -1;
-				var isDropped : Boolean = false;
-				if( dropTarget && isAccepted )
+				var isDropped:Boolean = false;
+				if(dropTarget && isAccepted)
 				{
-					dropTarget.dispatchEvent( new DragDropEvent( DragDropEvent.DRAG_DROP , _dragData , true , dropTargetLocalX , dropTargetLocalY ) );
+					dropTarget.dispatchEvent(new DragDropEvent(DragDropEvent.DRAG_DROP, _dragData, true, dropTargetLocalX, dropTargetLocalY));
 					isDropped = true;
 				}
 				dropTarget = null;
-				completeDrag( isDropped );
+				completeDrag(isDropped);
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.text
 {
 	import feathers.core.FeathersControl;
@@ -70,7 +70,7 @@ package feathers.controls.text
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user presses the Enter key while the editor has focus.
@@ -92,7 +92,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 */
-	[Event(name="enter" , type="starling.events.Event")]
+	[Event(name="enter",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text editor receives focus.
@@ -114,7 +114,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn" , type="starling.events.Event")]
+	[Event(name="focusIn",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text editor loses focus.
@@ -136,7 +136,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut" , type="starling.events.Event")]
+	[Event(name="focusOut",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the soft keyboard is activated. Not all text editors will
@@ -159,7 +159,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_ACTIVATE
 	 */
-	[Event(name="softKeyboardActivate" , type="starling.events.Event")]
+	[Event(name="softKeyboardActivate",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the soft keyboard is deactivated. Not all text editors
@@ -182,7 +182,7 @@ package feathers.controls.text
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_DEACTIVATE
 	 */
-	[Event(name="softKeyboardDeactivate" , type="starling.events.Event")]
+	[Event(name="softKeyboardDeactivate",type="starling.events.Event")]
 
 	/**
 	 * Text that may be edited at runtime by the user with the
@@ -213,17 +213,29 @@ package feathers.controls.text
 	 * @see feathers.controls.TextInput
 	 * @see ../../../../help/text-editors.html Introduction to Feathers text editors
 	 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html flash.text.TextField
-	 */ public class TextFieldTextEditor extends FeathersControl implements ITextEditor, INativeFocusOwner, IStateObserver
+	 */
+	public class TextFieldTextEditor extends FeathersControl implements ITextEditor, INativeFocusOwner, IStateObserver
 	{
 		/**
 		 * @private
 		 */
-		private static var HELPER_MATRIX3D : Matrix3D;
+		private static var HELPER_MATRIX3D:Matrix3D;
 
 		/**
 		 * @private
 		 */
-		private static var HELPER_POINT3D : Vector3D;
+		private static var HELPER_POINT3D:Vector3D;
+		
+		/**
+		 * @private
+		 */
+		private static const HELPER_MATRIX:Matrix = new Matrix();
+
+		/**
+		 * @private
+		 */
+		private static const HELPER_POINT:Point = new Point();
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>TextFieldTextEditor</code>
 		 * components.
@@ -231,115 +243,96 @@ package feathers.controls.text
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		private static const HELPER_MATRIX : Matrix = new Matrix();
-		/**
-		 * @private
-		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * The text field sub-component.
-		 */
-		protected var textField : TextField;
-		/**
-		 * An image that displays a snapshot of the native <code>TextField</code>
-		 * in the Starling display list when the editor doesn't have focus.
-		 */
-		protected var textSnapshot : Image;
-		/**
-		 * The separate text field sub-component used for measurement.
-		 * Typically, the main text field often doesn't report correct values
-		 * for a full frame if its dimensions are changed too often.
-		 */
-		protected var measureTextField : TextField;
-		/**
-		 * @private
-		 */
-		protected var _snapshotWidth : int = 0;
-		/**
-		 * @private
-		 */
-		protected var _snapshotHeight : int = 0;
-		/**
-		 * @private
-		 */
-		protected var _textFieldSnapshotClipRect : Rectangle = new Rectangle();
-		/**
-		 * @private
-		 */
-		protected var _textFieldOffsetX : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _textFieldOffsetY : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _lastGlobalScaleX : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _lastGlobalScaleY : Number = 0;
-		/**
-		 * @private
-		 */
-		protected var _needsNewTexture : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _previousTextFormat : TextFormat;
-		/**
-		 * @private
-		 */
-		protected var currentTextFormat : TextFormat;
-		/**
-		 * @private
-		 */
-		protected var _textFormatForState : Object;
-		/**
-		 * @private
-		 */
-		protected var _textFieldHasFocus : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _isWaitingToSetFocus : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _pendingSelectionBeginIndex : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _pendingSelectionEndIndex : int = -1;
-		/**
-		 * @private
-		 */
-		protected var resetScrollOnFocusOut : Boolean = true;
+		public function TextFieldTextEditor()
+		{
+			this.isQuickHitAreaEnabled = true;
+			this.addEventListener(Event.ADDED_TO_STAGE, textEditor_addedToStageHandler);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, textEditor_removedFromStageHandler);
+		}
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return globalStyleProvider;
 		}
 
 		/**
+		 * The text field sub-component.
+		 */
+		protected var textField:TextField;
+
+		/**
 		 * @copy feathers.core.INativeFocusOwner#nativeFocus
 		 */
-		public function get nativeFocus() : InteractiveObject
+		public function get nativeFocus():InteractiveObject
 		{
 			return this.textField;
 		}
 
 		/**
+		 * An image that displays a snapshot of the native <code>TextField</code>
+		 * in the Starling display list when the editor doesn't have focus.
+		 */
+		protected var textSnapshot:Image;
+
+		/**
+		 * The separate text field sub-component used for measurement.
+		 * Typically, the main text field often doesn't report correct values
+		 * for a full frame if its dimensions are changed too often.
+		 */
+		protected var measureTextField:TextField;
+
+		/**
 		 * @private
 		 */
-		protected var _text : String = "";
+		protected var _snapshotWidth:int = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _snapshotHeight:int = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _textFieldSnapshotClipRect:Rectangle = new Rectangle();
+
+		/**
+		 * @private
+		 */
+		protected var _textFieldOffsetX:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _textFieldOffsetY:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _lastGlobalScaleX:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _lastGlobalScaleY:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _needsNewTexture:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _text:String = "";
 
 		/**
 		 * @inheritDoc
@@ -351,7 +344,7 @@ package feathers.controls.text
 		 *
 		 * @default ""
 		 */
-		public function get text() : String
+		public function get text():String
 		{
 			return this._text;
 		}
@@ -359,43 +352,58 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set text( value : String ) : void
+		public function set text(value:String):void
 		{
-			if( !value )
+			if(!value)
 			{
 				//don't allow null or undefined
 				value = "";
 			}
-			if( this._text == value )
+			if(this._text == value)
 			{
 				return;
 			}
 			this._text = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			this.dispatchEventWith( Event.CHANGE );
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get baseline() : Number
+		public function get baseline():Number
 		{
-			if( !this.textField )
+			if(!this.textField)
 			{
 				return 0;
 			}
-			var gutterDimensionsOffset : Number = 0;
-			if( this._useGutter )
+			var gutterDimensionsOffset:Number = 0;
+			if(this._useGutter)
 			{
 				gutterDimensionsOffset = 2;
 			}
-			return gutterDimensionsOffset + this.textField.getLineMetrics( 0 ).ascent;
+			return gutterDimensionsOffset + this.textField.getLineMetrics(0).ascent;
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _textFormat : TextFormat;
+		protected var _previousTextFormat:TextFormat;
+
+		/**
+		 * @private
+		 */
+		protected var currentTextFormat:TextFormat;
+
+		/**
+		 * @private
+		 */
+		protected var _textFormatForState:Object;
+
+		/**
+		 * @private
+		 */
+		protected var _textFormat:TextFormat;
 
 		/**
 		 * The format of the text, such as font and styles.
@@ -411,7 +419,7 @@ package feathers.controls.text
 		 * @see #disabledTextFormat
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextFormat.html flash.text.TextFormat
 		 */
-		public function get textFormat() : TextFormat
+		public function get textFormat():TextFormat
 		{
 			return this._textFormat;
 		}
@@ -419,9 +427,9 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set textFormat( value : TextFormat ) : void
+		public function set textFormat(value:TextFormat):void
 		{
-			if( this._textFormat == value )
+			if(this._textFormat == value)
 			{
 				return;
 			}
@@ -430,13 +438,13 @@ package feathers.controls.text
 			//false whether we use the real previous format or null. might as
 			//well remove the reference to an object we don't need anymore.
 			this._previousTextFormat = null;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _disabledTextFormat : TextFormat;
+		protected var _disabledTextFormat:TextFormat;
 
 		/**
 		 * The font and styles used to draw the text when the component is
@@ -453,7 +461,7 @@ package feathers.controls.text
 		 * @see #textFormat
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextFormat.html flash.text.TextFormat
 		 */
-		public function get disabledTextFormat() : TextFormat
+		public function get disabledTextFormat():TextFormat
 		{
 			return this._disabledTextFormat;
 		}
@@ -461,20 +469,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set disabledTextFormat( value : TextFormat ) : void
+		public function set disabledTextFormat(value:TextFormat):void
 		{
-			if( this._disabledTextFormat == value )
+			if(this._disabledTextFormat == value)
 			{
 				return;
 			}
 			this._disabledTextFormat = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _embedFonts : Boolean = false;
+		protected var _embedFonts:Boolean = false;
 
 		/**
 		 * Determines if the TextField should use an embedded font or not. If
@@ -487,10 +495,9 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of
-		 *     flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#embedFonts Full description of flash.text.TextField.embedFonts in Adobe's Flash Platform API Reference
 		 */
-		public function get embedFonts() : Boolean
+		public function get embedFonts():Boolean
 		{
 			return this._embedFonts;
 		}
@@ -498,20 +505,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set embedFonts( value : Boolean ) : void
+		public function set embedFonts(value:Boolean):void
 		{
-			if( this._embedFonts == value )
+			if(this._embedFonts == value)
 			{
 				return;
 			}
 			this._embedFonts = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _wordWrap : Boolean = false;
+		protected var _wordWrap:Boolean = false;
 
 		/**
 		 * Determines if the TextField wraps text to the next line.
@@ -523,10 +530,9 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#wordWrap Full description of
-		 *     flash.text.TextField.wordWrap in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#wordWrap Full description of flash.text.TextField.wordWrap in Adobe's Flash Platform API Reference
 		 */
-		public function get wordWrap() : Boolean
+		public function get wordWrap():Boolean
 		{
 			return this._wordWrap;
 		}
@@ -534,20 +540,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set wordWrap( value : Boolean ) : void
+		public function set wordWrap(value:Boolean):void
 		{
-			if( this._wordWrap == value )
+			if(this._wordWrap == value)
 			{
 				return;
 			}
 			this._wordWrap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _multiline : Boolean = false;
+		protected var _multiline:Boolean = false;
 
 		/**
 		 * Indicates whether field is a multiline text field.
@@ -559,10 +565,9 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#multiline Full description of
-		 *     flash.text.TextField.multiline in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#multiline Full description of flash.text.TextField.multiline in Adobe's Flash Platform API Reference
 		 */
-		public function get multiline() : Boolean
+		public function get multiline():Boolean
 		{
 			return this._multiline;
 		}
@@ -570,20 +575,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set multiline( value : Boolean ) : void
+		public function set multiline(value:Boolean):void
 		{
-			if( this._multiline == value )
+			if(this._multiline == value)
 			{
 				return;
 			}
 			this._multiline = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isHTML : Boolean = false;
+		protected var _isHTML:Boolean = false;
 
 		/**
 		 * Determines if the TextField should display the value of the
@@ -598,7 +603,7 @@ package feathers.controls.text
 		 *
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#htmlText flash.text.TextField.htmlText
 		 */
-		public function get isHTML() : Boolean
+		public function get isHTML():Boolean
 		{
 			return this._isHTML;
 		}
@@ -606,20 +611,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set isHTML( value : Boolean ) : void
+		public function set isHTML(value:Boolean):void
 		{
-			if( this._isHTML == value )
+			if(this._isHTML == value)
 			{
 				return;
 			}
 			this._isHTML = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _alwaysShowSelection : Boolean = false;
+		protected var _alwaysShowSelection:Boolean = false;
 
 		/**
 		 * When set to <code>true</code> and the text field is not in focus,
@@ -634,10 +639,9 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#alwaysShowSelection Full description of
-		 *     flash.text.TextField.alwaysShowSelection in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#alwaysShowSelection Full description of flash.text.TextField.alwaysShowSelection in Adobe's Flash Platform API Reference
 		 */
-		public function get alwaysShowSelection() : Boolean
+		public function get alwaysShowSelection():Boolean
 		{
 			return this._alwaysShowSelection;
 		}
@@ -645,33 +649,32 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set alwaysShowSelection( value : Boolean ) : void
+		public function set alwaysShowSelection(value:Boolean):void
 		{
-			if( this._alwaysShowSelection == value )
+			if(this._alwaysShowSelection == value)
 			{
 				return;
 			}
 			this._alwaysShowSelection = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _displayAsPassword : Boolean = false;
+		protected var _displayAsPassword:Boolean = false;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * Specifies whether the text field is a password text field that hides
 		 * the input characters using asterisks instead of the actual
 		 * characters.
 		 *
 		 * @see feathers.controls.TextInput#displayAsPassword
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of
-		 *     flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#displayAsPassword Full description of flash.text.TextField.displayAsPassword in Adobe's Flash Platform API Reference
 		 */
-		public function get displayAsPassword() : Boolean
+		public function get displayAsPassword():Boolean
 		{
 			return this._displayAsPassword;
 		}
@@ -679,31 +682,30 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set displayAsPassword( value : Boolean ) : void
+		public function set displayAsPassword(value:Boolean):void
 		{
-			if( this._displayAsPassword == value )
+			if(this._displayAsPassword == value)
 			{
 				return;
 			}
 			this._displayAsPassword = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maxChars : int = 0;
+		protected var _maxChars:int = 0;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#maxChars
 		 *
 		 * @see feathers.controls.TextInput#maxChars
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#maxChars Full description of
-		 *     flash.text.TextField.maxChars in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#maxChars Full description of flash.text.TextField.maxChars in Adobe's Flash Platform API Reference
 		 */
-		public function get maxChars() : int
+		public function get maxChars():int
 		{
 			return this._maxChars;
 		}
@@ -711,31 +713,30 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set maxChars( value : int ) : void
+		public function set maxChars(value:int):void
 		{
-			if( this._maxChars == value )
+			if(this._maxChars == value)
 			{
 				return;
 			}
 			this._maxChars = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _restrict : String;
+		protected var _restrict:String;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#restrict
 		 *
 		 * @see feathers.controls.TextInput#restrict
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of
-		 *     flash.text.TextField.restrict in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#restrict Full description of flash.text.TextField.restrict in Adobe's Flash Platform API Reference
 		 */
-		public function get restrict() : String
+		public function get restrict():String
 		{
 			return this._restrict;
 		}
@@ -743,29 +744,29 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set restrict( value : String ) : void
+		public function set restrict(value:String):void
 		{
-			if( this._restrict == value )
+			if(this._restrict == value)
 			{
 				return;
 			}
 			this._restrict = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isEditable : Boolean = true;
+		protected var _isEditable:Boolean = true;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#isEditable
 		 *
 		 * @see feathers.controls.TextInput#isEditable
 		 */
-		public function get isEditable() : Boolean
+		public function get isEditable():Boolean
 		{
 			return this._isEditable;
 		}
@@ -773,29 +774,29 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set isEditable( value : Boolean ) : void
+		public function set isEditable(value:Boolean):void
 		{
-			if( this._isEditable == value )
+			if(this._isEditable == value)
 			{
 				return;
 			}
 			this._isEditable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isSelectable : Boolean = true;
+		protected var _isSelectable:Boolean = true;
 
 		/**
 		 * <p>This property is managed by the <code>TextInput</code>.</p>
-		 *
+		 * 
 		 * @copy feathers.controls.TextInput#isSelectable
 		 *
 		 * @see feathers.controls.TextInput#isSelectable
 		 */
-		public function get isSelectable() : Boolean
+		public function get isSelectable():Boolean
 		{
 			return this._isSelectable;
 		}
@@ -803,20 +804,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set isSelectable( value : Boolean ) : void
+		public function set isSelectable(value:Boolean):void
 		{
-			if( this._isSelectable == value )
+			if(this._isSelectable == value)
 			{
 				return;
 			}
 			this._isSelectable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _antiAliasType : String = AntiAliasType.ADVANCED;
+		private var _antiAliasType:String = AntiAliasType.ADVANCED;
 
 		/**
 		 * The type of anti-aliasing used for this text field, defined as
@@ -831,12 +832,11 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.AntiAliasType.ADVANCED
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of
-		 *     flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#antiAliasType Full description of flash.text.TextField.antiAliasType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/AntiAliasType.html flash.text.AntiAliasType
 		 * @see #embedFonts
 		 */
-		public function get antiAliasType() : String
+		public function get antiAliasType():String
 		{
 			return this._antiAliasType;
 		}
@@ -844,20 +844,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set antiAliasType( value : String ) : void
+		public function set antiAliasType(value:String):void
 		{
-			if( this._antiAliasType == value )
+			if(this._antiAliasType == value)
 			{
 				return;
 			}
 			this._antiAliasType = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _gridFitType : String = GridFitType.PIXEL;
+		private var _gridFitType:String = GridFitType.PIXEL;
 
 		/**
 		 * Determines whether Flash Player forces strong horizontal and vertical
@@ -873,12 +873,11 @@ package feathers.controls.text
 		 *
 		 * @default flash.text.GridFitType.PIXEL
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of
-		 *     flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#gridFitType Full description of flash.text.TextField.gridFitType in Adobe's Flash Platform API Reference
 		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/GridFitType.html flash.text.GridFitType
 		 * @see #antiAliasType
 		 */
-		public function get gridFitType() : String
+		public function get gridFitType():String
 		{
 			return this._gridFitType;
 		}
@@ -886,20 +885,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set gridFitType( value : String ) : void
+		public function set gridFitType(value:String):void
 		{
-			if( this._gridFitType == value )
+			if(this._gridFitType == value)
 			{
 				return;
 			}
 			this._gridFitType = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _sharpness : Number = 0;
+		private var _sharpness:Number = 0;
 
 		/**
 		 * The sharpness of the glyph edges in this text field. This property
@@ -915,11 +914,10 @@ package feathers.controls.text
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of
-		 *     flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#sharpness Full description of flash.text.TextField.sharpness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
-		public function get sharpness() : Number
+		public function get sharpness():Number
 		{
 			return this._sharpness;
 		}
@@ -927,20 +925,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set sharpness( value : Number ) : void
+		public function set sharpness(value:Number):void
 		{
-			if( this._sharpness == value )
+			if(this._sharpness == value)
 			{
 				return;
 			}
 			this._sharpness = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _thickness : Number = 0;
+		private var _thickness:Number = 0;
 
 		/**
 		 * The thickness of the glyph edges in this text field. This property
@@ -956,11 +954,10 @@ package feathers.controls.text
 		 *
 		 * @default 0
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of
-		 *     flash.text.TextField.thickness in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#thickness Full description of flash.text.TextField.thickness in Adobe's Flash Platform API Reference
 		 * @see #antiAliasType
 		 */
-		public function get thickness() : Number
+		public function get thickness():Number
 		{
 			return this._thickness;
 		}
@@ -968,20 +965,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set thickness( value : Number ) : void
+		public function set thickness(value:Number):void
 		{
-			if( this._thickness == value )
+			if(this._thickness == value)
 			{
 				return;
 			}
 			this._thickness = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _background : Boolean = false;
+		private var _background:Boolean = false;
 
 		/**
 		 * Specifies whether the text field has a background fill. Use the
@@ -996,11 +993,10 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of
-		 *     flash.text.TextField.background in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#background Full description of flash.text.TextField.background in Adobe's Flash Platform API Reference
 		 * @see #backgroundColor
 		 */
-		public function get background() : Boolean
+		public function get background():Boolean
 		{
 			return this._background;
 		}
@@ -1008,20 +1004,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set background( value : Boolean ) : void
+		public function set background(value:Boolean):void
 		{
-			if( this._background == value )
+			if(this._background == value)
 			{
 				return;
 			}
 			this._background = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _backgroundColor : uint = 0xffffff;
+		private var _backgroundColor:uint = 0xffffff;
 
 		/**
 		 * The color of the text field background that is displayed if the
@@ -1035,11 +1031,10 @@ package feathers.controls.text
 		 *
 		 * @default 0xffffff
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of
-		 *     flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#backgroundColor Full description of flash.text.TextField.backgroundColor in Adobe's Flash Platform API Reference
 		 * @see #background
 		 */
-		public function get backgroundColor() : uint
+		public function get backgroundColor():uint
 		{
 			return this._backgroundColor;
 		}
@@ -1047,20 +1042,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set backgroundColor( value : uint ) : void
+		public function set backgroundColor(value:uint):void
 		{
-			if( this._backgroundColor == value )
+			if(this._backgroundColor == value)
 			{
 				return;
 			}
 			this._backgroundColor = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _border : Boolean = false;
+		private var _border:Boolean = false;
 
 		/**
 		 * Specifies whether the text field has a border. Use the
@@ -1077,11 +1072,10 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of
-		 *     flash.text.TextField.border in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#border Full description of flash.text.TextField.border in Adobe's Flash Platform API Reference
 		 * @see #borderColor
 		 */
-		public function get border() : Boolean
+		public function get border():Boolean
 		{
 			return this._border;
 		}
@@ -1089,20 +1083,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set border( value : Boolean ) : void
+		public function set border(value:Boolean):void
 		{
-			if( this._border == value )
+			if(this._border == value)
 			{
 				return;
 			}
 			this._border = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		private var _borderColor : uint = 0x000000;
+		private var _borderColor:uint = 0x000000;
 
 		/**
 		 * The color of the text field border that is displayed if the
@@ -1116,11 +1110,10 @@ package feathers.controls.text
 		 *
 		 * @default 0x000000
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of
-		 *     flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/text/TextField.html#borderColor Full description of flash.text.TextField.borderColor in Adobe's Flash Platform API Reference
 		 * @see #border
 		 */
-		public function get borderColor() : uint
+		public function get borderColor():uint
 		{
 			return this._borderColor;
 		}
@@ -1128,20 +1121,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set borderColor( value : uint ) : void
+		public function set borderColor(value:uint):void
 		{
-			if( this._borderColor == value )
+			if(this._borderColor == value)
 			{
 				return;
 			}
 			this._borderColor = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _useGutter : Boolean = false;
+		protected var _useGutter:Boolean = false;
 
 		/**
 		 * Determines if the 2-pixel gutter around the edges of the
@@ -1156,7 +1149,7 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 */
-		public function get useGutter() : Boolean
+		public function get useGutter():Boolean
 		{
 			return this._useGutter;
 		}
@@ -1164,34 +1157,49 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set useGutter( value : Boolean ) : void
+		public function set useGutter(value:Boolean):void
 		{
-			if( this._useGutter == value )
+			if(this._useGutter == value)
 			{
 				return;
 			}
 			this._useGutter = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get setTouchFocusOnEndedPhase() : Boolean
+		public function get setTouchFocusOnEndedPhase():Boolean
 		{
 			return false;
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _textFieldHasFocus:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _isWaitingToSetFocus:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _pendingSelectionBeginIndex:int = -1;
+
+		/**
 		 * @inheritDoc
 		 */
-		public function get selectionBeginIndex() : int
+		public function get selectionBeginIndex():int
 		{
-			if( this._pendingSelectionBeginIndex >= 0 )
+			if(this._pendingSelectionBeginIndex >= 0)
 			{
 				return this._pendingSelectionBeginIndex;
 			}
-			if( this.textField )
+			if(this.textField)
 			{
 				return this.textField.selectionBeginIndex;
 			}
@@ -1199,15 +1207,20 @@ package feathers.controls.text
 		}
 
 		/**
+		 * @private
+		 */
+		protected var _pendingSelectionEndIndex:int = -1;
+
+		/**
 		 * @inheritDoc
 		 */
-		public function get selectionEndIndex() : int
+		public function get selectionEndIndex():int
 		{
-			if( this._pendingSelectionEndIndex >= 0 )
+			if(this._pendingSelectionEndIndex >= 0)
 			{
 				return this._pendingSelectionEndIndex;
 			}
-			if( this.textField )
+			if(this.textField)
 			{
 				return this.textField.selectionEndIndex;
 			}
@@ -1217,7 +1230,7 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _stateContext : IStateContext;
+		protected var _stateContext:IStateContext;
 
 		/**
 		 * When the text renderer observes a state context, the text renderer
@@ -1230,7 +1243,7 @@ package feathers.controls.text
 		 *
 		 * @see #setTextFormatForState()
 		 */
-		public function get stateContext() : IStateContext
+		public function get stateContext():IStateContext
 		{
 			return this._stateContext;
 		}
@@ -1238,28 +1251,28 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set stateContext( value : IStateContext ) : void
+		public function set stateContext(value:IStateContext):void
 		{
-			if( this._stateContext === value )
+			if(this._stateContext === value)
 			{
 				return;
 			}
-			if( this._stateContext )
+			if(this._stateContext)
 			{
-				this._stateContext.removeEventListener( FeathersEventType.STATE_CHANGE , stateContext_stateChangeHandler );
+				this._stateContext.removeEventListener(FeathersEventType.STATE_CHANGE, stateContext_stateChangeHandler);
 			}
 			this._stateContext = value;
-			if( this._stateContext )
+			if(this._stateContext)
 			{
-				this._stateContext.addEventListener( FeathersEventType.STATE_CHANGE , stateContext_stateChangeHandler );
+				this._stateContext.addEventListener(FeathersEventType.STATE_CHANGE, stateContext_stateChangeHandler);
 			}
-			this.invalidate( INVALIDATION_FLAG_STATE );
+			this.invalidate(INVALIDATION_FLAG_STATE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _updateSnapshotOnScaleChange : Boolean = false;
+		protected var _updateSnapshotOnScaleChange:Boolean = false;
 
 		/**
 		 * Refreshes the texture snapshot every time that the text editor is
@@ -1280,7 +1293,7 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 */
-		public function get updateSnapshotOnScaleChange() : Boolean
+		public function get updateSnapshotOnScaleChange():Boolean
 		{
 			return this._updateSnapshotOnScaleChange;
 		}
@@ -1288,20 +1301,20 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set updateSnapshotOnScaleChange( value : Boolean ) : void
+		public function set updateSnapshotOnScaleChange(value:Boolean):void
 		{
-			if( this._updateSnapshotOnScaleChange == value )
+			if(this._updateSnapshotOnScaleChange == value)
 			{
 				return;
 			}
 			this._updateSnapshotOnScaleChange = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _useSnapshotDelayWorkaround : Boolean = false;
+		protected var _useSnapshotDelayWorkaround:Boolean = false;
 
 		/**
 		 * Fixes an issue where <code>flash.text.TextField</code> renders
@@ -1318,7 +1331,7 @@ package feathers.controls.text
 		 *
 		 * @default false
 		 */
-		public function get useSnapshotDelayWorkaround() : Boolean
+		public function get useSnapshotDelayWorkaround():Boolean
 		{
 			return this._useSnapshotDelayWorkaround;
 		}
@@ -1326,59 +1339,54 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		public function set useSnapshotDelayWorkaround( value : Boolean ) : void
+		public function set useSnapshotDelayWorkaround(value:Boolean):void
 		{
-			if( this._useSnapshotDelayWorkaround == value )
+			if(this._useSnapshotDelayWorkaround == value)
 			{
 				return;
 			}
 			this._useSnapshotDelayWorkaround = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function TextFieldTextEditor()
-		{
-			this.isQuickHitAreaEnabled = true;
-			this.addEventListener( Event.ADDED_TO_STAGE , textEditor_addedToStageHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE , textEditor_removedFromStageHandler );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		protected var resetScrollOnFocusOut:Boolean = true;
+
+		/**
+		 * @private
+		 */
+		override public function dispose():void
 		{
-			if( this.textSnapshot )
+			if(this.textSnapshot)
 			{
 				//avoid the need to call dispose(). we'll create a new snapshot
 				//when the renderer is added to stage again.
 				this.textSnapshot.texture.dispose();
-				this.removeChild( this.textSnapshot , true );
+				this.removeChild(this.textSnapshot, true);
 				this.textSnapshot = null;
 			}
 
-			if( this.textField )
+			if(this.textField)
 			{
-				if( this.textField.parent )
+				if(this.textField.parent)
 				{
-					this.textField.parent.removeChild( this.textField );
+					this.textField.parent.removeChild(this.textField);
 				}
-				this.textField.removeEventListener( flash.events.Event.CHANGE , textField_changeHandler );
-				this.textField.removeEventListener( FocusEvent.FOCUS_IN , textField_focusInHandler );
-				this.textField.removeEventListener( FocusEvent.FOCUS_OUT , textField_focusOutHandler );
-				this.textField.removeEventListener( KeyboardEvent.KEY_DOWN , textField_keyDownHandler );
-				this.textField.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE , textField_softKeyboardActivateHandler );
-				this.textField.removeEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE , textField_softKeyboardDeactivateHandler );
+				this.textField.removeEventListener(flash.events.Event.CHANGE, textField_changeHandler);
+				this.textField.removeEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
+				this.textField.removeEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
+				this.textField.removeEventListener(KeyboardEvent.KEY_DOWN, textField_keyDownHandler);
+				this.textField.removeEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE, textField_softKeyboardActivateHandler);
+				this.textField.removeEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE, textField_softKeyboardDeactivateHandler);
 			}
 			//this isn't necessary, but if a memory leak keeps the text renderer
 			//from being garbage collected, freeing up the text field may help
 			//ease major memory pressure from native filters
 			this.textField = null;
 			this.measureTextField = null;
-
+			
 			this.stateContext = null;
 
 			super.dispose();
@@ -1387,18 +1395,18 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function render( support : RenderSupport , parentAlpha : Number ) : void
+		override public function render(support:RenderSupport, parentAlpha:Number):void
 		{
-			if( this.textSnapshot )
+			if(this.textSnapshot)
 			{
-				if( this._updateSnapshotOnScaleChange )
+				if(this._updateSnapshotOnScaleChange)
 				{
-					this.getTransformationMatrix( this.stage , HELPER_MATRIX );
-					if( matrixToScaleX( HELPER_MATRIX ) != this._lastGlobalScaleX || matrixToScaleY( HELPER_MATRIX ) != this._lastGlobalScaleY )
+					this.getTransformationMatrix(this.stage, HELPER_MATRIX);
+					if(matrixToScaleX(HELPER_MATRIX) != this._lastGlobalScaleX || matrixToScaleY(HELPER_MATRIX) != this._lastGlobalScaleY)
 					{
 						//the snapshot needs to be updated because the scale has
 						//changed since the last snapshot was taken.
-						this.invalidate( INVALIDATION_FLAG_SIZE );
+						this.invalidate(INVALIDATION_FLAG_SIZE);
 						this.validate();
 					}
 				}
@@ -1406,54 +1414,54 @@ package feathers.controls.text
 			}
 			//we'll skip this if the text field isn't visible to avoid running
 			//that code every frame.
-			if( this.textField && this.textField.visible )
+			if(this.textField && this.textField.visible)
 			{
 				this.transformTextField();
 			}
-			super.render( support , parentAlpha );
+			super.render(support, parentAlpha);
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function setFocus( position : Point = null ) : void
+		public function setFocus(position:Point = null):void
 		{
-			if( this.textField )
+			if(this.textField)
 			{
-				if( !this.textField.parent )
+				if(!this.textField.parent)
 				{
-					Starling.current.nativeStage.addChild( this.textField );
+					Starling.current.nativeStage.addChild(this.textField);
 				}
-				if( position )
+				if(position)
 				{
-					var gutterPositionOffset : Number = 2;
-					if( this._useGutter )
+					var gutterPositionOffset:Number = 2;
+					if(this._useGutter)
 					{
 						gutterPositionOffset = 0;
 					}
-					var positionX : Number = position.x - this.textSnapshot.x + gutterPositionOffset;
-					var positionY : Number = position.y - this.textSnapshot.y + gutterPositionOffset;
-					if( positionX < 0 )
+					var positionX:Number = position.x - this.textSnapshot.x + gutterPositionOffset;
+					var positionY:Number = position.y - this.textSnapshot.y + gutterPositionOffset;
+					if(positionX < 0)
 					{
 						this._pendingSelectionBeginIndex = this._pendingSelectionEndIndex = 0;
 					}
 					else
 					{
-						this._pendingSelectionBeginIndex = this.getSelectionIndexAtPoint( positionX , positionY );
-						if( this._pendingSelectionBeginIndex < 0 )
+						this._pendingSelectionBeginIndex = this.getSelectionIndexAtPoint(positionX, positionY);
+						if(this._pendingSelectionBeginIndex < 0)
 						{
-							if( this._multiline )
+							if(this._multiline)
 							{
-								var lineIndex : int = int( positionY / this.textField.getLineMetrics( 0 ).height ) + (this.textField.scrollV - 1);
+								var lineIndex:int = int(positionY / this.textField.getLineMetrics(0).height) + (this.textField.scrollV - 1);
 								try
 								{
-									this._pendingSelectionBeginIndex = this.textField.getLineOffset( lineIndex ) + this.textField.getLineLength( lineIndex );
-									if( this._pendingSelectionBeginIndex != this._text.length )
+									this._pendingSelectionBeginIndex = this.textField.getLineOffset(lineIndex) + this.textField.getLineLength(lineIndex);
+									if(this._pendingSelectionBeginIndex != this._text.length)
 									{
 										this._pendingSelectionBeginIndex--;
 									}
 								}
-								catch( error : Error )
+								catch(error:Error)
 								{
 									//we may be checking for a line beyond the
 									//end that doesn't exist
@@ -1462,8 +1470,8 @@ package feathers.controls.text
 							}
 							else
 							{
-								this._pendingSelectionBeginIndex = this.getSelectionIndexAtPoint( positionX , this.textField.getLineMetrics( 0 ).ascent / 2 );
-								if( this._pendingSelectionBeginIndex < 0 )
+								this._pendingSelectionBeginIndex = this.getSelectionIndexAtPoint(positionX, this.textField.getLineMetrics(0).ascent / 2);
+								if(this._pendingSelectionBeginIndex < 0)
 								{
 									this._pendingSelectionBeginIndex = this._text.length;
 								}
@@ -1471,17 +1479,17 @@ package feathers.controls.text
 						}
 						else
 						{
-							var bounds : Rectangle = this.textField.getCharBoundaries( this._pendingSelectionBeginIndex );
+							var bounds:Rectangle = this.textField.getCharBoundaries(this._pendingSelectionBeginIndex);
 							//bounds should never be null because the character
 							//index passed to getCharBoundaries() comes from a
 							//call to getCharIndexAtPoint(). however, a user
 							//reported that a null reference error happened
 							//here! I couldn't reproduce, but I might as well
 							//assume that the runtime has a bug. won't hurt.
-							if( bounds )
+							if(bounds)
 							{
-								var boundsX : Number = bounds.x;
-								if( bounds && (boundsX + bounds.width - positionX) < (positionX - boundsX) )
+								var boundsX:Number = bounds.x;
+								if(bounds && (boundsX + bounds.width - positionX) < (positionX - boundsX))
 								{
 									this._pendingSelectionBeginIndex++;
 								}
@@ -1494,14 +1502,14 @@ package feathers.controls.text
 				{
 					this._pendingSelectionBeginIndex = this._pendingSelectionEndIndex = -1;
 				}
-				if( !FocusManager.isEnabledForStage( this.stage ) )
+				if(!FocusManager.isEnabledForStage(this.stage))
 				{
 					Starling.current.nativeStage.focus = this.textField;
 				}
 				this.textField.requestSoftKeyboard();
-				if( this._textFieldHasFocus )
+				if(this._textFieldHasFocus)
 				{
-					this.invalidate( INVALIDATION_FLAG_SELECTED );
+					this.invalidate(INVALIDATION_FLAG_SELECTED);
 				}
 			}
 			else
@@ -1513,14 +1521,14 @@ package feathers.controls.text
 		/**
 		 * @inheritDoc
 		 */
-		public function clearFocus() : void
+		public function clearFocus():void
 		{
-			if( !this._textFieldHasFocus )
+			if(!this._textFieldHasFocus)
 			{
 				return;
 			}
-			var nativeStage : Stage = Starling.current.nativeStage;
-			if( nativeStage.focus === this.textField )
+			var nativeStage:Stage = Starling.current.nativeStage;
+			if(nativeStage.focus === this.textField)
 			{
 				//only clear the native focus when our native target has focus
 				//because otherwise another component may lose focus.
@@ -1530,7 +1538,7 @@ package feathers.controls.text
 				//nativeStage, focus will be removed from the StageText, but the
 				//soft keyboard will incorrectly remain open.
 				nativeStage.focus = null;
-
+				
 				//previously, there was a comment here that said that the native
 				//stage focus should not be set to null. this was due to an
 				//issue in focus manager where focus would be restored
@@ -1542,19 +1550,19 @@ package feathers.controls.text
 		/**
 		 * @inheritDoc
 		 */
-		public function selectRange( beginIndex : int , endIndex : int ) : void
+		public function selectRange(beginIndex:int, endIndex:int):void
 		{
-			if( !this._isEditable && !this._isSelectable )
+			if(!this._isEditable && !this._isSelectable)
 			{
 				return;
 			}
-			if( this.textField )
+			if(this.textField)
 			{
-				if( !this._isValidating )
+				if(!this._isValidating)
 				{
 					this.validate();
 				}
-				this.textField.setSelection( beginIndex , endIndex );
+				this.textField.setSelection(beginIndex, endIndex);
 			}
 			else
 			{
@@ -1566,16 +1574,16 @@ package feathers.controls.text
 		/**
 		 * @inheritDoc
 		 */
-		public function measureText( result : Point = null ) : Point
+		public function measureText(result:Point = null):Point
 		{
-			if( !result )
+			if(!result)
 			{
 				result = new Point();
 			}
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				result.x = this.explicitWidth;
 				result.y = this.explicitHeight;
@@ -1585,14 +1593,14 @@ package feathers.controls.text
 			//if a parent component validates before we're added to the stage,
 			//measureText() may be called before initialization, so we need to
 			//force it.
-			if( !this._isInitialized )
+			if(!this._isInitialized)
 			{
 				this.initializeInternal();
 			}
 
 			this.commit();
 
-			result = this.measure( result );
+			result = this.measure(result);
 
 			return result;
 		}
@@ -1613,32 +1621,32 @@ package feathers.controls.text
 		 * @see #stateContext
 		 * @see #textFormat
 		 */
-		public function setTextFormatForState( state : String , textFormat : TextFormat ) : void
+		public function setTextFormatForState(state:String, textFormat:TextFormat):void
 		{
-			if( textFormat )
+			if(textFormat)
 			{
-				if( !this._textFormatForState )
+				if(!this._textFormatForState)
 				{
 					this._textFormatForState = {};
 				}
-				this._textFormatForState[ state ] = textFormat;
+				this._textFormatForState[state] = textFormat;
 			}
 			else
 			{
-				delete this._textFormatForState[ state ];
+				delete this._textFormatForState[state];
 			}
 			//if the context's current state is the state that we're modifying,
 			//we need to use the new value immediately.
-			if( this._stateContext && this._stateContext.currentState === state )
+			if(this._stateContext && this._stateContext.currentState === state)
 			{
-				this.invalidate( INVALIDATION_FLAG_STATE );
+				this.invalidate(INVALIDATION_FLAG_STATE);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
 			this.textField = new TextField();
 			//let's ensure that the text field can only get keyboard focus
@@ -1648,12 +1656,12 @@ package feathers.controls.text
 			this.textField.tabEnabled = false;
 			this.textField.visible = false;
 			this.textField.needsSoftKeyboard = true;
-			this.textField.addEventListener( flash.events.Event.CHANGE , textField_changeHandler );
-			this.textField.addEventListener( FocusEvent.FOCUS_IN , textField_focusInHandler );
-			this.textField.addEventListener( FocusEvent.FOCUS_OUT , textField_focusOutHandler );
-			this.textField.addEventListener( KeyboardEvent.KEY_DOWN , textField_keyDownHandler );
-			this.textField.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE , textField_softKeyboardActivateHandler );
-			this.textField.addEventListener( SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE , textField_softKeyboardDeactivateHandler );
+			this.textField.addEventListener(flash.events.Event.CHANGE, textField_changeHandler);
+			this.textField.addEventListener(FocusEvent.FOCUS_IN, textField_focusInHandler);
+			this.textField.addEventListener(FocusEvent.FOCUS_OUT, textField_focusOutHandler);
+			this.textField.addEventListener(KeyboardEvent.KEY_DOWN, textField_keyDownHandler);
+			this.textField.addEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_ACTIVATE, textField_softKeyboardActivateHandler);
+			this.textField.addEventListener(SoftKeyboardEvent.SOFT_KEYBOARD_DEACTIVATE, textField_softKeyboardDeactivateHandler);
 			//when adding more events here, don't forget to remove them when the
 			//text editor is disposed
 
@@ -1668,30 +1676,30 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
 
 			this.commit();
 
 			sizeInvalid = this.autoSizeIfNeeded() || sizeInvalid;
 
-			this.layout( sizeInvalid );
+			this.layout(sizeInvalid);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function commit() : void
+		protected function commit():void
 		{
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
 
-			if( dataInvalid || stylesInvalid || stateInvalid )
+			if(dataInvalid || stylesInvalid || stateInvalid)
 			{
 				this.refreshTextFormat();
-				this.commitStylesAndData( this.textField );
+				this.commitStylesAndData(this.textField);
 			}
 		}
 
@@ -1711,77 +1719,77 @@ package feathers.controls.text
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			this.measure( HELPER_POINT );
-			return this.setSizeInternal( HELPER_POINT.x , HELPER_POINT.y , false );
+			this.measure(HELPER_POINT);
+			return this.setSizeInternal(HELPER_POINT.x, HELPER_POINT.y, false);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function measure( result : Point = null ) : Point
+		protected function measure(result:Point = null):Point
 		{
-			if( !result )
+			if(!result)
 			{
 				result = new Point();
 			}
 
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
 
-			if( !needsWidth && !needsHeight )
+			if(!needsWidth && !needsHeight)
 			{
 				result.x = this.explicitWidth;
 				result.y = this.explicitHeight;
 				return result;
 			}
 
-			this.commitStylesAndData( this.measureTextField );
+			this.commitStylesAndData(this.measureTextField);
 
-			var gutterDimensionsOffset : Number = 4;
-			if( this._useGutter )
+			var gutterDimensionsOffset:Number = 4;
+			if(this._useGutter)
 			{
 				gutterDimensionsOffset = 0;
 			}
 
-			var newWidth : Number = this.explicitWidth;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			if(needsWidth)
 			{
 				this.measureTextField.wordWrap = false;
 				newWidth = this.measureTextField.width - gutterDimensionsOffset;
-				if( newWidth < this._minWidth )
+				if(newWidth < this.explicitMinWidth)
 				{
-					newWidth = this._minWidth;
+					newWidth = this.explicitMinWidth;
 				}
-				else if( newWidth > this._maxWidth )
+				else if(newWidth > this._maxWidth)
 				{
 					newWidth = this._maxWidth;
 				}
 			}
 
-			var newHeight : Number = this.explicitHeight;
-			if( needsHeight )
+			var newHeight:Number = this.explicitHeight;
+			if(needsHeight)
 			{
 				this.measureTextField.wordWrap = this._wordWrap;
 				this.measureTextField.width = newWidth + gutterDimensionsOffset;
 				newHeight = this.measureTextField.height - gutterDimensionsOffset;
-				if( this._useGutter )
+				if(this._useGutter)
 				{
 					newHeight += 4;
 				}
-				if( newHeight < this._minHeight )
+				if(newHeight < this.explicitMinHeight)
 				{
-					newHeight = this._minHeight;
+					newHeight = this.explicitMinHeight;
 				}
-				else if( newHeight > this._maxHeight )
+				else if(newHeight > this._maxHeight)
 				{
 					newHeight = this._maxHeight;
 				}
@@ -1796,7 +1804,7 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function commitStylesAndData( textField : TextField ) : void
+		protected function commitStylesAndData(textField:TextField):void
 		{
 			textField.antiAliasType = this._antiAliasType;
 			textField.background = this._background;
@@ -1815,23 +1823,23 @@ package feathers.controls.text
 			textField.embedFonts = this._embedFonts;
 			textField.type = this._isEditable ? TextFieldType.INPUT : TextFieldType.DYNAMIC;
 			textField.selectable = this._isEnabled && (this._isEditable || this._isSelectable);
-
-			if( textField === this.textField )
+			
+			if(textField === this.textField)
 			{
 				//for some reason, textField.defaultTextFormat always fails
 				//comparison against currentTextFormat. if we save to a member
 				//variable and compare against that instead, it works.
 				//I guess text field creates a different TextFormat object.
-				var isFormatDifferent : Boolean = this._previousTextFormat != this.currentTextFormat;
+				var isFormatDifferent:Boolean = this._previousTextFormat != this.currentTextFormat;
 				this._previousTextFormat = this.currentTextFormat;
 			}
 			textField.defaultTextFormat = this.currentTextFormat;
-
-			if( this._isHTML )
+			
+			if(this._isHTML)
 			{
-				if( isFormatDifferent || textField.htmlText != this._text )
+				if(isFormatDifferent || textField.htmlText != this._text)
 				{
-					if( textField == this.textField && this._pendingSelectionBeginIndex < 0 )
+					if(textField == this.textField && this._pendingSelectionBeginIndex < 0)
 					{
 						//if the TextFormat has changed from the last commit,
 						//the selection range may be lost when we set the text
@@ -1846,9 +1854,9 @@ package feathers.controls.text
 			}
 			else
 			{
-				if( isFormatDifferent || textField.text != this._text )
+				if(isFormatDifferent || textField.text != this._text)
 				{
-					if( textField == this.textField && this._pendingSelectionBeginIndex < 0 )
+					if(textField == this.textField && this._pendingSelectionBeginIndex < 0)
 					{
 						this._pendingSelectionBeginIndex = this.textField.selectionBeginIndex;
 						this._pendingSelectionEndIndex = this.textField.selectionEndIndex;
@@ -1861,26 +1869,26 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshTextFormat() : void
+		protected function refreshTextFormat():void
 		{
-			var textFormat : TextFormat;
-			if( this._stateContext && this._textFormatForState )
+			var textFormat:TextFormat;
+			if(this._stateContext && this._textFormatForState)
 			{
-				var currentState : String = this._stateContext.currentState;
-				if( currentState in this._textFormatForState )
+				var currentState:String = this._stateContext.currentState;
+				if(currentState in this._textFormatForState)
 				{
-					textFormat = TextFormat( this._textFormatForState[ currentState ] );
+					textFormat = TextFormat(this._textFormatForState[currentState]);
 				}
 			}
-			if( !textFormat && !this._isEnabled && this._disabledTextFormat )
+			if(!textFormat && !this._isEnabled && this._disabledTextFormat)
 			{
 				textFormat = this._disabledTextFormat;
 			}
-			if( !textFormat )
+			if(!textFormat)
 			{
 				//let's fall back to using Starling's embedded mini font if no
 				//text format has been specified
-				if( !this._textFormat )
+				if(!this._textFormat)
 				{
 					this._textFormat = new TextFormat();
 				}
@@ -1892,13 +1900,13 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function layout( sizeInvalid : Boolean ) : void
+		protected function layout(sizeInvalid:Boolean):void
 		{
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
 
-			if( sizeInvalid )
+			if(sizeInvalid)
 			{
 				this.refreshSnapshotParameters();
 				this.refreshTextFieldSize();
@@ -1908,13 +1916,13 @@ package feathers.controls.text
 
 			this.checkIfNewSnapshotIsNeeded();
 
-			if( !this._textFieldHasFocus && (sizeInvalid || stylesInvalid || dataInvalid || stateInvalid || this._needsNewTexture) )
+			if(!this._textFieldHasFocus && (sizeInvalid || stylesInvalid || dataInvalid || stateInvalid || this._needsNewTexture))
 			{
-				if( this._useSnapshotDelayWorkaround )
+				if(this._useSnapshotDelayWorkaround)
 				{
 					//sometimes, we need to wait a frame for flash.text.TextField
 					//to render properly when drawing to BitmapData.
-					this.addEventListener( Event.ENTER_FRAME , refreshSnapshot_enterFrameHandler );
+					this.addEventListener(Event.ENTER_FRAME, refreshSnapshot_enterFrameHandler);
 				}
 				else
 				{
@@ -1927,18 +1935,18 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function getSelectionIndexAtPoint( pointX : Number , pointY : Number ) : int
+		protected function getSelectionIndexAtPoint(pointX:Number, pointY:Number):int
 		{
-			return this.textField.getCharIndexAtPoint( pointX , pointY );
+			return this.textField.getCharIndexAtPoint(pointX, pointY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshTextFieldSize() : void
+		protected function refreshTextFieldSize():void
 		{
-			var gutterDimensionsOffset : Number = 4;
-			if( this._useGutter )
+			var gutterDimensionsOffset:Number = 4;
+			if(this._useGutter)
 			{
 				gutterDimensionsOffset = 0;
 			}
@@ -1949,30 +1957,30 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshSnapshotParameters() : void
+		protected function refreshSnapshotParameters():void
 		{
 			this._textFieldOffsetX = 0;
 			this._textFieldOffsetY = 0;
 			this._textFieldSnapshotClipRect.x = 0;
 			this._textFieldSnapshotClipRect.y = 0;
 
-			var scaleFactor : Number = Starling.contentScaleFactor;
-			var clipWidth : Number = this.actualWidth * scaleFactor;
-			if( this._updateSnapshotOnScaleChange )
+			var scaleFactor:Number = Starling.contentScaleFactor;
+			var clipWidth:Number = this.actualWidth * scaleFactor;
+			if(this._updateSnapshotOnScaleChange)
 			{
-				this.getTransformationMatrix( this.stage , HELPER_MATRIX );
-				clipWidth *= matrixToScaleX( HELPER_MATRIX );
+				this.getTransformationMatrix(this.stage, HELPER_MATRIX);
+				clipWidth *= matrixToScaleX(HELPER_MATRIX);
 			}
-			if( clipWidth < 0 )
+			if(clipWidth < 0)
 			{
 				clipWidth = 0;
 			}
-			var clipHeight : Number = this.actualHeight * scaleFactor;
-			if( this._updateSnapshotOnScaleChange )
+			var clipHeight:Number = this.actualHeight * scaleFactor;
+			if(this._updateSnapshotOnScaleChange)
 			{
-				clipHeight *= matrixToScaleY( HELPER_MATRIX );
+				clipHeight *= matrixToScaleY(HELPER_MATRIX);
 			}
-			if( clipHeight < 0 )
+			if(clipHeight < 0)
 			{
 				clipHeight = 0;
 			}
@@ -1983,7 +1991,7 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function transformTextField() : void
+		protected function transformTextField():void
 		{
 			//there used to be some code here that returned immediately if the
 			//TextField wasn't visible. some mobile devices displayed the text
@@ -1991,110 +1999,113 @@ package feathers.controls.text
 			//being made visible, so I had to remove it. I moved the visible
 			//check into render(), since it can still benefit from the
 			//optimization there. see issue #1104.
-
+			
 			HELPER_POINT.x = HELPER_POINT.y = 0;
-			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
-			var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
-			var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
-			var smallerGlobalScale : Number = globalScaleX;
-			if( globalScaleY < smallerGlobalScale )
+			this.getTransformationMatrix(this.stage, HELPER_MATRIX);
+			var globalScaleX:Number = matrixToScaleX(HELPER_MATRIX);
+			var globalScaleY:Number = matrixToScaleY(HELPER_MATRIX);
+			var smallerGlobalScale:Number = globalScaleX;
+			if(globalScaleY < smallerGlobalScale)
 			{
 				smallerGlobalScale = globalScaleY;
 			}
-			if( this.is3D )
+			if(this.is3D)
 			{
-				HELPER_MATRIX3D = this.getTransformationMatrix3D( this.stage , HELPER_MATRIX3D );
-				HELPER_POINT3D = MatrixUtil.transformCoords3D( HELPER_MATRIX3D , 0 , 0 , 0 , HELPER_POINT3D );
-				HELPER_POINT.setTo( HELPER_POINT3D.x , HELPER_POINT3D.y );
+				HELPER_MATRIX3D = this.getTransformationMatrix3D(this.stage, HELPER_MATRIX3D);
+				HELPER_POINT3D = MatrixUtil.transformCoords3D(HELPER_MATRIX3D, 0, 0, 0, HELPER_POINT3D);
+				HELPER_POINT.setTo(HELPER_POINT3D.x, HELPER_POINT3D.y);
 			}
 			else
 			{
-				MatrixUtil.transformCoords( HELPER_MATRIX , 0 , 0 , HELPER_POINT );
+				MatrixUtil.transformCoords(HELPER_MATRIX, 0, 0, HELPER_POINT);
 			}
-			var starlingViewPort : Rectangle = Starling.current.viewPort;
-			var nativeScaleFactor : Number = 1;
-			if( Starling.current.supportHighResolutions )
+			var starlingViewPort:Rectangle = Starling.current.viewPort;
+			var nativeScaleFactor:Number = 1;
+			if(Starling.current.supportHighResolutions)
 			{
 				nativeScaleFactor = Starling.current.nativeStage.contentsScaleFactor;
 			}
-			var scaleFactor : Number = Starling.contentScaleFactor / nativeScaleFactor;
-			var gutterPositionOffset : Number = 0;
-			if( !this._useGutter )
+			var scaleFactor:Number = Starling.contentScaleFactor / nativeScaleFactor;
+			var gutterPositionOffset:Number = 0;
+			if(!this._useGutter)
 			{
 				gutterPositionOffset = 2 * smallerGlobalScale;
 			}
-			this.textField.x = Math.round( starlingViewPort.x + (HELPER_POINT.x * scaleFactor) - gutterPositionOffset );
-			this.textField.y = Math.round( starlingViewPort.y + (HELPER_POINT.y * scaleFactor) - gutterPositionOffset );
-			this.textField.rotation = matrixToRotation( HELPER_MATRIX ) * 180 / Math.PI;
-			this.textField.scaleX = matrixToScaleX( HELPER_MATRIX ) * scaleFactor;
-			this.textField.scaleY = matrixToScaleY( HELPER_MATRIX ) * scaleFactor;
+			this.textField.x = Math.round(starlingViewPort.x + (HELPER_POINT.x * scaleFactor) - gutterPositionOffset);
+			this.textField.y = Math.round(starlingViewPort.y + (HELPER_POINT.y * scaleFactor) - gutterPositionOffset);
+			this.textField.rotation = matrixToRotation(HELPER_MATRIX) * 180 / Math.PI;
+			this.textField.scaleX = matrixToScaleX(HELPER_MATRIX) * scaleFactor;
+			this.textField.scaleY = matrixToScaleY(HELPER_MATRIX) * scaleFactor;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function positionSnapshot() : void
+		protected function positionSnapshot():void
 		{
-			if( !this.textSnapshot )
+			if(!this.textSnapshot)
 			{
 				return;
 			}
-			this.getTransformationMatrix( this.stage , HELPER_MATRIX );
-			this.textSnapshot.x = Math.round( HELPER_MATRIX.tx ) - HELPER_MATRIX.tx;
-			this.textSnapshot.y = Math.round( HELPER_MATRIX.ty ) - HELPER_MATRIX.ty;
+			this.getTransformationMatrix(this.stage, HELPER_MATRIX);
+			this.textSnapshot.x = Math.round(HELPER_MATRIX.tx) - HELPER_MATRIX.tx;
+			this.textSnapshot.y = Math.round(HELPER_MATRIX.ty) - HELPER_MATRIX.ty;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function checkIfNewSnapshotIsNeeded() : void
+		protected function checkIfNewSnapshotIsNeeded():void
 		{
-			var canUseRectangleTexture : Boolean = Starling.current.profile != Context3DProfile.BASELINE_CONSTRAINED;
-			if( canUseRectangleTexture )
+			var canUseRectangleTexture:Boolean = Starling.current.profile != Context3DProfile.BASELINE_CONSTRAINED;
+			if(canUseRectangleTexture)
 			{
 				this._snapshotWidth = this._textFieldSnapshotClipRect.width;
 				this._snapshotHeight = this._textFieldSnapshotClipRect.height;
 			}
 			else
 			{
-				this._snapshotWidth = getNextPowerOfTwo( this._textFieldSnapshotClipRect.width );
-				this._snapshotHeight = getNextPowerOfTwo( this._textFieldSnapshotClipRect.height );
+				this._snapshotWidth = getNextPowerOfTwo(this._textFieldSnapshotClipRect.width);
+				this._snapshotHeight = getNextPowerOfTwo(this._textFieldSnapshotClipRect.height);
 			}
-			var textureRoot : ConcreteTexture = this.textSnapshot ? this.textSnapshot.texture.root : null;
-			this._needsNewTexture = this._needsNewTexture || !this.textSnapshot || textureRoot.scale != Starling.contentScaleFactor || this._snapshotWidth != textureRoot.width || this._snapshotHeight != textureRoot.height;
+			var textureRoot:ConcreteTexture = this.textSnapshot ? this.textSnapshot.texture.root : null;
+			this._needsNewTexture = this._needsNewTexture || !this.textSnapshot ||
+			textureRoot.scale != Starling.contentScaleFactor ||
+			this._snapshotWidth != textureRoot.width || this._snapshotHeight != textureRoot.height;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function doPendingActions() : void
+		protected function doPendingActions():void
 		{
-			if( this._isWaitingToSetFocus )
+			if(this._isWaitingToSetFocus)
 			{
 				this._isWaitingToSetFocus = false;
 				this.setFocus();
 			}
 
-			if( this._pendingSelectionBeginIndex >= 0 )
+			if(this._pendingSelectionBeginIndex >= 0)
 			{
-				var startIndex : int = this._pendingSelectionBeginIndex;
-				var endIndex : int = this._pendingSelectionEndIndex;
+				var startIndex:int = this._pendingSelectionBeginIndex;
+				var endIndex:int = this._pendingSelectionEndIndex;
 				this._pendingSelectionBeginIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.selectRange( startIndex , endIndex );
+				this.selectRange(startIndex, endIndex);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function texture_onRestore() : void
+		protected function texture_onRestore():void
 		{
-			if( this.textSnapshot && this.textSnapshot.texture && this.textSnapshot.texture.scale != Starling.contentScaleFactor )
+			if(this.textSnapshot && this.textSnapshot.texture &&
+				this.textSnapshot.texture.scale != Starling.contentScaleFactor)
 			{
 				//if we've changed between scale factors, we need to recreate
 				//the texture to match the new scale factor.
-				this.invalidate( INVALIDATION_FLAG_SIZE );
+				this.invalidate(INVALIDATION_FLAG_SIZE);
 			}
 			else
 			{
@@ -2105,51 +2116,52 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshSnapshot() : void
+		protected function refreshSnapshot():void
 		{
-			if( this._snapshotWidth <= 0 || this._snapshotHeight <= 0 )
+			if(this._snapshotWidth <= 0 || this._snapshotHeight <= 0)
 			{
 				return;
 			}
-			var gutterPositionOffset : Number = 2;
-			if( this._useGutter )
+			var gutterPositionOffset:Number = 2;
+			if(this._useGutter)
 			{
 				gutterPositionOffset = 0;
 			}
-			var scaleFactor : Number = Starling.contentScaleFactor;
-			if( this._updateSnapshotOnScaleChange )
+			var scaleFactor:Number = Starling.contentScaleFactor;
+			if(this._updateSnapshotOnScaleChange)
 			{
-				this.getTransformationMatrix( this.stage , HELPER_MATRIX );
-				var globalScaleX : Number = matrixToScaleX( HELPER_MATRIX );
-				var globalScaleY : Number = matrixToScaleY( HELPER_MATRIX );
+				this.getTransformationMatrix(this.stage, HELPER_MATRIX);
+				var globalScaleX:Number = matrixToScaleX(HELPER_MATRIX);
+				var globalScaleY:Number = matrixToScaleY(HELPER_MATRIX);
 			}
 			HELPER_MATRIX.identity();
-			HELPER_MATRIX.translate( this._textFieldOffsetX - gutterPositionOffset , this._textFieldOffsetY - gutterPositionOffset );
-			HELPER_MATRIX.scale( scaleFactor , scaleFactor );
-			if( this._updateSnapshotOnScaleChange )
+			HELPER_MATRIX.translate(this._textFieldOffsetX - gutterPositionOffset, this._textFieldOffsetY - gutterPositionOffset);
+			HELPER_MATRIX.scale(scaleFactor, scaleFactor);
+			if(this._updateSnapshotOnScaleChange)
 			{
-				HELPER_MATRIX.scale( globalScaleX , globalScaleY );
+				HELPER_MATRIX.scale(globalScaleX, globalScaleY);
 			}
-			var bitmapData : BitmapData = new BitmapData( this._snapshotWidth , this._snapshotHeight , true , 0x00ff00ff );
-			bitmapData.draw( this.textField , HELPER_MATRIX , null , null , this._textFieldSnapshotClipRect );
-			var newTexture : Texture;
-			if( !this.textSnapshot || this._needsNewTexture )
+			var bitmapData:BitmapData = new BitmapData(this._snapshotWidth, this._snapshotHeight, true, 0x00ff00ff);
+			bitmapData.draw(this.textField, HELPER_MATRIX, null, null, this._textFieldSnapshotClipRect);
+			var newTexture:Texture;
+			if(!this.textSnapshot || this._needsNewTexture)
 			{
 				//skip Texture.fromBitmapData() because we don't want
 				//it to create an onRestore function that will be
 				//immediately discarded for garbage collection. 
-				newTexture = Texture.empty( bitmapData.width / scaleFactor , bitmapData.height / scaleFactor , true , false , false , scaleFactor );
-				newTexture.root.uploadBitmapData( bitmapData );
+				newTexture = Texture.empty(bitmapData.width / scaleFactor, bitmapData.height / scaleFactor,
+					true, false, false, scaleFactor);
+				newTexture.root.uploadBitmapData(bitmapData);
 				newTexture.root.onRestore = texture_onRestore;
 			}
-			if( !this.textSnapshot )
+			if(!this.textSnapshot)
 			{
-				this.textSnapshot = new Image( newTexture );
-				this.addChild( this.textSnapshot );
+				this.textSnapshot = new Image(newTexture);
+				this.addChild(this.textSnapshot);
 			}
 			else
 			{
-				if( this._needsNewTexture )
+				if(this._needsNewTexture)
 				{
 					this.textSnapshot.texture.dispose();
 					this.textSnapshot.texture = newTexture;
@@ -2158,11 +2170,11 @@ package feathers.controls.text
 				else
 				{
 					//this is faster, if we haven't resized the bitmapdata
-					var existingTexture : Texture = this.textSnapshot.texture;
-					existingTexture.root.uploadBitmapData( bitmapData );
+					var existingTexture:Texture = this.textSnapshot.texture;
+					existingTexture.root.uploadBitmapData(bitmapData);
 				}
 			}
-			if( this._updateSnapshotOnScaleChange )
+			if(this._updateSnapshotOnScaleChange)
 			{
 				this.textSnapshot.scaleX = 1 / globalScaleX;
 				this.textSnapshot.scaleY = 1 / globalScaleY;
@@ -2177,79 +2189,81 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function textEditor_addedToStageHandler( event : Event ) : void
+		protected function textEditor_addedToStageHandler(event:Event):void
 		{
-			if( !this.textField.parent )
+			if(!this.textField.parent)
 			{
 				//the text field needs to be on the native stage to measure properly
-				Starling.current.nativeStage.addChild( this.textField );
+				Starling.current.nativeStage.addChild(this.textField);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textEditor_removedFromStageHandler( event : Event ) : void
+		protected function textEditor_removedFromStageHandler(event:Event):void
 		{
-			if( this.textField.parent )
+			if(this.textField.parent)
 			{
 				//remove this from the stage, if needed
 				//it will be added back next time we receive focus
-				this.textField.parent.removeChild( this.textField );
+				this.textField.parent.removeChild(this.textField);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function hasFocus_enterFrameHandler( event : Event ) : void
+		protected function hasFocus_enterFrameHandler(event:Event):void
 		{
-			if( this.textSnapshot )
+			if(this.textSnapshot)
 			{
 				this.textSnapshot.visible = !this._textFieldHasFocus;
 			}
 			this.textField.visible = this._textFieldHasFocus;
 
-			if( this._textFieldHasFocus )
+			if(this._textFieldHasFocus)
 			{
-				var target : DisplayObject = this;
-				do {
-					if( !target.hasVisibleArea )
+				var target:DisplayObject = this;
+				do
+				{
+					if(!target.hasVisibleArea)
 					{
 						this.clearFocus();
 						break;
 					}
 					target = target.parent;
-				} while( target )
+				}
+				while(target)
 			}
 			else
 			{
-				this.removeEventListener( Event.ENTER_FRAME , hasFocus_enterFrameHandler );
+				this.removeEventListener(Event.ENTER_FRAME, hasFocus_enterFrameHandler);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshSnapshot_enterFrameHandler( event : Event ) : void
+		protected function refreshSnapshot_enterFrameHandler(event:Event):void
 		{
-			this.removeEventListener( Event.ENTER_FRAME , refreshSnapshot_enterFrameHandler );
+			this.removeEventListener(Event.ENTER_FRAME, refreshSnapshot_enterFrameHandler);
 			this.refreshSnapshot();
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stage_touchHandler( event : TouchEvent ) : void
+		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			var touch : Touch = event.getTouch( this.stage , TouchPhase.BEGAN );
-			if( !touch ) //we only care about began touches
+			var touch:Touch = event.getTouch(this.stage, TouchPhase.BEGAN);
+			if(!touch) //we only care about began touches
 			{
 				return;
 			}
-			touch.getLocation( this.stage , HELPER_POINT );
-			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
-			if( isInBounds ) //if the touch is in the text editor, it's all good
+			touch.getLocation(this.stage, HELPER_POINT);
+			var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+			if(isInBounds) //if the touch is in the text editor, it's all good
 			{
 				return;
 			}
@@ -2260,9 +2274,9 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function textField_changeHandler( event : flash.events.Event ) : void
+		protected function textField_changeHandler(event:flash.events.Event):void
 		{
-			if( this._isHTML )
+			if(this._isHTML)
 			{
 				this.text = this.textField.htmlText;
 			}
@@ -2275,42 +2289,42 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function textField_focusInHandler( event : FocusEvent ) : void
+		protected function textField_focusInHandler(event:FocusEvent):void
 		{
 			this._textFieldHasFocus = true;
-			this.stage.addEventListener( TouchEvent.TOUCH , stage_touchHandler );
-			this.addEventListener( Event.ENTER_FRAME , hasFocus_enterFrameHandler );
-			this.dispatchEventWith( FeathersEventType.FOCUS_IN );
+			this.stage.addEventListener(TouchEvent.TOUCH, stage_touchHandler);
+			this.addEventListener(Event.ENTER_FRAME, hasFocus_enterFrameHandler);
+			this.dispatchEventWith(FeathersEventType.FOCUS_IN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textField_focusOutHandler( event : FocusEvent ) : void
+		protected function textField_focusOutHandler(event:FocusEvent):void
 		{
 			this._textFieldHasFocus = false;
-			this.stage.removeEventListener( TouchEvent.TOUCH , stage_touchHandler );
+			this.stage.removeEventListener(TouchEvent.TOUCH, stage_touchHandler);
 
-			if( this.resetScrollOnFocusOut )
+			if(this.resetScrollOnFocusOut)
 			{
 				this.textField.scrollH = this.textField.scrollV = 0;
 			}
 
 			//the text may have changed, so we invalidate the data flag
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			this.dispatchEventWith(FeathersEventType.FOCUS_OUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textField_keyDownHandler( event : KeyboardEvent ) : void
+		protected function textField_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.keyCode == Keyboard.ENTER )
+			if(event.keyCode == Keyboard.ENTER)
 			{
-				this.dispatchEventWith( FeathersEventType.ENTER );
+				this.dispatchEventWith(FeathersEventType.ENTER);
 			}
-			else if( !FocusManager.isEnabledForStage( this.stage ) && event.keyCode == Keyboard.TAB )
+			else if(!FocusManager.isEnabledForStage(this.stage) && event.keyCode == Keyboard.TAB)
 			{
 				this.clearFocus();
 			}
@@ -2319,25 +2333,25 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function textField_softKeyboardActivateHandler( event : SoftKeyboardEvent ) : void
+		protected function textField_softKeyboardActivateHandler(event:SoftKeyboardEvent):void
 		{
-			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_ACTIVATE , true );
+			this.dispatchEventWith(FeathersEventType.SOFT_KEYBOARD_ACTIVATE, true);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textField_softKeyboardDeactivateHandler( event : SoftKeyboardEvent ) : void
+		protected function textField_softKeyboardDeactivateHandler(event:SoftKeyboardEvent):void
 		{
-			this.dispatchEventWith( FeathersEventType.SOFT_KEYBOARD_DEACTIVATE , true );
+			this.dispatchEventWith(FeathersEventType.SOFT_KEYBOARD_DEACTIVATE, true);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function stateContext_stateChangeHandler( event : Event ) : void
+		protected function stateContext_stateChangeHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STATE );
+			this.invalidate(INVALIDATION_FLAG_STATE);
 		}
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.layout
 {
 	import feathers.core.IFeathersEventDispatcher;
@@ -34,11 +34,12 @@ package feathers.layout
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Interface providing layout capabilities for containers.
-	 */ public interface ILayout extends IFeathersEventDispatcher
+	 */
+	public interface ILayout extends IFeathersEventDispatcher
 	{
 		/**
 		 * Determines if the container calls <code>layout()</code> when the
@@ -49,7 +50,7 @@ package feathers.layout
 		 * May also be used by layouts that toggle item visibility as the items
 		 * scroll into and out of the view port.
 		 */
-		function get requiresLayoutOnScroll() : Boolean;
+		function get requiresLayoutOnScroll():Boolean;
 
 		/**
 		 * Positions (and possibly resizes) the supplied items within the
@@ -85,7 +86,7 @@ package feathers.layout
 		 * 
 		 * @see feathers.core.FeathersControl#validate()
 		 */
-		function layout( items : Vector.<DisplayObject> , viewPortBounds : ViewPortBounds = null , result : LayoutBoundsResult = null ) : LayoutBoundsResult;
+		function layout(items:Vector.<DisplayObject>, viewPortBounds:ViewPortBounds = null, result:LayoutBoundsResult = null):LayoutBoundsResult;
 
 
 		/**
@@ -105,7 +106,8 @@ package feathers.layout
 		 *
 		 * @see #getNearestScrollPositionForIndex()
 		 */
-		function getScrollPositionForIndex( index : int , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point;
+		function getScrollPositionForIndex(index:int, items:Vector.<DisplayObject>,
+			x:Number, y:Number, width:Number, height:Number, result:Point = null):Point;
 
 		/**
 		 * Calculates the scroll position nearest to the current scroll position
@@ -125,6 +127,7 @@ package feathers.layout
 		 *
 		 * @see #getScrollPositionForIndex()
 		 */
-		function getNearestScrollPositionForIndex( index : int , scrollX : Number , scrollY : Number , items : Vector.<DisplayObject> , x : Number , y : Number , width : Number , height : Number , result : Point = null ) : Point
+		function getNearestScrollPositionForIndex(index:int, scrollX:Number, scrollY:Number,
+			items:Vector.<DisplayObject>, x:Number, y:Number, width:Number, height:Number, result:Point = null):Point
 	}
 }

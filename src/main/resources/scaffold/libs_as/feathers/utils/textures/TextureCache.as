@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.utils.textures
 {
 	import flash.errors.IllegalOperationError;
@@ -20,37 +20,50 @@ package feathers.utils.textures
 	public class TextureCache
 	{
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _hasInsertAtRemoveAt : Boolean;
-		/**
-		 * @private
-		 */
-		protected var _unretainedKeys : Vector.<String> = new <String>[];
-		/**
-		 * @private
-		 */
-		protected var _unretainedTextures : Object = {};
-		/**
-		 * @private
-		 */
-		protected var _retainedTextures : Object = {};
-		/**
-		 * @private
-		 */
-		protected var _retainCounts : Object = {};
+		public function TextureCache(maxUnretainedTextures:int = int.MAX_VALUE)
+		{
+			this._maxUnretainedTextures = maxUnretainedTextures;
+			this._hasInsertAtRemoveAt = "insertAt" in this._unretainedKeys;
+		}
 
 		/**
 		 * @private
 		 */
-		protected var _maxUnretainedTextures : int;
+		protected var _hasInsertAtRemoveAt:Boolean;
+
+		/**
+		 * @private
+		 */
+		protected var _unretainedKeys:Vector.<String> = new <String>[];
+
+		/**
+		 * @private
+		 */
+		protected var _unretainedTextures:Object = {};
+
+		/**
+		 * @private
+		 */
+		protected var _retainedTextures:Object = {};
+
+		/**
+		 * @private
+		 */
+		protected var _retainCounts:Object = {};
+
+		/**
+		 * @private
+		 */
+		protected var _maxUnretainedTextures:int;
 
 		/**
 		 * Limits the number of unretained textures that may be stored in
 		 * memory. The textures retained least recently will be disposed if
 		 * there are too many.
 		 */
-		public function get maxUnretainedTextures() : int
+		public function get maxUnretainedTextures():int
 		{
 			return this._maxUnretainedTextures;
 		}
@@ -58,39 +71,30 @@ package feathers.utils.textures
 		/**
 		 * @private
 		 */
-		public function set maxUnretainedTextures( value : int ) : void
+		public function set maxUnretainedTextures(value:int):void
 		{
-			if( this._maxUnretainedTextures === value )
+			if(this._maxUnretainedTextures === value)
 			{
 				return;
 			}
 			this._maxUnretainedTextures = value;
-			if( this._unretainedKeys.length > value )
+			if(this._unretainedKeys.length > value)
 			{
 				this.trimCache();
 			}
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function TextureCache( maxUnretainedTextures : int = int.MAX_VALUE )
-		{
-			this._maxUnretainedTextures = maxUnretainedTextures;
-			this._hasInsertAtRemoveAt = "insertAt" in this._unretainedKeys;
-		}
-
-		/**
 		 * Disposes the texture cache, including all textures (even if they are
 		 * retained).
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
-			for each( var texture : Texture in this._unretainedTextures )
+			for each(var texture:Texture in this._unretainedTextures)
 			{
 				texture.dispose();
 			}
-			for each( texture in this._retainedTextures )
+			for each(texture in this._retainedTextures)
 			{
 				texture.dispose();
 			}
@@ -105,25 +109,25 @@ package feathers.utils.textures
 		 * @see #removeTexture()
 		 * @see #hasTexture()
 		 */
-		public function addTexture( key : String , texture : Texture , retainTexture : Boolean = true ) : void
+		public function addTexture(key:String, texture:Texture, retainTexture:Boolean = true):void
 		{
-			if( !this._retainedTextures )
+			if(!this._retainedTextures)
 			{
-				throw new IllegalOperationError( "Cannot add a texture after the cache has been disposed." )
+				throw new IllegalOperationError("Cannot add a texture after the cache has been disposed.")
 			}
-			if( key in this._unretainedTextures || key in this._retainedTextures )
+			if(key in this._unretainedTextures || key in this._retainedTextures)
 			{
-				throw new ArgumentError( "Key \"" + key + "\" already exists in the cache." );
+				throw new ArgumentError("Key \"" + key + "\" already exists in the cache.");
 			}
-			if( retainTexture )
+			if(retainTexture)
 			{
-				this._retainedTextures[ key ] = texture;
-				this._retainCounts[ key ] = 1 as int;
+				this._retainedTextures[key] = texture;
+				this._retainCounts[key] = 1 as int;
 				return;
 			}
-			this._unretainedTextures[ key ] = texture;
-			this._unretainedKeys[ this._unretainedKeys.length ] = key;
-			if( this._unretainedKeys.length > this._maxUnretainedTextures )
+			this._unretainedTextures[key] = texture;
+			this._unretainedKeys[this._unretainedKeys.length] = key;
+			if(this._unretainedKeys.length > this._maxUnretainedTextures)
 			{
 				this.trimCache();
 			}
@@ -135,24 +139,24 @@ package feathers.utils.textures
 		 *
 		 * @see #addTexture()
 		 */
-		public function removeTexture( key : String , dispose : Boolean = false ) : void
+		public function removeTexture(key:String, dispose:Boolean = false):void
 		{
-			if( !this._unretainedTextures )
+			if(!this._unretainedTextures)
 			{
 				return;
 			}
-			var texture : Texture = this._unretainedTextures[ key ] as Texture;
-			if( texture )
+			var texture:Texture = this._unretainedTextures[key] as Texture;
+			if(texture)
 			{
-				this.removeUnretainedKey( key );
+				this.removeUnretainedKey(key);
 			}
 			else
 			{
-				texture = this._retainedTextures[ key ] as Texture;
-				delete this._retainedTextures[ key ];
-				delete this._retainCounts[ key ];
+				texture = this._retainedTextures[key] as Texture;
+				delete this._retainedTextures[key];
+				delete this._retainCounts[key];
 			}
-			if( dispose && texture )
+			if(dispose && texture)
 			{
 				texture.dispose();
 			}
@@ -161,9 +165,9 @@ package feathers.utils.textures
 		/**
 		 * Indicates if a texture is associated with the specified key.
 		 */
-		public function hasTexture( key : String ) : Boolean
+		public function hasTexture(key:String):Boolean
 		{
-			if( !this._retainedTextures )
+			if(!this._retainedTextures)
 			{
 				return false;
 			}
@@ -174,11 +178,11 @@ package feathers.utils.textures
 		 * Returns how many times the texture associated with the specified key
 		 * has currently been retained.
 		 */
-		public function getRetainCount( key : String ) : int
+		public function getRetainCount(key:String):int
 		{
-			if( this._retainCounts && (key in this._retainCounts) )
+			if(this._retainCounts && (key in this._retainCounts))
 			{
-				return this._retainCounts[ key ] as int;
+				return this._retainCounts[key] as int;
 			}
 			return 0;
 		}
@@ -190,28 +194,28 @@ package feathers.utils.textures
 		 * 
 		 * @see #releaseTexture()
 		 */
-		public function retainTexture( key : String ) : Texture
+		public function retainTexture(key:String):Texture
 		{
-			if( !this._retainedTextures )
+			if(!this._retainedTextures)
 			{
-				throw new IllegalOperationError( "Cannot retain a texture after the cache has been disposed." )
+				throw new IllegalOperationError("Cannot retain a texture after the cache has been disposed.")
 			}
-			if( key in this._retainedTextures )
+			if(key in this._retainedTextures)
 			{
-				var count : int = this._retainCounts[ key ] as int;
+				var count:int = this._retainCounts[key] as int;
 				count++;
-				this._retainCounts[ key ] = count;
-				return Texture( this._retainedTextures[ key ] );
+				this._retainCounts[key] = count;
+				return Texture(this._retainedTextures[key]);
 			}
-
-			if( !(key in this._unretainedTextures) )
+			
+			if(!(key in this._unretainedTextures))
 			{
-				throw new ArgumentError( "Texture with key \"" + key + "\" cannot be retained because it has not been added to the cache." );
+				throw new ArgumentError("Texture with key \"" + key + "\" cannot be retained because it has not been added to the cache.");
 			}
-			var texture : Texture = Texture( this._unretainedTextures[ key ] );
-			this.removeUnretainedKey( key );
-			this._retainedTextures[ key ] = texture;
-			this._retainCounts[ key ] = 1 as int;
+			var texture:Texture = Texture(this._unretainedTextures[key]);
+			this.removeUnretainedKey(key);
+			this._retainedTextures[key] = texture;
+			this._retainCounts[key] = 1 as int;
 			return texture;
 		}
 
@@ -220,74 +224,74 @@ package feathers.utils.textures
 		 *
 		 * @see #retainTexture()
 		 */
-		public function releaseTexture( key : String ) : void
+		public function releaseTexture(key:String):void
 		{
-			if( !this._retainedTextures || !(key in this._retainedTextures) )
+			if(!this._retainedTextures || !(key in this._retainedTextures))
 			{
 				return;
 			}
-			var count : int = this._retainCounts[ key ] as int;
+			var count:int = this._retainCounts[key] as int;
 			count--;
-			if( count === 0 )
+			if(count === 0)
 			{
 				//get the existing texture
-				var texture : Texture = Texture( this._retainedTextures[ key ] );
+				var texture:Texture = Texture(this._retainedTextures[key]);
 				
 				//remove from retained
-				delete this._retainCounts[ key ];
-				delete this._retainedTextures[ key ];
+				delete this._retainCounts[key];
+				delete this._retainedTextures[key];
 
-				this._unretainedTextures[ key ] = texture;
-				this._unretainedKeys[ this._unretainedKeys.length ] = key;
-				if( this._unretainedKeys.length > this._maxUnretainedTextures )
+				this._unretainedTextures[key] = texture;
+				this._unretainedKeys[this._unretainedKeys.length] = key;
+				if(this._unretainedKeys.length > this._maxUnretainedTextures)
 				{
 					this.trimCache();
 				}
 			}
 			else
 			{
-				this._retainCounts[ key ] = count;
+				this._retainCounts[key] = count;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removeUnretainedKey( key : String ) : void
+		protected function removeUnretainedKey(key:String):void
 		{
-			var index : int = this._unretainedKeys.indexOf( key );
-			if( this._hasInsertAtRemoveAt )
+			var index:int = this._unretainedKeys.indexOf(key);
+			if(this._hasInsertAtRemoveAt)
 			{
-				this._unretainedKeys[ "removeAt" ]( index );
+				this._unretainedKeys["removeAt"](index);
 			}
-			else if( index === (this._unretainedKeys.length - 1) )
+			else if(index === (this._unretainedKeys.length - 1))
 			{
 				this._unretainedKeys.pop();
 			}
-			else if( index === 0 )
+			else if(index === 0)
 			{
 				this._unretainedKeys.shift();
 			}
 			else
 			{
-				this._unretainedKeys.splice( index , 1 );
+				this._unretainedKeys.splice(index, 1);
 			}
-			delete this._unretainedTextures[ key ];
+			delete this._unretainedTextures[key];
 		}
 
 		/**
 		 * @private
 		 */
-		protected function trimCache() : void
+		protected function trimCache():void
 		{
-			var currentCount : int = this._unretainedKeys.length;
-			var maxCount : int = this._maxUnretainedTextures;
-			while( currentCount > maxCount )
+			var currentCount:int = this._unretainedKeys.length;
+			var maxCount:int = this._maxUnretainedTextures;
+			while(currentCount > maxCount)
 			{
-				var key : String = this._unretainedKeys.shift();
-				var texture : Texture = Texture( this._unretainedTextures[ key ] );
+				var key:String = this._unretainedKeys.shift();
+				var texture:Texture = Texture(this._unretainedTextures[key]);
 				texture.dispose();
-				delete this._unretainedTextures[ key ];
+				delete this._unretainedTextures[key];
 				currentCount--;
 			}
 		}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.controls.LayoutGroup;
@@ -27,20 +27,20 @@ package feathers.media
 		public function BaseMediaPlayer()
 		{
 			super();
-			if( Object( this ).constructor === BaseMediaPlayer )
+			if(Object(this).constructor === BaseMediaPlayer)
 			{
 				throw new AbstractClassError();
 			}
-			this.addEventListener( Event.ADDED , mediaPlayer_addedHandler );
-			this.addEventListener( Event.REMOVED , mediaPlayer_removedHandler );
+			this.addEventListener(Event.ADDED, mediaPlayer_addedHandler);
+			this.addEventListener(Event.REMOVED, mediaPlayer_removedHandler);
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( !this._layout )
+			if(!this._layout)
 			{
 				this.layout = new AnchorLayout();
 			}
@@ -50,20 +50,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function handleAddedChild( child : DisplayObject ) : void
+		protected function handleAddedChild(child:DisplayObject):void
 		{
-			if( child is IMediaPlayerControl )
+			if(child is IMediaPlayerControl)
 			{
-				IMediaPlayerControl( child ).mediaPlayer = this;
+				IMediaPlayerControl(child).mediaPlayer = this;
 			}
-			if( child is DisplayObjectContainer )
+			if(child is DisplayObjectContainer)
 			{
-				var container : DisplayObjectContainer = DisplayObjectContainer( child );
-				var childCount : int = container.numChildren;
-				for( var i : int = 0; i < childCount; i++ )
+				var container:DisplayObjectContainer = DisplayObjectContainer(child);
+				var childCount:int = container.numChildren;
+				for(var i:int = 0; i < childCount; i++)
 				{
-					child = container.getChildAt( i );
-					this.handleAddedChild( child );
+					child = container.getChildAt(i);
+					this.handleAddedChild(child);
 				}
 			}
 		}
@@ -71,20 +71,20 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function handleRemovedChild( child : DisplayObject ) : void
+		protected function handleRemovedChild(child:DisplayObject):void
 		{
-			if( child is IMediaPlayerControl )
+			if(child is IMediaPlayerControl)
 			{
-				IMediaPlayerControl( child ).mediaPlayer = null;
+				IMediaPlayerControl(child).mediaPlayer = null;
 			}
-			if( child is DisplayObjectContainer )
+			if(child is DisplayObjectContainer)
 			{
-				var container : DisplayObjectContainer = DisplayObjectContainer( child );
-				var childCount : int = container.numChildren;
-				for( var i : int = 0; i < childCount; i++ )
+				var container:DisplayObjectContainer = DisplayObjectContainer(child);
+				var childCount:int = container.numChildren;
+				for(var i:int = 0; i < childCount; i++)
 				{
-					child = container.getChildAt( i );
-					this.handleRemovedChild( child );
+					child = container.getChildAt(i);
+					this.handleRemovedChild(child);
 				}
 			}
 		}
@@ -92,19 +92,19 @@ package feathers.media
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_addedHandler( event : Event ) : void
+		protected function mediaPlayer_addedHandler(event:Event):void
 		{
-			var addedChild : DisplayObject = DisplayObject( event.target );
-			this.handleAddedChild( addedChild );
+			var addedChild:DisplayObject = DisplayObject(event.target);
+			this.handleAddedChild(addedChild);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_removedHandler( event : Event ) : void
+		protected function mediaPlayer_removedHandler(event:Event):void
 		{
-			var removedChild : DisplayObject = DisplayObject( event.target );
-			this.handleRemovedChild( removedChild );
+			var removedChild:DisplayObject = DisplayObject(event.target);
+			this.handleRemovedChild(removedChild);
 		}
 	}
 }

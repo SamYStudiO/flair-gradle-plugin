@@ -10,242 +10,247 @@
 
 package starling.display
 {
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DProgramType;
-	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.IndexBuffer3D;
-	import flash.display3D.VertexBuffer3D;
-	import flash.geom.Matrix;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+    import flash.display3D.Context3D;
+    import flash.display3D.Context3DProgramType;
+    import flash.display3D.Context3DVertexBufferFormat;
+    import flash.display3D.IndexBuffer3D;
+    import flash.display3D.VertexBuffer3D;
+    import flash.geom.Matrix;
+    import flash.geom.Point;
+    import flash.geom.Rectangle;
 
-	import starling.core.RenderSupport;
-	import starling.core.Starling;
-	import starling.errors.MissingContextError;
-	import starling.events.Event;
-	import starling.geom.Polygon;
-	import starling.utils.VertexData;
+    import starling.core.RenderSupport;
+    import starling.core.Starling;
+    import starling.errors.MissingContextError;
+    import starling.events.Event;
+    import starling.geom.Polygon;
+    import starling.utils.VertexData;
 
-	/** A display object supporting basic vector drawing functionality. In its current state,
-	 *  the main use of this class is to provide a range of forms that can be used as masks.
-	 */
-	public class Canvas extends DisplayObject
-	{
-		private static var sHelperMatrix : Matrix = new Matrix();
-		private static var sRenderAlpha : Vector.<Number> = new <Number>[ 1.0 , 1.0 , 1.0 , 1.0 ];
+    /** A display object supporting basic vector drawing functionality. In its current state,
+     *  the main use of this class is to provide a range of forms that can be used as masks.
+     */
+    public class Canvas extends DisplayObject
+    {
+        private static const PROGRAM_NAME:String = "Shape";
 
-		private static function registerPrograms() : void
-		{
-			var target : Starling = Starling.current;
-			if( target.hasProgram( PROGRAM_NAME ) ) return; // already registered
+        private var mSyncRequired:Boolean;
+        private var mPolygons:Vector.<Polygon>;
 
-			var vertexShader : String = "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output space
-					"mul v0, va1, vc4 \n";  // multiply color with alpha, pass it to fragment shader
+        private var mVertexData:VertexData;
+        private var mVertexBuffer:VertexBuffer3D;
+        private var mIndexData:Vector.<uint>;
+        private var mIndexBuffer:IndexBuffer3D;
 
-			var fragmentShader : String = "mov oc, v0";           // just forward incoming color
+        private var mFillColor:uint;
+        private var mFillAlpha:Number;
 
-			target.registerProgramFromSource( PROGRAM_NAME , vertexShader , fragmentShader );
-		}
+        // helper objects (to avoid temporary objects)
+        private static var sHelperMatrix:Matrix = new Matrix();
+        private static var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
 
-		private static const PROGRAM_NAME : String = "Shape";
-		private var mSyncRequired : Boolean;
-		private var mPolygons : Vector.<Polygon>;
-		private var mVertexData : VertexData;
-		private var mVertexBuffer : VertexBuffer3D;
-		private var mIndexData : Vector.<uint>;
+        /** Creates a new (empty) Canvas. Call one or more of the 'draw' methods to add content. */
+        public function Canvas()
+        {
+            mPolygons   = new <Polygon>[];
+            mVertexData = new VertexData(0);
+            mIndexData  = new <uint>[];
+            mSyncRequired = false;
 
-		// helper objects (to avoid temporary objects)
-		private var mIndexBuffer : IndexBuffer3D;
-		private var mFillColor : uint;
-		private var mFillAlpha : Number;
+            mFillColor = 0xffffff;
+            mFillAlpha = 1.0;
 
-		/** Creates a new (empty) Canvas. Call one or more of the 'draw' methods to add content. */
-		public function Canvas()
-		{
-			mPolygons = new <Polygon>[];
-			mVertexData = new VertexData( 0 );
-			mIndexData = new <uint>[];
-			mSyncRequired = false;
+            registerPrograms();
 
-			mFillColor = 0xffffff;
-			mFillAlpha = 1.0;
+            // handle lost context
+            Starling.current.addEventListener(Event.CONTEXT3D_CREATE, onContextCreated);
+        }
 
-			registerPrograms();
+        private function onContextCreated(event:Object):void
+        {
+            registerPrograms();
+            syncBuffers();
+        }
 
-			// handle lost context
-			Starling.current.addEventListener( Event.CONTEXT3D_CREATE , onContextCreated );
-		}
+        /** @inheritDoc */
+        public override function dispose():void
+        {
+            destroyBuffers();
+            super.dispose();
+        }
 
-		/** @inheritDoc */
-		public override function dispose() : void
-		{
-			destroyBuffers();
-			super.dispose();
-		}
+        /** Draws a circle. */
+        public function drawCircle(x:Number, y:Number, radius:Number):void
+        {
+            appendPolygon(Polygon.createCircle(x, y, radius));
+        }
 
-		/** @inheritDoc */
-		public override function render( support : RenderSupport , parentAlpha : Number ) : void
-		{
-			if( mIndexData.length == 0 ) return;
-			if( mSyncRequired ) syncBuffers();
+        /** Draws an ellipse. */
+        public function drawEllipse(x:Number, y:Number, width:Number, height:Number):void
+        {
+            var radiusX:Number = width  / 2.0;
+            var radiusY:Number = height / 2.0;
 
-			support.finishQuadBatch();
-			support.raiseDrawCount();
+            appendPolygon(Polygon.createEllipse(x + radiusX, y + radiusY, radiusX, radiusY));
+        }
 
-			sRenderAlpha[ 0 ] = sRenderAlpha[ 1 ] = sRenderAlpha[ 2 ] = 1.0;
-			sRenderAlpha[ 3 ] = parentAlpha * this.alpha;
+        /** Draws a rectangle. */
+        public function drawRectangle(x:Number, y:Number, width:Number, height:Number):void
+        {
+            appendPolygon(Polygon.createRectangle(x, y, width, height));
+        }
 
-			var context : Context3D = Starling.context;
-			if( context == null ) throw new MissingContextError();
+        /** Draws an arbitrary polygon. */
+        public function drawPolygon(polygon:Polygon):void
+        {
+            appendPolygon(polygon);
+        }
 
-			// apply the current blend mode
-			support.applyBlendMode( false );
+        /** Specifies a simple one-color fill that subsequent calls to drawing methods
+         *  (such as <code>drawCircle()</code>) will use. */
+        public function beginFill(color:uint=0xffffff, alpha:Number=1.0):void
+        {
+            mFillColor = color;
+            mFillAlpha = alpha;
+        }
 
-			context.setProgram( Starling.current.getProgram( PROGRAM_NAME ) );
-			context.setVertexBufferAt( 0 , mVertexBuffer , 0 , Context3DVertexBufferFormat.FLOAT_2 );
-			context.setVertexBufferAt( 1 , mVertexBuffer , VertexData.COLOR_OFFSET , Context3DVertexBufferFormat.FLOAT_4 );
-			context.setProgramConstantsFromMatrix( Context3DProgramType.VERTEX , 0 , support.mvpMatrix3D , true );
-			context.setProgramConstantsFromVector( Context3DProgramType.VERTEX , 4 , sRenderAlpha , 1 );
+        /** Resets the color to 'white' and alpha to '1'. */
+        public function endFill():void
+        {
+            mFillColor = 0xffffff;
+            mFillAlpha = 1.0;
+        }
 
-			context.drawTriangles( mIndexBuffer , 0 , mIndexData.length / 3 );
+        /** Removes all existing vertices. */
+        public function clear():void
+        {
+            mVertexData.numVertices = 0;
+            mIndexData.length = 0;
+            mPolygons.length = 0;
+            destroyBuffers();
+        }
 
-			context.setVertexBufferAt( 0 , null );
-			context.setVertexBufferAt( 1 , null );
-		}
+        /** @inheritDoc */
+        public override function render(support:RenderSupport, parentAlpha:Number):void
+        {
+            if (mIndexData.length == 0) return;
+            if (mSyncRequired) syncBuffers();
 
-		/** @inheritDoc */
-		public override function getBounds( targetSpace : DisplayObject , resultRect : Rectangle = null ) : Rectangle
-		{
-			if( resultRect == null ) resultRect = new Rectangle();
+            support.finishQuadBatch();
+            support.raiseDrawCount();
 
-			var transformationMatrix : Matrix = targetSpace == this ? null : getTransformationMatrix( targetSpace , sHelperMatrix );
+            sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = 1.0;
+            sRenderAlpha[3] = parentAlpha * this.alpha;
 
-			return mVertexData.getBounds( transformationMatrix , 0 , -1 , resultRect );
-		}
+            var context:Context3D = Starling.context;
+            if (context == null) throw new MissingContextError();
 
-		/** @inheritDoc */
-		public override function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
-		{
-			if( forTouch && (!visible || !touchable) ) return null;
-			if( !hitTestMask( localPoint ) ) return null;
+            // apply the current blend mode
+            support.applyBlendMode(false);
 
-			for( var i : int = 0 , len : int = mPolygons.length; i < len; ++i )
-				if( mPolygons[ i ].containsPoint( localPoint ) ) return this;
+            context.setProgram(Starling.current.getProgram(PROGRAM_NAME));
+            context.setVertexBufferAt(0, mVertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
+            context.setVertexBufferAt(1, mVertexBuffer, VertexData.COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, support.mvpMatrix3D, true);
+            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha, 1);
 
-			return null;
-		}
+            context.drawTriangles(mIndexBuffer, 0, mIndexData.length / 3);
 
-		/** Draws a circle. */
-		public function drawCircle( x : Number , y : Number , radius : Number ) : void
-		{
-			appendPolygon( Polygon.createCircle( x , y , radius ) );
-		}
+            context.setVertexBufferAt(0, null);
+            context.setVertexBufferAt(1, null);
+        }
 
-		/** Draws an ellipse. */
-		public function drawEllipse( x : Number , y : Number , width : Number , height : Number ) : void
-		{
-			var radiusX : Number = width / 2.0;
-			var radiusY : Number = height / 2.0;
+        /** @inheritDoc */
+        public override function getBounds(targetSpace:DisplayObject, resultRect:Rectangle=null):Rectangle
+        {
+            if (resultRect == null) resultRect = new Rectangle();
 
-			appendPolygon( Polygon.createEllipse( x + radiusX , y + radiusY , radiusX , radiusY ) );
-		}
+            var transformationMatrix:Matrix = targetSpace == this ?
+                null : getTransformationMatrix(targetSpace, sHelperMatrix);
 
-		/** Draws a rectangle. */
-		public function drawRectangle( x : Number , y : Number , width : Number , height : Number ) : void
-		{
-			appendPolygon( Polygon.createRectangle( x , y , width , height ) );
-		}
+            return mVertexData.getBounds(transformationMatrix, 0, -1, resultRect);
+        }
 
-		/** Draws an arbitrary polygon. */
-		public function drawPolygon( polygon : Polygon ) : void
-		{
-			appendPolygon( polygon );
-		}
+        /** @inheritDoc */
+        public override function hitTest(localPoint:Point, forTouch:Boolean=false):DisplayObject
+        {
+            if (forTouch && (!visible || !touchable)) return null;
+            if (!hitTestMask(localPoint)) return null;
 
-		/** Specifies a simple one-color fill that subsequent calls to drawing methods
-		 *  (such as <code>drawCircle()</code>) will use. */
-		public function beginFill( color : uint = 0xffffff , alpha : Number = 1.0 ) : void
-		{
-			mFillColor = color;
-			mFillAlpha = alpha;
-		}
+            for (var i:int = 0, len:int = mPolygons.length; i < len; ++i)
+                if (mPolygons[i].containsPoint(localPoint)) return this;
 
-		/** Resets the color to 'white' and alpha to '1'. */
-		public function endFill() : void
-		{
-			mFillColor = 0xffffff;
-			mFillAlpha = 1.0;
-		}
+            return null;
+        }
 
-		/** Removes all existing vertices. */
-		public function clear() : void
-		{
-			mVertexData.numVertices = 0;
-			mIndexData.length = 0;
-			mPolygons.length = 0;
-			destroyBuffers();
-		}
+        private function appendPolygon(polygon:Polygon):void
+        {
+            var oldNumVertices:int = mVertexData.numVertices;
+            var oldNumIndices:int = mIndexData.length;
 
-		private function onContextCreated( event : Object ) : void
-		{
-			registerPrograms();
-			syncBuffers();
-		}
+            polygon.triangulate(mIndexData);
+            polygon.copyToVertexData(mVertexData, oldNumVertices);
 
-		private function appendPolygon( polygon : Polygon ) : void
-		{
-			var oldNumVertices : int = mVertexData.numVertices;
-			var oldNumIndices : int = mIndexData.length;
+            var newNumIndices:int = mIndexData.length;
 
-			polygon.triangulate( mIndexData );
-			polygon.copyToVertexData( mVertexData , oldNumVertices );
+            // triangulation was done with vertex-indices of polygon only; now add correct offset.
+            for (var i:int=oldNumIndices; i<newNumIndices; ++i)
+                mIndexData[i] += oldNumVertices;
 
-			var newNumIndices : int = mIndexData.length;
+            applyFillColor(oldNumVertices, polygon.numVertices);
 
-			// triangulation was done with vertex-indices of polygon only; now add correct offset.
-			for( var i : int = oldNumIndices; i < newNumIndices; ++i )
-				mIndexData[ i ] += oldNumVertices;
+            mPolygons[mPolygons.length] = polygon;
+            mSyncRequired = true;
+        }
 
-			applyFillColor( oldNumVertices , polygon.numVertices );
+        private static function registerPrograms():void
+        {
+            var target:Starling = Starling.current;
+            if (target.hasProgram(PROGRAM_NAME)) return; // already registered
 
-			mPolygons[ mPolygons.length ] = polygon;
-			mSyncRequired = true;
-		}
+            var vertexShader:String =
+                    "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output space
+                    "mul v0, va1, vc4 \n";  // multiply color with alpha, pass it to fragment shader
 
-		private function applyFillColor( vertexIndex : int , numVertices : int ) : void
-		{
-			var endIndex : int = vertexIndex + numVertices;
-			for( var i : int = vertexIndex; i < endIndex; ++i )
-				mVertexData.setColorAndAlpha( i , mFillColor , mFillAlpha );
-		}
+            var fragmentShader:String =
+                    "mov oc, v0";           // just forward incoming color
 
-		private function syncBuffers() : void
-		{
-			destroyBuffers();
+            target.registerProgramFromSource(PROGRAM_NAME, vertexShader, fragmentShader);
+        }
 
-			var context : Context3D = Starling.context;
-			if( context == null ) throw new MissingContextError();
+        private function applyFillColor(vertexIndex:int, numVertices:int):void
+        {
+            var endIndex:int = vertexIndex + numVertices;
+            for (var i:int=vertexIndex; i<endIndex; ++i)
+                mVertexData.setColorAndAlpha(i, mFillColor, mFillAlpha);
+        }
 
-			var numVertices : Number = mVertexData.numVertices;
-			var numIndices : Number = mIndexData.length;
+        private function syncBuffers():void
+        {
+            destroyBuffers();
 
-			mVertexBuffer = context.createVertexBuffer( numVertices , VertexData.ELEMENTS_PER_VERTEX );
-			mVertexBuffer.uploadFromVector( mVertexData.rawData , 0 , numVertices );
+            var context:Context3D = Starling.context;
+            if (context == null) throw new MissingContextError();
 
-			mIndexBuffer = context.createIndexBuffer( numIndices );
-			mIndexBuffer.uploadFromVector( mIndexData , 0 , numIndices );
+            var numVertices:Number = mVertexData.numVertices;
+            var numIndices:Number  = mIndexData.length;
 
-			mSyncRequired = false;
-		}
+            mVertexBuffer = context.createVertexBuffer(numVertices, VertexData.ELEMENTS_PER_VERTEX);
+            mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, numVertices);
 
-		private function destroyBuffers() : void
-		{
-			if( mVertexBuffer ) mVertexBuffer.dispose();
-			if( mIndexBuffer )  mIndexBuffer.dispose();
+            mIndexBuffer = context.createIndexBuffer(numIndices);
+            mIndexBuffer.uploadFromVector(mIndexData, 0, numIndices);
 
-			mVertexBuffer = null;
-			mIndexBuffer = null;
-			mSyncRequired = true;
-		}
-	}
+            mSyncRequired = false;
+        }
+
+        private function destroyBuffers():void
+        {
+            if (mVertexBuffer) mVertexBuffer.dispose();
+            if (mIndexBuffer)  mIndexBuffer.dispose();
+
+            mVertexBuffer = null;
+            mIndexBuffer  = null;
+            mSyncRequired = true;
+        }
+    }
 }

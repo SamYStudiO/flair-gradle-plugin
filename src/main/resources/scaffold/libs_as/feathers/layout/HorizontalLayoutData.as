@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.layout
 {
 	import starling.events.Event;
@@ -13,7 +13,7 @@ package feathers.layout
 	/**
 	 * @inheritDoc
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Extra, optional data used by an <code>HorizontalLayout</code> instance to
@@ -21,12 +21,22 @@ package feathers.layout
 	 *
 	 * @see HorizontalLayout
 	 * @see ILayoutDisplayObject
-	 */ public class HorizontalLayoutData extends EventDispatcher implements ILayoutData
+	 */
+	public class HorizontalLayoutData extends EventDispatcher implements ILayoutData
 	{
+		/**
+		 * Constructor.
+		 */
+		public function HorizontalLayoutData(percentWidth:Number = NaN, percentHeight:Number = NaN)
+		{
+			this._percentWidth = percentWidth;
+			this._percentHeight = percentHeight;
+		}
+
 		/**
 		 * @private
 		 */
-		protected var _percentWidth : Number;
+		protected var _percentWidth:Number;
 
 		/**
 		 * The width of the layout object, as a percentage of the container's
@@ -42,7 +52,7 @@ package feathers.layout
 		 *
 		 * @default NaN
 		 */
-		public function get percentWidth() : Number
+		public function get percentWidth():Number
 		{
 			return this._percentWidth;
 		}
@@ -50,20 +60,21 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set percentWidth( value : Number ) : void
+		public function set percentWidth(value:Number):void
 		{
-			if( this._percentWidth == value )
+			if(this._percentWidth == value)
 			{
 				return;
 			}
 			this._percentWidth = value;
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _percentHeight : Number;
+		protected var _percentHeight:Number;
+
 
 		/**
 		 * The height of the layout object, as a percentage of the container's
@@ -82,7 +93,7 @@ package feathers.layout
 		 *
 		 * @see feathers.layout.HorizontalLayout.VERTICAL_ALIGN_JUSTIFY
 		 */
-		public function get percentHeight() : Number
+		public function get percentHeight():Number
 		{
 			return this._percentHeight;
 		}
@@ -90,23 +101,14 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		public function set percentHeight( value : Number ) : void
+		public function set percentHeight(value:Number):void
 		{
-			if( this._percentHeight == value )
+			if(this._percentHeight == value)
 			{
 				return;
 			}
 			this._percentHeight = value;
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function HorizontalLayoutData( percentWidth : Number = NaN , percentHeight : Number = NaN )
-		{
-			this._percentWidth = percentWidth;
-			this._percentHeight = percentHeight;
+			this.dispatchEventWith(Event.CHANGE);
 		}
 	}
 }

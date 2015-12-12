@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import starling.events.Event;
@@ -31,51 +31,14 @@ package feathers.core
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * A list of space-delimited tokens. Obviously, since they are delimited by
 	 * spaces, tokens cannot contain spaces.
-	 */ public class TokenList extends EventDispatcher
+	 */
+	public class TokenList extends EventDispatcher
 	{
-		/**
-		 * @private
-		 * Storage for the tokens.
-		 */
-		protected var names : Vector.<String> = new <String>[];
-
-		/**
-		 * The tokens formatted with space delimiters.
-		 *
-		 * @default ""
-		 */
-		public function get value() : String
-		{
-			return names.join( " " );
-		}
-
-		/**
-		 * @private
-		 */
-		public function set value( value : String ) : void
-		{
-			if( this.value == value )
-			{
-				return;
-			}
-			this.names.length = 0;
-			this.names = Vector.<String>( value.split( " " ) );
-			this.dispatchEventWith( Event.CHANGE );
-		}
-
-		/**
-		 * The number of tokens in the list.
-		 */
-		public function get length() : int
-		{
-			return this.names.length;
-		}
-
 		/**
 		 * Constructor.
 		 */
@@ -84,93 +47,131 @@ package feathers.core
 		}
 
 		/**
+		 * @private
+		 * Storage for the tokens.
+		 */
+		protected var names:Vector.<String> = new <String>[];
+
+		/**
+		 * The tokens formatted with space delimiters.
+		 *
+		 * @default ""
+		 */
+		public function get value():String
+		{
+			return names.join(" ");
+		}
+
+		/**
+		 * @private
+		 */
+		public function set value(value:String):void
+		{
+			if(this.value == value)
+			{
+				return;
+			}
+			this.names.length = 0;
+			this.names = Vector.<String>(value.split(" "));
+			this.dispatchEventWith(Event.CHANGE);
+		}
+
+		/**
+		 * The number of tokens in the list.
+		 */
+		public function get length():int
+		{
+			return this.names.length;
+		}
+
+		/**
 		 * Returns the token at the specified index, or null, if there is no
 		 * token at that index.
 		 */
-		public function item( index : int ) : String
+		public function item(index:int):String
 		{
-			if( index < 0 || index >= this.names.length )
+			if(index < 0 || index >= this.names.length)
 			{
 				return null;
 			}
-			return this.names[ index ];
+			return this.names[index];
 		}
 
 		/**
 		 * Adds a token to the list. If the token already appears in the list,
 		 * it will not be added again.
 		 */
-		public function add( name : String ) : void
+		public function add(name:String):void
 		{
-			var index : int = this.names.indexOf( name );
-			if( index >= 0 )
+			var index:int = this.names.indexOf(name);
+			if(index >= 0)
 			{
 				return;
 			}
-			this.names[ this.names.length ] = name;
-			this.dispatchEventWith( Event.CHANGE );
+			this.names[this.names.length] = name;
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * Removes a token from the list, if the token is in the list. If the
 		 * token doesn't appear in the list, this call does nothing.
 		 */
-		public function remove( name : String ) : void
+		public function remove(name:String):void
 		{
-			var index : int = this.names.indexOf( name );
-			this.removeAt( index );
+			var index:int = this.names.indexOf(name);
+			this.removeAt(index);
 		}
 
 		/**
 		 * The token is added to the list if it doesn't appear in the list, or
 		 * it is removed from the list if it is already in the list.
 		 */
-		public function toggle( name : String ) : void
+		public function toggle(name:String):void
 		{
-			var index : int = this.names.indexOf( name );
-			if( index < 0 )
+			var index:int = this.names.indexOf(name);
+			if(index < 0)
 			{
-				this.names[ this.names.length ] = name;
-				this.dispatchEventWith( Event.CHANGE );
+				this.names[this.names.length] = name;
+				this.dispatchEventWith(Event.CHANGE);
 			}
 			else
 			{
-				this.removeAt( index );
+				this.removeAt(index);
 			}
 		}
 
 		/**
 		 * Determines if the specified token is in the list.
 		 */
-		public function contains( name : String ) : Boolean
+		public function contains(name:String):Boolean
 		{
-			return this.names.indexOf( name ) >= 0;
+			return this.names.indexOf(name) >= 0;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function removeAt( index : int ) : void
+		protected function removeAt(index:int):void
 		{
-			if( index < 0 )
+			if(index < 0)
 			{
 				return;
 			}
-			if( index == 0 )
+			if(index == 0)
 			{
 				this.names.shift();
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 				return;
 			}
-			var lastIndex : int = this.names.length - 1;
-			if( index == lastIndex )
+			var lastIndex:int = this.names.length - 1;
+			if(index == lastIndex)
 			{
 				this.names.pop();
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 				return;
 			}
-			this.names.splice( index , 1 );
-			this.dispatchEventWith( Event.CHANGE );
+			this.names.splice(index,  1);
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 	}

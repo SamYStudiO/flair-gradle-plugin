@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.renderers
 {
 	import feathers.controls.GroupedList;
@@ -25,12 +25,12 @@ package feathers.controls.renderers
 		 * <p>This property is set automatically by the list, and it should not
 		 * be set manually.</p>
 		 */
-		function get data() : Object;
+		function get data():Object;
 
 		/**
 		 * @private
 		 */
-		function set data( value : Object ) : void;
+		function set data(value:Object):void;
 
 		/**
 		 * The index of the group within the data provider of the grouped list.
@@ -38,12 +38,12 @@ package feathers.controls.renderers
 		 * <p>This property is set automatically by the list, and it should not
 		 * be set manually.</p>
 		 */
-		function get groupIndex() : int;
+		function get groupIndex():int;
 
 		/**
 		 * @private
 		 */
-		function set groupIndex( value : int ) : void;
+		function set groupIndex(value:int):void;
 
 		/**
 		 * The index of this display object within the layout.
@@ -51,12 +51,12 @@ package feathers.controls.renderers
 		 * <p>This property is set automatically by the list, and it should not
 		 * be set manually.</p>
 		 */
-		function get layoutIndex() : int;
+		function get layoutIndex():int;
 
 		/**
 		 * @private
 		 */
-		function set layoutIndex( value : int ) : void;
+		function set layoutIndex(value:int):void;
 
 		/**
 		 * The grouped list that contains this footer renderer.
@@ -64,23 +64,23 @@ package feathers.controls.renderers
 		 * <p>This property is set automatically by the list, and it should not
 		 * be set manually.</p>
 		 */
-		function get owner() : GroupedList;
+		function get owner():GroupedList;
 
 		/**
 		 * @private
 		 */
-		function set owner( value : GroupedList ) : void;
+		function set owner(value:GroupedList):void;
 
 		/**
 		 * The ID of the factory used to create this footer renderer.
 		 *
 		 * <p>This property is set by the list, and should not be set manually.</p>
 		 */
-		function get factoryID() : String;
+		function get factoryID():String;
 
 		/**
 		 * @private
 		 */
-		function set factoryID( value : String ) : void;
+		function set factoryID(value:String):void;
 	}
 }

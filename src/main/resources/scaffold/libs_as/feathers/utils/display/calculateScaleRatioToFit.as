@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.utils.display
 {
 	/**
@@ -12,11 +12,11 @@ package feathers.utils.display
 	 * required bounds (with the possibility of a bit of empty space on the
 	 * edges).
 	 */
-	public function calculateScaleRatioToFit( originalWidth : Number , originalHeight : Number , targetWidth : Number , targetHeight : Number ) : Number
+	public function calculateScaleRatioToFit(originalWidth:Number, originalHeight:Number, targetWidth:Number, targetHeight:Number):Number
 	{
-		var widthRatio : Number = targetWidth / originalWidth;
-		var heightRatio : Number = targetHeight / originalHeight;
-		if( widthRatio < heightRatio )
+		var widthRatio:Number = targetWidth / originalWidth;
+		var heightRatio:Number = targetHeight / originalHeight;
+		if(widthRatio < heightRatio)
 		{
 			return widthRatio;
 		}

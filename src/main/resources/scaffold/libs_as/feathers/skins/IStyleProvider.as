@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import feathers.core.IFeathersControl;
@@ -20,6 +20,6 @@ package feathers.skins
 		 *
 		 * @see #exclude()
 		 */
-		function applyStyles( target : IFeathersControl ) : void;
+		function applyStyles(target:IFeathersControl):void;
 	}
 }

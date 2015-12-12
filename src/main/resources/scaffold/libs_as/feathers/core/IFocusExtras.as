@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import starling.display.DisplayObject;
@@ -28,7 +28,7 @@ package feathers.core
 		 *
 		 * <p>May return <code>null</code> if there are no extra children.</p>
 		 */
-		function get focusExtrasBefore() : Vector.<DisplayObject>;
+		function get focusExtrasBefore():Vector.<DisplayObject>;
 
 		/**
 		 * Extra display objects that are not accessible through standard
@@ -39,6 +39,6 @@ package feathers.core
 		 *
 		 * <p>May return <code>null</code> if there are no extra children.</p>
 		 */
-		function get focusExtrasAfter() : Vector.<DisplayObject>;
+		function get focusExtrasAfter():Vector.<DisplayObject>;
 	}
 }

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import starling.events.Event;
@@ -31,7 +31,7 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * Creates a list of suggestions for an <code>AutoComplete</code> component
@@ -39,26 +39,35 @@ package feathers.data
 	 *
 	 * @see feathers.controls.AutoComplete
 	 * @see feathers.data.ListCollection
-	 */ public class LocalAutoCompleteSource extends EventDispatcher implements IAutoCompleteSource
+	 */
+	public class LocalAutoCompleteSource extends EventDispatcher implements IAutoCompleteSource
 	{
 		/**
 		 * @private
 		 */
-		protected static function defaultCompareFunction( item : Object , textToMatch : String ) : Boolean
+		protected static function defaultCompareFunction(item:Object, textToMatch:String):Boolean
 		{
-			return item.toString().toLowerCase().indexOf( textToMatch.toLowerCase() ) >= 0;
+			return item.toString().toLowerCase().indexOf(textToMatch.toLowerCase()) >= 0;
+		}
+
+		/**
+		 * Constructor.
+		 */
+		public function LocalAutoCompleteSource(source:ListCollection = null)
+		{
+			this._dataProvider = source;
 		}
 
 		/**
 		 * @private
 		 */
-		private var _dataProvider : ListCollection;
+		private var _dataProvider:ListCollection;
 
 		/**
 		 * A collection of items to be used as a source for auto-complete
 		 * results.
 		 */
-		public function get dataProvider() : ListCollection
+		public function get dataProvider():ListCollection
 		{
 			return this._dataProvider;
 		}
@@ -66,7 +75,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		public function set dataProvider( value : ListCollection ) : void
+		public function set dataProvider(value:ListCollection):void
 		{
 			this._dataProvider = value;
 		}
@@ -74,7 +83,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected var _compareFunction : Function = defaultCompareFunction;
+		protected var _compareFunction:Function = defaultCompareFunction;
 
 		/**
 		 * A function used to compare items from the data provider with the
@@ -86,7 +95,7 @@ package feathers.data
 		 * <p>The function is expected to have the following signature:</p>
 		 * <pre>function( item:Object, textToMatch:String ):Boolean</pre>
 		 */
-		public function get compareFunction() : Function
+		public function get compareFunction():Function
 		{
 			return this._compareFunction;
 		}
@@ -94,9 +103,9 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		public function set compareFunction( value : Function ) : void
+		public function set compareFunction(value:Function):void
 		{
-			if( value === null )
+			if(value === null)
 			{
 				value = defaultCompareFunction;
 			}
@@ -104,19 +113,11 @@ package feathers.data
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function LocalAutoCompleteSource( source : ListCollection = null )
-		{
-			this._dataProvider = source;
-		}
-
-		/**
 		 * @copy feathers.data.IAutoCompleteSource#load()
 		 */
-		public function load( textToMatch : String , result : ListCollection = null ) : void
+		public function load(textToMatch:String, result:ListCollection = null):void
 		{
-			if( result )
+			if(result)
 			{
 				result.removeAll();
 			}
@@ -124,21 +125,21 @@ package feathers.data
 			{
 				result = new ListCollection();
 			}
-			if( !this._dataProvider || textToMatch.length == 0 )
+			if(!this._dataProvider || textToMatch.length == 0)
 			{
-				this.dispatchEventWith( Event.COMPLETE , false , result );
+				this.dispatchEventWith(Event.COMPLETE, false, result);
 				return;
 			}
-			var compareFunction : Function = this._compareFunction;
-			for( var i : int = 0; i < this._dataProvider.length; i++ )
+			var compareFunction:Function = this._compareFunction;
+			for(var i:int = 0; i < this._dataProvider.length; i++)
 			{
-				var item : Object = this._dataProvider.getItemAt( i );
-				if( compareFunction( item , textToMatch ) )
+				var item:Object = this._dataProvider.getItemAt(i);
+				if(compareFunction(item, textToMatch))
 				{
-					result.addItem( item );
+					result.addItem(item);
 				}
 			}
-			this.dispatchEventWith( Event.COMPLETE , false , result );
+			this.dispatchEventWith(Event.COMPLETE, false, result);
 		}
 	}
 }

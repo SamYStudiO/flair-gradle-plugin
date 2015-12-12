@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls.renderers
 {
 	import feathers.controls.GroupedList;
@@ -22,43 +22,40 @@ package feathers.controls.renderers
 	public class DefaultGroupedListItemRenderer extends BaseDefaultItemRenderer implements IGroupedListItemRenderer
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>DefaultGroupedListItemRenderer</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
-		 */
-		public static var globalStyleProvider : IStyleProvider;
-		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ALTERNATE_STYLE_NAME_DRILL_DOWN
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_DRILL_DOWN : String = "feathers-drill-down-item-renderer";
+		public static const ALTERNATE_STYLE_NAME_DRILL_DOWN:String = "feathers-drill-down-item-renderer";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ALTERNATE_STYLE_NAME_CHECK
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_CHECK : String = "feathers-check-item-renderer";
+		public static const ALTERNATE_STYLE_NAME_CHECK:String = "feathers-check-item-renderer";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_LABEL
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_LABEL : String = "feathers-item-renderer-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_LABEL:String = "feathers-item-renderer-label";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_ICON_LABEL
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_ICON_LABEL : String = "feathers-item-renderer-icon-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_ICON_LABEL:String = "feathers-item-renderer-icon-label";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL : String = "feathers-item-renderer-accessory-label";
+		public static const DEFAULT_CHILD_STYLE_NAME_ACCESSORY_LABEL:String = "feathers-item-renderer-accessory-label";
+		
 		/**
 		 * @copy feathers.controls.Button#STATE_UP
 		 *
@@ -66,7 +63,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_UP : String = "up";
+		public static const STATE_UP:String = "up";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DOWN
 		 *
@@ -74,7 +72,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DOWN : String = "down";
+		public static const STATE_DOWN:String = "down";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_HOVER
 		 *
@@ -82,7 +81,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_HOVER : String = "hover";
+		public static const STATE_HOVER:String = "hover";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DISABLED
 		 *
@@ -90,7 +90,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DISABLED : String = "disabled";
+		public static const STATE_DISABLED:String = "disabled";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_UP_AND_SELECTED
 		 *
@@ -98,7 +99,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_UP_AND_SELECTED : String = "upAndSelected";
+		public static const STATE_UP_AND_SELECTED:String = "upAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DOWN_AND_SELECTED
 		 *
@@ -106,7 +108,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DOWN_AND_SELECTED : String = "downAndSelected";
+		public static const STATE_DOWN_AND_SELECTED:String = "downAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_HOVER_AND_SELECTED
 		 *
@@ -114,7 +117,8 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_HOVER_AND_SELECTED : String = "hoverAndSelected";
+		public static const STATE_HOVER_AND_SELECTED:String = "hoverAndSelected";
+
 		/**
 		 * @copy feathers.controls.Button#STATE_DISABLED_AND_SELECTED
 		 *
@@ -122,31 +126,36 @@ package feathers.controls.renderers
 		 * @see #stateToIconFunction
 		 * @see #stateToLabelPropertiesFunction
 		 */
-		public static const STATE_DISABLED_AND_SELECTED : String = "disabledAndSelected";
+		public static const STATE_DISABLED_AND_SELECTED:String = "disabledAndSelected";
+		
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_TOP
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_TOP : String = "top";
+		public static const ICON_POSITION_TOP:String = "top";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT : String = "right";
+		public static const ICON_POSITION_RIGHT:String = "right";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_BOTTOM
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_BOTTOM : String = "bottom";
+		public static const ICON_POSITION_BOTTOM:String = "bottom";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_LEFT
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_LEFT : String = "left";
+		public static const ICON_POSITION_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_MANUAL
 		 *
@@ -154,79 +163,92 @@ package feathers.controls.renderers
 		 * @see feathers.controls.Button#iconOffsetX
 		 * @see feathers.controls.Button#iconOffsetY
 		 */
-		public static const ICON_POSITION_MANUAL : String = "manual";
+		public static const ICON_POSITION_MANUAL:String = "manual";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_LEFT_BASELINE
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_LEFT_BASELINE : String = "leftBaseline";
+		public static const ICON_POSITION_LEFT_BASELINE:String = "leftBaseline";
+
 		/**
 		 * @copy feathers.controls.Button#ICON_POSITION_RIGHT_BASELINE
 		 *
 		 * @see feathers.controls.Button#iconPosition
 		 */
-		public static const ICON_POSITION_RIGHT_BASELINE : String = "rightBaseline";
+		public static const ICON_POSITION_RIGHT_BASELINE:String = "rightBaseline";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_LEFT
 		 *
 		 * @see feathers.controls.Button#horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_LEFT : String = "left";
+		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_CENTER
 		 *
 		 * @see feathers.controls.Button#horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_CENTER : String = "center";
+		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
+
 		/**
 		 * @copy feathers.controls.Button#HORIZONTAL_ALIGN_RIGHT
 		 *
 		 * @see feathers.controls.Button#horizontalAlign
 		 */
-		public static const HORIZONTAL_ALIGN_RIGHT : String = "right";
+		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_TOP
 		 *
 		 * @see feathers.controls.Button#verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_MIDDLE
 		 *
 		 * @see feathers.controls.Button#verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+
 		/**
 		 * @copy feathers.controls.Button#VERTICAL_ALIGN_BOTTOM
 		 *
 		 * @see feathers.controls.Button#verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ACCESSORY_POSITION_TOP
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryPosition
 		 */
-		public static const ACCESSORY_POSITION_TOP : String = "top";
+		public static const ACCESSORY_POSITION_TOP:String = "top";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ACCESSORY_POSITION_RIGHT
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryPosition
 		 */
-		public static const ACCESSORY_POSITION_RIGHT : String = "right";
+		public static const ACCESSORY_POSITION_RIGHT:String = "right";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ACCESSORY_POSITION_BOTTOM
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryPosition
 		 */
-		public static const ACCESSORY_POSITION_BOTTOM : String = "bottom";
+		public static const ACCESSORY_POSITION_BOTTOM:String = "bottom";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ACCESSORY_POSITION_LEFT
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryPosition
 		 */
-		public static const ACCESSORY_POSITION_LEFT : String = "left";
+		public static const ACCESSORY_POSITION_LEFT:String = "left";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#ACCESSORY_POSITION_MANUAL
 		 *
@@ -234,123 +256,30 @@ package feathers.controls.renderers
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryOffsetX
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#accessoryOffsetY
 		 */
-		public static const ACCESSORY_POSITION_MANUAL : String = "manual";
+		public static const ACCESSORY_POSITION_MANUAL:String = "manual";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#LAYOUT_ORDER_LABEL_ACCESSORY_ICON
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#layoutOrder
 		 */
-		public static const LAYOUT_ORDER_LABEL_ACCESSORY_ICON : String = "labelAccessoryIcon";
+		public static const LAYOUT_ORDER_LABEL_ACCESSORY_ICON:String = "labelAccessoryIcon";
+
 		/**
 		 * @copy feathers.controls.renderers.BaseDefaultItemRenderer#LAYOUT_ORDER_LABEL_ICON_ACCESSORY
 		 *
 		 * @see feathers.controls.renderers.BaseDefaultItemRenderer#layoutOrder
 		 */
-		public static const LAYOUT_ORDER_LABEL_ICON_ACCESSORY : String = "labelIconAccessory";
+		public static const LAYOUT_ORDER_LABEL_ICON_ACCESSORY:String = "labelIconAccessory";
 
 		/**
-		 * @private
+		 * The default <code>IStyleProvider</code> for all <code>DefaultGroupedListItemRenderer</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return DefaultGroupedListItemRenderer.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _groupIndex : int = -1;
-		
-		/**
-		 * @inheritDoc
-		 */
-		public function get groupIndex() : int
-		{
-			return this._groupIndex;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set groupIndex( value : int ) : void
-		{
-			this._groupIndex = value;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _itemIndex : int = -1;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get itemIndex() : int
-		{
-			return this._itemIndex;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set itemIndex( value : int ) : void
-		{
-			this._itemIndex = value;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _layoutIndex : int = -1;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get layoutIndex() : int
-		{
-			return this._layoutIndex;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set layoutIndex( value : int ) : void
-		{
-			this._layoutIndex = value;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get owner() : GroupedList
-		{
-			return GroupedList( this._owner );
-		}
-
-		/**
-		 * @private
-		 */
-		public function set owner( value : GroupedList ) : void
-		{
-			if( this._owner == value )
-			{
-				return;
-			}
-			if( this._owner )
-			{
-				this._owner.removeEventListener( FeathersEventType.SCROLL_START , owner_scrollStartHandler );
-				this._owner.removeEventListener( FeathersEventType.SCROLL_COMPLETE , owner_scrollCompleteHandler );
-			}
-			this._owner = value;
-			if( this._owner )
-			{
-				var list : GroupedList = GroupedList( this._owner );
-				this.isSelectableWithoutToggle = list.isSelectable;
-				this._owner.addEventListener( FeathersEventType.SCROLL_START , owner_scrollStartHandler );
-				this._owner.addEventListener( FeathersEventType.SCROLL_COMPLETE , owner_scrollCompleteHandler );
-			}
-			this.invalidate( INVALIDATION_FLAG_DATA );
-		}
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * Constructor.
@@ -363,7 +292,111 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		override public function dispose() : void
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return DefaultGroupedListItemRenderer.globalStyleProvider;
+		}
+		
+		/**
+		 * @private
+		 */
+		protected var _groupIndex:int = -1;
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get groupIndex():int
+		{
+			return this._groupIndex;
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set groupIndex(value:int):void
+		{
+			this._groupIndex = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _itemIndex:int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get itemIndex():int
+		{
+			return this._itemIndex;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set itemIndex(value:int):void
+		{
+			this._itemIndex = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _layoutIndex:int = -1;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get layoutIndex():int
+		{
+			return this._layoutIndex;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set layoutIndex(value:int):void
+		{
+			this._layoutIndex = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get owner():GroupedList
+		{
+			return GroupedList(this._owner);
+		}
+		
+		/**
+		 * @private
+		 */
+		public function set owner(value:GroupedList):void
+		{
+			if(this._owner == value)
+			{
+				return;
+			}
+			if(this._owner)
+			{
+				this._owner.removeEventListener(FeathersEventType.SCROLL_START, owner_scrollStartHandler);
+				this._owner.removeEventListener(FeathersEventType.SCROLL_COMPLETE, owner_scrollCompleteHandler);
+			}
+			this._owner = value;
+			if(this._owner)
+			{
+				var list:GroupedList = GroupedList(this._owner);
+				this.isSelectableWithoutToggle = list.isSelectable;
+				this._owner.addEventListener(FeathersEventType.SCROLL_START, owner_scrollStartHandler);
+				this._owner.addEventListener(FeathersEventType.SCROLL_COMPLETE, owner_scrollCompleteHandler);
+			}
+			this.invalidate(INVALIDATION_FLAG_DATA);
+		}
+
+		/**
+		 * @private
+		 */
+		override public function dispose():void
 		{
 			this.owner = null;
 			super.dispose();

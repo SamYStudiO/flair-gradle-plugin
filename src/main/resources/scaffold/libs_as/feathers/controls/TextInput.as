@@ -1,15 +1,14 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
 	import feathers.core.IFeathersControl;
-	import feathers.core.IFocusDisplayObject;
 	import feathers.core.IMultilineTextEditor;
 	import feathers.core.INativeFocusOwner;
 	import feathers.core.IStateContext;
@@ -55,7 +54,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the user presses the Enter key while the text input
@@ -83,7 +82,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.ENTER
 	 */
-	[Event(name="enter" , type="starling.events.Event")]
+	[Event(name="enter",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text input receives focus.
@@ -105,7 +104,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_IN
 	 */
-	[Event(name="focusIn" , type="starling.events.Event")]
+	[Event(name="focusIn",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the text input loses focus.
@@ -127,7 +126,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.FOCUS_OUT
 	 */
-	[Event(name="focusOut" , type="starling.events.Event")]
+	[Event(name="focusOut",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the soft keyboard is activated by the text editor. Not
@@ -150,7 +149,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_ACTIVATE
 	 */
-	[Event(name="softKeyboardActivate" , type="starling.events.Event")]
+	[Event(name="softKeyboardActivate",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the soft keyboard is deactivated by the text editor. Not
@@ -173,7 +172,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.SOFT_KEYBOARD_DEACTIVATE
 	 */
-	[Event(name="softKeyboardDeactivate" , type="starling.events.Event")]
+	[Event(name="softKeyboardDeactivate",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the display object's state changes.
@@ -197,7 +196,7 @@ package feathers.controls
 	 * 
 	 * @see #currentState
 	 */
-	[Event(name="stateChange" , type="starling.events.Event")]
+	[Event(name="stateChange",type="starling.events.Event")]
 
 	/**
 	 * A text entry control that allows users to enter and edit a single line of
@@ -222,143 +221,50 @@ package feathers.controls
 	 * @see feathers.core.ITextEditor
 	 * @see feathers.controls.AutoComplete
 	 * @see feathers.controls.TextArea
-	 */ public class TextInput extends FeathersControl implements ITextBaselineControl, INativeFocusOwner, IStateContext
+	 */
+	public class TextInput extends FeathersControl implements ITextBaselineControl, INativeFocusOwner, IStateContext
 	{
 		/**
-		 * The default <code>IStyleProvider</code> for all <code>TextInput</code>
-		 * components.
-		 *
-		 * @default null
-		 * @see feathers.core.FeathersControl#styleProvider
+		 * @private
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		private static const HELPER_POINT:Point = new Point();
+
 		/**
 		 * @private
 		 */
-		private static const HELPER_POINT : Point = new Point();
-		/**
-		 * @private
-		 */
-		protected static const INVALIDATION_FLAG_PROMPT_FACTORY : String = "promptFactory";
-		/**
-		 * The text editor sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var textEditor : ITextEditor;
-		/**
-		 * The prompt text renderer sub-component.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var promptTextRenderer : ITextRenderer;
-		/**
-		 * The currently selected background, based on state.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var currentBackground : DisplayObject;
-		/**
-		 * The currently visible icon. The value will be <code>null</code> if
-		 * there is no currently visible icon.
-		 *
-		 * <p>For internal use in subclasses.</p>
-		 */
-		protected var currentIcon : DisplayObject;
-		/**
-		 * The value added to the <code>styleNameList</code> of the text editor.
-		 * This variable is <code>protected</code> so that sub-classes can
-		 * customize the text editor style name in their constructors instead of
-		 * using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR</code>.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var textEditorStyleName : String = DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR;
-		/**
-		 * The value added to the <code>styleNameList</code> of the prompt text
-		 * renderer. This variable is <code>protected</code> so that sub-classes
-		 * can customize the prompt text renderer style name in their
-		 * constructors instead of using the default style name defined by
-		 * <code>DEFAULT_CHILD_STYLE_NAME_PROMPT</code>.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		protected var promptStyleName : String = DEFAULT_CHILD_STYLE_NAME_PROMPT;
-		/**
-		 * @private
-		 */
-		protected var _textEditorHasFocus : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _ignoreTextChanges : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _touchPointID : int = -1;
-		/**
-		 * @private
-		 * The width of the first skin that was displayed.
-		 */
-		protected var _originalSkinWidth : Number = NaN;
-		/**
-		 * @private
-		 * The height of the first skin that was displayed.
-		 */
-		protected var _originalSkinHeight : Number = NaN;
-		/**
-		 * @private
-		 */
-		protected var _skinSelector : StateValueSelector = new StateValueSelector();
-		/**
-		 * @private
-		 */
-		protected var _iconSelector : StateValueSelector = new StateValueSelector();
-		/**
-		 * @private
-		 * Flag indicating that the text editor should get focus after it is
-		 * created.
-		 */
-		protected var _isWaitingToSetFocus : Boolean = false;
-		/**
-		 * @private
-		 */
-		protected var _pendingSelectionBeginIndex : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _pendingSelectionEndIndex : int = -1;
-		/**
-		 * @private
-		 */
-		protected var _oldMouseCursor : String = null;
+		protected static const INVALIDATION_FLAG_PROMPT_FACTORY:String = "promptFactory";
+
 		/**
 		 * The <code>TextInput</code> is enabled and does not have focus.
 		 */
-		public static const STATE_ENABLED : String = "enabled";
+		public static const STATE_ENABLED:String = "enabled";
+
 		/**
 		 * The <code>TextInput</code> is disabled.
 		 */
-		public static const STATE_DISABLED : String = "disabled";
+		public static const STATE_DISABLED:String = "disabled";
+
 		/**
 		 * The <code>TextInput</code> is enabled and has focus.
 		 */
-		public static const STATE_FOCUSED : String = "focused";
+		public static const STATE_FOCUSED:String = "focused";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the text
 		 * editor.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR : String = "feathers-text-input-text-editor";
+		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR:String = "feathers-text-input-text-editor";
+
 		/**
 		 * The default value added to the <code>styleNameList</code> of the
 		 * prompt text renderer.
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_PROMPT : String = "feathers-text-input-prompt";
+		public static const DEFAULT_CHILD_STYLE_NAME_PROMPT:String = "feathers-text-input-prompt";
+
 		/**
 		 * An alternate style name to use with <code>TextInput</code> to allow a
 		 * theme to give it a search input style. If a theme does not provide a
@@ -379,76 +285,147 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		public static const ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT : String = "feathers-search-text-input";
+		public static const ALTERNATE_STYLE_NAME_SEARCH_TEXT_INPUT:String = "feathers-search-text-input";
+
 		/**
 		 * The text editor, icon, and prompt will be aligned vertically to the
 		 * top edge of the text input.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_TOP : String = "top";
+		public static const VERTICAL_ALIGN_TOP:String = "top";
+
 		/**
 		 * The text editor, icon, and prompt will be aligned vertically to the
 		 * middle of the text input.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_MIDDLE : String = "middle";
+		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
+
 		/**
 		 * The text editor, icon, and prompt will be aligned vertically to the
 		 * bottom edge of the text input.
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_BOTTOM : String = "bottom";
+		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
+
 		/**
 		 * The text editor will fill the full height of the text input (minus
 		 * top and bottom padding).
 		 *
 		 * @see #verticalAlign
 		 */
-		public static const VERTICAL_ALIGN_JUSTIFY : String = "justify";
+		public static const VERTICAL_ALIGN_JUSTIFY:String = "justify";
 
 		/**
-		 * @private
+		 * The default <code>IStyleProvider</code> for all <code>TextInput</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		public static var globalStyleProvider:IStyleProvider;
+
+		/**
+		 * Constructor.
+		 */
+		public function TextInput()
 		{
-			return TextInput.globalStyleProvider;
+			super();
+			this.addEventListener(TouchEvent.TOUCH, textInput_touchHandler);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, textInput_removedFromStageHandler);
 		}
 
 		/**
-		 * @private
-		 */
-		protected var _stateNames : Vector.<String> = new <String>
-				[ STATE_ENABLED , STATE_DISABLED , STATE_FOCUSED ];
-
-		/**
-		 * A list of all valid state names for use with <code>currentState</code>.
+		 * The text editor sub-component.
 		 *
 		 * <p>For internal use in subclasses.</p>
-		 *
-		 * @see #currentState
 		 */
-		protected function get stateNames() : Vector.<String>
-		{
-			return this._stateNames;
-		}
+		protected var textEditor:ITextEditor;
+
+		/**
+		 * The prompt text renderer sub-component.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var promptTextRenderer:ITextRenderer;
+
+		/**
+		 * The currently selected background, based on state.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var currentBackground:DisplayObject;
+
+		/**
+		 * The currently visible icon. The value will be <code>null</code> if
+		 * there is no currently visible icon.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 */
+		protected var currentIcon:DisplayObject;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the text editor.
+		 * This variable is <code>protected</code> so that sub-classes can
+		 * customize the text editor style name in their constructors instead of
+		 * using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var textEditorStyleName:String = DEFAULT_CHILD_STYLE_NAME_TEXT_EDITOR;
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the prompt text
+		 * renderer. This variable is <code>protected</code> so that sub-classes
+		 * can customize the prompt text renderer style name in their
+		 * constructors instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_PROMPT</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var promptStyleName:String = DEFAULT_CHILD_STYLE_NAME_PROMPT;
+
+		/**
+		 * @private
+		 */
+		protected var _textEditorHasFocus:Boolean = false;
 
 		/**
 		 * A text editor may be an <code>INativeFocusOwner</code>, so we need to
 		 * return the value of its <code>nativeFocus</code> property. If not,
 		 * then we return <code>null</code>.
-		 *
+		 * 
 		 * @see feathers.core.INativeFocusOwner
 		 */
-		public function get nativeFocus() : InteractiveObject
+		public function get nativeFocus():InteractiveObject
 		{
-			if( this.textEditor is INativeFocusOwner )
+			if(this.textEditor is INativeFocusOwner)
 			{
-				return INativeFocusOwner( this.textEditor ).nativeFocus;
+				return INativeFocusOwner(this.textEditor).nativeFocus;
 			}
 			return null;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _ignoreTextChanges:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _touchPointID:int = -1;
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return TextInput.globalStyleProvider;
 		}
 
 		/**
@@ -456,9 +433,9 @@ package feathers.controls
 		 * can be used instead of <code>FocusManager.focus == textInput</code>
 		 * to determine if the text input has focus.
 		 */
-		public function get hasFocus() : Boolean
+		public function get hasFocus():Boolean
 		{
-			if( !this._focusManager )
+			if(!this._focusManager)
 			{
 				return this._textEditorHasFocus;
 			}
@@ -468,30 +445,50 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set isEnabled( value : Boolean ) : void
+		override public function set isEnabled(value:Boolean):void
 		{
 			super.isEnabled = value;
-			if( this._isEnabled )
+			if(this._isEnabled)
 			{
-				this.changeState( this.hasFocus ? STATE_FOCUSED : STATE_ENABLED );
+				this.changeState(this.hasFocus ? STATE_FOCUSED : STATE_ENABLED);
 			}
 			else
 			{
-				this.changeState( STATE_DISABLED );
+				this.changeState(STATE_DISABLED);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _currentState : String = STATE_ENABLED;
+		protected var _stateNames:Vector.<String> = new <String>
+		[
+			STATE_ENABLED, STATE_DISABLED, STATE_FOCUSED
+		];
+
+		/**
+		 * A list of all valid state names for use with <code>currentState</code>.
+		 *
+		 * <p>For internal use in subclasses.</p>
+		 *
+		 * @see #currentState
+		 */
+		protected function get stateNames():Vector.<String>
+		{
+			return this._stateNames;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _currentState:String = STATE_ENABLED;
 
 		/**
 		 * The current state of the text input.
 		 *
 		 * @see #event:stateChange feathers.events.FeathersEventType.STATE_CHANGE
 		 */
-		public function get currentState() : String
+		public function get currentState():String
 		{
 			return this._currentState;
 		}
@@ -499,7 +496,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _text : String = "";
+		protected var _text:String = "";
 
 		/**
 		 * The text displayed by the text input. The text input dispatches
@@ -515,7 +512,7 @@ package feathers.controls
 		 *
 		 * @default ""
 		 */
-		public function get text() : String
+		public function get text():String
 		{
 			return this._text;
 		}
@@ -523,28 +520,28 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set text( value : String ) : void
+		public function set text(value:String):void
 		{
-			if( !value )
+			if(!value)
 			{
 				//don't allow null or undefined
 				value = "";
 			}
-			if( this._text == value )
+			if(this._text == value)
 			{
 				return;
 			}
 			this._text = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
-			this.dispatchEventWith( Event.CHANGE );
+			this.invalidate(INVALIDATION_FLAG_DATA);
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * The baseline measurement of the text, in pixels.
 		 */
-		public function get baseline() : Number
+		public function get baseline():Number
 		{
-			if( !this.textEditor )
+			if(!this.textEditor)
 			{
 				return 0;
 			}
@@ -554,7 +551,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _prompt : String = null;
+		protected var _prompt:String = null;
 
 		/**
 		 * The prompt, hint, or description text displayed by the input when the
@@ -567,7 +564,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get prompt() : String
+		public function get prompt():String
 		{
 			return this._prompt;
 		}
@@ -575,20 +572,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set prompt( value : String ) : void
+		public function set prompt(value:String):void
 		{
-			if( this._prompt == value )
+			if(this._prompt == value)
 			{
 				return;
 			}
 			this._prompt = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _typicalText : String;
+		protected var _typicalText:String;
 
 		/**
 		 * The text used to measure the input when the dimensions are not set
@@ -602,7 +599,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get typicalText() : String
+		public function get typicalText():String
 		{
 			return this._typicalText;
 		}
@@ -610,20 +607,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set typicalText( value : String ) : void
+		public function set typicalText(value:String):void
 		{
-			if( this._typicalText == value )
+			if(this._typicalText == value)
 			{
 				return;
 			}
 			this._typicalText = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maxChars : int = 0;
+		protected var _maxChars:int = 0;
 
 		/**
 		 * The maximum number of characters that may be entered. If <code>0</code>,
@@ -637,7 +634,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get maxChars() : int
+		public function get maxChars():int
 		{
 			return this._maxChars;
 		}
@@ -645,20 +642,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set maxChars( value : int ) : void
+		public function set maxChars(value:int):void
 		{
-			if( this._maxChars == value )
+			if(this._maxChars == value)
 			{
 				return;
 			}
 			this._maxChars = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _restrict : String;
+		protected var _restrict:String;
 
 		/**
 		 * Limits the set of characters that may be entered.
@@ -671,7 +668,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get restrict() : String
+		public function get restrict():String
 		{
 			return this._restrict;
 		}
@@ -679,20 +676,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set restrict( value : String ) : void
+		public function set restrict(value:String):void
 		{
-			if( this._restrict == value )
+			if(this._restrict == value)
 			{
 				return;
 			}
 			this._restrict = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _displayAsPassword : Boolean = false;
+		protected var _displayAsPassword:Boolean = false;
 
 		/**
 		 * Determines if the entered text will be masked so that it cannot be
@@ -706,7 +703,7 @@ package feathers.controls
 		 *
 		 * @default false
 		 */
-		public function get displayAsPassword() : Boolean
+		public function get displayAsPassword():Boolean
 		{
 			return this._displayAsPassword;
 		}
@@ -714,20 +711,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set displayAsPassword( value : Boolean ) : void
+		public function set displayAsPassword(value:Boolean):void
 		{
-			if( this._displayAsPassword == value )
+			if(this._displayAsPassword == value)
 			{
 				return;
 			}
 			this._displayAsPassword = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isEditable : Boolean = true;
+		protected var _isEditable:Boolean = true;
 
 		/**
 		 * Determines if the text input is editable. If the text input is not
@@ -742,7 +739,7 @@ package feathers.controls
 		 *
 		 * @see #isSelectable
 		 */
-		public function get isEditable() : Boolean
+		public function get isEditable():Boolean
 		{
 			return this._isEditable;
 		}
@@ -750,20 +747,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isEditable( value : Boolean ) : void
+		public function set isEditable(value:Boolean):void
 		{
-			if( this._isEditable == value )
+			if(this._isEditable == value)
 			{
 				return;
 			}
 			this._isEditable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _isSelectable : Boolean = true;
+		protected var _isSelectable:Boolean = true;
 
 		/**
 		 * If the <code>isEditable</code> property is set to <code>false</code>,
@@ -778,10 +775,10 @@ package feathers.controls
 		 * input.isSelectable = false;</listing>
 		 *
 		 * @default true
-		 *
+		 * 
 		 * @see #isEditable
 		 */
-		public function get isSelectable() : Boolean
+		public function get isSelectable():Boolean
 		{
 			return this._isSelectable;
 		}
@@ -789,20 +786,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set isSelectable( value : Boolean ) : void
+		public function set isSelectable(value:Boolean):void
 		{
-			if( this._isSelectable == value )
+			if(this._isSelectable == value)
 			{
 				return;
 			}
 			this._isSelectable = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _textEditorFactory : Function;
+		protected var _textEditorFactory:Function;
 
 		/**
 		 * A function used to instantiate the text editor. If null,
@@ -830,7 +827,7 @@ package feathers.controls
 		 * @see feathers.core.ITextEditor
 		 * @see feathers.core.FeathersControl#defaultTextEditorFactory
 		 */
-		public function get textEditorFactory() : Function
+		public function get textEditorFactory():Function
 		{
 			return this._textEditorFactory;
 		}
@@ -838,20 +835,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set textEditorFactory( value : Function ) : void
+		public function set textEditorFactory(value:Function):void
 		{
-			if( this._textEditorFactory == value )
+			if(this._textEditorFactory == value)
 			{
 				return;
 			}
 			this._textEditorFactory = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_EDITOR );
+			this.invalidate(INVALIDATION_FLAG_TEXT_EDITOR);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customTextEditorStyleName : String;
+		protected var _customTextEditorStyleName:String;
 
 		/**
 		 * A style name to add to the text input's text editor sub-component.
@@ -868,8 +865,7 @@ package feathers.controls
 		 * provide different styles than the default:</p>
 		 *
 		 * <listing version="3.0">
-		 * getStyleProviderForClass( StageTextTextEditor ).setFunctionForStyleName( "my-custom-text-input-text-editor",
-		 * setCustomTextInputTextEditorStyles );</listing>
+		 * getStyleProviderForClass( StageTextTextEditor ).setFunctionForStyleName( "my-custom-text-input-text-editor", setCustomTextInputTextEditorStyles );</listing>
 		 *
 		 * @default null
 		 *
@@ -877,7 +873,7 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleNameList
 		 * @see #textEditorFactory
 		 */
-		public function get customTextEditorStyleName() : String
+		public function get customTextEditorStyleName():String
 		{
 			return this._customTextEditorStyleName;
 		}
@@ -885,20 +881,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customTextEditorStyleName( value : String ) : void
+		public function set customTextEditorStyleName(value:String):void
 		{
-			if( this._customTextEditorStyleName == value )
+			if(this._customTextEditorStyleName == value)
 			{
 				return;
 			}
 			this._customTextEditorStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _promptFactory : Function;
+		protected var _promptFactory:Function;
 
 		/**
 		 * A function used to instantiate the prompt text renderer. If null,
@@ -930,7 +926,7 @@ package feathers.controls
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
 		 */
-		public function get promptFactory() : Function
+		public function get promptFactory():Function
 		{
 			return this._promptFactory;
 		}
@@ -938,20 +934,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set promptFactory( value : Function ) : void
+		public function set promptFactory(value:Function):void
 		{
-			if( this._promptFactory == value )
+			if(this._promptFactory == value)
 			{
 				return;
 			}
 			this._promptFactory = value;
-			this.invalidate( INVALIDATION_FLAG_PROMPT_FACTORY );
+			this.invalidate(INVALIDATION_FLAG_PROMPT_FACTORY);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customPromptStyleName : String;
+		protected var _customPromptStyleName:String;
 
 		/**
 		 * A style name to add to the text input's prompt text renderer
@@ -968,8 +964,7 @@ package feathers.controls
 		 * provide different styles than the default:</p>
 		 *
 		 * <listing version="3.0">
-		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-text-input-prompt", setCustomTextInputPromptStyles
-		 * );</listing>
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-text-input-prompt", setCustomTextInputPromptStyles );</listing>
 		 *
 		 * @default null
 		 *
@@ -977,7 +972,7 @@ package feathers.controls
 		 * @see feathers.core.FeathersControl#styleNameList
 		 * @see #promptFactory
 		 */
-		public function get customPromptStyleName() : String
+		public function get customPromptStyleName():String
 		{
 			return this._customPromptStyleName;
 		}
@@ -985,20 +980,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customPromptStyleName( value : String ) : void
+		public function set customPromptStyleName(value:String):void
 		{
-			if( this._customPromptStyleName == value )
+			if(this._customPromptStyleName == value)
 			{
 				return;
 			}
 			this._customPromptStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _promptProperties : PropertyProxy;
+		protected var _promptProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the input's prompt text
@@ -1033,11 +1028,11 @@ package feathers.controls
 		 * @see #promptFactory
 		 * @see feathers.core.ITextRenderer
 		 */
-		public function get promptProperties() : Object
+		public function get promptProperties():Object
 		{
-			if( !this._promptProperties )
+			if(!this._promptProperties)
 			{
-				this._promptProperties = new PropertyProxy( childProperties_onChange );
+				this._promptProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._promptProperties;
 		}
@@ -1045,36 +1040,53 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set promptProperties( value : Object ) : void
+		public function set promptProperties(value:Object):void
 		{
-			if( this._promptProperties == value )
+			if(this._promptProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._promptProperties )
+			if(this._promptProperties)
 			{
-				this._promptProperties.removeOnChangeCallback( childProperties_onChange );
+				this._promptProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._promptProperties = PropertyProxy( value );
-			if( this._promptProperties )
+			this._promptProperties = PropertyProxy(value);
+			if(this._promptProperties)
 			{
-				this._promptProperties.addOnChangeCallback( childProperties_onChange );
+				this._promptProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
+
+		/**
+		 * @private
+		 * The width of the first skin that was displayed.
+		 */
+		protected var _originalSkinWidth:Number = NaN;
+
+		/**
+		 * @private
+		 * The height of the first skin that was displayed.
+		 */
+		protected var _originalSkinHeight:Number = NaN;
+
+		/**
+		 * @private
+		 */
+		protected var _skinSelector:StateValueSelector = new StateValueSelector();
 
 		/**
 		 * The skin used when no other skin is defined for the current state.
@@ -1092,22 +1104,22 @@ package feathers.controls
 		 * @see #backgroundDisabledSkin
 		 * @see #backgroundFocusedSkin
 		 */
-		public function get backgroundSkin() : DisplayObject
+		public function get backgroundSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.defaultValue );
+			return DisplayObject(this._skinSelector.defaultValue);
 		}
 
 		/**
 		 * @private
 		 */
-		public function set backgroundSkin( value : DisplayObject ) : void
+		public function set backgroundSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.defaultValue == value )
+			if(this._skinSelector.defaultValue == value)
 			{
 				return;
 			}
 			this._skinSelector.defaultValue = value;
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
@@ -1124,22 +1136,22 @@ package feathers.controls
 		 * @see #backgroundSkin
 		 * @see #backgroundDisabledSkin
 		 */
-		public function get backgroundEnabledSkin() : DisplayObject
+		public function get backgroundEnabledSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_ENABLED ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_ENABLED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set backgroundEnabledSkin( value : DisplayObject ) : void
+		public function set backgroundEnabledSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_ENABLED ) == value )
+			if(this._skinSelector.getValueForState(STATE_ENABLED) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_ENABLED );
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this._skinSelector.setValueForState(value, STATE_ENABLED);
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
@@ -1153,22 +1165,22 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundFocusedSkin() : DisplayObject
+		public function get backgroundFocusedSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_FOCUSED ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_FOCUSED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set backgroundFocusedSkin( value : DisplayObject ) : void
+		public function set backgroundFocusedSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_FOCUSED ) == value )
+			if(this._skinSelector.getValueForState(STATE_FOCUSED) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_FOCUSED );
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this._skinSelector.setValueForState(value, STATE_FOCUSED);
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
@@ -1182,28 +1194,28 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get backgroundDisabledSkin() : DisplayObject
+		public function get backgroundDisabledSkin():DisplayObject
 		{
-			return DisplayObject( this._skinSelector.getValueForState( STATE_DISABLED ) );
+			return DisplayObject(this._skinSelector.getValueForState(STATE_DISABLED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set backgroundDisabledSkin( value : DisplayObject ) : void
+		public function set backgroundDisabledSkin(value:DisplayObject):void
 		{
-			if( this._skinSelector.getValueForState( STATE_DISABLED ) == value )
+			if(this._skinSelector.getValueForState(STATE_DISABLED) == value)
 			{
 				return;
 			}
-			this._skinSelector.setValueForState( value , STATE_DISABLED );
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this._skinSelector.setValueForState(value, STATE_DISABLED);
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _stateToSkinFunction : Function;
+		protected var _stateToSkinFunction:Function;
 
 		/**
 		 * Returns a skin for the current state.
@@ -1213,7 +1225,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get stateToSkinFunction() : Function
+		public function get stateToSkinFunction():Function
 		{
 			return this._stateToSkinFunction;
 		}
@@ -1221,15 +1233,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set stateToSkinFunction( value : Function ) : void
+		public function set stateToSkinFunction(value:Function):void
 		{
-			if( this._stateToSkinFunction == value )
+			if(this._stateToSkinFunction == value)
 			{
 				return;
 			}
 			this._stateToSkinFunction = value;
-			this.invalidate( INVALIDATION_FLAG_SKIN );
+			this.invalidate(INVALIDATION_FLAG_SKIN);
 		}
+
+		/**
+		 * @private
+		 */
+		protected var _iconSelector:StateValueSelector = new StateValueSelector();
 
 		/**
 		 * The icon used when no other icon is defined for the current state.
@@ -1248,22 +1265,22 @@ package feathers.controls
 		 * @see #disabledIcon
 		 * @see #focusedIcon
 		 */
-		public function get defaultIcon() : DisplayObject
+		public function get defaultIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.defaultValue );
+			return DisplayObject(this._iconSelector.defaultValue);
 		}
 
 		/**
 		 * @private
 		 */
-		public function set defaultIcon( value : DisplayObject ) : void
+		public function set defaultIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.defaultValue == value )
+			if(this._iconSelector.defaultValue == value)
 			{
 				return;
 			}
 			this._iconSelector.defaultValue = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1280,22 +1297,22 @@ package feathers.controls
 		 * @see #defaultIcon
 		 * @see #disabledIcon
 		 */
-		public function get enabledIcon() : DisplayObject
+		public function get enabledIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_ENABLED ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_ENABLED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set enabledIcon( value : DisplayObject ) : void
+		public function set enabledIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_ENABLED ) == value )
+			if(this._iconSelector.getValueForState(STATE_ENABLED) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_ENABLED );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_ENABLED);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1312,22 +1329,22 @@ package feathers.controls
 		 * @see #defaultIcon
 		 * @see #enabledIcon
 		 */
-		public function get disabledIcon() : DisplayObject
+		public function get disabledIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_DISABLED ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_DISABLED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set disabledIcon( value : DisplayObject ) : void
+		public function set disabledIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_DISABLED ) == value )
+			if(this._iconSelector.getValueForState(STATE_DISABLED) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_DISABLED );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_DISABLED);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1345,28 +1362,28 @@ package feathers.controls
 		 * @see #enabledIcon
 		 * @see #disabledIcon
 		 */
-		public function get focusedIcon() : DisplayObject
+		public function get focusedIcon():DisplayObject
 		{
-			return DisplayObject( this._iconSelector.getValueForState( STATE_FOCUSED ) );
+			return DisplayObject(this._iconSelector.getValueForState(STATE_FOCUSED));
 		}
 
 		/**
 		 * @private
 		 */
-		public function set focusedIcon( value : DisplayObject ) : void
+		public function set focusedIcon(value:DisplayObject):void
 		{
-			if( this._iconSelector.getValueForState( STATE_FOCUSED ) == value )
+			if(this._iconSelector.getValueForState(STATE_FOCUSED) == value)
 			{
 				return;
 			}
-			this._iconSelector.setValueForState( value , STATE_FOCUSED );
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this._iconSelector.setValueForState(value, STATE_FOCUSED);
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _stateToIconFunction : Function;
+		protected var _stateToIconFunction:Function;
 
 		/**
 		 * Returns an icon for the current state.
@@ -1376,7 +1393,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get stateToIconFunction() : Function
+		public function get stateToIconFunction():Function
 		{
 			return this._stateToIconFunction;
 		}
@@ -1384,20 +1401,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set stateToIconFunction( value : Function ) : void
+		public function set stateToIconFunction(value:Function):void
 		{
-			if( this._stateToIconFunction == value )
+			if(this._stateToIconFunction == value)
 			{
 				return;
 			}
 			this._stateToIconFunction = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _gap : Number = 0;
+		protected var _gap:Number = 0;
 
 		/**
 		 * The space, in pixels, between the icon and the text editor, if an
@@ -1412,7 +1429,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get gap() : Number
+		public function get gap():Number
 		{
 			return this._gap;
 		}
@@ -1420,14 +1437,14 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set gap( value : Number ) : void
+		public function set gap(value:Number):void
 		{
-			if( this._gap == value )
+			if(this._gap == value)
 			{
 				return;
 			}
 			this._gap = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -1449,7 +1466,7 @@ package feathers.controls
 		 * @see #paddingBottom
 		 * @see #paddingLeft
 		 */
-		public function get padding() : Number
+		public function get padding():Number
 		{
 			return this._paddingTop;
 		}
@@ -1457,7 +1474,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set padding( value : Number ) : void
+		public function set padding(value:Number):void
 		{
 			this.paddingTop = value;
 			this.paddingRight = value;
@@ -1468,7 +1485,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _paddingTop : Number = 0;
+		protected var _paddingTop:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the input's top edge and the
@@ -1482,7 +1499,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingTop() : Number
+		public function get paddingTop():Number
 		{
 			return this._paddingTop;
 		}
@@ -1490,20 +1507,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingTop( value : Number ) : void
+		public function set paddingTop(value:Number):void
 		{
-			if( this._paddingTop == value )
+			if(this._paddingTop == value)
 			{
 				return;
 			}
 			this._paddingTop = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingRight : Number = 0;
+		protected var _paddingRight:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the input's right edge and the
@@ -1517,7 +1534,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingRight() : Number
+		public function get paddingRight():Number
 		{
 			return this._paddingRight;
 		}
@@ -1525,20 +1542,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingRight( value : Number ) : void
+		public function set paddingRight(value:Number):void
 		{
-			if( this._paddingRight == value )
+			if(this._paddingRight == value)
 			{
 				return;
 			}
 			this._paddingRight = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingBottom : Number = 0;
+		protected var _paddingBottom:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the input's bottom edge and
@@ -1552,7 +1569,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingBottom() : Number
+		public function get paddingBottom():Number
 		{
 			return this._paddingBottom;
 		}
@@ -1560,20 +1577,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingBottom( value : Number ) : void
+		public function set paddingBottom(value:Number):void
 		{
-			if( this._paddingBottom == value )
+			if(this._paddingBottom == value)
 			{
 				return;
 			}
 			this._paddingBottom = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _paddingLeft : Number = 0;
+		protected var _paddingLeft:Number = 0;
 
 		/**
 		 * The minimum space, in pixels, between the input's left edge and the
@@ -1587,7 +1604,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get paddingLeft() : Number
+		public function get paddingLeft():Number
 		{
 			return this._paddingLeft;
 		}
@@ -1595,22 +1612,22 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set paddingLeft( value : Number ) : void
+		public function set paddingLeft(value:Number):void
 		{
-			if( this._paddingLeft == value )
+			if(this._paddingLeft == value)
 			{
 				return;
 			}
 			this._paddingLeft = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _verticalAlign : String = VERTICAL_ALIGN_MIDDLE;
+		protected var _verticalAlign:String = VERTICAL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String" , enumeration="top,middle,bottom,justify")]
+		[Inspectable(type="String",enumeration="top,middle,bottom,justify")]
 		/**
 		 * The location where the text editor is aligned vertically (on
 		 * the y-axis).
@@ -1626,7 +1643,8 @@ package feathers.controls
 		 * @see #VERTICAL_ALIGN_MIDDLE
 		 * @see #VERTICAL_ALIGN_BOTTOM
 		 * @see #VERTICAL_ALIGN_JUSTIFY
-		 */ public function get verticalAlign() : String
+		 */
+		public function get verticalAlign():String
 		{
 			return _verticalAlign;
 		}
@@ -1634,20 +1652,42 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set verticalAlign( value : String ) : void
+		public function set verticalAlign(value:String):void
 		{
-			if( this._verticalAlign == value )
+			if(this._verticalAlign == value)
 			{
 				return;
 			}
 			this._verticalAlign = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
+		 * Flag indicating that the text editor should get focus after it is
+		 * created.
 		 */
-		protected var _textEditorProperties : PropertyProxy;
+		protected var _isWaitingToSetFocus:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _pendingSelectionBeginIndex:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _pendingSelectionEndIndex:int = -1;
+
+		/**
+		 * @private
+		 */
+		protected var _oldMouseCursor:String = null;
+
+		/**
+		 * @private
+		 */
+		protected var _textEditorProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the input's text editor
@@ -1681,11 +1721,11 @@ package feathers.controls
 		 * @see #textEditorFactory
 		 * @see feathers.core.ITextEditor
 		 */
-		public function get textEditorProperties() : Object
+		public function get textEditorProperties():Object
 		{
-			if( !this._textEditorProperties )
+			if(!this._textEditorProperties)
 			{
-				this._textEditorProperties = new PropertyProxy( childProperties_onChange );
+				this._textEditorProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._textEditorProperties;
 		}
@@ -1693,47 +1733,47 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set textEditorProperties( value : Object ) : void
+		public function set textEditorProperties(value:Object):void
 		{
-			if( this._textEditorProperties == value )
+			if(this._textEditorProperties == value)
 			{
 				return;
 			}
-			if( !value )
+			if(!value)
 			{
 				value = new PropertyProxy();
 			}
-			if( !(value is PropertyProxy) )
+			if(!(value is PropertyProxy))
 			{
-				var newValue : PropertyProxy = new PropertyProxy();
-				for( var propertyName : String in value )
+				var newValue:PropertyProxy = new PropertyProxy();
+				for(var propertyName:String in value)
 				{
-					newValue[ propertyName ] = value[ propertyName ];
+					newValue[propertyName] = value[propertyName];
 				}
 				value = newValue;
 			}
-			if( this._textEditorProperties )
+			if(this._textEditorProperties)
 			{
-				this._textEditorProperties.removeOnChangeCallback( childProperties_onChange );
+				this._textEditorProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._textEditorProperties = PropertyProxy( value );
-			if( this._textEditorProperties )
+			this._textEditorProperties = PropertyProxy(value);
+			if(this._textEditorProperties)
 			{
-				this._textEditorProperties.addOnChangeCallback( childProperties_onChange );
+				this._textEditorProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @copy feathers.core.ITextEditor#selectionBeginIndex
 		 */
-		public function get selectionBeginIndex() : int
+		public function get selectionBeginIndex():int
 		{
-			if( this._pendingSelectionBeginIndex >= 0 )
+			if(this._pendingSelectionBeginIndex >= 0)
 			{
 				return this._pendingSelectionBeginIndex;
 			}
-			if( this.textEditor )
+			if(this.textEditor)
 			{
 				return this.textEditor.selectionBeginIndex;
 			}
@@ -1743,13 +1783,13 @@ package feathers.controls
 		/**
 		 * @copy feathers.core.ITextEditor#selectionEndIndex
 		 */
-		public function get selectionEndIndex() : int
+		public function get selectionEndIndex():int
 		{
-			if( this._pendingSelectionEndIndex >= 0 )
+			if(this._pendingSelectionEndIndex >= 0)
 			{
 				return this._pendingSelectionEndIndex;
 			}
-			if( this.textEditor )
+			if(this.textEditor)
 			{
 				return this.textEditor.selectionEndIndex;
 			}
@@ -1759,12 +1799,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function set visible( value : Boolean ) : void
+		override public function set visible(value:Boolean):void
 		{
-			if( !value )
+			if(!value)
 			{
 				this._isWaitingToSetFocus = false;
-				if( this._textEditorHasFocus )
+				if(this._textEditorHasFocus)
 				{
 					this.textEditor.clearFocus();
 				}
@@ -1773,94 +1813,48 @@ package feathers.controls
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function TextInput()
-		{
-			super();
-			this.addEventListener( TouchEvent.TOUCH , textInput_touchHandler );
-			this.addEventListener( Event.REMOVED_FROM_STAGE , textInput_removedFromStageHandler );
-		}
-
-		/**
 		 * @private
 		 */
-		override public function hitTest( localPoint : Point , forTouch : Boolean = false ) : DisplayObject
+		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject
 		{
-			if( forTouch && (!this.visible || !this.touchable) )
+			if(forTouch && (!this.visible || !this.touchable))
 			{
 				return null;
 			}
-			var clipRect : Rectangle = this.clipRect;
-			if( clipRect && !clipRect.containsPoint( localPoint ) )
+			var clipRect:Rectangle = this.clipRect;
+			if(clipRect && !clipRect.containsPoint(localPoint))
 			{
 				return null;
 			}
-			return this._hitArea.containsPoint( localPoint ) ? DisplayObject( this.textEditor ) : null;
+			return this._hitArea.containsPoint(localPoint) ? DisplayObject(this.textEditor) : null;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		override public function showFocus() : void
+		override public function showFocus():void
 		{
-			if( !this._focusManager || this._focusManager.focus != this )
+			if(!this._focusManager || this._focusManager.focus != this)
 			{
 				return;
 			}
-			this.selectRange( 0 , this._text.length );
+			this.selectRange(0, this._text.length);
 			super.showFocus();
-		}
-
-		/**
-		 * @private
-		 */
-		override public function dispose() : void
-		{
-			var skin : DisplayObject = this._skinSelector.defaultValue as DisplayObject;
-			//we don't dispose it if the text input is the parent because it'll
-			//already get disposed in super.dispose()
-			if( skin && skin.parent !== this )
-			{
-				skin.dispose();
-			}
-			for each( var state : String in this.stateNames )
-			{
-				skin = this._skinSelector.getValueForState( state ) as DisplayObject;
-				if( skin && skin.parent !== this )
-				{
-					skin.dispose();
-				}
-			}
-			skin = this._iconSelector.defaultValue as DisplayObject;
-			if( skin && skin.parent !== this )
-			{
-				skin.dispose();
-			}
-			for each( state in this.stateNames )
-			{
-				skin = this._iconSelector.getValueForState( state ) as DisplayObject;
-				if( skin && skin.parent !== this )
-				{
-					skin.dispose();
-				}
-			}
-			super.dispose();
 		}
 
 		/**
 		 * Focuses the text input control so that it may be edited.
 		 */
-		public function setFocus() : void
+		public function setFocus():void
 		{
 			//if the text editor has focus, no need to set focus
 			//if this is invisible, it wouldn't make sense to set focus
 			//if there's a touch point ID, we'll be setting focus on our own
-			if( this._textEditorHasFocus || !this.visible || this._touchPointID >= 0 )
+			if(this._textEditorHasFocus || !this.visible || this._touchPointID >= 0)
 			{
 				return;
 			}
-			if( this.textEditor )
+			if(this.textEditor)
 			{
 				this._isWaitingToSetFocus = false;
 				this.textEditor.setFocus();
@@ -1868,17 +1862,17 @@ package feathers.controls
 			else
 			{
 				this._isWaitingToSetFocus = true;
-				this.invalidate( INVALIDATION_FLAG_SELECTED );
+				this.invalidate(INVALIDATION_FLAG_SELECTED);
 			}
 		}
 
 		/**
 		 * Manually removes focus from the text input control.
 		 */
-		public function clearFocus() : void
+		public function clearFocus():void
 		{
 			this._isWaitingToSetFocus = false;
-			if( !this.textEditor || !this._textEditorHasFocus )
+			if(!this.textEditor || !this._textEditorHasFocus)
 			{
 				return;
 			}
@@ -1890,107 +1884,143 @@ package feathers.controls
 		 * or the end index is <code>-1</code>, the text insertion position is
 		 * changed and nothing is selected.
 		 */
-		public function selectRange( beginIndex : int , endIndex : int = -1 ) : void
+		public function selectRange(beginIndex:int, endIndex:int = -1):void
 		{
-			if( endIndex < 0 )
+			if(endIndex < 0)
 			{
 				endIndex = beginIndex;
 			}
-			if( beginIndex < 0 )
+			if(beginIndex < 0)
 			{
-				throw new RangeError( "Expected start index >= 0. Received " + beginIndex + "." );
+				throw new RangeError("Expected start index >= 0. Received " + beginIndex + ".");
 			}
-			if( endIndex > this._text.length )
+			if(endIndex > this._text.length)
 			{
-				throw new RangeError( "Expected end index <= " + this._text.length + ". Received " + endIndex + "." );
+				throw new RangeError("Expected end index <= " + this._text.length + ". Received " + endIndex + ".");
 			}
 
 			//if it's invalid, we need to wait until validation before changing
 			//the selection
-			if( this.textEditor && (this._isValidating || !this.isInvalid()) )
+			if(this.textEditor && (this._isValidating || !this.isInvalid()))
 			{
 				this._pendingSelectionBeginIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				this.textEditor.selectRange( beginIndex , endIndex );
+				this.textEditor.selectRange(beginIndex, endIndex);
 			}
 			else
 			{
 				this._pendingSelectionBeginIndex = beginIndex;
 				this._pendingSelectionEndIndex = endIndex;
-				this.invalidate( INVALIDATION_FLAG_SELECTED );
+				this.invalidate(INVALIDATION_FLAG_SELECTED);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override public function dispose():void
 		{
-			var stateInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STATE );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var skinInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SKIN );
-			var sizeInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_SIZE );
-			var textEditorInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_TEXT_EDITOR );
-			var promptFactoryInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_PROMPT_FACTORY );
-			var focusInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_FOCUS );
+			var skin:DisplayObject = this._skinSelector.defaultValue as DisplayObject;
+			//we don't dispose it if the text input is the parent because it'll
+			//already get disposed in super.dispose()
+			if(skin && skin.parent !== this)
+			{
+				skin.dispose();
+			}
+			for each(var state:String in this.stateNames)
+			{
+				skin = this._skinSelector.getValueForState(state) as DisplayObject;
+				if(skin && skin.parent !== this)
+				{
+					skin.dispose();
+				}
+			}
+			skin = this._iconSelector.defaultValue as DisplayObject;
+			if(skin && skin.parent !== this)
+			{
+				skin.dispose();
+			}
+			for each(state in this.stateNames)
+			{
+				skin = this._iconSelector.getValueForState(state) as DisplayObject;
+				if(skin && skin.parent !== this)
+				{
+					skin.dispose();
+				}
+			}
+			super.dispose();
+		}
 
-			if( textEditorInvalid )
+		/**
+		 * @private
+		 */
+		override protected function draw():void
+		{
+			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var skinInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SKIN);
+			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
+			var textEditorInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_TEXT_EDITOR);
+			var promptFactoryInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_PROMPT_FACTORY);
+			var focusInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_FOCUS);
+
+			if(textEditorInvalid)
 			{
 				this.createTextEditor();
 			}
 
-			if( promptFactoryInvalid || (this._prompt !== null && !this.promptTextRenderer) )
+			if(promptFactoryInvalid || (this._prompt !== null && !this.promptTextRenderer))
 			{
 				this.createPrompt();
 			}
 
-			if( textEditorInvalid || stylesInvalid )
+			if(textEditorInvalid || stylesInvalid)
 			{
 				this.refreshTextEditorProperties();
 			}
 
-			if( promptFactoryInvalid || stylesInvalid )
+			if(promptFactoryInvalid || stylesInvalid)
 			{
 				this.refreshPromptProperties();
 			}
 
-			if( textEditorInvalid || dataInvalid )
+			if(textEditorInvalid || dataInvalid)
 			{
-				var oldIgnoreTextChanges : Boolean = this._ignoreTextChanges;
+				var oldIgnoreTextChanges:Boolean = this._ignoreTextChanges;
 				this._ignoreTextChanges = true;
 				this.textEditor.text = this._text;
 				this._ignoreTextChanges = oldIgnoreTextChanges;
 			}
 
-			if( this.promptTextRenderer )
+			if(this.promptTextRenderer)
 			{
-				if( promptFactoryInvalid || dataInvalid || stylesInvalid )
+				if(promptFactoryInvalid || dataInvalid || stylesInvalid)
 				{
 					this.promptTextRenderer.visible = this._prompt && this._text.length == 0;
 				}
 
-				if( promptFactoryInvalid || stateInvalid )
+				if(promptFactoryInvalid || stateInvalid)
 				{
 					this.promptTextRenderer.isEnabled = this._isEnabled;
 				}
 			}
 
-			if( textEditorInvalid || stateInvalid )
+			if(textEditorInvalid || stateInvalid)
 			{
 				this.textEditor.isEnabled = this._isEnabled;
-				if( !this._isEnabled && Mouse.supportsNativeCursor && this._oldMouseCursor )
+				if(!this._isEnabled && Mouse.supportsNativeCursor && this._oldMouseCursor)
 				{
 					Mouse.cursor = this._oldMouseCursor;
 					this._oldMouseCursor = null;
 				}
 			}
 
-			if( stateInvalid || skinInvalid )
+			if(stateInvalid || skinInvalid)
 			{
 				this.refreshBackgroundSkin();
 			}
-			if( stateInvalid || stylesInvalid )
+			if(stateInvalid || stylesInvalid)
 			{
 				this.refreshIcon();
 			}
@@ -1999,7 +2029,7 @@ package feathers.controls
 
 			this.layoutChildren();
 
-			if( sizeInvalid || focusInvalid )
+			if(sizeInvalid || focusInvalid)
 			{
 				this.refreshFocusIndicator();
 			}
@@ -2023,66 +2053,66 @@ package feathers.controls
 		 * <p>Meant for internal use, and subclasses may override this function
 		 * with a custom implementation.</p>
 		 */
-		protected function autoSizeIfNeeded() : Boolean
+		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			var typicalTextWidth : Number = 0;
-			var typicalTextHeight : Number = 0;
-			if( this._typicalText )
+			var typicalTextWidth:Number = 0;
+			var typicalTextHeight:Number = 0;
+			if(this._typicalText)
 			{
-				var oldTextEditorWidth : Number = this.textEditor.width;
-				var oldTextEditorHeight : Number = this.textEditor.height;
-				var oldIgnoreTextChanges : Boolean = this._ignoreTextChanges;
+				var oldTextEditorWidth:Number = this.textEditor.width;
+				var oldTextEditorHeight:Number = this.textEditor.height;
+				var oldIgnoreTextChanges:Boolean = this._ignoreTextChanges;
 				this._ignoreTextChanges = true;
-				this.textEditor.setSize( NaN , NaN );
+				this.textEditor.setSize(NaN, NaN);
 				this.textEditor.text = this._typicalText;
-				this.textEditor.measureText( HELPER_POINT );
+				this.textEditor.measureText(HELPER_POINT);
 				this.textEditor.text = this._text;
 				this._ignoreTextChanges = oldIgnoreTextChanges;
 				typicalTextWidth = HELPER_POINT.x;
 				typicalTextHeight = HELPER_POINT.y;
 			}
-			if( this._prompt !== null )
+			if(this._prompt !== null)
 			{
-				this.promptTextRenderer.setSize( NaN , NaN );
-				this.promptTextRenderer.measureText( HELPER_POINT );
-				typicalTextWidth = Math.max( typicalTextWidth , HELPER_POINT.x );
-				typicalTextHeight = Math.max( typicalTextHeight , HELPER_POINT.y );
+				this.promptTextRenderer.setSize(NaN, NaN);
+				this.promptTextRenderer.measureText(HELPER_POINT);
+				typicalTextWidth = Math.max(typicalTextWidth, HELPER_POINT.x);
+				typicalTextHeight = Math.max(typicalTextHeight, HELPER_POINT.y);
 			}
 
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
-				newWidth = Math.max( this._originalSkinWidth , typicalTextWidth + this._paddingLeft + this._paddingRight );
-				if( newWidth !== newWidth ) //isNaN
+				newWidth = Math.max(this._originalSkinWidth, typicalTextWidth + this._paddingLeft + this._paddingRight);
+				if(newWidth !== newWidth) //isNaN
 				{
 					newWidth = 0;
 				}
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
-				newHeight = Math.max( this._originalSkinHeight , typicalTextHeight + this._paddingTop + this._paddingBottom );
-				if( newHeight !== newHeight ) //isNaN
+				newHeight = Math.max(this._originalSkinHeight, typicalTextHeight + this._paddingTop + this._paddingBottom);
+				if(newHeight !== newHeight) //isNaN
 				{
 					newHeight = 0;
 				}
 			}
 
-			var isMultiline : Boolean = this.textEditor is IMultilineTextEditor && IMultilineTextEditor( this.textEditor ).multiline;
-			if( this._typicalText && (this._verticalAlign == VERTICAL_ALIGN_JUSTIFY || isMultiline) )
+			var isMultiline:Boolean = this.textEditor is IMultilineTextEditor && IMultilineTextEditor(this.textEditor).multiline;
+			if(this._typicalText && (this._verticalAlign == VERTICAL_ALIGN_JUSTIFY || isMultiline))
 			{
 				this.textEditor.width = oldTextEditorWidth;
 				this.textEditor.height = oldTextEditorHeight;
 			}
 
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -2095,136 +2125,136 @@ package feathers.controls
 		 * @see #textEditor
 		 * @see #textEditorFactory
 		 */
-		protected function createTextEditor() : void
+		protected function createTextEditor():void
 		{
-			if( this.textEditor )
+			if(this.textEditor)
 			{
-				this.removeChild( DisplayObject( this.textEditor ) , true );
-				this.textEditor.removeEventListener( Event.CHANGE , textEditor_changeHandler );
-				this.textEditor.removeEventListener( FeathersEventType.ENTER , textEditor_enterHandler );
-				this.textEditor.removeEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
-				this.textEditor.removeEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
+				this.removeChild(DisplayObject(this.textEditor), true);
+				this.textEditor.removeEventListener(Event.CHANGE, textEditor_changeHandler);
+				this.textEditor.removeEventListener(FeathersEventType.ENTER, textEditor_enterHandler);
+				this.textEditor.removeEventListener(FeathersEventType.FOCUS_IN, textEditor_focusInHandler);
+				this.textEditor.removeEventListener(FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler);
 				this.textEditor = null;
 			}
 
-			var factory : Function = this._textEditorFactory != null ? this._textEditorFactory : FeathersControl.defaultTextEditorFactory;
-			this.textEditor = ITextEditor( factory() );
-			var textEditorStyleName : String = this._customTextEditorStyleName != null ? this._customTextEditorStyleName : this.textEditorStyleName;
-			this.textEditor.styleNameList.add( textEditorStyleName );
-			if( this.textEditor is IStateObserver )
+			var factory:Function = this._textEditorFactory != null ? this._textEditorFactory : FeathersControl.defaultTextEditorFactory;
+			this.textEditor = ITextEditor(factory());
+			var textEditorStyleName:String = this._customTextEditorStyleName != null ? this._customTextEditorStyleName : this.textEditorStyleName;
+			this.textEditor.styleNameList.add(textEditorStyleName);
+			if(this.textEditor is IStateObserver)
 			{
-				IStateObserver( this.textEditor ).stateContext = this;
+				IStateObserver(this.textEditor).stateContext = this;
 			}
-			this.textEditor.addEventListener( Event.CHANGE , textEditor_changeHandler );
-			this.textEditor.addEventListener( FeathersEventType.ENTER , textEditor_enterHandler );
-			this.textEditor.addEventListener( FeathersEventType.FOCUS_IN , textEditor_focusInHandler );
-			this.textEditor.addEventListener( FeathersEventType.FOCUS_OUT , textEditor_focusOutHandler );
-			this.addChild( DisplayObject( this.textEditor ) );
+			this.textEditor.addEventListener(Event.CHANGE, textEditor_changeHandler);
+			this.textEditor.addEventListener(FeathersEventType.ENTER, textEditor_enterHandler);
+			this.textEditor.addEventListener(FeathersEventType.FOCUS_IN, textEditor_focusInHandler);
+			this.textEditor.addEventListener(FeathersEventType.FOCUS_OUT, textEditor_focusOutHandler);
+			this.addChild(DisplayObject(this.textEditor));
 		}
 
 		/**
 		 * @private
 		 */
-		protected function createPrompt() : void
+		protected function createPrompt():void
 		{
-			if( this.promptTextRenderer )
+			if(this.promptTextRenderer)
 			{
-				this.removeChild( DisplayObject( this.promptTextRenderer ) , true );
+				this.removeChild(DisplayObject(this.promptTextRenderer), true);
 				this.promptTextRenderer = null;
 			}
 
-			if( this._prompt === null )
+			if(this._prompt === null)
 			{
 				return;
 			}
 
-			var factory : Function = this._promptFactory != null ? this._promptFactory : FeathersControl.defaultTextRendererFactory;
-			this.promptTextRenderer = ITextRenderer( factory() );
-			var promptStyleName : String = this._customPromptStyleName != null ? this._customPromptStyleName : this.promptStyleName;
-			this.promptTextRenderer.styleNameList.add( promptStyleName );
-			this.addChild( DisplayObject( this.promptTextRenderer ) );
+			var factory:Function = this._promptFactory != null ? this._promptFactory : FeathersControl.defaultTextRendererFactory;
+			this.promptTextRenderer = ITextRenderer(factory());
+			var promptStyleName:String = this._customPromptStyleName != null ? this._customPromptStyleName : this.promptStyleName;
+			this.promptTextRenderer.styleNameList.add(promptStyleName);
+			this.addChild(DisplayObject(this.promptTextRenderer));
 		}
 
 		/**
 		 * @private
 		 */
-		protected function changeState( state : String ) : void
+		protected function changeState(state:String):void
 		{
-			if( this._currentState == state )
+			if(this._currentState == state)
 			{
 				return;
 			}
-			if( this.stateNames.indexOf( state ) < 0 )
+			if(this.stateNames.indexOf(state) < 0)
 			{
-				throw new ArgumentError( "Invalid state: " + state + "." );
+				throw new ArgumentError("Invalid state: " + state + ".");
 			}
 			this._currentState = state;
-			this.invalidate( INVALIDATION_FLAG_STATE );
+			this.invalidate(INVALIDATION_FLAG_STATE);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function doPendingActions() : void
+		protected function doPendingActions():void
 		{
-			if( this._isWaitingToSetFocus )
+			if(this._isWaitingToSetFocus)
 			{
 				this._isWaitingToSetFocus = false;
-				if( !this._textEditorHasFocus )
+				if(!this._textEditorHasFocus)
 				{
 					this.textEditor.setFocus();
 				}
 			}
-			if( this._pendingSelectionBeginIndex >= 0 )
+			if(this._pendingSelectionBeginIndex >= 0)
 			{
-				var startIndex : int = this._pendingSelectionBeginIndex;
-				var endIndex : int = this._pendingSelectionEndIndex;
+				var startIndex:int = this._pendingSelectionBeginIndex;
+				var endIndex:int = this._pendingSelectionEndIndex;
 				this._pendingSelectionBeginIndex = -1;
 				this._pendingSelectionEndIndex = -1;
-				if( endIndex >= 0 )
+				if(endIndex >= 0)
 				{
-					var textLength : int = this._text.length;
-					if( endIndex > textLength )
+					var textLength:int = this._text.length;
+					if(endIndex > textLength)
 					{
 						endIndex = textLength;
 					}
 				}
-				this.selectRange( startIndex , endIndex );
+				this.selectRange(startIndex, endIndex);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshTextEditorProperties() : void
+		protected function refreshTextEditorProperties():void
 		{
 			this.textEditor.displayAsPassword = this._displayAsPassword;
 			this.textEditor.maxChars = this._maxChars;
 			this.textEditor.restrict = this._restrict;
 			this.textEditor.isEditable = this._isEditable;
 			this.textEditor.isSelectable = this._isSelectable;
-			for( var propertyName : String in this._textEditorProperties )
+			for(var propertyName:String in this._textEditorProperties)
 			{
-				var propertyValue : Object = this._textEditorProperties[ propertyName ];
-				this.textEditor[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._textEditorProperties[propertyName];
+				this.textEditor[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshPromptProperties() : void
+		protected function refreshPromptProperties():void
 		{
-			if( !this.promptTextRenderer )
+			if(!this.promptTextRenderer)
 			{
 				return;
 			}
 			this.promptTextRenderer.text = this._prompt;
-			var displayPrompt : DisplayObject = DisplayObject( this.promptTextRenderer );
-			for( var propertyName : String in this._promptProperties )
+			var displayPrompt:DisplayObject = DisplayObject(this.promptTextRenderer);
+			for(var propertyName:String in this._promptProperties)
 			{
-				var propertyValue : Object = this._promptProperties[ propertyName ];
-				this.promptTextRenderer[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._promptProperties[propertyName];
+				this.promptTextRenderer[propertyName] = propertyValue;
 			}
 		}
 
@@ -2233,34 +2263,35 @@ package feathers.controls
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function refreshBackgroundSkin() : void
+		protected function refreshBackgroundSkin():void
 		{
-			var oldSkin : DisplayObject = this.currentBackground;
-			if( this._stateToSkinFunction != null )
+			var oldSkin:DisplayObject = this.currentBackground;
+			if(this._stateToSkinFunction != null)
 			{
-				this.currentBackground = DisplayObject( this._stateToSkinFunction( this , this._currentState , oldSkin ) );
+				this.currentBackground = DisplayObject(this._stateToSkinFunction(this, this._currentState, oldSkin));
 			}
 			else
 			{
-				this.currentBackground = DisplayObject( this._skinSelector.updateValue( this , this._currentState , this.currentBackground ) );
+				this.currentBackground = DisplayObject(this._skinSelector.updateValue(this, this._currentState, this.currentBackground));
 			}
-			if( this.currentBackground != oldSkin )
+			if(this.currentBackground != oldSkin)
 			{
-				if( oldSkin )
+				if(oldSkin)
 				{
-					this.removeChild( oldSkin , false );
+					this.removeChild(oldSkin, false);
 				}
-				if( this.currentBackground )
+				if(this.currentBackground)
 				{
-					this.addChildAt( this.currentBackground , 0 );
+					this.addChildAt(this.currentBackground, 0);
 				}
 			}
-			if( this.currentBackground && (this._originalSkinWidth !== this._originalSkinWidth || //isNaN
-					this._originalSkinHeight !== this._originalSkinHeight) ) //isNaN
+			if(this.currentBackground &&
+				(this._originalSkinWidth !== this._originalSkinWidth || //isNaN
+					this._originalSkinHeight !== this._originalSkinHeight)) //isNaN
 			{
-				if( this.currentBackground is IValidating )
+				if(this.currentBackground is IValidating)
 				{
-					IValidating( this.currentBackground ).validate();
+					IValidating(this.currentBackground).validate();
 				}
 				this._originalSkinWidth = this.currentBackground.width;
 				this._originalSkinHeight = this.currentBackground.height;
@@ -2272,32 +2303,32 @@ package feathers.controls
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function refreshIcon() : void
+		protected function refreshIcon():void
 		{
-			var oldIcon : DisplayObject = this.currentIcon;
-			if( this._stateToIconFunction != null )
+			var oldIcon:DisplayObject = this.currentIcon;
+			if(this._stateToIconFunction != null)
 			{
-				this.currentIcon = DisplayObject( this._stateToIconFunction( this , this._currentState , oldIcon ) );
+				this.currentIcon = DisplayObject(this._stateToIconFunction(this, this._currentState, oldIcon));
 			}
 			else
 			{
-				this.currentIcon = DisplayObject( this._iconSelector.updateValue( this , this._currentState , this.currentIcon ) );
+				this.currentIcon = DisplayObject(this._iconSelector.updateValue(this, this._currentState, this.currentIcon));
 			}
-			if( this.currentIcon is IFeathersControl )
+			if(this.currentIcon is IFeathersControl)
 			{
-				IFeathersControl( this.currentIcon ).isEnabled = this._isEnabled;
+				IFeathersControl(this.currentIcon).isEnabled = this._isEnabled;
 			}
-			if( this.currentIcon != oldIcon )
+			if(this.currentIcon != oldIcon)
 			{
-				if( oldIcon )
+				if(oldIcon)
 				{
-					this.removeChild( oldIcon , false );
+					this.removeChild(oldIcon, false);
 				}
-				if( this.currentIcon )
+				if(this.currentIcon)
 				{
 					//we want the icon to appear below the text editor
-					var index : int = this.getChildIndex( DisplayObject( this.textEditor ) );
-					this.addChildAt( this.currentIcon , index );
+					var index:int = this.getChildIndex(DisplayObject(this.textEditor));
+					this.addChildAt(this.currentIcon, index);
 				}
 			}
 		}
@@ -2307,9 +2338,9 @@ package feathers.controls
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected function layoutChildren() : void
+		protected function layoutChildren():void
 		{
-			if( this.currentBackground )
+			if(this.currentBackground)
 			{
 				this.currentBackground.visible = true;
 				this.currentBackground.touchable = true;
@@ -2317,16 +2348,16 @@ package feathers.controls
 				this.currentBackground.height = this.actualHeight;
 			}
 
-			if( this.currentIcon is IValidating )
+			if(this.currentIcon is IValidating)
 			{
-				IValidating( this.currentIcon ).validate();
+				IValidating(this.currentIcon).validate();
 			}
 
-			if( this.currentIcon )
+			if(this.currentIcon)
 			{
 				this.currentIcon.x = this._paddingLeft;
 				this.textEditor.x = this.currentIcon.x + this.currentIcon.width + this._gap;
-				if( this.promptTextRenderer )
+				if(this.promptTextRenderer)
 				{
 					this.promptTextRenderer.x = this.currentIcon.x + this.currentIcon.width + this._gap;
 				}
@@ -2334,19 +2365,19 @@ package feathers.controls
 			else
 			{
 				this.textEditor.x = this._paddingLeft;
-				if( this.promptTextRenderer )
+				if(this.promptTextRenderer)
 				{
 					this.promptTextRenderer.x = this._paddingLeft;
 				}
 			}
 			this.textEditor.width = this.actualWidth - this._paddingRight - this.textEditor.x;
-			if( this.promptTextRenderer )
+			if(this.promptTextRenderer)
 			{
 				this.promptTextRenderer.width = this.actualWidth - this._paddingRight - this.promptTextRenderer.x;
 			}
 
-			var isMultiline : Boolean = this.textEditor is IMultilineTextEditor && IMultilineTextEditor( this.textEditor ).multiline;
-			if( isMultiline || this._verticalAlign == VERTICAL_ALIGN_JUSTIFY )
+			var isMultiline:Boolean = this.textEditor is IMultilineTextEditor && IMultilineTextEditor(this.textEditor).multiline;
+			if(isMultiline || this._verticalAlign == VERTICAL_ALIGN_JUSTIFY)
 			{
 				//multiline is treated the same as justify
 				this.textEditor.height = this.actualHeight - this._paddingTop - this._paddingBottom;
@@ -2357,53 +2388,53 @@ package feathers.controls
 				this.textEditor.height = NaN;
 			}
 			this.textEditor.validate();
-			if( this.promptTextRenderer )
+			if(this.promptTextRenderer)
 			{
 				this.promptTextRenderer.validate();
 			}
 
-			var biggerHeight : Number = this.textEditor.height;
-			var biggerBaseline : Number = this.textEditor.baseline;
-			if( this.promptTextRenderer )
+			var biggerHeight:Number = this.textEditor.height;
+			var biggerBaseline:Number = this.textEditor.baseline;
+			if(this.promptTextRenderer)
 			{
-				var promptBaseline : Number = this.promptTextRenderer.baseline;
-				var promptHeight : Number = this.promptTextRenderer.height;
-				if( promptBaseline > biggerBaseline )
+				var promptBaseline:Number = this.promptTextRenderer.baseline;
+				var promptHeight:Number = this.promptTextRenderer.height;
+				if(promptBaseline > biggerBaseline)
 				{
 					biggerBaseline = promptBaseline;
 				}
-				if( promptHeight > biggerHeight )
+				if(promptHeight > biggerHeight)
 				{
 					biggerHeight = promptHeight;
 				}
 			}
 
-			if( isMultiline )
+			if(isMultiline)
 			{
 				this.textEditor.y = this._paddingTop + biggerBaseline - this.textEditor.baseline;
-				if( this.promptTextRenderer )
+				if(this.promptTextRenderer)
 				{
 					this.promptTextRenderer.y = this._paddingTop + biggerBaseline - promptBaseline;
 					this.promptTextRenderer.height = this.actualHeight - this.promptTextRenderer.y - this._paddingBottom;
 				}
-				if( this.currentIcon )
+				if(this.currentIcon)
 				{
 					this.currentIcon.y = this._paddingTop;
 				}
 			}
 			else
 			{
-				switch( this._verticalAlign )
+				switch(this._verticalAlign)
 				{
 					case VERTICAL_ALIGN_JUSTIFY:
 					{
 						this.textEditor.y = this._paddingTop + biggerBaseline - this.textEditor.baseline;
-						if( this.promptTextRenderer )
+						if(this.promptTextRenderer)
 						{
 							this.promptTextRenderer.y = this._paddingTop + biggerBaseline - promptBaseline;
 							this.promptTextRenderer.height = this.actualHeight - this.promptTextRenderer.y - this._paddingBottom;
 						}
-						if( this.currentIcon )
+						if(this.currentIcon)
 						{
 							this.currentIcon.y = this._paddingTop;
 						}
@@ -2412,11 +2443,11 @@ package feathers.controls
 					case VERTICAL_ALIGN_TOP:
 					{
 						this.textEditor.y = this._paddingTop + biggerBaseline - this.textEditor.baseline;
-						if( this.promptTextRenderer )
+						if(this.promptTextRenderer)
 						{
 							this.promptTextRenderer.y = this._paddingTop + biggerBaseline - promptBaseline;
 						}
-						if( this.currentIcon )
+						if(this.currentIcon)
 						{
 							this.currentIcon.y = this._paddingTop;
 						}
@@ -2425,11 +2456,11 @@ package feathers.controls
 					case VERTICAL_ALIGN_BOTTOM:
 					{
 						this.textEditor.y = this.actualHeight - this._paddingBottom - biggerHeight + biggerBaseline - this.textEditor.baseline;
-						if( this.promptTextRenderer )
+						if(this.promptTextRenderer)
 						{
 							this.promptTextRenderer.y = this.actualHeight - this._paddingBottom - biggerHeight + biggerBaseline - promptBaseline;
 						}
-						if( this.currentIcon )
+						if(this.currentIcon)
 						{
 							this.currentIcon.y = this.actualHeight - this._paddingBottom - this.currentIcon.height;
 						}
@@ -2438,11 +2469,11 @@ package feathers.controls
 					default: //middle
 					{
 						this.textEditor.y = biggerBaseline - this.textEditor.baseline + this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2;
-						if( this.promptTextRenderer )
+						if(this.promptTextRenderer)
 						{
 							this.promptTextRenderer.y = biggerBaseline - promptBaseline + this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2;
 						}
-						if( this.currentIcon )
+						if(this.currentIcon)
 						{
 							this.currentIcon.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2;
 						}
@@ -2454,43 +2485,43 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function setFocusOnTextEditorWithTouch( touch : Touch ) : void
+		protected function setFocusOnTextEditorWithTouch(touch:Touch):void
 		{
-			if( !this.isFocusEnabled )
+			if(!this.isFocusEnabled)
 			{
 				return;
 			}
-			touch.getLocation( this.stage , HELPER_POINT );
-			var isInBounds : Boolean = this.contains( this.stage.hitTest( HELPER_POINT , true ) );
-			if( isInBounds && !this._textEditorHasFocus )
+			touch.getLocation(this.stage, HELPER_POINT);
+			var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+			if(isInBounds && !this._textEditorHasFocus)
 			{
-				this.textEditor.globalToLocal( HELPER_POINT , HELPER_POINT );
+				this.textEditor.globalToLocal(HELPER_POINT, HELPER_POINT);
 				this._isWaitingToSetFocus = false;
-				this.textEditor.setFocus( HELPER_POINT );
+				this.textEditor.setFocus(HELPER_POINT);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function childProperties_onChange( proxy : PropertyProxy , name : Object ) : void
+		protected function childProperties_onChange(proxy:PropertyProxy, name:Object):void
 		{
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textInput_removedFromStageHandler( event : Event ) : void
+		protected function textInput_removedFromStageHandler(event:Event):void
 		{
-			if( !this._focusManager && this._textEditorHasFocus )
+			if(!this._focusManager && this._textEditorHasFocus)
 			{
 				this.clearFocus();
 			}
 			this._textEditorHasFocus = false;
 			this._isWaitingToSetFocus = false;
 			this._touchPointID = -1;
-			if( Mouse.supportsNativeCursor && this._oldMouseCursor )
+			if(Mouse.supportsNativeCursor && this._oldMouseCursor)
 			{
 				Mouse.cursor = this._oldMouseCursor;
 				this._oldMouseCursor = null;
@@ -2500,43 +2531,43 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textInput_touchHandler( event : TouchEvent ) : void
+		protected function textInput_touchHandler(event:TouchEvent):void
 		{
-			if( !this._isEnabled )
+			if(!this._isEnabled)
 			{
 				this._touchPointID = -1;
 				return;
 			}
 
-			if( this._touchPointID >= 0 )
+			if(this._touchPointID >= 0)
 			{
-				var touch : Touch = event.getTouch( this , TouchPhase.ENDED , this._touchPointID );
-				if( !touch )
+				var touch:Touch = event.getTouch(this, TouchPhase.ENDED, this._touchPointID);
+				if(!touch)
 				{
 					return;
 				}
 				this._touchPointID = -1;
-				if( this.textEditor.setTouchFocusOnEndedPhase )
+				if(this.textEditor.setTouchFocusOnEndedPhase)
 				{
-					this.setFocusOnTextEditorWithTouch( touch );
+					this.setFocusOnTextEditorWithTouch(touch);
 				}
 			}
 			else
 			{
-				touch = event.getTouch( this , TouchPhase.BEGAN );
-				if( touch )
+				touch = event.getTouch(this, TouchPhase.BEGAN);
+				if(touch)
 				{
 					this._touchPointID = touch.id;
-					if( !this.textEditor.setTouchFocusOnEndedPhase )
+					if(!this.textEditor.setTouchFocusOnEndedPhase)
 					{
-						this.setFocusOnTextEditorWithTouch( touch );
+						this.setFocusOnTextEditorWithTouch(touch);
 					}
 					return;
 				}
-				touch = event.getTouch( this , TouchPhase.HOVER );
-				if( touch )
+				touch = event.getTouch(this, TouchPhase.HOVER);
+				if(touch)
 				{
-					if( Mouse.supportsNativeCursor && !this._oldMouseCursor )
+					if(Mouse.supportsNativeCursor && !this._oldMouseCursor)
 					{
 						this._oldMouseCursor = Mouse.cursor;
 						Mouse.cursor = MouseCursor.IBEAM;
@@ -2545,7 +2576,7 @@ package feathers.controls
 				}
 
 				//end hover
-				if( Mouse.supportsNativeCursor && this._oldMouseCursor )
+				if(Mouse.supportsNativeCursor && this._oldMouseCursor)
 				{
 					Mouse.cursor = this._oldMouseCursor;
 					this._oldMouseCursor = null;
@@ -2556,9 +2587,35 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textEditor_changeHandler( event : Event ) : void
+		override protected function focusInHandler(event:Event):void
 		{
-			if( this._ignoreTextChanges )
+			if(!this._focusManager)
+			{
+				return;
+			}
+			super.focusInHandler(event);
+			this.setFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function focusOutHandler(event:Event):void
+		{
+			if(!this._focusManager)
+			{
+				return;
+			}
+			super.focusOutHandler(event);
+			this.textEditor.clearFocus();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function textEditor_changeHandler(event:Event):void
+		{
+			if(this._ignoreTextChanges)
 			{
 				return;
 			}
@@ -2568,24 +2625,24 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function textEditor_enterHandler( event : Event ) : void
+		protected function textEditor_enterHandler(event:Event):void
 		{
-			this.dispatchEventWith( FeathersEventType.ENTER );
+			this.dispatchEventWith(FeathersEventType.ENTER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textEditor_focusInHandler( event : Event ) : void
+		protected function textEditor_focusInHandler(event:Event):void
 		{
-			if( !this.visible )
+			if(!this.visible)
 			{
 				this.textEditor.clearFocus();
 				return;
 			}
 			this._textEditorHasFocus = true;
-			this.changeState( STATE_FOCUSED );
-			if( this._focusManager && this.isFocusEnabled && this._focusManager.focus !== this )
+			this.changeState(STATE_FOCUSED);
+			if(this._focusManager && this.isFocusEnabled && this._focusManager.focus !== this)
 			{
 				//if setFocus() was called manually, we need to notify the focus
 				//manager (unless isFocusEnabled is false).
@@ -2593,55 +2650,29 @@ package feathers.controls
 				//simply return without doing anything.
 				this._focusManager.focus = this;
 			}
-			else if( !this._focusManager )
+			else if(!this._focusManager)
 			{
-				this.dispatchEventWith( FeathersEventType.FOCUS_IN );
+				this.dispatchEventWith(FeathersEventType.FOCUS_IN);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function textEditor_focusOutHandler( event : Event ) : void
+		protected function textEditor_focusOutHandler(event:Event):void
 		{
 			this._textEditorHasFocus = false;
-			this.changeState( this._isEnabled ? STATE_ENABLED : STATE_DISABLED );
-			if( this._focusManager && this._focusManager.focus === this )
+			this.changeState(this._isEnabled ? STATE_ENABLED : STATE_DISABLED);
+			if(this._focusManager && this._focusManager.focus === this)
 			{
 				//if clearFocus() was called manually, we need to notify the
 				//focus manager if it still thinks we have focus.
 				this._focusManager.focus = null;
 			}
-			else if( !this._focusManager )
+			else if(!this._focusManager)
 			{
-				this.dispatchEventWith( FeathersEventType.FOCUS_OUT );
+				this.dispatchEventWith(FeathersEventType.FOCUS_OUT);
 			}
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function focusInHandler( event : Event ) : void
-		{
-			if( !this._focusManager )
-			{
-				return;
-			}
-			super.focusInHandler( event );
-			this.setFocus();
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function focusOutHandler( event : Event ) : void
-		{
-			if( !this._focusManager )
-			{
-				return;
-			}
-			super.focusOutHandler( event );
-			this.textEditor.clearFocus();
 		}
 	}
 }

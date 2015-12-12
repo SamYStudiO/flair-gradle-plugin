@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import flash.errors.IllegalOperationError;
@@ -32,28 +32,37 @@ package feathers.core
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Controls the selection of two or more IToggle instances where only one
 	 * may be selected at a time.
 	 * 
 	 * @see IToggle
-	 */ public class ToggleGroup extends EventDispatcher
+	 */
+	public class ToggleGroup extends EventDispatcher
 	{
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _items : Vector.<IToggle> = new Vector.<IToggle>;
-		/**
-		 * @private
-		 */
-		protected var _ignoreChanges : Boolean = false;
+		public function ToggleGroup()
+		{
+		}
 
 		/**
 		 * @private
 		 */
-		protected var _isSelectionRequired : Boolean = true;
+		protected var _items:Vector.<IToggle> = new Vector.<IToggle>;
+
+		/**
+		 * @private
+		 */
+		protected var _ignoreChanges:Boolean = false;
+
+		/**
+		 * @private
+		 */
+		protected var _isSelectionRequired:Boolean = true;
 
 		/**
 		 * Determines if the user can deselect the currently selected item or
@@ -73,7 +82,7 @@ package feathers.core
 		 *
 		 * @default true
 		 */
-		public function get isSelectionRequired() : Boolean
+		public function get isSelectionRequired():Boolean
 		{
 			return this._isSelectionRequired;
 		}
@@ -81,19 +90,19 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		public function set isSelectionRequired( value : Boolean ) : void
+		public function set isSelectionRequired(value:Boolean):void
 		{
-			if( this._isSelectionRequired == value )
+			if(this._isSelectionRequired == value)
 			{
 				return;
 			}
 			this._isSelectionRequired = value;
-			if( this._isSelectionRequired && this._selectedIndex < 0 && this._items.length > 0 )
+			if(this._isSelectionRequired && this._selectedIndex < 0 && this._items.length > 0)
 			{
 				this.selectedIndex = 0;
 			}
 		}
-
+		
 		/**
 		 * The currently selected toggle.
 		 *
@@ -104,27 +113,27 @@ package feathers.core
 		 *
 		 * @default null
 		 */
-		public function get selectedItem() : IToggle
+		public function get selectedItem():IToggle
 		{
-			if( this._selectedIndex < 0 )
+			if(this._selectedIndex < 0)
 			{
 				return null;
 			}
-			return this._items[ this._selectedIndex ];
+			return this._items[this._selectedIndex];
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set selectedItem( value : IToggle ) : void
+		public function set selectedItem(value:IToggle):void
 		{
-			this.selectedIndex = this._items.indexOf( value );
+			this.selectedIndex = this._items.indexOf(value);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _selectedIndex : int = -1;
+		protected var _selectedIndex:int = -1;
 		
 		/**
 		 * The index of the currently selected toggle.
@@ -136,49 +145,42 @@ package feathers.core
 		 *
 		 * @default -1
 		 */
-		public function get selectedIndex() : int
+		public function get selectedIndex():int
 		{
 			return this._selectedIndex;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set selectedIndex( value : int ) : void
+		public function set selectedIndex(value:int):void
 		{
-			var itemCount : int = this._items.length;
-			if( value < -1 || value >= itemCount )
+			var itemCount:int = this._items.length;
+			if(value < -1 || value >= itemCount)
 			{
-				throw new RangeError( "Index " + value + " is out of range " + itemCount + " for ToggleGroup." );
+				throw new RangeError("Index " + value + " is out of range " + itemCount + " for ToggleGroup.");
 			}
-			var hasChanged : Boolean = this._selectedIndex != value;
+			var hasChanged:Boolean = this._selectedIndex != value;
 			this._selectedIndex = value;
 
 			//refresh all the items
 			this._ignoreChanges = true;
-			for( var i : int = 0; i < itemCount; i++ )
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				var item : IToggle = this._items[ i ];
+				var item:IToggle = this._items[i];
 				item.isSelected = i == value;
 			}
 			this._ignoreChanges = false;
-			if( hasChanged )
+			if(hasChanged)
 			{
 				//only dispatch if there's been a change. we didn't return
 				//early because this setter could be called if an item is
 				//unselected. if selection is required, we need to reselect the
 				//item (happens below in the item's onChange listener).
-				this.dispatchEventWith( Event.CHANGE );
+				this.dispatchEventWith(Event.CHANGE);
 			}
 		}
-
-		/**
-		 * Constructor.
-		 */
-		public function ToggleGroup()
-		{
-		}
-
+		
 		/**
 		 * Adds a toggle to the group. If it is the first item added to the
 		 * group, and <code>isSelectionRequired</code> is <code>true</code>, it
@@ -189,20 +191,20 @@ package feathers.core
 		 * <listing version="3.0">
 		 * group.addItem( radio );</listing>
 		 */
-		public function addItem( item : IToggle ) : void
+		public function addItem(item:IToggle):void
 		{
-			if( !item )
+			if(!item)
 			{
-				throw new ArgumentError( "IToggle passed to ToggleGroup addItem() must not be null." );
+				throw new ArgumentError("IToggle passed to ToggleGroup addItem() must not be null.");
 			}
-
-			var index : int = this._items.indexOf( item );
-			if( index >= 0 )
+			
+			var index:int = this._items.indexOf(item);
+			if(index >= 0)
 			{
-				throw new IllegalOperationError( "Cannot add an item to a ToggleGroup more than once." );
+				throw new IllegalOperationError("Cannot add an item to a ToggleGroup more than once.");
 			}
-			this._items.push( item );
-			if( this._selectedIndex < 0 && this._isSelectionRequired )
+			this._items.push(item);
+			if(this._selectedIndex < 0 && this._isSelectionRequired)
 			{
 				this.selectedItem = item;
 			}
@@ -210,14 +212,14 @@ package feathers.core
 			{
 				item.isSelected = false;
 			}
-			item.addEventListener( Event.CHANGE , item_changeHandler );
+			item.addEventListener(Event.CHANGE, item_changeHandler);
 
-			if( item is IGroupedToggle )
+			if(item is IGroupedToggle)
 			{
-				IGroupedToggle( item ).toggleGroup = this;
+				IGroupedToggle(item).toggleGroup = this;
 			}
 		}
-
+		
 		/**
 		 * Removes a toggle from the group. If the item being removed is
 		 * selected and <code>isSelectionRequired</code> is <code>true</code>,
@@ -229,30 +231,30 @@ package feathers.core
 		 * <listing version="3.0">
 		 * group.removeItem( radio );</listing>
 		 */
-		public function removeItem( item : IToggle ) : void
+		public function removeItem(item:IToggle):void
 		{
-			var index : int = this._items.indexOf( item );
-			if( index < 0 )
+			var index:int = this._items.indexOf(item);
+			if(index < 0)
 			{
 				return;
 			}
-			this._items.splice( index , 1 );
-			item.removeEventListener( Event.CHANGE , item_changeHandler );
-			if( item is IGroupedToggle )
+			this._items.splice(index, 1);
+			item.removeEventListener(Event.CHANGE, item_changeHandler);
+			if(item is IGroupedToggle)
 			{
-				IGroupedToggle( item ).toggleGroup = null;
+				IGroupedToggle(item).toggleGroup = null;
 			}
-			if( this._selectedIndex > index )
+			if(this._selectedIndex > index)
 			{
 				//the same item is selected, but its index has changed.
 				this.selectedIndex -= 1;
 			}
-			else if( this._selectedIndex == index )
+			else if(this._selectedIndex == index)
 			{
-				if( this._isSelectionRequired )
+				if(this._isSelectionRequired)
 				{
-					var maxSelectedIndex : int = this._items.length - 1;
-					if( this._selectedIndex > maxSelectedIndex )
+					var maxSelectedIndex:int = this._items.length - 1;
+					if(this._selectedIndex > maxSelectedIndex)
 					{
 						//we want to keep the same index, if possible, but if
 						//we can't because it is too high, we should select the
@@ -264,7 +266,7 @@ package feathers.core
 						//we need to manually dispatch the change event because
 						//the selected index hasn't changed, but the selected
 						//item has changed.
-						this.dispatchEventWith( Event.CHANGE );
+						this.dispatchEventWith(Event.CHANGE);
 					}
 				}
 				else
@@ -284,16 +286,16 @@ package feathers.core
 		 * <listing version="3.0">
 		 * group.removeAllItems();</listing>
 		 */
-		public function removeAllItems() : void
+		public function removeAllItems():void
 		{
-			var itemCount : int = this._items.length;
-			for( var i : int = 0; i < itemCount; i++ )
+			var itemCount:int = this._items.length;
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				var item : IToggle = this._items.shift();
-				item.removeEventListener( Event.CHANGE , item_changeHandler );
-				if( item is IGroupedToggle )
+				var item:IToggle = this._items.shift();
+				item.removeEventListener(Event.CHANGE, item_changeHandler);
+				if(item is IGroupedToggle)
 				{
-					IGroupedToggle( item ).toggleGroup = null;
+					IGroupedToggle(item).toggleGroup = null;
 				}
 			}
 			this.selectedIndex = -1;
@@ -310,9 +312,9 @@ package feathers.core
 		 *     // do something
 		 * }</listing>
 		 */
-		public function hasItem( item : IToggle ) : Boolean
+		public function hasItem(item:IToggle):Boolean
 		{
-			var index : int = this._items.indexOf( item );
+			var index:int = this._items.indexOf(item);
 			return index >= 0;
 		}
 
@@ -325,9 +327,9 @@ package feathers.core
 		 * <listing version="3.0">
 		 * var index:int = group.getItemIndex( radio );</listing>
 		 */
-		public function getItemIndex( item : IToggle ) : int
+		public function getItemIndex(item:IToggle):int
 		{
-			return this._items.indexOf( item );
+			return this._items.indexOf(item);
 		}
 
 		/**
@@ -339,59 +341,59 @@ package feathers.core
 		 * <listing version="3.0">
 		 * group.setItemIndex( radio, 2 );</listing>
 		 */
-		public function setItemIndex( item : IToggle , index : int ) : void
+		public function setItemIndex(item:IToggle, index:int):void
 		{
-			var oldIndex : int = this._items.indexOf( item );
-			if( oldIndex < 0 )
+			var oldIndex:int = this._items.indexOf(item);
+			if(oldIndex < 0)
 			{
-				throw new ArgumentError( "Attempting to set index of an item that has not been added to this ToggleGroup." );
+				throw new ArgumentError("Attempting to set index of an item that has not been added to this ToggleGroup.");
 			}
-			if( oldIndex == index )
+			if(oldIndex == index)
 			{
 				//no change needed
 				return;
 			}
-			this._items.splice( oldIndex , 1 );
-			this._items.splice( index , 0 , item );
-			if( this._selectedIndex >= 0 )
+			this._items.splice(oldIndex, 1);
+			this._items.splice(index, 0, item);
+			if(this._selectedIndex >= 0)
 			{
-				if( this._selectedIndex == oldIndex )
+				if(this._selectedIndex == oldIndex)
 				{
 					this.selectedIndex = index;
 				}
-				else if( oldIndex < this._selectedIndex && index > this._selectedIndex )
+				else if(oldIndex < this._selectedIndex && index > this._selectedIndex)
 				{
 					this.selectedIndex--;
 				}
-				else if( oldIndex > this._selectedIndex && index < this._selectedIndex )
+				else if(oldIndex > this._selectedIndex && index < this._selectedIndex)
 				{
 					this.selectedIndex++;
 				}
 			}
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function item_changeHandler( event : Event ) : void
+		protected function item_changeHandler(event:Event):void
 		{
-			if( this._ignoreChanges )
+			if(this._ignoreChanges)
 			{
 				return;
 			}
 
-			var item : IToggle = IToggle( event.currentTarget );
-			var index : int = this._items.indexOf( item );
-			if( item.isSelected || (this._isSelectionRequired && this._selectedIndex == index) )
+			var item:IToggle = IToggle(event.currentTarget);
+			var index:int = this._items.indexOf(item);
+			if(item.isSelected || (this._isSelectionRequired && this._selectedIndex == index))
 			{
 				//don't let it deselect the item
 				this.selectedIndex = index;
 			}
-			else if( !item.isSelected )
+			else if(!item.isSelected)
 			{
 				this.selectedIndex = -1;
 			}
 		}
-
+		
 	}
 }

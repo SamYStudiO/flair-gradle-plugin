@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.skins.IStyleProvider;
@@ -37,7 +37,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_START
 	 */
-	[Event(name="transitionInStart" , type="starling.events.Event")]
+	[Event(name="transitionInStart",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the transition animation finishes as the screen is shown
@@ -60,7 +60,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_IN_COMPLETE
 	 */
-	[Event(name="transitionInComplete" , type="starling.events.Event")]
+	[Event(name="transitionInComplete",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the transition animation begins as a different screen is
@@ -83,7 +83,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_START
 	 */
-	[Event(name="transitionOutStart" , type="starling.events.Event")]
+	[Event(name="transitionOutStart",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the transition animation finishes as a different screen
@@ -106,7 +106,7 @@ package feathers.controls
 	 *
 	 * @eventType feathers.events.FeathersEventType.TRANSITION_OUT_COMPLETE
 	 */
-	[Event(name="transitionOutComplete" , type="starling.events.Event")]
+	[Event(name="transitionOutComplete",type="starling.events.Event")]
 
 	/**
 	 * A basic screen to be displayed by <code>ScreenNavigator</code>. Provides
@@ -140,8 +140,23 @@ package feathers.controls
 	 * @see ../../../help/screen.html How to use the Feathers Screen component
 	 * @see feathers.controls.StackScreenNavigator
 	 * @see feathers.controls.ScreenNavigator
-	 */ public class Screen extends LayoutGroup implements IScreen
+	 */
+	public class Screen extends LayoutGroup implements IScreen
 	{
+		/**
+		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_STAGE
+		 *
+		 * @see feathers.controls.LayoutGroup#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
+
+		/**
+		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_CONTENT
+		 *
+		 * @see feathers.controls.LayoutGroup#autoSizeMode
+		 */
+		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>Screen</code>
 		 * components.
@@ -149,7 +164,67 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
+
+		/**
+		 * Constructor.
+		 */
+		public function Screen()
+		{
+			this.addEventListener(Event.ADDED_TO_STAGE, screen_addedToStageHandler);
+			super();
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return Screen.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _screenID:String;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get screenID():String
+		{
+			return this._screenID;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set screenID(value:String):void
+		{
+			this._screenID = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _owner:Object;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get owner():Object
+		{
+			return this._owner;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set owner(value:Object):void
+		{
+			this._owner = value;
+		}
+		
 		/**
 		 * Optional callback for the back hardware key. Automatically handles
 		 * keyboard events to cancel the default behavior.
@@ -171,7 +246,8 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		protected var backButtonHandler : Function;
+		protected var backButtonHandler:Function;
+		
 		/**
 		 * Optional callback for the menu hardware key. Automatically handles
 		 * keyboard events to cancel the default behavior.
@@ -193,7 +269,8 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		protected var menuButtonHandler : Function;
+		protected var menuButtonHandler:Function;
+		
 		/**
 		 * Optional callback for the search hardware key. Automatically handles
 		 * keyboard events to cancel the default behavior.
@@ -215,131 +292,63 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		protected var searchButtonHandler : Function;
-		/**
-		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_STAGE
-		 *
-		 * @see feathers.controls.LayoutGroup#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_STAGE : String = "stage";
-		/**
-		 * @copy feathers.controls.LayoutGroup#AUTO_SIZE_MODE_CONTENT
-		 *
-		 * @see feathers.controls.LayoutGroup#autoSizeMode
-		 */
-		public static const AUTO_SIZE_MODE_CONTENT : String = "content";
-
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return Screen.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _screenID : String;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get screenID() : String
-		{
-			return this._screenID;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set screenID( value : String ) : void
-		{
-			this._screenID = value;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _owner : Object;
+		protected var searchButtonHandler:Function;
 		
 		/**
-		 * @inheritDoc
-		 */
-		public function get owner() : Object
-		{
-			return this._owner;
-		}
-
-		/**
 		 * @private
 		 */
-		public function set owner( value : Object ) : void
+		protected function screen_addedToStageHandler(event:Event):void
 		{
-			this._owner = value;
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function Screen()
-		{
-			this.addEventListener( Event.ADDED_TO_STAGE , screen_addedToStageHandler );
-			super();
-		}
-
-		/**
-		 * @private
-		 */
-		protected function screen_addedToStageHandler( event : Event ) : void
-		{
-			if( event.target != this )
+			if(event.target != this)
 			{
 				return;
 			}
-			this.addEventListener( Event.REMOVED_FROM_STAGE , screen_removedFromStageHandler );
+			this.addEventListener(Event.REMOVED_FROM_STAGE, screen_removedFromStageHandler);
 			//using priority here is a hack so that objects higher up in the
 			//display list have a chance to cancel the event first.
-			var priority : int = -getDisplayObjectDepthFromStage( this );
-			Starling.current.nativeStage.addEventListener( KeyboardEvent.KEY_DOWN , screen_nativeStage_keyDownHandler , false , priority , true );
+			var priority:int = -getDisplayObjectDepthFromStage(this);
+			Starling.current.nativeStage.addEventListener(KeyboardEvent.KEY_DOWN, screen_nativeStage_keyDownHandler, false, priority, true);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function screen_removedFromStageHandler( event : Event ) : void
+		protected function screen_removedFromStageHandler(event:Event):void
 		{
-			if( event.target != this )
+			if(event.target != this)
 			{
 				return;
 			}
-			this.removeEventListener( Event.REMOVED_FROM_STAGE , screen_removedFromStageHandler );
-			Starling.current.nativeStage.removeEventListener( KeyboardEvent.KEY_DOWN , screen_nativeStage_keyDownHandler );
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, screen_removedFromStageHandler);
+			Starling.current.nativeStage.removeEventListener(KeyboardEvent.KEY_DOWN, screen_nativeStage_keyDownHandler);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function screen_nativeStage_keyDownHandler( event : KeyboardEvent ) : void
+		protected function screen_nativeStage_keyDownHandler(event:KeyboardEvent):void
 		{
-			if( event.isDefaultPrevented() )
+			if(event.isDefaultPrevented())
 			{
 				//someone else already handled this one
 				return;
 			}
-			if( this.backButtonHandler != null && event.keyCode == Keyboard.BACK )
+			if(this.backButtonHandler != null &&
+				event.keyCode == Keyboard.BACK)
 			{
 				event.preventDefault();
 				this.backButtonHandler();
 			}
-
-			if( this.menuButtonHandler != null && event.keyCode == Keyboard.MENU )
+			
+			if(this.menuButtonHandler != null &&
+				event.keyCode == Keyboard.MENU)
 			{
 				event.preventDefault();
 				this.menuButtonHandler();
 			}
-
-			if( this.searchButtonHandler != null && event.keyCode == Keyboard.SEARCH )
+			
+			if(this.searchButtonHandler != null &&
+				event.keyCode == Keyboard.SEARCH)
 			{
 				event.preventDefault();
 				this.searchButtonHandler();

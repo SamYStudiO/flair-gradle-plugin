@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import feathers.core.IFeathersControl;
@@ -62,14 +62,17 @@ package feathers.skins
 	public class StyleNameFunctionStyleProvider implements IStyleProvider
 	{
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _styleNameMap : Object;
+		public function StyleNameFunctionStyleProvider(styleFunction:Function = null)
+		{
+			this._defaultStyleFunction = styleFunction;
+		}
 
 		/**
 		 * @private
 		 */
-		protected var _defaultStyleFunction : Function;
+		protected var _defaultStyleFunction:Function;
 
 		/**
 		 * The target Feathers UI component is passed to this function when
@@ -82,7 +85,7 @@ package feathers.skins
 		 *
 		 * @see #setFunctionForStyleName()
 		 */
-		public function get defaultStyleFunction() : Function
+		public function get defaultStyleFunction():Function
 		{
 			return this._defaultStyleFunction;
 		}
@@ -90,18 +93,15 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		public function set defaultStyleFunction( value : Function ) : void
+		public function set defaultStyleFunction(value:Function):void
 		{
 			this._defaultStyleFunction = value;
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function StyleNameFunctionStyleProvider( styleFunction : Function = null )
-		{
-			this._defaultStyleFunction = styleFunction;
-		}
+		protected var _styleNameMap:Object;
 
 		/**
 		 * The target Feathers UI component is passed to this function when
@@ -113,43 +113,43 @@ package feathers.skins
 		 *
 		 * @see #defaultStyleFunction
 		 */
-		public function setFunctionForStyleName( styleName : String , styleFunction : Function ) : void
+		public function setFunctionForStyleName(styleName:String, styleFunction:Function):void
 		{
-			if( !this._styleNameMap )
+			if(!this._styleNameMap)
 			{
 				this._styleNameMap = {};
 			}
-			this._styleNameMap[ styleName ] = styleFunction;
+			this._styleNameMap[styleName] = styleFunction;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		public function applyStyles( target : IFeathersControl ) : void
+		public function applyStyles(target:IFeathersControl):void
 		{
-			if( this._styleNameMap )
+			if(this._styleNameMap)
 			{
-				var hasNameInitializers : Boolean = false;
-				var styleNameList : TokenList = target.styleNameList;
-				var styleNameCount : int = styleNameList.length;
-				for( var i : int = 0; i < styleNameCount; i++ )
+				var hasNameInitializers:Boolean = false;
+				var styleNameList:TokenList = target.styleNameList;
+				var styleNameCount:int = styleNameList.length;
+				for(var i:int = 0; i < styleNameCount; i++)
 				{
-					var name : String = styleNameList.item( i );
-					var initializer : Function = this._styleNameMap[ name ] as Function;
-					if( initializer != null )
+					var name:String = styleNameList.item(i);
+					var initializer:Function = this._styleNameMap[name] as Function;
+					if(initializer != null)
 					{
 						hasNameInitializers = true;
-						initializer( target );
+						initializer(target);
 					}
 				}
-				if( hasNameInitializers )
+				if(hasNameInitializers)
 				{
 					return;
 				}
 			}
-			if( this._defaultStyleFunction != null )
+			if(this._defaultStyleFunction != null)
 			{
-				this._defaultStyleFunction( target );
+				this._defaultStyleFunction(target);
 			}
 		}
 	}

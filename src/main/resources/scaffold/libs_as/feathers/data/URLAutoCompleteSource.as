@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import flash.events.ErrorEvent;
@@ -39,7 +39,7 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * Creates a list of suggestions for an <code>AutoComplete</code> component
@@ -56,36 +56,35 @@ package feathers.data
 	 * provided to parse other formats.</p>
 	 *
 	 * @see feathers.controls.AutoComplete
-	 */ public class URLAutoCompleteSource extends EventDispatcher implements IAutoCompleteSource
+	 */
+	public class URLAutoCompleteSource extends EventDispatcher implements IAutoCompleteSource
 	{
 		/**
 		 * @private
 		 */
-		protected static function defaultParseResultFunction( result : String ) : Object
+		protected static function defaultParseResultFunction(result:String):Object
 		{
-			return JSON.parse( result );
+			return JSON.parse(result);
 		}
+
 		/**
-		 * @private
+		 * Constructor.
 		 */
-		protected var _cachedResult : String;
-		/**
-		 * @private
-		 */
-		protected var _savedSuggestionsCollection : ListCollection;
-		/**
-		 * @private
-		 */
-		protected var _savedTextToMatch : String;
-		/**
-		 * @private
-		 */
-		protected var _urlLoader : URLLoader;
+		public function URLAutoCompleteSource(urlRequestFunction:Function, parseResultFunction:Function = null)
+		{
+			this.urlRequestFunction = urlRequestFunction;
+			this.parseResultFunction = parseResultFunction;
+		}
 
 		/**
 		 * @private
 		 */
-		protected var _urlRequestFunction : Function;
+		protected var _cachedResult:String;
+
+		/**
+		 * @private
+		 */
+		protected var _urlRequestFunction:Function;
 
 		/**
 		 * A function called by the auto-complete source that builds the
@@ -103,11 +102,10 @@ package feathers.data
 		 * will be called, and the <code>parseResultFunction</code> may be used
 		 * to filter the result on the client side instead.</p>
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequest.html Full description of flash.net.URLRequest
-		 *     in Adobe's Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequest.html Full description of flash.net.URLRequest in Adobe's Flash Platform API Reference
 		 * @see #parseResultFunction
 		 */
-		public function get urlRequestFunction() : Function
+		public function get urlRequestFunction():Function
 		{
 			return this._urlRequestFunction;
 		}
@@ -115,9 +113,9 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		public function set urlRequestFunction( value : Function ) : void
+		public function set urlRequestFunction(value:Function):void
 		{
-			if( this._urlRequestFunction === value )
+			if(this._urlRequestFunction === value)
 			{
 				return;
 			}
@@ -128,7 +126,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		protected var _parseResultFunction : Function = defaultParseResultFunction;
+		protected var _parseResultFunction:Function = defaultParseResultFunction;
 
 		/**
 		 * A function that parses the result loaded from the URL. Any plain-text
@@ -148,11 +146,10 @@ package feathers.data
 		 * pass the text entered into the <code>AutoComplete</code> component
 		 * to the server.</p>
 		 *
-		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/JSON.html#parse() Full description of JSON.parse() in Adobe's
-		 *     Flash Platform API Reference
+		 * @see http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/JSON.html#parse() Full description of JSON.parse() in Adobe's Flash Platform API Reference
 		 * @see #urlRequestFunction
 		 */
-		public function get parseResultFunction() : Function
+		public function get parseResultFunction():Function
 		{
 			return this._parseResultFunction;
 		}
@@ -160,13 +157,13 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		public function set parseResultFunction( value : Function ) : void
+		public function set parseResultFunction(value:Function):void
 		{
-			if( value === null )
+			if(value === null)
 			{
 				value = defaultParseResultFunction;
 			}
-			if( this._parseResultFunction === value )
+			if(this._parseResultFunction === value)
 			{
 				return;
 			}
@@ -175,41 +172,47 @@ package feathers.data
 		}
 
 		/**
-		 * Constructor.
+		 * @private
 		 */
-		public function URLAutoCompleteSource( urlRequestFunction : Function , parseResultFunction : Function = null )
-		{
-			this.urlRequestFunction = urlRequestFunction;
-			this.parseResultFunction = parseResultFunction;
-		}
+		protected var _savedSuggestionsCollection:ListCollection;
+
+		/**
+		 * @private
+		 */
+		protected var _savedTextToMatch:String;
+
+		/**
+		 * @private
+		 */
+		protected var _urlLoader:URLLoader;
 
 		/**
 		 * @copy feathers.data.IAutoCompleteSource#load()
 		 */
-		public function load( textToMatch : String , suggestionsResult : ListCollection = null ) : void
+		public function load(textToMatch:String, suggestionsResult:ListCollection = null):void
 		{
-			if( !suggestionsResult )
+			if(!suggestionsResult)
 			{
 				suggestionsResult = new ListCollection();
 			}
-			var urlRequestFunction : Function = this._urlRequestFunction;
-			var request : URLRequest;
-			if( urlRequestFunction.length === 1 )
+			var urlRequestFunction:Function = this._urlRequestFunction;
+			var request:URLRequest;
+			if(urlRequestFunction.length === 1)
 			{
-				request = URLRequest( urlRequestFunction( textToMatch ) );
+				request = URLRequest(urlRequestFunction(textToMatch));
 			}
 			else
 			{
-				if( this._cachedResult !== null )
+				if(this._cachedResult !== null)
 				{
-					this.parseData( this._cachedResult , textToMatch , suggestionsResult );
+					this.parseData(this._cachedResult, textToMatch, suggestionsResult);
 					return;
 				}
-				request = URLRequest( urlRequestFunction() );
+				request = URLRequest(urlRequestFunction());
 			}
 			this._savedSuggestionsCollection = suggestionsResult;
 			this._savedTextToMatch = textToMatch;
-			if( this._urlLoader )
+			if(this._urlLoader)
 			{
 				this._urlLoader.close();
 			}
@@ -217,66 +220,66 @@ package feathers.data
 			{
 				this._urlLoader = new URLLoader();
 				this._urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
-				this._urlLoader.addEventListener( flash.events.Event.COMPLETE , urlLoader_completeHandler );
-				this._urlLoader.addEventListener( IOErrorEvent.IO_ERROR , urlLoader_errorHandler );
-				this._urlLoader.addEventListener( SecurityErrorEvent.SECURITY_ERROR , urlLoader_errorHandler );
+				this._urlLoader.addEventListener(flash.events.Event.COMPLETE, urlLoader_completeHandler);
+				this._urlLoader.addEventListener(IOErrorEvent.IO_ERROR, urlLoader_errorHandler);
+				this._urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, urlLoader_errorHandler);
 			}
-			this._urlLoader.load( request );
+			this._urlLoader.load(request);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function parseData( resultText : String , textToMatch : String , suggestions : ListCollection ) : void
+		protected function parseData(resultText:String, textToMatch:String, suggestions:ListCollection):void
 		{
-			var parseResultFunction : Function = this._parseResultFunction;
-			if( parseResultFunction.length === 2 )
+			var parseResultFunction:Function = this._parseResultFunction;
+			if(parseResultFunction.length === 2)
 			{
-				suggestions.data = parseResultFunction( resultText , textToMatch );
+				suggestions.data = parseResultFunction(resultText, textToMatch);
 			}
 			else
 			{
-				suggestions.data = parseResultFunction( resultText );
+				suggestions.data = parseResultFunction(resultText);
 			}
-			this.dispatchEventWith( starling.events.Event.COMPLETE , false , suggestions );
+			this.dispatchEventWith(starling.events.Event.COMPLETE, false, suggestions);
 		}
 
 
 		/**
 		 * @private
 		 */
-		protected function urlLoader_completeHandler( event : flash.events.Event ) : void
+		protected function urlLoader_completeHandler(event:flash.events.Event):void
 		{
-			var suggestions : ListCollection = this._savedSuggestionsCollection;
+			var suggestions:ListCollection = this._savedSuggestionsCollection;
 			this._savedSuggestionsCollection = null;
-			var textToMatch : String = this._savedTextToMatch;
+			var textToMatch:String = this._savedTextToMatch;
 			this._savedTextToMatch = null;
 
-			var loadedData : String = this._urlLoader.data as String;
-			if( this._urlRequestFunction.length === 0 )
+			var loadedData:String = this._urlLoader.data as String;
+			if(this._urlRequestFunction.length === 0)
 			{
 				this._cachedResult = loadedData;
 			}
-			if( loadedData )
+			if(loadedData)
 			{
-				this.parseData( loadedData , textToMatch , suggestions );
+				this.parseData(loadedData, textToMatch, suggestions);
 			}
 			else
 			{
 				suggestions.removeAll();
-				this.dispatchEventWith( starling.events.Event.COMPLETE , false , suggestions );
+				this.dispatchEventWith(starling.events.Event.COMPLETE, false, suggestions);
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function urlLoader_errorHandler( event : ErrorEvent ) : void
+		protected function urlLoader_errorHandler(event:ErrorEvent):void
 		{
-			var result : ListCollection = this._savedSuggestionsCollection;
+			var result:ListCollection = this._savedSuggestionsCollection;
 			result.removeAll();
 			this._savedSuggestionsCollection = null;
-			this.dispatchEventWith( starling.events.Event.COMPLETE , false , result );
+			this.dispatchEventWith(starling.events.Event.COMPLETE, false, result);
 		}
 
 	}

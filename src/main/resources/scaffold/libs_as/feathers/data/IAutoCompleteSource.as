@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import feathers.core.IFeathersEventDispatcher;
@@ -30,14 +30,15 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * A source of items to display in the pop-up list of an
 	 * <code>AutoComplete</code> component.
 	 *
 	 * @see feathers.controls.AutoComplete
-	 */ public interface IAutoCompleteSource extends IFeathersEventDispatcher
+	 */
+	public interface IAutoCompleteSource extends IFeathersEventDispatcher
 	{
 		/**
 		 * Loads suggestions based on the text entered into an
@@ -46,6 +47,6 @@ package feathers.data
 		 * <p>If an existing <code>ListCollection</code> is passed in as the
 		 * result, all items will be removed before new items are added.</p>
 		 */
-		function load( textToMatch : String , suggestionsResult : ListCollection = null ) : void;
+		function load(textToMatch:String, suggestionsResult:ListCollection = null):void;
 	}
 }

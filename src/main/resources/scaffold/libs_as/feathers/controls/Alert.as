@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
@@ -21,13 +21,13 @@ package feathers.controls
 	import starling.display.DisplayObject;
 	import starling.events.Event;
 
-	[Exclude(name="layout" , kind="property")]
-	[Exclude(name="footer" , kind="property")]
-	[Exclude(name="footerFactory" , kind="property")]
-	[Exclude(name="footerProperties" , kind="property")]
-	[Exclude(name="customFooterName" , kind="property")]
-	[Exclude(name="customFooterStyleName" , kind="property")]
-	[Exclude(name="createFooter" , kind="method")]
+	[Exclude(name="layout",kind="property")]
+	[Exclude(name="footer",kind="property")]
+	[Exclude(name="footerFactory",kind="property")]
+	[Exclude(name="footerProperties",kind="property")]
+	[Exclude(name="customFooterName",kind="property")]
+	[Exclude(name="customFooterStyleName",kind="property")]
+	[Exclude(name="createFooter",kind="method")]
 
 	/**
 	 * Dispatched when the alert is closed. The <code>data</code> property of
@@ -52,7 +52,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CLOSE
 	 */
-	[Event(name="close" , type="starling.events.Event")]
+	[Event(name="close",type="starling.events.Event")]
 
 	/**
 	 * Displays a message in a modal pop-up with a title and a set of buttons.
@@ -77,8 +77,30 @@ package feathers.controls
 	 * }</listing>
 	 *
 	 * @see ../../../help/alert.html How to use the Feathers Alert component
-	 */ public class Alert extends Panel
+	 */
+	public class Alert extends Panel
 	{
+		/**
+		 * The default value added to the <code>styleNameList</code> of the header.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_HEADER:String = "feathers-alert-header";
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the button group.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP:String = "feathers-alert-button-group";
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the message.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_MESSAGE:String = "feathers-alert-message";
+
 		/**
 		 * Returns a new <code>Alert</code> instance when <code>Alert.show()</code>
 		 * is called. If one wishes to skin the alert manually, a custom factory
@@ -100,7 +122,8 @@ package feathers.controls
 		 *
 		 * @see #show()
 		 */
-		public static var alertFactory : Function = defaultAlertFactory;
+		public static var alertFactory:Function = defaultAlertFactory;
+
 		/**
 		 * Returns an overlay to display with a alert that is modal. Uses the
 		 * standard <code>overlayFactory</code> of the <code>PopUpManager</code>
@@ -125,7 +148,8 @@ package feathers.controls
 		 *
 		 * @see #show()
 		 */
-		public static var overlayFactory : Function;
+		public static var overlayFactory:Function;
+
 		/**
 		 * The default <code>IStyleProvider</code> for all <code>Alert</code>
 		 * components.
@@ -133,7 +157,7 @@ package feathers.controls
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
 
 		/**
 		 * The default factory that creates alerts when <code>Alert.show()</code>
@@ -144,7 +168,7 @@ package feathers.controls
 		 * @see #show()
 		 * @see #alertFactory
 		 */
-		public static function defaultAlertFactory() : Alert
+		public static function defaultAlertFactory():Alert
 		{
 			return new Alert();
 		}
@@ -168,34 +192,48 @@ package feathers.controls
 		 *     ]);
 		 * }</listing>
 		 */
-		public static function show( message : String , title : String = null , buttons : ListCollection = null , icon : DisplayObject = null , isModal : Boolean = true , isCentered : Boolean = true , customAlertFactory : Function = null , customOverlayFactory : Function = null ) : Alert
+		public static function show(message:String, title:String = null, buttons:ListCollection = null,
+			icon:DisplayObject = null, isModal:Boolean = true, isCentered:Boolean = true,
+			customAlertFactory:Function = null, customOverlayFactory:Function = null):Alert
 		{
-			var factory : Function = customAlertFactory;
-			if( factory == null )
+			var factory:Function = customAlertFactory;
+			if(factory == null)
 			{
 				factory = alertFactory != null ? alertFactory : defaultAlertFactory;
 			}
-			var alert : Alert = Alert( factory() );
+			var alert:Alert = Alert(factory());
 			alert.title = title;
 			alert.message = message;
 			alert.buttonsDataProvider = buttons;
 			alert.icon = icon;
 			factory = customOverlayFactory;
-			if( factory == null )
+			if(factory == null)
 			{
 				factory = overlayFactory;
 			}
-			PopUpManager.addPopUp( alert , isModal , isCentered , factory );
+			PopUpManager.addPopUp(alert, isModal, isCentered, factory);
 			return alert;
 		}
 
 		/**
 		 * @private
 		 */
-		protected static function defaultButtonGroupFactory() : ButtonGroup
+		protected static function defaultButtonGroupFactory():ButtonGroup
 		{
 			return new ButtonGroup();
 		}
+
+		/**
+		 * Constructor.
+		 */
+		public function Alert()
+		{
+			super();
+			this.headerStyleName = DEFAULT_CHILD_STYLE_NAME_HEADER;
+			this.footerStyleName = DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP;
+			this.buttonGroupFactory = defaultButtonGroupFactory;
+		}
+
 		/**
 		 * The value added to the <code>styleNameList</code> of the alert's
 		 * message text renderer. This variable is <code>protected</code> so
@@ -205,48 +243,33 @@ package feathers.controls
 		 *
 		 * @see feathers.core.FeathersControl#styleNameList
 		 */
-		protected var messageStyleName : String = DEFAULT_CHILD_STYLE_NAME_MESSAGE;
+		protected var messageStyleName:String = DEFAULT_CHILD_STYLE_NAME_MESSAGE;
+
 		/**
 		 * The header sub-component.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected var headerHeader : Header;
+		protected var headerHeader:Header;
+
 		/**
 		 * The button group sub-component.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected var buttonGroupFooter : ButtonGroup;
+		protected var buttonGroupFooter:ButtonGroup;
+
 		/**
 		 * The message text renderer sub-component.
 		 *
 		 * <p>For internal use in subclasses.</p>
 		 */
-		protected var messageTextRenderer : ITextRenderer;
-		/**
-		 * The default value added to the <code>styleNameList</code> of the header.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_HEADER : String = "feathers-alert-header";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the button group.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP : String = "feathers-alert-button-group";
-		/**
-		 * The default value added to the <code>styleNameList</code> of the message.
-		 *
-		 * @see feathers.core.FeathersControl#styleNameList
-		 */
-		public static const DEFAULT_CHILD_STYLE_NAME_MESSAGE : String = "feathers-alert-message";
+		protected var messageTextRenderer:ITextRenderer;
 
 		/**
 		 * @private
 		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
+		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return Alert.globalStyleProvider;
 		}
@@ -254,12 +277,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _message : String = null;
+		protected var _message:String = null;
 
 		/**
 		 * The alert's main text content.
 		 */
-		public function get message() : String
+		public function get message():String
 		{
 			return this._message;
 		}
@@ -267,25 +290,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set message( value : String ) : void
+		public function set message(value:String):void
 		{
-			if( this._message == value )
+			if(this._message == value)
 			{
 				return;
 			}
 			this._message = value;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _icon : DisplayObject;
+		protected var _icon:DisplayObject;
 
 		/**
 		 * The alert's optional icon content to display next to the text.
 		 */
-		public function get icon() : DisplayObject
+		public function get icon():DisplayObject
 		{
 			return this._icon;
 		}
@@ -293,33 +316,33 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set icon( value : DisplayObject ) : void
+		public function set icon(value:DisplayObject):void
 		{
-			if( this._icon == value )
+			if(this._icon == value)
 			{
 				return;
 			}
-			var oldDisplayListBypassEnabled : Boolean = this.displayListBypassEnabled;
+			var oldDisplayListBypassEnabled:Boolean = this.displayListBypassEnabled;
 			this.displayListBypassEnabled = false;
-			if( this._icon )
+			if(this._icon)
 			{
-				this._icon.removeEventListener( FeathersEventType.RESIZE , icon_resizeHandler );
-				this.removeChild( this._icon );
+				this._icon.removeEventListener(FeathersEventType.RESIZE, icon_resizeHandler);
+				this.removeChild(this._icon);
 			}
 			this._icon = value;
-			if( this._icon )
+			if(this._icon)
 			{
-				this._icon.addEventListener( FeathersEventType.RESIZE , icon_resizeHandler );
-				this.addChild( this._icon );
+				this._icon.addEventListener(FeathersEventType.RESIZE, icon_resizeHandler);
+				this.addChild(this._icon);
 			}
 			this.displayListBypassEnabled = oldDisplayListBypassEnabled;
-			this.invalidate( INVALIDATION_FLAG_DATA );
+			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _gap : Number = 0;
+		protected var _gap:Number = 0;
 
 		/**
 		 * The space, in pixels, between the alert's icon and its message text
@@ -332,7 +355,7 @@ package feathers.controls
 		 *
 		 * @default 0
 		 */
-		public function get gap() : Number
+		public function get gap():Number
 		{
 			return this._gap;
 		}
@@ -340,25 +363,25 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set gap( value : Number ) : void
+		public function set gap(value:Number):void
 		{
-			if( this._gap == value )
+			if(this._gap == value)
 			{
 				return;
 			}
 			this._gap = value;
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _buttonsDataProvider : ListCollection;
+		protected var _buttonsDataProvider:ListCollection;
 
 		/**
 		 * The data provider of the alert's <code>ButtonGroup</code>.
 		 */
-		public function get buttonsDataProvider() : ListCollection
+		public function get buttonsDataProvider():ListCollection
 		{
 			return this._buttonsDataProvider;
 		}
@@ -366,20 +389,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set buttonsDataProvider( value : ListCollection ) : void
+		public function set buttonsDataProvider(value:ListCollection):void
 		{
-			if( this._buttonsDataProvider == value )
+			if(this._buttonsDataProvider == value)
 			{
 				return;
 			}
 			this._buttonsDataProvider = value;
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _messageFactory : Function;
+		protected var _messageFactory:Function;
 
 		/**
 		 * A function used to instantiate the alert's message text renderer
@@ -415,7 +438,7 @@ package feathers.controls
 		 * @see feathers.core.ITextRenderer
 		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
 		 */
-		public function get messageFactory() : Function
+		public function get messageFactory():Function
 		{
 			return this._messageFactory;
 		}
@@ -423,20 +446,20 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set messageFactory( value : Function ) : void
+		public function set messageFactory(value:Function):void
 		{
-			if( this._messageFactory == value )
+			if(this._messageFactory == value)
 			{
 				return;
 			}
 			this._messageFactory = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _messageProperties : PropertyProxy;
+		protected var _messageProperties:PropertyProxy;
 
 		/**
 		 * An object that stores properties for the alert's message text
@@ -470,11 +493,11 @@ package feathers.controls
 		 * @see #messageFactory
 		 * @see feathers.core.ITextRenderer
 		 */
-		public function get messageProperties() : Object
+		public function get messageProperties():Object
 		{
-			if( !this._messageProperties )
+			if(!this._messageProperties)
 			{
-				this._messageProperties = new PropertyProxy( childProperties_onChange );
+				this._messageProperties = new PropertyProxy(childProperties_onChange);
 			}
 			return this._messageProperties;
 		}
@@ -482,32 +505,32 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set messageProperties( value : Object ) : void
+		public function set messageProperties(value:Object):void
 		{
-			if( this._messageProperties == value )
+			if(this._messageProperties == value)
 			{
 				return;
 			}
-			if( value && !(value is PropertyProxy) )
+			if(value && !(value is PropertyProxy))
 			{
-				value = PropertyProxy.fromObject( value );
+				value = PropertyProxy.fromObject(value);
 			}
-			if( this._messageProperties )
+			if(this._messageProperties)
 			{
-				this._messageProperties.removeOnChangeCallback( childProperties_onChange );
+				this._messageProperties.removeOnChangeCallback(childProperties_onChange);
 			}
-			this._messageProperties = PropertyProxy( value );
-			if( this._messageProperties )
+			this._messageProperties = PropertyProxy(value);
+			if(this._messageProperties)
 			{
-				this._messageProperties.addOnChangeCallback( childProperties_onChange );
+				this._messageProperties.addOnChangeCallback(childProperties_onChange);
 			}
-			this.invalidate( INVALIDATION_FLAG_STYLES );
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _customMessageStyleName : String;
+		protected var _customMessageStyleName:String;
 
 		/**
 		 * A style name to add to the alert's message text renderer
@@ -533,7 +556,7 @@ package feathers.controls
 		 * @see #messageFactory
 		 * @see #messageProperties
 		 */
-		public function get customMessageStyleName() : String
+		public function get customMessageStyleName():String
 		{
 			return this._customMessageStyleName;
 		}
@@ -541,14 +564,14 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customMessageStyleName( value : String ) : void
+		public function set customMessageStyleName(value:String):void
 		{
-			if( this._customMessageStyleName == value )
+			if(this._customMessageStyleName == value)
 			{
 				return;
 			}
 			this._customMessageStyleName = value;
-			this.invalidate( INVALIDATION_FLAG_TEXT_RENDERER );
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
 		}
 
 		/**
@@ -576,7 +599,7 @@ package feathers.controls
 		 * @see feathers.controls.ButtonGroup
 		 * @see #buttonGroupProperties
 		 */
-		public function get buttonGroupFactory() : Function
+		public function get buttonGroupFactory():Function
 		{
 			return super.footerFactory;
 		}
@@ -584,7 +607,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set buttonGroupFactory( value : Function ) : void
+		public function set buttonGroupFactory(value:Function):void
 		{
 			super.footerFactory = value;
 		}
@@ -612,7 +635,7 @@ package feathers.controls
 		 * @see #buttonGroupFactory
 		 * @see #buttonGroupProperties
 		 */
-		public function get customButtonGroupStyleName() : String
+		public function get customButtonGroupStyleName():String
 		{
 			return super.customFooterStyleName;
 		}
@@ -620,7 +643,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set customButtonGroupStyleName( value : String ) : void
+		public function set customButtonGroupStyleName(value:String):void
 		{
 			super.customFooterStyleName = value;
 		}
@@ -651,7 +674,7 @@ package feathers.controls
 		 * @see #buttonGroupFactory
 		 * @see feathers.controls.ButtonGroup
 		 */
-		public function get buttonGroupProperties() : Object
+		public function get buttonGroupProperties():Object
 		{
 			return super.footerProperties;
 		}
@@ -659,30 +682,19 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set buttonGroupProperties( value : Object ) : void
+		public function set buttonGroupProperties(value:Object):void
 		{
 			super.footerProperties = value;
 		}
 
 		/**
-		 * Constructor.
-		 */
-		public function Alert()
-		{
-			super();
-			this.headerStyleName = DEFAULT_CHILD_STYLE_NAME_HEADER;
-			this.footerStyleName = DEFAULT_CHILD_STYLE_NAME_BUTTON_GROUP;
-			this.buttonGroupFactory = defaultButtonGroupFactory;
-		}
-
-		/**
 		 * @private
 		 */
-		override protected function initialize() : void
+		override protected function initialize():void
 		{
-			if( !this.layout )
+			if(!this.layout)
 			{
-				var layout : VerticalLayout = new VerticalLayout();
+				var layout:VerticalLayout = new VerticalLayout();
 				layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
 				this.layout = layout;
 			}
@@ -692,34 +704,34 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function draw() : void
+		override protected function draw():void
 		{
-			var dataInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_DATA );
-			var stylesInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_STYLES );
-			var textRendererInvalid : Boolean = this.isInvalid( INVALIDATION_FLAG_TEXT_RENDERER );
+			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
+			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES)
+			var textRendererInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_TEXT_RENDERER);
 
-			if( textRendererInvalid )
+			if(textRendererInvalid)
 			{
 				this.createMessage();
 			}
 
-			if( textRendererInvalid || dataInvalid )
+			if(textRendererInvalid || dataInvalid)
 			{
 				this.messageTextRenderer.text = this._message;
 			}
 
-			if( textRendererInvalid || stylesInvalid )
+			if(textRendererInvalid || stylesInvalid)
 			{
 				this.refreshMessageStyles();
 			}
 
 			super.draw();
 
-			if( this._icon )
+			if(this._icon)
 			{
-				if( this._icon is IValidating )
+				if(this._icon is IValidating)
 				{
-					IValidating( this._icon ).validate();
+					IValidating(this._icon).validate();
 				}
 				this._icon.x = this._paddingLeft;
 				this._icon.y = this._topViewPortOffset + (this._viewPort.visibleHeight - this._icon.height) / 2;
@@ -729,80 +741,80 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override protected function autoSizeIfNeeded() : Boolean
+		override protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth : Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight : Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			if( !needsWidth && !needsHeight )
+			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
+			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			if( this._icon is IValidating )
+			if(this._icon is IValidating)
 			{
-				IValidating( this._icon ).validate();
+				IValidating(this._icon).validate();
 			}
 
-			var oldIgnoreHeaderResizing : Boolean = this._ignoreHeaderResizing;
+			var oldIgnoreHeaderResizing:Boolean = this._ignoreHeaderResizing;
 			this._ignoreHeaderResizing = true;
-			var oldIgnoreFooterResizing : Boolean = this._ignoreFooterResizing;
+			var oldIgnoreFooterResizing:Boolean = this._ignoreFooterResizing;
 			this._ignoreFooterResizing = true;
 
-			var oldHeaderWidth : Number = this.header.width;
-			var oldHeaderHeight : Number = this.header.height;
+			var oldHeaderWidth:Number = this.header.width;
+			var oldHeaderHeight:Number = this.header.height;
 			this.header.width = this.explicitWidth;
 			this.header.maxWidth = this._maxWidth;
 			this.header.height = NaN;
 			this.header.validate();
 
-			if( this.footer )
+			if(this.footer)
 			{
-				var oldFooterWidth : Number = this.footer.width;
-				var oldFooterHeight : Number = this.footer.height;
+				var oldFooterWidth:Number = this.footer.width;
+				var oldFooterHeight:Number = this.footer.height;
 				this.footer.width = this.explicitWidth;
 				this.footer.maxWidth = this._maxWidth;
 				this.footer.height = NaN;
 				this.footer.validate();
 			}
 
-			var newWidth : Number = this.explicitWidth;
-			var newHeight : Number = this.explicitHeight;
-			if( needsWidth )
+			var newWidth:Number = this.explicitWidth;
+			var newHeight:Number = this.explicitHeight;
+			if(needsWidth)
 			{
 				newWidth = this._viewPort.width + this._rightViewPortOffset + this._leftViewPortOffset;
-				if( this._icon )
+				if(this._icon)
 				{
-					var iconWidth : Number = this._icon.width;
-					if( iconWidth === iconWidth ) //!isNaN
+					var iconWidth:Number = this._icon.width;
+					if(iconWidth === iconWidth) //!isNaN
 					{
 						newWidth += this._icon.width + this._gap;
 					}
 				}
-				newWidth = Math.max( newWidth , this.header.width );
-				if( this.footer )
+				newWidth = Math.max(newWidth, this.header.width);
+				if(this.footer)
 				{
-					newWidth = Math.max( newWidth , this.footer.width );
+					newWidth = Math.max(newWidth, this.footer.width);
 				}
-				if( this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
-						this.originalBackgroundWidth > newWidth )
+				if(this.originalBackgroundWidth === this.originalBackgroundWidth && //!isNaN
+					this.originalBackgroundWidth > newWidth)
 				{
 					newWidth = this.originalBackgroundWidth;
 				}
 			}
-			if( needsHeight )
+			if(needsHeight)
 			{
 				newHeight = this._viewPort.height;
-				if( this._icon )
+				if(this._icon)
 				{
-					var iconHeight : Number = this._icon.height;
-					if( iconHeight === iconHeight ) //!isNaN
+					var iconHeight:Number = this._icon.height;
+					if(iconHeight === iconHeight) //!isNaN
 					{
-						newHeight = Math.max( newHeight , this._icon.height );
+						newHeight = Math.max(newHeight, this._icon.height);
 					}
 				}
 				newHeight += this._bottomViewPortOffset + this._topViewPortOffset;
-				if( this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
-						this.originalBackgroundHeight > newHeight )
+				if(this.originalBackgroundHeight === this.originalBackgroundHeight && //!isNaN
+					this.originalBackgroundHeight > newHeight)
 				{
 					newHeight = this.originalBackgroundHeight;
 				}
@@ -810,7 +822,7 @@ package feathers.controls
 
 			this.header.width = oldHeaderWidth;
 			this.header.height = oldHeaderHeight;
-			if( this.footer )
+			if(this.footer)
 			{
 				this.footer.width = oldFooterWidth;
 				this.footer.height = oldFooterHeight;
@@ -818,7 +830,7 @@ package feathers.controls
 			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
 			this._ignoreFooterResizing = oldIgnoreFooterResizing;
 
-			return this.setSizeInternal( newWidth , newHeight , false );
+			return this.setSizeInternal(newWidth, newHeight, false);
 		}
 
 		/**
@@ -832,47 +844,10 @@ package feathers.controls
 		 * @see #headerFactory
 		 * @see #customHeaderStyleName
 		 */
-		override protected function createHeader() : void
+		override protected function createHeader():void
 		{
 			super.createHeader();
-			this.headerHeader = Header( this.header );
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function createFooter() : void
-		{
-			this.createButtonGroup();
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function refreshFooterStyles() : void
-		{
-			super.refreshFooterStyles();
-			this.buttonGroupFooter.dataProvider = this._buttonsDataProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function calculateViewPortOffsets( forceScrollBars : Boolean = false , useActualBounds : Boolean = false ) : void
-		{
-			super.calculateViewPortOffsets( forceScrollBars , useActualBounds );
-			if( this._icon )
-			{
-				if( this._icon is IValidating )
-				{
-					IValidating( this._icon ).validate();
-				}
-				var iconWidth : Number = this._icon.width;
-				if( iconWidth == iconWidth ) //!isNaN
-				{
-					this._leftViewPortOffset += this._icon.width + this._gap;
-				}
-			}
+			this.headerHeader = Header(this.header);
 		}
 
 		/**
@@ -886,15 +861,23 @@ package feathers.controls
 		 * @see #buttonGroupFactory
 		 * @see #customButtonGroupStyleName
 		 */
-		protected function createButtonGroup() : void
+		protected function createButtonGroup():void
 		{
-			if( this.buttonGroupFooter )
+			if(this.buttonGroupFooter)
 			{
-				this.buttonGroupFooter.removeEventListener( Event.TRIGGERED , buttonsFooter_triggeredHandler );
+				this.buttonGroupFooter.removeEventListener(Event.TRIGGERED, buttonsFooter_triggeredHandler);
 			}
 			super.createFooter();
-			this.buttonGroupFooter = ButtonGroup( this.footer );
-			this.buttonGroupFooter.addEventListener( Event.TRIGGERED , buttonsFooter_triggeredHandler );
+			this.buttonGroupFooter = ButtonGroup(this.footer);
+			this.buttonGroupFooter.addEventListener(Event.TRIGGERED, buttonsFooter_triggeredHandler);
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function createFooter():void
+		{
+			this.createButtonGroup();
 		}
 
 		/**
@@ -908,51 +891,80 @@ package feathers.controls
 		 * @see #messageTextRenderer
 		 * @see #messageFactory
 		 */
-		protected function createMessage() : void
+		protected function createMessage():void
 		{
-			if( this.messageTextRenderer )
+			if(this.messageTextRenderer)
 			{
-				this.removeChild( DisplayObject( this.messageTextRenderer ) , true );
+				this.removeChild(DisplayObject(this.messageTextRenderer), true);
 				this.messageTextRenderer = null;
 			}
 
-			var factory : Function = this._messageFactory != null ? this._messageFactory : FeathersControl.defaultTextRendererFactory;
-			this.messageTextRenderer = ITextRenderer( factory() );
-			var messageStyleName : String = this._customMessageStyleName != null ? this._customMessageStyleName : this.messageStyleName;
-			var uiTextRenderer : IFeathersControl = IFeathersControl( this.messageTextRenderer );
-			uiTextRenderer.styleNameList.add( messageStyleName );
+			var factory:Function = this._messageFactory != null ? this._messageFactory : FeathersControl.defaultTextRendererFactory;
+			this.messageTextRenderer = ITextRenderer(factory());
+			var messageStyleName:String = this._customMessageStyleName != null ? this._customMessageStyleName : this.messageStyleName;
+			var uiTextRenderer:IFeathersControl = IFeathersControl(this.messageTextRenderer);
+			uiTextRenderer.styleNameList.add(messageStyleName);
 			uiTextRenderer.touchable = false;
-			this.addChild( DisplayObject( this.messageTextRenderer ) );
+			this.addChild(DisplayObject(this.messageTextRenderer));
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshMessageStyles() : void
+		override protected function refreshFooterStyles():void
 		{
-			for( var propertyName : String in this._messageProperties )
+			super.refreshFooterStyles();
+			this.buttonGroupFooter.dataProvider = this._buttonsDataProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshMessageStyles():void
+		{
+			for(var propertyName:String in this._messageProperties)
 			{
-				var propertyValue : Object = this._messageProperties[ propertyName ];
-				this.messageTextRenderer[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._messageProperties[propertyName];
+				this.messageTextRenderer[propertyName] = propertyValue;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected function buttonsFooter_triggeredHandler( event : Event , data : Object ) : void
+		override protected function calculateViewPortOffsets(forceScrollBars:Boolean = false, useActualBounds:Boolean = false):void
+		{
+			super.calculateViewPortOffsets(forceScrollBars, useActualBounds);
+			if(this._icon)
+			{
+				if(this._icon is IValidating)
+				{
+					IValidating(this._icon).validate();
+				}
+				var iconWidth:Number = this._icon.width;
+				if(iconWidth == iconWidth) //!isNaN
+				{
+					this._leftViewPortOffset += this._icon.width + this._gap;
+				}
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected function buttonsFooter_triggeredHandler(event:Event, data:Object):void
 		{
 			this.removeFromParent();
-			this.dispatchEventWith( Event.CLOSE , false , data );
+			this.dispatchEventWith(Event.CLOSE, false, data);
 			this.dispose();
 		}
 
 		/**
 		 * @private
 		 */
-		protected function icon_resizeHandler( event : Event ) : void
+		protected function icon_resizeHandler(event:Event):void
 		{
-			this.invalidate( INVALIDATION_FLAG_LAYOUT );
+			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
 	}

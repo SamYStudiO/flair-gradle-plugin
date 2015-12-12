@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.controls.supportClasses.IScreenNavigatorItem;
@@ -35,10 +35,20 @@ package feathers.controls
 	public class ScreenNavigatorItem implements IScreenNavigatorItem
 	{
 		/**
+		 * Constructor.
+		 */
+		public function ScreenNavigatorItem(screen:Object = null, events:Object = null, properties:Object = null)
+		{
+			this._screen = screen;
+			this._events = events ? events : {};
+			this._properties = properties ? properties : {};
+		}
+
+		/**
 		 * @private
 		 */
-		protected var _screen : Object;
-
+		protected var _screen:Object;
+		
 		/**
 		 * The screen to be displayed by the <code>ScreenNavigator</code>. It
 		 * may be one of several possible types:
@@ -64,7 +74,7 @@ package feathers.controls
 		 *
 		 * @default null
 		 */
-		public function get screen() : Object
+		public function get screen():Object
 		{
 			return this._screen;
 		}
@@ -72,7 +82,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set screen( value : Object ) : void
+		public function set screen(value:Object):void
 		{
 			this._screen = value;
 		}
@@ -80,8 +90,8 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _events : Object;
-
+		protected var _events:Object;
+		
 		/**
 		 * A set of key-value pairs representing actions that should be
 		 * triggered when events are dispatched by the screen when it is shown.
@@ -96,7 +106,7 @@ package feathers.controls
 		 * @see #setFunctionForEvent()
 		 * @see #setScreenIDForEvent()
 		 */
-		public function get events() : Object
+		public function get events():Object
 		{
 			return this._events;
 		}
@@ -104,9 +114,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set events( value : Object ) : void
+		public function set events(value:Object):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = {};
 			}
@@ -116,15 +126,15 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _properties : Object;
-
+		protected var _properties:Object;
+		
 		/**
 		 * A set of key-value pairs representing properties to be set on the
 		 * screen when it is shown. A pair's key is the name of the screen's
 		 * property, and a pair's value is the value to be passed to the
 		 * screen's property.
 		 */
-		public function get properties() : Object
+		public function get properties():Object
 		{
 			return this._properties;
 		}
@@ -132,9 +142,9 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		public function set properties( value : Object ) : void
+		public function set properties(value:Object):void
 		{
-			if( !value )
+			if(!value)
 			{
 				value = {};
 			}
@@ -144,19 +154,9 @@ package feathers.controls
 		/**
 		 * @inheritDoc
 		 */
-		public function get canDispose() : Boolean
+		public function get canDispose():Boolean
 		{
 			return !(this._screen is DisplayObject);
-		}
-
-		/**
-		 * Constructor.
-		 */
-		public function ScreenNavigatorItem( screen : Object = null , events : Object = null , properties : Object = null )
-		{
-			this._screen = screen;
-			this._events = events ? events : {};
-			this._properties = properties ? properties : {};
 		}
 
 		/**
@@ -173,9 +173,9 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setFunctionForEvent( eventType : String , action : Function ) : void
+		public function setFunctionForEvent(eventType:String, action:Function):void
 		{
-			this._events[ eventType ] = action;
+			this._events[eventType] = action;
 		}
 
 		/**
@@ -193,9 +193,9 @@ package feathers.controls
 		 * @see #clearEvent()
 		 * @see #events
 		 */
-		public function setScreenIDForEvent( eventType : String , screenID : String ) : void
+		public function setScreenIDForEvent(eventType:String, screenID:String):void
 		{
-			this._events[ eventType ] = screenID;
+			this._events[eventType] = screenID;
 		}
 
 		/**
@@ -204,43 +204,43 @@ package feathers.controls
 		 *
 		 * @see #events
 		 */
-		public function clearEvent( eventType : String ) : void
+		public function clearEvent(eventType:String):void
 		{
-			delete this._events[ eventType ];
+			delete this._events[eventType];
 		}
-
+		
 		/**
 		 * @inheritDoc
 		 */
-		public function getScreen() : DisplayObject
+		public function getScreen():DisplayObject
 		{
-			var screenInstance : DisplayObject;
-			if( this._screen is Class )
+			var screenInstance:DisplayObject;
+			if(this._screen is Class)
 			{
-				var ScreenType : Class = Class( this._screen );
+				var ScreenType:Class = Class(this._screen);
 				screenInstance = new ScreenType();
 			}
-			else if( this._screen is Function )
+			else if(this._screen is Function)
 			{
-				screenInstance = DisplayObject( (this._screen as Function)() );
+				screenInstance = DisplayObject((this._screen as Function)());
 			}
 			else
 			{
-				screenInstance = DisplayObject( this._screen );
+				screenInstance = DisplayObject(this._screen);
 			}
-			if( !(screenInstance is DisplayObject) )
+			if(!(screenInstance is DisplayObject))
 			{
-				throw new ArgumentError( "ScreenNavigatorItem \"getScreen()\" must return a Starling display object." );
+				throw new ArgumentError("ScreenNavigatorItem \"getScreen()\" must return a Starling display object.");
 			}
-
-			if( this._properties )
+			
+			if(this._properties)
 			{
-				for( var propertyName : String in this._properties )
+				for(var propertyName:String in this._properties)
 				{
-					screenInstance[ propertyName ] = this._properties[ propertyName ];
+					screenInstance[propertyName] = this._properties[propertyName];
 				}
 			}
-
+			
 			return screenInstance;
 		}
 	}

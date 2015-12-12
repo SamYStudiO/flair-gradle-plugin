@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.themes
 {
 	import feathers.core.IFeathersEventDispatcher;
@@ -36,7 +36,7 @@ package feathers.themes
 	 *
 	 * @eventType starling.events.Event.COMPLETE
 	 */
-	[Event(name="complete" , type="starling.events.Event")]
+	[Event(name="complete",type="starling.events.Event")]
 
 	/**
 	 * A theme that uses an asynchronous loading mechanism (such as the Starling
@@ -46,7 +46,8 @@ package feathers.themes
 	 * it has fully initialized. Attempting to create Feathers components before
 	 * the theme has dispatched <code>Event.COMPLETE</code> may result in no
 	 * skins or even runtime errors.
-	 */ public interface IAsyncTheme extends IFeathersEventDispatcher
+	 */
+	public interface IAsyncTheme extends IFeathersEventDispatcher
 	{
 		/**
 		 * Indicates if the assets have been loaded and the theme has been
@@ -54,6 +55,6 @@ package feathers.themes
 		 * 
 		 * @see #event:complete starling.events.Event.COMPLETE
 		 */
-		function isCompleteForStarling( starling : Starling ) : Boolean;
+		function isCompleteForStarling(starling:Starling):Boolean;
 	}
 }

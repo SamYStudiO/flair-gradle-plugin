@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.media
 {
 	import feathers.controls.ToggleButton;
@@ -28,50 +28,8 @@ package feathers.media
 		 * @default null
 		 * @see feathers.core.FeathersControl#styleProvider
 		 */
-		public static var globalStyleProvider : IStyleProvider;
+		public static var globalStyleProvider:IStyleProvider;
 		
-		/**
-		 * @private
-		 */
-		override protected function get defaultStyleProvider() : IStyleProvider
-		{
-			return FullScreenToggleButton.globalStyleProvider;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _mediaPlayer : VideoPlayer;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get mediaPlayer() : IMediaPlayer
-		{
-			return this._mediaPlayer;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set mediaPlayer( value : IMediaPlayer ) : void
-		{
-			if( this._mediaPlayer == value )
-			{
-				return;
-			}
-			if( this._mediaPlayer )
-			{
-				this._mediaPlayer.removeEventListener( MediaPlayerEventType.DISPLAY_STATE_CHANGE , mediaPlayer_displayStageChangeHandler );
-			}
-			this._mediaPlayer = value as VideoPlayer;
-			if( this._mediaPlayer )
-			{
-				this.isSelected = this._mediaPlayer.isFullScreen;
-				this._mediaPlayer.addEventListener( MediaPlayerEventType.DISPLAY_STATE_CHANGE , mediaPlayer_displayStageChangeHandler );
-			}
-		}
-
 		/**
 		 * Constructor.
 		 */
@@ -82,21 +40,63 @@ package feathers.media
 			//we'll update isSelected based on events dispatched by the media
 			//player
 			this.isToggle = false;
-			this.addEventListener( Event.TRIGGERED , fullScreenButton_triggeredHandler );
+			this.addEventListener(Event.TRIGGERED, fullScreenButton_triggeredHandler);
 		}
 
 		/**
 		 * @private
 		 */
-		protected function fullScreenButton_triggeredHandler( event : Event ) : void
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return FullScreenToggleButton.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _mediaPlayer:VideoPlayer;
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get mediaPlayer():IMediaPlayer
+		{
+			return this._mediaPlayer;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set mediaPlayer(value:IMediaPlayer):void
+		{
+			if(this._mediaPlayer == value)
+			{
+				return;
+			}
+			if(this._mediaPlayer)
+			{
+				this._mediaPlayer.removeEventListener(MediaPlayerEventType.DISPLAY_STATE_CHANGE, mediaPlayer_displayStageChangeHandler);
+			}
+			this._mediaPlayer = value as VideoPlayer;
+			if(this._mediaPlayer)
+			{
+				this.isSelected = this._mediaPlayer.isFullScreen;
+				this._mediaPlayer.addEventListener(MediaPlayerEventType.DISPLAY_STATE_CHANGE, mediaPlayer_displayStageChangeHandler);
+			}
+		}
+		
+		/**
+		 * @private
+		 */
+		protected function fullScreenButton_triggeredHandler(event:Event):void
 		{
 			this._mediaPlayer.toggleFullScreen();
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected function mediaPlayer_displayStageChangeHandler( event : Event ) : void
+		protected function mediaPlayer_displayStageChangeHandler(event:Event):void
 		{
 			this.isSelected = this._mediaPlayer.isFullScreen;
 		}

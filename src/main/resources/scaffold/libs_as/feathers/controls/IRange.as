@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.controls
 {
 	import feathers.core.IFeathersControl;
@@ -29,14 +29,15 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Minimum requirements for a scroll bar to be usable with a <code>Scroller</code>
 	 * component.
 	 *
 	 * @see Scroller
-	 */ public interface IRange extends IFeathersControl
+	 */
+	public interface IRange extends IFeathersControl
 	{
 		/**
 		 * The minimum numeric value of the range.
@@ -50,12 +51,12 @@ package feathers.controls
 		 * component.page = 10
 		 * component.value = 12;</listing>
 		 */
-		function get minimum() : Number;
+		function get minimum():Number;
 
 		/**
 		 * @private
 		 */
-		function set minimum( value : Number ) : void;
+		function set minimum(value:Number):void;
 
 		/**
 		 * The maximum numeric value of the range.
@@ -69,12 +70,12 @@ package feathers.controls
 		 * component.page = 10
 		 * component.value = 12;</listing>
 		 */
-		function get maximum() : Number;
+		function get maximum():Number;
 
 		/**
 		 * @private
 		 */
-		function set maximum( value : Number ) : void;
+		function set maximum(value:Number):void;
 
 		/**
 		 * The current numeric value.
@@ -88,12 +89,12 @@ package feathers.controls
 		 * component.page = 10
 		 * component.value = 12;</listing>
 		 */
-		function get value() : Number;
+		function get value():Number;
 
 		/**
 		 * @private
 		 */
-		function set value( value : Number ) : void;
+		function set value(value:Number):void;
 
 		/**
 		 * The amount the value must change to increment or decrement.
@@ -107,11 +108,11 @@ package feathers.controls
 		 * component.page = 10
 		 * component.value = 12;</listing>
 		 */
-		function get step() : Number;
+		function get step():Number;
 
 		/**
 		 * @private
 		 */
-		function set step( value : Number ) : void;
+		function set step(value:Number):void;
 	}
 }

@@ -15,25 +15,22 @@ package starling.utils
     /** A class that provides constant values for horizontal alignment of objects. */
     public final class HAlign
     {
+        /** @private */
+        public function HAlign() { throw new AbstractClassError(); }
+        
+        /** Left alignment. */
+        public static const LEFT:String   = "left";
+        
+        /** Centered alignement. */
+        public static const CENTER:String = "center";
+        
+        /** Right alignment. */
+        public static const RIGHT:String  = "right";
+        
         /** Indicates whether the given alignment string is valid. */
-        public static function isValid( hAlign : String ) : Boolean
+        public static function isValid(hAlign:String):Boolean
         {
             return hAlign == LEFT || hAlign == CENTER || hAlign == RIGHT;
-        }
-
-        /** Left alignment. */
-        public static const LEFT : String = "left";
-
-        /** Centered alignement. */
-        public static const CENTER : String = "center";
-
-        /** Right alignment. */
-        public static const RIGHT : String = "right";
-
-        /** @private */
-        public function HAlign()
-        {
-            throw new AbstractClassError();
         }
     }
 }

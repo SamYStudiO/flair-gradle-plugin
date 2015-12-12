@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.core
 {
 	import flash.utils.Dictionary;
@@ -16,33 +16,53 @@ package feathers.core
 	public final class ValidationQueue implements IAnimatable
 	{
 		/**
+		 * @private
+		 */
+		private static const STARLING_TO_VALIDATION_QUEUE:Dictionary = new Dictionary(true);
+
+		/**
 		 * Gets the validation queue for the specified Starling instance. If
 		 * a validation queue does not exist for the specified Starling
 		 * instance, a new one will be created.
 		 */
-		public static function forStarling( starling : Starling ) : ValidationQueue
+		public static function forStarling(starling:Starling):ValidationQueue
 		{
-			if( !starling )
+			if(!starling)
 			{
 				return null;
 			}
-			var queue : ValidationQueue = STARLING_TO_VALIDATION_QUEUE[ starling ];
-			if( !queue )
+			var queue:ValidationQueue = STARLING_TO_VALIDATION_QUEUE[starling];
+			if(!queue)
 			{
-				STARLING_TO_VALIDATION_QUEUE[ starling ] = queue = new ValidationQueue( starling );
+				STARLING_TO_VALIDATION_QUEUE[starling] = queue = new ValidationQueue(starling);
 			}
 			return queue;
 		}
-		/**
-		 * @private
-		 */
-		private static const STARLING_TO_VALIDATION_QUEUE : Dictionary = new Dictionary( true );
-		private var _hasInsertAt : Boolean = true;
-		private var _starling : Starling;
-		private var _delayedQueue : Vector.<IValidating> = new <IValidating>[];
-		private var _queue : Vector.<IValidating> = new <IValidating>[];
 
-		private var _isValidating : Boolean = false;
+		/**
+		 * Constructor.
+		 */
+		public function ValidationQueue(starling:Starling)
+		{
+			this._starling = starling;
+			try
+			{
+				//strangely hasOwnProperty() and "insertAt" in this._queue don't
+				//work in this case. it will throw a runtime error in versions
+				//of the runtime before 19, though.
+				this._queue["insertAt"];
+			}
+			catch(error:ReferenceError)
+			{
+				this._hasInsertAt = false;
+			}
+		}
+		
+		private var _hasInsertAt:Boolean = true;
+
+		private var _starling:Starling;
+
+		private var _isValidating:Boolean = false;
 
 		/**
 		 * If true, the queue is currently validating.
@@ -55,38 +75,22 @@ package feathers.core
 		 *     // do something
 		 * }</listing>
 		 */
-		public function get isValidating() : Boolean
+		public function get isValidating():Boolean
 		{
 			return this._isValidating;
 		}
 
-		/**
-		 * Constructor.
-		 */
-		public function ValidationQueue( starling : Starling )
-		{
-			this._starling = starling;
-			try
-			{
-				//strangely hasOwnProperty() and "insertAt" in this._queue don't
-				//work in this case. it will throw a runtime error in versions
-				//of the runtime before 19, though.
-				this._queue[ "insertAt" ];
-			}
-			catch( error : ReferenceError )
-			{
-				this._hasInsertAt = false;
-			}
-		}
+		private var _delayedQueue:Vector.<IValidating> = new <IValidating>[];
+		private var _queue:Vector.<IValidating> = new <IValidating>[];
 
 		/**
 		 * Disposes the validation queue.
 		 */
-		public function dispose() : void
+		public function dispose():void
 		{
-			if( this._starling )
+			if(this._starling)
 			{
-				this._starling.juggler.remove( this );
+				this._starling.juggler.remove(this);
 				this._starling = null;
 			}
 		}
@@ -94,37 +98,37 @@ package feathers.core
 		/**
 		 * Adds a validating component to the queue.
 		 */
-		public function addControl( control : IValidating , delayIfValidating : Boolean ) : void
+		public function addControl(control:IValidating, delayIfValidating:Boolean):void
 		{
 			//if the juggler was purged, we need to add the queue back in.
-			if( !this._starling.juggler.contains( this ) )
+			if(!this._starling.juggler.contains(this))
 			{
-				this._starling.juggler.add( this );
+				this._starling.juggler.add(this);
 			}
-			var currentQueue : Vector.<IValidating> = (this._isValidating && delayIfValidating) ? this._delayedQueue : this._queue;
-			if( currentQueue.indexOf( control ) >= 0 )
+			var currentQueue:Vector.<IValidating> = (this._isValidating && delayIfValidating) ? this._delayedQueue : this._queue;
+			if(currentQueue.indexOf(control) >= 0)
 			{
 				//already queued
 				return;
 			}
-			var queueLength : int = currentQueue.length;
-			if( this._isValidating && currentQueue == this._queue )
+			var queueLength:int = currentQueue.length;
+			if(this._isValidating && currentQueue == this._queue)
 			{
 				//special case: we need to keep it sorted
-				var depth : int = control.depth;
+				var depth:int = control.depth;
 
 				//we're traversing the queue backwards because it's
 				//significantly more likely that we're going to push than that
 				//we're going to splice, so there's no point to iterating over
 				//the whole queue
-				for( var i : int = queueLength - 1; i >= 0; i-- )
+				for(var i:int = queueLength - 1; i >= 0; i--)
 				{
-					var otherControl : IValidating = IValidating( currentQueue[ i ] );
-					var otherDepth : int = otherControl.depth;
+					var otherControl:IValidating = IValidating(currentQueue[i]);
+					var otherDepth:int = otherControl.depth;
 					//we can skip the overhead of calling queueSortFunction and
 					//of looking up the value we've already stored in the depth
 					//local variable.
-					if( depth >= otherDepth )
+					if(depth >= otherDepth)
 					{
 						break;
 					}
@@ -132,52 +136,52 @@ package feathers.core
 				//add one because we're going after the last item we checked
 				//if we made it through all of them, i will be -1, and we want 0
 				i++;
-				if( i == queueLength )
+				if(i == queueLength)
 				{
-					currentQueue[ queueLength ] = control;
+					currentQueue[queueLength] = control;
 				}
-				else if( this._hasInsertAt )
+				else if(this._hasInsertAt)
 				{
-					currentQueue[ "insertAt" ]( i , control );
+					currentQueue["insertAt"](i, control);
 				}
 				else
 				{
-					currentQueue.splice( i , 0 , control );
+					currentQueue.splice(i, 0, control);
 				}
 			}
 			else
 			{
-				currentQueue[ queueLength ] = control;
+				currentQueue[queueLength] = control;
 			}
 		}
 
 		/**
 		 * @private
 		 */
-		public function advanceTime( time : Number ) : void
+		public function advanceTime(time:Number):void
 		{
-			if( this._isValidating || !this._starling.contextValid )
+			if(this._isValidating || !this._starling.contextValid)
 			{
 				return;
 			}
-			var queueLength : int = this._queue.length;
-			if( queueLength == 0 )
+			var queueLength:int = this._queue.length;
+			if(queueLength == 0)
 			{
 				return;
 			}
 			this._isValidating = true;
-			this._queue = this._queue.sort( queueSortFunction );
-			while( this._queue.length > 0 ) //rechecking length after the shift
+			this._queue = this._queue.sort(queueSortFunction);
+			while(this._queue.length > 0) //rechecking length after the shift
 			{
-				var item : IValidating = this._queue.shift();
-				if( item.depth < 0 )
+				var item:IValidating = this._queue.shift();
+				if(item.depth < 0)
 				{
 					//skip items that are no longer on the display list
 					continue;
 				}
 				item.validate();
 			}
-			var temp : Vector.<IValidating> = this._queue;
+			var temp:Vector.<IValidating> = this._queue;
 			this._queue = this._delayedQueue;
 			this._delayedQueue = temp;
 			this._isValidating = false;
@@ -186,14 +190,14 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		protected function queueSortFunction( first : IValidating , second : IValidating ) : int
+		protected function queueSortFunction(first:IValidating, second:IValidating):int
 		{
-			var difference : int = second.depth - first.depth;
-			if( difference > 0 )
+			var difference:int = second.depth - first.depth;
+			if(difference > 0)
 			{
 				return -1;
 			}
-			else if( difference < 0 )
+			else if(difference < 0)
 			{
 				return 1;
 			}

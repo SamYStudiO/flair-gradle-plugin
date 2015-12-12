@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.data
 {
 	import feathers.events.CollectionEventType;
@@ -33,7 +33,7 @@ package feathers.data
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name="change" , type="starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the collection has changed drastically, such as when
@@ -56,7 +56,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.RESET
 	 */
-	[Event(name="reset" , type="starling.events.Event")]
+	[Event(name="reset",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is added to the collection.
@@ -79,7 +79,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.ADD_ITEM
 	 */
-	[Event(name="addItem" , type="starling.events.Event")]
+	[Event(name="addItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is removed from the collection.
@@ -102,7 +102,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REMOVE_ITEM
 	 */
-	[Event(name="removeItem" , type="starling.events.Event")]
+	[Event(name="removeItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when an item is replaced in the collection.
@@ -125,7 +125,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.REPLACE_ITEM
 	 */
-	[Event(name="replaceItem" , type="starling.events.Event")]
+	[Event(name="replaceItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the <code>updateItemAt()</code> function is called on the
@@ -151,7 +151,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ITEM
 	 */
-	[Event(name="updateItem" , type="starling.events.Event")]
+	[Event(name="updateItem",type="starling.events.Event")]
 
 	/**
 	 * Dispatched when the <code>updateAll()</code> function is called on the
@@ -176,7 +176,7 @@ package feathers.data
 	 *
 	 * @eventType feathers.events.CollectionEventType.UPDATE_ALL
 	 */
-	[Event(name="updateAll" , type="starling.events.Event")]
+	[Event(name="updateAll",type="starling.events.Event")]
 
 	/**
 	 * Wraps a data source with a common API for use with UI controls, like
@@ -187,123 +187,124 @@ package feathers.data
 	 * @see ArrayListCollectionDataDescriptor
 	 * @see VectorListCollectionDataDescriptor
 	 * @see XMLListListCollectionDataDescriptor
-	 */ public class ListCollection extends EventDispatcher
+	 */
+	public class ListCollection extends EventDispatcher
 	{
+		/**
+		 * Constructor
+		 */
+		public function ListCollection(data:Object = null)
+		{
+			if(!data)
+			{
+				//default to an array if no data is provided
+				data = [];
+			}
+			this.data = data;
+		}
+		
 		/**
 		 * @private
 		 */
-		protected var _data : Object;
+		protected var _data:Object;
 		
 		/**
 		 * The data source for this collection. May be any type of data, but a
 		 * <code>dataDescriptor</code> needs to be provided to translate from
 		 * the data source's APIs to something that can be understood by
 		 * <code>ListCollection</code>.
-		 *
+		 * 
 		 * <p>Data sources of type Array, Vector, and XMLList are automatically
 		 * detected, and no <code>dataDescriptor</code> needs to be set if the
 		 * <code>ListCollection</code> uses one of these types.</p>
 		 */
-		public function get data() : Object
+		public function get data():Object
 		{
 			return _data;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set data( value : Object ) : void
+		public function set data(value:Object):void
 		{
-			if( this._data == value )
+			if(this._data == value)
 			{
 				return;
 			}
 			this._data = value;
 			//we'll automatically detect an array, vector, or xmllist for convenience
-			if( this._data is Array && !(this._dataDescriptor is ArrayListCollectionDataDescriptor) )
+			if(this._data is Array && !(this._dataDescriptor is ArrayListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new ArrayListCollectionDataDescriptor();
 			}
-			else if( this._data is Vector.<Number> && !(this._dataDescriptor is VectorNumberListCollectionDataDescriptor) )
+			else if(this._data is Vector.<Number> && !(this._dataDescriptor is VectorNumberListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new VectorNumberListCollectionDataDescriptor();
 			}
-			else if( this._data is Vector.<int> && !(this._dataDescriptor is VectorIntListCollectionDataDescriptor) )
+			else if(this._data is Vector.<int> && !(this._dataDescriptor is VectorIntListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new VectorIntListCollectionDataDescriptor();
 			}
-			else if( this._data is Vector.<uint> && !(this._dataDescriptor is VectorUintListCollectionDataDescriptor) )
+			else if(this._data is Vector.<uint> && !(this._dataDescriptor is VectorUintListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new VectorUintListCollectionDataDescriptor();
 			}
-			else if( this._data is Vector.<*> && !(this._dataDescriptor is VectorListCollectionDataDescriptor) )
+			else if(this._data is Vector.<*> && !(this._dataDescriptor is VectorListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new VectorListCollectionDataDescriptor();
 			}
-			else if( this._data is XMLList && !(this._dataDescriptor is XMLListListCollectionDataDescriptor) )
+			else if(this._data is XMLList && !(this._dataDescriptor is XMLListListCollectionDataDescriptor))
 			{
 				this._dataDescriptor = new XMLListListCollectionDataDescriptor();
 			}
-			if( this._data === null )
+			if(this._data === null)
 			{
 				this._dataDescriptor = null;
 			}
-			this.dispatchEventWith( CollectionEventType.RESET );
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(CollectionEventType.RESET);
+			this.dispatchEventWith(Event.CHANGE);
 		}
-
+		
 		/**
 		 * @private
 		 */
-		protected var _dataDescriptor : IListCollectionDataDescriptor;
-		
+		protected var _dataDescriptor:IListCollectionDataDescriptor;
+
 		/**
 		 * Describes the underlying data source by translating APIs.
-		 *
+		 * 
 		 * @see IListCollectionDataDescriptor
 		 */
-		public function get dataDescriptor() : IListCollectionDataDescriptor
+		public function get dataDescriptor():IListCollectionDataDescriptor
 		{
 			return this._dataDescriptor;
 		}
-
+		
 		/**
 		 * @private
 		 */
-		public function set dataDescriptor( value : IListCollectionDataDescriptor ) : void
+		public function set dataDescriptor(value:IListCollectionDataDescriptor):void
 		{
-			if( this._dataDescriptor == value )
+			if(this._dataDescriptor == value)
 			{
 				return;
 			}
 			this._dataDescriptor = value;
-			this.dispatchEventWith( CollectionEventType.RESET );
-			this.dispatchEventWith( Event.CHANGE );
+			this.dispatchEventWith(CollectionEventType.RESET);
+			this.dispatchEventWith(Event.CHANGE);
 		}
 
 		/**
 		 * The number of items in the collection.
 		 */
-		public function get length() : int
+		public function get length():int
 		{
-			if( !this._dataDescriptor )
+			if(!this._dataDescriptor)
 			{
 				return 0;
 			}
-			return this._dataDescriptor.getLength( this._data );
-		}
-
-		/**
-		 * Constructor
-		 */
-		public function ListCollection( data : Object = null )
-		{
-			if( !data )
-			{
-				//default to an array if no data is provided
-				data = [];
-			}
-			this.data = data;
+			return this._dataDescriptor.getLength(this._data);
 		}
 
 		/**
@@ -319,9 +320,9 @@ package feathers.data
 		 * 
 		 * @see #updateAll()
 		 */
-		public function updateItemAt( index : int ) : void
+		public function updateItemAt(index:int):void
 		{
-			this.dispatchEventWith( CollectionEventType.UPDATE_ITEM , false , index );
+			this.dispatchEventWith(CollectionEventType.UPDATE_ITEM, false, index);
 		}
 
 		/**
@@ -337,112 +338,112 @@ package feathers.data
 		 * 
 		 * @see #updateItemAt()
 		 */
-		public function updateAll() : void
+		public function updateAll():void
 		{
-			this.dispatchEventWith( CollectionEventType.UPDATE_ALL );
+			this.dispatchEventWith(CollectionEventType.UPDATE_ALL);
 		}
-
+		
 		/**
 		 * Returns the item at the specified index in the collection.
 		 */
-		public function getItemAt( index : int ) : Object
+		public function getItemAt(index:int):Object
 		{
-			return this._dataDescriptor.getItemAt( this._data , index );
+			return this._dataDescriptor.getItemAt(this._data, index);
 		}
-
+		
 		/**
 		 * Determines which index the item appears at within the collection. If
 		 * the item isn't in the collection, returns <code>-1</code>.
 		 */
-		public function getItemIndex( item : Object ) : int
+		public function getItemIndex(item:Object):int
 		{
-			return this._dataDescriptor.getItemIndex( this._data , item );
+			return this._dataDescriptor.getItemIndex(this._data, item);
 		}
-
+		
 		/**
 		 * Adds an item to the collection, at the specified index.
 		 */
-		public function addItemAt( item : Object , index : int ) : void
+		public function addItemAt(item:Object, index:int):void
 		{
-			this._dataDescriptor.addItemAt( this._data , item , index );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.ADD_ITEM , false , index );
+			this._dataDescriptor.addItemAt(this._data, item, index);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(CollectionEventType.ADD_ITEM, false, index);
 		}
-
+		
 		/**
 		 * Removes the item at the specified index from the collection and
 		 * returns it.
 		 */
-		public function removeItemAt( index : int ) : Object
+		public function removeItemAt(index:int):Object
 		{
-			var item : Object = this._dataDescriptor.removeItemAt( this._data , index );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.REMOVE_ITEM , false , index );
+			var item:Object = this._dataDescriptor.removeItemAt(this._data, index);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(CollectionEventType.REMOVE_ITEM, false, index);
 			return item;
 		}
-
+		
 		/**
 		 * Removes a specific item from the collection.
 		 */
-		public function removeItem( item : Object ) : void
+		public function removeItem(item:Object):void
 		{
-			var index : int = this.getItemIndex( item );
-			if( index >= 0 )
+			var index:int = this.getItemIndex(item);
+			if(index >= 0)
 			{
-				this.removeItemAt( index );
+				this.removeItemAt(index);
 			}
 		}
 
 		/**
 		 * Removes all items from the collection.
 		 */
-		public function removeAll() : void
+		public function removeAll():void
 		{
-			if( this.length == 0 )
+			if(this.length == 0)
 			{
 				return;
 			}
-			this._dataDescriptor.removeAll( this._data );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.RESET , false );
+			this._dataDescriptor.removeAll(this._data);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(CollectionEventType.RESET, false);
 		}
-
+		
 		/**
 		 * Replaces the item at the specified index with a new item.
 		 */
-		public function setItemAt( item : Object , index : int ) : void
+		public function setItemAt(item:Object, index:int):void
 		{
-			this._dataDescriptor.setItemAt( this._data , item , index );
-			this.dispatchEventWith( Event.CHANGE );
-			this.dispatchEventWith( CollectionEventType.REPLACE_ITEM , false , index );
+			this._dataDescriptor.setItemAt(this._data, item, index);
+			this.dispatchEventWith(Event.CHANGE);
+			this.dispatchEventWith(CollectionEventType.REPLACE_ITEM, false, index);
 		}
 
 		/**
 		 * Adds an item to the end of the collection.
 		 */
-		public function addItem( item : Object ) : void
+		public function addItem(item:Object):void
 		{
-			this.addItemAt( item , this.length );
+			this.addItemAt(item, this.length);
 		}
 
 		/**
 		 * Adds an item to the end of the collection.
 		 */
-		public function push( item : Object ) : void
+		public function push(item:Object):void
 		{
-			this.addItemAt( item , this.length );
+			this.addItemAt(item, this.length);
 		}
 
 		/**
 		 * Adds all items from another collection.
 		 */
-		public function addAll( collection : ListCollection ) : void
+		public function addAll(collection:ListCollection):void
 		{
-			var otherCollectionLength : int = collection.length;
-			for( var i : int = 0; i < otherCollectionLength; i++ )
+			var otherCollectionLength:int = collection.length;
+			for(var i:int = 0; i < otherCollectionLength; i++)
 			{
-				var item : Object = collection.getItemAt( i );
-				this.addItem( item );
+				var item:Object = collection.getItemAt(i);
+				this.addItem(item);
 			}
 		}
 
@@ -450,48 +451,48 @@ package feathers.data
 		 * Adds all items from another collection, placing the items at a
 		 * specific index in this collection.
 		 */
-		public function addAllAt( collection : ListCollection , index : int ) : void
+		public function addAllAt(collection:ListCollection, index:int):void
 		{
-			var otherCollectionLength : int = collection.length;
-			var currentIndex : int = index;
-			for( var i : int = 0; i < otherCollectionLength; i++ )
+			var otherCollectionLength:int = collection.length;
+			var currentIndex:int = index;
+			for(var i:int = 0; i < otherCollectionLength; i++)
 			{
-				var item : Object = collection.getItemAt( i );
-				this.addItemAt( item , currentIndex );
+				var item:Object = collection.getItemAt(i);
+				this.addItemAt(item, currentIndex);
 				currentIndex++;
 			}
 		}
-
+		
 		/**
 		 * Removes the item from the end of the collection and returns it.
 		 */
-		public function pop() : Object
+		public function pop():Object
 		{
-			return this.removeItemAt( this.length - 1 );
+			return this.removeItemAt(this.length - 1);
 		}
-
+		
 		/**
 		 * Adds an item to the beginning of the collection.
 		 */
-		public function unshift( item : Object ) : void
+		public function unshift(item:Object):void
 		{
-			this.addItemAt( item , 0 );
+			this.addItemAt(item, 0);
 		}
-
+		
 		/**
 		 * Removed the item from the beginning of the collection and returns it. 
 		 */
-		public function shift() : Object
+		public function shift():Object
 		{
-			return this.removeItemAt( 0 );
+			return this.removeItemAt(0);
 		}
 
 		/**
 		 * Determines if the specified item is in the collection.
 		 */
-		public function contains( item : Object ) : Boolean
+		public function contains(item:Object):Boolean
 		{
-			return this.getItemIndex( item ) >= 0;
+			return this.getItemIndex(item) >= 0;
 		}
 
 		/**
@@ -514,13 +515,13 @@ package feathers.data
 		 * @see http://doc.starling-framework.org/core/starling/display/DisplayObject.html#dispose() starling.display.DisplayObject.dispose()
 		 * @see http://doc.starling-framework.org/core/starling/textures/Texture.html#dispose() starling.textures.Texture.dispose()
 		 */
-		public function dispose( disposeItem : Function ) : void
+		public function dispose(disposeItem:Function):void
 		{
-			var itemCount : int = this.length;
-			for( var i : int = 0; i < itemCount; i++ )
+			var itemCount:int = this.length;
+			for(var i:int = 0; i < itemCount; i++)
 			{
-				var item : Object = this.getItemAt( i );
-				disposeItem( item );
+				var item:Object = this.getItemAt(i);
+				disposeItem(item);
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 /*
- Feathers
- Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Feathers
+Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
 
- This program is free software. You can redistribute and/or modify it in
- accordance with the terms of the accompanying license agreement.
- */
+This program is free software. You can redistribute and/or modify it in
+accordance with the terms of the accompanying license agreement.
+*/
 package feathers.skins
 {
 	import feathers.display.Scale9Image;
@@ -18,33 +18,6 @@ package feathers.skins
 	public class Scale9ImageStateValueSelector extends StateWithToggleValueSelector
 	{
 		/**
-		 * @private
-		 */
-		protected var _imageProperties : Object;
-
-		/**
-		 * Optional properties to set on the Scale9Image instance.
-		 *
-		 * @see feathers.display.Scale9Image
-		 */
-		public function get imageProperties() : Object
-		{
-			if( !this._imageProperties )
-			{
-				this._imageProperties = {};
-			}
-			return this._imageProperties;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set imageProperties( value : Object ) : void
-		{
-			this._imageProperties = value;
-		}
-
-		/**
 		 * Constructor.
 		 */
 		public function Scale9ImageStateValueSelector()
@@ -54,41 +27,68 @@ package feathers.skins
 		/**
 		 * @private
 		 */
-		override public function setValueForState( value : Object , state : Object , isSelected : Boolean = false ) : void
+		protected var _imageProperties:Object;
+
+		/**
+		 * Optional properties to set on the Scale9Image instance.
+		 *
+		 * @see feathers.display.Scale9Image
+		 */
+		public function get imageProperties():Object
 		{
-			if( !(value is Scale9Textures) )
+			if(!this._imageProperties)
 			{
-				throw new ArgumentError( "Value for state must be a Scale9Textures instance." );
+				this._imageProperties = {};
 			}
-			super.setValueForState( value , state , isSelected );
+			return this._imageProperties;
 		}
 
 		/**
 		 * @private
 		 */
-		override public function updateValue( target : Object , state : Object , oldValue : Object = null ) : Object
+		public function set imageProperties(value:Object):void
 		{
-			var textures : Scale9Textures = super.updateValue( target , state ) as Scale9Textures;
-			if( !textures )
+			this._imageProperties = value;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function setValueForState(value:Object, state:Object, isSelected:Boolean = false):void
+		{
+			if(!(value is Scale9Textures))
+			{
+				throw new ArgumentError("Value for state must be a Scale9Textures instance.");
+			}
+			super.setValueForState(value, state, isSelected);
+		}
+
+		/**
+		 * @private
+		 */
+		override public function updateValue(target:Object, state:Object, oldValue:Object = null):Object
+		{
+			var textures:Scale9Textures = super.updateValue(target, state) as Scale9Textures;
+			if(!textures)
 			{
 				return null;
 			}
 
-			if( oldValue is Scale9Image )
+			if(oldValue is Scale9Image)
 			{
-				var image : Scale9Image = Scale9Image( oldValue );
+				var image:Scale9Image = Scale9Image(oldValue);
 				image.textures = textures;
 				image.readjustSize();
 			}
 			else
 			{
-				image = new Scale9Image( textures );
+				image = new Scale9Image(textures);
 			}
 
-			for( var propertyName : String in this._imageProperties )
+			for(var propertyName:String in this._imageProperties)
 			{
-				var propertyValue : Object = this._imageProperties[ propertyName ];
-				image[ propertyName ] = propertyValue;
+				var propertyValue:Object = this._imageProperties[propertyName];
+				image[propertyName] = propertyValue;
 			}
 
 			return image;
