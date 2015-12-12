@@ -27,11 +27,9 @@ public class FlairProperties
 
 	public Boolean generateATFTextures = true
 
-	public String commonResources = "drawable/**,drawable-nodpi/**,values*/**,xml*/**"
+	public String iosExcludeResources = "drawable*-ldpi*/**,drawable*-mdpi*/**,drawable*-hdpi*/**,drawable*-xxxhdpi*/**"
 
-	public String iosResources = "drawable*-xhdpi*/**,drawable*-xxhdpi*/**"
+	public String androidExcludeResources = "drawable*-ldpi*/**,drawable*-xxxhdpi*/**"
 
-	public String androidResources = "drawable-*/**"
-
-	public String desktopResources = "drawable*-mdpi/**,drawable*-xhdpi*/**"
+	public String desktopExcludeResources = "drawable*-mdpi/**,drawable*-x*hdpi*/**"
 }
