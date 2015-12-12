@@ -44,7 +44,7 @@ class TexturePacker extends DefaultTask
 
 		if( generateATFTextures )
 		{
-			String png2atf = new File( "${ SDKManager.getPath( project ) }/atftools/png2atf" ).getPath( )
+			String png2atf = "${ SDKManager.getPath( project ) }/atftools/png2atf"
 
 			tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
 				include "drawable*/**/*.png"
@@ -56,10 +56,6 @@ class TexturePacker extends DefaultTask
 				{
 					String input = file.getAbsolutePath( )
 					String output = input.replaceAll( "\\.png" , "\\.atf" )
-
-					File directory = new File( output ).getParentFile( )
-
-					if( !directory.exists( ) ) project.mkdir( directory )
 
 					project.exec {
 						commandLine "${ png2atf }" , "-c" , "e2" , "-n" , "0,0" , "-r" , "-i" , "${ input }" , "-o" , "${ output }"
