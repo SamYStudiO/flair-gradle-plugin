@@ -1,48 +1,15 @@
 package _appId_.view.core
 {
-	import _appId_.actors.STAGE;
-
 	import feathers.controls.Screen;
-	import feathers.system.DeviceCapabilities;
+	import feathers.controls.StackScreenNavigator;
 
 	import org.osflash.signals.Signal;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 * Created by SamYStudiO on 12/12/2015.
 	 */
-	public class AScreen extends Screen implements IndexScreen
+	public class AScreen extends Screen implements IShowHideScreen
 	{
-		/**
-		 * @private
-		 */
-		protected var _index : uint;
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get index() : uint
-		{
-			return _index;
-		}
-
-		public function set index( index : uint ) : void
-		{
-			_index = index;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _params : Object = {};
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get params() : Object
-		{
-			return _params;
-		}
-
 		/**
 		 * @private
 		 */
@@ -74,7 +41,6 @@ package _appId_.view.core
 		 */
 		public function AScreen()
 		{
-			super();
 		}
 
 		/**
@@ -94,76 +60,19 @@ package _appId_.view.core
 		/**
 		 * @inheritDoc
 		 */
-		public function saveState() : Object
-		{
-			return null;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
 		override protected function initialize() : void
 		{
 			super.initialize();
 
-			_initialize();
-			if( DeviceCapabilities.isPhone( STAGE ) ) _initializePhone();
-			else _initializeTablet();
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		override protected function draw() : void
-		{
-			super.draw();
-
-			_draw();
-
-			if( DeviceCapabilities.isPhone( STAGE ) ) _drawPhone();
-			else _drawTablet();
+			backButtonHandler = _goBack;
 		}
 
 		/**
 		 *
 		 */
-		protected function _initialize() : void
+		protected function _goBack() : void
 		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _initializePhone() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _initializeTablet() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _draw() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _drawPhone() : void
-		{
-		}
-
-		/**
-		 *
-		 */
-		protected function _drawTablet() : void
-		{
+			if( _owner is StackScreenNavigator ) ( _owner as StackScreenNavigator ).popScreen();
 		}
 	}
 }

@@ -7,20 +7,8 @@ package _appId_.view.core
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public interface IndexScreen extends IScreen
+	public interface IShowHideScreen extends IScreen
 	{
-		/**
-		 *
-		 */
-		function get index() : uint;
-
-		function set index( index : uint ) : void;
-
-		/**
-		 *
-		 */
-		function get params() : Object;
-
 		/**
 		 *
 		 */
@@ -40,10 +28,5 @@ package _appId_.view.core
 		 *
 		 */
 		function hide() : void;
-
-		/**
-		 *
-		 */
-		function saveState() : Object;
 	}
 }

@@ -6,7 +6,7 @@ package _appId_.view
 	public final class EnumScreen
 	{
 		/**
-		 *
+		 * Top root screen (StarlingMain)
 		 */
 		public static const MAIN : String = "main";
 

@@ -1,18 +1,15 @@
 package _appId_
 {
-	import _appId_.actors.STAGE;
-
 	import feathers.system.DeviceCapabilities;
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
 
+	[SWF(width='1024' , height='768' , frameRate='60' , backgroundColor='0xffffff')]
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
-	 */
-	[SWF(width='1024' , height='768' , frameRate='60' , backgroundColor='0xffffff')]
-	public class MainDesktop extends ASplashMain
+	 */ public class MainDesktop extends ASplashMain
 	{
 		/**
 		 *
@@ -27,7 +24,7 @@ package _appId_
 		 */
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
-			return STAGE.contentsScaleFactor == 2 ? "splash@x2.png" : "splash.png";
+			return stage.contentsScaleFactor == 2 ? "splash@x2.png" : "splash.png";
 		}
 
 		/**
@@ -37,8 +34,8 @@ package _appId_
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 
-			var w : Number = STAGE.stageWidth;
-			var h : Number = STAGE.stageHeight;
+			var w : Number = stage.stageWidth;
+			var h : Number = stage.stageHeight;
 
 			_splashScreenLandscape.x = Math.round( ( w - _splashScreenLandscape.width ) / 2 );
 			_splashScreenLandscape.y = Math.round( ( h - _splashScreenLandscape.height ) / 2 );

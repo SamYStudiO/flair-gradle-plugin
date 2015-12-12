@@ -1,17 +1,24 @@
 package _appId_.view
 {
-	import _appId_.actors.STARLING_MAIN;
+	import _appId_.resources.getString;
 	import _appId_.theme.FeathersTheme;
-	import _appId_.view.core.AAssetNavigatorPanelScreen;
+	import _appId_.view.core.AAssetPanelScreen;
 	import _appId_.view.home.HomeScreen;
 
-	import feathers.controls.ScreenNavigatorItem;
+	import feathers.controls.StackScreenNavigator;
+	import feathers.controls.StackScreenNavigatorItem;
+	import feathers.motion.Slide;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class StarlingMain extends AAssetNavigatorPanelScreen
+	public class StarlingMain extends AAssetPanelScreen
 	{
+		/**
+		 *
+		 */
+		protected var _navigator : StackScreenNavigator;
+
 		/**
 		 *
 		 */
@@ -19,19 +26,27 @@ package _appId_.view
 		{
 			super();
 
-			STARLING_MAIN = this;
 			_screenID = EnumScreen.MAIN;
-			new FeathersTheme();
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _initialize() : void
+		override protected function initialize() : void
 		{
-			super._initialize();
+			super.initialize();
 
-			addScreen( EnumScreen.HOME , new ScreenNavigatorItem( HomeScreen ) );
+			new FeathersTheme();
+
+			title = "MAIN";
+
+			_navigator = new StackScreenNavigator();
+			_navigator.pushTransition = Slide.createSlideLeftTransition();
+			_navigator.popTransition = Slide.createSlideRightTransition();
+			_navigator.addScreen( EnumScreen.HOME , new StackScreenNavigatorItem( HomeScreen ) );
+			_navigator.pushScreen( getString( "first_screen" ) );
+
+			addChild( _navigator );
 		}
 	}
 }

@@ -1,12 +1,13 @@
 package _appId_.motion
 {
-	import _appId_.view.core.IndexAssetScreen;
-	import _appId_.view.core.IndexScreen;
+	import _appId_.view.core.IShowHideScreen;
+
+	import feathers.events.FeathersEventType;
 
 	import flash.utils.setTimeout;
 
-	import starling.animation.Transitions;
 	import starling.display.DisplayObject;
+	import starling.events.Event;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 05/12/2015.
@@ -16,52 +17,59 @@ package _appId_.motion
 		/**
 		 *
 		 */
-		public static function createTransition( duration : Number = 0.5 , ease : Object = Transitions.EASE_OUT , waitNextScreenReady : Boolean = false , overlapDelay : Number = NaN ) : Function
+		public static function createTransition( waitNewScreenInitialized : Boolean = false , overlapDelay : Number = NaN ) : Function
 		{
 			return function ( oldScreen : DisplayObject , newScreen : DisplayObject , onComplete : Function ) : void
 			{
-				var oldIndexedScreen : IndexScreen = oldScreen as IndexScreen;
-				var newIndexedScreen : IndexScreen = newScreen as IndexScreen;
-				var newIndexedAssetScreen : IndexAssetScreen = newScreen as IndexAssetScreen;
+				var oldShowHideScreen : IShowHideScreen = oldScreen as IShowHideScreen;
+				var newShowHideScreen : IShowHideScreen = newScreen as IShowHideScreen;
 
 				function hideOldScreen() : void
 				{
-					if( waitNextScreenReady && newIndexedAssetScreen != null && !newIndexedAssetScreen.isReady )
+					if( waitNewScreenInitialized && newShowHideScreen != null && !newShowHideScreen.isInitialized )
 					{
-						newIndexedAssetScreen.assetsComplete.addOnce( hideOldScreen );
+						newShowHideScreen.addEventListener( FeathersEventType.INITIALIZE , function ( e : Event ) : void
+						{
+							newShowHideScreen.removeEventListener( FeathersEventType.INITIALIZE , arguments.callee );
+							hideOldScreen();
+						} );
 					}
 					else
 					{
-						if( newIndexedScreen != null )
+						if( newShowHideScreen != null )
 						{
 							if( !isNaN( overlapDelay ) && overlapDelay >= 0 )
 							{
 								if( overlapDelay == 0 ) showNewScreen();
 								else setTimeout( showNewScreen , overlapDelay * 1000 )
 							}
-							else oldIndexedScreen.hidden.addOnce( showNewScreen );
+							else oldShowHideScreen.hidden.addOnce( showNewScreen );
 						}
-						else oldIndexedScreen.hidden.addOnce( onComplete );
+						else oldShowHideScreen.hidden.addOnce( onComplete );
 
-						oldIndexedScreen.hide();
+						oldShowHideScreen.hide();
 					}
 				}
 
 				function showNewScreen() : void
 				{
-					if( newIndexedAssetScreen != null && !newIndexedAssetScreen.isReady )
+					if( newShowHideScreen != null && !newShowHideScreen.isInitialized )
 					{
-						newIndexedAssetScreen.assetsComplete.addOnce( showNewScreen );
+						newShowHideScreen.addEventListener( FeathersEventType.INITIALIZE , function ( e : Event ) : void
+						{
+							newShowHideScreen.removeEventListener( FeathersEventType.INITIALIZE , arguments.callee );
+							showNewScreen();
+						} );
 					}
 					else
 					{
-						if( onComplete != null ) newIndexedScreen.shown.addOnce( onComplete );
-						newIndexedScreen.show();
+						if( onComplete != null ) newShowHideScreen.shown.addOnce( onComplete );
+						newShowHideScreen.show();
 					}
 				}
 
-				if( oldIndexedScreen != null ) hideOldScreen();
-				else if( newIndexedScreen != null ) showNewScreen();
+				if( oldShowHideScreen != null ) hideOldScreen();
+				else if( newShowHideScreen != null ) showNewScreen();
 				else if( onComplete != null ) onComplete();
 			}
 		}

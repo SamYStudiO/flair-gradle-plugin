@@ -1,11 +1,12 @@
 package _appId_.utils
 {
-	import _appId_.actors.STAGE;
 	import _appId_.utils.device.isDesktop;
 
+	import flash.display.Stage;
 	import flash.display.StageOrientation;
 	import flash.events.Event;
 	import flash.geom.Matrix;
+	import flash.utils.Dictionary;
 
 	import org.osflash.signals.Signal;
 
@@ -17,16 +18,16 @@ package _appId_.utils
 		/**
 		 *
 		 */
-		private static var __instance : OrientationManager;
+		private static var __instances : Dictionary = new Dictionary( true );
 
 		/**
 		 *
 		 */
-		public static function getInstance() : OrientationManager
+		public static function getInstance( stage : Stage ) : OrientationManager
 		{
-			if( __instance == null ) __instance = new OrientationManager( new Singleton() );
+			if( !__instances[ stage ] ) __instances[ stage ] = new OrientationManager( new Singleton() , stage );
 
-			return __instance;
+			return __instances[ stage ];
 		}
 
 		/**
@@ -35,7 +36,12 @@ package _appId_.utils
 		private const _orientations : Array = [ StageOrientation.DEFAULT , StageOrientation.ROTATED_LEFT , StageOrientation.UPSIDE_DOWN , StageOrientation.ROTATED_RIGHT ];
 
 		/**
-		 * @private
+		 *
+		 */
+		private var _stage : Stage;
+
+		/**
+		 *
 		 */
 		private var _stageOrientation : String;
 
@@ -49,11 +55,11 @@ package _appId_.utils
 
 		public function set stageOrientation( s : String ) : void
 		{
-			STAGE.setOrientation( s );
+			_stage.setOrientation( s );
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		private var _deviceOrientation : String;
 
@@ -70,7 +76,7 @@ package _appId_.utils
 		 */
 		public function get isStagePortrait() : Boolean
 		{
-			return STAGE.stageWidth < STAGE.stageHeight && !isDesktop();
+			return _stage.stageWidth < _stage.stageHeight && !isDesktop();
 		}
 
 		/**
@@ -78,7 +84,7 @@ package _appId_.utils
 		 */
 		public function get isStageLandscape() : Boolean
 		{
-			return STAGE.stageWidth > STAGE.stageHeight || isDesktop();
+			return _stage.stageWidth > _stage.stageHeight || isDesktop();
 		}
 
 		/**
@@ -98,7 +104,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * @private
+		 *
 		 */
 		private var _defaultOrientationIsPortrait : Boolean;
 
@@ -119,9 +125,9 @@ package _appId_.utils
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected var _deviceVSStageMatrix : Matrix;
+		private var _deviceVSStageMatrix : Matrix;
 
 		/**
 		 *
@@ -132,9 +138,9 @@ package _appId_.utils
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected var _stageOrientationChanged : Signal = new Signal();
+		private var _stageOrientationChanged : Signal = new Signal();
 
 		/**
 		 *
@@ -145,9 +151,9 @@ package _appId_.utils
 		}
 
 		/**
-		 * @private
+		 *
 		 */
-		protected var _deviceOrientationChanged : Signal = new Signal();
+		private var _deviceOrientationChanged : Signal = new Signal();
 
 		/**
 		 *
@@ -160,17 +166,19 @@ package _appId_.utils
 		/**
 		 * @private
 		 */
-		public function OrientationManager( singleton : Singleton )
+		public function OrientationManager( singleton : Singleton , stage : Stage )
 		{
 			if( singleton == null ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
 
-			_stageOrientation = STAGE.orientation == StageOrientation.UNKNOWN ? StageOrientation.DEFAULT : STAGE.orientation;
+			_stage = stage;
+
+			_stageOrientation = _stage.orientation == StageOrientation.UNKNOWN ? StageOrientation.DEFAULT : _stage.orientation;
 
 			var orientationIsDefaultUpDown : Boolean = _stageOrientation == StageOrientation.DEFAULT || _stageOrientation == StageOrientation.UPSIDE_DOWN;
 			var orientationIsRightLeft : Boolean = _stageOrientation == StageOrientation.ROTATED_LEFT || _stageOrientation == StageOrientation.ROTATED_RIGHT;
 
 			_defaultOrientationIsPortrait = orientationIsDefaultUpDown && isStagePortrait || orientationIsRightLeft && isStageLandscape;
-			_deviceOrientation = STAGE.deviceOrientation == StageOrientation.UNKNOWN ? ( _stageOrientation == StageOrientation.ROTATED_RIGHT ? StageOrientation.ROTATED_LEFT : _stageOrientation == StageOrientation.ROTATED_LEFT ? StageOrientation.ROTATED_RIGHT : _stageOrientation ) : STAGE.deviceOrientation;
+			_deviceOrientation = _stage.deviceOrientation == StageOrientation.UNKNOWN ? ( _stageOrientation == StageOrientation.ROTATED_RIGHT ? StageOrientation.ROTATED_LEFT : _stageOrientation == StageOrientation.ROTATED_LEFT ? StageOrientation.ROTATED_RIGHT : _stageOrientation ) : _stage.deviceOrientation;
 			_deviceVSStageMatrix = new Matrix();
 		}
 
@@ -179,7 +187,7 @@ package _appId_.utils
 		 */
 		public function startListeningForChange() : void
 		{
-			STAGE.addEventListener( Event.ENTER_FRAME , _monitorOrientation );
+			_stage.addEventListener( Event.ENTER_FRAME , _monitorOrientation );
 		}
 
 		/**
@@ -187,7 +195,7 @@ package _appId_.utils
 		 */
 		public function stopListeningForChange() : void
 		{
-			STAGE.removeEventListener( Event.ENTER_FRAME , _monitorOrientation );
+			_stage.removeEventListener( Event.ENTER_FRAME , _monitorOrientation );
 		}
 
 		/**
@@ -203,20 +211,20 @@ package _appId_.utils
 		 */
 		private function _monitorOrientation( e : Event = null ) : void
 		{
-			var newStageOrientation : String = STAGE.orientation == StageOrientation.UNKNOWN ? _stageOrientation : STAGE.orientation;
-			var stageWidth : Number = STAGE.stageWidth;
-			var stageHeight : Number = STAGE.stageHeight;
+			var newStageOrientation : String = _stage.orientation == StageOrientation.UNKNOWN ? _stageOrientation : _stage.orientation;
+			var stageWidth : Number = _stage.stageWidth;
+			var stageHeight : Number = _stage.stageHeight;
 			var stageIsPortrait : Boolean = ( _defaultOrientationIsPortrait && ( newStageOrientation == StageOrientation.DEFAULT || newStageOrientation == StageOrientation.UPSIDE_DOWN ) ) || ( !_defaultOrientationIsPortrait && ( newStageOrientation == StageOrientation.ROTATED_LEFT || newStageOrientation == StageOrientation.ROTATED_RIGHT ) );
 			var stageOrientationChanged : Boolean = _stageOrientation != newStageOrientation && ( ( stageIsPortrait && stageWidth < stageHeight ) || ( !stageIsPortrait && stageWidth >= stageHeight ) );
 
-			var newDeviceOrientation : String = STAGE.deviceOrientation == StageOrientation.UNKNOWN ? _deviceOrientation : STAGE.deviceOrientation;
+			var newDeviceOrientation : String = _stage.deviceOrientation == StageOrientation.UNKNOWN ? _deviceOrientation : _stage.deviceOrientation;
 			var deviceOrientationChanged : Boolean = _deviceOrientation != newDeviceOrientation;
-
-			_stageOrientation = newStageOrientation;
-			_deviceOrientation = newDeviceOrientation;
 
 			if( stageOrientationChanged || deviceOrientationChanged )
 			{
+				_stageOrientation = newStageOrientation;
+				_deviceOrientation = newDeviceOrientation;
+
 				var deviceOrientationFromStage : String = _stageOrientation == StageOrientation.ROTATED_LEFT ? StageOrientation.ROTATED_RIGHT : _stageOrientation == StageOrientation.ROTATED_RIGHT ? StageOrientation.ROTATED_LEFT : _stageOrientation;
 				var offset : uint = _orientations.indexOf( deviceOrientationFromStage );
 				var currentIndex : int = _orientations.indexOf( _deviceOrientation );
@@ -245,11 +253,11 @@ package _appId_.utils
 					_deviceVSStageMatrix.rotate( Math.PI );
 					_deviceVSStageMatrix.translate( 1 , 1 );
 				}
+
+				if( stageOrientationChanged ) this.stageOrientationChanged.dispatch();
+
+				if( deviceOrientationChanged ) this.deviceOrientationChanged.dispatch();
 			}
-
-			if( stageOrientationChanged ) this.stageOrientationChanged.dispatch();
-
-			if( deviceOrientationChanged ) this.deviceOrientationChanged.dispatch();
 		}
 	}
 }

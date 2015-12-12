@@ -1,8 +1,5 @@
 package _appId_
 {
-	import _appId_.actors.ORIENTATION_MANAGER;
-	import _appId_.actors.STAGE;
-
 	import feathers.utils.display.calculateScaleRatioToFit;
 
 	import flash.display.Bitmap;
@@ -12,7 +9,6 @@ package _appId_
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	[SWF(width='1080' , height='1920' , frameRate='60' , backgroundColor='0xffffff')]
 	public class MainAndroid extends ASplashMain
 	{
 		/**
@@ -29,8 +25,8 @@ package _appId_
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
-			var stageWidth : Number = STAGE.stageWidth;
-			var stageHeight : Number = STAGE.stageHeight;
+			var stageWidth : Number = stage.stageWidth;
+			var stageHeight : Number = stage.stageHeight;
 
 			var max : Number = Math.max( stageWidth , stageHeight );
 			var min : Number = Math.min( stageWidth , stageHeight );
@@ -76,8 +72,8 @@ package _appId_
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
 
-			var w : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.stageWidth : STAGE.stageHeight;
-			var h : Number = ORIENTATION_MANAGER.isStagePortrait ? STAGE.stageHeight : STAGE.stageWidth;
+			var w : Number = _ORIENTATION_MANAGER.isStagePortrait ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _ORIENTATION_MANAGER.isStagePortrait ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
@@ -93,8 +89,8 @@ package _appId_
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 
-			var w : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.stageWidth : STAGE.stageHeight;
-			var h : Number = ORIENTATION_MANAGER.isStageLandscape ? STAGE.stageHeight : STAGE.stageWidth;
+			var w : Number = _ORIENTATION_MANAGER.isStageLandscape ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _ORIENTATION_MANAGER.isStageLandscape ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 

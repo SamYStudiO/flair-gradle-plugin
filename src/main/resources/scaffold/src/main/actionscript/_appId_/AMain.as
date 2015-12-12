@@ -1,15 +1,11 @@
 package _appId_
 {
-	import _appId_.actors.NAVIGATOR;
-	import _appId_.actors.STAGE;
-	import _appId_.actors.STARLING;
-	import _appId_.actors.STARLING_MAIN;
-	import _appId_.actors.STARLING_STAGE;
-	import _appId_.resources.getString;
 	import _appId_.theme.Fonts;
 	import _appId_.utils.device.isDesktop;
 	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.StarlingMain;
+
+	import feathers.events.FeathersEventType;
 
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
@@ -41,6 +37,11 @@ package _appId_
 		/**
 		 *
 		 */
+		protected var _starling : Starling;
+
+		/**
+		 *
+		 */
 		protected var _isActivated : Boolean = true;
 
 		/**
@@ -67,10 +68,9 @@ package _appId_
 		 */
 		protected function _initStage() : void
 		{
-			STAGE = stage;
-			STAGE.align = StageAlign.TOP_LEFT;
-			STAGE.scaleMode = StageScaleMode.NO_SCALE;
-			STAGE.stageFocusRect = false;
+			stage.align = StageAlign.TOP_LEFT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.stageFocusRect = false;
 		}
 
 		/**
@@ -96,33 +96,32 @@ package _appId_
 			Starling.multitouchEnabled = true;
 			Starling.handleLostContext = true;
 
-			STARLING = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
-			STARLING.showStats = Capabilities.isDebugger;
-			STARLING.simulateMultitouch = isDesktop();
-			STARLING.enableErrorChecking = Capabilities.isDebugger;
-			STARLING.supportHighResolutions = isDesktop();
-			STARLING_STAGE = STARLING.stage;
+			_starling = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
+			_starling.showStats = Capabilities.isDebugger;
+			_starling.simulateMultitouch = isDesktop();
+			_starling.enableErrorChecking = Capabilities.isDebugger;
+			_starling.supportHighResolutions = isDesktop();
 
 			_onStageResize();
 
-			STARLING.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
-			STARLING.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
+			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
+			_starling.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 
-			Gestouch.inputAdapter = new NativeInputAdapter( STAGE );
+			Gestouch.inputAdapter = new NativeInputAdapter( stage );
 			Gestouch.addDisplayListAdapter( DisplayObject , new StarlingDisplayListAdapter() );
-			Gestouch.addTouchHitTester( new StarlingTouchHitTester( STARLING ) , -1 );
+			Gestouch.addTouchHitTester( new StarlingTouchHitTester( _starling ) , -1 );
 
-			if( _isActivated ) STARLING.start();
+			if( _isActivated ) _starling.start();
 		}
 
 		/**
 		 *
 		 */
-		protected function _onMainReady() : void
+		protected function _onMainInitialized() : void
 		{
-			info( this , "_onMainReady" );
+			info( this , "_onMainInitialized" );
 
-			NAVIGATOR.showPath( getString( "first_screen" ) );
+			_starling.root.removeEventListener( FeathersEventType.INITIALIZE , _onMainInitialized );
 		}
 
 		/**
@@ -134,7 +133,7 @@ package _appId_
 
 			_isActivated = true;
 
-			if( STARLING != null ) STARLING.start();
+			if( _starling != null ) _starling.start();
 		}
 
 		/**
@@ -146,7 +145,7 @@ package _appId_
 
 			_isActivated = false;
 
-			if( STARLING != null && !isDesktop() ) STARLING.stop( true );
+			if( _starling != null && !isDesktop() ) _starling.stop( true );
 		}
 
 		/**
@@ -170,7 +169,7 @@ package _appId_
 		{
 			info( this , "_onStarlingContextCreate" );
 
-			STARLING.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
+			_starling.removeEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 		}
 
 		/**
@@ -180,12 +179,9 @@ package _appId_
 		{
 			info( this , "_onStarlingRootCreate" );
 
-			STAGE.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
-
-			if( STARLING_MAIN.isReady ) _onMainReady();
-			else STARLING_MAIN.assetsComplete.addOnce( _onMainReady );
-
-			STARLING.removeEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
+			_starling.removeEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
+			stage.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
+			_starling.root.addEventListener( FeathersEventType.INITIALIZE , _onMainInitialized );
 		}
 
 		/**
@@ -193,17 +189,17 @@ package _appId_
 		 */
 		protected function _onStageResize( e : flash.events.Event = null ) : void
 		{
-			var stageWidth : Number = STAGE.stageWidth;
-			var stageHeight : Number = STAGE.stageHeight;
+			var stageWidth : Number = stage.stageWidth;
+			var stageHeight : Number = stage.stageHeight;
 
 			info( this , "_onStageResize" , stageWidth , stageHeight );
 
 			var scale : Number = getDensityScale();
 
-			STARLING_STAGE.stageWidth = stageWidth / scale;
-			STARLING_STAGE.stageHeight = stageHeight / scale;
+			_starling.stage.stageWidth = stageWidth / scale;
+			_starling.stage.stageHeight = stageHeight / scale;
 
-			STARLING.viewPort = new Rectangle( 0 , 0 , stageWidth , stageHeight );
+			_starling.viewPort = new Rectangle( 0 , 0 , stageWidth , stageHeight );
 		}
 	}
 }

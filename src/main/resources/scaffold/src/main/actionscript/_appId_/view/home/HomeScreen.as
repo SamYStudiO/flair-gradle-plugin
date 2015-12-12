@@ -30,9 +30,9 @@ package _appId_.view.home
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _initialize() : void
+		override protected function initialize() : void
 		{
-			super._initialize();
+			super.initialize();
 
 			_label = new Label();
 			_label.text = getString( "hello" );
@@ -42,9 +42,9 @@ package _appId_.view.home
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _draw() : void
+		override protected function draw() : void
 		{
-			super._draw();
+			super.draw();
 
 			if( isInvalid( INVALIDATION_FLAG_SIZE ) )
 			{

@@ -33,5 +33,5 @@ public class FlairProperties
 
 	public String androidResources = "drawable-*/**"
 
-	public String desktopResources = "drawable-mdpi/**"
+	public String desktopResources = "drawable*-mdpi/**,drawable*-xhdpi*/**"
 }

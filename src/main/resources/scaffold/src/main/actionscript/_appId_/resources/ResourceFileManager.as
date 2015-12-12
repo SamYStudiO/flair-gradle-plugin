@@ -1,7 +1,5 @@
 package _appId_.resources
 {
-	import _appId_.actors.STARLING;
-	import _appId_.actors.STARLING_STAGE;
 	import _appId_.utils.device.deviceLocale;
 	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
@@ -13,6 +11,8 @@ package _appId_.resources
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.utils.Dictionary;
+
+	import starling.core.Starling;
 
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
@@ -47,7 +47,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __SMALLEST_WIDTH_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.SMALLEST_WIDTH , /(sw[0-9]{2,4}dp)/ , Math.min( STARLING_STAGE.stageWidth , STARLING_STAGE.stageHeight ) , function ( qualifierValue : String , testValue : String ) : Boolean
+		private const __SMALLEST_WIDTH_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.SMALLEST_WIDTH , /(sw[0-9]{2,4}dp)/ , Math.min( Starling.current.stage.stageWidth , Starling.current.stage.stageHeight ) , function ( qualifierValue : String , testValue : String ) : Boolean
 		{
 			function parseSWInt( s : String ) : int
 			{
@@ -310,13 +310,13 @@ package _appId_.resources
 
 							if( ext == "atf" )
 							{
-								if( STARLING.profile == Context3DProfile.STANDARD_EXTENDED ) v.push( resourceFile )
+								if( Starling.current.profile == Context3DProfile.STANDARD_EXTENDED ) v.push( resourceFile )
 							}
 							else if( ext == "png" )
 							{
 								atf = file.parent.resolvePath( file.name.split( "." )[ 0 ] + ".atf" );
 
-								if( STARLING.profile != Context3DProfile.STANDARD_EXTENDED || !atf.exists ) v.push( resourceFile )
+								if( Starling.current.profile != Context3DProfile.STANDARD_EXTENDED || !atf.exists ) v.push( resourceFile )
 							}
 							else
 							{

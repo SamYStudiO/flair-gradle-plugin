@@ -1,25 +1,25 @@
 package _appId_.view.core
 {
-	import _appId_.actors.RESOURCE_MANAGER;
-	import _appId_.actors.STAGE;
 	import _appId_.resources.ResourceFile;
+	import _appId_.resources.ResourceFileManager;
 	import _appId_.resources.addAssetManager;
 	import _appId_.resources.removeAssetManager;
 	import _appId_.utils.displayMetrics.getDensityScale;
 
-	import feathers.system.DeviceCapabilities;
+	import feathers.events.FeathersEventType;
 
 	import flash.system.Capabilities;
 
 	import org.osflash.signals.Signal;
 
+	import starling.events.Event;
 	import starling.textures.TextureOptions;
 	import starling.utils.AssetManager;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
 	 */
-	public class AAssetScreen extends AScreen implements IndexAssetScreen
+	public class AAssetScreen extends AScreen implements IAssetScreen
 	{
 		/**
 		 *
@@ -29,53 +29,14 @@ package _appId_.view.core
 		/**
 		 * @private
 		 */
-		protected var _isReady : Boolean;
+		protected var _assetProgress : Signal = new Signal( Number );
 
 		/**
 		 * @inheritDoc
 		 */
-		public function get isReady() : Boolean
+		public function get assetProgress() : Signal
 		{
-			return _isReady;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _assetsProgress : Signal = new Signal( Number );
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get assetsProgress() : Signal
-		{
-			return _assetsProgress;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _assetsComplete : Signal = new Signal();
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get assetsComplete() : Signal
-		{
-			return _assetsComplete;
-		}
-
-		/**
-		 * @private
-		 */
-		protected var _assetsError : Signal = new Signal();
-
-		/**
-		 * @inheritDoc
-		 */
-		public function get assetsError() : Signal
-		{
-			return _assetsError;
+			return _assetProgress;
 		}
 
 		/**
@@ -94,30 +55,44 @@ package _appId_.view.core
 			super.dispose();
 
 			if( _assets != null ) _assets.purge();
-			delete removeAssetManager( _screenID );
+			removeAssetManager( _screenID );
 		}
 
 		/**
 		 * @inheritDoc
 		 */
-		override protected function initialize() : void
+		override protected function initializeInternal() : void
 		{
-			_initAssets();
-		}
+			if( _isInitialized || _isInitializing ) return;
 
-		/**
-		 * @inheritDoc
-		 */
-		override protected function draw() : void
-		{
-			if( _isReady ) super.draw();
+			_isInitializing = true;
+
+			_initializeAssets( function ( ratio : Number ) : void
+			{
+				_assetProgress.dispatch( ratio );
+
+				if( ratio == 1 )
+				{
+					initialize();
+					invalidate();
+					_isInitializing = false;
+					_isInitialized = true;
+					dispatchEventWith( FeathersEventType.INITIALIZE );
+				}
+			} );
+
+			if( _styleProvider ) _styleProvider.applyStyles( this );
+
+			_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 		}
 
 		/**
 		 *
 		 */
-		protected function _initAssets() : void
+		protected function _initializeAssets( onProgress : Function ) : void
 		{
+			if( _assets ) return;
+
 			_assets = _getAssetManager();
 			_assets.verbose = Capabilities.isDebugger;
 
@@ -125,7 +100,7 @@ package _appId_.view.core
 
 			_addAssets();
 
-			_assets.loadQueue( _onAssetsProgress );
+			_assets.loadQueue( onProgress );
 		}
 
 		/**
@@ -141,46 +116,12 @@ package _appId_.view.core
 		 */
 		protected function _addAssets() : void
 		{
-			var resourceList : Vector.<ResourceFile> = RESOURCE_MANAGER.getResources( _screenID );
+			var resourceList : Vector.<ResourceFile> = ResourceFileManager.getInstance().getResources( _screenID );
 
 			for each ( var file : ResourceFile in resourceList )
 			{
 				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale ) );
 			}
-		}
-
-		/**
-		 *
-		 */
-		protected function _onAssetsProgress( ratio : Number ) : void
-		{
-			_assetsProgress.dispatch( ratio );
-
-			if( ratio == 1 ) _onAssetsComplete();
-		}
-
-		/**
-		 *
-		 */
-		protected function _onAssetsComplete() : void
-		{
-			_initialize();
-
-			if( DeviceCapabilities.isPhone( STAGE ) ) _initializePhone();
-			else _initializeTablet();
-
-			_isReady = true;
-			_assetsComplete.dispatch();
-
-			invalidate();
-		}
-
-		/**
-		 *
-		 */
-		protected function _onAssetsError() : void
-		{
-			_assetsError.dispatch();
 		}
 	}
 }
