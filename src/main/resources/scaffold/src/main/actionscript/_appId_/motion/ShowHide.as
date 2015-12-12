@@ -26,7 +26,7 @@ package _appId_.motion
 
 				function hideOldScreen() : void
 				{
-					if( waitNewScreenInitialized && newShowHideScreen != null && !newShowHideScreen.isInitialized )
+					if( waitNewScreenInitialized && newShowHideScreen && !newShowHideScreen.isInitialized )
 					{
 						newShowHideScreen.addEventListener( FeathersEventType.INITIALIZE , function ( e : Event ) : void
 						{
@@ -36,7 +36,7 @@ package _appId_.motion
 					}
 					else
 					{
-						if( newShowHideScreen != null )
+						if( newShowHideScreen )
 						{
 							if( !isNaN( overlapDelay ) && overlapDelay >= 0 )
 							{
@@ -53,7 +53,7 @@ package _appId_.motion
 
 				function showNewScreen() : void
 				{
-					if( newShowHideScreen != null && !newShowHideScreen.isInitialized )
+					if( newShowHideScreen && !newShowHideScreen.isInitialized )
 					{
 						newShowHideScreen.addEventListener( FeathersEventType.INITIALIZE , function ( e : Event ) : void
 						{
@@ -63,14 +63,14 @@ package _appId_.motion
 					}
 					else
 					{
-						if( onComplete != null ) newShowHideScreen.shown.addOnce( onComplete );
+						if( onComplete ) newShowHideScreen.shown.addOnce( onComplete );
 						newShowHideScreen.show();
 					}
 				}
 
-				if( oldShowHideScreen != null ) hideOldScreen();
-				else if( newShowHideScreen != null ) showNewScreen();
-				else if( onComplete != null ) onComplete();
+				if( oldShowHideScreen ) hideOldScreen();
+				else if( newShowHideScreen ) showNewScreen();
+				else if( onComplete ) onComplete();
 			}
 		}
 

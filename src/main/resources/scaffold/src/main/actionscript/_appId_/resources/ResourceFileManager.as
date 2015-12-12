@@ -29,7 +29,7 @@ package _appId_.resources
 		 */
 		public static function getInstance() : ResourceFileManager
 		{
-			if( __instance == null ) __instance = new ResourceFileManager( new Singleton() );
+			if( !__instance ) __instance = new ResourceFileManager( new Singleton() );
 
 			return __instance;
 		}
@@ -72,7 +72,7 @@ package _appId_.resources
 		 */
 		public function ResourceFileManager( singleton : Singleton )
 		{
-			if( singleton == null ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
+			if( !singleton ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
 		}
 
 		/**
@@ -211,7 +211,7 @@ package _appId_.resources
 
 							test = directory.name.match( qualifier.regexp );
 
-							if( test != null && test.length > 0 )
+							if( test && test.length > 0 )
 							{
 								match = test[ 0 ].replace( /-/g , "" );
 
@@ -239,13 +239,13 @@ package _appId_.resources
 						{
 							test = directory.name.match( qualifier.regexp );
 
-							if( test != null && test.length > 0 )
+							if( test && test.length > 0 )
 							{
 								for each ( directory in validDirectories )
 								{
 									test = directory.name.match( qualifier.regexp );
 
-									if( ( test == null || test.length == 0 ) )
+									if( ( !test || test.length == 0 ) )
 									{
 										b.removeAt( b.indexOf( directory ) );
 									}
@@ -259,7 +259,7 @@ package _appId_.resources
 					validDirectories = b.concat();
 				}
 
-				directory = validDirectories.length > 0 ? validDirectories[ 0 ] : null;
+				directory = validDirectories.length ? validDirectories[ 0 ] : null;
 
 				if( directory )
 				{
@@ -464,7 +464,7 @@ class Qualifier
 	 */
 	public function test( value : Object ) : Boolean
 	{
-		return matchFunction != null ? matchFunction( this.value , value ) : value === this.value;
+		return matchFunction ? matchFunction( this.value , value ) : value === this.value;
 	}
 }
 

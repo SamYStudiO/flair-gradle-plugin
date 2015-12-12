@@ -106,9 +106,9 @@ package _appId_
 			var filePath : String = _getSplashScreenFilePath( portrait );
 			var file : File;
 
-			if( filePath != null && filePath != "" ) file = File.applicationDirectory.resolvePath( filePath );
+			if( filePath ) file = File.applicationDirectory.resolvePath( filePath );
 
-			if( file != null && file.exists )
+			if( file && file.exists )
 			{
 				var fs : FileStream = new FileStream();
 				fs.open( file , FileMode.READ );

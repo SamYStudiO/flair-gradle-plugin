@@ -5,9 +5,9 @@ package _appId_.utils.object
 	 */
 	public function merge( fromObject : Object , toObject : Object , overwrite : Boolean = true , excludeProperties : * = null ) : Object
 	{
-		toObject = toObject == null ? {} : toObject;
+		toObject = !toObject ? {} : toObject;
 
-		excludeProperties = excludeProperties == null ? {} : excludeProperties;
+		excludeProperties = !excludeProperties ? {} : excludeProperties;
 
 		for( var s : String in fromObject )
 		{

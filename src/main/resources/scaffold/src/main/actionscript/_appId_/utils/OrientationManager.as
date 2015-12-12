@@ -168,7 +168,7 @@ package _appId_.utils
 		 */
 		public function OrientationManager( singleton : Singleton , stage : Stage )
 		{
-			if( singleton == null ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
+			if( !singleton ) throw new Error( this + " Singleton instance can only be accessed through getInstance method" );
 
 			_stage = stage;
 

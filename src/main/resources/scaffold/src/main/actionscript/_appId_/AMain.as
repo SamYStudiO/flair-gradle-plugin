@@ -133,7 +133,7 @@ package _appId_
 
 			_isActivated = true;
 
-			if( _starling != null ) _starling.start();
+			if( _starling ) _starling.start();
 		}
 
 		/**
@@ -145,7 +145,7 @@ package _appId_
 
 			_isActivated = false;
 
-			if( _starling != null && !isDesktop() ) _starling.stop( true );
+			if( _starling && !isDesktop() ) _starling.stop( true );
 		}
 
 		/**
