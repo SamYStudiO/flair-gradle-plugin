@@ -125,6 +125,14 @@ package _appId_.resources
 		/**
 		 *
 		 */
+		public function getRaw( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		{
+			return getResource( EnumResourceType.RAW , screenID );
+		}
+
+		/**
+		 *
+		 */
 		public function getResource( resourceType : String , screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
 			var resourceList : Dictionary = _getResourceList( resourceType , screenID );
@@ -335,7 +343,7 @@ package _appId_.resources
 		 */
 		public function getResources( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
-			return getDrawables( screenID ).concat( getXML( screenID ) ).concat( getValues( screenID ) )
+			return getDrawables( screenID ).concat( getXML( screenID ) ).concat( getValues( screenID ) ).concat( getRaw( screenID ) )
 		}
 
 		/**

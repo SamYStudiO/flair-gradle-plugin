@@ -21,6 +21,11 @@ package _appId_.resources
 		public static const XML : String = "xml";
 
 		/**
+		 *
+		 */
+		public static const RAW : String = "raw";
+
+		/**
 		 * @private
 		 */
 		public function EnumResourceType()
