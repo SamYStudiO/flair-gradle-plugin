@@ -21,7 +21,7 @@ class UpdateProperties extends DefaultTask
 	{
 		String appId = project.flair.appId
 
-		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
+		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
 
 		String moduleName = project.flair.moduleName
 
@@ -31,17 +31,15 @@ class UpdateProperties extends DefaultTask
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file )
 		}
 
-		String commonResources = project.flair.commonResources
-		String androidResources = project.flair.androidResources
-		String iosResources = project.flair.iosResources
-		String desktopResources = project.flair.desktopResources
+		String androidExcludeResources = project.flair.androidExcludeResources
+		String iosExcludeResources = project.flair.iosExcludeResources
+		String desktopExcludeResources = project.flair.desktopExcludeResources
 
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )
 		String out = ""
 		Boolean replace = false
-		String subNodeName = ""
-		String typeResources = ""
+		String typeExcludeResources = ""
 
 		imlContent.eachLine { line ->
 
@@ -49,21 +47,18 @@ class UpdateProperties extends DefaultTask
 			{
 				if( line.indexOf( "android" ) >= 0 )
 				{
-					subNodeName = "packaging-android"
-					typeResources = androidResources
+					typeExcludeResources = androidExcludeResources
 				}
 				if( line.indexOf( "ios" ) >= 0 )
 				{
-					subNodeName = "packaging-ios"
-					typeResources = iosResources
+					typeExcludeResources = iosExcludeResources
 				}
 				if( line.indexOf( "desktop" ) >= 0 )
 				{
-					subNodeName = "packaging-air-desktop"
-					typeResources = desktopResources
+					typeExcludeResources = desktopExcludeResources
 				}
 
-				out += line + "\r\n"
+				out += line + System.lineSeparator( )
 			}
 			else if( line.indexOf( "FilePathAndPathInPackage" ) >= 0 && line.indexOf( "splashs" ) < 0 && line.indexOf( "icons" ) < 0 )
 			{
@@ -79,29 +74,28 @@ class UpdateProperties extends DefaultTask
 					String paths = ""
 
 					tree.each { file ->
-						File parent = file.getParentFile( )
-						String parentName = parent.getName( )
 
-						String[] commons = commonResources.split( "," )
-						String[] types = typeResources.split( "," )
+						if( file.getParentFile( ).getName( ) != "resources" )
+						{
+							File parent = file.getParentFile( )
 
-						commons.each { common ->
-
-							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
-
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( common.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
+							while( parent.getParentFile( ).getName( ) != "resources" )
 							{
-								paths += path
+								parent = parent.getParentFile( )
 							}
-						}
 
-						types.each { type ->
+							String parentName = parent.getName( )
 
-							String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />\r\n"
+							String[] types = typeExcludeResources.split( "," )
 
-							if( parent.getParentFile( ).getName( ) == "resources" && parentName.matches( type.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
-							{
-								paths += path
+							types.each { type ->
+
+								String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" + System.lineSeparator( )
+
+								if( parent.getParentFile( ).getName( ) == "resources" && !parentName.matches( type.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
+								{
+									paths += path
+								}
 							}
 						}
 					}
@@ -109,7 +103,7 @@ class UpdateProperties extends DefaultTask
 					out += paths
 				}
 
-				out += line + "\r\n"
+				out += line + System.lineSeparator( )
 			}
 		}
 

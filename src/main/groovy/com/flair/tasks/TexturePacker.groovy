@@ -44,7 +44,7 @@ class TexturePacker extends DefaultTask
 
 		if( generateATFTextures )
 		{
-			String png2atf = new File( SDKManager.getPath( project ) + File.separator + "atftools" + File.separator + "png2atf.exe" ).getPath( )
+			String png2atf = new File( "${ SDKManager.getPath( project ) }/atftools/png2atf" ).getPath( )
 
 			tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
 				include "drawable*/**/*.png"

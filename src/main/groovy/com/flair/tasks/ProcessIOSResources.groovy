@@ -20,14 +20,12 @@ public class ProcessIOSResources extends DefaultTask
 		project.getBuildDir( ).deleteDir( )
 
 		String moduleName = project.flair.moduleName
-		String commonResources = project.flair.commonResources
-		String iosResources = project.flair.iosResources
-		String resources = commonResources.concat( "," + iosResources )
+		String iosExcludeResources = project.flair.iosExcludeResources
 
 		project.copy {
 			from "${ moduleName }/src/main/assets"
-
 			into "${ project.getBuildDir( ) }/assets"
+
 			includeEmptyDirs = false
 		}
 
@@ -35,7 +33,7 @@ public class ProcessIOSResources extends DefaultTask
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include resources.split( "," )
+			exclude iosExcludeResources.split( "," )
 			includeEmptyDirs = false
 		}
 

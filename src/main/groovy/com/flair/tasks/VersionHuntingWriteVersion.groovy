@@ -26,7 +26,7 @@ public class VersionHuntingWriteVersion extends DefaultTask
 		String moduleName = project.flair.moduleName
 		String version = project.flair.appVersion
 
-		if( url.isEmpty( ) || id.isEmpty( ) ) throw new IllegalArgumentException( "Missing versionHuntingURL or versionHuntingID property add\nflair {\n	versionHuntingURL = \"url\"\n	versionHuntingID = \"id\"\n}\nto your build.gradle file." )
+		if( url.isEmpty( ) || id.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing versionHuntingURL or versionHuntingID property add%nflair {%n	versionHuntingURL = \"url\"%n	versionHuntingID = \"id\"%n}%nto your build.gradle file." ) )
 
 		HTTPBuilder http = new HTTPBuilder( url )
 		def body = [ id_swf: id , inc: "false" , version: version ]

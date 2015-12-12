@@ -24,10 +24,10 @@ public class Scaffold extends DefaultTask
 
 		appName = appName == "" ? project.name : appName
 
-		if( appId.isEmpty( ) ) throw new IllegalArgumentException( "Missing appId property add\nflair {\n	appId = \"myAppid\"\n}\nto your build.gradle file." )
+		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
 
-		String s = appId.replace( "." , File.separator )
+		String s = appId.replace( "." , "/" )
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )

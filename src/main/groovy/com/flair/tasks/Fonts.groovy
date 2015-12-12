@@ -20,11 +20,11 @@ class Fonts extends DefaultTask
 	{
 		String moduleName = project.flair.moduleName
 		String appId = project.flair.appId
-		String appIdPath = appId.replace( "." , File.separator )
+		String appIdPath = appId.replace( "." , "/" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/fonts" )
 
-		String fontsClassContent = "package ${ appId }.theme\r\n{\r\n\t/**\r\n\t * @author SamYStudiO ( contact@samystudio.net )\r\n\t */\r\n\tpublic final class Fonts\r\n\t{\r\n"
+		String fontsClassContent = String.format( "package ${ appId }.theme%n{%n\t/**%n\t * @author SamYStudiO ( contact@samystudio.net )%n\t */%n\tpublic final class Fonts%n\t{%n" )
 
 		String fonts = ""
 
@@ -38,8 +38,8 @@ class Fonts extends DefaultTask
 				{
 					String upper = getUpperCaseFontFamily( getFontFamily( name ) )
 
-					if( !fonts.isEmpty( ) ) fontsClassContent = fontsClassContent.concat( "\r\n" )
-					fontsClassContent = fontsClassContent.concat( "\t\t/**\r\n\t\t *\r\n\t\t */\r\n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";\r\n" )
+					if( !fonts.isEmpty( ) ) fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
+					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
 					fonts = fonts.concat( fontFamily )
 				}
 
@@ -47,7 +47,7 @@ class Fonts extends DefaultTask
 			}
 		}
 
-		fontsClassContent = fontsClassContent.concat( "\r\n\t\t/**\r\n\t\t * @private\r\n\t\t */\r\n\t\tpublic function Fonts()\r\n\t\t{\r\n\t\t\tthrow new Error( this + \" cannot be instantiated\" );\r\n\t\t}\r\n" + "\t}\r\n}" )
+		fontsClassContent = fontsClassContent.concat( String.format( "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts()%n\t\t{%n\t\t\tthrow new Error( this + \" cannot be instantiated\" );%n\t\t}%n" + "\t}%n}" ) )
 
 		File f = project.file( "${ moduleName }/src/main/actionscript/${ appIdPath }/theme/Fonts.as" )
 		f.write( fontsClassContent )
@@ -80,6 +80,6 @@ class Fonts extends DefaultTask
 		String cff = filename.toLowerCase( ).indexOf( "cff" ) >= 0 ? "true" : "false"
 		String upper = getUpperCaseFontFamily( trimExt( filename ) )
 
-		return "\t\t[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]\r\n\t\tprotected static var ${ upper }_CLASS : Class;\r\n"
+		return String.format( "\t\t[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]%n\t\tprotected static var ${ upper }_CLASS : Class;%n" )
 	}
 }

@@ -20,9 +20,7 @@ public class ProcessDesktopResources extends DefaultTask
 		project.getBuildDir( ).deleteDir( )
 
 		String moduleName = project.flair.moduleName
-		String commonResources = project.flair.commonResources
-		String desktopResources = project.flair.desktopResources
-		String resources = commonResources.concat( "," + desktopResources )
+		String desktopExcludeResources = project.flair.desktopExcludeResources
 
 		project.copy {
 			from "${ moduleName }/src/main/assets"
@@ -35,19 +33,17 @@ public class ProcessDesktopResources extends DefaultTask
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include resources.split( "," )
+			exclude desktopExcludeResources.split( "," )
 			includeEmptyDirs = false
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/desktop/splashs"
-
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
 			from "${ moduleName }/src/main/resources/desktop/icons"
-
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}

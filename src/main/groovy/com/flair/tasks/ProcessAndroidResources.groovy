@@ -20,9 +20,7 @@ public class ProcessAndroidResources extends DefaultTask
 		project.getBuildDir( ).deleteDir( )
 
 		String moduleName = project.flair.moduleName
-		String commonResources = project.flair.commonResources
-		String androidResources = project.flair.androidResources
-		String resources = commonResources.concat( "," + androidResources )
+		String androidExcludeResources = project.flair.androidExcludeResources
 
 		project.copy {
 			from "${ moduleName }/src/main/assets"
@@ -35,7 +33,7 @@ public class ProcessAndroidResources extends DefaultTask
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			include resources.split( "," )
+			exclude androidExcludeResources.split( "," )
 			includeEmptyDirs = false
 		}
 
