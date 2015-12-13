@@ -22,7 +22,7 @@ class Fonts extends DefaultTask
 		String appId = project.flair.appId
 		String appIdPath = appId.replace( "." , "/" )
 
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/fonts" )
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/fonts" )
 
 		String fontsClassContent = String.format( "package ${ appId }.theme%n{%n\t/**%n\t * @author SamYStudiO ( contact@samystudio.net )%n\t */%n\tpublic final class Fonts%n\t{%n" )
 
