@@ -51,10 +51,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_dev" />
       </configuration>
@@ -107,10 +105,9 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
+          <AirSigningOptions arch="x86" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_dev" />
       </configuration>
@@ -163,10 +160,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_preprod" />
       </configuration>
@@ -219,10 +214,9 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
+          <AirSigningOptions arch="x86" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_preprod" />
       </configuration>
@@ -277,11 +271,11 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default-Portrait@2x.png" path-in-package="Default-Portrait@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default.png" path-in-package="Default.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default@2x.png" path-in-package="Default@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/dev/certificate_ios_dev.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/dev/ios_dev.mobileprovision" />
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/dev/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/dev/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
       <configuration name="android_armv7_prod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_armv7_prod.swf" output-folder="$MODULE_DIR$/../build">
@@ -333,10 +327,9 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_prod" />
       </configuration>
@@ -389,10 +382,9 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxxhdpi" path-in-package="resources/drawable-xxxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate_android.p12" use-temp-certificate="false" />
+          <AirSigningOptions arch="x86" keystore-path="$MODULE_DIR$/src/main/android/certificates/certificate.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="android_x86_prod" />
       </configuration>
@@ -448,11 +440,11 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default-Portrait@2x.png" path-in-package="Default-Portrait@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default.png" path-in-package="Default.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default@2x.png" path-in-package="Default@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/preprod/certificate_ios_dev.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/preprod/ios_dev.mobileprovision" />
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/preprod/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/preprod/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
       <configuration name="ios_prod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainIOS" output-file="ios_prod.swf" output-folder="$MODULE_DIR$/../build">
@@ -507,11 +499,11 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default-Portrait@2x.png" path-in-package="Default-Portrait@2x.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default.png" path-in-package="Default.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/ios/splashs/Default@2x.png" path-in-package="Default@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xhdpi" path-in-package="resources/drawable-xhdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-xxhdpi" path-in-package="resources/drawable-xxhdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/preprod/certificate_ios_dev.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/preprod/ios_dev.mobileprovision" />
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/ios/certificates/prod/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/main/ios/certificates/prod/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
       <configuration name="desktop_dev" target-platform="Desktop" pure-as="true" main-class="${appId}.MainDesktop" output-file="desktop_dev.swf" output-folder="$MODULE_DIR$/../build">
@@ -546,7 +538,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash.png" path-in-package="splash.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-ldpi" path-in-package="resources/drawable-ldpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
         </packaging-air-desktop>
@@ -586,7 +579,8 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash.png" path-in-package="splash.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-ldpi" path-in-package="resources/drawable-ldpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
         </packaging-air-desktop>
@@ -626,10 +620,11 @@
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/icons/icon72x72.png" path-in-package="icons/icon72x72.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash.png" path-in-package="splash.png" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/desktop/splashs/splash@2x.png" path-in-package="splash@2x.png" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-mdpi" path-in-package="resources/drawable-mdpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-ldpi" path-in-package="resources/drawable-ldpi" />
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/drawable-hdpi" path-in-package="resources/drawable-hdpi" />
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/main/resources/values" path-in-package="resources/values" />
           </files-to-package>
-          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/desktop/certificates/certificate_desktop.p12" use-temp-certificate="false" />
+          <AirSigningOptions keystore-path="$MODULE_DIR$/src/main/desktop/certificates/certificate.p12" use-temp-certificate="false" />
         </packaging-air-desktop>
         <packaging-android />
         <packaging-ios />
