@@ -38,12 +38,12 @@ public class ProcessDesktopResources extends DefaultTask
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/desktop/splashs"
+			from "${ moduleName }/src/main/desktop/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/desktop/icons"
+			from "${ moduleName }/src/main/desktop/icons"
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}

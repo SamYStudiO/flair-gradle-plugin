@@ -38,12 +38,12 @@ public class ProcessAndroidResources extends DefaultTask
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/android/splashs"
+			from "${ moduleName }/src/main/android/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/android/icons"
+			from "${ moduleName }/src/main/android/icons"
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}

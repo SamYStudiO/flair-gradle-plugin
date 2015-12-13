@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.0.1</string>
         <key>fileName</key>
-        <string>W:/Projects/flair/src/main/resources/scaffold/src/main/resources/atlases/main.tps</string>
+        <string>W:/Projects/flair/src/main/resources/scaffold/src/main/atlases/main.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -89,7 +89,7 @@
         <key>dataFormat</key>
         <string>sparrow</string>
         <key>textureFileName</key>
-        <filename>../{v}/main{n}.png</filename>
+        <filename>../resources/{v}/main{n}.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -198,7 +198,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../{v}/main{n}.xml</filename>
+                <filename>../resources/{v}/main{n}.xml</filename>
             </struct>
         </map>
         <key>multiPack</key>

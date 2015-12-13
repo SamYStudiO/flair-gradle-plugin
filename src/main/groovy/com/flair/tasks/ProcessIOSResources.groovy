@@ -38,12 +38,12 @@ public class ProcessIOSResources extends DefaultTask
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/ios/splashs"
+			from "${ moduleName }/src/main/ios/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/ios/icons"
+			from "${ moduleName }/src/main/ios/icons"
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}
