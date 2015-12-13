@@ -23,7 +23,7 @@ class TexturePacker extends DefaultTask
 		Boolean generateATFTextures = project.flair.generateATFTextures
 
 		String toATF = ""
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
 
 		tree.each { file ->
 
