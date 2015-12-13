@@ -74,9 +74,14 @@ package _appId_.view.core
 				if( ratio == 1 )
 				{
 					initialize();
-					invalidate();
+
+					_invalidationFlags = {};
+					_isAllInvalid = false;
 					_isInitializing = false;
 					_isInitialized = true;
+
+					invalidate();
+
 					dispatchEventWith( FeathersEventType.INITIALIZE );
 				}
 			} );

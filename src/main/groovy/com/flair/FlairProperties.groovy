@@ -27,5 +27,5 @@ public class FlairProperties
 
 	public String androidExcludeResources = "drawable*-ldpi*/**,drawable*-xxxhdpi*/**"
 
-	public String desktopExcludeResources = "drawable*-mdpi/**,drawable*-x*hdpi*/**"
+	public String desktopExcludeResources = "drawable*-ldpi*/**,drawable*-hdpi*/**,drawable*-xxhdpi*/**,drawable*-xxxhdpi*/**"
 }
