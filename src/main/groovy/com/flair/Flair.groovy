@@ -20,7 +20,7 @@ public class Flair implements Plugin<Project>
 		project.getTasks( ).create( "processAndroidResources" , ProcessAndroidResources )
 		project.getTasks( ).create( "processDesktopResources" , ProcessDesktopResources )
 		project.getTasks( ).create( "generateAtlases" , TexturePacker )
-		project.getTasks( ).create( "writeVersion" , VersionHuntingWriteVersion )
-		project.getTasks( ).create( "incrementVersion" , VersionHuntingIncrementVersion )
+		project.getTasks( ).create( "incrementVersion" , VersioningIncrementVersion )
+		project.getTasks( ).create( "writeVersion" , VersioningWriteVersion )
 	}
 }

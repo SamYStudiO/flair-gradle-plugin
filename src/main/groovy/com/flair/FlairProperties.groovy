@@ -5,6 +5,8 @@ package com.flair
  */
 public class FlairProperties
 {
+	public String moduleName = "app"
+
 	public String appId = ""
 
 	public String appName = ""
@@ -16,12 +18,6 @@ public class FlairProperties
 	public Boolean appAutoOrient = true
 
 	public Boolean appDepthAndStencil = false
-
-	public String moduleName = "app"
-
-	public String versionHuntingURL = ""
-
-	public String versionHuntingID = ""
 
 	public String defaultLocale = "en"
 
