@@ -21,7 +21,7 @@ package _appId_
 		/**
 		 *
 		 */
-		protected const _ORIENTATION_MANAGER : OrientationManager = OrientationManager.getInstance( stage );
+		protected var _ORIENTATION_MANAGER : OrientationManager;
 
 		/**
 		 *
@@ -57,6 +57,8 @@ package _appId_
 		override protected function _initStage() : void
 		{
 			super._initStage();
+
+			_ORIENTATION_MANAGER = OrientationManager.getInstance( stage );
 
 			_defaultAutoOrients = stage.autoOrients;
 
