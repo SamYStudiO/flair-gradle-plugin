@@ -10,7 +10,7 @@ public class ProcessDesktopResources extends DefaultTask
 {
 	public ProcessDesktopResources()
 	{
-		group = "processResources"
+		group = "process resources"
 		description = ""
 	}
 

@@ -10,7 +10,7 @@ public class ProcessAndroidResources extends DefaultTask
 {
 	public ProcessAndroidResources()
 	{
-		group = "processResources"
+		group = "process resources"
 		description = ""
 	}
 
