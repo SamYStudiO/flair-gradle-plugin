@@ -160,7 +160,7 @@ class UpdateProperties extends DefaultTask
 
 				if( parent.indexOf( "-" ) > 0 )
 				{
-					String locale = parent.split( "-" )[ 1 ].toLowerCase( )
+					String locale = parent.split( "-" )[ 1 ]
 
 					if( locales.indexOf( locale ) >= 0 ) supportedLocales = supportedLocales.concat( locale + " " )
 				}
