@@ -71,6 +71,7 @@ package _appId_
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.stageFocusRect = false;
+			stage.frameRate = 60;
 		}
 
 		/**
