@@ -10,6 +10,7 @@ package _appId_.resources
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
+	import flash.system.Capabilities;
 	import flash.utils.Dictionary;
 
 	import starling.core.Starling;
@@ -90,7 +91,7 @@ package _appId_.resources
 		{
 			var outputFile : File = File.applicationStorageDirectory.resolvePath( "resources/" + screenID + "/values.xml" );
 
-			if( !outputFile.exists )
+			if( !outputFile.exists || Capabilities.isDebugger )
 			{
 				var outputXML : XML = <root />;
 				var stream : FileStream = new FileStream();
