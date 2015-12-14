@@ -1,11 +1,16 @@
 package _appId_.view.home
 {
 	import _appId_.resources.getString;
+	import _appId_.view.EnumScreen;
 	import _appId_.view.core.AScreen;
 
-	import feathers.controls.Label;
+	import feathers.controls.Button;
+	import feathers.controls.StackScreenNavigator;
+	import feathers.layout.VerticalLayout;
 
 	import myLogger.debug;
+
+	import starling.events.Event;
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
@@ -15,7 +20,7 @@ package _appId_.view.home
 		/**
 		 *
 		 */
-		protected var _label : Label;
+		protected var _button : Button;
 
 		/**
 		 *
@@ -34,24 +39,18 @@ package _appId_.view.home
 		{
 			super.initialize();
 
-			_label = new Label();
-			_label.text = getString( "hello" );
-			addChild( _label );
-		}
+			var l : VerticalLayout = new VerticalLayout();
+			l.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_CENTER;
+			l.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			layout = l;
 
-		/**
-		 * @inheritDoc
-		 */
-		override protected function draw() : void
-		{
-			super.draw();
-
-			if( isInvalid( INVALIDATION_FLAG_SIZE ) )
+			_button = new Button();
+			_button.label = getString( "hello" );
+			_button.addEventListener( Event.TRIGGERED , function () : void
 			{
-				_label.validate();
-				_label.x = ( actualWidth - _label.width ) / 2;
-				_label.y = 100;
-			}
+				( _owner as StackScreenNavigator ).pushScreen( EnumScreen.OTHER_SCREEN );
+			} );
+			addChild( _button );
 		}
 	}
 }

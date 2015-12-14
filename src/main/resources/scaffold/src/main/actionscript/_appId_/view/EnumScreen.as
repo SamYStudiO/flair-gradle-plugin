@@ -16,6 +16,11 @@ package _appId_.view
 		public static const HOME : String = "home";
 
 		/**
+		 *
+		 */
+		public static const OTHER_SCREEN : String = "otherScreen";
+
+		/**
 		 * @private
 		 */
 		public function EnumScreen()
