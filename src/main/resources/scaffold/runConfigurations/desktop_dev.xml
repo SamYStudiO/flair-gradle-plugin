@@ -33,7 +33,7 @@
         <option name="url" value="http://" />
         <option name="usbDebugPort" value="7936" />
         <method>
-            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="writeVersion"
+            <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="updateProperties"
                 vmOptions="" />
             <option name="Gradle.BeforeRunTask" enabled="true" externalProjectPath="$PROJECT_DIR$" scriptParameters="" tasks="incrementVersion"
                 vmOptions="" />

@@ -21,6 +21,5 @@ public class Flair implements Plugin<Project>
 		project.getTasks( ).create( "processDesktopResources" , ProcessDesktopResources )
 		project.getTasks( ).create( "generateAtlases" , TexturePacker )
 		project.getTasks( ).create( "incrementVersion" , VersioningIncrementVersion )
-		project.getTasks( ).create( "writeVersion" , VersioningWriteVersion )
 	}
 }

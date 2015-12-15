@@ -23,12 +23,22 @@ class UpdateProperties extends DefaultTask
 
 		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
 
+		String version = project.flair.appVersion
+
+		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
+
 		String moduleName = project.flair.moduleName
+
+		String[] a = version.split( "\\." )
+
+		String major = a.length > 0 ? a[ 0 ] : "0"
+		String minor = a.length > 1 ? a[ 1 ] : "0"
+		String build = a.length > 2 ? a[ 2 ] : "0"
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
 		tree.each { file ->
 
-			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file )
+			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
 		}
 
 		String androidExcludeResources = project.flair.androidExcludeResources
@@ -59,6 +69,10 @@ class UpdateProperties extends DefaultTask
 				}
 
 				out += line + System.lineSeparator( )
+			}
+			else if( line.indexOf( "packaging" ) >= 0 )
+			{
+				out += line.replaceAll( /_[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ , "_${ major }.${ minor }.${ build }" ) + System.lineSeparator( )
 			}
 			else if( line.indexOf( "FilePathAndPathInPackage" ) >= 0 && line.indexOf( "splashs" ) < 0 && line.indexOf( "icons" ) < 0 )
 			{
@@ -110,7 +124,7 @@ class UpdateProperties extends DefaultTask
 		iml.write( out )
 	}
 
-	protected void updatePropertiesFromFile( File f )
+	protected void updatePropertiesFromFile( File f , String version )
 	{
 		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
@@ -122,10 +136,13 @@ class UpdateProperties extends DefaultTask
 		String supportedLocales = getSupportedLocales( )
 		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
 
+
+
 		if( desktop )
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
+					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
 					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 					.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
@@ -135,6 +152,7 @@ class UpdateProperties extends DefaultTask
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
+					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
 					.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 					.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
