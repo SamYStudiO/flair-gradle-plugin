@@ -138,6 +138,8 @@ class UpdateProperties extends DefaultTask
 		String supportedLocales = getSupportedLocales( )
 		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
 
+		appName = appName == "" ? project.name : appName
+
 		if( desktop )
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
