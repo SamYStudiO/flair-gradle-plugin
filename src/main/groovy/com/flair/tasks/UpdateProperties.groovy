@@ -168,22 +168,23 @@ class UpdateProperties extends DefaultTask
 	{
 		String moduleName = project.flair.moduleName
 
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" )
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" ) {
+			include "**/*.xml"
+		}
 		String locales = "en de cs es fr it ja ko nl pl pt ru sv tr zh"
 		String supportedLocales = ""
 
 		tree.each { file ->
 
-			if( file.getName( ) == "strings.xml" )
+			String parent = file.getParentFile( ).getName( )
+
+			if( parent.indexOf( "values-" ) >= 0 )
 			{
-				String parent = file.getParentFile( ).getName( )
+				String locale = parent.find( /-([a-z]{2,3})(?:-|$)/ )
 
-				if( parent.indexOf( "-" ) > 0 )
-				{
-					String locale = parent.split( "-" )[ 1 ]
+				if( locale && locale.indexOf( "-" ) >= 0 ) locale = locale.replaceAll( /-/ , "" );
 
-					if( locales.indexOf( locale ) >= 0 ) supportedLocales = supportedLocales.concat( locale + " " )
-				}
+				if( locales.indexOf( locale ) >= 0 && supportedLocales.indexOf( locale ) < 0 ) supportedLocales = supportedLocales.concat( locale + " " )
 			}
 		}
 
