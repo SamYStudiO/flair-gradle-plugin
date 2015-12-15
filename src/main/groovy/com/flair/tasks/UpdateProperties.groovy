@@ -35,7 +35,9 @@ class UpdateProperties extends DefaultTask
 		String minor = a.length > 1 ? a[ 1 ] : "0"
 		String build = a.length > 2 ? a[ 2 ] : "0"
 
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
+		FileTree tree = project.fileTree( "${ moduleName }/src/main/" ) {
+			include "**/*.xml"
+		}
 		tree.each { file ->
 
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
@@ -135,8 +137,6 @@ class UpdateProperties extends DefaultTask
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
 		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
-
-
 
 		if( desktop )
 		{
