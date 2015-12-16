@@ -32,7 +32,7 @@ class TexturePacker extends DefaultTask
 				ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
 				project.exec {
-					commandLine "TexturePacker" , "${ file.getPath( ) }"
+					commandLine "TexturePacker" , file.getPath( )
 					ignoreExitValue = true
 
 					standardOutput = output
@@ -58,7 +58,7 @@ class TexturePacker extends DefaultTask
 					String output = input.replaceAll( "\\.png" , "\\.atf" )
 
 					project.exec {
-						commandLine "${ png2atf }" , "-c" , "e2" , "-n" , "0,0" , "-r" , "-i" , "${ input }" , "-o" , "${ output }"
+						commandLine "${ png2atf }" , "-c" , "e2" , "-n" , "0,0" , "-r" , "-i" , input , "-o" , output
 						ignoreExitValue = true
 					}
 				}

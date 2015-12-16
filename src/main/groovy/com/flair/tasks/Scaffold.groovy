@@ -52,11 +52,11 @@ public class Scaffold extends DefaultTask
 				{
 					String content = file.getText( )
 
-					content = content.replace( "\${appId}" , appId )
+					content = content.replace( '${appId}' , appId )
 							.replace( "_appId_" , appId )
-							.replace( "\${projectName}" , project.getName( ) )
-							.replace( "\${appName}" , appName )
-							.replace( "\${moduleName}" , moduleName )
+							.replace( '${projectName}' , project.getName( ) )
+							.replace( '${appName}' , appName )
+							.replace( '${moduleName}' , moduleName )
 
 					file.write( content )
 				}
