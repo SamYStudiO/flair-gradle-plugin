@@ -16,7 +16,7 @@ class Fonts extends DefaultTask
 	}
 
 	@TaskAction
-	public void generateFonts()
+	public void generateFontClass()
 	{
 		String moduleName = project.flair.moduleName
 		String appId = project.flair.appId

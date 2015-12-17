@@ -21,7 +21,9 @@ public class FlairProperties
 
 	public String defaultLocale = "en"
 
-	public Boolean generateATFTextures = true
+	public Boolean addGenerateAtlasesTaskToRunConfiguration = true
+
+	public Boolean generateATFTexturesFromAtlases = true
 
 	public String iosExcludeResources = "drawable*-ldpi*/**,drawable*-mdpi*/**,drawable*-hdpi*/**,drawable*-xxxhdpi*/**"
 

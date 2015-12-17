@@ -13,15 +13,15 @@ class TexturePacker extends DefaultTask
 {
 	public TexturePacker()
 	{
-		group = "texturePacker"
+		group = "atlases"
 		description = ""
 	}
 
 	@TaskAction
-	public void generateTextures()
+	public void generateAtlases()
 	{
 		String moduleName = project.flair.moduleName
-		Boolean generateATFTextures = project.flair.generateATFTextures
+		Boolean generateATFTexturesFromAtlases = project.flair.generateATFTexturesFromAtlases
 
 		String toATF = ""
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
@@ -44,7 +44,7 @@ class TexturePacker extends DefaultTask
 			}
 		}
 
-		if( generateATFTextures )
+		if( generateATFTexturesFromAtlases )
 		{
 			String png2atf = "${ SDKManager.getPath( project ) }/atftools/png2atf"
 
