@@ -1,6 +1,7 @@
 package com.flair.tasks
 
 import com.flair.utils.SDKManager
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -32,7 +33,8 @@ class TexturePacker extends DefaultTask
 				ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
 				project.exec {
-					commandLine "TexturePacker" , file.getPath( )
+					executable Os.isFamily( Os.FAMILY_WINDOWS ) ? "texturepacker" : "/usr/local/bin/texturepacker"
+					args file.getPath( )
 					ignoreExitValue = true
 
 					standardOutput = output

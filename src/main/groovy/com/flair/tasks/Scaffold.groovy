@@ -35,11 +35,9 @@ public class Scaffold extends DefaultTask
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"
-
-			rename( "scaffold.iml" , "${ moduleName }.iml" )
 		}
 
-		FileTree tree = project.fileTree( "/scaffold" )
+		FileTree tree = project.fileTree( "scaffold" )
 
 		tree.each { file ->
 
@@ -107,5 +105,7 @@ public class Scaffold extends DefaultTask
 		}
 
 		project.file( "${ moduleName }/local.properties" ).delete( )
+
+		project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
 	}
 }
