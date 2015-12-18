@@ -38,6 +38,11 @@ package _appId_.resources
 		/**
 		 *
 		 */
+		private const __ENVIRONMENT_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-(dev|preprod)/ , CONFIG::ENVIRONMENT );
+
+		/**
+		 *
+		 */
 		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2,3})(?:-|$)/ , deviceLocale.getLanguage() );
 
 		/**
@@ -66,7 +71,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __QUALIFIERS : Array = [ __LOCALE_LANGUAGE_QUALIFIER , __LOCALE_REGION_QUALIFIER , __SMALLEST_WIDTH_QUALIFIER , __DENSITY_QUALIFIER ];
+		private const __QUALIFIERS : Array = [ __ENVIRONMENT_QUALIFIER , __LOCALE_LANGUAGE_QUALIFIER , __LOCALE_REGION_QUALIFIER , __SMALLEST_WIDTH_QUALIFIER , __DENSITY_QUALIFIER ];
 
 		/**
 		 * @private
@@ -406,6 +411,11 @@ class Singleton
 
 class EnumQualifier
 {
+	/**
+	 *
+	 */
+	public static const ENVIRONMENT : String = "environment";
+
 	/**
 	 *
 	 */
