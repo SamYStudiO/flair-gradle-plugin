@@ -55,7 +55,8 @@ class UpdateProperties extends DefaultTask
 
 		imlContent.eachLine { line ->
 
-			if( line.indexOf( "configuration" ) >= 0 )
+			if( line.indexOf( "air_sdk" ) >= 0 ) out += line.replace( "air_sdk" , SDKManager.getPath( project ).split( "/" ).last(  ) ) + System.lineSeparator( )
+			else if( line.indexOf( "configuration" ) >= 0 )
 			{
 				if( line.indexOf( "android" ) >= 0 )
 				{
