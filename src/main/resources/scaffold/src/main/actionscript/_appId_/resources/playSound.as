@@ -6,7 +6,7 @@ package _appId_.resources
 	import flash.media.SoundTransform;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function playSound( id : String , startTime : Number = 0 , loops : int = 0 , transform : SoundTransform = null , groupID : String = EnumScreen.MAIN ) : SoundChannel
 	{

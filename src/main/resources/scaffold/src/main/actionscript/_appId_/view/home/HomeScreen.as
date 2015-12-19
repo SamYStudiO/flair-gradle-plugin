@@ -13,7 +13,7 @@ package _appId_.view.home
 	import starling.events.Event;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class HomeScreen extends AScreen
 	{

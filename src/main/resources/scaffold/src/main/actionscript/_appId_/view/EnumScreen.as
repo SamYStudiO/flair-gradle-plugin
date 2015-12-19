@@ -1,12 +1,12 @@
 package _appId_.view
 {
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public final class EnumScreen
 	{
 		/**
-		 * Top root screen (StarlingMain)
+		 *
 		 */
 		public static const MAIN : String = "main";
 

@@ -7,7 +7,7 @@ package _appId_
 	import flash.events.InvokeEvent;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class MainAndroid extends ASplashMain
 	{

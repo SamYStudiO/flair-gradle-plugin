@@ -8,7 +8,7 @@ package _appId_
 	import flash.system.Capabilities;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class MainIOS extends ASplashMain
 	{

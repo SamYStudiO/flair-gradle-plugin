@@ -5,7 +5,7 @@ package _appId_.resources
 	import starling.utils.AssetManager;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getAssetManager( id : String = EnumScreen.MAIN ) : AssetManager
 	{

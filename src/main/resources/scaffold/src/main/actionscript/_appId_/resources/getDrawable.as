@@ -5,7 +5,7 @@ package _appId_.resources
 	import starling.textures.Texture;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getDrawable( assetID : String , groupID : String = EnumScreen.MAIN ) : Texture
 	{

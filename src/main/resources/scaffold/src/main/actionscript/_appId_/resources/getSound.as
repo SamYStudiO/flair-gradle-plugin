@@ -5,7 +5,7 @@ package _appId_.resources
 	import flash.media.Sound;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getSound( id : String , groupID : String = EnumScreen.MAIN ) : Sound
 	{

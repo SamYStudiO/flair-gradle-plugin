@@ -6,7 +6,7 @@ package _appId_.view.core
 	import org.osflash.signals.Signal;
 
 	/**
-	 * Created by SamYStudiO on 12/12/2015.
+	 *
 	 */
 	public class AScreen extends Screen implements IShowHideScreen
 	{

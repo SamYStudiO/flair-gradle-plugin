@@ -5,7 +5,7 @@ package _appId_.resources
 	import flash.utils.ByteArray;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getByteArray( id : String , groupID : String = EnumScreen.MAIN ) : ByteArray
 	{

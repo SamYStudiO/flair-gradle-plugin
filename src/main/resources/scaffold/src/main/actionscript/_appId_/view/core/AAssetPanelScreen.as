@@ -17,7 +17,7 @@ package _appId_.view.core
 	import starling.utils.AssetManager;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class AAssetPanelScreen extends APanelScreen implements IAssetScreen
 	{

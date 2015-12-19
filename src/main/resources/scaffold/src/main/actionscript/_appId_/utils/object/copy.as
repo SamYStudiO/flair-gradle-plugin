@@ -3,7 +3,7 @@ package _appId_.utils.object
 	import flash.utils.ByteArray;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function copy( o : Object ) : Object
 	{

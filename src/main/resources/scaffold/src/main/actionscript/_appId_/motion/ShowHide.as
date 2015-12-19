@@ -10,7 +10,7 @@ package _appId_.motion
 	import starling.events.Event;
 
 	/**
-	 * @author SamYStudiO (contact@samystudio.net) on 05/12/2015.
+	 *
 	 */
 	public class ShowHide
 	{

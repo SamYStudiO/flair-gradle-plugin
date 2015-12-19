@@ -9,7 +9,7 @@ package _appId_.utils
 	import org.osflash.signals.Signal;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public final class OrientationManager
 	{

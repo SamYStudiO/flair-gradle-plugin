@@ -30,7 +30,7 @@ package _appId_
 	import starling.events.Event;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class AMain extends Sprite
 	{

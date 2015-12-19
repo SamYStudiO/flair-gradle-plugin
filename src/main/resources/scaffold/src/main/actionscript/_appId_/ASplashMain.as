@@ -14,7 +14,7 @@ package _appId_
 	import flash.utils.setTimeout;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class ASplashMain extends AMain
 	{

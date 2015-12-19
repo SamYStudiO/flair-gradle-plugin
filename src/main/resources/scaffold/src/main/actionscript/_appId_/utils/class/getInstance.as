@@ -4,9 +4,6 @@ package _appId_.utils.class
 
 	/**
 	 * @author SamYStudiO ( contact@samystudio.net )
-	 * Get an instance from a Class object.
-	 * @param Clazz Class object from which get instance.
-	 * @param arguments The arguments to pass to instance constructor.
 	 */
 	public function getInstance( Clazz : Class , ...arguments ) : *
 	{

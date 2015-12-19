@@ -9,7 +9,7 @@ package _appId_.resources
 	import net.samystudio.density.Density;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getDimension( id : String , groupID : String = EnumScreen.MAIN ) : Number
 	{

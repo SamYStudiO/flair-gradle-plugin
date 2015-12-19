@@ -10,7 +10,7 @@ package _appId_.theme
 	import starling.display.Quad;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class FeathersTheme extends StyleNameFunctionTheme
 	{

@@ -3,7 +3,6 @@ package _appId_.resources
 	import _appId_.utils.device.locale;
 	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
-	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.EnumScreen;
 
 	import flash.display3D.Context3DProfile;
@@ -16,7 +15,7 @@ package _appId_.resources
 	import starling.core.Starling;
 
 	/**
-	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
+	 *
 	 */
 	public final class ResourceFileManager
 	{

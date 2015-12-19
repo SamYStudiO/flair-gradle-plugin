@@ -6,7 +6,7 @@ package _appId_.utils.object
 	import flash.utils.getQualifiedClassName;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function stringify( o : Object ) : String
 	{

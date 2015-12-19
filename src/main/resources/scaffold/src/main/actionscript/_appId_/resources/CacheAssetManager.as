@@ -10,6 +10,9 @@ package _appId_.resources
 
 	import starling.utils.AssetManager;
 
+	/**
+	 *
+	 */
 	public class CacheAssetManager extends AssetManager
 	{
 		/**
@@ -18,17 +21,12 @@ package _appId_.resources
 		protected var _cacheDirectory : File;
 
 		/**
-		 * Enable or disable read/write from cache directory.
-		 * When enabled all external files (http files) are written into cache directory.
 		 *
-		 * @default true
 		 */
 		public var cacheEnabled : Boolean = true;
 
 		/**
-		 * Indicates if files that have just been written into cache are process into memory as well like any other asset.
 		 *
-		 * @default false
 		 */
 		public var processCachedAsset : Boolean = false;
 

@@ -5,7 +5,7 @@ package _appId_.resources
 	import starling.textures.Texture;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function getDrawables( prefix : String , groupID : String = EnumScreen.MAIN ) : Vector.<Texture>
 	{

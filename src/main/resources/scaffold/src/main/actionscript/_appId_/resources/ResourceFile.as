@@ -3,7 +3,7 @@ package _appId_.resources
 	import flash.filesystem.File;
 
 	/**
-	 * @author SamYStudiO (contact@samystudio.net) on 06/12/2015.
+	 *
 	 */
 	public class ResourceFile extends File
 	{

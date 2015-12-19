@@ -1,7 +1,7 @@
 package _appId_.utils.math
 {
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public function floor( n : Number ) : int
 	{

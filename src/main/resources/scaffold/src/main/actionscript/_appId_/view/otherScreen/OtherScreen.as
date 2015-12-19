@@ -12,7 +12,7 @@ package _appId_.view.otherScreen
 	import starling.events.Event;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class OtherScreen extends AScreen
 	{

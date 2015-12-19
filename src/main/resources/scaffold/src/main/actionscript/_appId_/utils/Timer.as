@@ -7,17 +7,15 @@ package _appId_.utils
 	import flash.utils.getTimer;
 
 	/**
-	 * Dispatched at each Timer interval.
+	 *
 	 */
 	[Event(name="timer" , type="flash.events.TimerEvent")]
 	/**
-	 * Dispatched when timer reach repeatCount property. If repeat is 0 this event is never dispatched, Timer need to be stopped manually.
+	 *
 	 */
 	[Event(name="timerComplete" , type="flash.events.TimerEvent")]
 	/**
-	 * Timer class is equivalent to flash.utils.Timer class but is synchronized with system clock in order to make easier countdown.
-	 * Even if processor is slow down, each intervals are always the same.
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */ public class Timer extends EventDispatcher
 	{
 		/**
@@ -41,8 +39,7 @@ package _appId_.utils
 		protected var _delay : uint;
 
 		/**
-		 * Get or set the delay between each intervals in milliseconds.
-		 * If delay is 0 interval is based on stage frame rate.
+		 *
 		 */
 		public function get delay() : uint
 		{
@@ -60,7 +57,7 @@ package _appId_.utils
 		protected var _repeatCount : uint;
 
 		/**
-		 * Get or set the repeat count (intervals) before Timer stop.
+		 *
 		 */
 		public function get repeatCount() : uint
 		{
@@ -78,7 +75,7 @@ package _appId_.utils
 		protected var _currentTime : uint;
 
 		/**
-		 * Get or set the current time in milliseconds. This is useful when Timer is used as a play head and you want to reach a time position.
+		 *
 		 */
 		public function get currentTime() : uint
 		{
@@ -101,7 +98,7 @@ package _appId_.utils
 		protected var _currentCount : uint;
 
 		/**
-		 * Get or set the current count (intervals) elapsed.
+		 *
 		 */
 		public function get currentCount() : uint
 		{
@@ -117,7 +114,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * Get a Boolean that specify if Timer is currently running or stopped.
+		 *
 		 */
 		public function get running() : Boolean
 		{
@@ -125,10 +122,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * Build a new Timer instance.
-		 * @param delay the delay between each interval in milliseconds.
-		 * @param repeatCount The repeat count before Timer stop automatically.
-		 * @param startNow A Boolean that indicates if Timer must start immediately.
+		 *
 		 */
 		public function Timer( delay : uint = 0 , repeatCount : uint = 0 , startNow : Boolean = false )
 		{
@@ -139,8 +133,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * Start the Timer. If Timer was stopped and not reset, the currentTime and currentCount values
-		 * are preserved as they were before Timer stopped.
+		 *
 		 */
 		public function start() : void
 		{
@@ -154,7 +147,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * Stop the Timer.
+		 *
 		 */
 		public function stop() : void
 		{
@@ -167,7 +160,7 @@ package _appId_.utils
 		}
 
 		/**
-		 * Reset and stop the timer, currentCount and currentTime are reset to 0;
+		 *
 		 */
 		public function reset() : void
 		{

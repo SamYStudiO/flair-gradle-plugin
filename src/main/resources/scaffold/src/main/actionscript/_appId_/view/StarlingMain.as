@@ -15,7 +15,7 @@ package _appId_.view
 	import starling.display.Quad;
 
 	/**
-	 * @author SamYStudiO ( contact@samystudio.net )
+	 *
 	 */
 	public class StarlingMain extends AAssetPanelScreen
 	{
