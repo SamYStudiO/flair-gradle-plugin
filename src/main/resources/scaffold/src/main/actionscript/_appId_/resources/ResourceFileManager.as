@@ -1,6 +1,6 @@
 package _appId_.resources
 {
-	import _appId_.utils.device.deviceLocale;
+	import _appId_.utils.device.locale;
 	import _appId_.utils.displayMetrics.EnumDensityDpi;
 	import _appId_.utils.displayMetrics.densityDpi;
 	import _appId_.utils.displayMetrics.getDensityScale;
@@ -43,12 +43,12 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2})(?:-|$)/ , deviceLocale.getLanguage() );
+		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2})(?:-|$)/ , locale.getLanguage() );
 
 		/**
 		 *
 		 */
-		private const __LOCALE_REGION_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_REGION , /-(r[A-Z]{2})(?:-|$)/ , deviceLocale.getRegion() );
+		private const __LOCALE_REGION_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_REGION , /-(r[A-Z]{2})(?:-|$)/ , locale.getRegion() );
 
 		/**
 		 *

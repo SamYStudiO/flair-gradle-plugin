@@ -6,5 +6,5 @@ package _appId_.utils.device
 	/**
 	 * @author SamYStudiO (contact@samystudio.net) on 29/11/2015.
 	 */
-	public var deviceLocale : LocaleID = new LocaleID( Capabilities.languages[ 0 ] );
+	public var locale : LocaleID = new LocaleID( Capabilities.languages[ 0 ] );
 }
