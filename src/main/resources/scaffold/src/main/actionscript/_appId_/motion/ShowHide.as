@@ -10,12 +10,16 @@ package _appId_.motion
 	import starling.events.Event;
 
 	/**
-	 *
+	 * Creates animated effects, like transitions for screen navigators, that let screen handle transition by itself.
 	 */
 	public class ShowHide
 	{
 		/**
-		 *
+		 * Creates a transition function for a screen navigator that will let screen handle transition by itself.
+		 * @param waitNewScreenInitialized A boolean indicating if old screen should wait for new screen
+		 * to be initialized before starting its transition.
+		 * @param overlapDelay A delay in milliseconds indicating time to wait for new screen to start its transition after ols screen has started
+		 * its own if value is NaN new screen transition will start after old screen transition is completed.
 		 */
 		public static function createTransition( waitNewScreenInitialized : Boolean = false , overlapDelay : Number = NaN ) : Function
 		{

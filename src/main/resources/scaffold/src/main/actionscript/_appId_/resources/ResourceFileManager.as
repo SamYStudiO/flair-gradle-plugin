@@ -15,7 +15,7 @@ package _appId_.resources
 	import starling.core.Starling;
 
 	/**
-	 *
+	 * ResourceFileManager help retrieve assets depending of your device configuration.
 	 */
 	public final class ResourceFileManager
 	{
@@ -25,7 +25,7 @@ package _appId_.resources
 		private static var __instance : ResourceFileManager;
 
 		/**
-		 *
+		 * Get ResourceFileManager unique singleton instance.
 		 */
 		public static function getInstance() : ResourceFileManager
 		{
@@ -35,9 +35,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * TODO test this
 		 */
-		private const __ENVIRONMENT_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-(dev|preprod)/ , CONFIG::ENVIRONMENT );
+		private const __ENVIRONMENT_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.ENVIRONMENT , /-(dev|preprod)/ , CONFIG::ENVIRONMENT );
 
 		/**
 		 *
@@ -81,7 +81,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all drawables required from your device configuration.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
+		 * @return A Vector of all drawables assets as ResourceFile.
 		 */
 		public function getDrawables( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -89,7 +91,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all values required from your device configuration.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
+		 * @return A Vector of all values assets as ResourceFile.
 		 */
 		public function getValues( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -120,7 +124,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all xml required from your device configuration.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
+		 * @return A Vector of all xml assets as ResourceFile.
 		 */
 		public function getXML( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -128,7 +134,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all raw required from your device configuration.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
+		 * @return A Vector of all raw assets as ResourceFile.
 		 */
 		public function getRaw( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -136,7 +144,10 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all assets from the specified resourceType argument.
+		 * @param resourceType The type of resource to retrieve.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
+		 * @return A Vector of all assets of type specified by resourceType argument as ResourceFile.
 		 */
 		public function getResource( resourceType : String , screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -344,7 +355,9 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Get all assets of all kind required from your device configuration.
+		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder
+		 * @return A Vector of all assets as ResourceFile.
 		 */
 		public function getResources( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{

@@ -11,27 +11,30 @@ package _appId_.resources
 	import starling.utils.AssetManager;
 
 	/**
-	 *
+	 * Add ability to AssetManager to cache external assets loaded through.
 	 */
 	public class CacheAssetManager extends AssetManager
 	{
 		/**
-		 *
+		 * File (directory) location where assets are stored.
 		 */
 		protected var _cacheDirectory : File;
 
 		/**
-		 *
+		 * Enable/disable cache ability.
 		 */
 		public var cacheEnabled : Boolean = true;
 
 		/**
-		 *
+		 * Indicates if assets just loaded and cached are also processed into memory.
 		 */
 		public var processCachedAsset : Boolean = false;
 
 		/**
+		 * Constructor.
+		 * @param cacheDirectory File (directory) location where assets are stored.
 		 *
+		 * @see starling.utils.AssetManager
 		 */
 		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = File.cacheDirectory.resolvePath( "assets" ) )
 		{
@@ -41,7 +44,7 @@ package _appId_.resources
 		}
 
 		/**
-		 *
+		 * Clear all assets stored in cache directory.
 		 */
 		public function clearCacheDirectory() : void
 		{
