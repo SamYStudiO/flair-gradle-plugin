@@ -43,7 +43,7 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2,3})(?:-|$)/ , deviceLocale.getLanguage() );
+		private const __LOCALE_LANGUAGE_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.LOCALE_LANGUAGE , /-([a-z]{2})(?:-|$)/ , deviceLocale.getLanguage() );
 
 		/**
 		 *
