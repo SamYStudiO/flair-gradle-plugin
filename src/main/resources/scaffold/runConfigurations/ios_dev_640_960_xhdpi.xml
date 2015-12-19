@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-	<configuration name="ios_dev_640_960" default="false" factoryName="Flash App" singleton="true" type="FlashRunConfigurationType">
+	<configuration name="ios_dev_640_960_xhdpi" default="false" factoryName="Flash App" singleton="true" type="FlashRunConfigurationType">
 		<option name="BCName" value="ios_dev" />
 		<option name="IOSSimulatorSdkPath" value="" />
 		<option name="adlOptions" value="" />

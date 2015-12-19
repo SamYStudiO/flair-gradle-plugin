@@ -11,7 +11,7 @@ package _appId_.resources
 	/**
 	 *
 	 */
-	public function getDimension( id : String , groupID : String = EnumScreen.MAIN ) : Number
+	public function getDimen( id : String , groupID : String = EnumScreen.MAIN ) : Number
 	{
 		var dim : String = getAssetManager( groupID ).getXml( "values" )..dimen.( @name == id ).toString();
 		var value : int = parseInt( dim );

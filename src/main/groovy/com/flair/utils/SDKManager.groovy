@@ -6,7 +6,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * @author SamYStudiO (contact@samystudio.net) on 28/11/2015.
+ * @author SamYStudiO on 28/11/2015.
  */
 public final class SDKManager
 {

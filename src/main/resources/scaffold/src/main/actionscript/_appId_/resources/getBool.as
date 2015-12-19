@@ -5,7 +5,7 @@ package _appId_.resources
 	/**
 	 *
 	 */
-	public function getBoolean( id : String , groupID : String = EnumScreen.MAIN ) : Boolean
+	public function getBool( id : String , groupID : String = EnumScreen.MAIN ) : Boolean
 	{
 		return getAssetManager( groupID ).getXml( "values" )..bool.( @name == id ).toString() == "true";
 	}
