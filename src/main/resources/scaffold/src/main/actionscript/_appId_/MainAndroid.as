@@ -56,12 +56,24 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
+		override protected function _init( e : InvokeEvent ) : void
+		{
+			// Uncomment if you want assets to be scaled to device physical density
+			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi...)
+			// if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
+
+			super._init( e );
+		}
+
+		/**
+		 * @inheritDoc
+		 */
 		override protected function _splashScreenPortraitLoaded( e : Event ) : void
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
 
-			var w : Number = _orientationManager.isStagePortrait ? stage.stageWidth : stage.stageHeight;
-			var h : Number = _orientationManager.isStagePortrait ? stage.stageHeight : stage.stageWidth;
+			var w : Number = _ORIENTATION_MANAGER.isStagePortrait ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _ORIENTATION_MANAGER.isStagePortrait ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
@@ -77,8 +89,8 @@ package _appId_
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 
-			var w : Number = _orientationManager.isStageLandscape ? stage.stageWidth : stage.stageHeight;
-			var h : Number = _orientationManager.isStageLandscape ? stage.stageHeight : stage.stageWidth;
+			var w : Number = _ORIENTATION_MANAGER.isStageLandscape ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _ORIENTATION_MANAGER.isStageLandscape ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 

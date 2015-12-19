@@ -41,7 +41,9 @@
     <!--<publisherID></publisherID>-->
 
     <!-- Identifies the ActionScript extensions used by an application. -->
-    <extensions></extensions>
+    <extensions>
+        <extensionID>net.samystudio.Density</extensionID>
+    </extensions>
 
     <!-- Settings for the application's initial window. Required. -->
     <initialWindow>
