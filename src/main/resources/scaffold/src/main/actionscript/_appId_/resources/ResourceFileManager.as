@@ -297,22 +297,22 @@ package _appId_.resources
 								switch( true )
 								{
 									case parentDirectoryName == "drawable" || parentDirectoryName.indexOf( "-mdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_MDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_MDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-ldpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_LDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_LDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-hdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_HDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_HDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XHDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_XHDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xxhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XXHDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_XXHDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xxxhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XXXHDPI / densityDpi * getDensityScale();
+										scale = EnumDensityDpi.DENSITY_XXXHDPI / densityDpi;
 										break;
 
 									default :

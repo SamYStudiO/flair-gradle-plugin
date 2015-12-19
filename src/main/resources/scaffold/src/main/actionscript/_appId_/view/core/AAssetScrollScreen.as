@@ -125,7 +125,7 @@ package _appId_.view.core
 
 			for each ( var file : ResourceFile in resourceList )
 			{
-				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale ) );
+				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale * getDensityScale() ) );
 			}
 		}
 	}
