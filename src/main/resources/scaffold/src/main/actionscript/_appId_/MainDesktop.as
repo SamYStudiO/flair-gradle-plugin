@@ -9,7 +9,7 @@ package _appId_
 	[SWF(width='1024' , height='768' , frameRate='60' , backgroundColor='0xffffff')]
 	/**
 	 *
-	 */ public class MainDesktop extends ASplashMain
+	 */ public class MainDesktop extends AMain
 	{
 		/**
 		 *

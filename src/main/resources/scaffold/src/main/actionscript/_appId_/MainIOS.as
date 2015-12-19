@@ -10,7 +10,7 @@ package _appId_
 	/**
 	 *
 	 */
-	public class MainIOS extends ASplashMain
+	public class MainIOS extends AMain
 	{
 		/**
 		 *

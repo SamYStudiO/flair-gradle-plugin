@@ -1,6 +1,7 @@
 package _appId_
 {
 	import _appId_.theme.Fonts;
+	import _appId_.utils.OrientationManager;
 	import _appId_.utils.device.isDesktop;
 	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.StarlingMain;
@@ -8,14 +9,21 @@ package _appId_
 	import feathers.events.FeathersEventType;
 
 	import flash.desktop.NativeApplication;
+	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.display3D.Context3DRenderMode;
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
+	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
+	import flash.utils.ByteArray;
+	import flash.utils.setTimeout;
 
 	import myLogger.DEFAULT_LOGGER;
 	import myLogger.info;
@@ -47,6 +55,31 @@ package _appId_
 		/**
 		 *
 		 */
+		protected var _orientationManager : OrientationManager;
+
+		/**
+		 *
+		 */
+		protected var _defaultAutoOrients : Boolean;
+
+		/**
+		 *
+		 */
+		protected var _splashScreenContainer : Sprite;
+
+		/**
+		 *
+		 */
+		protected var _splashScreenPortrait : Loader;
+
+		/**
+		 *
+		 */
+		protected var _splashScreenLandscape : Loader;
+
+		/**
+		 *
+		 */
 		public function AMain()
 		{
 			NativeApplication.nativeApplication.addEventListener( InvokeEvent.INVOKE , _init , false , 0 , true );
@@ -72,6 +105,13 @@ package _appId_
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.stageFocusRect = false;
 			stage.frameRate = 60;
+			stage.color = 0xffffff;
+
+			_orientationManager = OrientationManager.getInstance( stage );
+
+			_defaultAutoOrients = stage.autoOrients;
+
+			if( stage.autoOrients ) _orientationManager.startListeningForChange();
 		}
 
 		/**
@@ -122,7 +162,118 @@ package _appId_
 		{
 			info( this , "_onMainInitialized" );
 
+			setTimeout( _cleanupSplashScreen , 1000 );
+
+			stage.autoOrients = _defaultAutoOrients;
+			if( stage.autoOrients ) _orientationManager.updateStageOrientationFromDeviceOrientation();
+
 			_starling.root.removeEventListener( FeathersEventType.INITIALIZE , _onMainInitialized );
+		}
+
+		/**
+		 *
+		 */
+		protected function _initSplashScreen() : void
+		{
+			_splashScreenContainer = new Sprite();
+			stage.addChild( _splashScreenContainer );
+
+			_splashScreenPortrait = _getSplashScreen( true );
+			_splashScreenPortrait.visible = _orientationManager.isDevicePortrait;
+			_splashScreenContainer.addChild( _splashScreenPortrait );
+
+			_splashScreenLandscape = _getSplashScreen( false );
+			_splashScreenLandscape.visible = _orientationManager.isDeviceLandscape;
+			_splashScreenContainer.addChild( _splashScreenLandscape );
+
+			_orientationManager.deviceOrientationChanged.add( _orientationChanged );
+		}
+
+		/**
+		 *
+		 */
+		protected function _getSplashScreen( portrait : Boolean ) : Loader
+		{
+			var loader : Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener( Event.COMPLETE , portrait ? _splashScreenPortraitLoaded : _splashScreenLandscapeLoaded );
+
+			var filePath : String = _getSplashScreenFilePath( portrait );
+			var file : File;
+
+			if( filePath ) file = File.applicationDirectory.resolvePath( filePath );
+
+			if( file && file.exists )
+			{
+				var fs : FileStream = new FileStream();
+				fs.open( file , FileMode.READ );
+
+				var ba : ByteArray = new ByteArray();
+				fs.readBytes( ba );
+
+				loader.loadBytes( ba );
+
+				fs.close();
+			}
+
+			return loader;
+		}
+
+		/**
+		 *
+		 */
+		protected function _orientationChanged() : void
+		{
+			_splashScreenPortrait.visible = _orientationManager.isDevicePortrait;
+			_splashScreenLandscape.visible = _orientationManager.isDeviceLandscape;
+
+			var m : Matrix = _orientationManager.deviceVSStageMatrix;
+			m.tx *= stage.stageWidth;
+			m.ty *= stage.stageHeight;
+
+			_splashScreenContainer.transform.matrix = m;
+		}
+
+		/**
+		 *
+		 */
+		protected function _getSplashScreenFilePath( portrait : Boolean ) : String
+		{
+			return null;
+		}
+
+		/**
+		 *
+		 */
+		protected function _cleanupSplashScreen() : void
+		{
+			try
+			{
+				_splashScreenPortrait.close();
+			}
+			catch( e : Error )
+			{
+			}
+
+			try
+			{
+				_splashScreenLandscape.close();
+			}
+			catch( e : Error )
+			{
+			}
+
+			_splashScreenPortrait.contentLoaderInfo.removeEventListener( Event.COMPLETE , _splashScreenPortraitLoaded );
+			_splashScreenLandscape.contentLoaderInfo.removeEventListener( Event.COMPLETE , _splashScreenLandscapeLoaded );
+
+			_splashScreenContainer.removeChildren();
+
+			stage.removeChild( _splashScreenContainer );
+
+			_splashScreenPortrait = null;
+			_splashScreenLandscape = null;
+			_splashScreenContainer = null;
+
+			_orientationManager.deviceOrientationChanged.remove( _orientationChanged );
 		}
 
 		/**
@@ -158,6 +309,7 @@ package _appId_
 			_initStage();
 			_initFonts();
 			_initConstants();
+			_initSplashScreen();
 			_initStarling();
 
 			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
@@ -201,6 +353,20 @@ package _appId_
 			_starling.stage.stageHeight = stageHeight / scale;
 
 			_starling.viewPort = new Rectangle( 0 , 0 , stageWidth , stageHeight );
+		}
+
+		/**
+		 *
+		 */
+		protected function _splashScreenPortraitLoaded( e : Event ) : void
+		{
+		}
+
+		/**
+		 *
+		 */
+		protected function _splashScreenLandscapeLoaded( e : Event ) : void
+		{
 		}
 	}
 }
