@@ -5,7 +5,7 @@ package _appId_.resources
 	/**
 	 *
 	 */
-	public function getXml( id : String , groupID : String = EnumScreen.MAIN ) : String
+	public function getXml( id : String , groupID : String = EnumScreen.MAIN ) : XML
 	{
 		return getAssetManager( groupID ).getXml( id );
 	}

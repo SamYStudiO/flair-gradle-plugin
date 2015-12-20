@@ -5,61 +5,61 @@ package _appId_.resources
 	 * This class try to mimic android R class.
 	 *
 	 * For example to get a drawable :
-	 * getDrawable( R.drawable.DRAWABLE_ID );
+	 * getDrawable( R.drawable.drawable_id );
 	 * or to get a string :
-	 * getString( R.string.STRING_ID );
+	 * getString( R.string.string_id );
 	 */
 	public final class R
 	{
 		/**
 		 *
 		 */
-		public var bool : Bool;
+		public static const bool : RBool = new RBool();
 
 		/**
 		 *
 		 */
-		public var byteArray : ByteArray;
+		public static const color : RColor = new RColor();
 
 		/**
 		 *
 		 */
-		public var color : Color;
+		public static const dimen : RDimen = new RDimen();
 
 		/**
 		 *
 		 */
-		public var Dimen : Dimen;
+		public static const drawable : RDrawable = new RDrawable();
 
 		/**
 		 *
 		 */
-		public var drawable : Drawable;
+		public static const integer : RInteger = new RInteger();
 
 		/**
 		 *
 		 */
-		public var integer : Integer;
+		public static const object : RObject = new RObject();
 
 		/**
 		 *
 		 */
-		public var object : Object;
+		public static const raw : RRaw = new RRaw();
 
 		/**
 		 *
 		 */
-		public var sound : Sound;
+		public static const sound : RSound = new RSound();
 
 		/**
 		 *
 		 */
-		public var string : String;
+		public static const string : RString = new RString();
 
 		/**
 		 *
 		 */
-		public var xml : Xml;
+		public static const xml : RXml = new RXml();
 
 		/**
 		 *
@@ -70,52 +70,56 @@ package _appId_.resources
 	}
 }
 
-class Bool
+import _appId_.resources.getString;
+
+class RBool
 {
 
 }
 
-class ByteArray
+class RColor
 {
 
 }
 
-class Color
+class RDimen
 {
 
 }
 
-class Dimen
+class RDrawable
 {
 
 }
 
-class Drawable
+class RInteger
 {
 
 }
 
-class Integer
+class RObject
 {
 
 }
 
-class Object
+class RRaw
 {
 
 }
 
-class Sound
+class RSound
 {
 
 }
 
-class String
+class RString
 {
-
+	public const first_screen : String = getString( "first_screen" );
+	public const hello : String = getString( "hello" );
+	public const world : String = getString( "world" );
 }
 
-class Xml
+class RXml
 {
 
 }

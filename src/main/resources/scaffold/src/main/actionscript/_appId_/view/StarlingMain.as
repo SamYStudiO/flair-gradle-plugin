@@ -1,6 +1,6 @@
 package _appId_.view
 {
-	import _appId_.resources.getString;
+	import _appId_.resources.R;
 	import _appId_.theme.FeathersTheme;
 	import _appId_.view.core.AAssetPanelScreen;
 	import _appId_.view.home.HomeScreen;
@@ -58,7 +58,7 @@ package _appId_.view
 			_navigator.popTransition = Slide.createSlideRightTransition();
 			_navigator.addScreen( EnumScreen.HOME , new StackScreenNavigatorItem( HomeScreen ) );
 			_navigator.addScreen( EnumScreen.OTHER_SCREEN , new StackScreenNavigatorItem( OtherScreen ) );
-			_navigator.pushScreen( getString( "first_screen" ) );
+			_navigator.pushScreen( R.string.first_screen );
 			_navigator.layoutData = new AnchorLayoutData( 0 , 0 , 0 , 0 );
 
 			addChild( _navigator );

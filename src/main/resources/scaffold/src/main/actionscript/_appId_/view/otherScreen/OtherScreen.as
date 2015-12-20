@@ -1,6 +1,6 @@
 package _appId_.view.otherScreen
 {
-	import _appId_.resources.getString;
+	import _appId_.resources.R;
 	import _appId_.view.core.AScreen;
 
 	import feathers.controls.Button;
@@ -44,7 +44,7 @@ package _appId_.view.otherScreen
 			layout = l;
 
 			_button = new Button();
-			_button.label = getString( "other_screen" );
+			_button.label = R.string.world;
 			_button.addEventListener( Event.TRIGGERED , function () : void
 			{
 				( _owner as StackScreenNavigator ).popScreen();

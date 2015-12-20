@@ -1,6 +1,6 @@
 package _appId_.view.home
 {
-	import _appId_.resources.getString;
+	import _appId_.resources.R;
 	import _appId_.view.EnumScreen;
 	import _appId_.view.core.AScreen;
 
@@ -45,7 +45,7 @@ package _appId_.view.home
 			layout = l;
 
 			_button = new Button();
-			_button.label = getString( "hello" );
+			_button.label = R.string.hello;
 			_button.addEventListener( Event.TRIGGERED , function () : void
 			{
 				( _owner as StackScreenNavigator ).pushScreen( EnumScreen.OTHER_SCREEN );
