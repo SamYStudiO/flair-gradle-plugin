@@ -4,7 +4,6 @@ package _appId_
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
-	import flash.events.InvokeEvent;
 
 	/**
 	 *

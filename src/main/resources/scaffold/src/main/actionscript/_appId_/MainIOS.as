@@ -1,10 +1,5 @@
 package _appId_
 {
-	import _appId_.utils.displayMetrics.getDensityDpiFromPhysicalDensity;
-
-	import feathers.system.DeviceCapabilities;
-
-	import flash.events.InvokeEvent;
 	import flash.system.Capabilities;
 
 	/**
