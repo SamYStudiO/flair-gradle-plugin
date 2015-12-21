@@ -47,8 +47,6 @@ package _appId_
 		override protected function _init( e : InvokeEvent ) : void
 		{
 			DeviceCapabilities.dpi = 160;
-			DeviceCapabilities.screenPixelWidth = stage.stageWidth;
-			DeviceCapabilities.screenPixelHeight = stage.stageHeight;
 
 			super._init( e );
 		}
