@@ -1,7 +1,7 @@
 package _appId_.utils.displayMetrics
 {
 	/**
-	 *
+	 * Get density dpi bucket (mdpi 160, hdpi 240, xhdpi 320, etc...) from specified dpi.
 	 */
 	public function getDensityDpiFromPhysicalDensity( density : uint ) : int
 	{

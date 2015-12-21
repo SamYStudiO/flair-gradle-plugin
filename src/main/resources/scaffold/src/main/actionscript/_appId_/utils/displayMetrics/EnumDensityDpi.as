@@ -1,7 +1,7 @@
 package _appId_.utils.displayMetrics
 {
 	/**
-	 *
+	 * Defined constants for all density dpi buckets.
 	 */
 	public final class EnumDensityDpi
 	{
