@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2014 Gamua. All Rights Reserved.
+//	Copyright 2011-2015 Gamua. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -12,34 +12,32 @@ package starling.filters
 {
     import flash.display3D.Context3D;
     import flash.display3D.Context3DProgramType;
-    import flash.display3D.Context3DVertexBufferFormat;
     import flash.display3D.IndexBuffer3D;
-    import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
     import flash.errors.IllegalOperationError;
     import flash.geom.Matrix;
-    import flash.geom.Matrix3D;
     import flash.geom.Rectangle;
     import flash.system.Capabilities;
     import flash.utils.getQualifiedClassName;
-    
-    import starling.core.RenderSupport;
+
     import starling.core.Starling;
-    import starling.core.starling_internal;
     import starling.display.BlendMode;
     import starling.display.DisplayObject;
     import starling.display.Image;
-    import starling.display.QuadBatch;
+    import starling.display.MeshBatch;
     import starling.display.Stage;
     import starling.errors.AbstractClassError;
     import starling.errors.MissingContextError;
     import starling.events.Event;
+    import starling.rendering.IndexData;
+    import starling.rendering.Painter;
+    import starling.rendering.RenderState;
+    import starling.rendering.VertexData;
     import starling.textures.Texture;
+    import starling.utils.MathUtil;
     import starling.utils.MatrixUtil;
     import starling.utils.RectangleUtil;
     import starling.utils.SystemUtil;
-    import starling.utils.VertexData;
-    import starling.utils.getNextPowerOfTwo;
 
     /** The FragmentFilter class is the base class for all filter effects in Starling.
      *  All other filters of this package extend this class. You can attach them to any display
@@ -84,38 +82,37 @@ package starling.filters
         protected const STD_FRAGMENT_SHADER:String =
             "tex oc, v0, fs0 <2d, clamp, linear, mipnone>"; // just forward texture color
         
-        private var mVertexPosAtID:int = 0;
-        private var mTexCoordsAtID:int = 1;
-        private var mBaseTextureID:int = 0;
-        private var mMvpConstantID:int = 0;
+        private var _vertexPosAtID:int = 0;
+        private var _texCoordsAtID:int = 1;
+        private var _baseTextureID:int = 0;
+        private var _mvpConstantID:int = 0;
         
-        private var mNumPasses:int;
-        private var mPassTextures:Vector.<Texture>;
+        private var _numPasses:int;
+        private var _passTextures:Vector.<Texture>;
 
-        private var mMode:String;
-        private var mResolution:Number;
-        private var mMarginX:Number;
-        private var mMarginY:Number;
-        private var mOffsetX:Number;
-        private var mOffsetY:Number;
+        private var _mode:String;
+        private var _resolution:Number;
+        private var _marginX:Number;
+        private var _marginY:Number;
+        private var _offsetX:Number;
+        private var _offsetY:Number;
         
-        private var mVertexData:VertexData;
-        private var mVertexBuffer:VertexBuffer3D;
-        private var mIndexData:Vector.<uint>;
-        private var mIndexBuffer:IndexBuffer3D;
+        private var _vertexData:VertexData;
+        private var _vertexBuffer:VertexBuffer3D;
+        private var _indexData:IndexData;
+        private var _indexBuffer:IndexBuffer3D;
         
-        private var mCacheRequested:Boolean;
-        private var mCache:QuadBatch;
+        private var _cacheRequested:Boolean;
+        private var _cache:MeshBatch;
         
         /** Helper objects. */
         private static var sStageBounds:Rectangle = new Rectangle();
         private static var sTransformationMatrix:Matrix = new Matrix();
         
         /** Helper objects that may be used recursively (thus not static). */
-        private var mHelperMatrix:Matrix     = new Matrix();
-        private var mHelperMatrix3D:Matrix3D = new Matrix3D();
-        private var mHelperRect:Rectangle    = new Rectangle();
-        private var mHelperRect2:Rectangle   = new Rectangle();
+        private var _helperMatrix:Matrix     = new Matrix();
+        private var _helperRect:Rectangle    = new Rectangle();
+        private var _helperRect2:Rectangle   = new Rectangle();
 
         /** Creates a new Fragment filter with the specified number of passes and resolution.
          *  This constructor may only be called by the constructor of a subclass. */
@@ -129,21 +126,21 @@ package starling.filters
             
             if (numPasses < 1) throw new ArgumentError("At least one pass is required.");
             
-            mNumPasses = numPasses;
-            mMarginX = mMarginY = 0.0;
-            mOffsetX = mOffsetY = 0;
-            mResolution = resolution;
-            mPassTextures = new <Texture>[];
-            mMode = FragmentFilterMode.REPLACE;
+            _numPasses = numPasses;
+            _marginX = _marginY = 0.0;
+            _offsetX = _offsetY = 0;
+            _resolution = resolution;
+            _passTextures = new <Texture>[];
+            _mode = FragmentFilterMode.REPLACE;
 
-            mVertexData = new VertexData(4);
-            mVertexData.setTexCoords(0, 0, 0);
-            mVertexData.setTexCoords(1, 1, 0);
-            mVertexData.setTexCoords(2, 0, 1);
-            mVertexData.setTexCoords(3, 1, 1);
+            _vertexData = new VertexData("position(float2), texCoords(float2)", 4);
+            _vertexData.setPoint(0, "texCoords", 0, 0);
+            _vertexData.setPoint(1, "texCoords", 1, 0);
+            _vertexData.setPoint(2, "texCoords", 0, 1);
+            _vertexData.setPoint(3, "texCoords", 1, 1);
             
-            mIndexData = new <uint>[0, 1, 2, 1, 3, 2];
-            mIndexData.fixed = true;
+            _indexData = new IndexData(6);
+            _indexData.appendQuad(0, 1, 2, 3);
 
             if (Starling.current.contextValid)
                 createPrograms();
@@ -158,54 +155,54 @@ package starling.filters
         public function dispose():void
         {
             Starling.current.stage3D.removeEventListener(Event.CONTEXT3D_CREATE, onContextCreated);
-            if (mVertexBuffer) mVertexBuffer.dispose();
-            if (mIndexBuffer)  mIndexBuffer.dispose();
+            if (_vertexBuffer) _vertexBuffer.dispose();
+            if (_indexBuffer)  _indexBuffer.dispose();
             disposePassTextures();
             disposeCache();
         }
         
         private function onContextCreated(event:Object):void
         {
-            mVertexBuffer = null;
-            mIndexBuffer  = null;
+            _vertexBuffer = null;
+            _indexBuffer  = null;
 
             disposePassTextures();
             createPrograms();
-            if (mCache) cache();
+            if (_cache) cache();
         }
         
         /** Applies the filter on a certain display object, rendering the output into the current 
          *  render target. This method is called automatically by Starling's rendering system 
          *  for the object the filter is attached to. */
-        public function render(object:DisplayObject, support:RenderSupport, parentAlpha:Number):void
+        public function render(object:DisplayObject, painter:Painter):void
         {
             // bottom layer
             
             if (mode == FragmentFilterMode.ABOVE)
-                object.render(support, parentAlpha);
+                object.render(painter);
             
             // center layer
             
-            if (mCacheRequested)
+            if (_cacheRequested)
             {
-                mCacheRequested = false;
-                mCache = renderPasses(object, support, 1.0, true);
+                _cacheRequested = false;
+                _cache = renderPasses(object, painter, true);
                 disposePassTextures();
             }
             
-            if (mCache)
-                mCache.render(support, parentAlpha);
+            if (_cache)
+                _cache.render(painter);
             else
-                renderPasses(object, support, parentAlpha, false);
+                renderPasses(object, painter, false);
             
             // top layer
             
             if (mode == FragmentFilterMode.BELOW)
-                object.render(support, parentAlpha);
+                object.render(painter);
         }
         
-        private function renderPasses(object:DisplayObject, support:RenderSupport,
-                                      parentAlpha:Number, intoCache:Boolean=false):QuadBatch
+        private function renderPasses(object:DisplayObject, painter:Painter,
+                                      intoCache:Boolean=false):MeshBatch
         {
             var passTexture:Texture;
             var cacheTexture:Texture = null;
@@ -213,133 +210,116 @@ package starling.filters
             var targetSpace:DisplayObject = object.stage;
             var stage:Stage  = Starling.current.stage;
             var scale:Number = Starling.current.contentScaleFactor;
-            var projMatrix:Matrix     = mHelperMatrix;
-            var projMatrix3D:Matrix3D = mHelperMatrix3D;
-            var bounds:Rectangle      = mHelperRect;
-            var boundsPot:Rectangle   = mHelperRect2;
-            var previousStencilRefValue:uint;
-            var previousRenderTarget:Texture;
+            var bounds:Rectangle      = _helperRect;
+            var boundsPot:Rectangle   = _helperRect2;
             var intersectWithStage:Boolean;
+            var state:RenderState = painter.state;
 
             if (context == null) throw new MissingContextError();
             
             // the bounds of the object in stage coordinates
             // (or, if the object is not connected to the stage, in its base object's coordinates)
-            intersectWithStage = !intoCache && mOffsetX == 0 && mOffsetY == 0;
-            calculateBounds(object, targetSpace, mResolution * scale, intersectWithStage, bounds, boundsPot);
+            intersectWithStage = !intoCache && _offsetX == 0 && _offsetY == 0;
+            calculateBounds(object, targetSpace, _resolution * scale, intersectWithStage, bounds, boundsPot);
             
             if (bounds.isEmpty())
             {
                 disposePassTextures();
-                return intoCache ? new QuadBatch() : null; 
+                return intoCache ? new MeshBatch() : null;
             }
             
             updateBuffers(context, boundsPot);
-            updatePassTextures(boundsPot.width, boundsPot.height, mResolution * scale);
+            updatePassTextures(boundsPot.width, boundsPot.height, _resolution * scale);
             
-            support.finishQuadBatch();
-            support.raiseDrawCount(mNumPasses);
-            support.pushMatrix();
-            support.pushMatrix3D();
-            support.pushClipRect(boundsPot, false);
+            painter.finishMeshBatch();
+            painter.drawCount += _numPasses;
+            painter.pushState();
+            state.clipRect = boundsPot;
 
-            // save original state (projection matrix, render target, stencil reference value)
-            projMatrix.copyFrom(support.projectionMatrix);
-            projMatrix3D.copyFrom(support.projectionMatrix3D);
-            previousRenderTarget = support.renderTarget;
-            previousStencilRefValue = support.stencilReferenceValue;
-
-            if (previousRenderTarget && !SystemUtil.supportsRelaxedTargetClearRequirement)
+            if (state.renderTarget && !SystemUtil.supportsRelaxedTargetClearRequirement)
                 throw new IllegalOperationError(
                     "To nest filters, you need at least Flash Player / AIR version 15.");
             
             if (intoCache)
                 cacheTexture = Texture.empty(boundsPot.width, boundsPot.height, PMA, false, true,
-                                             mResolution * scale);
+                                             _resolution * scale);
 
             // draw the original object into a texture
-            support.renderTarget = mPassTextures[0];
-            support.clear();
-            support.blendMode = BlendMode.NORMAL;
-            support.stencilReferenceValue = 0;
-            support.setProjectionMatrix(
+            state.renderTarget = _passTextures[0];
+            state.blendMode = BlendMode.NORMAL;
+            state.setProjectionMatrix(
                 bounds.x, bounds.y, boundsPot.width, boundsPot.height,
                 stage.stageWidth, stage.stageHeight, stage.cameraPosition);
 
-            object.render(support, parentAlpha);
-            support.finishQuadBatch();
+            painter.prepareToDraw();
+            painter.clear();
+            object.render(painter);
+            painter.finishMeshBatch();
             
             // prepare drawing of actual filter passes
-            RenderSupport.setBlendFactors(PMA);
-            support.loadIdentity();  // now we'll draw in stage coordinates!
+            BlendMode.get(BlendMode.NORMAL).activate();
+            state.setModelviewMatricesToIdentity();  // now we'll draw in stage coordinates!
 
-            context.setVertexBufferAt(mVertexPosAtID, mVertexBuffer, VertexData.POSITION_OFFSET, 
-                                      Context3DVertexBufferFormat.FLOAT_2);
-            context.setVertexBufferAt(mTexCoordsAtID, mVertexBuffer, VertexData.TEXCOORD_OFFSET,
-                                      Context3DVertexBufferFormat.FLOAT_2);
-            
+            _vertexData.setVertexBufferAttribute(_vertexBuffer, _vertexPosAtID, "position");
+            _vertexData.setVertexBufferAttribute(_vertexBuffer, _texCoordsAtID, "texCoords");
+
             // draw all passes
-            for (var i:int=0; i<mNumPasses; ++i)
+            for (var i:int=0; i<_numPasses; ++i)
             {
-                if (i < mNumPasses - 1) // intermediate pass  
+                if (i < _numPasses - 1) // intermediate pass
                 {
                     // draw into pass texture
-                    support.renderTarget = getPassTexture(i+1);
-                    support.clear();
+                    state.renderTarget = getPassTexture(i+1);
+                    painter.clear();
                 }
                 else // final pass
                 {
                     if (intoCache)
                     {
                         // draw into cache texture
-                        support.renderTarget = cacheTexture;
-                        support.clear();
+                        state.renderTarget = cacheTexture;
+                        painter.clear();
                     }
                     else
                     {
+                        _helperMatrix.identity();
+                        _helperMatrix.translate(_offsetX, _offsetY);
+
                         // draw into back buffer, at original (stage) coordinates
-                        support.popClipRect();
-                        support.projectionMatrix   = projMatrix;
-                        support.projectionMatrix3D = projMatrix3D;
-                        support.renderTarget = previousRenderTarget;
-                        support.translateMatrix(mOffsetX, mOffsetY);
-                        support.stencilReferenceValue = previousStencilRefValue;
-                        support.blendMode = object.blendMode;
-                        support.applyBlendMode(PMA);
+                        painter.popState();
+                        painter.pushState();
+
+                        state.setModelviewMatricesToIdentity();
+                        state.transformModelviewMatrix(_helperMatrix);
+                        state.blendMode = object.blendMode;
+                        painter.prepareToDraw();
                     }
                 }
                 
                 passTexture = getPassTexture(i);
-                context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, mMvpConstantID, 
-                                                      support.mvpMatrix3D, true);
-                context.setTextureAt(mBaseTextureID, passTexture.base);
+                context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, _mvpConstantID,
+                                                      state.mvpMatrix3D, true);
+                context.setTextureAt(_baseTextureID, passTexture.base);
                 
                 activate(i, context, passTexture);
-                context.drawTriangles(mIndexBuffer, 0, 2);
+                context.drawTriangles(_indexBuffer, 0, 2);
                 deactivate(i, context, passTexture);
             }
             
             // reset shader attributes
-            context.setVertexBufferAt(mVertexPosAtID, null);
-            context.setVertexBufferAt(mTexCoordsAtID, null);
-            context.setTextureAt(mBaseTextureID, null);
+            context.setVertexBufferAt(_vertexPosAtID, null);
+            context.setVertexBufferAt(_texCoordsAtID, null);
+            context.setTextureAt(_baseTextureID, null);
 
-            support.popMatrix();
-            support.popMatrix3D();
+            painter.popState();
 
             if (intoCache)
             {
-                // restore support settings
-                support.projectionMatrix.copyFrom(projMatrix);
-                support.projectionMatrix3D.copyFrom(projMatrix3D);
-                support.renderTarget = previousRenderTarget;
-                support.popClipRect();
-                
                 // Create an image containing the cache. To have a display object that contains
                 // the filter output in object coordinates, we wrap it in a QuadBatch: that way,
                 // we can modify it with a transformation matrix.
                 
-                var quadBatch:QuadBatch = new QuadBatch();
+                var meshBatch:MeshBatch = new MeshBatch();
                 var image:Image = new Image(cacheTexture);
                 
                 // targetSpace could be null, so we calculate the matrix from the other side
@@ -347,11 +327,11 @@ package starling.filters
 
                 object.getTransformationMatrix(targetSpace, sTransformationMatrix).invert();
                 MatrixUtil.prependTranslation(sTransformationMatrix,
-                    bounds.x + mOffsetX, bounds.y + mOffsetY);
-                quadBatch.addImage(image, 1.0, sTransformationMatrix);
-                quadBatch.ownsTexture = true;
+                    bounds.x + _offsetX, bounds.y + _offsetY);
+                meshBatch.addMesh(image, sTransformationMatrix);
+                // meshBatch.ownsTexture = true; // TODO check and re-implement
 
-                return quadBatch;
+                return meshBatch;
             }
             else return null;
         }
@@ -360,41 +340,40 @@ package starling.filters
         
         private function updateBuffers(context:Context3D, bounds:Rectangle):void
         {
-            mVertexData.setPosition(0, bounds.x, bounds.y);
-            mVertexData.setPosition(1, bounds.right, bounds.y);
-            mVertexData.setPosition(2, bounds.x, bounds.bottom);
-            mVertexData.setPosition(3, bounds.right, bounds.bottom);
+            _vertexData.setPoint(0, "position", bounds.x, bounds.y);
+            _vertexData.setPoint(1, "position", bounds.right, bounds.y);
+            _vertexData.setPoint(2, "position", bounds.x, bounds.bottom);
+            _vertexData.setPoint(3, "position", bounds.right, bounds.bottom);
             
-            if (mVertexBuffer == null)
+            if (_vertexBuffer == null)
             {
-                mVertexBuffer = context.createVertexBuffer(4, VertexData.ELEMENTS_PER_VERTEX);
-                mIndexBuffer  = context.createIndexBuffer(6);
-                mIndexBuffer.uploadFromVector(mIndexData, 0, 6);
+                _vertexBuffer = _vertexData.createVertexBuffer();
+                _indexBuffer  = _indexData.createIndexBuffer(true);
             }
-            
-            mVertexBuffer.uploadFromVector(mVertexData.rawData, 0, 4);
+
+            _vertexData.uploadToVertexBuffer(_vertexBuffer);
         }
         
         private function updatePassTextures(width:Number, height:Number, scale:Number):void
         {
-            var numPassTextures:int = mNumPasses > 1 ? 2 : 1;
+            var numPassTextures:int = _numPasses > 1 ? 2 : 1;
             var needsUpdate:Boolean =
-                mPassTextures.length != numPassTextures ||
-                Math.abs(mPassTextures[0].nativeWidth  - width  * scale) > 0.1 ||
-                Math.abs(mPassTextures[0].nativeHeight - height * scale) > 0.1;
+                _passTextures.length != numPassTextures ||
+                Math.abs(_passTextures[0].nativeWidth  - width  * scale) > 0.1 ||
+                Math.abs(_passTextures[0].nativeHeight - height * scale) > 0.1;
             
             if (needsUpdate)
             {
                 disposePassTextures();
 
                 for (var i:int=0; i<numPassTextures; ++i)
-                    mPassTextures[i] = Texture.empty(width, height, PMA, false, true, scale);
+                    _passTextures[i] = Texture.empty(width, height, PMA, false, true, scale);
             }
         }
         
         private function getPassTexture(pass:int):Texture
         {
-            return mPassTextures[pass % 2];
+            return _passTextures[pass % 2];
         }
         
         /** Calculates the bounds of the filter in stage coordinates. The method calculates two
@@ -407,8 +386,8 @@ package starling.filters
                                          resultPotRect:Rectangle):void
         {
             var stage:Stage;
-            var marginX:Number = mMarginX;
-            var marginY:Number = mMarginY;
+            var marginX:Number = _marginX;
+            var marginY:Number = _marginY;
             
             if (targetSpace is Stage)
             {
@@ -448,25 +427,25 @@ package starling.filters
                 var minHeight:Number = resultRect.height > minSize ? resultRect.height : minSize;
                 resultPotRect.setTo(
                     resultRect.x, resultRect.y,
-                    getNextPowerOfTwo(minWidth  * scale) / scale,
-                    getNextPowerOfTwo(minHeight * scale) / scale);
+                    MathUtil.getNextPowerOfTwo(minWidth  * scale) / scale,
+                    MathUtil.getNextPowerOfTwo(minHeight * scale) / scale);
             }
         }
         
         private function disposePassTextures():void
         {
-            for each (var texture:Texture in mPassTextures)
+            for each (var texture:Texture in _passTextures)
                 texture.dispose();
             
-            mPassTextures.length = 0;
+            _passTextures.length = 0;
         }
         
         private function disposeCache():void
         {
-            if (mCache)
+            if (_cache)
             {
-                mCache.dispose();
-                mCache = null;
+                _cache.dispose();
+                _cache = null;
             }
         }
         
@@ -510,17 +489,6 @@ package starling.filters
             // clean up resources
         }
         
-        /** Assembles fragment- and vertex-shaders, passed as Strings, to a Program3D. 
-         *  If any argument is  null, it is replaced by the class constants STD_FRAGMENT_SHADER or
-         *  STD_VERTEX_SHADER, respectively. */
-        protected function assembleAgal(fragmentShader:String=null, vertexShader:String=null):Program3D
-        {
-            if (fragmentShader == null) fragmentShader = STD_FRAGMENT_SHADER;
-            if (vertexShader   == null) vertexShader   = STD_VERTEX_SHADER;
-            
-            return RenderSupport.assembleAgal(vertexShader, fragmentShader);
-        }
-        
         // cache
         
         /** Caches the filter output into a texture. An uncached filter is rendered in every frame;
@@ -528,7 +496,7 @@ package starling.filters
          *  change, it has to be updated manually; to do that, call "cache" again. */
         public function cache():void
         {
-            mCacheRequested = true;
+            _cacheRequested = true;
             disposeCache();
         }
         
@@ -536,85 +504,68 @@ package starling.filters
          *  be executed once per frame again. */ 
         public function clearCache():void
         {
-            mCacheRequested = false;
+            _cacheRequested = false;
             disposeCache();
-        }
-        
-        // flattening
-        
-        /** @private */
-        starling_internal function compile(object:DisplayObject):QuadBatch
-        {
-            var support:RenderSupport;
-            var stage:Stage = object.stage;
-            var quadBatch:QuadBatch;
-
-            support = new RenderSupport();
-            object.getTransformationMatrix(stage, support.modelViewMatrix);
-            quadBatch = renderPasses(object, support, 1.0, true);
-            support.dispose();
-
-            return quadBatch;
         }
         
         // properties
         
         /** Indicates if the filter is cached (via the "cache" method). */
-        public function get isCached():Boolean { return (mCache != null) || mCacheRequested; }
+        public function get isCached():Boolean { return (_cache != null) || _cacheRequested; }
         
         /** The resolution of the filter texture. "1" means stage resolution, "0.5" half the
          *  stage resolution. A lower resolution saves memory and execution time (depending on 
          *  the GPU), but results in a lower output quality. Values greater than 1 are allowed;
          *  such values might make sense for a cached filter when it is scaled up. @default 1 */
-        public function get resolution():Number { return mResolution; }
+        public function get resolution():Number { return _resolution; }
         public function set resolution(value:Number):void 
         {
             if (value <= 0) throw new ArgumentError("Resolution must be > 0");
-            else mResolution = value; 
+            else _resolution = value;
         }
         
         /** The filter mode, which is one of the constants defined in the "FragmentFilterMode" 
          *  class. @default "replace" */
-        public function get mode():String { return mMode; }
-        public function set mode(value:String):void { mMode = value; }
+        public function get mode():String { return _mode; }
+        public function set mode(value:String):void { _mode = value; }
         
         /** Use the x-offset to move the filter output to the right or left. */
-        public function get offsetX():Number { return mOffsetX; }
-        public function set offsetX(value:Number):void { mOffsetX = value; }
+        public function get offsetX():Number { return _offsetX; }
+        public function set offsetX(value:Number):void { _offsetX = value; }
         
         /** Use the y-offset to move the filter output to the top or bottom. */
-        public function get offsetY():Number { return mOffsetY; }
-        public function set offsetY(value:Number):void { mOffsetY = value; }
+        public function get offsetY():Number { return _offsetY; }
+        public function set offsetY(value:Number):void { _offsetY = value; }
         
         /** The x-margin will extend the size of the filter texture along the x-axis.
          *  Useful when the filter will "grow" the rendered object. */
-        protected function get marginX():Number { return mMarginX; }
-        protected function set marginX(value:Number):void { mMarginX = value; }
+        protected function get marginX():Number { return _marginX; }
+        protected function set marginX(value:Number):void { _marginX = value; }
         
         /** The y-margin will extend the size of the filter texture along the y-axis.
          *  Useful when the filter will "grow" the rendered object. */
-        protected function get marginY():Number { return mMarginY; }
-        protected function set marginY(value:Number):void { mMarginY = value; }
+        protected function get marginY():Number { return _marginY; }
+        protected function set marginY(value:Number):void { _marginY = value; }
         
         /** The number of passes the filter is applied. The "activate" and "deactivate" methods
          *  will be called that often. */
-        protected function set numPasses(value:int):void { mNumPasses = value; }
-        protected function get numPasses():int { return mNumPasses; }
+        protected function set numPasses(value:int):void { _numPasses = value; }
+        protected function get numPasses():int { return _numPasses; }
         
         /** The ID of the vertex buffer attribute that stores the vertex position. */ 
-        protected final function get vertexPosAtID():int { return mVertexPosAtID; }
-        protected final function set vertexPosAtID(value:int):void { mVertexPosAtID = value; }
+        protected final function get vertexPosAtID():int { return _vertexPosAtID; }
+        protected final function set vertexPosAtID(value:int):void { _vertexPosAtID = value; }
         
         /** The ID of the vertex buffer attribute that stores the texture coordinates. */
-        protected final function get texCoordsAtID():int { return mTexCoordsAtID; }
-        protected final function set texCoordsAtID(value:int):void { mTexCoordsAtID = value; }
+        protected final function get texCoordsAtID():int { return _texCoordsAtID; }
+        protected final function set texCoordsAtID(value:int):void { _texCoordsAtID = value; }
 
         /** The ID (sampler) of the input texture (containing the output of the previous pass). */
-        protected final function get baseTextureID():int { return mBaseTextureID; }
-        protected final function set baseTextureID(value:int):void { mBaseTextureID = value; }
+        protected final function get baseTextureID():int { return _baseTextureID; }
+        protected final function set baseTextureID(value:int):void { _baseTextureID = value; }
         
         /** The ID of the first register of the modelview-projection constant (a 4x4 matrix). */
-        protected final function get mvpConstantID():int { return mMvpConstantID; }
-        protected final function set mvpConstantID(value:int):void { mMvpConstantID = value; }
+        protected final function get mvpConstantID():int { return _mvpConstantID; }
+        protected final function set mvpConstantID(value:int):void { _mvpConstantID = value; }
     }
 }

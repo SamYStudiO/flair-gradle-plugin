@@ -1815,14 +1815,13 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject
+		override public function hitTest(localPoint:Point):DisplayObject
 		{
-			if(forTouch && (!this.visible || !this.touchable))
+			if(!this.visible || !this.touchable)
 			{
 				return null;
 			}
-			var clipRect:Rectangle = this.clipRect;
-			if(clipRect && !clipRect.containsPoint(localPoint))
+			if(this.mask && !this.hitTestMask(localPoint))
 			{
 				return null;
 			}
@@ -2468,14 +2467,14 @@ package feathers.controls
 					}
 					default: //middle
 					{
-						this.textEditor.y = biggerBaseline - this.textEditor.baseline + this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2;
+						this.textEditor.y = biggerBaseline - this.textEditor.baseline + this._paddingTop + Math.round((this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2);
 						if(this.promptTextRenderer)
 						{
-							this.promptTextRenderer.y = biggerBaseline - promptBaseline + this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2;
+							this.promptTextRenderer.y = biggerBaseline - promptBaseline + this._paddingTop + Math.round((this.actualHeight - this._paddingTop - this._paddingBottom - biggerHeight) / 2);
 						}
 						if(this.currentIcon)
 						{
-							this.currentIcon.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2;
+							this.currentIcon.y = this._paddingTop + Math.round((this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2);
 						}
 					}
 				}
@@ -2492,7 +2491,7 @@ package feathers.controls
 				return;
 			}
 			touch.getLocation(this.stage, HELPER_POINT);
-			var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+			var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT));
 			if(isInBounds && !this._textEditorHasFocus)
 			{
 				this.textEditor.globalToLocal(HELPER_POINT, HELPER_POINT);

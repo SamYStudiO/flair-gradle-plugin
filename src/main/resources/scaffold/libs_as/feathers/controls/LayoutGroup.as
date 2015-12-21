@@ -21,9 +21,10 @@ package feathers.controls
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
-	import starling.core.RenderSupport;
 	import starling.display.DisplayObject;
+	import starling.display.Quad;
 	import starling.events.Event;
+	import starling.rendering.Painter;
 
 	/**
 	 * A generic container that supports layout. For a container that supports
@@ -229,7 +230,7 @@ package feathers.controls
 			this._clipContent = value;
 			if(!value)
 			{
-				this.clipRect = null;
+				this.mask = null;
 			}
 			this.invalidate(INVALIDATION_FLAG_CLIPPING);
 		}
@@ -402,13 +403,24 @@ package feathers.controls
 			}
 			if(oldIndex >= 0)
 			{
-				this.items.splice(oldIndex, 1);
+				if(Array.prototype.removeAt !== undefined)
+				{
+					this.items["removeAt"](oldIndex);
+				}
+				else
+				{
+					this.items.splice(oldIndex, 1);
+				}
 			}
 			var itemCount:int = this.items.length;
 			if(index == itemCount)
 			{
 				//faster than splice because it avoids gc
 				this.items[index] = child;
+			}
+			else if(Array.prototype.insertAt !== undefined)
+			{
+				this.items["insertAt"](index, child);
 			}
 			else
 			{
@@ -425,7 +437,14 @@ package feathers.controls
 		{
 			if(index >= 0 && index < this.items.length)
 			{
-				this.items.splice(index, 1);
+				if(Array.prototype.removeAt !== undefined)
+				{
+					this.items["removeAt"](index);
+				}
+				else
+				{
+					this.items.splice(index, 1);
+				}
 			}
 			var child:DisplayObject = super.removeChildAt(index, dispose);
 			if(child is IFeathersControl)
@@ -455,8 +474,16 @@ package feathers.controls
 			//the super function already checks if oldIndex < 0, and throws an
 			//appropriate error, so no need to do it again!
 
-			this.items.splice(oldIndex, 1);
-			this.items.splice(index, 0, child);
+			if(Array.prototype.insertAt !== undefined)
+			{
+				this.items["removeAt"](oldIndex);
+				this.items["insertAt"](index, child);
+			}
+			else
+			{
+				this.items.splice(oldIndex, 1);
+				this.items.splice(index, 0, child);
+			}
 			this.invalidate(INVALIDATION_FLAG_LAYOUT);
 		}
 
@@ -465,7 +492,7 @@ package feathers.controls
 		 */
 		override public function swapChildrenAt(index1:int, index2:int):void
 		{
-			super.swapChildrenAt(index1, index2)
+			super.swapChildrenAt(index1, index2);
 			var child1:DisplayObject = this.items[index1];
 			var child2:DisplayObject = this.items[index2];
 			this.items[index1] = child2;
@@ -486,11 +513,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject
+		override public function hitTest(localPoint:Point):DisplayObject
 		{
 			var localX:Number = localPoint.x;
 			var localY:Number = localPoint.y;
-			var result:DisplayObject = super.hitTest(localPoint, forTouch);
+			var result:DisplayObject = super.hitTest(localPoint);
 			if(result)
 			{
 				if(!this._isEnabled)
@@ -499,7 +526,7 @@ package feathers.controls
 				}
 				return result;
 			}
-			if(forTouch && (!this.visible || !this.touchable))
+			if(!this.visible || !this.touchable)
 			{
 				return null;
 			}
@@ -513,7 +540,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function render(support:RenderSupport, parentAlpha:Number):void
+		/*override public function render(painter:Painter):void
 		{
 			if(this.currentBackgroundSkin && this.currentBackgroundSkin.hasVisibleArea)
 			{
@@ -540,8 +567,8 @@ package feathers.controls
 					support.popClipRect();
 				}
 			}
-			super.render(support, parentAlpha);
-		}
+			super.render(painter);
+		}*/
 
 		/**
 		 * @private
@@ -822,16 +849,18 @@ package feathers.controls
 				return;
 			}
 
-			var clipRect:Rectangle = this.clipRect;
-			if(!clipRect)
+			var mask:Quad = this.mask as Quad;
+			if(mask)
 			{
-				clipRect = new Rectangle();
+				mask.x = 0;
+				mask.y = 0;
+				mask.width = this.actualWidth;
+				mask.height = this.actualHeight;
 			}
-			clipRect.x = 0;
-			clipRect.y = 0;
-			clipRect.width = this.actualWidth;
-			clipRect.height = this.actualHeight;
-			this.clipRect = clipRect;
+			else
+			{
+				this.mask = new Quad(this.actualWidth, this.actualHeight, 0xff00ff);
+			}
 		}
 
 		/**

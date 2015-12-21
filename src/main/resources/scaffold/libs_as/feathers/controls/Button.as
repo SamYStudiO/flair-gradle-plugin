@@ -24,13 +24,13 @@ package feathers.controls
 	import flash.ui.Keyboard;
 	import flash.utils.getTimer;
 
-	import starling.core.RenderSupport;
 	import starling.display.DisplayObject;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.rendering.Painter;
 
 	/**
 	 * Dispatched when the the user taps or clicks the button. The touch must
@@ -2178,7 +2178,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		override public function render(support:RenderSupport, parentAlpha:Number):void
+		override public function render(painter:Painter):void
 		{
 			var scale:Number = 1;
 			if(this._currentState == STATE_DOWN)
@@ -2189,13 +2189,13 @@ package feathers.controls
 			{
 				scale = this._scaleWhenHovering;
 			}
-			if(scale !== 1)
+			/*if(scale !== 1)
 			{
-				support.translateMatrix(Math.round((1 - scale) / 2 * this.actualWidth),
+				painter.translateMatrix(Math.round((1 - scale) / 2 * this.actualWidth),
 					Math.round((1 - scale) / 2 * this.actualHeight));
-				support.scaleMatrix(scale, scale);
-			}
-			super.render(support, parentAlpha);
+				painter.scaleMatrix(scale, scale);
+			}*/
+			super.render(painter);
 		}
 
 		/**
@@ -2682,22 +2682,23 @@ package feathers.controls
 			var oldIgnoreIconResizes:Boolean = this._ignoreIconResizes;
 			this._ignoreIconResizes = true;
 			this.refreshMaxLabelSize(false);
-			if(this._label && this.labelTextRenderer && this.currentIcon)
+			var labelRenderer:DisplayObject = null;
+			if(this._label !== null && this.labelTextRenderer)
 			{
 				this.labelTextRenderer.validate();
-				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
-				if(this._iconPosition != ICON_POSITION_MANUAL)
-				{
-					this.positionLabelAndIcon();
-				}
-
+				labelRenderer = DisplayObject(this.labelTextRenderer);
 			}
-			else if(this._label && this.labelTextRenderer && !this.currentIcon)
+			var iconIsInLayout:Boolean = this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL;
+			if(labelRenderer && iconIsInLayout)
 			{
-				this.labelTextRenderer.validate();
-				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
+				this.positionSingleChild(labelRenderer);
+				this.positionLabelAndIcon();
 			}
-			else if((!this._label || !this.labelTextRenderer) && this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL)
+			else if(labelRenderer)
+			{
+				this.positionSingleChild(labelRenderer);
+			}
+			else if(iconIsInLayout)
 			{
 				this.positionSingleChild(this.currentIcon);
 			}
@@ -2712,7 +2713,7 @@ package feathers.controls
 				this.currentIcon.x += this._iconOffsetX;
 				this.currentIcon.y += this._iconOffsetY;
 			}
-			if(this._label && this.labelTextRenderer)
+			if(labelRenderer)
 			{
 				this.labelTextRenderer.x += this._labelOffsetX;
 				this.labelTextRenderer.y += this._labelOffsetY;
@@ -2744,7 +2745,7 @@ package feathers.controls
 					calculatedHeight = this._maxHeight;
 				}
 			}
-			if(this._label && this.labelTextRenderer)
+			if(this._label != null && this.labelTextRenderer)
 			{
 				this.labelTextRenderer.maxWidth = calculatedWidth - this._paddingLeft - this._paddingRight;
 				this.labelTextRenderer.maxHeight = calculatedHeight - this._paddingTop - this._paddingBottom;
@@ -3016,7 +3017,7 @@ package feathers.controls
 				}
 
 				touch.getLocation(this.stage, HELPER_POINT);
-				var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT, true));
+				var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT));
 				if(touch.phase == TouchPhase.MOVED)
 				{
 					if(this._isLongPressEnabled)
@@ -3090,7 +3091,7 @@ package feathers.controls
 			if(accumulatedTime >= this._longPressDuration)
 			{
 				this.removeEventListener(Event.ENTER_FRAME, longPress_enterFrameHandler);
-				var isInBounds:Boolean = this.contains(this.stage.hitTest(this._longPressGlobalPosition, true));
+				var isInBounds:Boolean = this.contains(this.stage.hitTest(this._longPressGlobalPosition));
 				if(isInBounds)
 				{
 					this._hasLongPressed = true;

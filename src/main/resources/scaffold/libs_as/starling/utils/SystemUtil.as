@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2014 Gamua. All Rights Reserved.
+//	Copyright 2011-2015 Gamua. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -15,7 +15,7 @@ package starling.utils
     import flash.events.EventDispatcher;
     import flash.system.Capabilities;
     import flash.utils.getDefinitionByName;
-    
+
     import starling.errors.AbstractClassError;
 
     /** A utility class with methods related to the current platform and runtime. */

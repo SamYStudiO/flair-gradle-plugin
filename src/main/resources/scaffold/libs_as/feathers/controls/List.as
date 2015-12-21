@@ -8,6 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.controls
 {
 	import feathers.controls.renderers.DefaultListItemRenderer;
+	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.controls.supportClasses.ListDataViewPort;
 	import feathers.core.IFocusContainer;
 	import feathers.core.PropertyProxy;
@@ -1346,6 +1347,20 @@ package feathers.controls
 			{
 				delete this._itemRendererFactories[id];
 			}
+		}
+
+		/**
+		 * Returns the current item renderer used to render a specific item. May
+		 * return <code>null</code> if an item doesn't currently have an item
+		 * renderer. Most lists use virtual layouts where only the visible items
+		 * will have an item renderer, so the result will usually be
+		 * <code>null</code> for most items in the data provider.
+		 *
+		 * @see ../../../help/faq/layout-virtualization.html What is layout virtualization?
+		 */
+		public function itemToItemRenderer(item:Object):IListItemRenderer
+		{
+			return this.dataViewPort.itemToItemRenderer(item);
 		}
 
 		/**

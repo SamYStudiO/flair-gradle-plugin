@@ -1029,6 +1029,21 @@ package feathers.controls.supportClasses
 				this._verticalScrollPosition, this._layoutItems, 0, 0, this.actualVisibleWidth, this.actualVisibleHeight, result);
 		}
 
+		public function itemToItemRenderer(item:Object):IGroupedListItemRenderer
+		{
+			return IGroupedListItemRenderer(this._itemRendererMap[item]);
+		}
+
+		public function headerDataToHeaderRenderer(headerData:Object):IGroupedListHeaderRenderer
+		{
+			return IGroupedListHeaderRenderer(this._headerRendererMap[headerData]);
+		}
+
+		public function footerDataToFooterRenderer(footerData:Object):IGroupedListFooterRenderer
+		{
+			return IGroupedListFooterRenderer(this._footerRendererMap[footerData]);
+		}
+
 		override public function dispose():void
 		{
 			this.refreshInactiveRenderers(true);
@@ -1514,7 +1529,14 @@ package feathers.controls.supportClasses
 					var inactiveIndex:int = inactiveItemRenderers.indexOf(this._typicalItemRenderer);
 					if(inactiveIndex >= 0)
 					{
-						inactiveItemRenderers.splice(inactiveIndex, 1);
+						if(Array.prototype.removeAt !== undefined)
+						{
+							inactiveItemRenderers["removeAt"](inactiveIndex);
+						}
+						else
+						{
+							inactiveItemRenderers.splice(inactiveIndex, 1);
+						}
 					}
 					//if refreshLayoutTypicalItem() was called, it will have already
 					//added the typical item renderer to the active renderers. if
@@ -1815,7 +1837,14 @@ package feathers.controls.supportClasses
 					var inactiveIndex:int = inactiveItemRenderers.indexOf(itemRenderer);
 					if(inactiveIndex >= 0)
 					{
-						inactiveItemRenderers.splice(inactiveIndex, 1);
+						if(Array.prototype.removeAt !== undefined)
+						{
+							inactiveItemRenderers["removeAt"](inactiveIndex);
+						}
+						else
+						{
+							inactiveItemRenderers.splice(inactiveIndex, 1);
+						}
 					}
 					else
 					{
@@ -1853,7 +1882,14 @@ package feathers.controls.supportClasses
 				var activeHeaderRenderers:Vector.<IGroupedListHeaderRenderer> = storage.activeHeaderRenderers;
 				var inactiveHeaderRenderers:Vector.<IGroupedListHeaderRenderer> = storage.inactiveHeaderRenderers;
 				activeHeaderRenderers[activeHeaderRenderers.length] = headerRenderer;
-				inactiveHeaderRenderers.splice(inactiveHeaderRenderers.indexOf(headerRenderer), 1);
+				if(Array.prototype.removeAt !== undefined)
+				{
+					inactiveHeaderRenderers["removeAt"](inactiveHeaderRenderers.indexOf(headerRenderer));
+				}
+				else
+				{
+					inactiveHeaderRenderers.splice(inactiveHeaderRenderers.indexOf(headerRenderer), 1);
+				}
 				headerRenderer.visible = true;
 				this._layoutItems[layoutIndex] = DisplayObject(headerRenderer);
 			}
@@ -1883,7 +1919,14 @@ package feathers.controls.supportClasses
 				var activeFooterRenderers:Vector.<IGroupedListFooterRenderer> = storage.activeFooterRenderers;
 				var inactiveFooterRenderers:Vector.<IGroupedListFooterRenderer> = storage.inactiveFooterRenderers;
 				activeFooterRenderers[activeFooterRenderers.length] = footerRenderer;
-				inactiveFooterRenderers.splice(inactiveFooterRenderers.indexOf(footerRenderer), 1);
+				if(Array.prototype.removeAt !== undefined)
+				{
+					inactiveFooterRenderers["removeAt"](inactiveFooterRenderers.indexOf(footerRenderer), 1);
+				}
+				else
+				{
+					inactiveFooterRenderers.splice(inactiveFooterRenderers.indexOf(footerRenderer), 1);
+				}
 				footerRenderer.visible = true;
 				this._layoutItems[layoutIndex] = DisplayObject(footerRenderer);
 			}

@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2014 Gamua. All Rights Reserved.
+//	Copyright 2011-2015 Gamua. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -13,9 +13,9 @@ package starling.text
     import flash.display.BitmapData;
     import flash.geom.Rectangle;
     import flash.utils.ByteArray;
-    
+
     import starling.textures.Texture;
-    
+
     /** @private
      *  This class contains constants for the 'MINI' bitmap font. It's done that way to avoid
      *  a dependency on the 'mx.core' library (which is required for the 'Embed' statement).
