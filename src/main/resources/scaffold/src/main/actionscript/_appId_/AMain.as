@@ -120,7 +120,6 @@ package _appId_
 		protected function _initStarling() : void
 		{
 			Starling.multitouchEnabled = true;
-			Starling.handleLostContext = true;
 
 			_starling = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
 			_starling.showStats = Capabilities.isDebugger;

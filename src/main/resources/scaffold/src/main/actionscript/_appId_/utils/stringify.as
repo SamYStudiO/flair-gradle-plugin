@@ -3,6 +3,8 @@ package _appId_.utils
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
+	import starling.utils.StringUtil;
+
 	/**
 	 *
 	 */
@@ -49,7 +51,7 @@ package _appId_.utils
 				}
 			}
 
-			if( !hasProp ) return s.replace( /(^\s+)/ , "" ).replace( /(\s+$)/ , "" ) + " }\n";
+			if( !hasProp ) return StringUtil.trim( s ) + " }\n";
 
 			return s + startTab + "}\n";
 		}
