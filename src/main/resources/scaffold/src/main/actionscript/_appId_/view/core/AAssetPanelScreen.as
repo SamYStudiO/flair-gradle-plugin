@@ -84,11 +84,11 @@ package _appId_.view.core
 
 					dispatchEventWith( FeathersEventType.INITIALIZE );
 				}
+
+				if( _styleProvider ) _styleProvider.applyStyles( this );
+
+				_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 			} );
-
-			if( _styleProvider ) _styleProvider.applyStyles( this );
-
-			_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 		}
 
 		/**
