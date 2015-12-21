@@ -59,7 +59,7 @@ package _appId_.theme
 		 */
 		protected function _initializeStage() : void
 		{
-			Starling.current.nativeStage.color = 0xffffff;
+			Starling.current.stage.color = 0xffffff;
 		}
 	}
 }
