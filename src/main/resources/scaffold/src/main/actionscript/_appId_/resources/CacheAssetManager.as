@@ -1,7 +1,5 @@
 package _appId_.resources
 {
-	import _appId_.utils.string.isUrl;
-
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -56,7 +54,7 @@ package _appId_.resources
 		 */
 		override protected function transformData( data : ByteArray , url : String ) : ByteArray
 		{
-			if( cacheEnabled && isUrl( url ) )
+			if( cacheEnabled && url.indexOf( "http" ) == 0 )
 			{
 				var fileStream : FileStream;
 				var name : String = getName( url );
@@ -84,7 +82,7 @@ package _appId_.resources
 				var extension : String = getExtensionFromUrl( url );
 				var f : File = _cacheDirectory.resolvePath( extension != null ? name + "." + extension : name );
 
-				if( f.exists && isUrl( url ) )
+				if( f.exists && url.indexOf( "http" ) == 0 )
 				{
 					if( rawAsset is String ) rawAsset = f.url;
 					else ( rawAsset as URLRequest ).url = f.url;
