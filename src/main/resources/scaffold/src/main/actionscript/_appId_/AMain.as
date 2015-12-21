@@ -117,21 +117,6 @@ package _appId_
 		/**
 		 *
 		 */
-		protected function _initFonts() : void
-		{
-			Fonts;
-		}
-
-		/**
-		 *
-		 */
-		protected function _initConstants() : void
-		{
-		}
-
-		/**
-		 *
-		 */
 		protected function _initStarling() : void
 		{
 			Starling.multitouchEnabled = true;
@@ -307,10 +292,11 @@ package _appId_
 		{
 			_initDebugger();
 			_initStage();
-			_initFonts();
-			_initConstants();
 			_initSplashScreen();
 			_initStarling();
+
+			// crate a instance to embed fonts
+			new Fonts;
 
 			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
 		}
