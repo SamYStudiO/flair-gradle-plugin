@@ -11,7 +11,9 @@ package _appId_.utils.object
 
 		for( var s : String in fromObject )
 		{
-			if( ( excludeProperties is Array && ( excludeProperties as Array ).indexOf( s ) == -1 ) || ( !( excludeProperties is Array ) && excludeProperties[ s ] == undefined ) )
+			var propName : String = fromObject[ s ];
+
+			if( ( excludeProperties is Array && ( excludeProperties as Array ).indexOf( propName ) == -1 ) || ( !( excludeProperties is Array ) && excludeProperties[ propName ] == undefined ) )
 			{
 				if( !overwrite )
 				{
@@ -19,7 +21,7 @@ package _appId_.utils.object
 
 					try
 					{
-						hasProperty = toObject[ s ] != undefined;
+						hasProperty = toObject[ propName ] != undefined;
 					}
 					catch( e : Error )
 					{
@@ -31,7 +33,7 @@ package _appId_.utils.object
 
 				try
 				{
-					toObject[ s ] = fromObject[ s ];
+					toObject[ propName ] = fromObject[ propName ];
 				}
 				catch( e : Error )
 				{

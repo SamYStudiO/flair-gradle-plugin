@@ -1,4 +1,4 @@
-package _appId_.motion
+package _appId_.view.core.motion
 {
 	import _appId_.view.core.IShowHideScreen;
 
