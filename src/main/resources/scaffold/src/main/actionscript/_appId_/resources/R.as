@@ -3,11 +3,6 @@ package _appId_.resources
 	/**
 	 * DO NOT edit this class, this is auto generated from generateResourceClass task and will give you typed access to all app resources.
 	 * This class try to mimic android R class.
-	 *
-	 * For example to get a drawable :
-	 * getDrawable( R.drawable.drawable_id );
-	 * or to get a string :
-	 * getString( R.string.string_id );
 	 */
 	public final class R
 	{
