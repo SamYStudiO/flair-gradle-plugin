@@ -56,18 +56,6 @@ package _appId_
 		/**
 		 * @inheritDoc
 		 */
-		override protected function _init( e : InvokeEvent ) : void
-		{
-			// Uncomment if you want assets to be scaled to device physical density
-			// after assets have been picked from bucket (ldpi, mdpi, hdpi, xhdpi, xxhdpi, xxxhdpi...)
-			// if( Density.isSupported ) DeviceCapabilities.dpi = Density.service.xdpi;
-
-			super._init( e );
-		}
-
-		/**
-		 * @inheritDoc
-		 */
 		override protected function _splashScreenPortraitLoaded( e : Event ) : void
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
