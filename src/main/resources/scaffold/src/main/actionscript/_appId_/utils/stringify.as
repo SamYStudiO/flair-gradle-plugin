@@ -1,7 +1,5 @@
-package _appId_.utils.object
+package _appId_.utils
 {
-	import _appId_.utils.string.trim;
-
 	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
@@ -51,7 +49,7 @@ package _appId_.utils.object
 				}
 			}
 
-			if( !hasProp ) return trim( s ) + " }\n";
+			if( !hasProp ) return s.replace( /(^\s+)/ , "" ).replace( /(\s+$)/ , "" ) + " }\n";
 
 			return s + startTab + "}\n";
 		}

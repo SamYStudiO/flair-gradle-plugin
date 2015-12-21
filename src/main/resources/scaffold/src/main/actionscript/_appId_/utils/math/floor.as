@@ -1,7 +1,7 @@
 package _appId_.utils.math
 {
 	/**
-	 *
+	 * Optimized Math.floor
 	 */
 	public function floor( n : Number ) : int
 	{

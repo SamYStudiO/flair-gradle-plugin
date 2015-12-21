@@ -1,7 +1,7 @@
 package _appId_.utils.math
 {
 	/**
-	 *
+	 * Optimized Math.round
 	 */
 	public function round( n : Number ) : int
 	{
