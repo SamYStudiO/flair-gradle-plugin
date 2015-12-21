@@ -24,7 +24,7 @@ class Fonts extends DefaultTask
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/fonts" )
 
-		String fontsClassContent = String.format( "package ${ appId }.theme%n{%n\t/**%n\t * @author SamYStudiO ( contact@samystudio.net )%n\t */%n\tpublic final class Fonts%n\t{%n" )
+		String fontsClassContent = ""
 
 		String fonts = ""
 
@@ -32,25 +32,22 @@ class Fonts extends DefaultTask
 			String name = file.getName( )
 			String fontFamily = getFontFamily( name )
 
-			if( name.toLowerCase( ).indexOf( ".otf" ) >= 0 || name.toLowerCase( ).indexOf( ".ttf" ) >= 0 )
+			if( fonts.indexOf( fontFamily ) < 0 )
 			{
-				if( fonts.indexOf( fontFamily ) < 0 )
-				{
-					String upper = getUpperCaseFontFamily( getFontFamily( name ) )
+				String upper = getUpperCaseFontFamily( getFontFamily( name ) )
 
-					if( !fonts.isEmpty( ) ) fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
-					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
-					fonts = fonts.concat( fontFamily )
-				}
-
-				fontsClassContent = fontsClassContent.concat( generateFont( name ) )
+				fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
+				fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
+				fonts = fonts.concat( fontFamily )
 			}
+
+			fontsClassContent = fontsClassContent.concat( generateFont( name ) )
 		}
 
-		fontsClassContent = fontsClassContent.concat( String.format( "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts()%n\t\t{%n\t\t\tthrow new Error( this + \" cannot be instantiated\" );%n\t\t}%n" + "\t}%n}" ) )
-
 		File f = project.file( "${ moduleName }/src/main/actionscript/${ appIdPath }/theme/Fonts.as" )
-		f.write( fontsClassContent )
+		String content = f.getText( )
+		content = content.replaceAll( /class Fonts(\s|.)*function Fonts/ , String.format( "class Fonts%n\t{\t\t" + fontsClassContent + "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts" ) )
+		f.write( content )
 	}
 
 	protected String trimExt( String filename )
