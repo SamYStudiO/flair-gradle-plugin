@@ -42,7 +42,7 @@
 
     <!-- Identifies the ActionScript extensions used by an application. -->
     <extensions>
-        <extensionID>net.samystudio.Density</extensionID>
+        <extensionID>com.flair.PhysicalDensity</extensionID>
     </extensions>
 
     <!-- Settings for the application's initial window. Required. -->

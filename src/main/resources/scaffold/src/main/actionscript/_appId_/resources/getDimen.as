@@ -4,9 +4,9 @@ package _appId_.resources
 	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.EnumScreen;
 
-	import feathers.system.DeviceCapabilities;
+	import com.flair.PhysicalDensity;
 
-	import net.samystudio.density.Density;
+	import feathers.system.DeviceCapabilities;
 
 	/**
 	 *
@@ -30,7 +30,7 @@ package _appId_.resources
 				case "mm" :
 				case "in" :
 
-					var dpi : Number = isAndroid() ? Density.service.xdpi : DeviceCapabilities.dpi;
+					var dpi : Number = isAndroid() ? PhysicalDensity.dpi : DeviceCapabilities.dpi;
 					var inches : Number = value * dpi / getDensityScale();
 
 					if( unit == "in" ) return inches;
