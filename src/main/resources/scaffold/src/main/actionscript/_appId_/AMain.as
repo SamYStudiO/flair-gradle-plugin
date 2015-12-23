@@ -179,7 +179,7 @@ package _appId_
 		protected function _getSplashScreen( portrait : Boolean ) : Loader
 		{
 			var loader : Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener( Event.COMPLETE , portrait ? _splashScreenPortraitLoaded : _splashScreenLandscapeLoaded );
+			loader.contentLoaderInfo.addEventListener( flash.events.Event.COMPLETE , portrait ? _splashScreenPortraitLoaded : _splashScreenLandscapeLoaded );
 
 			var filePath : String = _getSplashScreenFilePath( portrait );
 			var file : File;
@@ -246,8 +246,8 @@ package _appId_
 			{
 			}
 
-			_splashScreenPortrait.contentLoaderInfo.removeEventListener( Event.COMPLETE , _splashScreenPortraitLoaded );
-			_splashScreenLandscape.contentLoaderInfo.removeEventListener( Event.COMPLETE , _splashScreenLandscapeLoaded );
+			_splashScreenPortrait.contentLoaderInfo.removeEventListener( flash.events.Event.COMPLETE , _splashScreenPortraitLoaded );
+			_splashScreenLandscape.contentLoaderInfo.removeEventListener( flash.events.Event.COMPLETE , _splashScreenLandscapeLoaded );
 
 			_splashScreenContainer.removeChildren();
 
@@ -294,8 +294,7 @@ package _appId_
 			_initSplashScreen();
 			_initStarling();
 
-			// crate a instance to embed fonts
-			new Fonts;
+			Fonts;
 
 			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
 		}
@@ -343,14 +342,14 @@ package _appId_
 		/**
 		 *
 		 */
-		protected function _splashScreenPortraitLoaded( e : Event ) : void
+		protected function _splashScreenPortraitLoaded( e : flash.events.Event ) : void
 		{
 		}
 
 		/**
 		 *
 		 */
-		protected function _splashScreenLandscapeLoaded( e : Event ) : void
+		protected function _splashScreenLandscapeLoaded( e : flash.events.Event ) : void
 		{
 		}
 	}
