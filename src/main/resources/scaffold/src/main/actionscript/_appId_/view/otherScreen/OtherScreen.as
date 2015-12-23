@@ -11,7 +11,7 @@ package _appId_.view.otherScreen
 	import starling.events.Event;
 
 	/**
-	 *
+	 * Example screen (you may modify or remove)
 	 */
 	public class OtherScreen extends AScreen
 	{

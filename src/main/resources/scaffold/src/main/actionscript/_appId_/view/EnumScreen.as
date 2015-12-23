@@ -1,7 +1,7 @@
 package _appId_.view
 {
 	/**
-	 *
+	 * Constants for all screen ids
 	 */
 	public final class EnumScreen
 	{

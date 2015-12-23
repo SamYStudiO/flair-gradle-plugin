@@ -12,7 +12,7 @@ package _appId_.view.home
 	import starling.events.Event;
 
 	/**
-	 *
+	 * Example screen (you may modify or remove)
 	 */
 	public class HomeScreen extends AScreen
 	{

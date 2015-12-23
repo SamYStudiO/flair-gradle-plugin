@@ -1,6 +1,5 @@
 package _appId_.view
 {
-	import _appId_.theme.FeathersTheme;
 	import _appId_.view.core.AAssetPanelScreen;
 	import _appId_.view.home.HomeScreen;
 	import _appId_.view.otherScreen.OtherScreen;
@@ -14,7 +13,8 @@ package _appId_.view
 	import starling.display.Quad;
 
 	/**
-	 *
+	 * App root screen, you should edit this to your convenience, depending on your needs you may extends
+	 * AAssetScreen, AAssetScrollScreen or AAssetPanelScreen, each one will manage resources for you.
 	 */
 	public class StarlingMain extends AAssetPanelScreen
 	{
@@ -30,6 +30,7 @@ package _appId_.view
 		{
 			super();
 
+			//Top root screen id, DO NOT modify
 			_screenID = EnumScreen.MAIN;
 		}
 
@@ -39,8 +40,6 @@ package _appId_.view
 		override protected function initialize() : void
 		{
 			super.initialize();
-
-			new FeathersTheme();
 
 			autoSizeMode = AUTO_SIZE_MODE_STAGE;
 			layout = new AnchorLayout();
