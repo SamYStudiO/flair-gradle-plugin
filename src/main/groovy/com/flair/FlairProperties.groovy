@@ -13,6 +13,8 @@ public class FlairProperties
 
 	public String appVersion = "0.0.0"
 
+	public Boolean appFullScreen = true
+
 	public String appAspectRatio = "any"
 
 	public Boolean appAutoOrient = true

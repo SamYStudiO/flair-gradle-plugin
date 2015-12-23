@@ -131,6 +131,7 @@ class UpdateProperties extends DefaultTask
 		String sdkVersion = SDKManager.getVersion( project )
 		String appId = project.flair.appId
 		String appName = project.flair.appName
+		String appFullScreen = project.flair.appFullScreen
 		String appAspectRatio = project.flair.appAspectRatio
 		String appAutoOrient = project.flair.appAutoOrient.toString( )
 		String appDepthAndStencil = project.flair.appDepthAndStencil.toString( )
@@ -155,6 +156,7 @@ class UpdateProperties extends DefaultTask
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
+					.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
 					.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 					.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
