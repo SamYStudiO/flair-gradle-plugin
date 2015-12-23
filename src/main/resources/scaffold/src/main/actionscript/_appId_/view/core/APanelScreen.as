@@ -6,7 +6,7 @@ package _appId_.view.core
 	import org.osflash.signals.Signal;
 
 	/**
-	 *
+	 * Feathers PanelScreen with ability to show hide by itself
 	 */
 	public class APanelScreen extends PanelScreen implements IShowHideScreen
 	{

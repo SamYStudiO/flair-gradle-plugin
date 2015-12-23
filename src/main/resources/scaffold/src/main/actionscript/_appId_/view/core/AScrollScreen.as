@@ -6,7 +6,7 @@ package _appId_.view.core
 	import org.osflash.signals.Signal;
 
 	/**
-	 *
+	 * Feathers ScrollScreen with ability to show hide by itself
 	 */
 	public class AScrollScreen extends ScrollScreen implements IShowHideScreen
 	{

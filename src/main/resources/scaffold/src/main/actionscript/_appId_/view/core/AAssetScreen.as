@@ -18,7 +18,7 @@ package _appId_.view.core
 	import starling.utils.AssetManager;
 
 	/**
-	 *
+	 * Feathers Screen with resource management
 	 */
 	public class AAssetScreen extends AScreen implements IAssetScreen
 	{
@@ -95,9 +95,31 @@ package _appId_.view.core
 		}
 
 		/**
+		 * Override if you want to use custom AssetManager
+		 */
+		protected function _getAssetManager() : AssetManager
+		{
+			return new AssetManager( getDensityScale() );
+		}
+
+		/**
+		 * In most case this screen will automatically load the right assets for you but if your really need to add custom assets
+		 * you may override this
+		 */
+		protected function _addAssets() : void
+		{
+			var resourceList : Vector.<ResourceFile> = ResourceFileManager.getInstance().getResources( _screenID );
+
+			for each ( var file : ResourceFile in resourceList )
+			{
+				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale * getDensityScale() ) );
+			}
+		}
+
+		/**
 		 *
 		 */
-		protected function _initializeAssets( onProgress : Function ) : void
+		private function _initializeAssets( onProgress : Function ) : void
 		{
 			if( _assets ) return;
 
@@ -109,27 +131,6 @@ package _appId_.view.core
 			_addAssets();
 
 			_assets.loadQueue( onProgress );
-		}
-
-		/**
-		 *
-		 */
-		protected function _getAssetManager() : AssetManager
-		{
-			return new AssetManager( getDensityScale() );
-		}
-
-		/**
-		 *
-		 */
-		protected function _addAssets() : void
-		{
-			var resourceList : Vector.<ResourceFile> = ResourceFileManager.getInstance().getResources( _screenID );
-
-			for each ( var file : ResourceFile in resourceList )
-			{
-				_assets.enqueueWithName( file.getFile() , null , new TextureOptions( file.drawableScale * getDensityScale() ) );
-			}
 		}
 	}
 }
