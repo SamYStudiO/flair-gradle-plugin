@@ -6,6 +6,7 @@ package _appId_.view.core
 	import _appId_.resources.removeAssetManager;
 	import _appId_.utils.displayMetrics.getDensityScale;
 
+	import feathers.core.IFeathersControl;
 	import feathers.events.FeathersEventType;
 
 	import flash.system.Capabilities;
@@ -67,6 +68,8 @@ package _appId_.view.core
 
 			_isInitializing = true;
 
+			var instance : IFeathersControl = this;
+
 			_initializeAssets( function ( ratio : Number ) : void
 			{
 				_assetProgress.dispatch( ratio );
@@ -85,7 +88,7 @@ package _appId_.view.core
 					dispatchEventWith( FeathersEventType.INITIALIZE );
 				}
 
-				if( _styleProvider ) _styleProvider.applyStyles( this );
+				if( _styleProvider ) _styleProvider.applyStyles( instance );
 
 				_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 			} );
