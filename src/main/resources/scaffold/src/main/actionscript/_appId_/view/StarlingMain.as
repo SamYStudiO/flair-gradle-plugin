@@ -1,6 +1,5 @@
 package _appId_.view
 {
-	import _appId_.resources.R;
 	import _appId_.theme.FeathersTheme;
 	import _appId_.view.core.AAssetPanelScreen;
 	import _appId_.view.home.HomeScreen;

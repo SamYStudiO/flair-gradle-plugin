@@ -1,6 +1,5 @@
 package _appId_.view.otherScreen
 {
-	import _appId_.resources.R;
 	import _appId_.view.core.AScreen;
 
 	import feathers.controls.Button;

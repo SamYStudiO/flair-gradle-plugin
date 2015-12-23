@@ -1,6 +1,5 @@
 package _appId_.view.home
 {
-	import _appId_.resources.R;
 	import _appId_.view.EnumScreen;
 	import _appId_.view.core.AScreen;
 

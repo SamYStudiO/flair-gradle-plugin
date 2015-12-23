@@ -44,7 +44,7 @@ class Fonts extends DefaultTask
 			fontsClassContent = fontsClassContent.concat( generateFont( name ) )
 		}
 
-		File f = project.file( "${ moduleName }/src/main/actionscript/${ appIdPath }/theme/Fonts.as" )
+		File f = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
 		String content = f.getText( )
 		content = content.replaceAll( /class Fonts(\s|.)*function Fonts/ , String.format( "class Fonts%n\t{\t\t" + fontsClassContent + "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts" ) )
 		f.write( content )

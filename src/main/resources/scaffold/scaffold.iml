@@ -637,6 +637,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/fonts" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/generated" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/android/certificates" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/android/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/android/splashs" />

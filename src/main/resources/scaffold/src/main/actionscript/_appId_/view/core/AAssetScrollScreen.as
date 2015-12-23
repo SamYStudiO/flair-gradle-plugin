@@ -1,10 +1,10 @@
 package _appId_.view.core
 {
-	import _appId_.resources.ResourceFile;
-	import _appId_.resources.ResourceFileManager;
-	import _appId_.resources.addAssetManager;
-	import _appId_.resources.removeAssetManager;
-	import _appId_.utils.displayMetrics.getDensityScale;
+	import com.flair.resources.ResourceFile;
+	import com.flair.resources.ResourceFileManager;
+	import com.flair.resources.addAssetManager;
+	import com.flair.resources.removeAssetManager;
+	import com.flair.utils.displayMetrics.getDensityScale;
 
 	import feathers.core.IFeathersControl;
 	import feathers.events.FeathersEventType;

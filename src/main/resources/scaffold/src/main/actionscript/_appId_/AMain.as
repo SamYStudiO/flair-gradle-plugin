@@ -1,10 +1,10 @@
 package _appId_
 {
-	import _appId_.theme.Fonts;
-	import _appId_.utils.OrientationManager;
-	import _appId_.utils.device.isDesktop;
-	import _appId_.utils.displayMetrics.getDensityScale;
 	import _appId_.view.StarlingMain;
+
+	import com.flair.utils.OrientationManager;
+	import com.flair.utils.device.isDesktop;
+	import com.flair.utils.displayMetrics.getDensityScale;
 
 	import feathers.events.FeathersEventType;
 
