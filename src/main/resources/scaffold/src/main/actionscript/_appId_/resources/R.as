@@ -9,63 +9,81 @@ package _appId_.resources
 		/**
 		 *
 		 */
-		public static const bool : RBool = new RBool();
+		public static var bool : RBool;
 
 		/**
 		 *
 		 */
-		public static const color : RColor = new RColor();
+		public static var color : RColor;
 
 		/**
 		 *
 		 */
-		public static const dimen : RDimen = new RDimen();
+		public static var dimen : RDimen;
 
 		/**
 		 *
 		 */
-		public static const drawable : RDrawable = new RDrawable();
+		public static var drawable : RDrawable;
 
 		/**
 		 *
 		 */
-		public static const integer : RInteger = new RInteger();
+		public static var integer : RInteger;
 
 		/**
 		 *
 		 */
-		public static const object : RObject = new RObject();
+		public static var object : RObject;
 
 		/**
 		 *
 		 */
-		public static const raw : RRaw = new RRaw();
+		public static var raw : RRaw;
 
 		/**
 		 *
 		 */
-		public static const sound : RSound = new RSound();
+		public static var sound : RSound;
 
 		/**
 		 *
 		 */
-		public static const string : RString = new RString();
+		public static var string : RString;
 
 		/**
 		 *
 		 */
-		public static const xml : RXml = new RXml();
+		public static var xml : RXml;
 
 		/**
 		 *
 		 */
-		public function R()
+		public function R( singleton : Singleton )
 		{
+			bool = new RBool();
+			color = new RColor();
+			dimen = new RDimen();
+			drawable = new RDrawable();
+			integer = new RInteger();
+			object = new RObject();
+			raw = new RRaw();
+			sound = new RSound();
+			string = new RString();
+			xml = new RXml();
 		}
 	}
 }
 
+import _appId_.resources.R;
 import _appId_.resources.getString;
+
+new R( new Singleton() );
+
+class Singleton
+{
+
+}
 
 class RBool
 {

@@ -154,7 +154,7 @@ public class ResourceLinkGenerator extends DefaultTask
 			}
 		}
 
-		classFileContent = classFileContent.replaceAll( /}[^{}]*class RBool/ , "}" + System.lineSeparator( ) + System.lineSeparator( ) + "import com.hello.world.resources.*;" + System.lineSeparator( ) + "import flash.media.Sound;" + System.lineSeparator( ) + "import flash.utils.ByteArray;" + System.lineSeparator( ) + "import starling.textures.Texture;" + System.lineSeparator( ) + System.lineSeparator( ) + "class RBool" )
+		classFileContent = classFileContent.replaceAll( /}[^{}]*new R\( new Singleton\(\) \);/ , "}" + System.lineSeparator( ) + System.lineSeparator( ) + "import ${ appId }.resources.R;" + System.lineSeparator( ) + "import ${ appId }.resources.*;" + System.lineSeparator( ) + "import flash.media.Sound;" + System.lineSeparator( ) + "import flash.utils.ByteArray;" + System.lineSeparator( ) + "import starling.textures.Texture;" + System.lineSeparator( ) + System.lineSeparator( ) + "new R( new Singleton() );" )
 		classFileContent = classFileContent.replaceAll( /class RBool\s*\{[^}]*}/ , "class RBool" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + bools + "}" )
 		classFileContent = classFileContent.replaceAll( /class RColor\s*\{[^}]*}/ , "class RColor" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + colors + "}" )
 		classFileContent = classFileContent.replaceAll( /class RDimen\s*\{[^}]*}/ , "class RDimen" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + dimens + "}" )
