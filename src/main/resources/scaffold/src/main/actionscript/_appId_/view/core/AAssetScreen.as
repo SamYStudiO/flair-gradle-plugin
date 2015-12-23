@@ -86,11 +86,11 @@ package _appId_.view.core
 					invalidate();
 
 					dispatchEventWith( FeathersEventType.INITIALIZE );
+
+					if( _styleProvider ) _styleProvider.applyStyles( instance );
+
+					_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 				}
-
-				if( _styleProvider ) _styleProvider.applyStyles( instance );
-
-				_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 			} );
 
 		}
