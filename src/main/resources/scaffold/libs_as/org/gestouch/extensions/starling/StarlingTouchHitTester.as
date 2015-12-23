@@ -32,7 +32,7 @@ package org.gestouch.extensions.starling
 			}
 
 			point = StarlingUtils.adjustGlobalPoint( starling, point );
-			return starling.stage.hitTest( point, true );
+			return starling.stage.hitTest( point );
 		}
 	}
 }
