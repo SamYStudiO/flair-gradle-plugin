@@ -7,11 +7,11 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 19/12/2015.
  */
-public class ResourceLinkGenerator extends DefaultTask
+public class Resources extends DefaultTask
 {
-	public ResourceLinkGenerator()
+	public Resources()
 	{
-		group = "resources"
+		group = "generated"
 		description = ""
 	}
 
