@@ -92,7 +92,6 @@ package _appId_.view.core
 					_styleNameList.addEventListener( Event.CHANGE , styleNameList_changeHandler );
 				}
 			} );
-
 		}
 
 		/**
