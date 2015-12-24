@@ -23,7 +23,7 @@ uploadArchives {
 	repositories.mavenDeployer {
 		configuration = configurations.deployerJars
 		repository( url: "ftp://ftp.samystudio.net/projects/repo" ) {
-			authentication( userName: "samystud" , password: "ftpfleure" )
+			authentication( userName: ftplogin , password: ftppwd )
 		}
 	}
 }
