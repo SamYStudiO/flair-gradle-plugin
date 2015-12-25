@@ -14,7 +14,6 @@ apply plugin: "maven"
 
 dependencies {
 	compile gradleApi( )
-	compile group: "org.codehaus.groovy.modules.http-builder" , name: "http-builder" , version: "0.7.1"
 	deployerJars "org.apache.maven.wagon:wagon-ftp:2.10"
 }
 
