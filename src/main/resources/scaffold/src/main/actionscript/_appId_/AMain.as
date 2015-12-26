@@ -121,7 +121,7 @@ package _appId_
 		{
 			Starling.multitouchEnabled = true;
 
-			_starling = new Starling( StarlingMain , stage , null , null , Context3DRenderMode.AUTO , "auto" );
+			_starling = new Starling( StarlingMain , stage );
 			_starling.showStats = Capabilities.isDebugger;
 			_starling.simulateMultitouch = isDesktop();
 			_starling.enableErrorChecking = Capabilities.isDebugger;
