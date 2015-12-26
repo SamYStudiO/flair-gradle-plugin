@@ -14,14 +14,13 @@ apply plugin: "maven"
 
 dependencies {
 	compile gradleApi( )
-	compile group: "org.codehaus.groovy.modules.http-builder" , name: "http-builder" , version: "0.7.1"
 	deployerJars "org.apache.maven.wagon:wagon-ftp:2.10"
 }
 
 uploadArchives {
 	repositories.mavenDeployer {
 		configuration = configurations.deployerJars
-		repository( url: "ftp://ftp.samystudio.net/projects/repo" ) {
+		repository( url: ftpUrl ) {
 			authentication( userName: ftplogin , password: ftppwd )
 		}
 	}
