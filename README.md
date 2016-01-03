@@ -5,7 +5,7 @@ Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for documen
 !!!WORK IN PROGRESS!!!
 
 TODO :
-* Upload archive to jcenter/maven repositories
+* Upload archive to ~~bintray/~~jcenter/maven repositories
 * Write doc
 * Add tests
 * More scaffold tests
