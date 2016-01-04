@@ -1,11 +1,13 @@
 package _appId_.view.core
 {
+	import feathers.controls.IScreen;
+
 	import org.osflash.signals.Signal;
 
 	/**
 	 *
 	 */
-	public interface IResourceScreen extends IShowHideScreen
+	public interface IResourceScreen extends IScreen
 	{
 		/**
 		 * Get signal to keep track of asset loading progression

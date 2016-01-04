@@ -6,6 +6,7 @@ package _appId_.view.core
 	import com.flair.resources.removeAssetManager;
 	import com.flair.utils.displayMetrics.getDensityScale;
 
+	import feathers.controls.PanelScreen;
 	import feathers.core.IFeathersControl;
 	import feathers.events.FeathersEventType;
 
@@ -20,7 +21,7 @@ package _appId_.view.core
 	/**
 	 * Feathers PanelScreen with resource management
 	 */
-	public class AResourcePanelScreen extends APanelScreen implements IResourceScreen
+	public class AResourcePanelScreen extends PanelScreen implements IResourceScreen
 	{
 		/**
 		 *

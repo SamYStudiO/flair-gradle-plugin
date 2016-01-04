@@ -1,8 +1,7 @@
 package _appId_.view.otherScreen
 {
-	import _appId_.view.core.AScreen;
-
 	import feathers.controls.Button;
+	import feathers.controls.Screen;
 	import feathers.controls.StackScreenNavigator;
 	import feathers.layout.VerticalLayout;
 
@@ -13,7 +12,7 @@ package _appId_.view.otherScreen
 	/**
 	 * Example screen (you may modify or remove)
 	 */
-	public class OtherScreen extends AScreen
+	public class OtherScreen extends Screen
 	{
 		/**
 		 *

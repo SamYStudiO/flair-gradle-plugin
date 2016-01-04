@@ -1,9 +1,9 @@
 package _appId_.view.home
 {
 	import _appId_.view.EnumScreen;
-	import _appId_.view.core.AScreen;
 
 	import feathers.controls.Button;
+	import feathers.controls.Screen;
 	import feathers.controls.StackScreenNavigator;
 	import feathers.layout.VerticalLayout;
 
@@ -14,7 +14,7 @@ package _appId_.view.home
 	/**
 	 * Example screen (you may modify or remove)
 	 */
-	public class HomeScreen extends AScreen
+	public class HomeScreen extends Screen
 	{
 		/**
 		 *

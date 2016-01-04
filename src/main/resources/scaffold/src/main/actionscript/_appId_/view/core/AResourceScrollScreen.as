@@ -6,6 +6,7 @@ package _appId_.view.core
 	import com.flair.resources.removeAssetManager;
 	import com.flair.utils.displayMetrics.getDensityScale;
 
+	import feathers.controls.ScrollScreen;
 	import feathers.core.IFeathersControl;
 	import feathers.events.FeathersEventType;
 
@@ -20,7 +21,7 @@ package _appId_.view.core
 	/**
 	 * Feathers ScrollScreen with resource management
 	 */
-	public class AResourceScrollScreen extends AScrollScreen implements IResourceScreen
+	public class AResourceScrollScreen extends ScrollScreen implements IResourceScreen
 	{
 		/**
 		 *
