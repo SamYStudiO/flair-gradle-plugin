@@ -46,7 +46,7 @@ package _appId_
 		 */
 		override protected function _init( e : InvokeEvent ) : void
 		{
-			// use custom dpi, you may adjsut this value to match the scale you want for desktop
+			// use custom dpi, you may adjust this value to match the scale you want for desktop
 			DeviceCapabilities.dpi = 160;
 
 			super._init( e );
