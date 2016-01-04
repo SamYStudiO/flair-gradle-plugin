@@ -1,18 +1,18 @@
-package com.flair
+package com.flair.gradle
 
-import com.flair.tasks.*
+import com.flair.gradle.tasks.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO on 08/11/2015.
  */
-public class Flair implements Plugin<Project>
+public class FlairPlugin implements Plugin<Project>
 {
 	@Override
 	public void apply( Project project )
 	{
-		project.getExtensions( ).create( "flair" , FlairProperties )
+		project.getExtensions( ).create( "flair" , FlairPluginProperties )
 		project.getTasks( ).create( "generateProject" , Scaffold )
 		project.getTasks( ).create( "updateProperties" , UpdateProperties )
 		project.getTasks( ).create( "generateFontClass" , Fonts )

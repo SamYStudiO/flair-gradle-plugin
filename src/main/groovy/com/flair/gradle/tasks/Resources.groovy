@@ -1,4 +1,4 @@
-package com.flair.tasks
+package com.flair.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree

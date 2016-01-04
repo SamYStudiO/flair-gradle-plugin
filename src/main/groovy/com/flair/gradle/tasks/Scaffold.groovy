@@ -1,4 +1,4 @@
-package com.flair.tasks
+package com.flair.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
@@ -84,13 +84,6 @@ public class Scaffold extends DefaultTask
 		project.file( "${ moduleName }/runConfigurations" ).deleteDir( )
 
 		project.copy {
-			from "${ moduleName }/modules.xml"
-			into ".idea/"
-		}
-
-		project.file( "${ moduleName }/modules.xml" ).delete( )
-
-		project.copy {
 			from "${ moduleName }/gitignore"
 			into project.getRootDir( )
 
@@ -106,6 +99,8 @@ public class Scaffold extends DefaultTask
 
 		project.file( "${ moduleName }/local.properties" ).delete( )
 
+		project.file( ".idea/modules.xml" ).write( project.file( "${ moduleName }/modules.xml" ).getText( ) )
+		project.file( "${ moduleName }/modules.xml" ).delete( )
 		project.file( "${ moduleName }/scaffold.iml" ).renameTo( "${ moduleName }/${ moduleName }.iml" )
 	}
 }

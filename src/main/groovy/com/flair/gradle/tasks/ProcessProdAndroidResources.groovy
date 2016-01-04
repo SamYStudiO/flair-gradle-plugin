@@ -1,4 +1,4 @@
-package com.flair.tasks
+package com.flair.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -6,9 +6,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-public class ProcessAndroidResources extends DefaultTask
+public class ProcessProdAndroidResources extends DefaultTask
 {
-	public ProcessAndroidResources()
+	public ProcessProdAndroidResources()
 	{
 		group = "process resources"
 		description = ""
@@ -34,6 +34,7 @@ public class ProcessAndroidResources extends DefaultTask
 			into "${ project.getBuildDir( ) }/resources/"
 
 			exclude androidExcludeResources.split( "," )
+			exclude "*-dev*/** *-preprod/**"
 			includeEmptyDirs = false
 		}
 

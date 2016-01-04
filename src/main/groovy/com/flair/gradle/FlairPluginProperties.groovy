@@ -1,9 +1,9 @@
-package com.flair
+package com.flair.gradle
 
 /**
  * @author SamYStudiO on 08/11/2015.
  */
-public class FlairProperties
+public class FlairPluginProperties
 {
 	public String moduleName = "app"
 
