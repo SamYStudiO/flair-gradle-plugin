@@ -1,4 +1,4 @@
-package _appId_.view.core
+package com.flair.controls
 {
 	import com.flair.resources.ResourceFile;
 	import com.flair.resources.ResourceFileManager;
@@ -6,7 +6,7 @@ package _appId_.view.core
 	import com.flair.resources.removeAssetManager;
 	import com.flair.utils.displayMetrics.getDensityScale;
 
-	import feathers.controls.PanelScreen;
+	import feathers.controls.ScrollScreen;
 	import feathers.core.IFeathersControl;
 	import feathers.events.FeathersEventType;
 
@@ -19,9 +19,9 @@ package _appId_.view.core
 	import starling.utils.AssetManager;
 
 	/**
-	 * Feathers PanelScreen with resource management
+	 * Feathers ScrollScreen with resource management
 	 */
-	public class AResourcePanelScreen extends PanelScreen implements IResourceScreen
+	public class AResourceScrollScreen extends ScrollScreen implements IResourceScreen
 	{
 		/**
 		 *
@@ -44,7 +44,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AResourcePanelScreen()
+		public function AResourceScrollScreen()
 		{
 			super();
 		}

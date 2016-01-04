@@ -1,4 +1,4 @@
-package _appId_.view.core
+package com.flair.controls
 {
 	import feathers.controls.IScreen;
 

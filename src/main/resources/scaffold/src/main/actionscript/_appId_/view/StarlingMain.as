@@ -1,8 +1,9 @@
 package _appId_.view
 {
-	import _appId_.view.core.AResourcePanelScreen;
 	import _appId_.view.home.HomeScreen;
 	import _appId_.view.otherScreen.OtherScreen;
+
+	import com.flair.controls.AResourcePanelScreen;
 
 	import feathers.controls.StackScreenNavigator;
 	import feathers.controls.StackScreenNavigatorItem;
