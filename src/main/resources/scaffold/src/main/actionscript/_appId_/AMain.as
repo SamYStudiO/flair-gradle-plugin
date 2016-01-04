@@ -13,7 +13,6 @@ package _appId_
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.display3D.Context3DRenderMode;
 	import flash.events.Event;
 	import flash.events.InvokeEvent;
 	import flash.filesystem.File;
