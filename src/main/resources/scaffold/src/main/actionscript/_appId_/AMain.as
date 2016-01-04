@@ -2,9 +2,9 @@ package _appId_
 {
 	import _appId_.view.StarlingMain;
 
-	import com.flair.utils.OrientationManager;
-	import com.flair.utils.device.isDesktop;
-	import com.flair.utils.displayMetrics.getDensityScale;
+	import flair.utils.OrientationManager;
+	import flair.utils.device.isDesktop;
+	import flair.utils.displayMetrics.getDensityScale;
 
 	import feathers.events.FeathersEventType;
 

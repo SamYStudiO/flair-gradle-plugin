@@ -3,13 +3,13 @@ package _appId_.view
 	import _appId_.view.home.HomeScreen;
 	import _appId_.view.otherScreen.OtherScreen;
 
-	import com.flair.controls.AResourcePanelScreen;
-
 	import feathers.controls.StackScreenNavigator;
 	import feathers.controls.StackScreenNavigatorItem;
 	import feathers.layout.AnchorLayout;
 	import feathers.layout.AnchorLayoutData;
 	import feathers.motion.Slide;
+
+	import flair.controls.AResourcePanelScreen;
 
 	import starling.display.Quad;
 

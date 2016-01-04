@@ -1,4 +1,4 @@
-group = "com.flair.gradle"
+group = "com.github.samystudio.flair"
 version = "0.5.2"
 description = "Flair is a gradle plugin to build Adobe AIR projects with Starling and Feathers."
 
@@ -22,29 +22,6 @@ apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
 apply plugin: "com.gradle.plugin-publish"
 
-task sourcesJar( type: Jar ) {
-	classifier = "sources"
-	from sourceSets.main.groovy.srcDirs
-}
-
-task javadocJar( type: Jar , dependsOn: javadoc ) {
-	classifier = "javadoc"
-	from javadoc.destinationDir
-}
-
-artifacts {
-	archives javadocJar
-	archives sourcesJar
-}
-
-repositories {
-	mavenLocal( )
-}
-
-dependencies {
-	compile gradleApi( )
-}
-
 ext {
 	bintrayRepo = "maven"
 	bintrayName = project.name
@@ -66,6 +43,29 @@ ext {
 	licenseName = "BSD Simplified"
 	licenseUrl = "http://opensource.org/licenses/BSD-2-Clause"
 	allLicenses = [ "BSD Simplified" ]
+}
+
+repositories {
+	mavenLocal( )
+}
+
+dependencies {
+	compile gradleApi( )
+}
+
+task sourcesJar( type: Jar ) {
+	classifier = "sources"
+	from sourceSets.main.groovy.srcDirs
+}
+
+task javadocJar( type: Jar , dependsOn: javadoc ) {
+	classifier = "javadoc"
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives javadocJar
+	archives sourcesJar
 }
 
 publishing {
