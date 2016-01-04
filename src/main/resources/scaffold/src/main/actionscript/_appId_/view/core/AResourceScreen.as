@@ -18,9 +18,9 @@ package _appId_.view.core
 	import starling.utils.AssetManager;
 
 	/**
-	 * Feathers PanelScreen with resource management
+	 * Feathers Screen with resource management
 	 */
-	public class AAssetPanelScreen extends APanelScreen implements IAssetScreen
+	public class AResourceScreen extends AScreen implements IResourceScreen
 	{
 		/**
 		 *
@@ -43,7 +43,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AAssetPanelScreen()
+		public function AResourceScreen()
 		{
 			super();
 		}

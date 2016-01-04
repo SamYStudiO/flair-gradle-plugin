@@ -20,7 +20,7 @@ package _appId_.view.core
 	/**
 	 * Feathers ScrollScreen with resource management
 	 */
-	public class AAssetScrollScreen extends AScrollScreen implements IAssetScreen
+	public class AResourceScrollScreen extends AScrollScreen implements IResourceScreen
 	{
 		/**
 		 *
@@ -43,7 +43,7 @@ package _appId_.view.core
 		/**
 		 *
 		 */
-		public function AAssetScrollScreen()
+		public function AResourceScrollScreen()
 		{
 			super();
 		}

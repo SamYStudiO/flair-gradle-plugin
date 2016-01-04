@@ -1,6 +1,6 @@
 package _appId_.view
 {
-	import _appId_.view.core.AAssetPanelScreen;
+	import _appId_.view.core.AResourcePanelScreen;
 	import _appId_.view.home.HomeScreen;
 	import _appId_.view.otherScreen.OtherScreen;
 
@@ -14,9 +14,9 @@ package _appId_.view
 
 	/**
 	 * App root screen, you should edit this to your convenience, depending on your needs you may extends
-	 * AAssetScreen, AAssetScrollScreen or AAssetPanelScreen, each one will manage resources for you.
+	 * AResourceScreen, AResourceScrollScreen or AResourcePanelScreen, each one will manage resources for you.
 	 */
-	public class StarlingMain extends AAssetPanelScreen
+	public class StarlingMain extends AResourcePanelScreen
 	{
 		/**
 		 *

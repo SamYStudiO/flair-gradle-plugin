@@ -5,7 +5,7 @@ package _appId_.view.core
 	/**
 	 *
 	 */
-	public interface IAssetScreen extends IShowHideScreen
+	public interface IResourceScreen extends IShowHideScreen
 	{
 		/**
 		 * Get signal to keep track of asset loading progression
