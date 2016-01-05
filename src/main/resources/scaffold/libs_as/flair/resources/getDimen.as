@@ -1,6 +1,6 @@
 package flair.resources
 {
-	import com.flair.PhysicalDensity;
+	import flair.PhysicalDensity;
 
 	import flair.utils.device.isAndroid;
 	import flair.utils.displayMetrics.getDensityScale;
