@@ -138,8 +138,8 @@ package flair.resources
 
 		/**
 		 * Get all raw required from your device configuration.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
-		 * @return A Vector of all raw assets as ResourceFile.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
+		 * @return A Vector of all raw resources as ResourceFile.
 		 */
 		public function getRaw( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -147,10 +147,10 @@ package flair.resources
 		}
 
 		/**
-		 * Get all assets from the specified resourceType argument.
+		 * Get all resources from the specified resourceType argument.
 		 * @param resourceType The type of resource to retrieve.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
-		 * @return A Vector of all assets of type specified by resourceType argument as ResourceFile.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
+		 * @return A Vector of all resources of type specified by resourceType argument as ResourceFile.
 		 */
 		public function getResource( resourceType : String , screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -358,9 +358,9 @@ package flair.resources
 		}
 
 		/**
-		 * Get all assets of all kind required from your device configuration.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder
-		 * @return A Vector of all assets as ResourceFile.
+		 * Get all resources of all kind required from your device configuration.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder
+		 * @return A Vector of all resources as ResourceFile.
 		 */
 		public function getResources( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
