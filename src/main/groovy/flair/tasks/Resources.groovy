@@ -154,7 +154,7 @@ public class Resources extends DefaultTask
 			}
 		}
 
-		classFileContent = classFileContent.replaceAll( /}[^{}]*new R\( new Singleton\(\) \);/ , "}" + System.lineSeparator( ) + System.lineSeparator( ) + "import com.flair.resources.*;" + System.lineSeparator( ) + "import flash.media.Sound;" + System.lineSeparator( ) + "import flash.utils.ByteArray;" + System.lineSeparator( ) + "import starling.textures.Texture;" + System.lineSeparator( ) + System.lineSeparator( ) + "new R( new Singleton() );" )
+		classFileContent = classFileContent.replaceAll( /}[^{}]*new R\( new Singleton\(\) \);/ , "}" + System.lineSeparator( ) + System.lineSeparator( ) + "import flair.resources.*;" + System.lineSeparator( ) + "import flash.media.Sound;" + System.lineSeparator( ) + "import flash.utils.ByteArray;" + System.lineSeparator( ) + "import starling.textures.Texture;" + System.lineSeparator( ) + System.lineSeparator( ) + "new R( new Singleton() );" )
 		classFileContent = classFileContent.replaceAll( /class RBool\s*\{[^}]*}/ , "class RBool" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + bools + "}" )
 		classFileContent = classFileContent.replaceAll( /class RColor\s*\{[^}]*}/ , "class RColor" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + colors + "}" )
 		classFileContent = classFileContent.replaceAll( /class RDimen\s*\{[^}]*}/ , "class RDimen" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + dimens + "}" )
