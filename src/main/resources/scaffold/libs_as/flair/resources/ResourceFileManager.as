@@ -16,7 +16,7 @@ package flair.resources
 	import starling.core.Starling;
 
 	/**
-	 * ResourceFileManager help retrieve assets depending of your device configuration.
+	 * ResourceFileManager help retrieve resources depending of your device configuration.
 	 */
 	public final class ResourceFileManager
 	{
@@ -83,8 +83,8 @@ package flair.resources
 
 		/**
 		 * Get all drawables required from your device configuration.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
-		 * @return A Vector of all drawables assets as ResourceFile.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
+		 * @return A Vector of all drawables resources as ResourceFile.
 		 */
 		public function getDrawables( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
@@ -93,8 +93,8 @@ package flair.resources
 
 		/**
 		 * Get all values required from your device configuration.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
-		 * @return A Vector of all values assets as ResourceFile.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
+		 * @return A Vector of all values resources as ResourceFile.
 		 *
 		 * TODO check if only one overwritten value from a specific qualifier will not erase all default values
 		 */
@@ -128,8 +128,8 @@ package flair.resources
 
 		/**
 		 * Get all xml required from your device configuration.
-		 * @param screenID The screen id from which retrieve assets, by default it returns all asset at the root resource folder.
-		 * @return A Vector of all xml assets as ResourceFile.
+		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
+		 * @return A Vector of all xml resources as ResourceFile.
 		 */
 		public function getXML( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
 		{
