@@ -79,7 +79,7 @@ package
 	}
 }
 
-import com.flair.resources.getString;
+import flair.resources.getString;
 
 new R( new Singleton() );
 
