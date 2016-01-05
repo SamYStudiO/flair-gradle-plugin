@@ -111,7 +111,18 @@ package flair.resources
 				for each ( var file : ResourceFile in values )
 				{
 					stream.open( file , FileMode.READ );
-					outputXML.appendChild( new XML( stream.readUTFBytes( stream.bytesAvailable ) ) );
+					var list : XMLList = new XML( stream.readUTFBytes( stream.bytesAvailable ) ).*;
+
+					for each ( var node : XML in list )
+					{
+						var type : String = node.name();
+						var id : String = node.@name;
+
+						delete outputXML[ type ].( @name == id )[ 0 ];
+
+						outputXML.appendChild( node );
+					}
+
 					stream.close();
 				}
 
@@ -270,6 +281,9 @@ package flair.resources
 							{
 								for each ( directory in validDirectories )
 								{
+									// DO NOT remove default values
+									if( directory.name == "values" ) continue;
+
 									test = directory.name.match( qualifier.regexp );
 
 									if( ( !test || test.length == 0 ) )
@@ -286,9 +300,7 @@ package flair.resources
 					validDirectories = b.concat();
 				}
 
-				directory = validDirectories.length ? validDirectories[ 0 ] : null;
-
-				if( directory )
+				for each ( directory in validDirectories )
 				{
 					var list : Array = screenID == EnumScreen.MAIN ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
 
@@ -406,6 +418,8 @@ package flair.resources
 
 					for each ( var file : File in fileList )
 					{
+						if( file.isDirectory ) continue;
+
 						var filename : String = file.name.split( "." )[ 0 ];
 
 						if( d[ filename ] == undefined ) d[ filename ] = new Vector.<File>();

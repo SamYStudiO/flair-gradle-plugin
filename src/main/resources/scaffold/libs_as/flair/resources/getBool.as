@@ -7,6 +7,6 @@ package flair.resources
 	 */
 	public function getBool( id : String , groupID : String = EnumScreen.MAIN ) : Boolean
 	{
-		return getAssetManager( groupID ).getXml( "values" )..bool.( @name == id ).toString() == "true";
+		return getAssetManager( groupID ).getXml( "values" ).bool.( @name == id ).toString() == "true";
 	}
 }

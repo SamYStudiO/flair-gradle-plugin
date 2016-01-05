@@ -1,10 +1,11 @@
 package flair.resources
 {
+	import com.flair.PhysicalDensity;
+
 	import flair.utils.device.isAndroid;
 	import flair.utils.displayMetrics.getDensityScale;
-	import _appId_.view.EnumScreen;
 
-	import flair.PhysicalDensity;
+	import _appId_.view.EnumScreen;
 
 	import feathers.system.DeviceCapabilities;
 
@@ -13,7 +14,7 @@ package flair.resources
 	 */
 	public function getDimen( id : String , groupID : String = EnumScreen.MAIN ) : Number
 	{
-		var dim : String = getAssetManager( groupID ).getXml( "values" )..dimen.( @name == id ).toString();
+		var dim : String = getAssetManager( groupID ).getXml( "values" ).dimen.( @name == id ).toString();
 		var value : int = parseInt( dim );
 		var matches : Array = dim.match( /^\d([a-z]+)/ );
 
