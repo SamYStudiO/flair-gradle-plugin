@@ -7,9 +7,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 25/11/2015.
  */
-class Fonts extends DefaultTask
+class GenerateFontClass extends DefaultTask
 {
-	public Fonts()
+	public GenerateFontClass()
 	{
 		group = "generated"
 		description = ""
@@ -20,7 +20,6 @@ class Fonts extends DefaultTask
 	{
 		String moduleName = project.flair.moduleName
 		String appId = project.flair.appId
-		String appIdPath = appId.replace( "." , "/" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/fonts" )
 
@@ -64,7 +63,7 @@ class Fonts extends DefaultTask
 	{
 		String upname = filename.replaceAll( /[A-Z]/ , /_$0/ ).toUpperCase( )
 
-		if( upname.charAt( 0 ).toString( ) == "_" ) upname = upname.substring( 1 )
+		if( upname.charAt( 0 ).toString(  ) == "_" ) upname = upname.substring( 1 )
 
 		return upname
 	}

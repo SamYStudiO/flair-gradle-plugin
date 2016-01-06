@@ -1,13 +1,15 @@
 package flair
 
-import flair.tasks.Fonts
+import flair.tasks.AutoGenerateFontClass
+import flair.tasks.GenerateFontClass
 import flair.tasks.ProcessAndroidResources
 import flair.tasks.ProcessDesktopResources
 import flair.tasks.ProcessIOSResources
 import flair.tasks.ProcessProdAndroidResources
 import flair.tasks.ProcessProdDesktopResources
 import flair.tasks.ProcessProdIOSResources
-import flair.tasks.Resources
+import flair.tasks.AutoGenerateResourceClass
+import flair.tasks.GenerateResourceClass
 import flair.tasks.Scaffold
 import flair.tasks.TexturePacker
 import flair.tasks.UpdateProperties
@@ -26,7 +28,6 @@ public class FlairPlugin implements Plugin<Project>
 		project.getExtensions( ).create( "flair" , FlairPluginProperties )
 		project.getTasks( ).create( "generateProject" , Scaffold )
 		project.getTasks( ).create( "updateProperties" , UpdateProperties )
-		project.getTasks( ).create( "generateFontClass" , Fonts )
 		project.getTasks( ).create( "processIOSResources" , ProcessIOSResources )
 		project.getTasks( ).create( "processAndroidResources" , ProcessAndroidResources )
 		project.getTasks( ).create( "processDesktopResources" , ProcessDesktopResources )
@@ -35,6 +36,9 @@ public class FlairPlugin implements Plugin<Project>
 		project.getTasks( ).create( "processProdDesktopResources" , ProcessProdDesktopResources )
 		project.getTasks( ).create( "generateAtlases" , TexturePacker )
 		project.getTasks( ).create( "incrementVersion" , VersioningIncrementVersion )
-		project.getTasks( ).create( "generateResourceClass" , Resources )
+		project.getTasks( ).create( "generateFontClass" , GenerateFontClass )
+		project.getTasks( ).create( "autoGenerateFontClass" , AutoGenerateFontClass )
+		project.getTasks( ).create( "generateResourceClass" , GenerateResourceClass )
+		project.getTasks( ).create( "autoGenerateResourceClass" , AutoGenerateResourceClass )
 	}
 }

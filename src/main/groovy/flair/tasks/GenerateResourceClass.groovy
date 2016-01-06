@@ -7,16 +7,16 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 19/12/2015.
  */
-public class Resources extends DefaultTask
+public class GenerateResourceClass extends DefaultTask
 {
-	public Resources()
+	public GenerateResourceClass()
 	{
 		group = "generated"
 		description = ""
 	}
 
 	@TaskAction
-	public void generateResources()
+	public void generateResourceClass()
 	{
 		String moduleName = project.flair.moduleName
 		String appId = project.flair.appId
