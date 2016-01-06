@@ -5,7 +5,7 @@ package _appId_.view.otherScreen
 	import feathers.controls.StackScreenNavigator;
 	import feathers.layout.VerticalLayout;
 
-	import myLogger.debug;
+	import flair.debug;
 
 	import starling.events.Event;
 

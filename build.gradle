@@ -16,6 +16,7 @@ buildscript {
 	}
 }
 
+
 apply plugin: "groovy"
 apply plugin: "maven"
 apply plugin: "maven-publish"
@@ -75,7 +76,6 @@ publishing {
 		}
 	}
 }
-
 
 install {
 	repositories.mavenInstaller {

@@ -2,11 +2,12 @@ package _appId_
 {
 	import _appId_.view.StarlingMain;
 
+	import feathers.events.FeathersEventType;
+
+	import flair.info;
 	import flair.utils.OrientationManager;
 	import flair.utils.device.isDesktop;
 	import flair.utils.displayMetrics.getDensityScale;
-
-	import feathers.events.FeathersEventType;
 
 	import flash.desktop.NativeApplication;
 	import flash.display.Loader;
@@ -23,9 +24,6 @@ package _appId_
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	import flash.utils.setTimeout;
-
-	import myLogger.DEFAULT_LOGGER;
-	import myLogger.info;
 
 	import org.gestouch.core.Gestouch;
 	import org.gestouch.extensions.starling.StarlingDisplayListAdapter;
@@ -85,14 +83,6 @@ package _appId_
 
 			addEventListener( flash.events.Event.ACTIVATE , _onActivate , false , 0 , true );
 			addEventListener( flash.events.Event.DEACTIVATE , _onDeactivate , false , 0 , true );
-		}
-
-		/**
-		 *
-		 */
-		protected function _initDebugger() : void
-		{
-			DEFAULT_LOGGER.verbose = Capabilities.isDebugger;
 		}
 
 		/**
@@ -288,7 +278,6 @@ package _appId_
 		 */
 		protected function _init( e : InvokeEvent ) : void
 		{
-			_initDebugger();
 			_initStage();
 			_initSplashScreen();
 			_initStarling();
