@@ -1,6 +1,6 @@
-package flair.tasks
+package flair.gradle.tasks
 
-import flair.utils.SDKManager
+import flair.gradle.utils.SDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree

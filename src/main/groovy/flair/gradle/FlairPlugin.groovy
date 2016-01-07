@@ -1,19 +1,19 @@
-package flair
+package flair.gradle
 
-import flair.tasks.AutoGenerateFontClass
-import flair.tasks.GenerateFontClass
-import flair.tasks.ProcessAndroidResources
-import flair.tasks.ProcessDesktopResources
-import flair.tasks.ProcessIOSResources
-import flair.tasks.ProcessProdAndroidResources
-import flair.tasks.ProcessProdDesktopResources
-import flair.tasks.ProcessProdIOSResources
-import flair.tasks.AutoGenerateResourceClass
-import flair.tasks.GenerateResourceClass
-import flair.tasks.Scaffold
-import flair.tasks.TexturePacker
-import flair.tasks.UpdateProperties
-import flair.tasks.VersioningIncrementVersion
+import flair.gradle.tasks.AutoGenerateFontClass
+import flair.gradle.tasks.GenerateFontClass
+import flair.gradle.tasks.ProcessAndroidResources
+import flair.gradle.tasks.ProcessDesktopResources
+import flair.gradle.tasks.ProcessIOSResources
+import flair.gradle.tasks.ProcessProdAndroidResources
+import flair.gradle.tasks.ProcessProdDesktopResources
+import flair.gradle.tasks.ProcessProdIOSResources
+import flair.gradle.tasks.AutoGenerateResourceClass
+import flair.gradle.tasks.GenerateResourceClass
+import flair.gradle.tasks.Scaffold
+import flair.gradle.tasks.TexturePacker
+import flair.gradle.tasks.UpdateProperties
+import flair.gradle.tasks.VersioningIncrementVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

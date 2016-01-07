@@ -1,4 +1,4 @@
-package flair.tasks
+package flair.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -6,9 +6,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO on 24/11/2015.
  */
-public class ProcessProdDesktopResources extends DefaultTask
+public class ProcessAndroidResources extends DefaultTask
 {
-	public ProcessProdDesktopResources()
+	public ProcessAndroidResources()
 	{
 		group = "process resources"
 		description = ""
@@ -20,7 +20,7 @@ public class ProcessProdDesktopResources extends DefaultTask
 		project.getBuildDir( ).deleteDir( )
 
 		String moduleName = project.flair.moduleName
-		String desktopExcludeResources = project.flair.desktopExcludeResources
+		String androidExcludeResources = project.flair.androidExcludeResources
 
 		project.copy {
 			from "${ moduleName }/src/main/assets"
@@ -33,18 +33,17 @@ public class ProcessProdDesktopResources extends DefaultTask
 			from "${ moduleName }/src/main/resources/"
 			into "${ project.getBuildDir( ) }/resources/"
 
-			exclude desktopExcludeResources.split( "," )
-			exclude "*-dev*/** *-preprod/**"
+			exclude androidExcludeResources.split( "," )
 			includeEmptyDirs = false
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/desktop/splashs"
+			from "${ moduleName }/src/main/android/splashs"
 			into "${ project.getBuildDir( ) }/"
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/desktop/icons"
+			from "${ moduleName }/src/main/android/icons"
 			into "${ project.getBuildDir( ) }/icons"
 		}
 	}

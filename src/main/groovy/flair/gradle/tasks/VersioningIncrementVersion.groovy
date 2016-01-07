@@ -1,4 +1,4 @@
-package flair.tasks
+package flair.gradle.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction

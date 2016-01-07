@@ -1,4 +1,4 @@
-package flair.utils
+package flair.gradle.utils
 
 import org.gradle.api.Project
 

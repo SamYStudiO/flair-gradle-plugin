@@ -1,4 +1,4 @@
-package flair
+package flair.gradle
 
 /**
  * @author SamYStudiO on 08/11/2015.
