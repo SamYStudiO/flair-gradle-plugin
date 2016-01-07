@@ -3,7 +3,7 @@ Flair is a [gradle](http://gradle.org/) plugin that help you build Adobe AIR mob
 
 ###WARNING
 * This plugin is designed to work with [**IntelliJ IDEA**](https://www.jetbrains.com/idea/), it won't works as expected with other IDE, i may consider adding other IDE support (Flash Builder, FDT) if sufficient requests are made for them.
-
+___
 #####INSTALLATION
 * [Getting Started](https://github.com/SamYStudiO/flair-gradle-plugin/wiki/Getting-Started)
 
