@@ -4,7 +4,7 @@ package _appId_
 
 	import feathers.events.FeathersEventType;
 
-	import flair.info;
+	import flair.logging.info;
 	import flair.utils.OrientationManager;
 	import flair.utils.device.isDesktop;
 	import flair.utils.displayMetrics.getDensityScale;

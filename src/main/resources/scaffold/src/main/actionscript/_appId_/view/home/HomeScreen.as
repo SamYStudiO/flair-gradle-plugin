@@ -7,7 +7,7 @@ package _appId_.view.home
 	import feathers.controls.StackScreenNavigator;
 	import feathers.layout.VerticalLayout;
 
-	import flair.debug;
+	import flair.logging.debug;
 
 	import starling.events.Event;
 
