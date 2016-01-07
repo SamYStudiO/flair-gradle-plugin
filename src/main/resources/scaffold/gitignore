@@ -1,4 +1,4 @@
-/local.properties
-/build
+build/
+local.properties
 .DS_Store
 .gradle
