@@ -282,9 +282,6 @@ package _appId_
 			_initSplashScreen();
 			_initStarling();
 
-			// force Fonts to be packaged
-			Fonts;
-
 			NativeApplication.nativeApplication.removeEventListener( InvokeEvent.INVOKE , _init );
 		}
 
