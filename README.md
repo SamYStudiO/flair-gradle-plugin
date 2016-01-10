@@ -16,6 +16,8 @@ ___
 
 TODO :
 * ~~Upload archive to gradle/bintray/jcenter/maven repositories~~
+* Install/Compile tasks
+* Manage release types
 * Write doc (in progress)
 * Add tests
 * More scaffold tests
