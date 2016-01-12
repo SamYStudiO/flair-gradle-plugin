@@ -3,7 +3,7 @@ package flair.gradle.tasks
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Groups {
+public enum Group {
 	SCAFFOLD( "scaffold" ) ,
 	BUILD( "build" ) ,
 	PACKAGE( "package" ) ,
@@ -14,7 +14,7 @@ public enum Groups {
 
 	private String name
 
-	Groups( String name )
+	Group( String name )
 	{
 		this.name = name
 	}

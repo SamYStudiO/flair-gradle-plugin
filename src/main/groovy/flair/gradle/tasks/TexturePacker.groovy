@@ -13,7 +13,7 @@ class TexturePacker extends DefaultTask
 {
 	public TexturePacker()
 	{
-		group = Groups.TEXTURE_PACKER.name
+		group = Group.TEXTURE_PACKER.name
 		description = ""
 	}
 

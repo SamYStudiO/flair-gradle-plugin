@@ -28,7 +28,7 @@ public class AutoGenerateFontClass extends DefaultTask
 
 	public AutoGenerateFontClass()
 	{
-		group = Groups.GENERATED.name
+		group = Group.GENERATED.name
 		description = ""
 	}
 

@@ -11,7 +11,7 @@ public class Scaffold extends DefaultTask
 {
 	public Scaffold()
 	{
-		group = Groups.SCAFFOLD.name
+		group = Group.SCAFFOLD.name
 		description = ""
 	}
 

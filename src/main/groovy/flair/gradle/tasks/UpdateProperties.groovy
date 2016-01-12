@@ -12,7 +12,7 @@ public class UpdateProperties extends DefaultTask
 {
 	public UpdateProperties()
 	{
-		group = Groups.SCAFFOLD.name
+		group = Group.SCAFFOLD.name
 		description = ""
 	}
 

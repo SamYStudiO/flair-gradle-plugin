@@ -10,7 +10,7 @@ public class Clean extends DefaultTask
 {
 	public Clean()
 	{
-		group = Groups.BUILD.name
+		group = Group.BUILD.name
 		description = ""
 	}
 

@@ -11,7 +11,7 @@ public class GenerateResourceClass extends DefaultTask
 {
 	public GenerateResourceClass()
 	{
-		group = Groups.GENERATED.name
+		group = Group.GENERATED.name
 		description = ""
 	}
 

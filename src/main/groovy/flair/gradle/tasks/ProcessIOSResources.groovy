@@ -10,7 +10,7 @@ public class ProcessIOSResources extends DefaultTask
 {
 	public ProcessIOSResources()
 	{
-		group = Groups.DEFAULT.name
+		group = Group.DEFAULT.name
 		description = ""
 	}
 

@@ -10,7 +10,7 @@ public class VersioningIncrementVersion extends DefaultTask
 {
 	public VersioningIncrementVersion()
 	{
-		group = Groups.DEFAULT.name
+		group = Group.DEFAULT.name
 		description = ""
 	}
 

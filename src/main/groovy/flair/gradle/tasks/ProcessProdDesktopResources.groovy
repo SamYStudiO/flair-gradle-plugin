@@ -10,7 +10,7 @@ public class ProcessProdDesktopResources extends DefaultTask
 {
 	public ProcessProdDesktopResources()
 	{
-		group = Groups.DEFAULT.name
+		group = Group.DEFAULT.name
 		description = ""
 	}
 

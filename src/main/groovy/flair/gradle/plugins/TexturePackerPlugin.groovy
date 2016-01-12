@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.TexturePackerExtension
-import flair.gradle.tasks.Tasks
+import flair.gradle.tasks.Task
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -10,7 +10,7 @@ class TexturePackerPlugin extends AbstractPlugin
 {
 	public void addTasks()
 	{
-		addTask( Tasks.PUBLISH_ATLASES.name , Tasks.PUBLISH_ATLASES.type )
+		addTask( Task.PUBLISH_ATLASES.name , Task.PUBLISH_ATLASES.type )
 	}
 
 	public void addExtensions()

@@ -11,7 +11,7 @@ class GenerateFontClass extends DefaultTask
 {
 	public GenerateFontClass()
 	{
-		group = Groups.GENERATED.name
+		group = Group.GENERATED.name
 		description = ""
 	}
 

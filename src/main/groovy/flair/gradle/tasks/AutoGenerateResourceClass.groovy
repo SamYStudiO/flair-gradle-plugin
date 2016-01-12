@@ -28,7 +28,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 
 	public AutoGenerateResourceClass()
 	{
-		group = Groups.GENERATED.name
+		group = Group.GENERATED.name
 		description = ""
 	}
 
