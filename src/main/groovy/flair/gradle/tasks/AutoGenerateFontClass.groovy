@@ -12,9 +12,9 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS
 import static java.nio.file.StandardWatchEventKinds.*
 
 /**
- * @author SamYStudiO on 25/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
-class AutoGenerateFontClass extends DefaultTask
+public class AutoGenerateFontClass extends DefaultTask
 {
 	protected WatchService watcher
 
@@ -28,7 +28,7 @@ class AutoGenerateFontClass extends DefaultTask
 
 	public AutoGenerateFontClass()
 	{
-		group = "generated"
+		group = Groups.GENERATED.name
 		description = ""
 	}
 

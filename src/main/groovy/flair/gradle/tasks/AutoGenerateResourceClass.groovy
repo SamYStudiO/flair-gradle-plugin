@@ -12,7 +12,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS
 import static java.nio.file.StandardWatchEventKinds.*
 
 /**
- * @author SamYStudiO on 24/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 public class AutoGenerateResourceClass extends DefaultTask
 {
@@ -28,7 +28,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 
 	public AutoGenerateResourceClass()
 	{
-		group = "generated"
+		group = Groups.GENERATED.name
 		description = ""
 	}
 

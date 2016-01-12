@@ -4,13 +4,13 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 24/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 public class ProcessProdAndroidResources extends DefaultTask
 {
 	public ProcessProdAndroidResources()
 	{
-		group = "process resources"
+		group = Groups.DEFAULT.name
 		description = ""
 	}
 

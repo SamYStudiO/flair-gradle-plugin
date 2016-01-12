@@ -5,13 +5,13 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 25/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 class GenerateFontClass extends DefaultTask
 {
 	public GenerateFontClass()
 	{
-		group = "generated"
+		group = Groups.GENERATED.name
 		description = ""
 	}
 

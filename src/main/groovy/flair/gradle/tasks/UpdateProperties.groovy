@@ -1,18 +1,18 @@
 package flair.gradle.tasks
 
-import flair.gradle.utils.SDKManager
+import flair.gradle.utils.AIRSDKManager
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 25/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
-class UpdateProperties extends DefaultTask
+public class UpdateProperties extends DefaultTask
 {
 	public UpdateProperties()
 	{
-		group = "scaffold"
+		group = Groups.SCAFFOLD.name
 		description = ""
 	}
 
@@ -50,12 +50,12 @@ class UpdateProperties extends DefaultTask
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )
 		String out = ""
-		Boolean replace = false
+		boolean replace = false
 		String typeExcludeResources = ""
 
 		imlContent.eachLine { line ->
 
-			if( line.indexOf( "air_sdk_" ) >= 0 ) out += line.replaceAll( /air_sdk_\d{2}\.\d/ , SDKManager.getPath( project ).split( "/" ).last( ) ) + System.lineSeparator( ) else if( line.indexOf( "configuration" ) >= 0 )
+			if( line.indexOf( "air_sdk_" ) >= 0 ) out += line.replaceAll( /air_sdk_\d{2}\.\d/ , AIRSDKManager.getPath( project ).split( "/" ).last( ) ) + System.lineSeparator( ) else if( line.indexOf( "configuration" ) >= 0 )
 			{
 				if( line.indexOf( "android" ) >= 0 )
 				{
@@ -128,7 +128,7 @@ class UpdateProperties extends DefaultTask
 
 	protected void updatePropertiesFromFile( File f , String version )
 	{
-		String sdkVersion = SDKManager.getVersion( project )
+		String sdkVersion = AIRSDKManager.getVersion( project )
 		String appId = project.flair.appId
 		String appName = project.flair.appName
 		String appFullScreen = project.flair.appFullScreen
@@ -137,7 +137,7 @@ class UpdateProperties extends DefaultTask
 		String appDepthAndStencil = project.flair.appDepthAndStencil.toString( )
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
-		Boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
+		boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
 
 		appName = appName == "" ? project.name : appName
 

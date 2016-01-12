@@ -23,6 +23,7 @@ apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
 apply plugin: "com.gradle.plugin-publish"
 
+
 ext {
 	bintrayRepo = "maven"
 	bintrayName = project.name
@@ -73,6 +74,14 @@ publishing {
 	publications {
 		mavenJava( MavenPublication ) {
 			from components.java
+
+			artifact sourcesJar {
+				classifier "sources"
+			}
+
+			artifact javadocJar {
+				classifier "javadoc"
+			}
 		}
 	}
 }

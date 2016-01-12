@@ -6,9 +6,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * @author SamYStudiO on 28/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
-public final class SDKManager
+public final class AIRSDKManager
 {
 	public static String getVersion( Project project )
 	{
@@ -44,7 +44,7 @@ public final class SDKManager
 		return properties.getProperty( "sdk.dir" )
 	}
 
-	private SDKManager()
+	private AIRSDKManager()
 	{
 	}
 }

@@ -5,13 +5,13 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 19/12/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 public class GenerateResourceClass extends DefaultTask
 {
 	public GenerateResourceClass()
 	{
-		group = "generated"
+		group = Groups.GENERATED.name
 		description = ""
 	}
 
@@ -131,7 +131,7 @@ public class GenerateResourceClass extends DefaultTask
 				}
 				else if( parentName.indexOf( "drawable" ) == 0 )
 				{
-					Boolean isAtlas = ( ext != "xml" ) && new File( file.getParentFile( ).getPath( ) + File.separator + filename + ".xml" ).exists( )
+					boolean isAtlas = ( ext != "xml" ) && new File( file.getParentFile( ).getPath( ) + File.separator + filename + ".xml" ).exists( )
 
 					if( ext == "xml" )
 					{

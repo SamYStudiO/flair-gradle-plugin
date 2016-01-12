@@ -1,27 +1,27 @@
 package flair.gradle.tasks
 
-import flair.gradle.utils.SDKManager
+import flair.gradle.utils.AIRSDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 24/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 class TexturePacker extends DefaultTask
 {
 	public TexturePacker()
 	{
-		group = "atlases"
+		group = Groups.TEXTURE_PACKER.name
 		description = ""
 	}
 
 	@TaskAction
-	public void generateAtlases()
+	public void publishAtlases()
 	{
 		String moduleName = project.flair.moduleName
-		Boolean generateATFTexturesFromAtlases = project.flair.generateATFTexturesFromAtlases
+		boolean generateATFTexturesFromAtlases = project.flair.generateATFTexturesFromAtlases
 
 		String toATF = ""
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )
@@ -46,7 +46,7 @@ class TexturePacker extends DefaultTask
 
 		if( generateATFTexturesFromAtlases )
 		{
-			String png2atf = "${ SDKManager.getPath( project ) }/atftools/png2atf"
+			String png2atf = "${ AIRSDKManager.getPath( project ) }/atftools/png2atf"
 
 			tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
 				include "drawable*/**/*.png"

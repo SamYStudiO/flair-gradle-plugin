@@ -5,13 +5,13 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
- * @author SamYStudiO on 08/11/2015.
+ * @author SamYStudiO ( contact@samystudio.net )
  */
 public class Scaffold extends DefaultTask
 {
 	public Scaffold()
 	{
-		group = "scaffold"
+		group = Groups.SCAFFOLD.name
 		description = ""
 	}
 
