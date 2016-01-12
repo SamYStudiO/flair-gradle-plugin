@@ -1,5 +1,6 @@
-package flair.gradle.tasks
+package flair.gradle.tasks.texturepacker
 
+import flair.gradle.tasks.Group
 import flair.gradle.utils.AIRSDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask

@@ -1,14 +1,15 @@
-package flair.gradle.tasks
+package flair.gradle.tasks.others
 
+import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ProcessDesktopResources extends DefaultTask
+public class ProcessProdDesktopResources extends DefaultTask
 {
-	public ProcessDesktopResources()
+	public ProcessProdDesktopResources()
 	{
 		group = Group.DEFAULT.name
 		description = ""
@@ -34,6 +35,7 @@ public class ProcessDesktopResources extends DefaultTask
 			into "${ project.getBuildDir( ) }/resources/"
 
 			exclude desktopExcludeResources.split( "," )
+			exclude "*-dev*/** *-preprod/**"
 			includeEmptyDirs = false
 		}
 

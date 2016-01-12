@@ -1,5 +1,6 @@
-package flair.gradle.tasks
+package flair.gradle.tasks.scaffold
 
+import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction

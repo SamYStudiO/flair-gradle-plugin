@@ -1,5 +1,20 @@
 package flair.gradle.tasks
 
+import flair.gradle.tasks.generated.AutoGenerateFontClass
+import flair.gradle.tasks.generated.AutoGenerateResourceClass
+import flair.gradle.tasks.generated.GenerateFontClass
+import flair.gradle.tasks.generated.GenerateResourceClass
+import flair.gradle.tasks.others.ProcessAndroidResources
+import flair.gradle.tasks.others.ProcessDesktopResources
+import flair.gradle.tasks.others.ProcessIOSResources
+import flair.gradle.tasks.others.ProcessProdAndroidResources
+import flair.gradle.tasks.others.ProcessProdDesktopResources
+import flair.gradle.tasks.others.ProcessProdIOSResources
+import flair.gradle.tasks.others.VersioningIncrementVersion
+import flair.gradle.tasks.scaffold.Scaffold
+import flair.gradle.tasks.scaffold.UpdateProperties
+import flair.gradle.tasks.texturepacker.TexturePacker
+
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
