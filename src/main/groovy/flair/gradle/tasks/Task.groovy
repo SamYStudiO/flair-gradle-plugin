@@ -1,5 +1,6 @@
 package flair.gradle.tasks
 
+import flair.gradle.tasks.build.Compile
 import flair.gradle.tasks.generated.AutoGenerateFontClass
 import flair.gradle.tasks.generated.AutoGenerateResourceClass
 import flair.gradle.tasks.generated.GenerateFontClass
@@ -28,6 +29,7 @@ public enum Task {
 	PROCESS_PROD_IOS_RESOURCES( "processProdIOSResources" , ProcessProdIOSResources , Group.DEFAULT ) ,
 	PROCESS_PROD_ANDROID_RESOURCES( "processProdAndroidResources" , ProcessProdAndroidResources , Group.DEFAULT ) ,
 	PROCESS_PROD_DESKTOP_RESOURCES( "processProdDesktopResources" , ProcessProdDesktopResources , Group.DEFAULT ) ,
+	COMPILE( "compile" , Compile , Group.BUILD ) ,
 	PUBLISH_ATLASES( "publishAtlases" , TexturePacker , Group.TEXTURE_PACKER ) ,
 	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Group.DEFAULT ) ,
 	GENERATE_FONT_CLASS( "generateFontClass" , GenerateFontClass , Group.GENERATED ) ,
