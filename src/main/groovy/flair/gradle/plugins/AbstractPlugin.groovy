@@ -41,18 +41,23 @@ public abstract class AbstractPlugin implements Plugin<Project>
 	{
 		Task task = project.tasks.findByName( name )
 
-		return task ? task : project.tasks.create( name , type )
+		return task ?: project.tasks.create( name , type )
 	}
 
 	protected ExtensionAware addExtension( String name , Class type , ExtensionAware parent = project )
 	{
-		return parent.extensions.create( name , type ) as ExtensionAware
+		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
+
+		return extension ?: parent.extensions.create( name , type ) as ExtensionAware
 	}
 
 	protected ExtensionAware addConfigurationExtension( String name , Class type , ExtensionAware parent = project )
 	{
 		NamedDomainObjectContainer<BuildTypeExtension> buildTypeContainer = project.container( BuildTypeExtension , new BuildTypeFactory( project ) )
 		NamedDomainObjectContainer<ProductFlavorExtension> productFlavorContainer = project.container( ProductFlavorExtension , new ProductFlavorFactory( project ) )
-		return parent.extensions.create( name , type , name , project , buildTypeContainer , productFlavorContainer ) as ExtensionAware
+
+		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
+
+		return extension ?: parent.extensions.create( name , type , name , project , buildTypeContainer , productFlavorContainer ) as ExtensionAware
 	}
 }
