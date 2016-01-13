@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FlairPlugin implements Plugin<Project>
+public class AllPlugin implements Plugin<Project>
 {
 	@Override
 	public void apply( Project project )
