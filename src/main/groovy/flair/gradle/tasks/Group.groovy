@@ -7,10 +7,10 @@ public enum Group {
 	SCAFFOLD( "scaffold" ) ,
 	BUILD( "build" ) ,
 	PACKAGE( "package" ) ,
-	INSTALL( "install" ),
-	LAUNCH( "launch" ),
-	GENERATED( "generated" ),
-	TEXTURE_PACKER( "texturepacker" ),
+	INSTALL( "install" ) ,
+	LAUNCH( "launch" ) ,
+	GENERATED( "generated" ) ,
+	TEXTURE_PACKER( "texturepacker" ) ,
 	DEFAULT( "" )
 
 	private String name

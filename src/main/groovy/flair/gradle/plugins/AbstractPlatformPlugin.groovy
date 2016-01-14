@@ -18,8 +18,8 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin
 		addTask( Task.GENERATE_RESOURCE_CLASS.name , Task.GENERATE_RESOURCE_CLASS.type )
 		addTask( Task.AUTO_GENERATE_RESOURCE_CLASS.name , Task.AUTO_GENERATE_RESOURCE_CLASS.type )
 
-		project.afterEvaluate {
-			TaskManager.updateVariantTasks( project )
-		}
+		//project.afterEvaluate {
+			//TaskManager.updateVariantTasks( project )
+		//}
 	}
 }

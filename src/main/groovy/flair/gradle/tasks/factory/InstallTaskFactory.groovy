@@ -8,19 +8,19 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class InstallTaskFactory implements TaskFactory<Install>
+public class InstallTaskFactory implements VariantTaskFactory<Install>
 {
-	public Install create( Project project )
+	public Install create( Project project , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , null )
+		return create( project , null , singlePlatform , dependencies )
 	}
 
-	public Install create( Project project , Platform platform )
+	public Install create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , platform , "" , "" )
+		return create( project , platform , singlePlatform , "" , "" , dependencies )
 	}
 
-	public Install create( Project project , Platform platform , String productFlavor , String buildType )
+	public Install create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 	{
 		String name
 
@@ -44,6 +44,7 @@ public class InstallTaskFactory implements TaskFactory<Install>
 		t.platform = platform
 		t.productFlavor = productFlavor
 		t.buildType = buildType
+		t.dependsOn( dependencies )
 
 		return t
 	}

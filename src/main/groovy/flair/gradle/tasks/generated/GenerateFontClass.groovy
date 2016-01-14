@@ -64,7 +64,7 @@ class GenerateFontClass extends DefaultTask
 	{
 		String upname = filename.replaceAll( /[A-Z]/ , /_$0/ ).toUpperCase( )
 
-		if( upname.charAt( 0 ).toString(  ) == "_" ) upname = upname.substring( 1 )
+		if( upname.charAt( 0 ).toString( ) == "_" ) upname = upname.substring( 1 )
 
 		return upname
 	}

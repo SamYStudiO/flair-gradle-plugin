@@ -8,19 +8,19 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LaunchTaskFactory implements TaskFactory<Launch>
+public class LaunchTaskFactory implements VariantTaskFactory<Launch>
 {
-	public Launch create( Project project )
+	public Launch create( Project project , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , null )
+		return create( project , null , singlePlatform , dependencies )
 	}
 
-	public Launch create( Project project , Platform platform )
+	public Launch create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , platform , "" , "" )
+		return create( project , platform , singlePlatform , "" , "" , dependencies )
 	}
 
-	public Launch create( Project project , Platform platform , String productFlavor , String buildType )
+	public Launch create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 	{
 		String name
 
@@ -44,6 +44,7 @@ public class LaunchTaskFactory implements TaskFactory<Launch>
 		t.platform = platform
 		t.productFlavor = productFlavor
 		t.buildType = buildType
+		t.dependsOn( dependencies )
 
 		return t
 	}

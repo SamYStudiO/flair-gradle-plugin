@@ -23,19 +23,31 @@ public class TaskManager
 		updateTypeVariantTasks( project , productFlavors , buildTypes , new PackageTaskFactory( ) )
 		updateTypeVariantTasks( project , productFlavors , buildTypes , new InstallTaskFactory( ) )
 		updateTypeVariantTasks( project , productFlavors , buildTypes , new LaunchTaskFactory( ) )
+		updateProcessResourceTasks( project , new ProcessResourceTaskFactory( ) )
 	}
 
 	public
-	static void updateTypeVariantTasks( Project project , NamedDomainObjectContainer<ProductFlavorExtension> productFlavors , NamedDomainObjectContainer<BuildTypeExtension> buildTypes , TaskFactory factory )
+	static void updateProcessResourceTasks( Project project , TaskFactory factory )
 	{
 		List<Platform> platforms = getCurrentPlatform( project )
 
-		Task t
+		platforms.each { platform ->
 
+			factory.create( project , platform , platforms.size( ) > 1 , [ ] ) as Task
+		}
+	}
+
+	public
+	static void updateTypeVariantTasks( Project project , NamedDomainObjectContainer<ProductFlavorExtension> productFlavors , NamedDomainObjectContainer<BuildTypeExtension> buildTypes , VariantTaskFactory factory )
+	{
+		List<Platform> platforms = getCurrentPlatform( project )
 		List<String> dependencies = new ArrayList<String>( )
+		Task t
 
 		platforms.each { platform ->
 
+			String platformName = platforms.size( ) > 1 ? platform.name.capitalize( ) : ""
+			String proccessResourcesTaskName = "process" + platformName + "Resources"
 			List<String> platformDependencies = new ArrayList<String>( )
 
 			if( productFlavors && productFlavors.size( ) > 0 )
@@ -46,13 +58,13 @@ public class TaskManager
 					{
 						buildTypes.each { type ->
 
-							t = factory.create( project , platforms.size( ) > 1 ? platform : null , flavor.name , type.name ) as Task
+							t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , flavor.name , type.name , [ proccessResourcesTaskName ] ) as Task
 							platformDependencies.add( t.name )
 						}
 					}
 					else
 					{
-						t = factory.create( project , platforms.size( ) > 1 ? platform : null , flavor.name , "" ) as Task
+						t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , flavor.name , "" , [ proccessResourcesTaskName ] ) as Task
 						platformDependencies.add( t.name )
 					}
 				}
@@ -61,22 +73,20 @@ public class TaskManager
 			{
 				buildTypes.each { type ->
 
-					t = factory.create( project , platforms.size( ) > 1 ? platform : null , "" , type.name ) as Task
+					t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , "" , type.name , [ proccessResourcesTaskName ] ) as Task
 					platformDependencies.add( t.name )
 				}
 			}
 
 			if( platforms.size( ) > 1 )
 			{
-				t = factory.create( project , platform ) as Task
+				t = factory.create( project , platform , platforms.size( ) > 1 , platformDependencies.size( ) > 1 ? platformDependencies : [ ] ) as Task
 				dependencies.add( t.name )
-				if( platformDependencies.size(  ) > 1 ) t.dependsOn( platformDependencies )
-				else dependencies.addAll( platformDependencies )
 			}
+			else dependencies = platformDependencies.clone( ) as List<String>
 		}
 
-		t = factory.create( project ) as Task
-		if( dependencies.size(  ) > 1 ) t.dependsOn( dependencies )
+		t = factory.create( project , platforms.size( ) > 1 , dependencies.size( ) > 1 ? dependencies : [ ] ) as Task
 	}
 
 	protected static List<Platform> getCurrentPlatform( Project project )

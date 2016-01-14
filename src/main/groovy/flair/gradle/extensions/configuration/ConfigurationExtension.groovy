@@ -15,11 +15,23 @@ public class ConfigurationExtension extends AbstractExtension
 
 	protected Platform platform
 
+	public String excludeResources = "drawable*-ldpi*/**,drawable*-xxxhdpi*/**"
+
 	public ConfigurationExtension( String name , Project project , Platform platform )
 	{
 		super( name , project )
 
 		this.platform = platform
+
+		switch( platform )
+		{
+			case Platform.IOS: excludeResources = "drawable*-mdpi*/**,drawable*-hdpi*/**"
+				break
+			case Platform.ANDROID: excludeResources = ""
+				break
+			case Platform.DESKTOP: excludeResources = "drawable*-hdpi*/**,drawable*-xxhdpi*/**"
+				break
+		}
 	}
 
 	public void appDescriptor( Action<AppDescriptorExtension> action )

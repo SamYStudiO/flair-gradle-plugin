@@ -8,9 +8,5 @@ import org.gradle.api.Project
  */
 interface TaskFactory<T>
 {
-	public T create( Project project )
-
-	public T create( Project project , Platform platform )
-
-	public T create( Project project , Platform platform , String productFlavor , String buildType )
+	public T create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
 }
