@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ProductFlavorExtension extends AbstractExtension
+public class ProductFlavorExtension extends AbstractExtension implements IVariantExtension
 {
 	public ProductFlavorExtension( String name , Project project )
 	{
