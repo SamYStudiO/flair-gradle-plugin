@@ -47,7 +47,7 @@ public class TaskManager
 		platforms.each { platform ->
 
 			String platformName = platforms.size( ) > 1 ? platform.name.capitalize( ) : ""
-			String proccessResourcesTaskName = "process" + platformName + "Resources"
+			String processResourcesTaskName = "process" + platformName + "Resources"
 			List<String> platformDependencies = new ArrayList<String>( )
 
 			if( productFlavors && productFlavors.size( ) > 0 )
@@ -58,13 +58,13 @@ public class TaskManager
 					{
 						buildTypes.each { type ->
 
-							t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , type.name , [ proccessResourcesTaskName ] ) as Task
+							t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
 							platformDependencies.add( t.name )
 						}
 					}
 					else
 					{
-						t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , "" , [ proccessResourcesTaskName ] ) as Task
+						t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
 						platformDependencies.add( t.name )
 					}
 				}
@@ -73,7 +73,7 @@ public class TaskManager
 			{
 				buildTypes.each { type ->
 
-					t = factory.create( project , platform , platforms.size( ) > 1 , "" , type.name , [ proccessResourcesTaskName ] ) as Task
+					t = factory.create( project , platform , platforms.size( ) > 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
 					platformDependencies.add( t.name )
 				}
 			}
