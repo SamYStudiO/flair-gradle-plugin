@@ -27,7 +27,7 @@ public class PackageTaskFactory implements VariantTaskFactory<Packaging>
 		productFlavor = productFlavor ?: ""
 		buildType = buildType ?: ""
 
-		if( platform )
+		if( !singlePlatform )
 		{
 			name = "package" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}

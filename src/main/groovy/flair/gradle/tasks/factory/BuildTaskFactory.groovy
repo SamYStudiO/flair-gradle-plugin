@@ -27,7 +27,7 @@ public class BuildTaskFactory implements VariantTaskFactory<Build>
 		productFlavor = productFlavor ?: ""
 		buildType = buildType ?: ""
 
-		if( platform )
+		if( !singlePlatform )
 		{
 			name = "build" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}

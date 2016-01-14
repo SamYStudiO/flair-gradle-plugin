@@ -27,7 +27,7 @@ public class InstallTaskFactory implements VariantTaskFactory<Install>
 		productFlavor = productFlavor ?: ""
 		buildType = buildType ?: ""
 
-		if( platform )
+		if( !singlePlatform )
 		{
 			name = "install" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}

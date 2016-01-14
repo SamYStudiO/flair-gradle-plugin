@@ -27,7 +27,7 @@ public class LaunchTaskFactory implements VariantTaskFactory<Launch>
 		productFlavor = productFlavor ?: ""
 		buildType = buildType ?: ""
 
-		if( platform )
+		if( !singlePlatform )
 		{
 			name = "launch" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}

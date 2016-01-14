@@ -58,13 +58,13 @@ public class TaskManager
 					{
 						buildTypes.each { type ->
 
-							t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , flavor.name , type.name , [ proccessResourcesTaskName ] ) as Task
+							t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , type.name , [ proccessResourcesTaskName ] ) as Task
 							platformDependencies.add( t.name )
 						}
 					}
 					else
 					{
-						t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , flavor.name , "" , [ proccessResourcesTaskName ] ) as Task
+						t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , "" , [ proccessResourcesTaskName ] ) as Task
 						platformDependencies.add( t.name )
 					}
 				}
@@ -73,7 +73,7 @@ public class TaskManager
 			{
 				buildTypes.each { type ->
 
-					t = factory.create( project , platforms.size( ) > 1 ? platform : null , platforms.size( ) > 1 , "" , type.name , [ proccessResourcesTaskName ] ) as Task
+					t = factory.create( project , platform , platforms.size( ) > 1 , "" , type.name , [ proccessResourcesTaskName ] ) as Task
 					platformDependencies.add( t.name )
 				}
 			}
