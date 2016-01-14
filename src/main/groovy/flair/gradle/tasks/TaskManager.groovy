@@ -58,13 +58,13 @@ public class TaskManager
 					{
 						buildTypes.each { type ->
 
-							t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
+							t = factory.create( project , platform , platforms.size( ) <= 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
 							platformDependencies.add( t.name )
 						}
 					}
 					else
 					{
-						t = factory.create( project , platform , platforms.size( ) > 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
+						t = factory.create( project , platform , platforms.size( )  <= 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
 						platformDependencies.add( t.name )
 					}
 				}
@@ -73,20 +73,20 @@ public class TaskManager
 			{
 				buildTypes.each { type ->
 
-					t = factory.create( project , platform , platforms.size( ) > 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
+					t = factory.create( project , platform , platforms.size( )  <= 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
 					platformDependencies.add( t.name )
 				}
 			}
 
 			if( platforms.size( ) > 1 )
 			{
-				t = factory.create( project , platform , platforms.size( ) > 1 , platformDependencies.size( ) > 1 ? platformDependencies : [ ] ) as Task
+				t = factory.create( project , platform , platforms.size( ) <= 1 , platformDependencies.size( ) > 1 ? platformDependencies : [ ] ) as Task
 				dependencies.add( t.name )
 			}
 			else dependencies = platformDependencies.clone( ) as List<String>
 		}
 
-		t = factory.create( project , platforms.size( ) > 1 , dependencies.size( ) > 1 ? dependencies : [ ] ) as Task
+		t = factory.create( project , platforms.size( ) <= 1 , dependencies.size( ) > 1 ? dependencies : [ ] ) as Task
 	}
 
 	protected static List<Platform> getCurrentPlatform( Project project )
