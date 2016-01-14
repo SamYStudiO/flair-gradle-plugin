@@ -8,6 +8,7 @@ import flair.gradle.platforms.Platform
  */
 public class IOSPlugin extends AbstractPlatformPlugin
 {
+	@Override
 	public void addExtensions()
 	{
 		addConfigurationExtension( Platform.IOS.name.toLowerCase( ) , Platform.IOS , PlatformConfigurationExtension , flair )

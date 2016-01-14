@@ -8,6 +8,7 @@ import flair.gradle.tasks.TaskManager
  */
 public abstract class AbstractPlatformPlugin extends AbstractPlugin
 {
+	@Override
 	public void addTasks()
 	{
 		addTask( Task.SCAFFOLD.name , Task.SCAFFOLD.type )

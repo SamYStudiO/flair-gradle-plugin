@@ -2,7 +2,6 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
 import flair.gradle.platforms.Platform
-import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
@@ -10,7 +9,7 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractPlugin implements Plugin<Project>
+public abstract class AbstractPlugin implements IPlugin
 {
 	protected Project project
 
@@ -27,8 +26,10 @@ public abstract class AbstractPlugin implements Plugin<Project>
 		addExtensions( )
 	}
 
+	@Override
 	public abstract void addTasks()
 
+	@Override
 	public abstract void addExtensions()
 
 	public Task addTask( String name , Class type )
@@ -38,14 +39,28 @@ public abstract class AbstractPlugin implements Plugin<Project>
 		return task ?: project.tasks.create( name , type )
 	}
 
-	protected ExtensionAware addExtension( String name , Class type , ExtensionAware parent = project )
+	@Override
+	public ExtensionAware addExtension( String name , Class type )
+	{
+		addExtension( name , type , project )
+	}
+
+	@Override
+	public ExtensionAware addExtension( String name , Class type , ExtensionAware parent )
 	{
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 
 		return extension ?: parent.extensions.create( name , type ) as ExtensionAware
 	}
 
-	protected ExtensionAware addConfigurationExtension( String name , Platform platform , Class type , ExtensionAware parent = project )
+	@Override
+	public ExtensionAware addConfigurationExtension( String name , Platform platform , Class type )
+	{
+		addConfigurationExtension( name , platform , type , project )
+	}
+
+	@Override
+	public ExtensionAware addConfigurationExtension( String name , Platform platform , Class type , ExtensionAware parent )
 	{
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 

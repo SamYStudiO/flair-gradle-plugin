@@ -8,6 +8,7 @@ import flair.gradle.platforms.Platform
  */
 public class DesktopPlugin extends AbstractPlatformPlugin
 {
+	@Override
 	public void addExtensions()
 	{
 		addConfigurationExtension( Platform.DESKTOP.name.toLowerCase( ) , Platform.DESKTOP , PlatformConfigurationExtension , flair )
