@@ -1,9 +1,7 @@
 package flair.gradle.extensions
 
-import flair.gradle.extensions.configuration.variants.BuildTypeExtension
 import flair.gradle.extensions.configuration.VariantConfigurationExtension
-import flair.gradle.extensions.configuration.variants.ProductFlavorExtension
-import org.gradle.api.NamedDomainObjectContainer
+import flair.gradle.platforms.Platform
 import org.gradle.api.Project
 
 /**
@@ -15,8 +13,8 @@ public class FlairExtension extends VariantConfigurationExtension
 
 	public String moduleName = "app"
 
-	public FlairExtension( String name , Project project , NamedDomainObjectContainer<BuildTypeExtension> buildTypes , NamedDomainObjectContainer<ProductFlavorExtension> productFlavors )
+	public FlairExtension( String name , Project project , Platform platform )
 	{
-		super( name , project , buildTypes , productFlavors )
+		super( name , project , platform )
 	}
 }

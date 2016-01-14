@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.VariantConfigurationExtension
+import flair.gradle.extensions.configuration.ConfigurationExtension
+import flair.gradle.platforms.Platform
 import flair.gradle.tasks.Task
 
 /**
@@ -18,6 +19,6 @@ public class IOSPlugin extends AbstractPlatformPlugin
 
 	public void addExtensions()
 	{
-		addConfigurationExtension( "ios" , VariantConfigurationExtension , flair )
+		addConfigurationExtension( Platform.IOS.name.toLowerCase( ) , Platform.IOS , ConfigurationExtension , flair )
 	}
 }

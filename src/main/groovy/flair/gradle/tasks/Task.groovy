@@ -1,17 +1,10 @@
 package flair.gradle.tasks
 
-import flair.gradle.tasks.build.Compile
 import flair.gradle.tasks.generated.AutoGenerateFontClass
 import flair.gradle.tasks.generated.AutoGenerateResourceClass
 import flair.gradle.tasks.generated.GenerateFontClass
 import flair.gradle.tasks.generated.GenerateResourceClass
-import flair.gradle.tasks.others.ProcessAndroidResources
-import flair.gradle.tasks.others.ProcessDesktopResources
-import flair.gradle.tasks.others.ProcessIOSResources
-import flair.gradle.tasks.others.ProcessProdAndroidResources
-import flair.gradle.tasks.others.ProcessProdDesktopResources
-import flair.gradle.tasks.others.ProcessProdIOSResources
-import flair.gradle.tasks.others.VersioningIncrementVersion
+import flair.gradle.tasks.others.*
 import flair.gradle.tasks.scaffold.Scaffold
 import flair.gradle.tasks.scaffold.UpdateProperties
 import flair.gradle.tasks.texturepacker.TexturePacker
@@ -29,7 +22,10 @@ public enum Task {
 	PROCESS_PROD_IOS_RESOURCES( "processProdIOSResources" , ProcessProdIOSResources , Group.DEFAULT ) ,
 	PROCESS_PROD_ANDROID_RESOURCES( "processProdAndroidResources" , ProcessProdAndroidResources , Group.DEFAULT ) ,
 	PROCESS_PROD_DESKTOP_RESOURCES( "processProdDesktopResources" , ProcessProdDesktopResources , Group.DEFAULT ) ,
-	COMPILE( "compile" , Compile , Group.BUILD ) ,
+	//BUILD( "compile" , Build , Group.BUILD ) ,
+	//PACKAGE( "package" , Packaging , Group.PACKAGE ) ,
+	//INSTALL( "install" , Install , Group.INSTALL ) ,
+	//LAUNCH( "launch" , Launch , Group.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , TexturePacker , Group.TEXTURE_PACKER ) ,
 	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Group.DEFAULT ) ,
 	GENERATE_FONT_CLASS( "generateFontClass" , GenerateFontClass , Group.GENERATED ) ,

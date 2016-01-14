@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.tasks.Task
+import flair.gradle.tasks.TaskManager
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -16,6 +17,9 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin
 		addTask( Task.AUTO_GENERATE_FONT_CLASS.name , Task.AUTO_GENERATE_FONT_CLASS.type )
 		addTask( Task.GENERATE_RESOURCE_CLASS.name , Task.GENERATE_RESOURCE_CLASS.type )
 		addTask( Task.AUTO_GENERATE_RESOURCE_CLASS.name , Task.AUTO_GENERATE_RESOURCE_CLASS.type )
-		addTask( Task.COMPILE.name , Task.COMPILE.type )
+
+		project.afterEvaluate {
+			TaskManager.updateVariantTasks( project )
+		}
 	}
 }

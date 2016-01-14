@@ -1,11 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
-import flair.gradle.extensions.configuration.factory.BuildTypeFactory
-import flair.gradle.extensions.configuration.factory.ProductFlavorFactory
-import flair.gradle.extensions.configuration.variants.BuildTypeExtension
-import flair.gradle.extensions.configuration.variants.ProductFlavorExtension
-import org.gradle.api.NamedDomainObjectContainer
+import flair.gradle.platforms.Platform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -25,9 +21,7 @@ public abstract class AbstractPlugin implements Plugin<Project>
 	{
 		this.project = project
 
-		flair = ( ExtensionAware ) project.getExtensions( ).findByName( FlairExtension.NAME )
-
-		if( !flair ) flair = addConfigurationExtension( FlairExtension.NAME , FlairExtension )
+		flair = addConfigurationExtension( FlairExtension.NAME , null , FlairExtension )
 
 		addTasks( )
 		addExtensions( )
@@ -51,13 +45,10 @@ public abstract class AbstractPlugin implements Plugin<Project>
 		return extension ?: parent.extensions.create( name , type ) as ExtensionAware
 	}
 
-	protected ExtensionAware addConfigurationExtension( String name , Class type , ExtensionAware parent = project )
+	protected ExtensionAware addConfigurationExtension( String name , Platform platform , Class type , ExtensionAware parent = project )
 	{
-		NamedDomainObjectContainer<BuildTypeExtension> buildTypeContainer = project.container( BuildTypeExtension , new BuildTypeFactory( project ) )
-		NamedDomainObjectContainer<ProductFlavorExtension> productFlavorContainer = project.container( ProductFlavorExtension , new ProductFlavorFactory( project ) )
-
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 
-		return extension ?: parent.extensions.create( name , type , name , project , buildTypeContainer , productFlavorContainer ) as ExtensionAware
+		return extension ?: parent.extensions.create( name , type , name , project , platform ) as ExtensionAware
 	}
 }
