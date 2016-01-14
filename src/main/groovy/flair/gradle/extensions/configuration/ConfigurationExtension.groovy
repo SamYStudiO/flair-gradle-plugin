@@ -7,7 +7,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ConfigurationExtension extends AbstractExtension implements IConfigurationExtension
+public class ConfigurationExtension extends AbstractExtension
 {
 	protected AppDescriptorExtension appDescriptor = new AppDescriptorExtension( )
 
