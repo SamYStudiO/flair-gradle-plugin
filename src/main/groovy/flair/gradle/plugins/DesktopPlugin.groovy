@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.ConfigurationExtension
+import flair.gradle.extensions.configuration.PlatformConfigurationExtension
 import flair.gradle.platforms.Platform
 
 /**
@@ -10,6 +10,6 @@ public class DesktopPlugin extends AbstractPlatformPlugin
 {
 	public void addExtensions()
 	{
-		addConfigurationExtension( Platform.DESKTOP.name.toLowerCase( ) , Platform.DESKTOP , ConfigurationExtension , flair )
+		addConfigurationExtension( Platform.DESKTOP.name.toLowerCase( ) , Platform.DESKTOP , PlatformConfigurationExtension , flair )
 	}
 }
