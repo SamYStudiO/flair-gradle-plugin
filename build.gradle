@@ -74,7 +74,7 @@ artifacts {
 
 publishing {
 	publications {
-		mavenJava( MavenPublication ) {
+		flair( MavenPublication ) {
 			from components.java
 
 			artifact sourcesJar {
