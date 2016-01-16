@@ -38,6 +38,7 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 			switch( property )
 			{
 				case "moduleName": return "app"
+				case "packageName": return ""
 				case "autoGenerateVariantDirectory": return true
 
 				default: return null
