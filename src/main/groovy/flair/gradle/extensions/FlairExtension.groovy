@@ -17,6 +17,8 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 
 	public String packageName
 
+	public Boolean autoGenerateVariantDirectory
+
 	public FlairExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
@@ -36,6 +38,7 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 			switch( property )
 			{
 				case "moduleName": return "app"
+				case "autoGenerateVariantDirectory": return true
 
 				default: return null
 			}

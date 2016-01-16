@@ -19,6 +19,8 @@ public class TaskManager
 	public
 	static void updateTasks( Project project )
 	{
+		cleanVariantDirectories( project )
+
 		updateTypeVariantTasks( project , new BuildTaskFactory( ) , "build" )
 		updateTypeVariantTasks( project , new PackageTaskFactory( ) , "package" )
 		updateTypeVariantTasks( project , new InstallTaskFactory( ) , "install" )
@@ -76,7 +78,11 @@ public class TaskManager
 				productFlavorList.each { flavor ->
 					if( buildTypeList.size( ) > 0 )
 					{
-						buildTypeList.each { type -> factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
+						buildTypeList.each { type ->
+
+							factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
+
+							createVariantDirectory( project , type.name )
 						}
 
 						if( platforms.size( ) <= 1 )
@@ -100,11 +106,17 @@ public class TaskManager
 					{
 						factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
 					}
+
+					createVariantDirectory( project , flavor.name )
 				}
 			}
 			else if( buildTypeList.size( ) > 0 )
 			{
-				buildTypeList.each { type -> factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
+				buildTypeList.each { type ->
+
+					factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
+
+					createVariantDirectory( project , type.name )
 				}
 			}
 		}
@@ -122,5 +134,28 @@ public class TaskManager
 		}
 
 		return list
+	}
+
+	private static void createVariantDirectory( Project project , String name )
+	{
+		boolean autoGenerateVariantDirectory = PropertyManager.getProperty( project , "autoGenerateVariantDirectory" )
+
+		if( !autoGenerateVariantDirectory ) return
+
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+
+		project.file( "${ moduleName }/src/${ name }" ).mkdir( )
+	}
+
+	private static void cleanVariantDirectories( Project project )
+	{
+		Boolean autoGenerateVariantDirectory = PropertyManager.getProperty( project , "autoGenerateVariantDirectory" ) as Boolean
+
+		if( !autoGenerateVariantDirectory ) return
+
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+
+		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( )
+		}
 	}
 }
