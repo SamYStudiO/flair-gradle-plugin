@@ -24,7 +24,7 @@ public class Scaffold extends DefaultTask
 		String packageName = PropertyManager.getProperty( project , "packageName" )
 		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , null )
 
-		if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
+		if( !packageName ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
 
 		String s = packageName.replace( "." , "/" )
