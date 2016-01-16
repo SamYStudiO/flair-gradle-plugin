@@ -1,21 +1,14 @@
 package flair.gradle.tasks.install
 
-import flair.gradle.platforms.Platform
+import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Install extends DefaultTask
+class Install extends AbstractVariantTask
 {
-	public Platform platform
-
-	public String productFlavor = ""
-
-	public String buildType = ""
-
 	public Install()
 	{
 		group = Group.INSTALL.name

@@ -1,7 +1,7 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.configuration.variants.BuildTypeExtension
-import flair.gradle.extensions.configuration.variants.ProductFlavorExtension
+import flair.gradle.extensions.configuration.IConfigurationContainerExtension
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.platforms.Platform
 import flair.gradle.plugins.AndroidPlugin
 import flair.gradle.plugins.DesktopPlugin
@@ -17,79 +17,100 @@ import org.gradle.api.Task
 public class TaskManager
 {
 	public
-	static void updateVariantTasks( Project project , NamedDomainObjectContainer<ProductFlavorExtension> productFlavors = null , NamedDomainObjectContainer<BuildTypeExtension> buildTypes = null )
+	static void updateTasks( Project project )
 	{
-		updateTypeVariantTasks( project , productFlavors , buildTypes , new BuildTaskFactory( ) )
-		updateTypeVariantTasks( project , productFlavors , buildTypes , new PackageTaskFactory( ) )
-		updateTypeVariantTasks( project , productFlavors , buildTypes , new InstallTaskFactory( ) )
-		updateTypeVariantTasks( project , productFlavors , buildTypes , new LaunchTaskFactory( ) )
-		updateProcessResourceTasks( project , new ProcessResourceTaskFactory( ) )
+		updateTypeVariantTasks( project , new BuildTaskFactory( ) , "build" )
+		updateTypeVariantTasks( project , new PackageTaskFactory( ) , "package" )
+		updateTypeVariantTasks( project , new InstallTaskFactory( ) , "install" )
+		updateTypeVariantTasks( project , new LaunchTaskFactory( ) , "launch" )
 	}
 
 	public
-	static void updateProcessResourceTasks( Project project , TaskFactory factory )
+	static void updateProcessResourceTasks( Project project )
 	{
 		List<Platform> platforms = getCurrentPlatform( project )
 
 		platforms.each { platform ->
 
-			factory.create( project , platform , platforms.size( ) > 1 , [ ] ) as Task
+			new ProcessResourceTaskFactory( ).create( project , "process" , platform , platforms.size( ) > 1 , [ ] ) as Task
 		}
 	}
 
 	public
-	static void updateTypeVariantTasks( Project project , NamedDomainObjectContainer<ProductFlavorExtension> productFlavors , NamedDomainObjectContainer<BuildTypeExtension> buildTypes , VariantTaskFactory factory )
+	static void updateTypeVariantTasks( Project project , VariantTaskFactory factory , String taskPrefix )
 	{
 		List<Platform> platforms = getCurrentPlatform( project )
-		List<String> dependencies = new ArrayList<String>( )
-		Task t
+
+		NamedDomainObjectContainer<IConfigurationContainerExtension> allProductFlavors = PropertyManager.getRootContainer( project ).getProductFlavors( )
+		NamedDomainObjectContainer<IConfigurationContainerExtension> allBuildTypes = PropertyManager.getRootContainer( project ).getBuildTypes( )
 
 		platforms.each { platform ->
 
+			List<IConfigurationContainerExtension> productFlavorList = new ArrayList<IConfigurationContainerExtension>( )
+			List<IConfigurationContainerExtension> buildTypeList = new ArrayList<IConfigurationContainerExtension>( )
+
+			allProductFlavors.each {
+				productFlavorList.add( it )
+			}
+
+			allBuildTypes.each {
+				buildTypeList.add( it )
+			}
+
+			NamedDomainObjectContainer<IConfigurationContainerExtension> platformProductFlavors = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getProductFlavors( )
+			NamedDomainObjectContainer<IConfigurationContainerExtension> platformBuildTypes = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getBuildTypes( )
+
+			platformProductFlavors.each {
+				productFlavorList.add( it )
+			}
+
+			platformBuildTypes.each {
+				buildTypeList.add( it )
+			}
+
 			String platformName = platforms.size( ) > 1 ? platform.name.capitalize( ) : ""
 			String processResourcesTaskName = "process" + platformName + "Resources"
-			List<String> platformDependencies = new ArrayList<String>( )
 
-			if( productFlavors && productFlavors.size( ) > 0 )
+			if( productFlavorList.size( ) > 0 )
 			{
-				productFlavors.each { flavor ->
-
-					if( buildTypes && buildTypes.size( ) > 0 )
+				productFlavorList.each { flavor ->
+					if( buildTypeList.size( ) > 0 )
 					{
-						buildTypes.each { type ->
+						buildTypeList.each { type -> factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
+						}
 
-							t = factory.create( project , platform , platforms.size( ) <= 1 , flavor.name , type.name , [ processResourcesTaskName ] ) as Task
-							platformDependencies.add( t.name )
+						if( platforms.size( ) <= 1 )
+						{
+							Task t = project.tasks.findByName( taskPrefix + flavor.name.capitalize( ) )
+							if( t )
+							{
+								project.tasks.remove( t )
+							}
+						}
+						else
+						{
+							Task t = project.tasks.findByName( taskPrefix + platform.name.capitalize( ) + flavor.name.capitalize( ) )
+							if( t )
+							{
+								project.tasks.remove( t )
+							}
 						}
 					}
 					else
 					{
-						t = factory.create( project , platform , platforms.size( )  <= 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
-						platformDependencies.add( t.name )
+						factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , flavor.name , "" , [ processResourcesTaskName ] ) as Task
 					}
 				}
 			}
-			else if( buildTypes && buildTypes.size( ) > 0 )
+			else if( buildTypeList.size( ) > 0 )
 			{
-				buildTypes.each { type ->
-
-					t = factory.create( project , platform , platforms.size( )  <= 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
-					platformDependencies.add( t.name )
+				buildTypeList.each { type -> factory.create( project , taskPrefix , platform , platforms.size( ) <= 1 , "" , type.name , [ processResourcesTaskName ] ) as Task
 				}
 			}
-
-			if( platforms.size( ) > 1 )
-			{
-				t = factory.create( project , platform , platforms.size( ) <= 1 , platformDependencies.size( ) > 1 ? platformDependencies : [ ] ) as Task
-				dependencies.add( t.name )
-			}
-			else dependencies = platformDependencies.clone( ) as List<String>
 		}
-
-		t = factory.create( project , platforms.size( ) <= 1 , dependencies.size( ) > 1 ? dependencies : [ ] ) as Task
 	}
 
-	protected static List<Platform> getCurrentPlatform( Project project )
+	private static List<Platform> getCurrentPlatform( Project project )
 	{
 		List<Platform> list = new ArrayList<Platform>( )
 

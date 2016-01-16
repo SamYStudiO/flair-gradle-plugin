@@ -1,5 +1,6 @@
 package flair.gradle.tasks.texturepacker
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
 import flair.gradle.utils.AIRSDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -21,8 +22,8 @@ class TexturePacker extends DefaultTask
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = project.flair.moduleName
-		boolean generateATFTexturesFromAtlases = project.flair.generateATFTexturesFromAtlases
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		boolean generateATFTexturesFromAtlases = project.flair.texturepacker.generateATFTexturesFromAtlases
 
 		String toATF = ""
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )

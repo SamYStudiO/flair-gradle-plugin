@@ -1,15 +1,17 @@
 package flair.gradle.tasks.scaffold
 
+import flair.gradle.extensions.configuration.PropertyManager
+import flair.gradle.platforms.Platform
+import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
 import flair.gradle.utils.AIRSDKManager
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class UpdateProperties extends DefaultTask
+public class UpdateProperties extends AbstractVariantTask
 {
 	public UpdateProperties()
 	{
@@ -20,15 +22,15 @@ public class UpdateProperties extends DefaultTask
 	@TaskAction
 	public void updateProperties()
 	{
-		String appId = project.flair.appId
+		//String packageName = PropertyManager.getProp( project , "packageName" )
 
-		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
+		//if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
-		String version = project.flair.appVersion
+		String version = PropertyManager.getProperty( project , "appDescription" , "version" , platform , productFlavor , buildType )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
-		String moduleName = project.flair.moduleName
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
 		String[] a = version.split( "\\." )
 
@@ -44,9 +46,9 @@ public class UpdateProperties extends DefaultTask
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
 		}
 
-		String androidExcludeResources = project.flair.androidExcludeResources
-		String iosExcludeResources = project.flair.iosExcludeResources
-		String desktopExcludeResources = project.flair.desktopExcludeResources
+		String iosExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.IOS )
+		String androidExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.ANDROID )
+		String desktopExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.DESKTOP )
 
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )
@@ -127,20 +129,18 @@ public class UpdateProperties extends DefaultTask
 		iml.write( out )
 	}
 
-	protected void updatePropertiesFromFile( File f , String version )
+	private void updatePropertiesFromFile( File f , String version )
 	{
 		String sdkVersion = AIRSDKManager.getVersion( project )
-		String appId = project.flair.appId
-		String appName = project.flair.appName
-		String appFullScreen = project.flair.appFullScreen
-		String appAspectRatio = project.flair.appAspectRatio
-		String appAutoOrient = project.flair.appAutoOrient.toString( )
-		String appDepthAndStencil = project.flair.appDepthAndStencil.toString( )
+		String appId = PropertyManager.getProperty( project , "appDescriptor" , "id" , platform , productFlavor , buildType )
+		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , platform , productFlavor , buildType )
+		String appFullScreen = PropertyManager.getProperty( project , "appDescriptor" , "fullScreen" , platform , productFlavor , buildType )
+		String appAspectRatio = PropertyManager.getProperty( project , "appDescriptor" , "aspectRatio" , platform , productFlavor , buildType )
+		String appAutoOrient = PropertyManager.getProperty( project , "appDescriptor" , "autoOrient" , platform , productFlavor , buildType )
+		String appDepthAndStencil = PropertyManager.getProperty( project , "appDescriptor" , "depthAndStencil" , platform , productFlavor , buildType )
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
 		boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
-
-		appName = appName == "" ? project.name : appName
 
 		if( desktop )
 		{
@@ -169,7 +169,7 @@ public class UpdateProperties extends DefaultTask
 
 	private String getSupportedLocales()
 	{
-		String moduleName = project.flair.moduleName
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" ) {
 			include "**/*.xml"
@@ -191,7 +191,7 @@ public class UpdateProperties extends DefaultTask
 			}
 		}
 
-		String defaultLocale = project.flair.defaultLocale.toLowerCase( )
+		String defaultLocale = PropertyManager.getProperty( project , "appDescriptor" , "defaultSupportedLanguages" , platform , productFlavor , buildType )
 		if( !defaultLocale.isEmpty( ) && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

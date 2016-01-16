@@ -1,5 +1,6 @@
 package flair.gradle.tasks.generated
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -17,9 +18,9 @@ import static java.nio.file.StandardWatchEventKinds.*
  */
 public class AutoGenerateResourceClass extends DefaultTask
 {
-	protected WatchService watcher
+	private WatchService watcher
 
-	protected Map<WatchKey , Path> keys
+	private Map<WatchKey , Path> keys
 
 	@SuppressWarnings( "unchecked" )
 	static <T> WatchEvent<T> cast( WatchEvent<?> event )
@@ -38,7 +39,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 	{
 		runGenerateResourceClassTask( )
 
-		String moduleName = project.flair.moduleName
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
 		watcher = FileSystems.getDefault( ).newWatchService( )
 		keys = new HashMap<WatchKey , Path>( )
@@ -110,7 +111,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 		}
 	}
 
-	protected void registerDir( Path root )
+	private void registerDir( Path root )
 	{
 		Files.walkFileTree( root , new SimpleFileVisitor<Path>( )
 		{
@@ -126,7 +127,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 		} )
 	}
 
-	protected void runGenerateResourceClassTask()
+	private void runGenerateResourceClassTask()
 	{
 		ProjectConnection connection = GradleConnector.newConnector( )
 				.forProjectDirectory( project.projectDir )

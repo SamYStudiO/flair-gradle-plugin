@@ -1,5 +1,6 @@
 package flair.gradle.tasks.scaffold
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
@@ -19,16 +20,14 @@ public class Scaffold extends DefaultTask
 	@TaskAction
 	public void generateProject()
 	{
-		String appId = project.flair.appId
-		String appName = project.flair.appName
-		String moduleName = project.flair.moduleName
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String packageName = PropertyManager.getProperty( project , "packageName" )
+		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , null )
 
-		appName = appName == "" ? project.name : appName
-
-		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
+		if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )
 
-		String s = appId.replace( "." , "/" )
+		String s = packageName.replace( "." , "/" )
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
@@ -51,8 +50,8 @@ public class Scaffold extends DefaultTask
 				{
 					String content = file.getText( )
 
-					content = content.replace( '${appId}' , appId )
-							.replace( "_appId_" , appId )
+					content = content.replace( '${packageName}' , packageName )
+							.replace( "_appId_" , packageName )
 							.replace( '${projectName}' , project.getName( ) )
 							.replace( '${appName}' , appName )
 							.replace( '${moduleName}' , moduleName )

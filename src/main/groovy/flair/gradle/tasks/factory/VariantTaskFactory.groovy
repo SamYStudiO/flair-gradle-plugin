@@ -8,7 +8,7 @@ import org.gradle.api.Project
  */
 interface VariantTaskFactory<T> extends TaskFactory<T>
 {
-	public T create( Project project , boolean singlePlatform , List<String> dependencies )
+	public T create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
 
-	public T create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
+	public T create( Project project , String prefix , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 }

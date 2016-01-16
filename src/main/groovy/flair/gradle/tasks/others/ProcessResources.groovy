@@ -1,14 +1,15 @@
 package flair.gradle.tasks.others
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.platforms.Platform
+import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ProcessResources extends DefaultTask
+public class ProcessResources extends AbstractVariantTask
 {
 	public Platform platform
 
@@ -21,15 +22,9 @@ public class ProcessResources extends DefaultTask
 	@TaskAction
 	public void copy()
 	{
-		project.getBuildDir( ).deleteDir( )
-
-		String moduleName = project.flair.moduleName
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 		String platform = platform.name.toLowerCase( )
-		String excludeResources = project.flair.excludeResources
-		String platformExcludeResources = project.flair[ platform ].excludeResources.toString( )
-
-		if( platformExcludeResources != excludeResources ) excludeResources = excludeResources.concat( "," + platformExcludeResources )
-
+		String excludeResources = PropertyManager.getProperty( project , "excludeResources" )
 
 		project.copy {
 			from "${ moduleName }/src/main/assets"

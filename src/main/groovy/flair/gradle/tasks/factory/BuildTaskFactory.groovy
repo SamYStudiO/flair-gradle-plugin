@@ -10,17 +10,17 @@ import org.gradle.api.Project
  */
 public class BuildTaskFactory implements VariantTaskFactory<Build>
 {
-	public Build create( Project project , boolean singlePlatform , List<String> dependencies )
+	public Build create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , null , singlePlatform , dependencies )
+		return create( project , prefix , null , singlePlatform , dependencies )
 	}
 
-	public Build create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
+	public Build create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , platform , singlePlatform , null , null , dependencies )
+		return create( project , prefix , platform , singlePlatform , null , null , dependencies )
 	}
 
-	public Build create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
+	public Build create( Project project , String prefix , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 	{
 		String name
 
@@ -29,11 +29,11 @@ public class BuildTaskFactory implements VariantTaskFactory<Build>
 
 		if( !singlePlatform && platform )
 		{
-			name = "build" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 		else
 		{
-			name = "build" + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 
 		Build t = project.tasks.findByName( name ) as Build

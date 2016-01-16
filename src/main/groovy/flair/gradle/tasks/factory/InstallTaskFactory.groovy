@@ -10,17 +10,17 @@ import org.gradle.api.Project
  */
 public class InstallTaskFactory implements VariantTaskFactory<Install>
 {
-	public Install create( Project project , boolean singlePlatform , List<String> dependencies )
+	public Install create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , null , singlePlatform , dependencies )
+		return create( project , prefix , null , singlePlatform , dependencies )
 	}
 
-	public Install create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
+	public Install create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , platform , singlePlatform , "" , "" , dependencies )
+		return create( project , prefix , platform , singlePlatform , "" , "" , dependencies )
 	}
 
-	public Install create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
+	public Install create( Project project , String prefix , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 	{
 		String name
 
@@ -29,11 +29,11 @@ public class InstallTaskFactory implements VariantTaskFactory<Install>
 
 		if( !singlePlatform && platform )
 		{
-			name = "install" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 		else
 		{
-			name = "install" + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 
 		Install t = project.tasks.findByName( name ) as Install

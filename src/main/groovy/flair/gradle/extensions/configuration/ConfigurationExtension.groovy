@@ -1,46 +1,22 @@
 package flair.gradle.extensions.configuration
 
-import flair.gradle.platforms.Platform
-import org.gradle.api.Action
-import org.gradle.api.Project
-
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ConfigurationExtension extends AbstractExtension
-{
-	protected AppDescriptorExtension appDescriptor = new AppDescriptorExtension( )
+public enum ConfigurationExtension {
 
-	protected ADLExtension adl = new ADLExtension( )
+	ADL( "adl" ) ,
+	APP_DESCRIPTOR( "appDescriptor" )
 
-	protected Platform platform
+	private String name
 
-	public String excludeResources = "drawable*-ldpi*/**,drawable*-xxxhdpi*/**"
-
-	public ConfigurationExtension( String name , Project project , Platform platform )
+	ConfigurationExtension( String name )
 	{
-		super( name , project )
-
-		this.platform = platform
-
-		switch( platform )
-		{
-			case Platform.IOS: excludeResources = "drawable*-mdpi*/**,drawable*-hdpi*/**"
-				break
-			case Platform.ANDROID: excludeResources = ""
-				break
-			case Platform.DESKTOP: excludeResources = "drawable*-hdpi*/**,drawable*-xxhdpi*/**"
-				break
-		}
+		this.name = name
 	}
 
-	public void appDescriptor( Action<AppDescriptorExtension> action )
+	public String getName()
 	{
-		action.execute( appDescriptor )
-	}
-
-	public void adl( Action<ADLExtension> action )
-	{
-		action.execute( adl )
+		return name
 	}
 }

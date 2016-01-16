@@ -1,5 +1,6 @@
 package flair.gradle.tasks.generated
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
@@ -19,12 +20,10 @@ public class GenerateResourceClass extends DefaultTask
 	@TaskAction
 	public void generateResourceClass()
 	{
-		String moduleName = project.flair.moduleName
-		String appId = project.flair.appId
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String packageName = PropertyManager.getProperty( project , "packageName" )
 
-		if( appId.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appId property add%nflair {%n	appId = \"myAppid\"%n}%nto your build.gradle file." ) )
-
-		String s = appId.replace( "." , "/" )
+		if( !packageName ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
 		File classFile = project.file( "${ moduleName }/src/main/generated/R.as" )
 		String classFileContent = classFile.getText( )

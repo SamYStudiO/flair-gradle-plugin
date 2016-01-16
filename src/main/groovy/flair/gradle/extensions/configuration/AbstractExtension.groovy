@@ -1,5 +1,6 @@
 package flair.gradle.extensions.configuration
 
+import flair.gradle.platforms.Platform
 import org.gradle.api.Project
 
 /**
@@ -11,10 +12,13 @@ public abstract class AbstractExtension
 
 	protected Project project
 
-	public AbstractExtension( String name , Project project )
+	protected Platform platform
+
+	public AbstractExtension( String name , Project project , Platform platform )
 	{
 		this.name = name
 		this.project = project
+		this.platform = platform
 	}
 
 	public String getName()
@@ -25,5 +29,10 @@ public abstract class AbstractExtension
 	public Project getProject()
 	{
 		return project
+	}
+
+	public Platform getPlatform()
+	{
+		return platform
 	}
 }

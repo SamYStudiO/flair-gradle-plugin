@@ -1,13 +1,14 @@
 package flair.gradle.tasks.others
 
+import flair.gradle.extensions.configuration.PropertyManager
+import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VersioningIncrementVersion extends DefaultTask
+public class VersioningIncrementVersion extends AbstractVariantTask
 {
 	public VersioningIncrementVersion()
 	{
@@ -18,7 +19,7 @@ public class VersioningIncrementVersion extends DefaultTask
 	@TaskAction
 	public void incrementVersion()
 	{
-		String version = project.flair.appVersion
+		String version = PropertyManager.getProperty( project , "appDescription" , "version" , platform , productFlavor , buildType )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 

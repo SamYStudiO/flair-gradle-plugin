@@ -1,5 +1,6 @@
 package flair.gradle.tasks.generated
 
+import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
@@ -19,8 +20,7 @@ class GenerateFontClass extends DefaultTask
 	@TaskAction
 	public void generateFontClass()
 	{
-		String moduleName = project.flair.moduleName
-		String appId = project.flair.appId
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/fonts" )
 
@@ -50,17 +50,17 @@ class GenerateFontClass extends DefaultTask
 		f.write( content )
 	}
 
-	protected String trimExt( String filename )
+	private String trimExt( String filename )
 	{
 		return filename.split( "\\." ).first( )
 	}
 
-	protected String getFontFamily( String filename )
+	private String getFontFamily( String filename )
 	{
 		return trimExt( filename ).replaceAll( /(?i)bold/ , "" ).replaceAll( /(?i)italic/ , "" ).replaceAll( /(?i)cff/ , "" )
 	}
 
-	protected String getUpperCaseFontFamily( String filename )
+	private String getUpperCaseFontFamily( String filename )
 	{
 		String upname = filename.replaceAll( /[A-Z]/ , /_$0/ ).toUpperCase( )
 
@@ -69,7 +69,7 @@ class GenerateFontClass extends DefaultTask
 		return upname
 	}
 
-	protected String generateFont( String filename )
+	private String generateFont( String filename )
 	{
 		String fontFamily = getFontFamily( filename )
 		String fontWeight = filename.toLowerCase( ).indexOf( "bold" ) >= 0 ? "bold" : "normal"

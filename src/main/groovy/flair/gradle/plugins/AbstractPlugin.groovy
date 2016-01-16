@@ -32,6 +32,7 @@ public abstract class AbstractPlugin implements IPlugin
 	@Override
 	public abstract void addExtensions()
 
+	@Override
 	public Task addTask( String name , Class type )
 	{
 		Task task = project.tasks.findByName( name )

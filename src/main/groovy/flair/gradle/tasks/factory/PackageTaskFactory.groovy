@@ -10,17 +10,17 @@ import org.gradle.api.Project
  */
 public class PackageTaskFactory implements VariantTaskFactory<Packaging>
 {
-	public Packaging create( Project project , boolean singlePlatform , List<String> dependencies )
+	public Packaging create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , null , singlePlatform , dependencies )
+		return create( project , prefix , null , singlePlatform , dependencies )
 	}
 
-	public Packaging create( Project project , Platform platform , boolean singlePlatform , List<String> dependencies )
+	public Packaging create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
-		return create( project , platform , singlePlatform , "" , "" , dependencies )
+		return create( project , prefix , platform , singlePlatform , "" , "" , dependencies )
 	}
 
-	public Packaging create( Project project , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
+	public Packaging create( Project project , String prefix , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
 	{
 		String name
 
@@ -29,11 +29,11 @@ public class PackageTaskFactory implements VariantTaskFactory<Packaging>
 
 		if( !singlePlatform && platform )
 		{
-			name = "package" + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + platform.name.capitalize( ) + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 		else
 		{
-			name = "package" + productFlavor.capitalize( ) + buildType.capitalize( )
+			name = prefix + productFlavor.capitalize( ) + buildType.capitalize( )
 		}
 
 		Packaging t = project.tasks.findByName( name ) as Packaging
