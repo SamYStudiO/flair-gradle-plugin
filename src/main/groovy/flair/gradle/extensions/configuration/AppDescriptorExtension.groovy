@@ -40,7 +40,7 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 		{
 			switch( property )
 			{
-				case "id": return ""
+				case "id": return PropertyManager.getProperty( project , "packageName" )
 				case "idSuffix": return ""
 				case "appName": return project.name
 				case "appNameSuffix": return ""
