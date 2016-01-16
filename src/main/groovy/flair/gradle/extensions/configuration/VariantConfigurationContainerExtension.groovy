@@ -61,12 +61,12 @@ public class VariantConfigurationContainerExtension extends ConfigurationContain
 	@Override
 	public IConfigurationContainerExtension getProductFlavor( String name )
 	{
-		return productFlavors.getByName( name ) ?: new ConfigurationContainerExtension( name , project , platform )
+		return productFlavors.findByName( name ) ? productFlavors.getByName( name ) : new ConfigurationContainerExtension( name , project , platform )
 	}
 
 	@Override
 	public IConfigurationContainerExtension getBuildType( String name )
 	{
-		return buildTypes.getByName( name ) ?: new ConfigurationContainerExtension( name , project , platform )
+		return buildTypes.findByName( name ) ? buildTypes.getByName( name ) : new ConfigurationContainerExtension( name , project , platform )
 	}
 }
