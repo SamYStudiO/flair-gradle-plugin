@@ -13,22 +13,22 @@ class PropertyManager
 		return project.flair as IPlatformVariantConfigurationContainerExtension
 	}
 
-	public static String getProperty( Project project , String name )
+	public static Object getProperty( Project project , String name )
 	{
 		getProperty( project , name , null , "" , "" )
 	}
 
-	public static String getProperty( Project project , String name , Platform platform )
+	public static Object getProperty( Project project , String name , Platform platform )
 	{
 		getProperty( project , name , platform , "" , "" )
 	}
 
-	public static String getProperty( Project project , String configurationName , String name , Platform platform )
+	public static Object getProperty( Project project , String configurationName , String name , Platform platform )
 	{
 		getProperty( project , configurationName , name , platform , "" , "" )
 	}
 
-	public static String getProperty( Project project , String name , Platform platform , String productFlavor , String buildType )
+	public static Object getProperty( Project project , String name , Platform platform , String productFlavor , String buildType )
 	{
 		Object value
 
@@ -54,7 +54,7 @@ class PropertyManager
 	}
 
 	public
-	static String getProperty( Project project , String configurationName , String name , Platform platform , String productFlavor , String buildType )
+	static Object getProperty( Project project , String configurationName , String name , Platform platform , String productFlavor , String buildType )
 	{
 		Object value
 
