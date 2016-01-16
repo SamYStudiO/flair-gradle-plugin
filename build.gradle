@@ -22,6 +22,21 @@ apply plugin: "maven"
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
 apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'idea'
+
+configurations {
+	gradleRuntime
+}
+
+idea {
+	module {
+		scopes.RUNTIME.plus += [ configurations.gradleRuntime ]
+	}
+}
+
+dependencies {
+	gradleRuntime files("gradle/wrapper/gradle-wrapper.jar")
+}
 
 
 ext {
@@ -53,7 +68,9 @@ repositories {
 
 dependencies {
 	compile gradleApi( )
+	//testCompile group: 'org.spockframework' , name: 'spock-core' , version: '0.7-groovy-2.0'
 }
+
 
 task sourcesJar( type: Jar ) {
 	classifier = "sources"

@@ -1464,5 +1464,14 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library name="Gradle: gradle-wrapper">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/gradle/wrapper/gradle-wrapper.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

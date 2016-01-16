@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/flair-gradle-plugin.iml" filepath="$PROJECT_DIR$/flair-gradle-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/main/resources/scaffold/scaffold.iml" filepath="$PROJECT_DIR$/src/main/resources/scaffold/scaffold.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
     </modules>
   </component>
 </project>
