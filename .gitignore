@@ -1,9 +1,8 @@
 local.properties
+*.iml
+.gradle/
+gradle/
 build/
 out/
 test/
-app/
-.idea/libraries/libs_as2.xml
-.idea/libraries/libs_swc2.xml
-.idea/libraries/libs_ane2.xml
-.idea/runConfigurations
+.idea/
