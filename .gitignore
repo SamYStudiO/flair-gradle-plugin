@@ -1,5 +1,6 @@
 local.properties
 *.iml
+!src/main/resources/scaffold/scaffold.iml
 /.gradle/
 /gradle/
 /build/
