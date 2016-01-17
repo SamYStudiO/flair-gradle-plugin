@@ -44,7 +44,7 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 				case "idSuffix": return ""
 				case "appName": return project.name
 				case "appNameSuffix": return ""
-				case "version": return "0.0.0"
+				case "version": return "1.0.0"
 				case "fullScreen": return true
 				case "aspectRatio": return "any"
 				case "autoOrient": return true
