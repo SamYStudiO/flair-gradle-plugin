@@ -10,11 +10,6 @@ import org.gradle.api.Project
  */
 public class ProcessResourceTaskFactory implements VariantTaskFactory<ProcessResources>
 {
-	public ProcessResources create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
-	{
-		return create( project , prefix , null , singlePlatform , dependencies )
-	}
-
 	public ProcessResources create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
 		return create( project , prefix , platform , singlePlatform , "" , "" , dependencies )

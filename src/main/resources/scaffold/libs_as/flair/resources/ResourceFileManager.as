@@ -4,13 +4,8 @@ package flair.resources
 	import flair.utils.displayMetrics.EnumDensityDpi;
 	import flair.utils.displayMetrics.densityDpi;
 
-	import _appId_.view.EnumScreen;
-
 	import flash.display3D.Context3DProfile;
 	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-	import flash.system.Capabilities;
 	import flash.utils.Dictionary;
 
 	import starling.core.Starling;
@@ -34,11 +29,6 @@ package flair.resources
 
 			return __instance;
 		}
-
-		/**
-		 * TODO test this
-		 */
-		private const __ENVIRONMENT_QUALIFIER : Qualifier = new Qualifier( EnumQualifier.ENVIRONMENT , /-(dev|preprod)/ , CONFIG::ENVIRONMENT );
 
 		/**
 		 *
@@ -86,7 +76,7 @@ package flair.resources
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
 		 * @return A Vector of all drawables resources as ResourceFile.
 		 */
-		public function getDrawables( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getDrawables( screenID : String = null ) : Vector.<ResourceFile>
 		{
 			return getResource( EnumResourceType.DRAWABLE , screenID );
 		}
@@ -98,43 +88,9 @@ package flair.resources
 		 *
 		 * TODO check if only one overwritten value from a specific qualifier will not erase all default values
 		 */
-		public function getValues( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getValues( screenID : String = null ) : Vector.<ResourceFile>
 		{
-			var outputFile : File = File.applicationStorageDirectory.resolvePath( "resources/" + screenID + "/values.xml" );
-
-			if( !outputFile.exists || Capabilities.isDebugger )
-			{
-				var outputXML : XML = <root />;
-				var stream : FileStream = new FileStream();
-				var values : Vector.<ResourceFile> = getResource( EnumResourceType.VALUES , screenID );
-
-				for each ( var file : ResourceFile in values )
-				{
-					stream.open( file , FileMode.READ );
-					var list : XMLList = new XML( stream.readUTFBytes( stream.bytesAvailable ) ).*;
-
-					for each ( var node : XML in list )
-					{
-						var type : String = node.name();
-						var id : String = node.@name;
-
-						delete outputXML[ type ].( @name == id )[ 0 ];
-
-						outputXML.appendChild( node );
-					}
-
-					stream.close();
-				}
-
-				stream.open( outputFile , FileMode.WRITE );
-				stream.writeUTFBytes( outputXML.toString() );
-				stream.close();
-			}
-
-			var v : Vector.<ResourceFile> = new Vector.<ResourceFile>();
-			v.push( ResourceFile.fromFile( outputFile , EnumResourceType.VALUES ) );
-
-			return v;
+			return getResource( EnumResourceType.VALUES , screenID );
 		}
 
 		/**
@@ -142,7 +98,7 @@ package flair.resources
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
 		 * @return A Vector of all xml resources as ResourceFile.
 		 */
-		public function getXML( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getXML( screenID : String = null ) : Vector.<ResourceFile>
 		{
 			return getResource( EnumResourceType.XML , screenID );
 		}
@@ -152,7 +108,7 @@ package flair.resources
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
 		 * @return A Vector of all raw resources as ResourceFile.
 		 */
-		public function getRaw( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getRaw( screenID : String = null ) : Vector.<ResourceFile>
 		{
 			return getResource( EnumResourceType.RAW , screenID );
 		}
@@ -163,7 +119,7 @@ package flair.resources
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
 		 * @return A Vector of all resources of type specified by resourceType argument as ResourceFile.
 		 */
-		public function getResource( resourceType : String , screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getResource( resourceType : String , screenID : String = null ) : Vector.<ResourceFile>
 		{
 			var resourceList : Dictionary = _getResourceList( resourceType , screenID );
 			var fileName : String;
@@ -183,7 +139,7 @@ package flair.resources
 
 				for each ( file in resourceNameList )
 				{
-					directory = screenID == EnumScreen.MAIN ? file.parent : file.parent.parent;
+					directory = !screenID ? file.parent : file.parent.parent;
 
 					if( directoryList.indexOf( directory ) < 0 ) directoryList.push( directory );
 				}
@@ -302,7 +258,7 @@ package flair.resources
 
 				for each ( directory in validDirectories )
 				{
-					var list : Array = screenID == EnumScreen.MAIN ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
+					var list : Array = !screenID ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
 
 					for each ( file in list )
 					{
@@ -313,7 +269,7 @@ package flair.resources
 							var ext : String = file.extension;
 							var atf : File;
 							var resourceFile : ResourceFile = ResourceFile.fromFile( file , resourceType );
-							var parentDirectory : File = screenID == EnumScreen.MAIN ? file.parent : file.parent.parent;
+							var parentDirectory : File = !screenID ? file.parent : file.parent.parent;
 							var parentDirectoryName : String = parentDirectory.name;
 							var scale : Number = 1.0;
 
@@ -374,7 +330,7 @@ package flair.resources
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder
 		 * @return A Vector of all resources as ResourceFile.
 		 */
-		public function getResources( screenID : String = EnumScreen.MAIN ) : Vector.<ResourceFile>
+		public function getResources( screenID : String = null ) : Vector.<ResourceFile>
 		{
 			return getDrawables( screenID ).concat( getXML( screenID ) ).concat( getValues( screenID ) ).concat( getRaw( screenID ) )
 		}
@@ -405,7 +361,7 @@ package flair.resources
 		/**
 		 *
 		 */
-		private function _getResourceList( resourceType : String , screenID : String = EnumScreen.MAIN ) : Dictionary
+		private function _getResourceList( resourceType : String , screenID : String = null ) : Dictionary
 		{
 			var d : Dictionary = new Dictionary( true );
 			var directoryList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
@@ -414,7 +370,7 @@ package flair.resources
 			{
 				if( directory.isDirectory && directory.name.toLowerCase().indexOf( resourceType ) == 0 )
 				{
-					var fileList : Array = screenID == EnumScreen.MAIN ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
+					var fileList : Array = !screenID ? directory.getDirectoryListing() : directory.resolvePath( screenID ).getDirectoryListing();
 
 					for each ( var file : File in fileList )
 					{
@@ -440,11 +396,6 @@ class Singleton
 
 class EnumQualifier
 {
-	/**
-	 *
-	 */
-	public static const ENVIRONMENT : String = "environment";
-
 	/**
 	 *
 	 */

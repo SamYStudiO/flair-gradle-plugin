@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="android_armv7_dev">
     <configurations>
-      <configuration name="android_armv7_dev" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_armv7_dev.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_armv7_dev" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_armv7_dev.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -56,7 +56,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_dev" />
       </configuration>
-      <configuration name="android_x86_dev" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_x86_dev.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_x86_dev" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_x86_dev.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -111,7 +111,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_x86_dev" />
       </configuration>
-      <configuration name="android_armv7_preprod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_armv7_preprod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_armv7_preprod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_armv7_preprod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -165,7 +165,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_preprod" />
       </configuration>
-      <configuration name="android_x86_preprod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_x86_preprod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_x86_preprod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_x86_preprod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -220,7 +220,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_x86_preprod" />
       </configuration>
-      <configuration name="ios_dev" target-platform="Mobile" pure-as="true" main-class="${appId}.MainIOS" output-file="ios_dev.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="ios_dev" target-platform="Mobile" pure-as="true" main-class="_appId_.MainIOS" output-file="ios_dev.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">
@@ -278,7 +278,7 @@
           <AirSigningOptions keystore-path="$MODULE_DIR$/src/ios/certificates/dev/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/ios/certificates/dev/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
-      <configuration name="android_armv7_prod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_armv7_prod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_armv7_prod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_armv7_prod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -333,7 +333,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_armv7_prod" />
       </configuration>
-      <configuration name="android_x86_prod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainAndroid" output-file="android_x86_prod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="android_x86_prod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainAndroid" output-file="android_x86_prod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -388,7 +388,7 @@
         </packaging-android>
         <packaging-ios package-file-name="android_x86_prod" />
       </configuration>
-      <configuration name="ios_preprod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainIOS" output-file="ios_preprod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="ios_preprod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainIOS" output-file="ios_preprod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">
@@ -447,7 +447,7 @@
           <AirSigningOptions keystore-path="$MODULE_DIR$/src/ios/certificates/preprod/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/ios/certificates/preprod/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
-      <configuration name="ios_prod" target-platform="Mobile" pure-as="true" main-class="${appId}.MainIOS" output-file="ios_prod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="ios_prod" target-platform="Mobile" pure-as="true" main-class="_appId_.MainIOS" output-file="ios_prod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">
@@ -506,7 +506,7 @@
           <AirSigningOptions keystore-path="$MODULE_DIR$/src/ios/certificates/prod/certificate.p12" provisioning-profile-path="$MODULE_DIR$/src/ios/certificates/prod/profile.mobileprovision" />
         </packaging-ios>
       </configuration>
-      <configuration name="desktop_dev" target-platform="Desktop" pure-as="true" main-class="${appId}.MainDesktop" output-file="desktop_dev.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="desktop_dev" target-platform="Desktop" pure-as="true" main-class="_appId_.MainDesktop" output-file="desktop_dev.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">
@@ -546,7 +546,7 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
-      <configuration name="desktop_preprod" target-platform="Desktop" pure-as="true" main-class="${appId}.MainDesktop" output-file="desktop_preprod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="desktop_preprod" target-platform="Desktop" pure-as="true" main-class="_appId_.MainDesktop" output-file="desktop_preprod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">
@@ -587,7 +587,7 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
-      <configuration name="desktop_prod" target-platform="Desktop" pure-as="true" main-class="${appId}.MainDesktop" output-file="desktop_prod.swf" output-folder="$MODULE_DIR$/../build">
+      <configuration name="desktop_prod" target-platform="Desktop" pure-as="true" main-class="_appId_.MainDesktop" output-file="desktop_prod.swf" output-folder="$MODULE_DIR$/../build" skip-build="true">
         <dependencies>
           <entries>
             <entry library-name="libs_ane" library-level="project">

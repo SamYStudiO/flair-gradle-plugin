@@ -10,11 +10,6 @@ import org.gradle.api.Project
  */
 public class BuildTaskFactory implements VariantTaskFactory<Build>
 {
-	public Build create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
-	{
-		return create( project , prefix , null , singlePlatform , dependencies )
-	}
-
 	public Build create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
 		return create( project , prefix , platform , singlePlatform , null , null , dependencies )

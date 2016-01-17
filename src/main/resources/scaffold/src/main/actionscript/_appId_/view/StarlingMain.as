@@ -30,9 +30,6 @@ package _appId_.view
 		public function StarlingMain()
 		{
 			super();
-
-			//Top root screen id, DO NOT modify
-			_screenID = EnumScreen.MAIN;
 		}
 
 		/**

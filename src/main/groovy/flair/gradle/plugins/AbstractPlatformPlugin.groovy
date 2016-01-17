@@ -29,6 +29,7 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin
 	{
 		addTask( Task.SCAFFOLD.name , Task.SCAFFOLD.type )
 		addTask( Task.UPDATE_PROPERTIES.name , Task.UPDATE_PROPERTIES.type )
+		addTask( Task.CLEAN.name , Task.CLEAN.type )
 		addTask( Task.INCREMENT_VERSION.name , Task.INCREMENT_VERSION.type )
 		addTask( Task.GENERATE_FONT_CLASS.name , Task.GENERATE_FONT_CLASS.type )
 		addTask( Task.AUTO_GENERATE_FONT_CLASS.name , Task.AUTO_GENERATE_FONT_CLASS.type )

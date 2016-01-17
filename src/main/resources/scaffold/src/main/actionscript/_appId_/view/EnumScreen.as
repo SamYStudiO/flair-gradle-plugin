@@ -6,11 +6,6 @@ package _appId_.view
 	public final class EnumScreen
 	{
 		/**
-		 * Top root screen (StarlingMain), DO NOT remove
-		 */
-		public static const MAIN : String = "main";
-
-		/**
 		 * Example screen (you may modify or remove)
 		 */
 		public static const HOME : String = "home";

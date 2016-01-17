@@ -10,11 +10,6 @@ import org.gradle.api.Project
  */
 public class LaunchTaskFactory implements VariantTaskFactory<Launch>
 {
-	public Launch create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
-	{
-		return create( project , prefix , null , singlePlatform , dependencies )
-	}
-
 	public Launch create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
 		return create( project , prefix , platform , singlePlatform , "" , "" , dependencies )

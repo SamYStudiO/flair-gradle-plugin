@@ -1,11 +1,9 @@
 package flair.resources
 {
-	import _appId_.view.EnumScreen;
-
 	/**
 	 *
 	 */
-	public function getObject( id : String , groupID : String = EnumScreen.MAIN ) : Object
+	public function getObject( id : String , groupID : String = null ) : Object
 	{
 		return getAssetManager( groupID ).getObject( id );
 	}

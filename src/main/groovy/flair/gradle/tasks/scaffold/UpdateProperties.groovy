@@ -1,5 +1,6 @@
 package flair.gradle.tasks.scaffold
 
+import flair.gradle.extensions.configuration.ConfigurationExtension
 import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.platforms.Platform
 import flair.gradle.tasks.AbstractVariantTask
@@ -22,11 +23,11 @@ public class UpdateProperties extends AbstractVariantTask
 	@TaskAction
 	public void updateProperties()
 	{
-		//String packageName = PropertyManager.getProp( project , "packageName" )
+		//String packageName = PropertyManager.getProperty( project , "packageName" )
 
 		//if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
-		String version = PropertyManager.getProperty( project , "appDescription" , "version" , platform , productFlavor , buildType )
+		String version = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , platform , productFlavor , buildType )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 

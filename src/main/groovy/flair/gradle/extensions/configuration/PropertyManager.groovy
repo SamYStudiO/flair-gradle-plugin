@@ -32,19 +32,19 @@ class PropertyManager
 	{
 		Object value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getBuildType( buildType ).getProp( name )
+		if( platform && buildType ) value = getRootContainer( project ).getPlatformContainer( platform ).getBuildType( buildType ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getBuildType( buildType ).getProp( name )
+		if( buildType ) value = getRootContainer( project ).getBuildType( buildType ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getProductFlavor( productFlavor ).getProp( name )
+		if( platform && productFlavor ) value = getRootContainer( project ).getPlatformContainer( platform ).getProductFlavor( productFlavor ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getProductFlavor( productFlavor ).getProp( name )
+		if( productFlavor ) value = getRootContainer( project ).getProductFlavor( productFlavor ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getProp( name )
+		if( platform ) value = getRootContainer( project ).getPlatformContainer( platform ).getProp( name )
 		if( value ) return value
 
 		value = getRootContainer( project ).getProp( name )
@@ -58,19 +58,19 @@ class PropertyManager
 	{
 		Object value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getBuildType( buildType ).getConfiguration( configurationName ).getProp( name )
+		if( platform && buildType ) value = getRootContainer( project ).getPlatformContainer( platform ).getBuildType( buildType ).getConfiguration( configurationName ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getBuildType( buildType ).getConfiguration( configurationName ).getProp( name )
+		if( buildType ) value = getRootContainer( project ).getBuildType( buildType ).getConfiguration( configurationName ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getProductFlavor( productFlavor ).getConfiguration( configurationName ).getProp( name )
+		if( platform && productFlavor ) value = getRootContainer( project ).getPlatformContainer( platform ).getProductFlavor( productFlavor ).getConfiguration( configurationName ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getProductFlavor( productFlavor ).getConfiguration( configurationName ).getProp( name )
+		if( productFlavor ) value = getRootContainer( project ).getProductFlavor( productFlavor ).getConfiguration( configurationName ).getProp( name )
 		if( value ) return value
 
-		value = getRootContainer( project ).getPlatformContainer( platform ).getConfiguration( configurationName ).getProp( name )
+		if( platform ) value = getRootContainer( project ).getPlatformContainer( platform ).getConfiguration( configurationName ).getProp( name )
 		if( value ) return value
 
 		value = getRootContainer( project ).getConfiguration( configurationName ).getProp( name )

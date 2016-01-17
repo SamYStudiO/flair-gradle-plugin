@@ -1,5 +1,6 @@
 package flair.gradle.tasks
 
+import flair.gradle.tasks.build.Clean
 import flair.gradle.tasks.generated.AutoGenerateFontClass
 import flair.gradle.tasks.generated.AutoGenerateResourceClass
 import flair.gradle.tasks.generated.GenerateFontClass
@@ -16,6 +17,7 @@ public enum Task {
 
 	SCAFFOLD( "generateProject" , Scaffold , Group.SCAFFOLD ) ,
 	UPDATE_PROPERTIES( "updateProperties" , UpdateProperties , Group.SCAFFOLD ) ,
+	CLEAN( "clean" , Clean , Group.BUILD ) ,
 	//PROCESS_IOS_RESOURCES( "processIOSResources" , ProcessIOSResources , Group.DEFAULT ) ,
 			//PROCESS_ANDROID_RESOURCES( "processAndroidResources" , ProcessAndroidResources , Group.DEFAULT ) ,
 			//PROCESS_DESKTOP_RESOURCES( "processDesktopResources" , ProcessDesktopResources , Group.DEFAULT ) ,

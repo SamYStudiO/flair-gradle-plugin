@@ -10,11 +10,6 @@ import org.gradle.api.Project
  */
 public class InstallTaskFactory implements VariantTaskFactory<Install>
 {
-	public Install create( Project project , String prefix , boolean singlePlatform , List<String> dependencies )
-	{
-		return create( project , prefix , null , singlePlatform , dependencies )
-	}
-
 	public Install create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
 	{
 		return create( project , prefix , platform , singlePlatform , "" , "" , dependencies )

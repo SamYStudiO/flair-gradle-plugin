@@ -5,14 +5,12 @@ package flair.resources
 	import flair.utils.device.isAndroid;
 	import flair.utils.displayMetrics.getDensityScale;
 
-	import _appId_.view.EnumScreen;
-
 	import feathers.system.DeviceCapabilities;
 
 	/**
 	 *
 	 */
-	public function getDimen( id : String , groupID : String = EnumScreen.MAIN ) : Number
+	public function getDimen( id : String , groupID : String = null ) : Number
 	{
 		var dim : String = getAssetManager( groupID ).getXml( "values" ).dimen.( @name == id ).toString();
 		var value : int = parseInt( dim );

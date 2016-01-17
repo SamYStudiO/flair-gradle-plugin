@@ -1,190 +1,176 @@
 package flair.gradle.tasks.others
 
+import flair.gradle.extensions.configuration.ConfigurationExtension
 import flair.gradle.extensions.configuration.PropertyManager
-import flair.gradle.platforms.Platform
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
 import flair.gradle.utils.AIRSDKManager
+import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public class ProcessResources extends AbstractVariantTask
 {
+	@InputDirectory
+	def File inputDir
+
+	@OutputDirectory
+	def File outputDir
+
+	//@Input
+	//def inputProperty
+
 	public ProcessResources()
 	{
 		group = Group.DEFAULT.name
 		description = ""
+
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		inputDir = project.file( "${ project.projectDir.absolutePath }/${ moduleName }/src/main/resources" )
+		outputDir = project.buildDir
 	}
 
 	@TaskAction
-	public void copy()
+	public void process( IncrementalTaskInputs inputs )
 	{
+		println inputs.incremental ? "CHANGED inputs considered out of date" : "ALL inputs considered out of date"
+		if( !inputs.incremental ) project.delete( outputDir.listFiles( ) )
+
+		inputs.outOfDate { change ->
+			println "out of date: ${ change.file.name }"
+			def targetFile = new File( outputDir , change.file.name )
+			targetFile.text = change.file.text.reverse( )
+		}
+
+		inputs.removed { change ->
+			println "removed: ${ change.file.name }"
+			def targetFile = new File( outputDir , change.file.name )
+			targetFile.delete( )
+		}
+
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 		String sPlatform = platform.name.toLowerCase( )
-		String excludeResources = PropertyManager.getProperty( project , "excludeResources" )
+		List<String> excludeResources = PropertyManager.getProperty( project , "excludeResources" ) as List<String>
+		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
 
 		project.copy {
-			from "${ moduleName }/src/main/assets"
-			from "${ moduleName }/src/${ productFlavor }/assets"
-			from "${ moduleName }/src/${ buildType }/assets"
+			from "${ srcRoot }/main/assets"
+			from "${ srcRoot }/${ productFlavor }/assets"
+			from "${ srcRoot }/${ buildType }/assets"
 
-			into "${ project.getBuildDir( ) }/assets"
+			into "${ project.buildDir }/assets"
 
 			includeEmptyDirs = false
 		}
 
 		project.copy {
-			from "${ moduleName }/src/main/resources/"
-			from "${ moduleName }/src/${ productFlavor }/resources/"
-			from "${ moduleName }/src/${ buildType }/resources/"
+			from "${ srcRoot }/main/resources/"
+			from "${ srcRoot }/${ productFlavor }/resources/"
+			from "${ srcRoot }/${ buildType }/resources/"
 
-			into "${ project.getBuildDir( ) }/resources/"
+			into "${ project.buildDir }/resources/"
 
-			exclude excludeResources.split( "," )
+			exclude excludeResources
+			exclude "**/value*/**"
 
 			includeEmptyDirs = false
 		}
 
-		project.copy {
-			from "${ moduleName }/src/main/${ sPlatform }/splashs"
-			from "${ moduleName }/src/main/${ productFlavor }/splashs"
-			from "${ moduleName }/src/main/${ buildType }/splashs"
-
-			into "${ project.getBuildDir( ) }/"
-		}
+		processResourceValues( srcRoot )
 
 		project.copy {
-			from "${ moduleName }/src/main/${ sPlatform }/icons"
-			from "${ moduleName }/src/main/${ productFlavor }/icons"
-			from "${ moduleName }/src/main/${ buildType }/icons"
+			from "${ srcRoot }/${ sPlatform }/splashs"
+			from "${ srcRoot }/${ productFlavor }/splashs"
+			from "${ srcRoot }/${ buildType }/splashs"
 
-			into "${ project.getBuildDir( ) }/icons"
+			into "${ project.buildDir }/"
 		}
 
-		String version = PropertyManager.getProperty( project , "appDescription" , "version" , platform , productFlavor , buildType )
+		project.copy {
+			from "${ srcRoot }/${ sPlatform }/icons"
+			from "${ srcRoot }/${ productFlavor }/icons"
+			from "${ srcRoot }/${ buildType }/icons"
 
-		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
-
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-
-		String[] a = version.split( "\\." )
-
-		String major = a.length > 0 ? a[ 0 ] : "0"
-		String minor = a.length > 1 ? a[ 1 ] : "0"
-		String build = a.length > 2 ? a[ 2 ] : "0"
-
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/" ) {
-			include "**/*.xml"
-		}
-		tree.each { file ->
-
-			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
+			into "${ project.buildDir }/icons"
 		}
 
-		String iosExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.IOS )
-		String androidExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.ANDROID )
-		String desktopExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.DESKTOP )
-
-		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
-		String imlContent = iml.getText( )
-		String out = ""
-		boolean replace = false
-		String typeExcludeResources = ""
-
-		imlContent.eachLine { line ->
-
-			if( line.indexOf( "air_sdk_" ) >= 0 ) out += line.replaceAll( /air_sdk_\d{2}\.\d/ , AIRSDKManager.getPath( project ).split( "/" ).last( ) ) + System.lineSeparator( ) else if( line.indexOf( "configuration" ) >= 0 )
-			{
-				if( line.indexOf( "android" ) >= 0 )
-				{
-					typeExcludeResources = androidExcludeResources
-				}
-				if( line.indexOf( "ios" ) >= 0 )
-				{
-					typeExcludeResources = iosExcludeResources
-				}
-				if( line.indexOf( "desktop" ) >= 0 )
-				{
-					typeExcludeResources = desktopExcludeResources
-				}
-
-				out += line + System.lineSeparator( )
-			}
-			else if( line.indexOf( "packaging" ) >= 0 )
-			{
-				out += line.replaceAll( /_[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ , "_${ major }.${ minor }.${ build }" ) + System.lineSeparator( )
-			}
-			else if( line.indexOf( "FilePathAndPathInPackage" ) >= 0 && line.indexOf( "splashs" ) < 0 && line.indexOf( "icons" ) < 0 )
-			{
-				replace = true
-			}
-			else
-			{
-				if( replace )
-				{
-					replace = false
-
-					tree = project.fileTree( "${ moduleName }/src/main/resources/" )
-					String paths = ""
-
-					tree.each { file ->
-
-						if( file.getParentFile( ).getName( ) != "resources" )
-						{
-							File parent = file.getParentFile( )
-
-							while( parent.getParentFile( ).getName( ) != "resources" )
-							{
-								parent = parent.getParentFile( )
-							}
-
-							String parentName = parent.getName( )
-
-							String[] types = typeExcludeResources.split( "," )
-
-							types.each { type ->
-
-								String path = "            <FilePathAndPathInPackage file-path=\"\$MODULE_DIR\$/src/main/resources/${ parentName }\" path-in-package=\"resources/${ parentName }\" />" + System.lineSeparator( )
-
-								if( parent.getParentFile( ).getName( ) == "resources" && !parentName.matches( type.replace( "/**" , "" ).replace( "**/" , "" ).replace( "*" , ".*" ) ) && paths.indexOf( path ) < 0 )
-								{
-									paths += path
-								}
-							}
-						}
-					}
-
-					out += paths
-				}
-
-				out += line + System.lineSeparator( )
-			}
-		}
-
-		iml.write( out )
+		processApp( project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ).exists( ) ? project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ) : project.file( "${ srcRoot }/${ platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
 	}
 
-	private void updatePropertiesFromFile( File f , String version )
+	private String processResourceValues( String rootPath )
 	{
+		Node output = new Node( null , "resources" )
+
+		project.fileTree( "${ rootPath }/main/resources/values/" ) {
+			include "?*.xml"
+		}.each { file ->
+			Node xml = new XmlParser( ).parse( file )
+
+			xml.children( ).each { node ->
+
+				output.append( node as Node )
+			}
+		}
+
+		if( output.children( ).size( ) > 0 )
+		{
+			project.file( "${ project.buildDir }/resources/values/" ).mkdirs( )
+			project.file( "${ project.buildDir }/resources/values/values.xml" ).createNewFile( )
+			project.file( "${ project.buildDir }/resources/values/values.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
+			}
+		}
+
+		output = new Node( null , "resources" )
+
+		project.fileTree( "${ rootPath }/main/resources/" ) {
+			include "values-?*/?*.xml"
+		}.each { file ->
+
+			String qualifiers = file.parentFile.name.replace( "values-" , "" )
+
+			Node xml = new XmlParser( ).parse( file )
+
+			xml.children( ).each { node ->
+
+				output.append( node as Node )
+			}
+
+			if( output.children( ).size( ) > 0 )
+			{
+				project.file( "${ project.buildDir }/resources/values-${ qualifiers }/" ).mkdirs( )
+				project.file( "${ project.buildDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).createNewFile( )
+				project.file( "${ project.buildDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
+				}
+			}
+		}
+	}
+
+	private String processApp( File app )
+	{
+		String appContent = app.getText( )
 		String sdkVersion = AIRSDKManager.getVersion( project )
-		String appId = PropertyManager.getProperty( project , "appDescriptor" , "id" , platform , productFlavor , buildType )
-		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , platform , productFlavor , buildType )
-		String appFullScreen = PropertyManager.getProperty( project , "appDescriptor" , "fullScreen" , platform , productFlavor , buildType )
-		String appAspectRatio = PropertyManager.getProperty( project , "appDescriptor" , "aspectRatio" , platform , productFlavor , buildType )
-		String appAutoOrient = PropertyManager.getProperty( project , "appDescriptor" , "autoOrient" , platform , productFlavor , buildType )
-		String appDepthAndStencil = PropertyManager.getProperty( project , "appDescriptor" , "depthAndStencil" , platform , productFlavor , buildType )
-		String appContent = f.getText( )
+		String appId = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "id" , platform , productFlavor , buildType )
+		String appName = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "appName" , platform , productFlavor , buildType )
+		String appVersion = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , platform , productFlavor , buildType )
+		String appFullScreen = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "fullScreen" , platform , productFlavor , buildType )
+		String appAspectRatio = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "aspectRatio" , platform , productFlavor , buildType )
+		String appAutoOrient = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "autoOrient" , platform , productFlavor , buildType )
+		String appDepthAndStencil = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "depthAndStencil" , platform , productFlavor , buildType )
 		String supportedLocales = getSupportedLocales( )
-		boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
+		boolean desktop = appContent.indexOf( "<android>" ) < 0 && appContent.indexOf( "<iPhone>" ) < 0
 
 		if( desktop )
 		{
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
-					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
+					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
 					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 					.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 					.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
@@ -194,7 +180,7 @@ public class ProcessResources extends AbstractVariantTask
 			appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 					.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 					.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
-					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ version }</versionNumber>" )
+					.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
 					.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
 					.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 					.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
@@ -202,16 +188,15 @@ public class ProcessResources extends AbstractVariantTask
 					.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 		}
 
-		f.write( appContent )
+		project.file( "${ project.buildDir }/app_descriptor.xml" ).write( appContent )
 	}
 
 	private String getSupportedLocales()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-
-		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" ) {
+		FileTree tree = project.fileTree( "${ project.buildDir }/resources/" ) {
 			include "**/*.xml"
 		}
+
 		String locales = "en de cs es fr it ja ko nl pl pt ru sv tr zh"
 		String supportedLocales = ""
 
@@ -229,8 +214,9 @@ public class ProcessResources extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = PropertyManager.getProperty( project , "appDescriptor" , "defaultSupportedLanguages" , platform , productFlavor , buildType )
-		if( !defaultLocale.isEmpty( ) && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
+		String defaultLocale = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , platform , productFlavor , buildType )
+		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )
 	}
+}

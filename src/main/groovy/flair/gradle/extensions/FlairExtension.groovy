@@ -33,7 +33,9 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 	@Override
 	public Object getProp( String property , boolean returnDefaultIfNull )
 	{
-		if( this[ property ] != null || !returnDefaultIfNull ) return this[ property ] else
+		Object value = super.getProp( property , returnDefaultIfNull )
+
+		if( value != null || !returnDefaultIfNull ) return value else
 		{
 			switch( property )
 			{
