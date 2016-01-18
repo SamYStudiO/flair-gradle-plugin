@@ -16,7 +16,7 @@ import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ProcessResources extends AbstractVariantTask
+public class Assemble extends AbstractVariantTask
 {
 	@InputDirectory
 	def File inputDir
@@ -27,9 +27,9 @@ public class ProcessResources extends AbstractVariantTask
 	//@Input
 	//def inputProperty
 
-	public ProcessResources()
+	public Assemble()
 	{
-		group = Group.DEFAULT.name
+		group = Group.BUILD.name
 		description = ""
 
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
@@ -38,7 +38,7 @@ public class ProcessResources extends AbstractVariantTask
 	}
 
 	@TaskAction
-	public void process( IncrementalTaskInputs inputs )
+	public void assemble( IncrementalTaskInputs inputs )
 	{
 		println inputs.incremental ? "CHANGED inputs considered out of date" : "ALL inputs considered out of date"
 		if( !inputs.incremental ) project.delete( outputDir.listFiles( ) )

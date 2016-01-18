@@ -7,7 +7,6 @@ import flair.gradle.variants.Variant
 import flair.gradle.variants.VariantManager
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.tasks.TaskContainer
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -21,9 +20,9 @@ public class TaskManager
 	}
 
 	public
-	static TaskContainer getVariantTasks( Project project )
+	static Set<Task> getVariantTasks( Project project )
 	{
-		return project.tasks.findAll { task -> task instanceof IVariantTask }
+		return project.tasks.findAll { it instanceof IVariantTask }
 	}
 
 	public
@@ -31,7 +30,7 @@ public class TaskManager
 	{
 		List<String> list = new ArrayList<String>( )
 
-		TaskContainer c = project.tasks.findAll { task -> task.group == group.name }
+		Set<Task> c = project.tasks.findAll { task -> task.group == group.name }
 
 		c.each { list.add( it.name ) }
 
@@ -54,13 +53,14 @@ public class TaskManager
 	{
 		removeVariantTasks( project )
 
-		updateVariantTasks( project , new ProcessResourceTaskFactory( ) )
-		updateVariantTasks( project , new BuildTaskFactory( ) )
+		updateVariantTasks( project , new AssembleTaskFactory( ) )
+		updateVariantTasks( project , new CompileTaskFactory( ) )
 		updateVariantTasks( project , new PackageTaskFactory( ) )
 		updateVariantTasks( project , new InstallTaskFactory( ) )
 		updateVariantTasks( project , new LaunchTaskFactory( ) )
 
-		project.tasks.getByName( "build" ).dependsOn( getVariantTaskNames( project , Group.BUILD ) )
+		project.tasks.getByName( flair.gradle.tasks.Task.ASSEMBLE.name ).dependsOn( getVariantTaskNames( project , Group.ASSEMBLE ) )
+		project.tasks.getByName( flair.gradle.tasks.Task.COMPILE.name ).dependsOn( getVariantTaskNames( project , Group.COMPILE ) )
 	}
 
 	public

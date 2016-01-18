@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.platforms.Platform
+import flair.gradle.tasks.Group
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -16,6 +17,8 @@ interface IPlugin extends Plugin<Project>
 	public void addExtensions()
 
 	public Task addTask( String name , Class type )
+
+	public Task addTask( String name , Class type , Group group )
 
 	public ExtensionAware addExtension( String name , Class type )
 

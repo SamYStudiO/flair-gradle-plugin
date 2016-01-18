@@ -2,6 +2,7 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
 import flair.gradle.platforms.Platform
+import flair.gradle.tasks.Group
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
@@ -35,9 +36,19 @@ public abstract class AbstractPlugin implements IPlugin
 	@Override
 	public Task addTask( String name , Class type )
 	{
+		addTask( name , type , null )
+	}
+
+	@Override
+	public Task addTask( String name , Class type , Group group )
+	{
 		Task task = project.tasks.findByName( name )
 
-		return task ?: project.tasks.create( name , type )
+		task = task ?: type ? project.tasks.create( name , type ) : project.tasks.create( name )
+
+		if( group ) task.group = group
+
+		return task
 	}
 
 	@Override
