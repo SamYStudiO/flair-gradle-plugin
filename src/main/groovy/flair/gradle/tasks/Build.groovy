@@ -1,10 +1,5 @@
 package flair.gradle.tasks
 
-import flair.gradle.executable.IExecutable
-import flair.gradle.executable.MXMLC
-import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Group
-import flair.gradle.tasks.TaskManager
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -40,7 +35,7 @@ class Build extends AbstractVariantTask
 		{
 			ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
-			/*IExecutable exe = new MXMLC( project , platform , productFlavor , buildType )
+			/*ICli exe = new MXMLC( project , platform , productFlavor , buildType )
 
 			project.exec {
 				executable exe.getExecutable( )

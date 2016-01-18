@@ -1,9 +1,9 @@
-package flair.gradle.executable
+package flair.gradle.cli
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IExecutable
+interface ICli
 {
 	public String getExecutable()
 

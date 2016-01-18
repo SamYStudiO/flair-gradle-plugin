@@ -1,4 +1,4 @@
-package flair.gradle.executable
+package flair.gradle.cli
 
 import flair.gradle.platforms.Platform
 import flair.gradle.utils.AIRSDKManager
@@ -7,7 +7,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class MXMLC implements IExecutable
+class MXMLC implements ICli
 {
 	protected Project project
 
