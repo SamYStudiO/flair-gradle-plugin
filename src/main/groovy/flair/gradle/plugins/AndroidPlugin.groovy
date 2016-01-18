@@ -15,14 +15,6 @@ public class AndroidPlugin extends AbstractPlatformPlugin
 	}
 
 	@Override
-	public void apply( Project project )
-	{
-		project.apply( plugin: "flair.base" )
-
-		super.apply( project )
-	}
-
-	@Override
 	protected void addStructures()
 	{
 		addStructure( new AndroidStructure( ) )
