@@ -2,7 +2,6 @@ package flair.gradle.plugins
 
 import flair.gradle.structure.DesktopStructure
 import flair.gradle.variants.Platform
-import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

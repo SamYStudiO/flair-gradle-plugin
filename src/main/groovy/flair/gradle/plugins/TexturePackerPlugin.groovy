@@ -14,7 +14,7 @@ class TexturePackerPlugin extends AbstractStructurePlugin
 	@Override
 	public void apply( Project project )
 	{
-		project.apply( plugin: "flair.base" )
+		project.apply( plugin: BasePlugin )
 
 		super.apply( project )
 	}

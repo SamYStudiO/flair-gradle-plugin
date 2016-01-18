@@ -34,7 +34,7 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	@Override
 	public void apply( Project project )
 	{
-		project.apply( plugin: "flair.base" )
+		project.apply( plugin: BasePlugin )
 
 		super.apply( project )
 
