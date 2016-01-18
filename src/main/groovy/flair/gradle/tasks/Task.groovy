@@ -1,15 +1,5 @@
 package flair.gradle.tasks
 
-import flair.gradle.tasks.build.Clean
-import flair.gradle.tasks.generated.AutoGenerateFontClass
-import flair.gradle.tasks.generated.AutoGenerateResourceClass
-import flair.gradle.tasks.generated.GenerateFontClass
-import flair.gradle.tasks.generated.GenerateResourceClass
-import flair.gradle.tasks.others.VersioningIncrementVersion
-import flair.gradle.tasks.scaffold.Scaffold
-import flair.gradle.tasks.scaffold.UpdateProperties
-import flair.gradle.tasks.texturepacker.TexturePacker
-
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */

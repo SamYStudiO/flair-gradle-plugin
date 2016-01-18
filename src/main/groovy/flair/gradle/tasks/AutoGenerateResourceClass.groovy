@@ -1,4 +1,4 @@
-package flair.gradle.tasks.generated
+package flair.gradle.tasks
 
 import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group
@@ -16,7 +16,7 @@ import static java.nio.file.StandardWatchEventKinds.*
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AutoGenerateFontClass extends DefaultTask
+public class AutoGenerateResourceClass extends DefaultTask
 {
 	private WatchService watcher
 
@@ -28,24 +28,23 @@ public class AutoGenerateFontClass extends DefaultTask
 		return ( WatchEvent<T> ) event;
 	}
 
-	public AutoGenerateFontClass()
+	public AutoGenerateResourceClass()
 	{
 		group = Group.GENERATED.name
 		description = ""
 	}
 
 	@TaskAction
-	public void watchFonts()
+	public void watchResources()
 	{
-		runGenerateFontClassTask( )
+		runGenerateResourceClassTask( )
 
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
 		watcher = FileSystems.getDefault( ).newWatchService( )
 		keys = new HashMap<WatchKey , Path>( )
 
-		registerDir( project.file( "${ moduleName }/src/main/fonts" ).toPath( ) );
-
+		registerDir( project.file( "${ moduleName }/src/main/resources" ).toPath( ) );
 
 		for( ; ; )
 		{
@@ -96,7 +95,7 @@ public class AutoGenerateFontClass extends DefaultTask
 				change = true
 			}
 
-			if( change ) runGenerateFontClassTask( )
+			if( change ) runGenerateResourceClassTask( )
 
 			boolean valid = key.reset( )
 
@@ -128,14 +127,14 @@ public class AutoGenerateFontClass extends DefaultTask
 		} )
 	}
 
-	private void runGenerateFontClassTask()
+	private void runGenerateResourceClassTask()
 	{
 		ProjectConnection connection = GradleConnector.newConnector( )
 				.forProjectDirectory( project.projectDir )
 				.connect( )
 
 		connection.newBuild( )
-				.forTasks( "generateFontClass" )
+				.forTasks( "generateResourceClass" )
 				.run( )
 
 		connection.close( )

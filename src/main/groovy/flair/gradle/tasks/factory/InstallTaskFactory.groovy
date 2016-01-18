@@ -1,7 +1,7 @@
 package flair.gradle.tasks.factory
 
 import flair.gradle.tasks.Group
-import flair.gradle.tasks.install.Install
+import flair.gradle.tasks.Install
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 

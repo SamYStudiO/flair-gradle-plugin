@@ -1,4 +1,4 @@
-package flair.gradle.tasks.others
+package flair.gradle.tasks
 
 import flair.gradle.extensions.configuration.ConfigurationExtension
 import flair.gradle.extensions.configuration.PropertyManager

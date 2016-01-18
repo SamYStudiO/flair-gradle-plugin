@@ -1,4 +1,4 @@
-package flair.gradle.tasks.texturepacker
+package flair.gradle.tasks
 
 import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group

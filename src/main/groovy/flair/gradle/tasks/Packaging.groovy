@@ -1,4 +1,4 @@
-package flair.gradle.tasks.packaging
+package flair.gradle.tasks
 
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group

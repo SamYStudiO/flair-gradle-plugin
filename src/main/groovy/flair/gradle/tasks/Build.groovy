@@ -1,4 +1,4 @@
-package flair.gradle.tasks.build
+package flair.gradle.tasks
 
 import flair.gradle.executable.IExecutable
 import flair.gradle.executable.MXMLC

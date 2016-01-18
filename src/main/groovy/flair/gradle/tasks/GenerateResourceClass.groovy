@@ -1,4 +1,4 @@
-package flair.gradle.tasks.generated
+package flair.gradle.tasks
 
 import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.tasks.Group

@@ -1,4 +1,4 @@
-package flair.gradle.tasks.build
+package flair.gradle.tasks
 
 import flair.gradle.tasks.Group
 import org.gradle.api.DefaultTask
