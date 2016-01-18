@@ -1,6 +1,5 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.FlairExtension
 import flair.gradle.extensions.configuration.IConfigurationExtension
 import flair.gradle.extensions.configuration.IVariantConfigurationContainerExtension
 import flair.gradle.tasks.Group
@@ -16,14 +15,10 @@ public abstract class AbstractPlugin implements IPlugin
 {
 	protected Project project
 
-	protected IVariantConfigurationContainerExtension flair
-
 	@Override
 	public void apply( Project project )
 	{
 		this.project = project
-
-		flair = addConfigurationExtension( FlairExtension.NAME , null , FlairExtension ) as IVariantConfigurationContainerExtension
 
 		addTasks( )
 		addExtensions( )
@@ -78,6 +73,11 @@ public abstract class AbstractPlugin implements IPlugin
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 
 		return extension ?: parent.extensions.create( name , type , name , project , platform ) as ExtensionAware
+	}
+
+	protected IVariantConfigurationContainerExtension getFlairExtension()
+	{
+		return project.flair as IVariantConfigurationContainerExtension
 	}
 
 	protected abstract void addTasks()

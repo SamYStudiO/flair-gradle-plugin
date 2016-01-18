@@ -47,25 +47,6 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	}
 
 	@Override
-	public void addTasks()
-	{
-		addTask( Task.ASSEMBLE.name , Group.BUILD )
-		addTask( Task.COMPILE.name , Group.BUILD )
-		addTask( Task.CLEAN.name , Task.CLEAN.type )
-		//addTask( Task.INCREMENT_VERSION.name , Task.INCREMENT_VERSION.type )
-		//addTask( Task.GENERATE_FONT_CLASS.name , Task.GENERATE_FONT_CLASS.type )
-		//addTask( Task.AUTO_GENERATE_FONT_CLASS.name , Task.AUTO_GENERATE_FONT_CLASS.type )
-		//addTask( Task.GENERATE_RESOURCE_CLASS.name , Task.GENERATE_RESOURCE_CLASS.type )
-		//addTask( Task.AUTO_GENERATE_RESOURCE_CLASS.name , Task.AUTO_GENERATE_RESOURCE_CLASS.type )
-	}
-
-	@Override
-	public void addExtensions()
-	{
-		addConfigurationExtension( platform.name.toLowerCase( ) , platform , VariantsConfigurationContainerExtension , flair as ExtensionAware )
-	}
-
-	@Override
 	public final void addVariantTaskFactory( IVariantTaskFactory factory )
 	{
 		variantFactories.add( factory )
@@ -86,11 +67,9 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	}
 
 	@Override
-	protected void addStructures()
+	public void addExtensions()
 	{
-		addStructure( new CommonStructure( ) )
-		addStructure( new ClassTemplateStructure( ) )
-		addStructure( new VariantStructure( ) )
+		addConfigurationExtension( platform.name.toLowerCase( ) , platform , VariantsConfigurationContainerExtension , flairExtension as ExtensionAware )
 	}
 
 	protected void addVariantFactories()
@@ -113,7 +92,9 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 
 	private void removeVariantTasks()
 	{
-		Iterator<org.gradle.api.Task> iterator = project.tasks.findAll { it instanceof IVariantTask }.iterator( )
+		Iterator<org.gradle.api.Task> iterator = project.tasks.findAll {
+			it instanceof IVariantTask && ( it as IVariantTask ).variant.platform == platform
+		}.iterator( )
 
 		while( iterator.hasNext( ) )
 		{
