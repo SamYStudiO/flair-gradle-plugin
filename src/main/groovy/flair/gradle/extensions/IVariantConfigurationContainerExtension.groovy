@@ -7,5 +7,5 @@ interface IVariantConfigurationContainerExtension extends IConfigurationContaine
 {
 	public String getDimension()
 
-	public void setDimension( String value )
+	public void setDimension( String dimension )
 }

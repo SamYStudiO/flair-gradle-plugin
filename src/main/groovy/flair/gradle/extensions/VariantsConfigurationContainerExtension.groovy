@@ -56,15 +56,15 @@ public class VariantsConfigurationContainerExtension extends ConfigurationContai
 	}
 
 	@Override
-	public void setFlavorDimensions( List<String> value )
+	public void setFlavorDimensions( List<String> flavorDimensions )
 	{
-		flavorDimensions = value
+		this.flavorDimensions = flavorDimensions
 	}
 
 	@Override
-	public void setFlavorDimensions( String... values )
+	public void setFlavorDimensions( String... flavorDimensions )
 	{
-		flavorDimensions = values
+		this.flavorDimensions = flavorDimensions
 	}
 
 	@Override

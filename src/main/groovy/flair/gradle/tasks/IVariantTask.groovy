@@ -10,5 +10,5 @@ interface IVariantTask extends Task
 {
 	public Variant getVariant()
 
-	public void setVariant( Variant value )
+	public void setVariant( Variant variant )
 }

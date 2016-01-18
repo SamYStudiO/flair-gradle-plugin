@@ -15,8 +15,8 @@ class AbstractVariantTask extends DefaultTask implements IVariantTask
 		return variant
 	}
 
-	public void setVariant( Variant value )
+	public void setVariant( Variant variant )
 	{
-		variant = value
+		this.variant = variant
 	}
 }

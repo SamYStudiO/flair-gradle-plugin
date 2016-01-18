@@ -9,9 +9,9 @@ interface IVariantsConfigurationContainerExtension extends IConfigurationContain
 {
 	public List<String> getFlavorDimensions()
 
-	public void setFlavorDimensions( List<String> value )
+	public void setFlavorDimensions( List<String> flavorDimensions )
 
-	public void setFlavorDimensions( String... values )
+	public void setFlavorDimensions( String... flavorDimensions )
 
 	public NamedDomainObjectContainer<IVariantConfigurationContainerExtension> getProductFlavors()
 

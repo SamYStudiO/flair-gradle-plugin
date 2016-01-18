@@ -20,8 +20,8 @@ public class VariantConfigurationContainerExtension extends ConfigurationContain
 		return dimension
 	}
 
-	public void setDimension( String value )
+	public void setDimension( String dimension )
 	{
-		dimension = value
+		this.dimension = dimension
 	}
 }
