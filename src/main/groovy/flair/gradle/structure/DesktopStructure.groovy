@@ -1,6 +1,6 @@
 package flair.gradle.structure
 
-import flair.gradle.extensions.configuration.PropertyManager
+import flair.gradle.extensions.PropertyManager
 import org.gradle.api.Project
 
 /**

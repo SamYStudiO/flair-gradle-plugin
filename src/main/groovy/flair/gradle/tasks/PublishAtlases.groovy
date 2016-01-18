@@ -1,7 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.configuration.PropertyManager
-import flair.gradle.tasks.Group
+import flair.gradle.extensions.PropertyManager
 import flair.gradle.utils.AIRSDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask

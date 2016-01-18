@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.IConfigurationExtension
+import flair.gradle.extensions.IConfigurationExtension
 import flair.gradle.tasks.Group
 import flair.gradle.variants.Platform
 import org.gradle.api.Plugin

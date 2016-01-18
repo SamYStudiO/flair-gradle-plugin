@@ -1,4 +1,4 @@
-package flair.gradle.extensions.configuration
+package flair.gradle.extensions
 
 import flair.gradle.variants.Platform
 import flair.gradle.plugins.AndroidPlugin

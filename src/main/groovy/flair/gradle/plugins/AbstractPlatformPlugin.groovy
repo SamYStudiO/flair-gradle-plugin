@@ -1,9 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.VariantsConfigurationContainerExtension
-import flair.gradle.structure.ClassTemplateStructure
-import flair.gradle.structure.CommonStructure
-import flair.gradle.structure.VariantStructure
+import flair.gradle.extensions.VariantsConfigurationContainerExtension
 import flair.gradle.tasks.Group
 import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.Task

@@ -1,7 +1,7 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.configuration.ConfigurationExtension
-import flair.gradle.extensions.configuration.PropertyManager
+import flair.gradle.extensions.ConfigurationExtension
+import flair.gradle.extensions.PropertyManager
 import flair.gradle.variants.Platform
 import flair.gradle.utils.AIRSDKManager
 import org.gradle.api.file.FileTree

@@ -1,7 +1,7 @@
 package flair.gradle.variants
 
-import flair.gradle.extensions.configuration.IVariantConfigurationContainerExtension
-import flair.gradle.extensions.configuration.PropertyManager
+import flair.gradle.extensions.IVariantConfigurationContainerExtension
+import flair.gradle.extensions.PropertyManager
 import flair.gradle.plugins.PluginManager
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
