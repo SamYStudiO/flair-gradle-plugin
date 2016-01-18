@@ -13,7 +13,7 @@ public class PackageTaskFactory implements VariantTaskFactory<Packaging>
 {
 	public Packaging create( Project project , Variant variant )
 	{
-		String name = "package" + variant
+		String name = "package" + variant.name
 
 		Packaging t = project.tasks.findByName( name ) as Packaging
 
