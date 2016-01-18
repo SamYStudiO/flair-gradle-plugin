@@ -57,7 +57,7 @@ public class TaskManager
 		updateVariantTasks( project , new CompileTaskFactory( ) )
 		updateVariantTasks( project , new PackageTaskFactory( ) )
 		updateVariantTasks( project , new InstallTaskFactory( ) )
-		updateVariantTasks( project , new LaunchTaskFactory( ) )
+		updateVariantTasks( project , new LaunchADLTaskFactory( ) )
 
 		project.tasks.getByName( flair.gradle.tasks.Task.ASSEMBLE.name ).dependsOn( getVariantTaskNames( project , Group.ASSEMBLE ) )
 		project.tasks.getByName( flair.gradle.tasks.Task.COMPILE.name ).dependsOn( getVariantTaskNames( project , Group.COMPILE ) )

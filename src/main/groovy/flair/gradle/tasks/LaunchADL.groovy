@@ -7,9 +7,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Launch extends AbstractVariantTask
+class LaunchADL extends AbstractVariantTask
 {
-	public Launch()
+	public LaunchADL()
 	{
 		group = Group.LAUNCH.name
 		description = ""
