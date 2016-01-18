@@ -15,7 +15,7 @@ import org.gradle.api.tasks.TaskContainer
 public class TaskManager
 {
 	public
-	static Task getTask( Project project , Group group , Variant variant )
+	static Task getVariantTask( Project project , Group group , Variant variant )
 	{
 		return project.tasks.getByName( group.name + variant.name )
 	}
@@ -24,6 +24,18 @@ public class TaskManager
 	static TaskContainer getVariantTasks( Project project )
 	{
 		return project.tasks.findAll { task -> task instanceof IVariantTask }
+	}
+
+	public
+	static List<String> getVariantTaskNames( Project project , Group group )
+	{
+		List<String> list = new ArrayList<String>( )
+
+		TaskContainer c = project.tasks.findAll { task -> task.group == group.name }
+
+		c.each { list.add( it.name ) }
+
+		return list
 	}
 
 	public
@@ -47,6 +59,8 @@ public class TaskManager
 		updateVariantTasks( project , new PackageTaskFactory( ) )
 		updateVariantTasks( project , new InstallTaskFactory( ) )
 		updateVariantTasks( project , new LaunchTaskFactory( ) )
+
+		project.tasks.getByName( "build" ).dependsOn( getVariantTaskNames( project , Group.BUILD ) )
 	}
 
 	public
