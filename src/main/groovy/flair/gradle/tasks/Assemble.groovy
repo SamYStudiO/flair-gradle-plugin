@@ -2,12 +2,9 @@ package flair.gradle.tasks
 
 import flair.gradle.extensions.configuration.ConfigurationExtension
 import flair.gradle.extensions.configuration.PropertyManager
-import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Group
 import flair.gradle.utils.AIRSDKManager
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -62,7 +59,11 @@ public class Assemble extends AbstractVariantTask
 
 		project.copy {
 			from "${ srcRoot }/main/assets"
-			from "${ srcRoot }/${ variant.productFlavor }/assets"
+
+			variant.productFlavors.each {
+				from "${ srcRoot }/${ it }/assets"
+			}
+
 			from "${ srcRoot }/${ variant.buildType }/assets"
 
 			into "${ project.buildDir }/assets"
@@ -72,7 +73,11 @@ public class Assemble extends AbstractVariantTask
 
 		project.copy {
 			from "${ srcRoot }/main/resources/"
-			from "${ srcRoot }/${ productFlavor }/resources/"
+
+			variant.productFlavors.each {
+				from "${ srcRoot }/${ it }/resources/"
+			}
+
 			from "${ srcRoot }/${ variant.buildType }/resources/"
 
 			into "${ project.buildDir }/resources/"
@@ -87,7 +92,11 @@ public class Assemble extends AbstractVariantTask
 
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/splashs"
-			from "${ srcRoot }/${ productFlavor }/splashs"
+
+			variant.productFlavors.each {
+				from "${ srcRoot }/${ it }/splashs"
+			}
+
 			from "${ srcRoot }/${ variant.buildType }/splashs"
 
 			into "${ project.buildDir }/"
@@ -95,13 +104,21 @@ public class Assemble extends AbstractVariantTask
 
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/icons"
-			from "${ srcRoot }/${ productFlavor }/icons"
+
+			variant.productFlavors.each {
+				from "${ srcRoot }/${ it }/icons"
+			}
+
 			from "${ srcRoot }/${ variant.buildType }/icons"
 
 			into "${ project.buildDir }/icons"
 		}
 
-		processApp( project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ).exists( ) ? project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ) : project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
+		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
+
+		variant.productFlavors.each {
+			processApp( project.file( "${ srcRoot }/${ it }/app_descriptor.xml" ) )
+		}
 	}
 
 	private String processResourceValues( String rootPath )
