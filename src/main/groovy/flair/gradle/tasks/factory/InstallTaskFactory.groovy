@@ -2,6 +2,7 @@ package flair.gradle.tasks.factory
 
 import flair.gradle.tasks.Group
 import flair.gradle.tasks.Install
+import flair.gradle.tasks.TaskManager
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
@@ -20,6 +21,7 @@ public class InstallTaskFactory implements VariantTaskFactory<Install>
 
 		t.group = Group.INSTALL.name
 		t.variant = variant
+		t.dependsOn TaskManager.getVariantTask( project , Group.PACKAGE , variant )
 
 		return t
 	}
