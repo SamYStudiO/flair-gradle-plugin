@@ -1,4 +1,4 @@
-package _appId_
+package _packageName_
 {
 	import feathers.system.DeviceCapabilities;
 

@@ -11,9 +11,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class TexturePacker extends DefaultTask
+class PublishAtlases extends DefaultTask
 {
-	public TexturePacker()
+	public PublishAtlases()
 	{
 		group = Group.TEXTURE_PACKER.name
 		description = ""

@@ -4,7 +4,6 @@ package flair.gradle.tasks
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Group {
-	SCAFFOLD( "scaffold" ) ,
 	BUILD( "build" ) ,
 	ASSEMBLE( "assemble" ) ,
 	COMPILE( "compile" ) ,

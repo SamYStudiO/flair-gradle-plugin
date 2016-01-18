@@ -1,16 +1,22 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.VariantsConfigurationContainerExtension
-import flair.gradle.platforms.Platform
+import flair.gradle.structure.IOSStructure
+import flair.gradle.variants.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public class IOSPlugin extends AbstractPlatformPlugin
 {
-	@Override
-	public void addExtensions()
+	public IOSPlugin()
 	{
-		addConfigurationExtension( Platform.IOS.name.toLowerCase( ) , Platform.IOS , VariantsConfigurationContainerExtension , flair )
+		platform = Platform.IOS
+	}
+
+	@Override
+	protected void addStructures()
+	{
+		super.addStructures( )
+		addStructure( new IOSStructure( ) )
 	}
 }

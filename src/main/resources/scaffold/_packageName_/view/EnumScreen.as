@@ -1,4 +1,4 @@
-package _appId_.view
+package _packageName_.view
 {
 	/**
 	 * Constants for all screen ids

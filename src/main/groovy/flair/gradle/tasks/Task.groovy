@@ -4,12 +4,10 @@ package flair.gradle.tasks
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Task {
-
-	SCAFFOLD( "generateProject" , Scaffold , Group.SCAFFOLD ) ,
 	CLEAN( "clean" , Clean , Group.BUILD ) ,
 	ASSEMBLE( "assemble" , null , Group.BUILD ) ,
 	COMPILE( "compile" , null , Group.BUILD ) ,
-	PUBLISH_ATLASES( "publishAtlases" , TexturePacker , Group.TEXTURE_PACKER ) ,
+	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Group.TEXTURE_PACKER ) ,
 	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Group.DEFAULT ) ,
 	GENERATE_FONT_CLASS( "generateFontClass" , GenerateFontClass , Group.GENERATED ) ,
 	AUTO_GENERATE_FONT_CLASS( "autoGenerateFontClass" , AutoGenerateFontClass , Group.GENERATED ) ,

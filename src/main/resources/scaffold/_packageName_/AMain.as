@@ -1,6 +1,6 @@
-package _appId_
+package _packageName_
 {
-	import _appId_.view.StarlingMain;
+	import _packageName_.view.StarlingMain;
 
 	import feathers.events.FeathersEventType;
 

@@ -1,6 +1,6 @@
-package _appId_.view.home
+package _packageName.view.home
 {
-	import _appId_.view.EnumScreen;
+	import _packageName.view.EnumScreen;
 
 	import feathers.controls.Button;
 	import feathers.controls.Screen;

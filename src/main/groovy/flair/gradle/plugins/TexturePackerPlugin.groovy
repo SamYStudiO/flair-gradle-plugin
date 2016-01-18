@@ -1,12 +1,14 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.TexturePackerExtension
+import flair.gradle.structure.AtlasesStructure
 import flair.gradle.tasks.Task
+import org.gradle.api.plugins.ExtensionAware
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class TexturePackerPlugin extends AbstractPlugin
+class TexturePackerPlugin extends AbstractStructurePlugin
 {
 	@Override
 	public void addTasks()
@@ -17,6 +19,13 @@ class TexturePackerPlugin extends AbstractPlugin
 	@Override
 	public void addExtensions()
 	{
-		addExtension( TexturePackerExtension.NAME , TexturePackerExtension , flair )
+		addExtension( TexturePackerExtension.NAME , TexturePackerExtension , flair as ExtensionAware )
+	}
+
+	@Override
+	protected void addStructures()
+	{
+		super.addStructures( )
+		addStructure( new AtlasesStructure( ) )
 	}
 }

@@ -1,8 +1,10 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
-import flair.gradle.platforms.Platform
+import flair.gradle.extensions.configuration.IConfigurationExtension
+import flair.gradle.extensions.configuration.IVariantConfigurationContainerExtension
 import flair.gradle.tasks.Group
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
@@ -14,51 +16,49 @@ public abstract class AbstractPlugin implements IPlugin
 {
 	protected Project project
 
-	protected ExtensionAware flair
+	protected IVariantConfigurationContainerExtension flair
 
 	@Override
 	public void apply( Project project )
 	{
 		this.project = project
 
-		flair = addConfigurationExtension( FlairExtension.NAME , null , FlairExtension )
+		flair = addConfigurationExtension( FlairExtension.NAME , null , FlairExtension ) as IVariantConfigurationContainerExtension
 
 		addTasks( )
 		addExtensions( )
 	}
 
 	@Override
-	public abstract void addTasks()
-
-	@Override
-	public abstract void addExtensions()
-
-	@Override
-	public Task addTask( String name , Class type )
-	{
-		addTask( name , type , null )
-	}
-
-	@Override
-	public Task addTask( String name , Class type , Group group )
+	public final Task addTask( String name , Class type )
 	{
 		Task task = project.tasks.findByName( name )
 
-		task = task ?: type ? project.tasks.create( name , type ) : project.tasks.create( name )
-
-		if( group ) task.group = group
+		task = task ?: project.tasks.create( name , type )
 
 		return task
 	}
 
 	@Override
-	public ExtensionAware addExtension( String name , Class type )
+	public final Task addTask( String name , Group group )
+	{
+		Task task = project.tasks.findByName( name )
+
+		task = task ?: project.tasks.create( name )
+
+		task.group = group
+
+		return task
+	}
+
+	@Override
+	public final ExtensionAware addExtension( String name , Class type )
 	{
 		addExtension( name , type , project )
 	}
 
 	@Override
-	public ExtensionAware addExtension( String name , Class type , ExtensionAware parent )
+	public final ExtensionAware addExtension( String name , Class type , ExtensionAware parent )
 	{
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 
@@ -66,16 +66,21 @@ public abstract class AbstractPlugin implements IPlugin
 	}
 
 	@Override
-	public ExtensionAware addConfigurationExtension( String name , Platform platform , Class type )
+	public final ExtensionAware addConfigurationExtension( String name , Platform platform , Class<IConfigurationExtension> type )
 	{
 		addConfigurationExtension( name , platform , type , project )
 	}
 
 	@Override
-	public ExtensionAware addConfigurationExtension( String name , Platform platform , Class type , ExtensionAware parent )
+	public
+	final ExtensionAware addConfigurationExtension( String name , Platform platform , Class<IConfigurationExtension> type , ExtensionAware parent )
 	{
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 
 		return extension ?: parent.extensions.create( name , type , name , project , platform ) as ExtensionAware
 	}
+
+	protected abstract void addTasks()
+
+	protected abstract void addExtensions()
 }

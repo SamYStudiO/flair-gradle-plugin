@@ -1,7 +1,7 @@
-package _appId_.view
+package _packageName_.view
 {
-	import _appId_.view.home.HomeScreen;
-	import _appId_.view.otherScreen.OtherScreen;
+	import _packageName_.view.home.HomeScreen;
+	import _packageName_.view.otherScreen.OtherScreen;
 
 	import feathers.controls.StackScreenNavigator;
 	import feathers.controls.StackScreenNavigatorItem;

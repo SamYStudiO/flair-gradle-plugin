@@ -1,6 +1,5 @@
 package flair.gradle.variants
 
-import flair.gradle.platforms.Platform
 import flair.gradle.plugins.PluginManager
 import org.gradle.api.Project
 

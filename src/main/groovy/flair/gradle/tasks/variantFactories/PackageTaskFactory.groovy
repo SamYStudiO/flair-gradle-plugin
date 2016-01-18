@@ -1,15 +1,14 @@
-package flair.gradle.tasks.factory
+package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.Group
 import flair.gradle.tasks.Packaging
-import flair.gradle.tasks.TaskManager
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PackageTaskFactory implements VariantTaskFactory<Packaging>
+public class PackageTaskFactory implements IVariantTaskFactory<Packaging>
 {
 	public Packaging create( Project project , Variant variant )
 	{
@@ -21,7 +20,7 @@ public class PackageTaskFactory implements VariantTaskFactory<Packaging>
 
 		t.group = Group.PACKAGE.name
 		t.variant = variant
-		t.dependsOn TaskManager.getVariantTask( project , Group.COMPILE , variant )
+		t.dependsOn project.tasks.getByName( Group.COMPILE.name + variant.name ).name
 
 		return t
 	}

@@ -1,8 +1,6 @@
 package flair.gradle.extensions.configuration
 
-import flair.gradle.platforms.Platform
-import flair.gradle.structure.StructureManager
-import flair.gradle.tasks.TaskManager
+import flair.gradle.variants.Platform
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -31,13 +29,13 @@ public class VariantsConfigurationContainerExtension extends ConfigurationContai
 		}
 
 		productFlavors.whenObjectAdded {
-			StructureManager.updateVariantDirectories( project )
-			TaskManager.updateTasks( project )
+			//StructureManager.updateVariantDirectories( project )
+			//TaskManager.updateTasks( project )
 		}
 
 		buildTypes.whenObjectAdded {
-			StructureManager.updateVariantDirectories( project )
-			TaskManager.updateTasks( project )
+			//StructureManager.updateVariantDirectories( project )
+			//TaskManager.updateTasks( project )
 		}
 	}
 

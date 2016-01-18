@@ -1,4 +1,4 @@
-package flair.gradle.tasks.factory
+package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.Assemble
 import flair.gradle.tasks.Group
@@ -8,7 +8,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AssembleTaskFactory implements VariantTaskFactory<Assemble>
+public class AssembleTaskFactory implements IVariantTaskFactory<Assemble>
 {
 	public Assemble create( Project project , Variant variant )
 	{

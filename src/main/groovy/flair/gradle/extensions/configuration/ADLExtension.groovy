@@ -1,6 +1,6 @@
 package flair.gradle.extensions.configuration
 
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**

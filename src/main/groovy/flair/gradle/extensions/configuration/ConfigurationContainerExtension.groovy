@@ -1,6 +1,6 @@
 package flair.gradle.extensions.configuration
 
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Platform
 import flair.gradle.plugins.AndroidPlugin
 import flair.gradle.plugins.DesktopPlugin
 import flair.gradle.plugins.IOSPlugin

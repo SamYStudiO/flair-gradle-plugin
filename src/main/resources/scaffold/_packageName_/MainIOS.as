@@ -1,4 +1,4 @@
-package _appId_
+package _packageName_
 {
 	import flash.system.Capabilities;
 

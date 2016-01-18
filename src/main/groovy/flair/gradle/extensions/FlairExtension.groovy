@@ -3,7 +3,7 @@ package flair.gradle.extensions
 import flair.gradle.extensions.configuration.IPlatformVariantConfigurationContainerExtension
 import flair.gradle.extensions.configuration.IVariantsConfigurationContainerExtension
 import flair.gradle.extensions.configuration.VariantsConfigurationContainerExtension
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Platform
 import flair.gradle.plugins.PluginManager
 import org.gradle.api.Project
 

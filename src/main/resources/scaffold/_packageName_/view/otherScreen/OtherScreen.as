@@ -1,4 +1,4 @@
-package _appId_.view.otherScreen
+package _packageName_.view.otherScreen
 {
 	import feathers.controls.Button;
 	import feathers.controls.Screen;

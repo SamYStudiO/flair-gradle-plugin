@@ -1,4 +1,4 @@
-package flair.gradle.tasks.factory
+package flair.gradle.tasks.variantFactories
 
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface VariantTaskFactory<T>
+interface IVariantTaskFactory<T>
 {
 	public T create( Project project , Variant variant )
 }
