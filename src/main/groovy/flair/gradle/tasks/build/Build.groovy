@@ -4,6 +4,7 @@ import flair.gradle.executable.IExecutable
 import flair.gradle.executable.MXMLC
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Group
+import flair.gradle.tasks.TaskManager
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -15,18 +16,11 @@ class Build extends AbstractVariantTask
 	{
 		group = Group.BUILD.name
 		description = ""
-
-		//this.platform = platform
-		//this.productFlavor = productFlavor
-		//this.buildType = buildType
-		//dependsOn Task.PROCESS_ANDROID_RESOURCES
 	}
 
 	@TaskAction
 	public void build()
 	{
-		println( "test> " + platform + "--" + productFlavor + "--" + buildType )
-
 		boolean hasBuildDependencies = false
 
 		dependsOn.each { dependencyList ->
@@ -46,14 +40,14 @@ class Build extends AbstractVariantTask
 		{
 			ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
-			IExecutable exe = new MXMLC( project , platform , productFlavor , buildType )
+			/*IExecutable exe = new MXMLC( project , platform , productFlavor , buildType )
 
 			project.exec {
 				executable exe.getExecutable( )
 				args exe.getArguments( )
 
 				standardOutput = output
-			}
+			}*/
 
 			println( output.toString( ) )
 		}

@@ -1,6 +1,6 @@
 package flair.gradle.tasks.factory
 
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
@@ -8,7 +8,5 @@ import org.gradle.api.Project
  */
 interface VariantTaskFactory<T>
 {
-	public T create( Project project , String prefix , Platform platform , boolean singlePlatform , List<String> dependencies )
-
-	public T create( Project project , String prefix , Platform platform , boolean singlePlatform , String productFlavor , String buildType , List<String> dependencies )
+	public T create( Project project , Variant variant )
 }

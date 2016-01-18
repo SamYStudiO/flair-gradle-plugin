@@ -1,15 +1,16 @@
 package flair.gradle.extensions
 
 import flair.gradle.extensions.configuration.IPlatformVariantConfigurationContainerExtension
-import flair.gradle.extensions.configuration.IVariantConfigurationContainerExtension
-import flair.gradle.extensions.configuration.VariantConfigurationContainerExtension
+import flair.gradle.extensions.configuration.IVariantsConfigurationContainerExtension
+import flair.gradle.extensions.configuration.VariantsConfigurationContainerExtension
 import flair.gradle.platforms.Platform
+import flair.gradle.plugins.PluginManager
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FlairExtension extends VariantConfigurationContainerExtension implements IPlatformVariantConfigurationContainerExtension
+public class FlairExtension extends VariantsConfigurationContainerExtension implements IPlatformVariantConfigurationContainerExtension
 {
 	public static final NAME = "flair"
 
@@ -17,7 +18,7 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 
 	public String packageName
 
-	public Boolean autoGenerateVariantDirectory
+	public Boolean autoGenerateVariantDirectories
 
 	public FlairExtension( String name , Project project , Platform platform )
 	{
@@ -25,9 +26,9 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 	}
 
 	@Override
-	public IVariantConfigurationContainerExtension getPlatformContainer( Platform platform )
+	public IVariantsConfigurationContainerExtension getPlatformContainer( Platform platform )
 	{
-		return ( platform ? project.flair[ platform.name.toLowerCase( ) ] : project.flair ) as IVariantConfigurationContainerExtension
+		return ( platform && PluginManager.hasPlatformPlugin( project , platform ) ? project.flair[ platform.name.toLowerCase( ) ] : project.flair ) as IVariantsConfigurationContainerExtension
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class FlairExtension extends VariantConfigurationContainerExtension imple
 			{
 				case "moduleName": return "app"
 				case "packageName": return ""
-				case "autoGenerateVariantDirectory": return true
+				case "autoGenerateVariantDirectories": return true
 
 				default: return null
 			}

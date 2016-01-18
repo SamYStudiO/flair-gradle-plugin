@@ -43,6 +43,18 @@ public class ConfigurationContainerExtension extends AbstractConfigurationExtens
 	}
 
 	@Override
+	public IConfigurationExtension getAdl()
+	{
+		return adl
+	}
+
+	@Override
+	public IConfigurationExtension getAppDescriptor()
+	{
+		return appDescriptor
+	}
+
+	@Override
 	public Object getProp( String property , boolean returnDefaultIfNull )
 	{
 		if( this[ property ] != null || !returnDefaultIfNull ) return this[ property ] else

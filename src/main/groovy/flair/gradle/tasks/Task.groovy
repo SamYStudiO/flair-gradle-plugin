@@ -16,7 +16,6 @@ import flair.gradle.tasks.texturepacker.TexturePacker
 public enum Task {
 
 	SCAFFOLD( "generateProject" , Scaffold , Group.SCAFFOLD ) ,
-	UPDATE_PROPERTIES( "updateProperties" , UpdateProperties , Group.SCAFFOLD ) ,
 	CLEAN( "clean" , Clean , Group.BUILD ) ,
 	//PROCESS_IOS_RESOURCES( "processIOSResources" , ProcessIOSResources , Group.DEFAULT ) ,
 			//PROCESS_ANDROID_RESOURCES( "processAndroidResources" , ProcessAndroidResources , Group.DEFAULT ) ,

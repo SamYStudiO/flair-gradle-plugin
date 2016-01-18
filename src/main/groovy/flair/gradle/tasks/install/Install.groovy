@@ -13,17 +13,12 @@ class Install extends AbstractVariantTask
 	{
 		group = Group.INSTALL.name
 		description = ""
-
-		//this.platform = platform
-		//this.productFlavor = productFlavor
-		//this.buildType = buildType
-		//dependsOn Task.PROCESS_ANDROID_RESOURCES
 	}
 
 	@TaskAction
 	public void install()
 	{
-		println( "test> " + platform + "--" + productFlavor + "--" + buildType )
+		//println( "test> " + platform + "--" + productFlavor + "--" + buildType )
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream( )
 

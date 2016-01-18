@@ -13,18 +13,11 @@ class Packaging extends AbstractVariantTask
 	{
 		group = Group.PACKAGE.name
 		description = ""
-
-		//this.platform = platform
-		//this.productFlavor = productFlavor
-		//this.buildType = buildType
-		//dependsOn Task.PROCESS_ANDROID_RESOURCES
 	}
 
 	@TaskAction
 	public void packaging()
 	{
-		println( "test> " + platform + "--" + productFlavor + "--" + buildType )
-
 		ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
 		/*project.exec {

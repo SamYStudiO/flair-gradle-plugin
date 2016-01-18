@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Variant
 import org.gradle.api.Task
 
 /**
@@ -8,12 +8,7 @@ import org.gradle.api.Task
  */
 interface IVariantTask extends Task
 {
-	public Platform getPlatform()
-	public void setPlatform( Platform value )
+	public Variant getVariant()
 
-	public String getProductFlavor()
-	public void setProductFlavor( String value )
-
-	public String getBuildType()
-	public void setBuildType( String value )
+	public void setVariant( Variant value )
 }

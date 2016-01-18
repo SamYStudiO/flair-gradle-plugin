@@ -1,13 +1,10 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.configuration.IConfigurationContainerExtension
-import flair.gradle.extensions.configuration.PropertyManager
 import flair.gradle.platforms.Platform
-import flair.gradle.plugins.AndroidPlugin
-import flair.gradle.plugins.DesktopPlugin
-import flair.gradle.plugins.IOSPlugin
+import flair.gradle.plugins.PluginManager
 import flair.gradle.tasks.factory.*
-import org.gradle.api.NamedDomainObjectContainer
+import flair.gradle.variants.Variant
+import flair.gradle.variants.VariantManager
 import org.gradle.api.Project
 import org.gradle.api.Task
 
@@ -17,39 +14,55 @@ import org.gradle.api.Task
 public class TaskManager
 {
 	public
-	static void updateTasks( Project project )
+	static IVariantTask getTask( Project project , Group group , Variant variant )
 	{
-		cleanVariantDirectories( project )
-
-		updateTypeVariantTasks( project , new BuildTaskFactory( ) , "build" )
-		updateTypeVariantTasks( project , new PackageTaskFactory( ) , "package" )
-		updateTypeVariantTasks( project , new InstallTaskFactory( ) , "install" )
-		updateTypeVariantTasks( project , new LaunchTaskFactory( ) , "launch" )
+		return project.tasks.getByName( group.name + variant.name ) as IVariantTask
 	}
 
 	public
-	static void updateProcessResourceTasks( Project project )
+	static void removeVariantTasks( Project project )
 	{
-		List<Platform> platforms = getCurrentPlatform( project )
+		Iterator<Task> iterator = project.tasks.iterator( )
 
-		platforms.each { platform ->
+		while( iterator.hasNext( ) )
+		{
+			Task t = iterator.next( )
 
-			new ProcessResourceTaskFactory( ).create( project , "process" , platform , platforms.size( ) > 1 , [ ] ) as Task
+			if( t.name.startsWith( "build" ) || t.name.startsWith( "package" ) || t.name.startsWith( "install" ) || t.name.startsWith( "launch" ) || t.name.startsWith( "process" ) ) iterator.remove( )
 		}
 	}
 
 	public
-	static void updateTypeVariantTasks( Project project , VariantTaskFactory factory , String taskPrefix )
+	static void updateTasks( Project project )
 	{
-		List<Platform> platforms = getCurrentPlatform( project )
+		removeVariantTasks( project )
 
-		NamedDomainObjectContainer<IConfigurationContainerExtension> allProductFlavors = PropertyManager.getRootContainer( project ).getProductFlavors( )
-		NamedDomainObjectContainer<IConfigurationContainerExtension> allBuildTypes = PropertyManager.getRootContainer( project ).getBuildTypes( )
+		updateVariantTasks( project , new ProcessResourceTaskFactory( ) )
+		updateVariantTasks( project , new BuildTaskFactory( ) )
+		updateVariantTasks( project , new PackageTaskFactory( ) )
+		updateVariantTasks( project , new InstallTaskFactory( ) )
+		updateVariantTasks( project , new LaunchTaskFactory( ) )
+	}
+
+	public
+	static void updateVariantTasks( Project project , VariantTaskFactory factory )
+	{
+		List<Platform> platforms = PluginManager.getCurrentPlatforms( project )
+
+		platforms.each { platform ->
+			VariantManager.getVariants( project , platform ).each { variant -> factory.create( project , variant ) as Task
+			}
+		}
+
+		/*return
+
+		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> allProductFlavors = PropertyManager.getRootContainer( project ).getProductFlavors( )
+		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> allBuildTypes = PropertyManager.getRootContainer( project ).getBuildTypes( )
 
 		platforms.each { platform ->
 
-			List<IConfigurationContainerExtension> productFlavorList = new ArrayList<IConfigurationContainerExtension>( )
-			List<IConfigurationContainerExtension> buildTypeList = new ArrayList<IConfigurationContainerExtension>( )
+			List<IVariantConfigurationContainerExtension> productFlavorList = new ArrayList<IVariantConfigurationContainerExtension>( )
+			List<IVariantConfigurationContainerExtension> buildTypeList = new ArrayList<IVariantConfigurationContainerExtension>( )
 
 			allProductFlavors.each {
 				productFlavorList.add( it )
@@ -59,8 +72,8 @@ public class TaskManager
 				buildTypeList.add( it )
 			}
 
-			NamedDomainObjectContainer<IConfigurationContainerExtension> platformProductFlavors = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getProductFlavors( )
-			NamedDomainObjectContainer<IConfigurationContainerExtension> platformBuildTypes = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getBuildTypes( )
+			NamedDomainObjectContainer<IVariantConfigurationContainerExtension> platformProductFlavors = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getProductFlavors( )
+			NamedDomainObjectContainer<IVariantConfigurationContainerExtension> platformBuildTypes = PropertyManager.getRootContainer( project ).getPlatformContainer( platform ).getBuildTypes( )
 
 			platformProductFlavors.each {
 				productFlavorList.add( it )
@@ -119,43 +132,6 @@ public class TaskManager
 					createVariantDirectory( project , type.name )
 				}
 			}
-		}
-	}
-
-	private static List<Platform> getCurrentPlatform( Project project )
-	{
-		List<Platform> list = new ArrayList<Platform>( )
-
-		project.plugins.each { plugin ->
-
-			if( plugin instanceof IOSPlugin && list.indexOf( Platform.IOS ) < 0 ) list.add( Platform.IOS )
-			if( plugin instanceof AndroidPlugin && list.indexOf( Platform.ANDROID ) < 0 ) list.add( Platform.ANDROID )
-			if( plugin instanceof DesktopPlugin && list.indexOf( Platform.DESKTOP ) < 0 ) list.add( Platform.DESKTOP )
-		}
-
-		return list
-	}
-
-	private static void createVariantDirectory( Project project , String name )
-	{
-		boolean autoGenerateVariantDirectory = PropertyManager.getProperty( project , "autoGenerateVariantDirectory" )
-
-		if( !autoGenerateVariantDirectory ) return
-
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-
-		project.file( "${ moduleName }/src/${ name }" ).mkdir( )
-	}
-
-	private static void cleanVariantDirectories( Project project )
-	{
-		Boolean autoGenerateVariantDirectory = PropertyManager.getProperty( project , "autoGenerateVariantDirectory" ) as Boolean
-
-		if( !autoGenerateVariantDirectory ) return
-
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-
-		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( )
-		}
+		}*/
 	}
 }

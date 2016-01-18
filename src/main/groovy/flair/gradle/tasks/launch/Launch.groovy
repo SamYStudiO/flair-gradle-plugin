@@ -13,18 +13,11 @@ class Launch extends AbstractVariantTask
 	{
 		group = Group.LAUNCH.name
 		description = ""
-
-		//this.platform = platform
-		//this.productFlavor = productFlavor
-		//this.buildType = buildType
-		//dependsOn Task.PROCESS_ANDROID_RESOURCES
 	}
 
 	@TaskAction
 	public void launch()
 	{
-		println( "test> " + platform + "--" + productFlavor + "--" + buildType )
-
 		ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
 		/*project.exec {

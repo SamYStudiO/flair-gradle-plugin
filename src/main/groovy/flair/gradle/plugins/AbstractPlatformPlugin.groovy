@@ -1,5 +1,6 @@
 package flair.gradle.plugins
 
+import flair.gradle.structure.StructureManager
 import flair.gradle.tasks.Task
 import flair.gradle.tasks.TaskManager
 import org.gradle.api.Project
@@ -15,12 +16,8 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin
 		super.apply( project )
 
 		project.afterEvaluate {
-
-			TaskManager.updateProcessResourceTasks( project )
-
-			project.plugins.whenObjectAdded {
-				TaskManager.updateProcessResourceTasks( project )
-			}
+			TaskManager.updateTasks( project )
+			StructureManager.updateVariantDirectories( project )
 		}
 	}
 
@@ -28,7 +25,6 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin
 	public void addTasks()
 	{
 		addTask( Task.SCAFFOLD.name , Task.SCAFFOLD.type )
-		addTask( Task.UPDATE_PROPERTIES.name , Task.UPDATE_PROPERTIES.type )
 		addTask( Task.CLEAN.name , Task.CLEAN.type )
 		addTask( Task.INCREMENT_VERSION.name , Task.INCREMENT_VERSION.type )
 		addTask( Task.GENERATE_FONT_CLASS.name , Task.GENERATE_FONT_CLASS.type )

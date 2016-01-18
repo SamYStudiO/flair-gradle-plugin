@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.platforms.Platform
+import flair.gradle.variants.Variant
 import org.gradle.api.DefaultTask
 
 /**
@@ -8,39 +8,15 @@ import org.gradle.api.DefaultTask
  */
 class AbstractVariantTask extends DefaultTask implements IVariantTask
 {
-	protected Platform platform
+	protected Variant variant
 
-	public Platform getPlatform()
+	public Variant getVariant()
 	{
-		return platform
+		return variant
 	}
 
-	public void setPlatform( Platform value )
+	public void setVariant( Variant value )
 	{
-		platform = value
-	}
-
-	protected String productFlavor
-
-	public String getProductFlavor()
-	{
-		return productFlavor
-	}
-
-	public void setProductFlavor( String value )
-	{
-		productFlavor = value
-	}
-
-	protected String buildType
-
-	public String getBuildType()
-	{
-		return buildType
-	}
-
-	public void setBuildType( String value )
-	{
-		buildType = value
+		variant = value
 	}
 }

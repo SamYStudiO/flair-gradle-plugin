@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.configuration.VariantConfigurationContainerExtension
+import flair.gradle.extensions.configuration.VariantsConfigurationContainerExtension
 import flair.gradle.platforms.Platform
 
 /**
@@ -11,6 +11,6 @@ public class AndroidPlugin extends AbstractPlatformPlugin
 	@Override
 	public void addExtensions()
 	{
-		addConfigurationExtension( Platform.ANDROID.name.toLowerCase( ) , Platform.ANDROID , VariantConfigurationContainerExtension , flair )
+		addConfigurationExtension( Platform.ANDROID.name.toLowerCase( ) , Platform.ANDROID , VariantsConfigurationContainerExtension , flair )
 	}
 }

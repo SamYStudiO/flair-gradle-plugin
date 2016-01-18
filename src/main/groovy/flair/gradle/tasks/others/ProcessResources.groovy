@@ -56,14 +56,14 @@ public class ProcessResources extends AbstractVariantTask
 		}
 
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-		String sPlatform = platform.name.toLowerCase( )
+		String sPlatform = variant.platform.name.toLowerCase( )
 		List<String> excludeResources = PropertyManager.getProperty( project , "excludeResources" ) as List<String>
 		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
 
 		project.copy {
 			from "${ srcRoot }/main/assets"
-			from "${ srcRoot }/${ productFlavor }/assets"
-			from "${ srcRoot }/${ buildType }/assets"
+			from "${ srcRoot }/${ variant.productFlavor }/assets"
+			from "${ srcRoot }/${ variant.buildType }/assets"
 
 			into "${ project.buildDir }/assets"
 
@@ -73,7 +73,7 @@ public class ProcessResources extends AbstractVariantTask
 		project.copy {
 			from "${ srcRoot }/main/resources/"
 			from "${ srcRoot }/${ productFlavor }/resources/"
-			from "${ srcRoot }/${ buildType }/resources/"
+			from "${ srcRoot }/${ variant.buildType }/resources/"
 
 			into "${ project.buildDir }/resources/"
 
@@ -88,7 +88,7 @@ public class ProcessResources extends AbstractVariantTask
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/splashs"
 			from "${ srcRoot }/${ productFlavor }/splashs"
-			from "${ srcRoot }/${ buildType }/splashs"
+			from "${ srcRoot }/${ variant.buildType }/splashs"
 
 			into "${ project.buildDir }/"
 		}
@@ -96,12 +96,12 @@ public class ProcessResources extends AbstractVariantTask
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/icons"
 			from "${ srcRoot }/${ productFlavor }/icons"
-			from "${ srcRoot }/${ buildType }/icons"
+			from "${ srcRoot }/${ variant.buildType }/icons"
 
 			into "${ project.buildDir }/icons"
 		}
 
-		processApp( project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ).exists( ) ? project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ) : project.file( "${ srcRoot }/${ platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
+		processApp( project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ).exists( ) ? project.file( "${ srcRoot }/${ productFlavor }/app_descriptor.xml" ) : project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
 	}
 
 	private String processResourceValues( String rootPath )
@@ -156,13 +156,13 @@ public class ProcessResources extends AbstractVariantTask
 	{
 		String appContent = app.getText( )
 		String sdkVersion = AIRSDKManager.getVersion( project )
-		String appId = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "id" , platform , productFlavor , buildType )
-		String appName = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "appName" , platform , productFlavor , buildType )
-		String appVersion = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , platform , productFlavor , buildType )
-		String appFullScreen = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "fullScreen" , platform , productFlavor , buildType )
-		String appAspectRatio = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "aspectRatio" , platform , productFlavor , buildType )
-		String appAutoOrient = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "autoOrient" , platform , productFlavor , buildType )
-		String appDepthAndStencil = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "depthAndStencil" , platform , productFlavor , buildType )
+		String appId = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "id" , variant.platform , productFlavor , variant.buildType )
+		String appName = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "appName" , variant.platform , productFlavor , variant.buildType )
+		String appVersion = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant.platform , productFlavor , variant.buildType )
+		String appFullScreen = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "fullScreen" , variant.platform , productFlavor , variant.buildType )
+		String appAspectRatio = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "aspectRatio" , variant.platform , productFlavor , variant.buildType )
+		String appAutoOrient = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "autoOrient" , variant.platform , productFlavor , variant.buildType )
+		String appDepthAndStencil = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "depthAndStencil" , variant.platform , productFlavor , variant.buildType )
 		String supportedLocales = getSupportedLocales( )
 		boolean desktop = appContent.indexOf( "<android>" ) < 0 && appContent.indexOf( "<iPhone>" ) < 0
 
@@ -214,7 +214,7 @@ public class ProcessResources extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , platform , productFlavor , buildType )
+		String defaultLocale = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , variant.platform , productFlavor , variant.buildType )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

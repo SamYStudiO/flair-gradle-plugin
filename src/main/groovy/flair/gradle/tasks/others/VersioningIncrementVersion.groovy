@@ -20,7 +20,7 @@ public class VersioningIncrementVersion extends AbstractVariantTask
 	@TaskAction
 	public void incrementVersion()
 	{
-		String version = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , platform , productFlavor , buildType )
+		String version = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant.platform , productFlavor , variant.buildType )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
