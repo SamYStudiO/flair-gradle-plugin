@@ -10,7 +10,7 @@ import org.gradle.api.Project
 public class VariantStructure implements IStructure
 {
 	@Override
-	public void create( Project project )
+	public void create( Project project , File source )
 	{
 		boolean autoGenerateVariantDirectories = PropertyManager.getProperty( project , "autoGenerateVariantDirectories" )
 

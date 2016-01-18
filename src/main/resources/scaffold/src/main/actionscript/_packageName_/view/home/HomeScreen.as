@@ -1,4 +1,4 @@
-package _packageName.view.home
+package _packageName_.view.home
 {
 	import _packageName.view.EnumScreen;
 

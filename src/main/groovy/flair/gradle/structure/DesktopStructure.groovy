@@ -9,28 +9,15 @@ import org.gradle.api.Project
 public class DesktopStructure implements IStructure
 {
 	@Override
-	public void create( Project project )
+	public void create( Project project , File source )
 	{
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
-		if( !moduleName ) return
+		if( !moduleName || project.fileTree( "${ moduleName }/src/desktop" ).size( ) > 0 ) return
 
 		project.copy {
-			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
-			//from project.fileTree( new File( getClass( ).getResource( "scaffold/src" ).toURI() ).absolutePath )
-			into project.getRootDir( )
-
-			include "scaffold/**"
-			exclude "**/.gitkeep"
-		}
-
-		if( project.fileTree( "${ moduleName }/src/desktop" ).size( ) > 0 ) return
-
-		project.copy {
-			from "scaffold/desktop"
+			from "${ source.path }/src/desktop"
 			into "${ moduleName }/src/desktop"
 		}
-
-		project.file( "scaffold" ).deleteDir( )
 	}
 }

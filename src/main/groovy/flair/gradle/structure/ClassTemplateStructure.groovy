@@ -9,7 +9,7 @@ import org.gradle.api.Project
 public class ClassTemplateStructure implements IStructure
 {
 	@Override
-	public void create( Project project )
+	public void create( Project project , File source )
 	{
 		String moduleName = PropertyManager.getProperty( project , "moduleName" )
 
@@ -19,19 +19,10 @@ public class ClassTemplateStructure implements IStructure
 
 		if( !packageName || project.fileTree( "${ moduleName }/src/main/actionscript" ).size( ) > 0 ) return
 
-		project.copy {
-			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).toExternalForm( ) )
-			//from project.fileTree( new File( getClass( ).getResource( "scaffold/src" ).toURI() ).absolutePath )
-			into project.getRootDir( )
-
-			include "scaffold/**"
-			exclude "**/.gitkeep"
-		}
-
 		String s = packageName.replace( "." , "/" )
 
 		project.copy {
-			from "scaffold/_packageName_"
+			from "${ source.path }/src/main/actionscript/_packageName_"
 			into "${ moduleName }/src/main/actionscript/${ s }"
 		}
 
@@ -39,7 +30,5 @@ public class ClassTemplateStructure implements IStructure
 
 			file.write( file.getText( ).replace( "_packageName_" , packageName ) )
 		}
-
-		project.file( "scaffold" ).deleteDir( )
 	}
 }

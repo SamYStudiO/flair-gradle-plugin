@@ -34,9 +34,19 @@ public abstract class AbstractStructurePlugin extends AbstractPlugin implements 
 	@Override
 	public final void updateStructures()
 	{
-		structureFactories.each {
-			it.create( project )
+		project.copy {
+			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).getPath( ) )
+			into project.getRootDir( )
+
+			include "scaffold/**"
+			exclude "**/.gitkeep"
 		}
+
+		structureFactories.each {
+			it.create( project , project.file( "scaffold" ) )
+		}
+
+		project.file( "scaffold" ).deleteDir( )
 	}
 
 	protected abstract void addStructures()

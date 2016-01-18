@@ -1,5 +1,6 @@
 package flair.gradle.structure
 
+import flair.gradle.extensions.configuration.PropertyManager
 import org.gradle.api.Project
 
 /**
@@ -8,7 +9,15 @@ import org.gradle.api.Project
 public class AtlasesStructure implements IStructure
 {
 	@Override
-	public void create( Project project )
+	public void create( Project project , File source )
 	{
+		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+
+		if( !moduleName || project.fileTree( "${ moduleName }/src/main/atlases" ).size( ) > 0 ) return
+
+		project.copy {
+			from "${ source.path }/src/main/atlases"
+			into "${ moduleName }/src/main/atlases"
+		}
 	}
 }
