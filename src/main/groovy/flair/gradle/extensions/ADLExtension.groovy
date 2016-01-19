@@ -6,13 +6,13 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ADLExtension extends AbstractConfigurationExtension implements IConfigurationExtension
+public class AdlExtension extends AbstractConfigurationExtension implements IConfigurationExtension
 {
 	public String screensize
 
 	public int XscreenDPI
 
-	public ADLExtension( String name , Project project , Platform platform )
+	public AdlExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 	}

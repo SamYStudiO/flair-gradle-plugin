@@ -7,9 +7,9 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class LaunchADL extends AbstractVariantTask
+class LaunchAdl extends AbstractVariantTask
 {
-	public LaunchADL()
+	public LaunchAdl()
 	{
 		group = Group.LAUNCH.name
 		description = ""
@@ -21,7 +21,7 @@ class LaunchADL extends AbstractVariantTask
 		ByteArrayOutputStream output = new ByteArrayOutputStream( )
 
 		/*project.exec {
-			executable AIRSDKManager.getMXMLCPath( project )
+			executable AIRSDKManager.getMxmlcPath( project )
 			//args
 
 			standardOutput = output

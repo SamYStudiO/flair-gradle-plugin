@@ -3,7 +3,7 @@ package flair.gradle.extensions
 import flair.gradle.variants.Platform
 import flair.gradle.plugins.AndroidPlugin
 import flair.gradle.plugins.DesktopPlugin
-import flair.gradle.plugins.IOSPlugin
+import flair.gradle.plugins.IosPlugin
 import org.gradle.api.Action
 import org.gradle.api.Project
 
@@ -14,7 +14,7 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 {
 	protected AppDescriptorExtension appDescriptor
 
-	protected ADLExtension adl
+	protected AdlExtension adl
 
 	public List<String> excludeResources
 
@@ -23,7 +23,7 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 		super( name , project , platform )
 
 		appDescriptor = new AppDescriptorExtension( ConfigurationExtension.APP_DESCRIPTOR.name , project , platform )
-		adl = new ADLExtension( ConfigurationExtension.ADL.name , project , platform )
+		adl = new AdlExtension( ConfigurationExtension.ADL.name , project , platform )
 	}
 
 	public void appDescriptor( Action<AppDescriptorExtension> action )
@@ -31,7 +31,7 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 		action.execute( appDescriptor )
 	}
 
-	public void adl( Action<ADLExtension> action )
+	public void adl( Action<AdlExtension> action )
 	{
 		action.execute( adl )
 	}
@@ -87,7 +87,7 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 
 		project.plugins.each { plugin ->
 
-			if( plugin instanceof IOSPlugin && list.indexOf( Platform.IOS ) < 0 ) list.add( Platform.IOS )
+			if( plugin instanceof IosPlugin && list.indexOf( Platform.IOS ) < 0 ) list.add( Platform.IOS )
 			if( plugin instanceof AndroidPlugin && list.indexOf( Platform.ANDROID ) < 0 ) list.add( Platform.ANDROID )
 			if( plugin instanceof DesktopPlugin && list.indexOf( Platform.DESKTOP ) < 0 ) list.add( Platform.DESKTOP )
 		}

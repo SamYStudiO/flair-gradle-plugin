@@ -78,7 +78,7 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 		addVariantTaskFactory( new CompileTaskFactory( ) )
 		addVariantTaskFactory( new PackageTaskFactory( ) )
 		addVariantTaskFactory( new InstallTaskFactory( ) )
-		addVariantTaskFactory( new LaunchADLTaskFactory( ) )
+		addVariantTaskFactory( new LaunchAdlTaskFactory( ) )
 	}
 
 	private List<String> getVariantTaskNames( Group group )

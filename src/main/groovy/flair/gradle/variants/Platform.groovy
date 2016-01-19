@@ -5,7 +5,7 @@ package flair.gradle.variants
  */
 public enum Platform {
 
-	IOS( "IOS" ) ,
+	IOS( "Ios" ) ,
 	ANDROID( "Android" ) ,
 	DESKTOP( "Desktop" )
 

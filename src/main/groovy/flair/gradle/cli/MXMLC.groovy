@@ -1,7 +1,7 @@
 package flair.gradle.cli
 
+import flair.gradle.dependencies.AirSdk
 import flair.gradle.variants.Platform
-import flair.gradle.utils.AIRSDKManager
 import org.gradle.api.Project
 
 /**
@@ -38,14 +38,12 @@ class MXMLC implements ICli
 
 		arguments.each { arg -> println( arg )
 		}
-
-
 	}
 
 	@Override
 	public String getExecutable()
 	{
-		return AIRSDKManager.getMXMLCPath( project )
+		return new AirSdk( project ).getMxmlcPath(  )
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IOSStructure implements IStructure
+public class IosStructure implements IStructure
 {
 	@Override
 	public void create( Project project , File source )

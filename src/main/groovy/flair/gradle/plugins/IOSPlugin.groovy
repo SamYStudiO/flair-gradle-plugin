@@ -1,14 +1,14 @@
 package flair.gradle.plugins
 
-import flair.gradle.structure.IOSStructure
+import flair.gradle.structure.IosStructure
 import flair.gradle.variants.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IOSPlugin extends AbstractPlatformPlugin
+public class IosPlugin extends AbstractPlatformPlugin
 {
-	public IOSPlugin()
+	public IosPlugin()
 	{
 		platform = Platform.IOS
 	}
@@ -16,7 +16,7 @@ public class IOSPlugin extends AbstractPlatformPlugin
 	@Override
 	protected void addStructures()
 	{
-		addStructure( new IOSStructure( ) )
+		addStructure( new IosStructure( ) )
 	}
 
 	@Override

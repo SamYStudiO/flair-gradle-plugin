@@ -1,22 +1,22 @@
 package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.Group
-import flair.gradle.tasks.LaunchADL
+import flair.gradle.tasks.LaunchAdl
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LaunchADLTaskFactory implements IVariantTaskFactory<LaunchADL>
+public class LaunchAdlTaskFactory implements IVariantTaskFactory<LaunchAdl>
 {
-	public LaunchADL create( Project project , Variant variant )
+	public LaunchAdl create( Project project , Variant variant )
 	{
-		String name = "launchADL" + variant.name
+		String name = "launchAdl" + variant.name
 
-		LaunchADL t = project.tasks.findByName( name ) as LaunchADL
+		LaunchAdl t = project.tasks.findByName( name ) as LaunchAdl
 
-		if( !t ) t = project.tasks.create( name , LaunchADL )
+		if( !t ) t = project.tasks.create( name , LaunchAdl )
 
 		t.group = Group.LAUNCH.name
 		t.variant = variant
