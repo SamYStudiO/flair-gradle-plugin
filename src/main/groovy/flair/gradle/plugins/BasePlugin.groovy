@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
-import flair.gradle.ide.IIde
+import flair.gradle.ide.Ide
 import flair.gradle.ide.Idea
 import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
@@ -17,7 +17,7 @@ import org.gradle.api.Project
  */
 class BasePlugin extends AbstractStructurePlugin
 {
-	private List<IIde> ides = new ArrayList<IIde>( )
+	private List<Ide> ides = new ArrayList<Ide>( )
 
 	@Override
 	public void apply( Project project )
