@@ -50,8 +50,6 @@ class Watcher extends Thread
 	@Override
 	public void run()
 	{
-		println( "run " + root.path )
-
 		registerDir( root.toPath( ) )
 
 		while( true )
@@ -70,17 +68,13 @@ class Watcher extends Thread
 				return
 			}
 
-
 			Path dir = keys.get( key )
-			println( ">>" + dir )
 
-			if( dir == null )  continue
+			if( dir == null ) continue
 
 			for( WatchEvent<?> event : key.pollEvents( ) )
 			{
 				WatchEvent.Kind kind = event.kind( )
-
-				println( kind )
 
 				if( kind == OVERFLOW ) continue
 
@@ -105,12 +99,8 @@ class Watcher extends Thread
 				change = true
 			}
 
-			println( change )
-
 			if( change )
 			{
-				println( "change" )
-
 				for( Map.Entry<File , IWatcherExecutable> map : watchDirectories )
 				{
 					if( dir.toFile( ).path.startsWith( map.key.path ) ) map.value.execute( project )
@@ -118,8 +108,6 @@ class Watcher extends Thread
 
 				for( Map.Entry<String , IWatcherExecutable> map : watchPatterns )
 				{
-					println( map.key + "----" + dir.toFile( ).path )
-
 					if( dir.toFile( ).path.contains( map.key ) ) map.value.execute( project )
 				}
 			}
