@@ -2,18 +2,16 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.PlatformConfigurationContainerExtension
 import flair.gradle.tasks.Group
-import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.variantFactories.*
 import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin implements IPlatformPlugin
+public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin implements IPlatformPlugin , IVariantTaskPlugin
 {
 	protected List<IVariantTaskFactory> variantFactories = new ArrayList<IVariantTaskFactory>( )
 
@@ -38,7 +36,6 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 
 		super.apply( project )
 
-
 		addVariantFactories( )
 
 		project.afterEvaluate {
@@ -55,8 +52,6 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	@Override
 	public final void updateVariantTasks()
 	{
-		removeVariantTasks( )
-
 		variantFactories.each {
 
 			List<Variant> list = flairExtension.getAllVariants( platform )
@@ -89,17 +84,5 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 		project.tasks.findAll { task -> task.name.startsWith( group.name ) && task.name != group.name } each { list.add( it.name ) }
 
 		return list
-	}
-
-	private void removeVariantTasks()
-	{
-		Iterator<Task> iterator = project.tasks.findAll {
-			it instanceof IVariantTask && ( it as IVariantTask ).variant.platform == platform
-		}.iterator( )
-
-		while( iterator.hasNext( ) )
-		{
-			project.tasks.remove( iterator.next( ) )
-		}
 	}
 }

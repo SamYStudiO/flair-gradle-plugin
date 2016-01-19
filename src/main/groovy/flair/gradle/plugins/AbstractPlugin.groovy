@@ -81,7 +81,7 @@ public abstract class AbstractPlugin implements IPlugin
 		return project.flair as IPlatformExtensionManager
 	}
 
-	protected ready()
+	protected void ready()
 	{
 	}
 

@@ -51,7 +51,7 @@ public abstract class AbstractStructurePlugin extends AbstractPlugin implements 
 			it.create( project , project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold" ) )
 		}
 
-		project.file( "scaffold" ).deleteDir( )
+		project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold" ).deleteDir( )
 	}
 
 	protected abstract void addStructures()
