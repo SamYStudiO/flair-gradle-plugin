@@ -1,4 +1,4 @@
-local.properties
+/local.properties
 *.iml
 !src/main/resources/scaffold/scaffold.iml
 /.gradle/
