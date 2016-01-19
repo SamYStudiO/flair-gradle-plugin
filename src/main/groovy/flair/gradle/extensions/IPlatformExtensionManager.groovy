@@ -2,6 +2,7 @@ package flair.gradle.extensions
 
 import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
+import flair.gradle.watcher.Watcher
 import org.gradle.api.NamedDomainObjectContainer
 
 /**

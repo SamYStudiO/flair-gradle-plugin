@@ -5,12 +5,26 @@ import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.VariantStructure
 import flair.gradle.tasks.Task
+import flair.gradle.watcher.executables.GenerateFontClass
+import flair.gradle.watcher.executables.GenerateRClass
+import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 class BasePlugin extends AbstractStructurePlugin
 {
+	@Override
+	public void apply( Project project )
+	{
+		super.apply( project )
+
+		project.afterEvaluate {
+			new GenerateRClass( ).execute( project )
+			new GenerateFontClass( ).execute( project )
+		}
+	}
+
 	@Override
 	protected void addStructures()
 	{
@@ -34,17 +48,12 @@ class BasePlugin extends AbstractStructurePlugin
 	protected void addExtensions()
 	{
 		addConfigurationExtension( FlairExtension.NAME , null , FlairExtension )
+	}
 
-		/*String moduleName = flairExtension.getFlairProperty( "moduleName" )
-
-
-		flairExtension.watcher.watch( project.file( moduleName ) ) {
-
-			println( "change" )
-
-			Node node = new XmlParser( ).parse( project.file( "${ moduleName }/app.iml" ) )
-
-			project.file( "${ project.buildDir }/${ node.component.@active }" ).createNewFile( )
-		}*/
+	@Override
+	protected ready()
+	{
+		flairExtension.watcher.watchPattern( File.separator + "resources" , new GenerateRClass( ) )
+		flairExtension.watcher.watchPattern( File.separator + "fonts" , new GenerateFontClass( ) )
 	}
 }

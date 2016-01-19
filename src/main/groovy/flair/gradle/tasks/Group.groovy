@@ -11,7 +11,6 @@ public enum Group {
 	INSTALL( "install" ) ,
 	PROCESS( "process" ) ,
 	LAUNCH( "launch" ) ,
-	GENERATED( "generated" ) ,
 	TEXTURE_PACKER( "texturepacker" ) ,
 	DEFAULT( "" )
 

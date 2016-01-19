@@ -639,6 +639,10 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/fonts" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/generated" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/android/fonts" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ios/fonts" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/desktop/fonts" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/certificates" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/splashs" />

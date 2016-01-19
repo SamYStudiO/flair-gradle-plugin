@@ -22,6 +22,7 @@ public abstract class AbstractPlugin implements IPlugin
 
 		addTasks( )
 		addExtensions( )
+		ready( )
 	}
 
 	@Override
@@ -78,6 +79,10 @@ public abstract class AbstractPlugin implements IPlugin
 	protected IPlatformExtensionManager getFlairExtension()
 	{
 		return project.flair as IPlatformExtensionManager
+	}
+
+	protected ready()
+	{
 	}
 
 	protected abstract void addTasks()

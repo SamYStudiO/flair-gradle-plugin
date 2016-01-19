@@ -1,30 +1,28 @@
-package flair.gradle.tasks
+package flair.gradle.watcher.executables
 
+import flair.gradle.extensions.IPlatformExtensionManager
+import flair.gradle.watcher.IWatcherExecutable
+import org.gradle.api.Project
 import org.gradle.api.file.FileTree
-import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class GenerateResourceClass extends AbstractFlairTask
+class GenerateRClass implements IWatcherExecutable
 {
-	public GenerateResourceClass()
+	@Override
+	public void execute( Project project )
 	{
-		group = Group.GENERATED.name
-		description = ""
-	}
+		IPlatformExtensionManager extensionManager = project.flair as IPlatformExtensionManager
 
-	@TaskAction
-	public void generateResourceClass()
-	{
 		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 		String packageName = extensionManager.getFlairProperty( "packageName" )
 
-		if( !packageName ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
+		if( !moduleName || !packageName ) return
 
 		File classFile = project.file( "${ moduleName }/src/main/generated/R.as" )
 		String classFileContent = classFile.getText( )
-		FileTree resources = project.fileTree( "${ moduleName }/src/main/resources" )
+		FileTree resources = project.fileTree( "${ moduleName }/src" )
 
 		String bools = ""
 		String colors = ""
@@ -51,39 +49,41 @@ public class GenerateResourceClass extends AbstractFlairTask
 		Node node
 
 		resources.each { file ->
-			if( file.getParentFile( ).getName( ) != "resources" )
+			if( file.parentFile.parentFile.name == "resources" || file.parentFile.parentFile.parentFile.name == "resources" )
 			{
-				File parent = file.getParentFile( )
+				File parent = file.parentFile
 
-				while( parent.getParentFile( ).getName( ) != "resources" )
+				while( parent.parentFile.name != "resources" )
 				{
-					parent = parent.getParentFile( )
+					parent = parent.parentFile
 				}
 
-				String parentName = parent.getName( )
-				String filename = file.getName( ).split( "\\." )[ 0 ]
-				String ext = file.getName( ).split( "\\." )[ 1 ]
+				String parentName = parent.name
+				String flavor = parent.parentFile.parentFile.name
+				String conditional = flavor == "main" ? "" : "CONFIG::${ flavor.toUpperCase( ) } "
+				String filename = file.name.split( "\\." )[ 0 ]
+				String ext = file.name.split( "\\." )[ 1 ]
 
 				if( parentName.indexOf( "xml" ) == 0 && !xmlList.contains( filename ) )
 				{
-					xmls += "\tpublic const ${ filename } : XML = getXml( \"${ filename }\" );" + System.lineSeparator( )
+					xmls += "\t${ conditional }public const ${ filename } : XML = getXml( \"${ filename }\" );" + System.lineSeparator( )
 					xmlList.add( filename )
 				}
 				else if( parentName.indexOf( "raw" ) == 0 )
 				{
 					if( ( ext == "mpeg" || ext == "mp3" ) && !soundList.contains( filename ) )
 					{
-						sounds += "\tpublic const ${ filename } : Sound = getSound( \"${ filename }\" );" + System.lineSeparator( )
+						sounds += "\t${ conditional }public const ${ filename } : Sound = getSound( \"${ filename }\" );" + System.lineSeparator( )
 						soundList.add( filename )
 					}
 					else if( ext == "json" && !objectList.contains( filename ) )
 					{
-						objects += "\tpublic const ${ filename } : Object = getObject( \"${ filename }\" );" + System.lineSeparator( )
+						objects += "\t${ conditional }public const ${ filename } : Object = getObject( \"${ filename }\" );" + System.lineSeparator( )
 						objectList.add( filename )
 					}
 					else if( !rawList.contains( filename ) )
 					{
-						raws += "\tpublic const ${ filename } : ByteArray = getByteArray( \"${ filename }\" );" + System.lineSeparator( )
+						raws += "\t${ conditional }public const ${ filename } : ByteArray = getByteArray( \"${ filename }\" );" + System.lineSeparator( )
 						rawList.add( filename )
 					}
 				}
@@ -93,42 +93,42 @@ public class GenerateResourceClass extends AbstractFlairTask
 					node.string.each { string ->
 						if( !stringList.contains( string.@name.toString( ) ) )
 						{
-							strings += "\tpublic const ${ string.@name } : String = getString( \"${ string.@name }\" );" + System.lineSeparator( )
+							strings += "\t${ conditional }public const ${ string.@name } : String = getString( \"${ string.@name }\" );" + System.lineSeparator( )
 							stringList.add( string.@name.toString( ) )
 						}
 					}
 					node.color.each { color ->
 						if( !colorList.contains( color.@name.toString( ) ) )
 						{
-							colors += "\tpublic const ${ color.@name } : uint = getColor( \"${ color.@name }\" );" + System.lineSeparator( )
+							colors += "\t${ conditional }public const ${ color.@name } : uint = getColor( \"${ color.@name }\" );" + System.lineSeparator( )
 							colorList.add( color.@name.toString( ) )
 						}
 					}
 					node.bool.each { bool ->
 						if( !boolList.contains( bool.@name.toString( ) ) )
 						{
-							bools += "\tpublic const ${ bool.@name } : Boolean = getBoolean( \"${ bool.@name }\" );" + System.lineSeparator( )
+							bools += "\t${ conditional }public const ${ bool.@name } : Boolean = getBoolean( \"${ bool.@name }\" );" + System.lineSeparator( )
 							boolList.add( bool.@name.toString( ) )
 						}
 					}
 					node.dimen.each { dimen ->
 						if( !dimenList.contains( dimen.@name.toString( ) ) )
 						{
-							dimens += "\tpublic const ${ dimen.@name } : Number = getDimen( \"${ dimen.@name }\" );" + System.lineSeparator( )
+							dimens += "\t${ conditional }public const ${ dimen.@name } : Number = getDimen( \"${ dimen.@name }\" );" + System.lineSeparator( )
 							dimenList.add( dimen.@name.toString( ) )
 						}
 					}
 					node.integer.each { integer ->
 						if( !integerList.contains( integer.@name.toString( ) ) )
 						{
-							integers += "\tpublic const ${ integer.@name } : int = getInteger( \"${ integer.@name }\" );" + System.lineSeparator( )
+							integers += "\t${ conditional }public const ${ integer.@name } : int = getInteger( \"${ integer.@name }\" );" + System.lineSeparator( )
 							integerList.add( integer.@name.toString( ) )
 						}
 					}
 				}
 				else if( parentName.indexOf( "drawable" ) == 0 )
 				{
-					boolean isAtlas = ( ext != "xml" ) && new File( file.getParentFile( ).getPath( ) + File.separator + filename + ".xml" ).exists( )
+					boolean isAtlas = ( ext != "xml" ) && new File( file.parentFile.path + File.separator + filename + ".xml" ).exists( )
 
 					if( ext == "xml" )
 					{
@@ -137,14 +137,14 @@ public class GenerateResourceClass extends AbstractFlairTask
 						node.SubTexture.each { texture ->
 							if( !drawableList.contains( texture.@name.toString( ) ) )
 							{
-								drawables += "\tpublic const ${ texture.@name } : Texture = getDrawable( \"${ texture.@name }\" );" + System.lineSeparator( )
+								drawables += "\t${ conditional }public const ${ texture.@name } : Texture = getDrawable( \"${ texture.@name }\" );" + System.lineSeparator( )
 								drawableList.add( texture.@name.toString( ) )
 							}
 						}
 					}
 					else if( !isAtlas && !drawableList.contains( filename ) )
 					{
-						drawables += "\tpublic const ${ filename } : Texture = getDrawable( \"${ filename }\" );" + System.lineSeparator( )
+						drawables += "\t${ conditional }public const ${ filename } : Texture = getDrawable( \"${ filename }\" );" + System.lineSeparator( )
 						drawableList.add( filename )
 					}
 				}

@@ -35,7 +35,6 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	public void apply( Project project )
 	{
 		project.apply( plugin: BasePlugin )
-		//project.apply( plugin: IdeaPlugin )
 
 		super.apply( project )
 

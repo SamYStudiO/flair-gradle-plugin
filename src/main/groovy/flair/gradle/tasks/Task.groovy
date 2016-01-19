@@ -5,14 +5,10 @@ package flair.gradle.tasks
  */
 public enum Task {
 	CLEAN( "clean" , Clean , Group.BUILD ) ,
-	ASSEMBLE( "assemble" , null , Group.BUILD ) ,
-	COMPILE( "compile" , null , Group.BUILD ) ,
+	//ASSEMBLE( "assemble" , null , Group.BUILD ) ,
+	//COMPILE( "compile" , null , Group.BUILD ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Group.TEXTURE_PACKER ) ,
 	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Group.DEFAULT ) ,
-	GENERATE_FONT_CLASS( "generateFontClass" , GenerateFontClass , Group.GENERATED ) ,
-	AUTO_GENERATE_FONT_CLASS( "autoGenerateFontClass" , AutoGenerateFontClass , Group.GENERATED ) ,
-	GENERATE_RESOURCE_CLASS( "generateResourceClass" , GenerateResourceClass , Group.GENERATED ) ,
-	AUTO_GENERATE_RESOURCE_CLASS( "autoGenerateResourceClass" , AutoGenerateResourceClass , Group.GENERATED )
 
 	private String name
 

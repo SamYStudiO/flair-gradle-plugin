@@ -1,4 +1,6 @@
-package flair.gradle.extensions
+package flair.gradle.watcher
+
+import org.gradle.api.Project
 
 import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
@@ -12,36 +14,52 @@ import static java.nio.file.StandardWatchEventKinds.*
  */
 class Watcher extends Thread
 {
+	private Project project
+
 	private File root
 
 	private WatchService watcher = FileSystems.getDefault( ).newWatchService( )
 
 	private Map<WatchKey , Path> keys = new HashMap<WatchKey , Path>( )
 
-	private Map<File , Closure> watches = new HashMap<File , Closure>( )
+	private Map<File , IWatcherExecutable> watchDirectories = new HashMap<File , IWatcherExecutable>( )
 
-	public Watcher( File root )
+	private Map<String , IWatcherExecutable> watchPatterns = new HashMap<String , IWatcherExecutable>( )
+
+	public Watcher( Project project )
 	{
-		this.root = root
+		this( project , project.rootDir )
 	}
 
-	public watch( File path , Closure closure )
+	public Watcher( Project project , File root )
 	{
-		watches.put( path , closure )
+		this.root = root
+		this.project = project
+	}
+
+	public watchDirectory( File path , IWatcherExecutable executable )
+	{
+		watchDirectories.put( path , executable )
+	}
+
+	public watchPattern( String pattern , IWatcherExecutable executable )
+	{
+		watchPatterns.put( pattern , executable )
 	}
 
 	@Override
 	public void run()
 	{
-		println( "run" + root.toPath( ) )
+		println( "run " + root.path )
 
 		registerDir( root.toPath( ) )
 
-		for( ; ; )
+		while( true )
 		{
 			boolean change = false
 
 			WatchKey key
+
 			try
 			{
 				//key = watcher.take( )
@@ -52,14 +70,11 @@ class Watcher extends Thread
 				return
 			}
 
+
 			Path dir = keys.get( key )
+			println( ">>" + dir )
 
-			println( dir )
-
-			if( dir == null )
-			{
-				continue
-			}
+			if( dir == null )  continue
 
 			for( WatchEvent<?> event : key.pollEvents( ) )
 			{
@@ -67,10 +82,7 @@ class Watcher extends Thread
 
 				println( kind )
 
-				if( kind == OVERFLOW )
-				{
-					continue
-				}
+				if( kind == OVERFLOW ) continue
 
 				@SuppressWarnings( "unchecked" )
 				WatchEvent<Path> ev = ( WatchEvent<Path> ) event
@@ -97,10 +109,18 @@ class Watcher extends Thread
 
 			if( change )
 			{
-				for( Map.Entry<File , Closure> map : watches )
+				println( "change" )
+
+				for( Map.Entry<File , IWatcherExecutable> map : watchDirectories )
 				{
-					println( dir.toFile( ).path + "---------" + map.key.path )
-					if( dir.toFile( ).path.startsWith( map.key.path ) ) map.value( )
+					if( dir.toFile( ).path.startsWith( map.key.path ) ) map.value.execute( project )
+				}
+
+				for( Map.Entry<String , IWatcherExecutable> map : watchPatterns )
+				{
+					println( map.key + "----" + dir.toFile( ).path )
+
+					if( dir.toFile( ).path.contains( map.key ) ) map.value.execute( project )
 				}
 			}
 
