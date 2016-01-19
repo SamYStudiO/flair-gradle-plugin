@@ -6,7 +6,7 @@ import org.gradle.api.Task
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantTask extends Task
+interface IVariantTask extends IFlairTask
 {
 	public Variant getVariant()
 
