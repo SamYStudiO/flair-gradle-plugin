@@ -43,7 +43,7 @@ class MXMLC implements ICli
 	@Override
 	public String getExecutable()
 	{
-		return new Sdk( project ).getMxmlcPath(  )
+		return new Sdk( project ).getMxmlcPath( )
 	}
 
 	@Override

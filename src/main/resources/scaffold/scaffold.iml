@@ -20,7 +20,6 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="true" />
-            <entry key="compiler.define" value="CONFIG::IOS&#9;false&#10;CONFIG::ANDROID&#9;false&#10;CONFIG::PROD&#9;false&#10;CONFIG::PLATFORM&#9;&quot;&quot;" />
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
@@ -44,9 +43,11 @@
       <excludeFolder url="file://$MODULE_DIR$/src/android/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/signing" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/desktop/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/signing" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/ios/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/ios/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/ios/signing" />
       <excludeFolder url="file://$MODULE_DIR$/src/ios/splashs" />

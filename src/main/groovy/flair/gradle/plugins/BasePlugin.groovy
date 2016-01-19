@@ -1,6 +1,8 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairExtension
+import flair.gradle.ide.IIde
+import flair.gradle.ide.Idea
 import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.VariantStructure
@@ -15,9 +17,13 @@ import org.gradle.api.Project
  */
 class BasePlugin extends AbstractStructurePlugin
 {
+	private List<IIde> ides = new ArrayList<IIde>( )
+
 	@Override
 	public void apply( Project project )
 	{
+		ides.add( new Idea( project ) )
+
 		super.apply( project )
 
 		project.beforeEvaluate {
@@ -27,6 +33,10 @@ class BasePlugin extends AbstractStructurePlugin
 		project.afterEvaluate {
 			new GenerateRClass( ).execute( project )
 			new GenerateFontClass( ).execute( project )
+
+			ides.each {
+				if( it.isActive ) it.refresh( )
+			}
 		}
 	}
 
@@ -36,7 +46,10 @@ class BasePlugin extends AbstractStructurePlugin
 		addStructure( new CommonStructure( ) )
 		addStructure( new ClassTemplateStructure( ) )
 		addStructure( new VariantStructure( ) )
-		addStructure( new CommonStructure( ) )
+
+		ides.each {
+			if( it.isActive ) addStructure( it.structure )
+		}
 	}
 
 	@Override
