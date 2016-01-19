@@ -17,11 +17,11 @@ public class Sdk
 	{
 		if( path ) return path
 
-		path = System.getenv( "FLEX_HOME" )
+		path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
 
 		if( path ) return path
 
-		path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
+		path = System.getenv( "FLEX_HOME" )
 
 		return path
 	}
