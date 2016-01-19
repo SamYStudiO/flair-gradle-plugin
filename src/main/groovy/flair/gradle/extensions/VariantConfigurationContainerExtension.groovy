@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VariantConfigurationContainerExtension extends ConfigurationContainerExtension implements IVariantConfigurationContainerExtension
+public class VariantConfigurationContainerExtension extends AbstractConfigurationContainerExtension implements IVariantConfigurationContainerExtension
 {
 	protected String dimension
 

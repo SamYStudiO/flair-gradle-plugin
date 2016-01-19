@@ -34,6 +34,11 @@ public abstract class AbstractStructurePlugin extends AbstractPlugin implements 
 	@Override
 	public final void updateStructures()
 	{
+		String moduleName = flairExtension.getFlairProperty( "moduleName" )
+		String packageName = flairExtension.getFlairProperty( "packageName" )
+
+		if( !moduleName || !packageName ) return
+
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).getPath( ) )
 			into project.getRootDir( )

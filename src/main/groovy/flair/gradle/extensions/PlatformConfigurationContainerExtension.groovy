@@ -8,7 +8,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VariantsConfigurationContainerExtension extends ConfigurationContainerExtension implements IVariantsConfigurationContainerExtension
+public class PlatformConfigurationContainerExtension extends AbstractConfigurationContainerExtension implements IPlatformConfigurationContainerExtension
 {
 	protected NamedDomainObjectContainer<IVariantConfigurationContainerExtension> productFlavors
 
@@ -16,7 +16,7 @@ public class VariantsConfigurationContainerExtension extends ConfigurationContai
 
 	protected List<String> flavorDimensions
 
-	public VariantsConfigurationContainerExtension( String name , Project project , Platform platform )
+	public PlatformConfigurationContainerExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 

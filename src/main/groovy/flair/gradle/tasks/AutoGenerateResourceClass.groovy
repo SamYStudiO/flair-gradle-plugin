@@ -1,7 +1,5 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.PropertyManager
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.tooling.GradleConnector
 import org.gradle.tooling.ProjectConnection
@@ -15,7 +13,7 @@ import static java.nio.file.StandardWatchEventKinds.*
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AutoGenerateResourceClass extends DefaultTask
+public class AutoGenerateResourceClass extends AbstractFlairTask
 {
 	private WatchService watcher
 
@@ -38,7 +36,7 @@ public class AutoGenerateResourceClass extends DefaultTask
 	{
 		runGenerateResourceClassTask( )
 
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 
 		watcher = FileSystems.getDefault( ).newWatchService( )
 		keys = new HashMap<WatchKey , Path>( )

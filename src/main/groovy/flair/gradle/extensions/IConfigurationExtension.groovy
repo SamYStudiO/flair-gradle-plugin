@@ -14,6 +14,8 @@ interface IConfigurationExtension
 
 	public Platform getPlatform()
 
+	public IPlatformExtensionManager getExtensionManager()
+
 	public Object getProp( String property )
 
 	public Object getProp( String property , boolean returnDefaultIfNull )

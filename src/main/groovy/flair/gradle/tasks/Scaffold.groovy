@@ -1,14 +1,12 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.PropertyManager
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Scaffold extends DefaultTask
+public class Scaffold extends AbstractFlairTask
 {
 	public Scaffold()
 	{
@@ -19,9 +17,9 @@ public class Scaffold extends DefaultTask
 	@TaskAction
 	public void generateProject()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-		String packageName = PropertyManager.getProperty( project , "packageName" )
-		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , null )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		String packageName = extensionManager.getFlairProperty( "packageName" )
+		String appName = extensionManager.getFlairProperty( "appDescriptor" , "appName" )
 
 		if( !packageName ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 		if( project.file( moduleName ).exists( ) ) throw new Exception( "Scaffold already done." )

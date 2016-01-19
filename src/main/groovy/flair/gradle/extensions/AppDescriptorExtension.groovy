@@ -36,11 +36,11 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 	@Override
 	public Object getProp( String property , boolean returnDefaultIfNull )
 	{
-		if( this[ property ] != null || !returnDefaultIfNull ) return this[ property ] else
+		if( this[ property ] || !returnDefaultIfNull ) return this[ property ] else
 		{
 			switch( property )
 			{
-				case "id": return PropertyManager.getProperty( project , "packageName" )
+				case "id": return extensionManager.getFlairProperty( "packageName" )
 				case "idSuffix": return ""
 				case "appName": return project.name
 				case "appNameSuffix": return ""

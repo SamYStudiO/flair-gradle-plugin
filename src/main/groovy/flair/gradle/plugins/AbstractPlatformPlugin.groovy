@@ -1,13 +1,13 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.VariantsConfigurationContainerExtension
+import flair.gradle.extensions.PlatformConfigurationContainerExtension
 import flair.gradle.tasks.Group
 import flair.gradle.tasks.IVariantTask
-import flair.gradle.tasks.Task
 import flair.gradle.tasks.variantFactories.*
 import flair.gradle.variants.Platform
-import flair.gradle.variants.VariantManager
+import flair.gradle.variants.Variant
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
 
 /**
@@ -58,17 +58,18 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 
 		variantFactories.each {
 
-			VariantManager.getVariants( project , platform ).each { variant -> it.create( project , variant ) }
+			List<Variant> list = flairExtension.getAllVariants( platform )
+			if( list.size( ) ) list.each { variant -> it.create( project , variant ) } else it.create( project , new Variant( project , platform ) )
 		}
 
-		project.tasks.getByName( Task.ASSEMBLE.name ).dependsOn( getVariantTaskNames( Group.ASSEMBLE ) )
-		project.tasks.getByName( Task.COMPILE.name ).dependsOn( getVariantTaskNames( Group.COMPILE ) )
+		//project.tasks.getByName( Task.ASSEMBLE.name ).dependsOn( getVariantTaskNames( Group.ASSEMBLE ) )
+		//project.tasks.getByName( Task.COMPILE.name ).dependsOn( getVariantTaskNames( Group.COMPILE ) )
 	}
 
 	@Override
 	public void addExtensions()
 	{
-		addConfigurationExtension( platform.name.toLowerCase( ) , platform , VariantsConfigurationContainerExtension , flairExtension as ExtensionAware )
+		addConfigurationExtension( platform.name.toLowerCase( ) , platform , PlatformConfigurationContainerExtension , flairExtension as ExtensionAware )
 	}
 
 	protected void addVariantFactories()
@@ -84,14 +85,14 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 	{
 		List<String> list = new ArrayList<String>( )
 
-		project.tasks.findAll { task -> task.group == group.name } each { list.add( it.name ) }
+		project.tasks.findAll { task -> task.name.startsWith( group.name ) && task.name != group.name } each { list.add( it.name ) }
 
 		return list
 	}
 
 	private void removeVariantTasks()
 	{
-		Iterator<org.gradle.api.Task> iterator = project.tasks.findAll {
+		Iterator<Task> iterator = project.tasks.findAll {
 			it instanceof IVariantTask && ( it as IVariantTask ).variant.platform == platform
 		}.iterator( )
 

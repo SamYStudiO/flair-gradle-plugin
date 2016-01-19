@@ -1,9 +1,8 @@
 package flair.gradle.tasks
 
 import flair.gradle.extensions.ConfigurationExtension
-import flair.gradle.extensions.PropertyManager
-import flair.gradle.variants.Platform
 import flair.gradle.utils.AIRSDKManager
+import flair.gradle.variants.Platform
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -21,15 +20,15 @@ public class UpdateProperties extends AbstractVariantTask
 	@TaskAction
 	public void updateProperties()
 	{
-		//String packageName = PropertyManager.getProperty( project , "packageName" )
+		//String packageName = PropertyManager.getFlairProperty( project , "packageName" )
 
 		//if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
-		String version = PropertyManager.getProperty( project , ConfigurationExtension.APP_DESCRIPTOR.name , "version" , platform , productFlavor , buildType )
+		String version = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 
 		String[] a = version.split( "\\." )
 
@@ -45,9 +44,9 @@ public class UpdateProperties extends AbstractVariantTask
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
 		}
 
-		String iosExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.IOS )
-		String androidExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.ANDROID )
-		String desktopExcludeResources = PropertyManager.getProperty( project , "excludeResources" , Platform.DESKTOP )
+		String iosExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.IOS )
+		String androidExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.ANDROID )
+		String desktopExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.DESKTOP )
 
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )
@@ -131,12 +130,12 @@ public class UpdateProperties extends AbstractVariantTask
 	private void updatePropertiesFromFile( File f , String version )
 	{
 		String sdkVersion = AIRSDKManager.getVersion( project )
-		String appId = PropertyManager.getProperty( project , "appDescriptor" , "id" , platform , productFlavor , buildType )
-		String appName = PropertyManager.getProperty( project , "appDescriptor" , "appName" , platform , productFlavor , buildType )
-		String appFullScreen = PropertyManager.getProperty( project , "appDescriptor" , "fullScreen" , platform , productFlavor , buildType )
-		String appAspectRatio = PropertyManager.getProperty( project , "appDescriptor" , "aspectRatio" , platform , productFlavor , buildType )
-		String appAutoOrient = PropertyManager.getProperty( project , "appDescriptor" , "autoOrient" , platform , productFlavor , buildType )
-		String appDepthAndStencil = PropertyManager.getProperty( project , "appDescriptor" , "depthAndStencil" , platform , productFlavor , buildType )
+		String appId = extensionManager.getFlairProperty( "appDescriptor" , "id" , variant )
+		String appName = extensionManager.getFlairProperty( "appDescriptor" , "appName" , variant )
+		String appFullScreen = extensionManager.getFlairProperty( "appDescriptor" , "fullScreen" , variant )
+		String appAspectRatio = extensionManager.getFlairProperty( "appDescriptor" , "aspectRatio" , variant )
+		String appAutoOrient = extensionManager.getFlairProperty( "appDescriptor" , "autoOrient" , variant )
+		String appDepthAndStencil = extensionManager.getFlairProperty( "appDescriptor" , "depthAndStencil" , variant )
 		String appContent = f.getText( )
 		String supportedLocales = getSupportedLocales( )
 		boolean desktop = f.getText( ).indexOf( "<android>" ) < 0 && f.getText( ).indexOf( "<iPhone>" ) < 0
@@ -168,7 +167,7 @@ public class UpdateProperties extends AbstractVariantTask
 
 	private String getSupportedLocales()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/resources/" ) {
 			include "**/*.xml"
@@ -190,7 +189,7 @@ public class UpdateProperties extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = PropertyManager.getProperty( project , "appDescriptor" , "defaultSupportedLanguages" , platform , productFlavor , buildType )
+		String defaultLocale = extensionManager.getFlairProperty( "appDescriptor" , "defaultSupportedLanguages" , variant )
 		if( !defaultLocale.isEmpty( ) && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

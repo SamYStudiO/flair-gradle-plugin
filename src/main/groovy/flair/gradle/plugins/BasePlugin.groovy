@@ -4,7 +4,6 @@ import flair.gradle.extensions.FlairExtension
 import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.VariantStructure
-import flair.gradle.tasks.Group
 import flair.gradle.tasks.Task
 
 /**
@@ -24,9 +23,9 @@ class BasePlugin extends AbstractStructurePlugin
 	@Override
 	protected void addTasks()
 	{
-		addTask( Task.ASSEMBLE.name , Group.BUILD )
-		addTask( Task.COMPILE.name , Group.BUILD )
 		addTask( Task.CLEAN.name , Task.CLEAN.type )
+		//addTask( Task.ASSEMBLE.name , Group.BUILD )
+		//addTask( Task.COMPILE.name , Group.BUILD )
 
 		org.gradle.api.plugins.PluginManager
 	}
@@ -34,6 +33,7 @@ class BasePlugin extends AbstractStructurePlugin
 	@Override
 	protected void addExtensions()
 	{
+		println( "hello" )
 		addConfigurationExtension( FlairExtension.NAME , null , FlairExtension )
 	}
 }

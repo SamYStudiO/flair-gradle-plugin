@@ -1,14 +1,12 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.PropertyManager
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class GenerateFontClass extends DefaultTask
+class GenerateFontClass extends AbstractFlairTask
 {
 	public GenerateFontClass()
 	{
@@ -19,7 +17,7 @@ class GenerateFontClass extends DefaultTask
 	@TaskAction
 	public void generateFontClass()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/fonts" )
 

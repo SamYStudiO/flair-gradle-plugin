@@ -20,7 +20,7 @@ public class ADLExtension extends AbstractConfigurationExtension implements ICon
 	@Override
 	public Object getProp( String property , boolean returnDefaultIfNull )
 	{
-		if( this[ property ] != null || !returnDefaultIfNull ) return this[ property ] else
+		if( this[ property ] || !returnDefaultIfNull ) return this[ property ] else
 		{
 			switch( property )
 			{

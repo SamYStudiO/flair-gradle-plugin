@@ -10,7 +10,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class ConfigurationContainerExtension extends AbstractConfigurationExtension implements IConfigurationContainerExtension
+public abstract class AbstractConfigurationContainerExtension extends AbstractConfigurationExtension implements IConfigurationContainerExtension
 {
 	protected AppDescriptorExtension appDescriptor
 
@@ -18,7 +18,7 @@ public class ConfigurationContainerExtension extends AbstractConfigurationExtens
 
 	public List<String> excludeResources
 
-	public ConfigurationContainerExtension( String name , Project project , Platform platform )
+	public AbstractConfigurationContainerExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 
@@ -57,7 +57,7 @@ public class ConfigurationContainerExtension extends AbstractConfigurationExtens
 	@Override
 	public Object getProp( String property , boolean returnDefaultIfNull )
 	{
-		if( this[ property ] != null || !returnDefaultIfNull ) return this[ property ] else
+		if( this[ property ] || !returnDefaultIfNull ) return this[ property ] else
 		{
 			switch( property )
 			{
@@ -66,13 +66,12 @@ public class ConfigurationContainerExtension extends AbstractConfigurationExtens
 					Platform p = platform
 
 					if( p == null ) p = detectDefaultPlatform( )
-					if( p == null ) return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 
 					switch( p )
 					{
-						case p.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case p.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case p.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
 
 						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 					}

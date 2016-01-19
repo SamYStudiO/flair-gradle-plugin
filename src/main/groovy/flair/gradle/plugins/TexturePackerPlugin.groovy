@@ -28,13 +28,12 @@ class TexturePackerPlugin extends AbstractStructurePlugin
 	@Override
 	public void addExtensions()
 	{
-		addExtension( TexturePackerExtension.NAME , TexturePackerExtension , flair as ExtensionAware )
+		addExtension( TexturePackerExtension.NAME , TexturePackerExtension , flairExtension as ExtensionAware )
 	}
 
 	@Override
 	protected void addStructures()
 	{
-		super.addStructures( )
 		addStructure( new AtlasesStructure( ) )
 	}
 }

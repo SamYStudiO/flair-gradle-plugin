@@ -27,8 +27,6 @@ class MXMLC implements ICli
 		this.buildType = buildType ?: ""
 		this.arguments = new ArrayList<String>( )
 
-		println( ">>>>>>>>>>>>>>>>>>>>>" + project.flair.android.buildTypes )
-
 		arguments.add( "-source-path+=" + project.projectDir.absolutePath + "/" + project.flair.moduleName.toString( ) + "/src/main/actionscript" )
 		arguments.add( "-source-path+=" + project.projectDir.absolutePath + "/" + project.flair.moduleName.toString( ) + "/src/main/fonts" )
 		arguments.add( "-source-path+=" + project.projectDir.absolutePath + "/" + project.flair.moduleName.toString( ) + "/src/main/generated" )

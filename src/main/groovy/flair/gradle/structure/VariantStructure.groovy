@@ -1,7 +1,6 @@
 package flair.gradle.structure
 
-import flair.gradle.extensions.PropertyManager
-import flair.gradle.variants.VariantManager
+import flair.gradle.extensions.IPlatformExtensionManager
 import org.gradle.api.Project
 
 /**
@@ -12,16 +11,18 @@ public class VariantStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		boolean autoGenerateVariantDirectories = PropertyManager.getProperty( project , "autoGenerateVariantDirectories" )
+		IPlatformExtensionManager extensionManager = project.flair as IPlatformExtensionManager
+
+		boolean autoGenerateVariantDirectories = extensionManager.getFlairProperty( "autoGenerateVariantDirectories" )
 
 		if( !autoGenerateVariantDirectories ) return
 
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
 
 		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( ) }
 
-		VariantManager.getProductFlavors( project ).each { project.file( "${ moduleName }/src/${ it }" ).mkdirs( ) }
-		VariantManager.getBuildTypes( project ).each { project.file( "${ moduleName }/src/${ it }" ).mkdirs( ) }
+		extensionManager.allProductFlavors.each { project.file( "${ moduleName }/src/${ it.name }" ).mkdirs( ) }
+		extensionManager.allBuildTypes.each { project.file( "${ moduleName }/src/${ it.name }" ).mkdirs( ) }
 	}
 }
 

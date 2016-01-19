@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.IConfigurationExtension
-import flair.gradle.extensions.IVariantConfigurationContainerExtension
+import flair.gradle.extensions.IPlatformExtensionManager
 import flair.gradle.tasks.Group
 import flair.gradle.variants.Platform
 import org.gradle.api.Project
@@ -75,9 +75,9 @@ public abstract class AbstractPlugin implements IPlugin
 		return extension ?: parent.extensions.create( name , type , name , project , platform ) as ExtensionAware
 	}
 
-	protected IVariantConfigurationContainerExtension getFlairExtension()
+	protected IPlatformExtensionManager getFlairExtension()
 	{
-		return project.flair as IVariantConfigurationContainerExtension
+		return project.flair as IPlatformExtensionManager
 	}
 
 	protected abstract void addTasks()

@@ -5,7 +5,7 @@ import flair.gradle.variants.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IPlatformVariantConfigurationContainerExtension extends IVariantsConfigurationContainerExtension
+interface IPlatformVariantConfigurationContainerExtension extends IPlatformConfigurationContainerExtension
 {
-	public IVariantsConfigurationContainerExtension getPlatformContainer( Platform platform )
+	public IPlatformConfigurationContainerExtension getPlatformContainer( Platform platform )
 }

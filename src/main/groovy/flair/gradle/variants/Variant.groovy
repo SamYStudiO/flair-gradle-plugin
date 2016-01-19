@@ -16,6 +16,11 @@ public final class Variant
 
 	protected String buildType
 
+	public Variant( Project project , Platform platform )
+	{
+		this( project , platform , ( String ) null )
+	}
+
 	public Variant( Project project , Platform platform , String flavor )
 	{
 		this( project , platform , flavor , null )

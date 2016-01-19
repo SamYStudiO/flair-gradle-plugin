@@ -1,16 +1,14 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.PropertyManager
 import flair.gradle.utils.AIRSDKManager
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class PublishAtlases extends DefaultTask
+class PublishAtlases extends AbstractFlairTask
 {
 	public PublishAtlases()
 	{
@@ -21,8 +19,8 @@ class PublishAtlases extends DefaultTask
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-		boolean generateATFTexturesFromAtlases = project.flair.texturepacker.generateATFTexturesFromAtlases
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		boolean generateATFTexturesFromAtlases = extensionManager.getFlairProperty( "texturepacker" , "generateATFTexturesFromAtlases" )
 
 		String toATF = ""
 		FileTree tree = project.fileTree( "${ moduleName }/src/main/" )

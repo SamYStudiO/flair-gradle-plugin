@@ -5,7 +5,7 @@ import org.gradle.api.NamedDomainObjectContainer
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantsConfigurationContainerExtension extends IConfigurationContainerExtension
+interface IPlatformConfigurationContainerExtension extends IConfigurationContainerExtension
 {
 	public List<String> getFlavorDimensions()
 

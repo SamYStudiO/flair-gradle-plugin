@@ -35,4 +35,9 @@ public abstract class AbstractExtension
 	{
 		return platform
 	}
+
+	public IPlatformExtensionManager getExtensionManager()
+	{
+		return project.flair as IPlatformExtensionManager
+	}
 }

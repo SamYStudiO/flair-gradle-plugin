@@ -1,14 +1,12 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.PropertyManager
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class GenerateResourceClass extends DefaultTask
+public class GenerateResourceClass extends AbstractFlairTask
 {
 	public GenerateResourceClass()
 	{
@@ -19,8 +17,8 @@ public class GenerateResourceClass extends DefaultTask
 	@TaskAction
 	public void generateResourceClass()
 	{
-		String moduleName = PropertyManager.getProperty( project , "moduleName" )
-		String packageName = PropertyManager.getProperty( project , "packageName" )
+		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		String packageName = extensionManager.getFlairProperty( "packageName" )
 
 		if( !packageName ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 

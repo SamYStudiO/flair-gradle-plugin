@@ -1,12 +1,11 @@
 package flair.gradle.tasks
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 /**
-* @author SamYStudiO ( contact@samystudio.net )
-*/
-public class Clean extends DefaultTask
+ * @author SamYStudiO ( contact@samystudio.net )
+ */
+public class Clean extends AbstractFlairTask
 {
 	public Clean()
 	{
