@@ -41,14 +41,14 @@ public abstract class AbstractStructurePlugin extends AbstractPlugin implements 
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).getPath( ) )
-			into project.getRootDir( )
+			into System.getProperty( "java.io.tmpdir" )
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"
 		}
 
 		structureFactories.each {
-			it.create( project , project.file( "scaffold" ) )
+			it.create( project , project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold" ) )
 		}
 
 		project.file( "scaffold" ).deleteDir( )

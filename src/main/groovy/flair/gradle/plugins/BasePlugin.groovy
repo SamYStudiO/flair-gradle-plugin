@@ -33,7 +33,18 @@ class BasePlugin extends AbstractStructurePlugin
 	@Override
 	protected void addExtensions()
 	{
-		println( "hello" )
 		addConfigurationExtension( FlairExtension.NAME , null , FlairExtension )
+
+		/*String moduleName = flairExtension.getFlairProperty( "moduleName" )
+
+
+		flairExtension.watcher.watch( project.file( moduleName ) ) {
+
+			println( "change" )
+
+			Node node = new XmlParser( ).parse( project.file( "${ moduleName }/app.iml" ) )
+
+			project.file( "${ project.buildDir }/${ node.component.@active }" ).createNewFile( )
+		}*/
 	}
 }

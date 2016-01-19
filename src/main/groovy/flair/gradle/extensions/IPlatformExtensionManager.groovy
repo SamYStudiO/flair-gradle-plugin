@@ -9,6 +9,8 @@ import org.gradle.api.NamedDomainObjectContainer
  */
 interface IPlatformExtensionManager
 {
+	public Watcher getWatcher()
+
 	public NamedDomainObjectContainer<IVariantConfigurationContainerExtension> getAllProductFlavors()
 
 	public NamedDomainObjectContainer<IVariantConfigurationContainerExtension> getAllBuildTypes()

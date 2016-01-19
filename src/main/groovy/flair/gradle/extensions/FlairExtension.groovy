@@ -13,6 +13,8 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 {
 	public static final NAME = "flair"
 
+	protected Watcher watcher
+
 	public String moduleName
 
 	public String packageName
@@ -22,6 +24,15 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 	public FlairExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
+
+		watcher = new Watcher( project.rootDir )
+		Thread t = new Thread( watcher )
+		t.start( )
+	}
+
+	public Watcher getWatcher()
+	{
+		return watcher
 	}
 
 	@Override
