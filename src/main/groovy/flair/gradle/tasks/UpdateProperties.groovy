@@ -1,14 +1,9 @@
 package flair.gradle.tasks
 
-import flair.gradle.dependencies.AirSdk
-import flair.gradle.dependencies.AirSdk
-import flair.gradle.extensions.ConfigurationExtension
+import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.ConfigurationExtension
 import flair.gradle.variants.Platform
-import flair.gradle.variants.Platform
 import org.gradle.api.file.FileTree
-import org.gradle.api.file.FileTree
-import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -61,7 +56,7 @@ public class UpdateProperties extends AbstractVariantTask
 
 		imlContent.eachLine { line ->
 
-			if( line.indexOf( "air_sdk_" ) >= 0 ) out += line.replaceAll( /air_sdk_\d{2}\.\d/ , new AirSdk( project ).path.split( "/" ).last( ) ) + System.lineSeparator( ) else if( line.indexOf( "configuration" ) >= 0 )
+			if( line.indexOf( "air_sdk_" ) >= 0 ) out += line.replaceAll( /air_sdk_\d{2}\.\d/ , new Sdk( project ).path.split( "/" ).last( ) ) + System.lineSeparator( ) else if( line.indexOf( "configuration" ) >= 0 )
 			{
 				if( line.indexOf( "android" ) >= 0 )
 				{
@@ -134,7 +129,7 @@ public class UpdateProperties extends AbstractVariantTask
 
 	private void updatePropertiesFromFile( File f , String version )
 	{
-		String sdkVersion = new AirSdk( project ).version
+		String sdkVersion = new Sdk( project ).version
 		String appId = extensionManager.getFlairProperty( "appDescriptor" , "id" , variant )
 		String appName = extensionManager.getFlairProperty( "appDescriptor" , "appName" , variant )
 		String appFullScreen = extensionManager.getFlairProperty( "appDescriptor" , "fullScreen" , variant )

@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.dependencies.AirSdk
+import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.ConfigurationExtension
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
@@ -200,7 +200,7 @@ public class Assemble extends AbstractVariantTask
 		if( !app.exists( ) ) return
 
 		String appContent = app.getText( )
-		String sdkVersion = new AirSdk( project ).version
+		String sdkVersion = new Sdk( project ).version
 		String appId = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "id" , variant )
 		String appName = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "appName" , variant )
 		String appVersion = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant )

@@ -7,7 +7,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AirSdk
+public class Sdk
 {
 	private Project project
 
@@ -15,6 +15,10 @@ public class AirSdk
 
 	public String getPath()
 	{
+		if( path ) return path
+
+		path = System.getenv( "FLEX_HOME" )
+
 		if( path ) return path
 
 		path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
@@ -27,34 +31,38 @@ public class AirSdk
 		this.path = path
 	}
 
-	public AirSdk( String path )
+	public Sdk()
+	{
+	}
+
+	public Sdk( String path )
 	{
 		this.path = path
 	}
 
-	public AirSdk( Project project )
+	public Sdk( Project project )
 	{
 		this.project = project
 	}
 
-	public Boolean isValidSdk()
+	public Boolean isValid()
 	{
 		return isAirSdk( ) || isFlexSdk( )
 	}
 
 	public Boolean isAirSdk()
 	{
-		return new File( "${ path }/air-sdk-description.xml" ).exists( )
+		return new File( "${ getPath( ) }/air-sdk-description.xml" ).exists( )
 	}
 
 	public Boolean isFlexSdk()
 	{
-		return new File( "${ path }/flex-sdk-description.xml" ).exists( )
+		return new File( "${ getPath( ) }/flex-sdk-description.xml" ).exists( )
 	}
 
 	public String getVersion()
 	{
-		File description = new File( "${ path }/air-sdk-description.xml" )
+		File description = new File( "${ getPath( ) }/air-sdk-description.xml" )
 
 		return new XmlParser( ).parseText( description.getText( ) ).version.text( ).substring( 0 , 4 )
 	}
@@ -63,27 +71,27 @@ public class AirSdk
 	{
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "amxmlc.bat" : "amxmlc"
 
-		return path + "/bin/" + executable
+		return getPath( ) + "/bin/" + executable
 	}
 
 	public String getAdtPath()
 	{
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "adt.bat" : "adt"
 
-		return path + "/bin/" + executable
+		return getPath( ) + "/bin/" + executable
 	}
 
 	public String getAdlPath()
 	{
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "adl.exe" : "adl"
 
-		return path + "/bin/" + executable
+		return getPath( ) + "/bin/" + executable
 	}
 
 	public String getAsdocPath()
 	{
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "aasdoc.bat" : "aasdoc"
 
-		return path + "/bin/" + executable
+		return getPath( ) + "/bin/" + executable
 	}
 }

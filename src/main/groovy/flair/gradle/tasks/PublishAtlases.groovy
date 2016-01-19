@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.dependencies.AirSdk
+import flair.gradle.dependencies.Sdk
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -45,7 +45,7 @@ class PublishAtlases extends AbstractFlairTask
 
 		if( generateATFTexturesFromAtlases )
 		{
-			String png2atf = "${ new AirSdk( project ).path }/atftools/png2atf"
+			String png2atf = "${ new Sdk( project ).path }/atftools/png2atf"
 
 			tree = project.fileTree( "${ moduleName }/src/main/resources" ) {
 				include "drawable*/**/*.png"

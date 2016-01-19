@@ -1,6 +1,6 @@
 package flair.gradle.cli
 
-import flair.gradle.dependencies.AirSdk
+import flair.gradle.dependencies.Sdk
 import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
@@ -43,7 +43,7 @@ class MXMLC implements ICli
 	@Override
 	public String getExecutable()
 	{
-		return new AirSdk( project ).getMxmlcPath(  )
+		return new Sdk( project ).getMxmlcPath(  )
 	}
 
 	@Override
