@@ -122,7 +122,7 @@ public class Assemble extends AbstractVariantTask
 
 			from "${ srcRoot }/${ variant.buildType }/splashs"
 
-			into "${ project.buildDir }/${ variant.name }/"
+			into "${ project.buildDir }/${ variant.name }/splashs"
 		}
 
 		project.copy {
