@@ -17,7 +17,7 @@ package _packageName_.view.otherScreen
 		/**
 		 *
 		 */
-		protected var _button : Button;
+		private var _button : Button;
 
 		/**
 		 *

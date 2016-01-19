@@ -1,6 +1,6 @@
 package _packageName_.view.home
 {
-	import _packageName.view.EnumScreen;
+	import _packageName_.view.EnumScreen;
 
 	import feathers.controls.Button;
 	import feathers.controls.Screen;
@@ -19,7 +19,7 @@ package _packageName_.view.home
 		/**
 		 *
 		 */
-		protected var _button : Button;
+		private var _button : Button;
 
 		/**
 		 *
