@@ -59,6 +59,7 @@ public final class Variant
 	public enum NamingType
 	{
 		CAPITALIZE( null ) ,
+		CAPITALIZE_BUT_FIRST( null ) ,
 		UNDERSCORE( '_' ) ,
 		HYPHEN( '-' ) ,
 		SPACE( ' ' )
@@ -83,11 +84,14 @@ public final class Variant
 		switch( type )
 		{
 			case NamingType.CAPITALIZE:
+			case NamingType.CAPITALIZE_BUT_FIRST:
 
 				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.capitalize( )
 				productFlavors.each { flavor -> name += flavor.capitalize( ) }
 
 				if( buildType ) name += buildType.capitalize( )
+
+				if( type == NamingType.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
 
 				return name
 
