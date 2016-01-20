@@ -39,6 +39,8 @@ public class Idea implements Ide
 	public void refresh()
 	{
 		String moduleName = ( project.flair as IPlatformExtensionManager ).getFlairProperty( "moduleName" )
+
+		if( !project.rootProject.file( ".idea/modules.xml" ).exists(  ) ) return
 		Node node = new XmlParser( ).parse( project.rootProject.file( ".idea/modules.xml" ) )
 
 		if( !node.'**'.module.find { it.@'fileurl'.contains( "${ moduleName }.iml" ) } )
