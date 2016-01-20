@@ -48,12 +48,58 @@ public final class Variant
 	{
 		String name = ""
 
-		if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.capitalize( )
-		productFlavors.each { flavor -> name += flavor.capitalize( ) }
+		if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name
+		productFlavors.each { flavor -> name += flavor }
 
-		if( buildType ) name += buildType.capitalize( )
+		if( buildType ) name += buildType
 
 		return name
+	}
+
+	public enum NamingType
+	{
+		CAPITALIZE( null ) ,
+		UNDERSCORE( '_' ) ,
+		HYPHEN( '-' ) ,
+		SPACE( ' ' )
+
+		private Character c
+
+		public NamingType( Character c )
+		{
+			this.c = c
+		}
+
+		public Character getC()
+		{
+			return c
+		}
+	}
+
+	public String getNameWithType( NamingType type )
+	{
+		String name = ""
+
+		switch( type )
+		{
+			case NamingType.CAPITALIZE:
+
+				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.capitalize( )
+				productFlavors.each { flavor -> name += flavor.capitalize( ) }
+
+				if( buildType ) name += buildType.capitalize( )
+
+				return name
+
+			default:
+
+				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name + type.c
+				productFlavors.each { flavor -> name += flavor + type.c }
+
+				if( buildType ) name += buildType.capitalize( ) else name.substring( 0 , name.size( ) - 1 )
+
+				return name
+		}
 	}
 
 	public Platform getPlatform()
