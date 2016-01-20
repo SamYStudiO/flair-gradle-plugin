@@ -54,10 +54,11 @@ class GenerateFontClass implements IWatcherExecutable
 			}
 		}
 
-		if( fontsClassContent != "" )
+		File f = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
+		String content = f.getText( )
+
+		if( fontsClassContent != "" || content.indexOf( "Embed" ) > 0 )
 		{
-			File f = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
-			String content = f.getText( )
 			content = content.replaceAll( /class Fonts(\s|.)*function Fonts/ , String.format( "class Fonts%n\t{\t\t" + fontsClassContent + "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts" ) )
 			f.write( content )
 		}
