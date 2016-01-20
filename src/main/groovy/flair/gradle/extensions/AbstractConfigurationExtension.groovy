@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -8,7 +8,7 @@ import org.gradle.api.Project
  */
 public abstract class AbstractConfigurationExtension extends AbstractExtension implements IConfigurationExtension
 {
-	public AbstractConfigurationExtension( String name , Project project , Platform platform )
+	public AbstractConfigurationExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
 	}

@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ public class AdlExtension extends AbstractConfigurationExtension implements ICon
 
 	public int XscreenDPI
 
-	public AdlExtension( String name , Project project , Platform platform )
+	public AdlExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
 	}

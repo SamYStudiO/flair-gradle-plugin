@@ -3,7 +3,7 @@ package flair.gradle.variants
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Platform {
+public enum Platforms {
 
 	IOS( "Ios" ) ,
 	ANDROID( "Android" ) ,
@@ -11,7 +11,7 @@ public enum Platform {
 
 	private String name
 
-	Platform( String name )
+	Platforms( String name )
 	{
 		this.name = name
 	}

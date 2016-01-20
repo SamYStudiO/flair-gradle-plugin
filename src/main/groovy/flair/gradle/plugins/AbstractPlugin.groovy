@@ -2,8 +2,8 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.IConfigurationExtension
 import flair.gradle.extensions.IPlatformExtensionManager
-import flair.gradle.tasks.Group
-import flair.gradle.variants.Platform
+import flair.gradle.tasks.Groups
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
@@ -36,7 +36,7 @@ public abstract class AbstractPlugin implements IPlugin
 	}
 
 	@Override
-	public final Task addTask( String name , Group group )
+	public final Task addTask( String name , Groups group )
 	{
 		Task task = project.tasks.findByName( name )
 
@@ -62,14 +62,14 @@ public abstract class AbstractPlugin implements IPlugin
 	}
 
 	@Override
-	public final ExtensionAware addConfigurationExtension( String name , Platform platform , Class<IConfigurationExtension> type )
+	public final ExtensionAware addConfigurationExtension( String name , Platforms platform , Class<IConfigurationExtension> type )
 	{
 		addConfigurationExtension( name , platform , type , project )
 	}
 
 	@Override
 	public
-	final ExtensionAware addConfigurationExtension( String name , Platform platform , Class<IConfigurationExtension> type , ExtensionAware parent )
+	final ExtensionAware addConfigurationExtension( String name , Platforms platform , Class<IConfigurationExtension> type , ExtensionAware parent )
 	{
 		ExtensionAware extension = parent.extensions.findByName( name ) as ExtensionAware
 

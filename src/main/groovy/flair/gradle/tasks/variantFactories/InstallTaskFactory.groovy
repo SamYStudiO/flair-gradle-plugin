@@ -1,6 +1,6 @@
 package flair.gradle.tasks.variantFactories
 
-import flair.gradle.tasks.Group
+import flair.gradle.tasks.Groups
 import flair.gradle.tasks.Install
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
@@ -18,9 +18,9 @@ public class InstallTaskFactory implements IVariantTaskFactory<Install>
 
 		if( !t ) t = project.tasks.create( name , Install )
 
-		t.group = Group.INSTALL.name
+		t.group = Groups.INSTALL.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Group.PACKAGE.name + variant.name ).name
+		t.dependsOn project.tasks.getByName( Groups.PACKAGE.name + variant.name ).name
 
 		return t
 	}

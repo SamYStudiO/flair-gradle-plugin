@@ -9,7 +9,7 @@ class Packaging extends AbstractVariantTask
 {
 	public Packaging()
 	{
-		group = Group.PACKAGE.name
+		group = Groups.PACKAGE.name
 		description = ""
 	}
 

@@ -3,14 +3,14 @@ package flair.gradle.extensions
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum ConfigurationExtension {
+public enum ConfigurationExtensions {
 
 	ADL( "adl" ) ,
 	APP_DESCRIPTOR( "appDescriptor" )
 
 	private String name
 
-	ConfigurationExtension( String name )
+	ConfigurationExtensions( String name )
 	{
 		this.name = name
 	}

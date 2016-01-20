@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -28,7 +28,7 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 
 	public String defaultSupportedLanguages
 
-	public AppDescriptorExtension( String name , Project project , Platform platform )
+	public AppDescriptorExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
 	}

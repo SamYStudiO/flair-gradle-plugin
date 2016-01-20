@@ -9,7 +9,7 @@ class Install extends AbstractVariantTask
 {
 	public Install()
 	{
-		group = Group.INSTALL.name
+		group = Groups.INSTALL.name
 		description = ""
 	}
 

@@ -9,7 +9,7 @@ public class Clean extends AbstractFlairTask
 {
 	public Clean()
 	{
-		group = Group.BUILD.name
+		group = Groups.BUILD.name
 		description = ""
 	}
 

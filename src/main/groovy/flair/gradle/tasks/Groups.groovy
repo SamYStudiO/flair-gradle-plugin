@@ -3,7 +3,7 @@ package flair.gradle.tasks
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Group {
+public enum Groups {
 	BUILD( "build" ) ,
 	ASSEMBLE( "assemble" ) ,
 	COMPILE( "compile" ) ,
@@ -16,7 +16,7 @@ public enum Group {
 
 	private String name
 
-	Group( String name )
+	Groups( String name )
 	{
 		this.name = name
 	}

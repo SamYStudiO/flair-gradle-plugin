@@ -1,8 +1,8 @@
 package flair.gradle.tasks
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.ConfigurationExtension
-import flair.gradle.variants.Platform
+import flair.gradle.extensions.ConfigurationExtensions
+import flair.gradle.variants.Platforms
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -13,7 +13,7 @@ public class UpdateProperties extends AbstractVariantTask
 {
 	public UpdateProperties()
 	{
-		group = Group.SCAFFOLD.name
+		group = Groups.SCAFFOLD.name
 		description = ""
 	}
 
@@ -24,7 +24,7 @@ public class UpdateProperties extends AbstractVariantTask
 
 		//if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
-		String version = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant )
+		String version = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "version" , variant )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
@@ -44,9 +44,9 @@ public class UpdateProperties extends AbstractVariantTask
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
 		}
 
-		String iosExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.IOS )
-		String androidExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.ANDROID )
-		String desktopExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platform.DESKTOP )
+		String iosExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.IOS )
+		String androidExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.ANDROID )
+		String desktopExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.DESKTOP )
 
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )

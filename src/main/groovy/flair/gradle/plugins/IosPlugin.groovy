@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.structure.IosStructure
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -10,7 +10,7 @@ public class IosPlugin extends AbstractPlatformPlugin
 {
 	public IosPlugin()
 	{
-		platform = Platform.IOS
+		platform = Platforms.IOS
 	}
 
 	@Override

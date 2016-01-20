@@ -9,7 +9,7 @@ class Compile extends AbstractVariantTask
 {
 	public Compile()
 	{
-		group = Group.BUILD.name
+		group = Groups.BUILD.name
 		description = ""
 	}
 

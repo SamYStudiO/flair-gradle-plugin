@@ -9,7 +9,7 @@ class LaunchAdl extends AbstractVariantTask
 {
 	public LaunchAdl()
 	{
-		group = Group.LAUNCH.name
+		group = Groups.LAUNCH.name
 		description = ""
 	}
 

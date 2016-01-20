@@ -1,7 +1,7 @@
 package flair.gradle.tasks
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.ConfigurationExtension
+import flair.gradle.extensions.ConfigurationExtensions
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -22,7 +22,7 @@ public class Assemble extends AbstractVariantTask
 
 	public Assemble()
 	{
-		group = Group.BUILD.name
+		group = Groups.BUILD.name
 		description = ""
 
 		//String moduleName = extensionManager.getFlairProperty( "moduleName" )
@@ -201,13 +201,13 @@ public class Assemble extends AbstractVariantTask
 
 		String appContent = app.getText( )
 		String sdkVersion = new Sdk( project ).version
-		String appId = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "id" , variant )
-		String appName = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "appName" , variant )
-		String appVersion = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "version" , variant )
-		String appFullScreen = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "fullScreen" , variant )
-		String appAspectRatio = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "aspectRatio" , variant )
-		String appAutoOrient = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "autoOrient" , variant )
-		String appDepthAndStencil = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "depthAndStencil" , variant )
+		String appId = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "id" , variant )
+		String appName = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "appName" , variant )
+		String appVersion = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "version" , variant )
+		String appFullScreen = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "fullScreen" , variant )
+		String appAspectRatio = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "aspectRatio" , variant )
+		String appAutoOrient = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "autoOrient" , variant )
+		String appDepthAndStencil = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "depthAndStencil" , variant )
 		String supportedLocales = getSupportedLocales( )
 
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
@@ -247,7 +247,7 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( ConfigurationExtension.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , variant )
+		String defaultLocale = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , variant )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

@@ -1,6 +1,6 @@
 package flair.gradle.tasks.variantFactories
 
-import flair.gradle.tasks.Group
+import flair.gradle.tasks.Groups
 import flair.gradle.tasks.PublishAtlases
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
@@ -18,7 +18,7 @@ public class PublishAtlasesTaskFactory implements IVariantTaskFactory<PublishAtl
 
 		if( !t ) t = project.tasks.create( name , PublishAtlases )
 
-		t.group = Group.TEXTURE_PACKER.name
+		t.group = Groups.TEXTURE_PACKER.name
 		t.variant = variant
 
 		return t

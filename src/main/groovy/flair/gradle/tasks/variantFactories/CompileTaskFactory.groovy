@@ -1,7 +1,7 @@
 package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.Compile
-import flair.gradle.tasks.Group
+import flair.gradle.tasks.Groups
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
@@ -18,9 +18,9 @@ public class CompileTaskFactory implements IVariantTaskFactory<Compile>
 
 		if( !t ) t = project.tasks.create( name , Compile )
 
-		t.group = Group.BUILD.name
+		t.group = Groups.BUILD.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Group.ASSEMBLE.name + variant.name ).name
+		t.dependsOn project.tasks.getByName( Groups.ASSEMBLE.name + variant.name ).name
 
 		return t
 	}

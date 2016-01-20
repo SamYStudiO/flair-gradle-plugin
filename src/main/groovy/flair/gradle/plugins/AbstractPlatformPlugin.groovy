@@ -1,9 +1,9 @@
 package flair.gradle.plugins
 
 import flair.gradle.extensions.PlatformConfigurationContainerExtension
-import flair.gradle.tasks.Group
+import flair.gradle.tasks.Groups
 import flair.gradle.tasks.variantFactories.*
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -15,16 +15,16 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 {
 	protected List<IVariantTaskFactory> variantFactories = new ArrayList<IVariantTaskFactory>( )
 
-	protected Platform platform
+	protected Platforms platform
 
 	@Override
-	public Platform getPlatform()
+	public Platforms getPlatform()
 	{
 		return platform
 	}
 
 	@Override
-	public void setPlatform( Platform platform )
+	public void setPlatform( Platforms platform )
 	{
 		this.platform = platform
 	}
@@ -58,8 +58,8 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 			if( list.size( ) ) list.each { variant -> it.create( project , variant ) } else it.create( project , new Variant( project , platform ) )
 		}
 
-		//project.tasks.getByName( Task.ASSEMBLE.name ).dependsOn( getVariantTaskNames( Group.ASSEMBLE ) )
-		//project.tasks.getByName( Task.COMPILE.name ).dependsOn( getVariantTaskNames( Group.COMPILE ) )
+		//project.tasks.getByName( Tasks.ASSEMBLE.name ).dependsOn( getVariantTaskNames( Groups.ASSEMBLE ) )
+		//project.tasks.getByName( Tasks.COMPILE.name ).dependsOn( getVariantTaskNames( Groups.COMPILE ) )
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public abstract class AbstractPlatformPlugin extends AbstractStructurePlugin imp
 		addVariantTaskFactory( new LaunchAdlTaskFactory( ) )
 	}
 
-	private List<String> getVariantTaskNames( Group group )
+	private List<String> getVariantTaskNames( Groups group )
 	{
 		List<String> list = new ArrayList<String>( )
 

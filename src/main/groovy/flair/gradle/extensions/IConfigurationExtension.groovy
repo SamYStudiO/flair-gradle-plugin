@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ interface IConfigurationExtension
 
 	public Project getProject()
 
-	public Platform getPlatform()
+	public Platforms getPlatform()
 
 	public IPlatformExtensionManager getExtensionManager()
 

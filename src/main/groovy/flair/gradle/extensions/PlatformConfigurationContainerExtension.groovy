@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -16,7 +16,7 @@ public class PlatformConfigurationContainerExtension extends AbstractConfigurati
 
 	protected List<String> flavorDimensions
 
-	public PlatformConfigurationContainerExtension( String name , Project project , Platform platform )
+	public PlatformConfigurationContainerExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
 

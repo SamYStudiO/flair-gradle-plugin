@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -18,29 +18,29 @@ public class PluginManager
 		return false
 	}
 
-	public static boolean hasPlatformPlugin( Project project , Platform platform )
+	public static boolean hasPlatformPlugin( Project project , Platforms platform )
 	{
 		boolean hasPlatform = false
 
 		project.plugins.each { plugin ->
 
-			if( plugin instanceof IosPlugin && platform == Platform.IOS ) hasPlatform = true
-			if( plugin instanceof AndroidPlugin && platform == Platform.ANDROID ) hasPlatform = true
-			if( plugin instanceof DesktopPlugin && platform == Platform.DESKTOP ) hasPlatform = true
+			if( plugin instanceof IosPlugin && platform == Platforms.IOS ) hasPlatform = true
+			if( plugin instanceof AndroidPlugin && platform == Platforms.ANDROID ) hasPlatform = true
+			if( plugin instanceof DesktopPlugin && platform == Platforms.DESKTOP ) hasPlatform = true
 		}
 
 		return hasPlatform
 	}
 
-	public static List<Platform> getCurrentPlatforms( Project project )
+	public static List<Platforms> getCurrentPlatforms( Project project )
 	{
-		List<Platform> list = new ArrayList<Platform>( )
+		List<Platforms> list = new ArrayList<Platforms>( )
 
 		project.plugins.each { plugin ->
 
-			if( plugin instanceof IosPlugin && list.indexOf( Platform.IOS ) < 0 ) list.add( Platform.IOS )
-			if( plugin instanceof AndroidPlugin && list.indexOf( Platform.ANDROID ) < 0 ) list.add( Platform.ANDROID )
-			if( plugin instanceof DesktopPlugin && list.indexOf( Platform.DESKTOP ) < 0 ) list.add( Platform.DESKTOP )
+			if( plugin instanceof IosPlugin && list.indexOf( Platforms.IOS ) < 0 ) list.add( Platforms.IOS )
+			if( plugin instanceof AndroidPlugin && list.indexOf( Platforms.ANDROID ) < 0 ) list.add( Platforms.ANDROID )
+			if( plugin instanceof DesktopPlugin && list.indexOf( Platforms.DESKTOP ) < 0 ) list.add( Platforms.DESKTOP )
 		}
 
 		return list

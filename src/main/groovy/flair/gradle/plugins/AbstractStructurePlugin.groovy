@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.structure.IStructure
-import flair.gradle.variants.Platform
+import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
@@ -9,7 +9,7 @@ import org.gradle.api.Project
  */
 public abstract class AbstractStructurePlugin extends AbstractPlugin implements IStructurePlugin
 {
-	protected Platform platform
+	protected Platforms platform
 
 	protected List<IStructure> structureFactories = new ArrayList<IStructure>( )
 

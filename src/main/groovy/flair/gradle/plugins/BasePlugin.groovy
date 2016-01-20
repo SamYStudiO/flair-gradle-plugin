@@ -7,7 +7,7 @@ import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.VariantStructure
 import flair.gradle.tasks.IVariantTask
-import flair.gradle.tasks.Task
+import flair.gradle.tasks.Tasks
 import flair.gradle.watcher.executables.GenerateFontClass
 import flair.gradle.watcher.executables.GenerateRClass
 import org.gradle.api.Project
@@ -25,6 +25,9 @@ class BasePlugin extends AbstractStructurePlugin
 		ides.add( new Idea( project ) )
 
 		super.apply( project )
+
+		project.configurations.create(  )
+		project.dependencies.create(  )
 
 		project.beforeEvaluate {
 			removeVariantTasks( )
@@ -55,9 +58,9 @@ class BasePlugin extends AbstractStructurePlugin
 	@Override
 	protected void addTasks()
 	{
-		addTask( Task.CLEAN.name , Task.CLEAN.type )
-		//addTask( Task.ASSEMBLE.name , Group.BUILD )
-		//addTask( Task.COMPILE.name , Group.BUILD )
+		addTask( Tasks.CLEAN.name , Tasks.CLEAN.type )
+		//addTask( Tasks.ASSEMBLE.name , Groups.BUILD )
+		//addTask( Tasks.COMPILE.name , Groups.BUILD )
 	}
 
 	@Override
