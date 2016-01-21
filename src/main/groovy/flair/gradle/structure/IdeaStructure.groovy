@@ -25,7 +25,7 @@ class IdeaStructure implements IStructure
 			}
 		}
 
-		if( !project.rootProject.file( ".idea/libraries" ).exists( ) )
+		if( !project.rootProject.file( ".idea/libraries/libs_as" ).exists( ) )
 		{
 			project.copy {
 				from "${ source.path }/idea/libraries"
@@ -35,7 +35,7 @@ class IdeaStructure implements IStructure
 
 		project.rootProject.fileTree( ".idea/libraries" ).each { file ->
 
-			file.write( file.getText( ).replace( '${moduleName}' , moduleName ) )
+			if( file.name.indexOf( "libs_" ) == 0 ) file.write( file.getText( ).replace( '${moduleName}' , moduleName ) )
 		}
 
 		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) ) return
