@@ -11,6 +11,8 @@ import org.gradle.api.file.FileTree
  */
 class GenerateRClass implements IWatcherAction
 {
+	public static String template
+
 	@Override
 	public void execute( Project project )
 	{
@@ -19,13 +21,13 @@ class GenerateRClass implements IWatcherAction
 		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 		String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 
-		if( !moduleName || !packageName ) return
+		if( !moduleName || !packageName || !template ) return
 
 		File classFile = project.file( "${ moduleName }/src/main/generated/R.as" )
 
 		if( !classFile.exists( ) ) return
 
-		String classFileContent = classFile.getText( )
+		String classFileContent = template
 		FileTree resources = project.fileTree( "${ moduleName }/src" )
 
 		String bools = ""

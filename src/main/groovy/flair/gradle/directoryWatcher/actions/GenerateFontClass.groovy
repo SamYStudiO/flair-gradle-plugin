@@ -11,6 +11,8 @@ import org.gradle.api.file.FileTree
  */
 class GenerateFontClass implements IWatcherAction
 {
+	public static String template
+
 	@Override
 	public void execute( Project project )
 	{
@@ -18,7 +20,7 @@ class GenerateFontClass implements IWatcherAction
 
 		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 
-		if( !moduleName ) return
+		if( !moduleName || !template ) return
 
 		FileTree tree = project.fileTree( "${ moduleName }/src" )
 
@@ -59,7 +61,7 @@ class GenerateFontClass implements IWatcherAction
 
 		if( !f.exists( ) ) return
 
-		String content = f.getText( )
+		String content = template
 
 		if( fontsClassContent != "" || content.indexOf( "Embed" ) > 0 )
 		{

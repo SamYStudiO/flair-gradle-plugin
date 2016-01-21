@@ -141,6 +141,9 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 			exclude "**/.gitkeep"
 		}
 
+		GenerateFontClass.template = project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold/src/main/generated/Fonts.as" ).getText( )
+		GenerateRClass.template = project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold/src/main/generated/R.as" ).getText( )
+
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
 			{
