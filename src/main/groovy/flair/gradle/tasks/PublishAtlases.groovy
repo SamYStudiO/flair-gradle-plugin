@@ -1,6 +1,8 @@
 package flair.gradle.tasks
 
 import flair.gradle.dependencies.Sdk
+import flair.gradle.extensions.Extensions
+import flair.gradle.extensions.Properties
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -19,8 +21,8 @@ class PublishAtlases extends AbstractVariantTask
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = extensionManager.getFlairProperty( "moduleName" )
-		boolean generateATFTexturesFromAtlases = extensionManager.getFlairProperty( "texturepacker" , "generateATFTexturesFromAtlases" )
+		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		boolean generateATFTexturesFromAtlases = extensionManager.getFlairProperty( Extensions.TEXTURE_PACKER.name , Properties.GENERATE_ATF_TEXTURES_FROM_ATLASES.name )
 
 		List<String> list = new ArrayList<String>( )
 

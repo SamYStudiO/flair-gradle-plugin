@@ -1,9 +1,7 @@
 package flair.gradle.ide
 
-import flair.gradle.extensions.IPlatformExtensionManager
 import flair.gradle.structure.IStructure
 import flair.gradle.structure.IdeaStructure
-import groovy.xml.XmlUtil
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 
@@ -35,21 +33,6 @@ public class Idea implements Ide
 				return name.endsWith( ".iml" )
 			}
 		} ).size( ) > 0
-	}
-
-	public void refresh()
-	{
-		String moduleName = ( project.flair as IPlatformExtensionManager ).getFlairProperty( "moduleName" )
-
-		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) ) return
-		Node node = new XmlParser( ).parse( project.rootProject.file( ".idea/modules.xml" ) )
-
-		if( !node.'**'.module.find { it.@'fileurl'.contains( "${ moduleName }.iml" ) } )
-		{
-			new Node( ( Node ) node.component.modules.first( ) , "module" , [ 'fileurl': "file://\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" , 'filepath': "\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" ] )
-
-			project.rootProject.file( ".idea/modules.xml" ).withWriter { out -> XmlUtil.serialize( node , out ) }
-		}
 	}
 
 	public class SdkInfos implements ISdkInfos
@@ -146,11 +129,11 @@ public class Idea implements Ide
 
 		int index = 0
 		int currentIndex = 0
-		int currentVersion = 0
+		float currentVersion = 0
 
 		list.each {
 
-			int version = Integer.parseInt( ( String ) it.version.replace( "AIR SDK " , "" ) )
+			float version = Float.parseFloat( ( String ) it.version.replace( "AIR SDK " , "" ) )
 
 			if( version > currentVersion )
 			{
@@ -161,6 +144,6 @@ public class Idea implements Ide
 			currentIndex++
 		}
 
-		return list[ index ].children( ).find { it.name( ) == "name" }.@'value' + "|" + list[ index ].homePath.@'value' + "|" + version
+		return list[ index ].children( ).find { it.name( ) == "name" }.@'value' + "|" + list[ index ].homePath.@'value' + "|" + currentVersion
 	}
 }

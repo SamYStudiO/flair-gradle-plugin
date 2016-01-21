@@ -1,6 +1,8 @@
 package flair.gradle.structure
 
-import flair.gradle.extensions.IPlatformExtensionManager
+import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
+import groovy.xml.XmlUtil
 import org.gradle.api.Project
 
 /**
@@ -11,7 +13,7 @@ class IdeaStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IPlatformExtensionManager ).getFlairProperty( "moduleName" )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( Properties.MODULE_NAME.name )
 
 		if( !project.file( "${ moduleName }/${ moduleName }.iml" ).exists( ) )
 		{
@@ -34,6 +36,17 @@ class IdeaStructure implements IStructure
 		project.rootProject.fileTree( ".idea/libraries" ).each { file ->
 
 			file.write( file.getText( ).replace( '${moduleName}' , moduleName ) )
+		}
+
+		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) ) return
+
+		Node node = new XmlParser( ).parse( project.rootProject.file( ".idea/modules.xml" ) )
+
+		if( !node.'**'.module.find { it.@'fileurl'.contains( "${ moduleName }.iml" ) } )
+		{
+			new Node( ( Node ) node.component.modules.first( ) , "module" , [ 'fileurl': "file://\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" , 'filepath': "\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" ] )
+
+			project.rootProject.file( ".idea/modules.xml" ).withWriter { out -> XmlUtil.serialize( node , out ) }
 		}
 	}
 }

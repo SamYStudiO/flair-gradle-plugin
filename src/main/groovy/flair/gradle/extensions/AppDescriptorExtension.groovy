@@ -1,12 +1,11 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class AppDescriptorExtension extends AbstractConfigurationExtension implements IConfigurationExtension
+class AppDescriptorExtension extends AbstractExtension
 {
 	public String id
 
@@ -28,9 +27,9 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 
 	public String defaultSupportedLanguages
 
-	public AppDescriptorExtension( String name , Project project , Platforms platform )
+	public AppDescriptorExtension( String name , Project project )
 	{
-		super( name , project , platform )
+		super( name , project )
 	}
 
 	@Override
@@ -40,16 +39,16 @@ class AppDescriptorExtension extends AbstractConfigurationExtension implements I
 		{
 			switch( property )
 			{
-				case "id": return extensionManager.getFlairProperty( "packageName" )
-				case "idSuffix": return ""
-				case "appName": return project.name
-				case "appNameSuffix": return ""
-				case "version": return "1.0.0"
-				case "fullScreen": return true
-				case "aspectRatio": return "any"
-				case "autoOrient": return true
-				case "depthAndStencil": return false
-				case "defaultSupportedLanguages": return "en"
+				case Properties.APP_ID.name: return extensionManager.getFlairProperty( "packageName" )
+				case Properties.APP_ID_SUFFIX.name: return ""
+				case Properties.APP_NAME.name: return project.name
+				case Properties.APP_NAME_SUFFIX.name: return ""
+				case Properties.APP_VERSION.name: return "1.0.0"
+				case Properties.APP_FULL_SCREEN.name: return true
+				case Properties.APP_ASPECT_RATIO.name: return "any"
+				case Properties.APP_AUTO_ORIENT.name: return true
+				case Properties.APP_DEPTH_AND_STENCIL.name: return false
+				case Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
 
 				default: return null
 			}

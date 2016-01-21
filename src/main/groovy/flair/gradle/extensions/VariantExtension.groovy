@@ -6,11 +6,11 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VariantConfigurationContainerExtension extends AbstractConfigurationContainerExtension implements IVariantConfigurationContainerExtension
+public class VariantExtension extends AbstractPlatformExtension implements IVariantExtension
 {
-	protected String dimension
+	private String dimension
 
-	public VariantConfigurationContainerExtension( String name , Project project , Platforms platform )
+	public VariantExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
 	}

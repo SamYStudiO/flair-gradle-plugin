@@ -5,7 +5,7 @@ import flair.gradle.variants.Variant
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantTask extends IFlairTask
+interface IVariantTask extends ITask
 {
 	public Variant getVariant()
 

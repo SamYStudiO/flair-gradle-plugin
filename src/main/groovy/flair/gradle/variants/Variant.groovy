@@ -8,13 +8,13 @@ import org.gradle.api.Project
  */
 public final class Variant
 {
-	protected Project project
+	private Project project
 
-	protected Platforms platform
+	private Platforms platform
 
-	protected List<String> productFlavors
+	private List<String> productFlavors
 
-	protected String buildType
+	private String buildType
 
 	public Variant( Project project , Platforms platform )
 	{
@@ -58,20 +58,20 @@ public final class Variant
 
 	public enum NamingTypes
 	{
-		CAPITALIZE( null ) ,
-		CAPITALIZE_BUT_FIRST( null ) ,
-		UNDERSCORE( '_' ) ,
-		HYPHEN( '-' ) ,
-		SPACE( ' ' )
+		CAPITALIZE( "" ) ,
+		CAPITALIZE_BUT_FIRST( "" ) ,
+		UNDERSCORE( "_" ) ,
+		HYPHEN( "-" ) ,
+		SPACE( " " )
 
-		private Character c
+		private String c
 
-		public NamingTypes( Character c )
+		public NamingTypes( String c )
 		{
 			this.c = c
 		}
 
-		public Character getC()
+		public String getC()
 		{
 			return c
 		}
@@ -111,13 +111,28 @@ public final class Variant
 		return platform
 	}
 
+	public setPlatform( Platforms platform )
+	{
+		this.platform = platform
+	}
+
 	public List<String> getProductFlavors()
 	{
 		return productFlavors
 	}
 
+	public setProductFlavors( List<String> productFlavors )
+	{
+		this.productFlavors = productFlavors
+	}
+
 	public String getBuildType()
 	{
 		return buildType
+	}
+
+	public setBuildType( String buildType )
+	{
+		this.buildType = buildType
 	}
 }

@@ -3,19 +3,14 @@ package flair.gradle.extensions
 import flair.gradle.plugins.PluginManager
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
-import flair.gradle.watcher.Watcher
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FlairExtension extends PlatformConfigurationContainerExtension implements IPlatformVariantConfigurationContainerExtension , IPlatformExtensionManager
+public class FlairExtension extends PlatformContainerExtension implements IExtensionManager
 {
-	public static final NAME = "flair"
-
-	protected Watcher watcher
-
 	public String moduleName
 
 	public String packageName
@@ -25,21 +20,12 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 	public FlairExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
-
-		watcher = new Watcher( project )
-		Thread t = new Thread( watcher )
-		t.start( )
-	}
-
-	public Watcher getWatcher()
-	{
-		return watcher
 	}
 
 	@Override
-	public IPlatformConfigurationContainerExtension getPlatformContainer( Platforms platform )
+	public IPlatformContainerExtension getPlatformContainer( Platforms platform )
 	{
-		return ( platform && PluginManager.hasPlatformPlugin( project , platform ) ? project.flair[ platform.name.toLowerCase( ) ] : project.flair ) as IPlatformConfigurationContainerExtension
+		return ( platform && PluginManager.hasPlatformPlugin( project , platform ) ? project.flair[ platform.name.toLowerCase( ) ] : project.flair ) as IPlatformContainerExtension
 	}
 
 	@Override
@@ -51,21 +37,21 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		{
 			switch( property )
 			{
-				case "moduleName": return "app"
-				case "packageName": return ""
-				case "autoGenerateVariantDirectories": return true
+				case Properties.MODULE_NAME.name: return "app"
+				case Properties.PACKAGE_NAME.name: return ""
+				case Properties.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return true
 
 				default: return null
 			}
 		}
 	}
 
-	public NamedDomainObjectContainer<IVariantConfigurationContainerExtension> getAllProductFlavors()
+	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformProductFlavors()
 	{
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> iosProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getProductFlavors( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> androidProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getProductFlavors( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> desktopProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getProductFlavors( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> commonProductFlavors = getProductFlavors( )
+		NamedDomainObjectContainer<IVariantExtension> iosProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> androidProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> desktopProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> commonProductFlavors = getProductFlavors( )
 
 		if( iosProductFlavors ) commonProductFlavors.addAll( iosProductFlavors )
 		if( androidProductFlavors ) commonProductFlavors.addAll( androidProductFlavors )
@@ -74,12 +60,12 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		return commonProductFlavors
 	}
 
-	public NamedDomainObjectContainer<IVariantConfigurationContainerExtension> getAllBuildTypes()
+	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformBuildTypes()
 	{
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> iosBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getBuildTypes( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> androidBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getBuildTypes( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> desktopBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getBuildTypes( ) : null
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> commonBuildTypes = getBuildTypes( )
+		NamedDomainObjectContainer<IVariantExtension> iosBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> androidBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> desktopBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> commonBuildTypes = getBuildTypes( )
 
 		if( iosBuildTypes ) commonBuildTypes.addAll( iosBuildTypes )
 		if( androidBuildTypes ) commonBuildTypes.addAll( androidBuildTypes )
@@ -88,40 +74,40 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		return commonBuildTypes
 	}
 
-	public List<Variant> getAllVariants()
+	public List<Variant> getAllActivePlatformVariants()
 	{
 		List<Variant> list = new ArrayList<Variant>( )
 
-		if( PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ) list.addAll( getAllVariants( Platforms.IOS ) )
-		if( PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ) list.addAll( getAllVariants( Platforms.ANDROID ) )
-		if( PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ) list.addAll( getAllVariants( Platforms.DESKTOP ) )
+		if( PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ) list.addAll( getPlatformVariants( Platforms.IOS ) )
+		if( PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ) list.addAll( getPlatformVariants( Platforms.ANDROID ) )
+		if( PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ) list.addAll( getPlatformVariants( Platforms.DESKTOP ) )
 
 		return list
 	}
 
-	public List<Variant> getAllVariants( Platforms platform )
+	public List<Variant> getPlatformVariants( Platforms platform )
 	{
-		if( !platform || !PluginManager.hasPlatformPlugin( project , platform ) ) return getAllVariants( )
+		if( !platform ) return getAllActivePlatformVariants( )
 
 		List<Variant> list = new ArrayList<Variant>( )
 
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> platformProductFlavors = getPlatformContainer( platform ).getProductFlavors( )
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> platformBuildTypes = getPlatformContainer( platform ).getBuildTypes( )
+		NamedDomainObjectContainer<IVariantExtension> platformProductFlavors = getPlatformContainer( platform ).getProductFlavors( )
+		NamedDomainObjectContainer<IVariantExtension> platformBuildTypes = getPlatformContainer( platform ).getBuildTypes( )
 
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> commonProductFlavors = getProductFlavors( )
-		NamedDomainObjectContainer<IVariantConfigurationContainerExtension> commonBuildTypes = getBuildTypes( )
+		NamedDomainObjectContainer<IVariantExtension> commonProductFlavors = getProductFlavors( )
+		NamedDomainObjectContainer<IVariantExtension> commonBuildTypes = getBuildTypes( )
 
 		List<String> platformDimension = getPlatformContainer( platform ).flavorDimensions
 		List<String> commonDimension = flavorDimensions
 
-		List<IVariantConfigurationContainerExtension> mergedProductFlavors = platformProductFlavors.toList( )
+		List<IVariantExtension> mergedProductFlavors = platformProductFlavors.toList( )
 
 		commonProductFlavors.each { flavor ->
 
 			if( !platformProductFlavors.findByName( flavor.name ) ) mergedProductFlavors.add( flavor )
 		}
 
-		List<IVariantConfigurationContainerExtension> mergedBuildTypes = platformBuildTypes.toList( )
+		List<IVariantExtension> mergedBuildTypes = platformBuildTypes.toList( )
 
 		commonBuildTypes.each { type ->
 
@@ -129,7 +115,7 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		}
 
 		List<String> mergedDimension = platformDimension && platformDimension.size( ) ? platformDimension : commonDimension
-
+		
 		// add flavors with no dimension
 		if( mergedProductFlavors.size( ) )
 		{
@@ -158,7 +144,7 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 
 		// add flavors with dimension
 		// TODO rough code! could be done a proper way?
-		List<List<IVariantConfigurationContainerExtension>> flavorDimensions = new ArrayList<>( )
+		List<List<IVariantExtension>> flavorDimensions = new ArrayList<>( )
 
 		mergedDimension.each { dimension ->
 
@@ -245,25 +231,25 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 
 	public Object getFlairProperty( String name )
 	{
-		getFlairProperty( name , ( Variant ) null )
+		getFlairProperty( ( Variant ) null , name )
 	}
 
-	public Object getFlairProperty( String name , Platforms platform )
+	public Object getFlairProperty( Platforms platform , String name )
 	{
-		getFlairProperty( name , new Variant( project , platform ) )
+		getFlairProperty( new Variant( project , platform ) , name )
 	}
 
-	public Object getFlairProperty( String configurationName , String name )
+	public Object getFlairProperty( String extensionName , String name )
 	{
-		getFlairProperty( configurationName , name , ( Variant ) null )
+		getFlairProperty( extensionName , ( Variant ) null , name )
 	}
 
-	public Object getFlairProperty( String configurationName , String name , Platforms platform )
+	public Object getFlairProperty( String extensionName , Platforms platform , String name )
 	{
-		getFlairProperty( configurationName , name , new Variant( project , platform ) )
+		getFlairProperty( extensionName , new Variant( project , platform ) , name )
 	}
 
-	public Object getFlairProperty( String name , Variant variant )
+	public Object getFlairProperty( Variant variant , String name )
 	{
 		Object value
 
@@ -300,21 +286,21 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		return getPlatformContainer( variant ? variant.platform : null ).getProp( name , true )
 	}
 
-	public Object getFlairProperty( String configurationName , String name , Variant variant )
+	public Object getFlairProperty( String extensionName , Variant variant , String name )
 	{
 		Object value
 
-		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getConfiguration( configurationName ).getProp( name )
+		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getExtension( extensionName ).getProp( name )
 		if( value ) return value
 
-		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getConfiguration( configurationName ).getProp( name )
+		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getExtension( extensionName ).getProp( name )
 		if( value ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getConfiguration( configurationName ).getProp( name )
+				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( name )
 				if( value ) return value
 			}
 		}
@@ -323,17 +309,17 @@ public class FlairExtension extends PlatformConfigurationContainerExtension impl
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getProductFlavor( variant.productFlavors[ i ] ).getConfiguration( configurationName ).getProp( name )
+				value = getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( name )
 				if( value ) return value
 			}
 		}
 
-		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getConfiguration( configurationName ).getProp( name )
+		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getExtension( extensionName ).getProp( name )
 		if( value ) return value
 
-		value = getConfiguration( configurationName ).getProp( name )
+		value = getExtension( extensionName ).getProp( name )
 		if( value ) return value
 
-		return getPlatformContainer( variant ? variant.platform : null ).getConfiguration( configurationName ).getProp( name , true )
+		return getPlatformContainer( variant ? variant.platform : null ).getExtension( extensionName ).getProp( name , true )
 	}
 }

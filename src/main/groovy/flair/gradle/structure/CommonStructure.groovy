@@ -1,6 +1,7 @@
 package flair.gradle.structure
 
-import flair.gradle.extensions.IPlatformExtensionManager
+import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
 import org.gradle.api.Project
 
 /**
@@ -11,7 +12,7 @@ public class CommonStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IPlatformExtensionManager ).getFlairProperty( "moduleName" )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( Properties.MODULE_NAME.name )
 
 		if( project.fileTree( "${ moduleName }/src/main" ).size( ) > 0 ) return
 

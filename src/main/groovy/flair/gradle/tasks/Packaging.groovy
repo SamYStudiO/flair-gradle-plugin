@@ -16,15 +16,5 @@ class Packaging extends AbstractVariantTask
 	@TaskAction
 	public void packaging()
 	{
-		ByteArrayOutputStream output = new ByteArrayOutputStream( )
-
-		/*project.exec {
-			executable AIRSDKManager.getMxmlcPath( project )
-			//args
-
-			standardOutput = output
-		}*/
-
-		println( output.toString( ) )
 	}
 }

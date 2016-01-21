@@ -5,8 +5,11 @@ package flair.gradle.tasks
  */
 public enum Tasks {
 	CLEAN( "clean" , Clean , Groups.BUILD ) ,
-	//ASSEMBLE( "assemble" , null , Groups.BUILD ) ,
-	//COMPILE( "compile" , null , Groups.BUILD ) ,
+	ASSEMBLE( "assemble" , null , Groups.BUILD ) ,
+	COMPILE( "compile" , null , Groups.BUILD ) ,
+	PACKAGE( "package" , null , Groups.PACKAGE ) ,
+	INSTALL( "install" , null , Groups.INSTALL ) ,
+	LAUNCH_ADL( "launchAdl" , null , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
 	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Groups.DEFAULT ) ,
 

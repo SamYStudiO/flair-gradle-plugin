@@ -1,20 +1,19 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platforms
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AdlExtension extends AbstractConfigurationExtension implements IConfigurationExtension
+public class AdlExtension extends AbstractExtension
 {
 	public String screensize
 
 	public int XscreenDPI
 
-	public AdlExtension( String name , Project project , Platforms platform )
+	public AdlExtension( String name , Project project )
 	{
-		super( name , project , platform )
+		super( name , project )
 	}
 
 	@Override
@@ -24,8 +23,8 @@ public class AdlExtension extends AbstractConfigurationExtension implements ICon
 		{
 			switch( property )
 			{
-				case "screensize": return "540x960:540x960"
-				case "XscreenDPI": return 240
+				case Properties.ADL_SCREEN_SIZE.name: return "540x960:540x960"
+				case Properties.ADL_X_SCREEN_DPI.name: return 240
 
 				default: return null
 			}

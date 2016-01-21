@@ -1,82 +1,48 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.TexturePackerExtension
+import flair.gradle.extensions.factories.IExtensionFactory
+import flair.gradle.extensions.factories.TexturePackerExtensionFactory
 import flair.gradle.structure.AtlasesStructure
+import flair.gradle.structure.IStructure
 import flair.gradle.tasks.variantFactories.IVariantTaskFactory
 import flair.gradle.tasks.variantFactories.PublishAtlasesTaskFactory
-import flair.gradle.variants.Platforms
-import flair.gradle.variants.Variant
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtensionAware
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class TexturePackerPlugin extends AbstractStructurePlugin implements IVariantTaskPlugin
+class TexturePackerPlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin
 {
-	protected List<IVariantTaskFactory> variantFactories = new ArrayList<IVariantTaskFactory>( )
-
 	@Override
 	public void apply( Project project )
 	{
 		project.apply( plugin: BasePlugin )
 
 		super.apply( project )
-
-		addVariantTaskFactory( new PublishAtlasesTaskFactory( ) )
-
-		project.afterEvaluate {
-			updateVariantTasks( )
-		}
 	}
 
 	@Override
-	public final void addVariantTaskFactory( IVariantTaskFactory factory )
+	public IExtensionFactory getExtensionFactory()
 	{
-		variantFactories.add( factory )
+		return new TexturePackerExtensionFactory( )
 	}
 
 	@Override
-	public final void updateVariantTasks()
+	public List<IStructure> getStructures()
 	{
-		variantFactories.each {
+		List<IStructure> list = new ArrayList<IStructure>( )
+		list.add( new AtlasesStructure( ) )
 
-			List<Variant> list
-
-			if( PluginManager.hasPlatformPlugin( project , Platforms.IOS ) )
-			{
-				list = flairExtension.getAllVariants( Platforms.IOS )
-				if( list.size( ) ) list.each { variant -> it.create( project , variant ) } else it.create( project , new Variant( project , Platforms.IOS ) )
-			}
-
-			if( PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) )
-			{
-				list = flairExtension.getAllVariants( Platforms.ANDROID )
-				if( list.size( ) ) list.each { variant -> it.create( project , variant ) } else it.create( project , new Variant( project , Platforms.ANDROID ) )
-			}
-
-			if( PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) )
-			{
-				list = flairExtension.getAllVariants( Platforms.DESKTOP )
-				if( list.size( ) ) list.each { variant -> it.create( project , variant ) } else it.create( project , new Variant( project , Platforms.DESKTOP ) )
-			}
-		}
+		return list
 	}
 
 	@Override
-	public void addTasks()
+	public List<IVariantTaskFactory> getVariantTaskFactories()
 	{
-	}
+		List<IVariantTaskFactory> list = new ArrayList<IVariantTaskFactory>( )
 
-	@Override
-	public void addExtensions()
-	{
-		addExtension( TexturePackerExtension.NAME , TexturePackerExtension , flairExtension as ExtensionAware )
-	}
+		list.add( new PublishAtlasesTaskFactory( ) )
 
-	@Override
-	protected void addStructures()
-	{
-		addStructure( new AtlasesStructure( ) )
+		return list
 	}
 }

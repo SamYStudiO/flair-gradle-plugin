@@ -10,20 +10,29 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractConfigurationContainerExtension extends AbstractConfigurationExtension implements IConfigurationContainerExtension
+public abstract class AbstractPlatformExtension extends AbstractExtension implements IPlatformExtension
 {
-	protected AppDescriptorExtension appDescriptor
+	private Platforms platform
 
-	protected AdlExtension adl
+	public Platforms getPlatform()
+	{
+		return platform
+	}
+
+	private AppDescriptorExtension appDescriptor
+
+	private AdlExtension adl
 
 	public List<String> excludeResources
 
-	public AbstractConfigurationContainerExtension( String name , Project project , Platforms platform )
+	public AbstractPlatformExtension( String name , Project project , Platforms platform )
 	{
-		super( name , project , platform )
+		super( name , project )
 
-		appDescriptor = new AppDescriptorExtension( ConfigurationExtensions.APP_DESCRIPTOR.name , project , platform )
-		adl = new AdlExtension( ConfigurationExtensions.ADL.name , project , platform )
+		this.platform = platform
+
+		appDescriptor = new AppDescriptorExtension( Extensions.APP_DESCRIPTOR.name , project )
+		adl = new AdlExtension( Extensions.ADL.name , project )
 	}
 
 	public void appDescriptor( Action<AppDescriptorExtension> action )
@@ -37,19 +46,19 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 	}
 
 	@Override
-	public IConfigurationExtension getConfiguration( String name )
+	public IExtension getExtension( String name )
 	{
-		return this[ name ] as IConfigurationExtension
+		return this[ name ] as IExtension
 	}
 
 	@Override
-	public IConfigurationExtension getAdl()
+	public IExtension getAdl()
 	{
 		return adl
 	}
 
 	@Override
-	public IConfigurationExtension getAppDescriptor()
+	public IExtension getAppDescriptor()
 	{
 		return appDescriptor
 	}
@@ -61,7 +70,7 @@ public abstract class AbstractConfigurationContainerExtension extends AbstractCo
 		{
 			switch( property )
 			{
-				case "excludeResources":
+				case Properties.EXCLUDE_RESOURCES.name:
 
 					Platforms p = platform
 

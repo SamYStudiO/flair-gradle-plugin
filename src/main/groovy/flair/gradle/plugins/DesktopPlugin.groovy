@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.structure.DesktopStructure
+import flair.gradle.structure.IStructure
 import flair.gradle.variants.Platforms
 
 /**
@@ -14,13 +15,11 @@ public class DesktopPlugin extends AbstractPlatformPlugin
 	}
 
 	@Override
-	protected void addStructures()
+	public List<IStructure> getStructures()
 	{
-		addStructure( new DesktopStructure( ) )
-	}
+		List<IStructure> list = new ArrayList<IStructure>( )
+		list.add( new DesktopStructure( ) )
 
-	@Override
-	protected void addTasks()
-	{
+		return list
 	}
 }

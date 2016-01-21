@@ -5,7 +5,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Clean extends AbstractFlairTask
+public class Clean extends AbstractTask
 {
 	public Clean()
 	{

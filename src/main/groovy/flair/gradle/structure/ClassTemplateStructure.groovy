@@ -1,6 +1,7 @@
 package flair.gradle.structure
 
-import flair.gradle.extensions.IPlatformExtensionManager
+import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
 import org.gradle.api.Project
 
 /**
@@ -11,12 +12,12 @@ public class ClassTemplateStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		IPlatformExtensionManager extensionManager = project.flair as IPlatformExtensionManager
-		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		IExtensionManager extensionManager = project.flair as IExtensionManager
+		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 
 		if( project.fileTree( "${ moduleName }/src/main/actionscript" ).size( ) > 0 ) return
 
-		String packageName = extensionManager.getFlairProperty( "packageName" )
+		String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 
 		String s = packageName.replace( "." , "/" )
 

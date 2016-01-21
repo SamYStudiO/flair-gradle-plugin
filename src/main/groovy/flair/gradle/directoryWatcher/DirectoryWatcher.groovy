@@ -1,10 +1,9 @@
-package flair.gradle.watcher
+package flair.gradle.directoryWatcher
 
 import org.gradle.api.Project
 
 import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
-import java.util.concurrent.TimeUnit
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS
 import static java.nio.file.StandardWatchEventKinds.*
@@ -12,7 +11,7 @@ import static java.nio.file.StandardWatchEventKinds.*
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Watcher extends Thread
+class DirectoryWatcher extends Thread
 {
 	private Project project
 
@@ -22,29 +21,29 @@ class Watcher extends Thread
 
 	private Map<WatchKey , Path> keys = new HashMap<WatchKey , Path>( )
 
-	private Map<File , IWatcherExecutable> watchDirectories = new HashMap<File , IWatcherExecutable>( )
+	private Map<File , IWatcherAction> watchDirectories = new HashMap<File , IWatcherAction>( )
 
-	private Map<String , IWatcherExecutable> watchPatterns = new HashMap<String , IWatcherExecutable>( )
+	private Map<String , IWatcherAction> watchPatterns = new HashMap<String , IWatcherAction>( )
 
-	public Watcher( Project project )
+	public DirectoryWatcher( Project project )
 	{
 		this( project , project.rootDir )
 	}
 
-	public Watcher( Project project , File root )
+	public DirectoryWatcher( Project project , File root )
 	{
 		this.root = root
 		this.project = project
 	}
 
-	public watchDirectory( File path , IWatcherExecutable executable )
+	public watch( File path , IWatcherAction action )
 	{
-		watchDirectories.put( path , executable )
+		watchDirectories.put( path , action )
 	}
 
-	public watchPattern( String pattern , IWatcherExecutable executable )
+	public watch( String pattern , IWatcherAction action )
 	{
-		watchPatterns.put( pattern , executable )
+		watchPatterns.put( pattern , action )
 	}
 
 	@Override
@@ -60,8 +59,8 @@ class Watcher extends Thread
 
 			try
 			{
-				//key = watcher.take( )
-				key = watcher.poll( 25 , TimeUnit.MILLISECONDS )
+				key = watcher.take( )
+				//key = watcher.poll( 25 , TimeUnit.MILLISECONDS )
 			}
 			catch( InterruptedException x )
 			{
@@ -101,12 +100,12 @@ class Watcher extends Thread
 
 			if( change )
 			{
-				for( Map.Entry<File , IWatcherExecutable> map : watchDirectories )
+				for( Map.Entry<File , IWatcherAction> map : watchDirectories )
 				{
 					if( dir.toFile( ).path.startsWith( map.key.path ) ) map.value.execute( project )
 				}
 
-				for( Map.Entry<String , IWatcherExecutable> map : watchPatterns )
+				for( Map.Entry<String , IWatcherAction> map : watchPatterns )
 				{
 					if( dir.toFile( ).path.contains( map.key ) ) map.value.execute( project )
 				}

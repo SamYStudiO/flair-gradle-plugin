@@ -5,8 +5,6 @@ package flair.gradle.tasks
  */
 public enum Groups {
 	BUILD( "build" ) ,
-	ASSEMBLE( "assemble" ) ,
-	COMPILE( "compile" ) ,
 	PACKAGE( "package" ) ,
 	INSTALL( "install" ) ,
 	PROCESS( "process" ) ,

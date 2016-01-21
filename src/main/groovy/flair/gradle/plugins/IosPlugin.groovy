@@ -1,5 +1,6 @@
 package flair.gradle.plugins
 
+import flair.gradle.structure.IStructure
 import flair.gradle.structure.IosStructure
 import flair.gradle.variants.Platforms
 
@@ -14,13 +15,11 @@ public class IosPlugin extends AbstractPlatformPlugin
 	}
 
 	@Override
-	protected void addStructures()
+	public List<IStructure> getStructures()
 	{
-		addStructure( new IosStructure( ) )
-	}
+		List<IStructure> list = new ArrayList<IStructure>( )
+		list.add( new IosStructure( ) )
 
-	@Override
-	protected void addTasks()
-	{
+		return list
 	}
 }

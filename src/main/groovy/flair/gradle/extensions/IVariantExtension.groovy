@@ -3,7 +3,7 @@ package flair.gradle.extensions
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantConfigurationContainerExtension extends IConfigurationContainerExtension
+interface IVariantExtension extends IPlatformExtension
 {
 	public String getDimension()
 

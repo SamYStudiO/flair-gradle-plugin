@@ -11,5 +11,5 @@ public interface Ide
 
 	public boolean getIsActive()
 
-	public void refresh()
+	public ISdkInfos getSdkInfos()
 }

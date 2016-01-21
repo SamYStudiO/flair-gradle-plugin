@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.structure.AndroidStructure
+import flair.gradle.structure.IStructure
 import flair.gradle.variants.Platforms
 
 /**
@@ -14,13 +15,11 @@ public class AndroidPlugin extends AbstractPlatformPlugin
 	}
 
 	@Override
-	protected void addStructures()
+	public List<IStructure> getStructures()
 	{
-		addStructure( new AndroidStructure( ) )
-	}
+		List<IStructure> list = new ArrayList<IStructure>( )
+		list.add( new AndroidStructure( ) )
 
-	@Override
-	protected void addTasks()
-	{
+		return list
 	}
 }

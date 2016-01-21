@@ -1,21 +1,22 @@
-package flair.gradle.watcher.executables
+package flair.gradle.directoryWatcher.actions
 
-import flair.gradle.extensions.IPlatformExtensionManager
-import flair.gradle.watcher.IWatcherExecutable
+import flair.gradle.directoryWatcher.IWatcherAction
+import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class GenerateFontClass implements IWatcherExecutable
+class GenerateFontClass implements IWatcherAction
 {
 	@Override
 	public void execute( Project project )
 	{
-		IPlatformExtensionManager extensionManager = project.flair as IPlatformExtensionManager
+		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 
 		if( !moduleName ) return
 
@@ -55,6 +56,9 @@ class GenerateFontClass implements IWatcherExecutable
 		}
 
 		File f = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
+
+		if( !f.exists( ) ) return
+
 		String content = f.getText( )
 
 		if( fontsClassContent != "" || content.indexOf( "Embed" ) > 0 )

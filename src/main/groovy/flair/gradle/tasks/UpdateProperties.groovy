@@ -1,7 +1,8 @@
 package flair.gradle.tasks
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.ConfigurationExtensions
+import flair.gradle.extensions.Extensions
+import flair.gradle.extensions.Properties
 import flair.gradle.variants.Platforms
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -24,7 +25,7 @@ public class UpdateProperties extends AbstractVariantTask
 
 		//if( packageName.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing packageName property add%nflair {%n	packageName = \"myAppid\"%n}%nto your build.gradle file." ) )
 
-		String version = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "version" , variant )
+		String version = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_VERSION.name )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
@@ -44,9 +45,9 @@ public class UpdateProperties extends AbstractVariantTask
 			if( file.getText( ).indexOf( "<application xmlns=\"http://ns.adobe.com/air/application/" ) > 0 ) updatePropertiesFromFile( file , "${ major }.${ minor }.${ build }" )
 		}
 
-		String iosExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.IOS )
-		String androidExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.ANDROID )
-		String desktopExcludeResources = extensionManager.getFlairProperty( "excludeResources" , Platforms.DESKTOP )
+		String iosExcludeResources = extensionManager.getFlairProperty( Platforms.IOS , Properties.EXCLUDE_RESOURCES.name )
+		String androidExcludeResources = extensionManager.getFlairProperty( Platforms.ANDROID , Properties.EXCLUDE_RESOURCES.name )
+		String desktopExcludeResources = extensionManager.getFlairProperty( Platforms.DESKTOP , Properties.EXCLUDE_RESOURCES.name )
 
 		File iml = project.file( "${ moduleName }/${ moduleName }.iml" )
 		String imlContent = iml.getText( )

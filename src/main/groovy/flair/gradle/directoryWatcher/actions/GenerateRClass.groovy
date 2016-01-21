@@ -1,26 +1,30 @@
-package flair.gradle.watcher.executables
+package flair.gradle.directoryWatcher.actions
 
-import flair.gradle.extensions.IPlatformExtensionManager
-import flair.gradle.watcher.IWatcherExecutable
+import flair.gradle.directoryWatcher.IWatcherAction
+import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class GenerateRClass implements IWatcherExecutable
+class GenerateRClass implements IWatcherAction
 {
 	@Override
 	public void execute( Project project )
 	{
-		IPlatformExtensionManager extensionManager = project.flair as IPlatformExtensionManager
+		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( "moduleName" )
-		String packageName = extensionManager.getFlairProperty( "packageName" )
+		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 
 		if( !moduleName || !packageName ) return
 
 		File classFile = project.file( "${ moduleName }/src/main/generated/R.as" )
+
+		if( !classFile.exists( ) ) return
+
 		String classFileContent = classFile.getText( )
 		FileTree resources = project.fileTree( "${ moduleName }/src" )
 

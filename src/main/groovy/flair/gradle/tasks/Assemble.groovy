@@ -1,7 +1,9 @@
 package flair.gradle.tasks
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.ConfigurationExtensions
+import flair.gradle.extensions.Extensions
+import flair.gradle.extensions.Properties
+import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -15,7 +17,7 @@ public class Assemble extends AbstractVariantTask
 	//def File inputDir
 
 	//@OutputDirectory
-	//def File outputDir
+	String outputDir
 
 	//@Input
 	//def inputProperty
@@ -48,12 +50,11 @@ public class Assemble extends AbstractVariantTask
 			targetFile.delete( )
 		}*/
 
-		String moduleName = extensionManager.getFlairProperty( "moduleName" )
+		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 		String sPlatform = variant.platform.name.toLowerCase( )
-		List<String> excludeResources = extensionManager.getFlairProperty( "excludeResources" , variant ) as List<String>
+		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.EXCLUDE_RESOURCES.name ) as List<String>
 		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
-
-		println( sPlatform + "---" + excludeResources )
+		outputDir = project.file( "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.CAPITALIZE_BUT_FIRST ) }" )
 
 		project.copy {
 			from "${ srcRoot }/main/assets"
@@ -64,7 +65,9 @@ public class Assemble extends AbstractVariantTask
 
 			from "${ srcRoot }/${ variant.buildType }/assets"
 
-			into "${ project.buildDir }/${ variant.name }/assets"
+
+
+			into "${outputDir }/assets"
 
 			includeEmptyDirs = false
 		}
@@ -72,7 +75,7 @@ public class Assemble extends AbstractVariantTask
 		project.copy {
 			from "${ srcRoot }/main/resources/"
 
-			into "${ project.buildDir }/${ variant.name }/resources/"
+			into "${ outputDir }/resources/"
 
 			exclude excludeResources
 			exclude "**/value*/**"
@@ -89,7 +92,7 @@ public class Assemble extends AbstractVariantTask
 				from "${ srcRoot }/${ flavor }/resources/"
 
 
-				into "${ project.buildDir }/${ variant.name }/resources/"
+				into "${ outputDir }/resources/"
 
 				exclude excludeResources
 				exclude "**/value*/**"
@@ -103,7 +106,7 @@ public class Assemble extends AbstractVariantTask
 		project.copy {
 			from "${ srcRoot }/${ variant.buildType }/resources/"
 
-			into "${ project.buildDir }/${ variant.name }/resources/"
+			into "${ outputDir }/resources/"
 
 			exclude excludeResources
 			exclude "**/value*/**"
@@ -122,7 +125,7 @@ public class Assemble extends AbstractVariantTask
 
 			from "${ srcRoot }/${ variant.buildType }/splashs"
 
-			into "${ project.buildDir }/${ variant.name }/"
+			into "${ outputDir }/"
 		}
 
 		project.copy {
@@ -134,7 +137,7 @@ public class Assemble extends AbstractVariantTask
 
 			from "${ srcRoot }/${ variant.buildType }/icons"
 
-			into "${ project.buildDir }/${ variant.name }/icons"
+			into "${ outputDir }/icons"
 		}
 
 		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
@@ -164,9 +167,9 @@ public class Assemble extends AbstractVariantTask
 
 		if( output.children( ).size( ) > 0 )
 		{
-			project.file( "${ project.buildDir }/${ variant.name }/resources/values/" ).mkdirs( )
-			project.file( "${ project.buildDir }/${ variant.name }/resources/values/values.xml" ).createNewFile( )
-			project.file( "${ project.buildDir }/${ variant.name }/resources/values/values.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
+			project.file( "${ outputDir }/resources/values/" ).mkdirs( )
+			project.file( "${ outputDir }/resources/values/values.xml" ).createNewFile( )
+			project.file( "${ outputDir }/resources/values/values.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
 			}
 		}
 
@@ -187,9 +190,9 @@ public class Assemble extends AbstractVariantTask
 
 			if( output.children( ).size( ) > 0 )
 			{
-				project.file( "${ project.buildDir }/${ variant.name }/resources/values-${ qualifiers }/" ).mkdirs( )
-				project.file( "${ project.buildDir }/${ variant.name }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).createNewFile( )
-				project.file( "${ project.buildDir }/${ variant.name }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
+				project.file( "${ outputDir }/resources/values-${ qualifiers }/" ).mkdirs( )
+				project.file( "${ outputDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).createNewFile( )
+				project.file( "${ outputDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
 				}
 			}
 		}
@@ -201,13 +204,13 @@ public class Assemble extends AbstractVariantTask
 
 		String appContent = app.getText( )
 		String sdkVersion = new Sdk( project ).version
-		String appId = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "id" , variant )
-		String appName = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "appName" , variant )
-		String appVersion = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "version" , variant )
-		String appFullScreen = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "fullScreen" , variant )
-		String appAspectRatio = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "aspectRatio" , variant )
-		String appAutoOrient = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "autoOrient" , variant )
-		String appDepthAndStencil = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "depthAndStencil" , variant )
+		String appId = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID_SUFFIX.name )
+		String appName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME_SUFFIX.name )
+		String appVersion = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_VERSION.name )
+		String appFullScreen = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_FULL_SCREEN.name )
+		String appAspectRatio = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ASPECT_RATIO.name )
+		String appAutoOrient = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_AUTO_ORIENT.name )
+		String appDepthAndStencil = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_DEPTH_AND_STENCIL.name )
 		String supportedLocales = getSupportedLocales( )
 
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
@@ -221,12 +224,12 @@ public class Assemble extends AbstractVariantTask
 								.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 
 
-		project.file( "${ project.buildDir }/${ variant.name }/app_descriptor.xml" ).write( appContent )
+		project.file( "${ outputDir }/app_descriptor.xml" ).write( appContent )
 	}
 
 	private String getSupportedLocales()
 	{
-		FileTree tree = project.fileTree( "${ project.buildDir }/${ variant.name }/resources/" ) {
+		FileTree tree = project.fileTree( "${ outputDir }/resources/" ) {
 			include "**/*.xml"
 		}
 
@@ -247,7 +250,7 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "defaultSupportedLanguages" , variant )
+		String defaultLocale = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

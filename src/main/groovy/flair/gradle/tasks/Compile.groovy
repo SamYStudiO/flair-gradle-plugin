@@ -16,17 +16,5 @@ class Compile extends AbstractVariantTask
 	@TaskAction
 	public void compile()
 	{
-		//println( "test> " + platform + "--" + productFlavor + "--" + buildType )
-
-		ByteArrayOutputStream output = new ByteArrayOutputStream( )
-
-		/*project.exec {
-			executable AIRSDKManager.getMxmlcPath( project )
-			//args
-
-			standardOutput = output
-		}*/
-
-		println( output.toString( ) )
 	}
 }

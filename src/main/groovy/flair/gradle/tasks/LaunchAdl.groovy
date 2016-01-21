@@ -16,15 +16,5 @@ class LaunchAdl extends AbstractVariantTask
 	@TaskAction
 	public void launch()
 	{
-		ByteArrayOutputStream output = new ByteArrayOutputStream( )
-
-		/*project.exec {
-			executable AIRSDKManager.getMxmlcPath( project )
-			//args
-
-			standardOutput = output
-		}*/
-
-		println( output.toString( ) )
 	}
 }

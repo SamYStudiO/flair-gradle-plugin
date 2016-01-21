@@ -1,6 +1,7 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.ConfigurationExtensions
+import flair.gradle.extensions.Extensions
+import flair.gradle.extensions.Properties
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -17,7 +18,7 @@ public class VersioningIncrementVersion extends AbstractVariantTask
 	@TaskAction
 	public void incrementVersion()
 	{
-		String version = extensionManager.getFlairProperty( ConfigurationExtensions.APP_DESCRIPTOR.name , "version" , variant )
+		String version = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_VERSION.name )
 
 		if( version.isEmpty( ) ) throw new IllegalArgumentException( String.format( "Missing appVersion add%nflair {%n\\appVersion = \"x.x.x\"%n}%nto your build.gradle file." ) )
 
