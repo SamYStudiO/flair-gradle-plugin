@@ -2,8 +2,8 @@ package flair.gradle.plugins
 
 import flair.gradle.directoryWatcher.DirectoryWatcher
 import flair.gradle.directoryWatcher.IWatcherAction
-import flair.gradle.directoryWatcher.actions.GenerateFontClass
-import flair.gradle.directoryWatcher.actions.GenerateRClass
+import flair.gradle.structure.generated.GenerateFontClass
+import flair.gradle.structure.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.Properties
