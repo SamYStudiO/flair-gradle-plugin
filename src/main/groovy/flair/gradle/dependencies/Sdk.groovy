@@ -1,5 +1,6 @@
 package flair.gradle.dependencies
 
+import flair.gradle.plugins.IdePlugin
 import flair.gradle.utils.LocalProperties
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
@@ -16,6 +17,26 @@ public class Sdk
 	public String getPath()
 	{
 		if( path ) return path
+
+		if( project )
+		{
+			boolean found
+
+			project.plugins.each {
+
+				if( it instanceof IdePlugin )
+				{
+					if( !found && it.sdk.isValid( ) )
+					{
+						found = true
+						path = it.sdk.path
+						name = it.sdk.name
+					}
+				}
+			}
+
+			if( found ) return path
+		}
 
 		try
 		{
@@ -50,13 +71,44 @@ public class Sdk
 		this.path = path
 	}
 
-	public Sdk()
+	private String name
+
+	public String getName()
 	{
+		if( name ) return name
+
+		String path = getPath( )
+
+		if( name ) return name
+
+		if( path )
+		{
+			if( path.indexOf( "/" ) > 0 )
+			{
+				String[] a = path.split( "/" )
+
+				return a[ a.size( ) - 1 ]
+			}
+			else return path
+		}
+
+		return ""
+	}
+
+	public void setName( String name )
+	{
+		this.name = name
 	}
 
 	public Sdk( String path )
 	{
 		this.path = path
+	}
+
+	public Sdk( String path , String name )
+	{
+		this.path = path
+		this.name = name
 	}
 
 	public Sdk( Project project )
@@ -66,7 +118,7 @@ public class Sdk
 
 	public Boolean isValid()
 	{
-		return isAirSdk( )
+		return path && isAirSdk( )
 	}
 
 	public Boolean isAirSdk()

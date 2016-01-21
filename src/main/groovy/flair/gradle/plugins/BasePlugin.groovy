@@ -2,19 +2,17 @@ package flair.gradle.plugins
 
 import flair.gradle.directoryWatcher.DirectoryWatcher
 import flair.gradle.directoryWatcher.IWatcherAction
-import flair.gradle.structure.generated.GenerateFontClass
-import flair.gradle.structure.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.Properties
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
-import flair.gradle.ide.Ide
-import flair.gradle.ide.Idea
 import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.IStructure
 import flair.gradle.structure.VariantStructure
+import flair.gradle.structure.generated.GenerateFontClass
+import flair.gradle.structure.generated.GenerateRClass
 import flair.gradle.tasks.Assemble
 import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.Tasks
@@ -27,8 +25,6 @@ import org.gradle.api.plugins.ExtensionAware
  */
 class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , IStructurePlugin , IWatcherActionPlugin
 {
-	private List<Ide> ides = new ArrayList<Ide>( )
-
 	private List<IPlugin> plugins = new ArrayList<IPlugin>( )
 
 	private List<IPlatformPlugin> platformPlugins = new ArrayList<IPlatformPlugin>( )
@@ -47,8 +43,6 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 	public void apply( Project project )
 	{
 		super.apply( project )
-
-		addIdes( )
 
 		project.plugins.whenPluginAdded {
 
@@ -97,10 +91,6 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 		list.add( new ClassTemplateStructure( ) )
 		list.add( new VariantStructure( ) )
 
-		ides.each {
-			if( it.isActive ) list.add( it.structure )
-		}
-
 		return list
 	}
 
@@ -119,11 +109,6 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 	protected void addTasks()
 	{
 		project.tasks.create( Tasks.CLEAN.name , Tasks.CLEAN.type )
-	}
-
-	private void addIdes()
-	{
-		ides.add( new Idea( project ) )
 	}
 
 	private void createStructures()
