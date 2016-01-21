@@ -39,7 +39,7 @@ class AppDescriptorExtension extends AbstractExtension
 		{
 			switch( property )
 			{
-				case Properties.APP_ID.name: return extensionManager.getFlairProperty( "packageName" )
+				case Properties.APP_ID.name: return extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 				case Properties.APP_ID_SUFFIX.name: return ""
 				case Properties.APP_NAME.name: return project.name
 				case Properties.APP_NAME_SUFFIX.name: return ""

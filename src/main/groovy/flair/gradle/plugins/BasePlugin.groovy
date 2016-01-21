@@ -6,6 +6,7 @@ import flair.gradle.directoryWatcher.actions.GenerateFontClass
 import flair.gradle.directoryWatcher.actions.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.IExtensionManager
+import flair.gradle.extensions.Properties
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.ide.Ide
@@ -64,7 +65,7 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 
 				if( it == this ) flair = project.extensions.getByName( Extensions.FLAIR.name ) as IExtensionManager
 
-				// TODO try to remove platform extension if only one exist (actual comment code doesn't work
+				// TODO try to remove platform extension if only one exist (actual comment code doesn't work)
 				//if( it instanceof IPlatformPlugin && platformPluginCount == 2 )
 				//{
 				//	platformPlugins[ 0 ].extensionFactory.create( project.extensions.getByName( FlairExtension.NAME ) as ExtensionAware , project )
@@ -127,8 +128,8 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 
 	private void createStructures()
 	{
-		String moduleName = flair.getFlairProperty( "moduleName" )
-		String packageName = flair.getFlairProperty( "packageName" )
+		String moduleName = flair.getFlairProperty( Properties.MODULE_NAME.name )
+		String packageName = flair.getFlairProperty( Properties.PACKAGE_NAME.name )
 
 		if( !moduleName || !packageName ) return
 
