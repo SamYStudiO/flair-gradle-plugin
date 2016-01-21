@@ -25,6 +25,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	public List<String> excludeResources
 
+	public String mainClass
+
 	public AbstractPlatformExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project )
@@ -83,6 +85,22 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platforms.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
 
 						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
+					}
+
+				case Properties.MAIN_CLASS.name:
+
+					Platforms p = platform
+					String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
+
+					if( p == null ) p = detectDefaultPlatform( )
+
+					switch( p )
+					{
+						case Platforms.IOS: return packageName + ".MainIOS"
+						case Platforms.ANDROID: return packageName + ".MainAndroid"
+						case Platforms.DESKTOP: return packageName + ".MainDesktop"
+
+						default: return null
 					}
 
 				default: return null

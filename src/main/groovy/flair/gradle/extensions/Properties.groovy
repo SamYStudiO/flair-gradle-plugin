@@ -9,6 +9,7 @@ enum Properties
 	PACKAGE_NAME( "packageName" ) ,
 	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 
+	MAIN_CLASS( "mainClass" ) ,
 	EXCLUDE_RESOURCES( "excludeResources" ) ,
 
 	ADL_SCREEN_SIZE( "screensize" ) ,
@@ -18,6 +19,7 @@ enum Properties
 	APP_ID_SUFFIX( "idSuffix" ) ,
 	APP_NAME( "appName" ) ,
 	APP_NAME_SUFFIX( "appNameSuffix" ) ,
+	APP_FILE_NAME( "filename" ) ,
 	APP_VERSION( "version" ) ,
 	APP_FULL_SCREEN( "fullScreen" ) ,
 	APP_ASPECT_RATIO( "aspectRatio" ) ,

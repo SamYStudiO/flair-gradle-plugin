@@ -11,7 +11,7 @@ import static java.nio.file.StandardWatchEventKinds.*
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class DirectoryWatcher extends Thread
+class DirectoryWatcher implements Runnable
 {
 	private Project project
 
@@ -100,14 +100,14 @@ class DirectoryWatcher extends Thread
 
 			if( change )
 			{
-				for( Map.Entry<File , IWatcherAction> map : watchDirectories )
+				for( Map.Entry<File , IWatcherAction> fileMap : watchDirectories )
 				{
-					if( dir.toFile( ).path.startsWith( map.key.path ) ) map.value.execute( project )
+					if( dir.toFile( ).path.startsWith( fileMap.key.path ) ) fileMap.value.execute( project )
 				}
 
-				for( Map.Entry<String , IWatcherAction> map : watchPatterns )
+				for( Map.Entry<String , IWatcherAction> stringMap : watchPatterns )
 				{
-					if( dir.toFile( ).path.contains( map.key ) ) map.value.execute( project )
+					if( dir.toFile( ).path.contains( stringMap.key ) ) stringMap.value.execute( project )
 				}
 			}
 

@@ -15,6 +15,8 @@ class AppDescriptorExtension extends AbstractExtension
 
 	public String appNameSuffix
 
+	public String filename
+
 	public String version
 
 	public Boolean fullScreen
@@ -43,6 +45,7 @@ class AppDescriptorExtension extends AbstractExtension
 				case Properties.APP_ID_SUFFIX.name: return ""
 				case Properties.APP_NAME.name: return project.name
 				case Properties.APP_NAME_SUFFIX.name: return ""
+				case Properties.APP_FILE_NAME.name: return getProp( Properties.APP_NAME.name , true ) + getProp( Properties.APP_NAME_SUFFIX.name , true )
 				case Properties.APP_VERSION.name: return "1.0.0"
 				case Properties.APP_FULL_SCREEN.name: return true
 				case Properties.APP_ASPECT_RATIO.name: return "any"

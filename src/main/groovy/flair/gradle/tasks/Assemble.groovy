@@ -54,7 +54,7 @@ public class Assemble extends AbstractVariantTask
 		String sPlatform = variant.platform.name.toLowerCase( )
 		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.EXCLUDE_RESOURCES.name ) as List<String>
 		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
-		outputDir = project.file( "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.CAPITALIZE_BUT_FIRST ) }" )
+		outputDir = project.file( "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }" )
 
 		project.copy {
 			from "${ srcRoot }/main/assets"
@@ -206,6 +206,8 @@ public class Assemble extends AbstractVariantTask
 		String sdkVersion = new Sdk( project ).version
 		String appId = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID_SUFFIX.name )
 		String appName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME_SUFFIX.name )
+		String appFileName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_FILE_NAME.name )
+		String appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
 		String appVersion = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_VERSION.name )
 		String appFullScreen = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_FULL_SCREEN.name )
 		String appAspectRatio = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ASPECT_RATIO.name )
@@ -216,6 +218,8 @@ public class Assemble extends AbstractVariantTask
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 								.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 								.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
+								.replaceAll( /<filename>.*<\\/filename>/ , "<filename>${ appFileName }</filename>" )
+								.replaceAll( /<content>.*<\\/content>/ , "<content>${ appSWF }</content>" )
 								.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
 								.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
 								.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )

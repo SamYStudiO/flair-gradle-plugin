@@ -17,13 +17,32 @@ public class Sdk
 	{
 		if( path ) return path
 
-		path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
+		try
+		{
+			path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
+		}
+		catch( NullPointerException e )
+		{}
+
+		if( path ) return path
+
+		path = System.getenv( "AIR_HOME" )
+
+		if( path ) return path
+
+		path = System.getenv( "AIR_SDK_HOME" )
 
 		if( path ) return path
 
 		path = System.getenv( "FLEX_HOME" )
 
-		return path
+		if( path ) return path
+
+		path = System.getenv( "FLEX_SDK_HOME" )
+
+		if( path ) return path
+
+		throw new Exception( "Cannot find AIR SDK home, try setting sdk.dir property from local.properties file in your project root or set AIR_HOME/FLEX_HOME environment variable" )
 	}
 
 	public void setPath( String path )
@@ -47,7 +66,7 @@ public class Sdk
 
 	public Boolean isValid()
 	{
-		return isAirSdk( ) || isFlexSdk( )
+		return isAirSdk( )
 	}
 
 	public Boolean isAirSdk()
