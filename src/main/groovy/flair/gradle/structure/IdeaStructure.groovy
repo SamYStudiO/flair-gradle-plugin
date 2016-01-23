@@ -35,7 +35,7 @@ class IdeaStructure implements IStructure
 
 		project.rootProject.fileTree( ".idea/libraries" ).each { file ->
 
-			if( file.name.indexOf( "libs_" ) == 0 ) file.write( file.getText( ).replace( '${moduleName}' , moduleName ) )
+			if( file.name.indexOf( "libs_" ) == 0 ) file.write( file.text.replace( '${moduleName}' , moduleName ) )
 		}
 
 		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) ) return

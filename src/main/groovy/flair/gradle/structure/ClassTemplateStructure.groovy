@@ -28,7 +28,7 @@ public class ClassTemplateStructure implements IStructure
 
 		project.fileTree( "${ moduleName }/src/main/actionscript/${ s }" ).each { file ->
 
-			file.write( file.getText( ).replace( "_packageName_" , packageName ) )
+			file.write( file.text.replace( "_packageName_" , packageName ) )
 		}
 	}
 }

@@ -163,7 +163,7 @@ public class Assemble extends AbstractVariantTask
 
 			Node output
 
-			if( outputFile.getText(  ).isEmpty(  ) ) output = new Node( null , "resources" )
+			if( outputFile.text.isEmpty(  ) ) output = new Node( null , "resources" )
 			else output = new XmlParser( ).parse( outputFile )
 
 			Node xml = new XmlParser( ).parse( file )
@@ -188,7 +188,7 @@ public class Assemble extends AbstractVariantTask
 	{
 		if( !app.exists( ) ) return
 
-		String appContent = app.getText( )
+		String appContent = app.text
 		String sdkVersion = new Sdk( project ).version
 		String appId = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID_SUFFIX.name )
 		String appName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME_SUFFIX.name )

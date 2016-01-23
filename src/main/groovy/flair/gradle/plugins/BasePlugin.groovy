@@ -169,8 +169,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			exclude "**/.gitkeep"
 		}
 
-		GenerateFontClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).getText( )
-		GenerateRClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).getText( )
+		GenerateFontClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).text
+		GenerateRClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).text
 
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
