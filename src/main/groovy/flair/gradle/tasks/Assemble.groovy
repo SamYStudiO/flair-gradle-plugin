@@ -1,5 +1,6 @@
 package flair.gradle.tasks
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.Properties
@@ -13,43 +14,17 @@ import org.gradle.api.tasks.TaskAction
  */
 public class Assemble extends AbstractVariantTask
 {
-	//@InputDirectory
-	//def File inputDir
-
-	//@OutputDirectory
 	String outputDir
-
-	//@Input
-	//def inputProperty
 
 	public Assemble()
 	{
 		group = Groups.BUILD.name
 		description = ""
-
-		//String moduleName = extensionManager.getFlairProperty( "moduleName" )
-		//inputDir = project.file( "${ moduleName }/src/main/resources" )
-		//outputDir = project.file( "${ project.buildDir }/${ variant.name }" )
 	}
 
 	@TaskAction
-	public void assemble( /*IncrementalTaskInputs inputs*/ )
+	public void assemble()
 	{
-		/*println inputs.incremental ? "CHANGED inputs considered out of date" : "ALL inputs considered out of date"
-		if( !inputs.incremental ) project.delete( outputDir.listFiles( ) )
-
-		inputs.outOfDate { change ->
-			println "out of date: ${ change.file.name }"
-			def targetFile = new File( outputDir , change.file.name )
-			targetFile.text = change.file.text.reverse( )
-		}
-
-		inputs.removed { change ->
-			println "removed: ${ change.file.name }"
-			def targetFile = new File( outputDir , change.file.name )
-			targetFile.delete( )
-		}*/
-
 		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 		String sPlatform = variant.platform.name.toLowerCase( )
 		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.EXCLUDE_RESOURCES.name ) as List<String>
@@ -65,11 +40,25 @@ public class Assemble extends AbstractVariantTask
 
 			from "${ srcRoot }/${ variant.buildType }/assets"
 
-
-
-			into "${outputDir }/assets"
+			into "${ outputDir }/assets"
 
 			includeEmptyDirs = false
+		}
+
+		Collection<File> packagedFiles = project.configurations.getByName( Configurations.PACKAGE.name ).files
+
+		packagedFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.PACKAGE.name.capitalize( ) ) )
+		variant.productFlavors.each {
+
+			packagedFiles.addAll( project.configurations.getByName( it + Configurations.PACKAGE.name.capitalize( ) ) )
+		}
+
+		packagedFiles.each { file ->
+
+			project.copy {
+				from file.path
+				into "${ outputDir }/${ file.path.split( "/" ).last( ) }"
+			}
 		}
 
 		project.copy {
@@ -157,20 +146,19 @@ public class Assemble extends AbstractVariantTask
 			String qualifiers = file.parentFile.name.replace( "values" , "" )
 
 			project.file( "${ outputDir }/resources/values${ qualifiers }/" ).mkdirs( )
-			File outputFile  = project.file( "${ outputDir }/resources/values${ qualifiers }/values${ qualifiers }.xml" )
+			File outputFile = project.file( "${ outputDir }/resources/values${ qualifiers }/values${ qualifiers }.xml" )
 
-			if( !outputFile.exists(  ) ) outputFile.createNewFile( )
+			if( !outputFile.exists( ) ) outputFile.createNewFile( )
 
 			Node output
 
-			if( outputFile.text.isEmpty(  ) ) output = new Node( null , "resources" )
-			else output = new XmlParser( ).parse( outputFile )
+			if( outputFile.text.isEmpty( ) ) output = new Node( null , "resources" ) else output = new XmlParser( ).parse( outputFile )
 
 			Node xml = new XmlParser( ).parse( file )
 
 			xml.children( ).each { Node node ->
 
-				Node old = output.children(  ).find { output.name(  ) == node.name(  ) && output.@'name' == node.@'name' } as Node
+				Node old = output.children( ).find { output.name( ) == node.name( ) && output.@'name' == node.@'name' } as Node
 
 				if( old ) output.remove( old )
 
@@ -202,16 +190,16 @@ public class Assemble extends AbstractVariantTask
 		String supportedLocales = getSupportedLocales( )
 
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
-								.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
-								.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
-								.replaceAll( /<filename>.*<\\/filename>/ , "<filename>${ appFileName }</filename>" )
-								.replaceAll( /<content>.*<\\/content>/ , "<content>${ appSWF }</content>" )
-								.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
-								.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
-								.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
-								.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
-								.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
-								.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
+				.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
+				.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
+				.replaceAll( /<filename>.*<\\/filename>/ , "<filename>${ appFileName }</filename>" )
+				.replaceAll( /<content>.*<\\/content>/ , "<content>${ appSWF }</content>" )
+				.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
+				.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
+				.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
+				.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
+				.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
+				.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 
 
 		project.file( "${ outputDir }/app_descriptor.xml" ).write( appContent )
