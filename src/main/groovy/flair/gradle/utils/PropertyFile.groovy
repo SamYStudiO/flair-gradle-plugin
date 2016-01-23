@@ -3,7 +3,7 @@ package flair.gradle.utils
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LocalProperties
+public class PropertyFile
 {
 	private Properties properties = new Properties( )
 
@@ -21,12 +21,12 @@ public class LocalProperties
 		if( file.exists( ) ) properties.load( file.newDataInputStream( ) )
 	}
 
-	public LocalProperties( String path )
+	public PropertyFile( String path )
 	{
 		this( new File( path ) )
 	}
 
-	public LocalProperties( File file )
+	public PropertyFile( File file )
 	{
 		setFile( file )
 	}

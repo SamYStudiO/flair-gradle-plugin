@@ -8,7 +8,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaPlugin extends AbstractIdePlugin implements IStructurePlugin
+class IdeaPlugin extends AbstractIdePlugin
 {
 	@Override
 	public List<IStructure> getStructures()
@@ -20,7 +20,7 @@ class IdeaPlugin extends AbstractIdePlugin implements IStructurePlugin
 	}
 
 	@Override
-	protected Sdk findSdk()
+	protected List<Sdk> findSdks()
 	{
 		String path = ""
 		String file = ""
@@ -82,10 +82,10 @@ class IdeaPlugin extends AbstractIdePlugin implements IStructurePlugin
 		if( all.size( ) && index != -1 )
 		{
 			String[] a = all[ index ].split( "\\|" )
-			if( a.size( ) ) return new Sdk( a[ 1 ] , a[ 0 ] )
+			if( a.size( ) ) return [ new Sdk( a[ 1 ] , a[ 0 ] ) ]
 		}
 
-		return new Sdk( project )
+		return [ new Sdk( project ) ]
 	}
 
 	private String internalGetSdkPath( File file )

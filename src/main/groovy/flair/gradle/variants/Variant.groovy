@@ -97,7 +97,7 @@ public final class Variant
 
 			default:
 
-				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.toLowerCase(  ) + type.c
+				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.toLowerCase( ) + type.c
 				productFlavors.each { flavor -> name += flavor + type.c }
 
 				if( buildType ) name += buildType else name.substring( 0 , name.size( ) - 1 )

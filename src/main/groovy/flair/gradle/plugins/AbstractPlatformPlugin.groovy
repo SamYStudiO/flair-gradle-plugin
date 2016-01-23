@@ -1,10 +1,10 @@
 package flair.gradle.plugins
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.extensions.factories.PlatformExtensionFactory
 import flair.gradle.tasks.variantFactories.*
 import flair.gradle.variants.Platforms
-import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -28,11 +28,11 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 	}
 
 	@Override
-	public void apply( Project project )
+	public List<Configurations> getConfigurations()
 	{
-		project.apply( plugin: BasePlugin )
-
-		super.apply( project )
+		return Configurations.values( ).findAll {
+			it.name.toLowerCase( ).indexOf( platform.name.toLowerCase( ) ) == 0
+		}
 	}
 
 	@Override

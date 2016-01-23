@@ -5,7 +5,7 @@ import flair.gradle.variants.Platforms
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IPlatformPlugin extends IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin
+interface IPlatformPlugin extends IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin , IConfigurationPlugin
 {
 	public Platforms getPlatform()
 

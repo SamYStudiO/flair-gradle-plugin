@@ -115,7 +115,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		}
 
 		List<String> mergedDimension = platformDimension && platformDimension.size( ) ? platformDimension : commonDimension
-		
+
 		// add flavors with no dimension
 		if( mergedProductFlavors.size( ) )
 		{

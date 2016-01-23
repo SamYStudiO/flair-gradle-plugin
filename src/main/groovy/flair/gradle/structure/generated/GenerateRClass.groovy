@@ -66,30 +66,31 @@ class GenerateRClass implements IWatcherAction
 
 				String parentName = parent.name
 				String flavor = parent.parentFile.parentFile.name
-				String conditional = flavor == "main" ? "" : "CONFIG::${ flavor.toUpperCase( ) } "
+				String conditionalOpen = flavor == "main" ? "" : "CONFIG::${ flavor.toUpperCase( ) } "
+				String conditionalClose = flavor == "main" ? "" : " }"
 				String filename = file.name.split( "\\." )[ 0 ]
 				String ext = file.name.split( "\\." )[ 1 ]
 
 				if( parentName.indexOf( "xml" ) == 0 && !xmlList.contains( filename ) )
 				{
-					xmls += "\t${ conditional }public const ${ filename } : XML = getXml( \"${ filename }\" );" + System.lineSeparator( )
+					xmls += "\t${ conditionalOpen }public const ${ filename } : XML = getXml( \"${ filename }\" );${ conditionalClose }" + System.lineSeparator( )
 					xmlList.add( filename )
 				}
 				else if( parentName.indexOf( "raw" ) == 0 )
 				{
 					if( ( ext == "mpeg" || ext == "mp3" ) && !soundList.contains( filename ) )
 					{
-						sounds += "\t${ conditional }public const ${ filename } : Sound = getSound( \"${ filename }\" );" + System.lineSeparator( )
+						sounds += "\t${ conditionalOpen }public const ${ filename } : Sound = getSound( \"${ filename }\" );${ conditionalClose }" + System.lineSeparator( )
 						soundList.add( filename )
 					}
 					else if( ext == "json" && !objectList.contains( filename ) )
 					{
-						objects += "\t${ conditional }public const ${ filename } : Object = getObject( \"${ filename }\" );" + System.lineSeparator( )
+						objects += "\t${ conditionalOpen }public const ${ filename } : Object = getObject( \"${ filename }\" );${ conditionalClose }" + System.lineSeparator( )
 						objectList.add( filename )
 					}
 					else if( !rawList.contains( filename ) )
 					{
-						raws += "\t${ conditional }public const ${ filename } : ByteArray = getByteArray( \"${ filename }\" );" + System.lineSeparator( )
+						raws += "\t${ conditionalOpen }public const ${ filename } : ByteArray = getByteArray( \"${ filename }\" );${ conditionalClose }" + System.lineSeparator( )
 						rawList.add( filename )
 					}
 				}
@@ -99,35 +100,35 @@ class GenerateRClass implements IWatcherAction
 					node.string.each { string ->
 						if( !stringList.contains( string.@name.toString( ) ) )
 						{
-							strings += "\t${ conditional }public const ${ string.@name } : String = getString( \"${ string.@name }\" );" + System.lineSeparator( )
+							strings += "\t${ conditionalOpen }public const ${ string.@name } : String = getString( \"${ string.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 							stringList.add( string.@name.toString( ) )
 						}
 					}
 					node.color.each { color ->
 						if( !colorList.contains( color.@name.toString( ) ) )
 						{
-							colors += "\t${ conditional }public const ${ color.@name } : uint = getColor( \"${ color.@name }\" );" + System.lineSeparator( )
+							colors += "\t${ conditionalOpen }public const ${ color.@name } : uint = getColor( \"${ color.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 							colorList.add( color.@name.toString( ) )
 						}
 					}
 					node.bool.each { bool ->
 						if( !boolList.contains( bool.@name.toString( ) ) )
 						{
-							bools += "\t${ conditional }public const ${ bool.@name } : Boolean = getBoolean( \"${ bool.@name }\" );" + System.lineSeparator( )
+							bools += "\t${ conditionalOpen }public const ${ bool.@name } : Boolean = getBoolean( \"${ bool.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 							boolList.add( bool.@name.toString( ) )
 						}
 					}
 					node.dimen.each { dimen ->
 						if( !dimenList.contains( dimen.@name.toString( ) ) )
 						{
-							dimens += "\t${ conditional }public const ${ dimen.@name } : Number = getDimen( \"${ dimen.@name }\" );" + System.lineSeparator( )
+							dimens += "\t${ conditionalOpen }public const ${ dimen.@name } : Number = getDimen( \"${ dimen.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 							dimenList.add( dimen.@name.toString( ) )
 						}
 					}
 					node.integer.each { integer ->
 						if( !integerList.contains( integer.@name.toString( ) ) )
 						{
-							integers += "\t${ conditional }public const ${ integer.@name } : int = getInteger( \"${ integer.@name }\" );" + System.lineSeparator( )
+							integers += "\t${ conditionalOpen }public const ${ integer.@name } : int = getInteger( \"${ integer.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 							integerList.add( integer.@name.toString( ) )
 						}
 					}
@@ -143,14 +144,14 @@ class GenerateRClass implements IWatcherAction
 						node.SubTexture.each { texture ->
 							if( !drawableList.contains( texture.@name.toString( ) ) )
 							{
-								drawables += "\t${ conditional }public const ${ texture.@name } : Texture = getDrawable( \"${ texture.@name }\" );" + System.lineSeparator( )
+								drawables += "\t${ conditionalOpen }public const ${ texture.@name } : Texture = getDrawable( \"${ texture.@name }\" );${ conditionalClose }" + System.lineSeparator( )
 								drawableList.add( texture.@name.toString( ) )
 							}
 						}
 					}
 					else if( !isAtlas && !drawableList.contains( filename ) )
 					{
-						drawables += "\t${ conditional }public const ${ filename } : Texture = getDrawable( \"${ filename }\" );" + System.lineSeparator( )
+						drawables += "\t${ conditionalOpen }public const ${ filename } : Texture = getDrawable( \"${ filename }\" );${ conditionalClose }" + System.lineSeparator( )
 						drawableList.add( filename )
 					}
 				}

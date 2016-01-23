@@ -8,21 +8,15 @@ import org.gradle.api.Project
  */
 public abstract class AbstractIdePlugin extends AbstractPlugin implements IdePlugin
 {
-	private Sdk sdk
+	private List<Sdk> sdks
 
 	@Override
 	public void apply( Project project )
 	{
 		super.apply( project )
 
-		sdk = findSdk( )
+		sdks = findSdks( )
 	}
 
-	@Override
-	public final Sdk getSdk()
-	{
-		return sdk
-	}
-
-	protected abstract Sdk findSdk()
+	protected abstract List<Sdk> findSdks()
 }

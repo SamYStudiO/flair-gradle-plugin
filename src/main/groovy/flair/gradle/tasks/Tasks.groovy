@@ -10,8 +10,7 @@ public enum Tasks {
 	PACKAGE( "package" , null , Groups.PACKAGE ) ,
 	INSTALL( "install" , null , Groups.INSTALL ) ,
 	LAUNCH_ADL( "launchAdl" , null , Groups.LAUNCH ) ,
-	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
-	INCREMENT_VERSION( "incrementVersion" , VersioningIncrementVersion , Groups.DEFAULT ) ,
+	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER )
 
 	private String name
 

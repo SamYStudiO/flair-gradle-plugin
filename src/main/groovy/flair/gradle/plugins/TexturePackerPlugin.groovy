@@ -6,21 +6,12 @@ import flair.gradle.structure.AtlasesStructure
 import flair.gradle.structure.IStructure
 import flair.gradle.tasks.variantFactories.IVariantTaskFactory
 import flair.gradle.tasks.variantFactories.PublishAtlasesTaskFactory
-import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 class TexturePackerPlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin
 {
-	@Override
-	public void apply( Project project )
-	{
-		project.apply( plugin: BasePlugin )
-
-		super.apply( project )
-	}
-
 	@Override
 	public IExtensionFactory getExtensionFactory()
 	{

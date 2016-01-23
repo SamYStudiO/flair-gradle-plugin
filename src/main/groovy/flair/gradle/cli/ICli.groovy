@@ -11,7 +11,7 @@ interface ICli
 
 	public void addArgument( String arg )
 
-	public void reset( )
+	public void reset()
 
 	public void execute( Project project )
 }

@@ -1,6 +1,5 @@
 package flair.gradle.tasks.variantFactories
 
-import flair.gradle.tasks.Groups
 import flair.gradle.tasks.Install
 import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Variant

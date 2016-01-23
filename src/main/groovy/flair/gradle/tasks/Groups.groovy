@@ -7,7 +7,6 @@ public enum Groups {
 	BUILD( "build" ) ,
 	PACKAGE( "package" ) ,
 	INSTALL( "install" ) ,
-	PROCESS( "process" ) ,
 	LAUNCH( "launch" ) ,
 	TEXTURE_PACKER( "texturepacker" ) ,
 	DEFAULT( "" )

@@ -1,69 +1,17 @@
 package flair.gradle.dependencies
 
-import flair.gradle.plugins.IdePlugin
-import flair.gradle.utils.LocalProperties
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public class Sdk
 {
-	private Project project
-
 	private String path
 
 	public String getPath()
 	{
-		if( path ) return path
-
-		if( project )
-		{
-			boolean found
-
-			project.plugins.each {
-
-				if( it instanceof IdePlugin )
-				{
-					if( !found && it.sdk.isValid( ) )
-					{
-						found = true
-						path = it.sdk.path
-						name = it.sdk.name
-					}
-				}
-			}
-
-			if( found ) return path
-		}
-
-		try
-		{
-			path = new LocalProperties( project.file( "local.properties" ) ).getProp( "sdk.dir" )
-		}
-		catch( NullPointerException e )
-		{}
-
-		if( path ) return path
-
-		path = System.getenv( "AIR_HOME" )
-
-		if( path ) return path
-
-		path = System.getenv( "AIR_SDK_HOME" )
-
-		if( path ) return path
-
-		path = System.getenv( "FLEX_HOME" )
-
-		if( path ) return path
-
-		path = System.getenv( "FLEX_SDK_HOME" )
-
-		if( path ) return path
-
-		throw new Exception( "Cannot find AIR SDK home, try setting sdk.dir property from local.properties file in your project root or set AIR_HOME/FLEX_HOME environment variable" )
+		return path
 	}
 
 	public void setPath( String path )
@@ -75,29 +23,7 @@ public class Sdk
 
 	public String getName()
 	{
-		if( name ) return name
-
-		String path = getPath( )
-
-		if( name ) return name
-
-		if( path )
-		{
-			if( path.indexOf( "/" ) > 0 )
-			{
-				String[] a = path.split( "/" )
-
-				return a[ a.size( ) - 1 ]
-			}
-			else return path
-		}
-
-		return ""
-	}
-
-	public void setName( String name )
-	{
-		this.name = name
+		return name ?: path ? path.split( "/" ).last( ) : null
 	}
 
 	public Sdk( String path )
@@ -111,58 +37,53 @@ public class Sdk
 		this.name = name
 	}
 
-	public Sdk( Project project )
-	{
-		this.project = project
-	}
-
-	public Boolean isValid()
-	{
-		return path && isAirSdk( )
-	}
-
 	public Boolean isAirSdk()
 	{
-		return new File( "${ getPath( ) }/air-sdk-description.xml" ).exists( )
-	}
-
-	public Boolean isFlexSdk()
-	{
-		return new File( "${ getPath( ) }/flex-sdk-description.xml" ).exists( )
+		return path && new File( "${ path }/air-sdk-description.xml" ).exists( )
 	}
 
 	public String getVersion()
 	{
-		File description = new File( "${ getPath( ) }/air-sdk-description.xml" )
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		File description = new File( "${ path }/air-sdk-description.xml" )
 
 		return new XmlParser( ).parseText( description.getText( ) ).version.text( ).substring( 0 , 4 )
 	}
 
 	public String getMxmlcPath()
 	{
-		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "amxmlc.bat" : "amxmlc"
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
-		return getPath( ) + "/bin/" + executable
+		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "mxmlc.bat" : "mxmlc"
+
+		return path + "/bin/" + executable
 	}
 
 	public String getAdtPath()
 	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "adt.bat" : "adt"
 
-		return getPath( ) + "/bin/" + executable
+		return path + "/bin/" + executable
 	}
 
 	public String getAdlPath()
 	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "adl.exe" : "adl"
 
-		return getPath( ) + "/bin/" + executable
+		return path + "/bin/" + executable
 	}
 
 	public String getAsdocPath()
 	{
-		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "aasdoc.bat" : "aasdoc"
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
-		return getPath( ) + "/bin/" + executable
+		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "asdoc.bat" : "asdoc"
+
+		return path + "/bin/" + executable
 	}
 }

@@ -19,6 +19,8 @@ public abstract class AbstractPlugin implements IPlugin
 	{
 		this.project = project
 
+		if( !this instanceof BasePlugin ) project.apply( plugin: BasePlugin )
+
 		addTasks( )
 	}
 

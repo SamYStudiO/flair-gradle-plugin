@@ -1,5 +1,6 @@
 package flair.gradle.plugins
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.directoryWatcher.DirectoryWatcher
 import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.Extensions
@@ -23,7 +24,7 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , IStructurePlugin , IWatcherActionPlugin
+class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IWatcherActionPlugin , IConfigurationPlugin
 {
 	private List<IPlugin> plugins = new ArrayList<IPlugin>( )
 
@@ -57,13 +58,21 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 			{
 				it.extensionFactory.create( it == this ? project : project.extensions.getByName( Extensions.FLAIR.name ) as ExtensionAware , project )
 
-				if( it == this ) flair = project.extensions.getByName( Extensions.FLAIR.name ) as IExtensionManager
+				if( it == this )
+				{
+					flair = project.extensions.getByName( Extensions.FLAIR.name ) as IExtensionManager
+				}
 
 				// TODO try to remove platform extension if only one exist (actual comment code doesn't work)
 				//if( it instanceof IPlatformPlugin && platformPluginCount == 2 )
 				//{
 				//	platformPlugins[ 0 ].extensionFactory.create( project.extensions.getByName( FlairExtension.NAME ) as ExtensionAware , project )
 				//}
+			}
+
+			if( it instanceof IConfigurationPlugin )
+			{
+				createConfigurations( it.configurations )
 			}
 		}
 
@@ -80,6 +89,12 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 	public IExtensionFactory getExtensionFactory()
 	{
 		return new FlairExtensionFactory( )
+	}
+
+	@Override
+	public List<Configurations> getConfigurations()
+	{
+		return Configurations.DEFAULTS
 	}
 
 	@Override
@@ -111,6 +126,31 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 		project.tasks.create( Tasks.CLEAN.name , Tasks.CLEAN.type )
 	}
 
+	private void createConfigurations( List<Configurations> list )
+	{
+		list.each { conf ->
+
+			project.configurations.create( conf.name ) {
+
+				if( conf.files )
+				{
+					conf.files.each {
+						project.dependencies.add( project.configurations.getByName( conf.name ).name , project.files( "${ flair.getFlairProperty( Properties.MODULE_NAME.name ) }/${ it }" ) )
+					}
+				}
+
+				if( conf.fileTree )
+				{
+					conf.fileTree.each {
+						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( Properties.MODULE_NAME.name ) }/${ it.value }"
+					}
+
+					project.dependencies.add( conf.name , project.fileTree( conf.fileTree ) )
+				}
+			}
+		}
+	}
+
 	private void createStructures()
 	{
 		String moduleName = flair.getFlairProperty( Properties.MODULE_NAME.name )
@@ -118,32 +158,33 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 
 		if( !moduleName || !packageName ) return
 
+		String tempDir = System.getProperty( "java.io.tmpdir" )
+		String scaffoldTempDir = "${ tempDir }/scaffold"
+
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).getPath( ) )
-			into System.getProperty( "java.io.tmpdir" )
+			into tempDir
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"
 		}
 
-		GenerateFontClass.template = project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold/src/main/generated/Fonts.as" ).getText( )
-		GenerateRClass.template = project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold/src/main/generated/R.as" ).getText( )
+		GenerateFontClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).getText( )
+		GenerateRClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).getText( )
 
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
 			{
-				it.structures.each { structure -> structure.create( project , project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold" ) )
+				it.structures.each { structure -> structure.create( project , project.file( scaffoldTempDir ) )
 				}
 			}
 		}
 
-		project.file( "${ System.getProperty( "java.io.tmpdir" ) }/scaffold" ).deleteDir( )
+		project.file( scaffoldTempDir ).deleteDir( )
 	}
 
 	private void createVariantTasks()
 	{
-		List<Class> list = new ArrayList<Class>( )
-
 		project.plugins.each { plugin ->
 			if( plugin instanceof IVariantTaskPlugin )
 			{
@@ -157,8 +198,6 @@ class BasePlugin extends AbstractPlugin implements IPlugin , IExtensionPlugin , 
 						{
 							task.dependsOn project.tasks.getByName( Tasks.PUBLISH_ATLASES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
 						}
-
-						list.add( factory.class )
 					}
 				}
 			}

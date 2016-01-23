@@ -1,7 +1,7 @@
 package
 {
 	/**
-	 * DO NOT edit this class, this is auto generated from generateResourceClass task and will give you access to app resources.
+	 * DO NOT edit this class, this is auto generated from your resources directories.
 	 * This class try to mimic android R class but will return resource instances instead of resource ids.
 	 * For example :
 	 * var image : Image = new Image( R.drawable.drawable_id );

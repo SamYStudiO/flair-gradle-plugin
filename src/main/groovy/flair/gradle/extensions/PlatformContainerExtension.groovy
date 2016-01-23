@@ -1,5 +1,6 @@
 package flair.gradle.extensions
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.variants.Platforms
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
@@ -26,6 +27,14 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 		buildTypes = project.container( VariantExtension ) {
 			new VariantExtension( it , project , platform )
+		}
+
+		productFlavors.whenObjectAdded {
+			addConfiguration( it.name )
+		}
+
+		buildTypes.whenObjectAdded {
+			addConfiguration( it.name )
 		}
 	}
 
@@ -79,5 +88,17 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 	public IVariantExtension getBuildType( String name )
 	{
 		return buildTypes.findByName( name ) ? buildTypes.getByName( name ) : new VariantExtension( name , project , platform )
+	}
+
+	protected addConfiguration( String name )
+	{
+		Configurations.DEFAULTS.each { conf ->
+
+			String s = name + conf.name.capitalize( )
+			if( !project.configurations.findByName( s ) )
+			{
+				project.configurations.create( s )
+			}
+		}
 	}
 }

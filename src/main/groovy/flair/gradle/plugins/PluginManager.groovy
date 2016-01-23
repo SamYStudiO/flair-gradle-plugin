@@ -24,9 +24,7 @@ public class PluginManager
 
 		project.plugins.each { plugin ->
 
-			if( plugin instanceof IosPlugin && platform == Platforms.IOS ) hasPlatform = true
-			if( plugin instanceof AndroidPlugin && platform == Platforms.ANDROID ) hasPlatform = true
-			if( plugin instanceof DesktopPlugin && platform == Platforms.DESKTOP ) hasPlatform = true
+			if( plugin instanceof IPlatformPlugin && plugin.platform == platform ) hasPlatform = true
 		}
 
 		return hasPlatform
@@ -38,9 +36,7 @@ public class PluginManager
 
 		project.plugins.each { plugin ->
 
-			if( plugin instanceof IosPlugin && list.indexOf( Platforms.IOS ) < 0 ) list.add( Platforms.IOS )
-			if( plugin instanceof AndroidPlugin && list.indexOf( Platforms.ANDROID ) < 0 ) list.add( Platforms.ANDROID )
-			if( plugin instanceof DesktopPlugin && list.indexOf( Platforms.DESKTOP ) < 0 ) list.add( Platforms.DESKTOP )
+			if( plugin instanceof IPlatformPlugin && list.indexOf( plugin.platform ) < 0 ) list.add( plugin.platform )
 		}
 
 		return list

@@ -152,48 +152,34 @@ public class Assemble extends AbstractVariantTask
 	{
 		if( !resourceDir.exists( ) ) return
 
-		Node output = new Node( null , "resources" )
+		project.fileTree( "${ resourceDir }" ) { include "values*/?*.xml" }.each { file ->
 
-		project.fileTree( "${ resourceDir }/values/" ) {
-			include "?*.xml"
-		}.each { file ->
-			Node xml = new XmlParser( ).parse( file )
+			String qualifiers = file.parentFile.name.replace( "values" , "" )
 
-			xml.children( ).each { node ->
+			project.file( "${ outputDir }/resources/values${ qualifiers }/" ).mkdirs( )
+			File outputFile  = project.file( "${ outputDir }/resources/values${ qualifiers }/values${ qualifiers }.xml" )
 
-				output.append( node as Node )
-			}
-		}
+			if( !outputFile.exists(  ) ) outputFile.createNewFile( )
 
-		if( output.children( ).size( ) > 0 )
-		{
-			project.file( "${ outputDir }/resources/values/" ).mkdirs( )
-			project.file( "${ outputDir }/resources/values/values.xml" ).createNewFile( )
-			project.file( "${ outputDir }/resources/values/values.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
-			}
-		}
+			Node output
 
-		output = new Node( null , "resources" )
-
-		project.fileTree( "${ resourceDir }" ) {
-			include "values-?*/?*.xml"
-		}.each { file ->
-
-			String qualifiers = file.parentFile.name.replace( "values-" , "" )
+			if( outputFile.getText(  ).isEmpty(  ) ) output = new Node( null , "resources" )
+			else output = new XmlParser( ).parse( outputFile )
 
 			Node xml = new XmlParser( ).parse( file )
 
-			xml.children( ).each { node ->
+			xml.children( ).each { Node node ->
 
-				output.append( node as Node )
+				Node old = output.children(  ).find { output.name(  ) == node.name(  ) && output.@'name' == node.@'name' } as Node
+
+				if( old ) output.remove( old )
+
+				output.append( node )
 			}
 
 			if( output.children( ).size( ) > 0 )
 			{
-				project.file( "${ outputDir }/resources/values-${ qualifiers }/" ).mkdirs( )
-				project.file( "${ outputDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).createNewFile( )
-				project.file( "${ outputDir }/resources/values-${ qualifiers }/values-${ qualifiers }.xml" ).withWriter { writer -> XmlUtil.serialize( output , writer )
-				}
+				outputFile.withWriter { writer -> XmlUtil.serialize( output , writer ) }
 			}
 		}
 	}
