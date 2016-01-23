@@ -1,6 +1,8 @@
 package flair.gradle.dependencies
 
+import flair.gradle.utils.PropertyFile
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -26,6 +28,16 @@ public class Sdk
 		return name ?: path ? path.split( "/" ).last( ) : null
 	}
 
+	public Sdk( Project project )
+	{
+		this( new PropertyFile( project.file( "local.properties" ) ).getProp( "sdk.dir" ) )
+	}
+
+	public Sdk( Project project , String name )
+	{
+		this( new PropertyFile( project.file( "local.properties" ) ).getProp( "sdk.dir" ) , name )
+	}
+
 	public Sdk( String path )
 	{
 		this.path = path
@@ -48,7 +60,7 @@ public class Sdk
 
 		File description = new File( "${ path }/air-sdk-description.xml" )
 
-		return new XmlParser( ).parseText( description.getText( ) ).version.text( ).substring( 0 , 4 )
+		return new XmlParser( ).parseText( description.text ).version.text( ).substring( 0 , 4 )
 	}
 
 	public String getMxmlcPath()
