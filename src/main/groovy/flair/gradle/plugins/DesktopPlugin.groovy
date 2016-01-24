@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
-import flair.gradle.structure.DesktopStructure
-import flair.gradle.structure.IStructure
+import flair.gradle.structures.DesktopStructure
+import flair.gradle.structures.IStructure
 import flair.gradle.variants.Platforms
 
 /**

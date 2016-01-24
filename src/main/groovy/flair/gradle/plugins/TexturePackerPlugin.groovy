@@ -2,8 +2,8 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.extensions.factories.TexturePackerExtensionFactory
-import flair.gradle.structure.AtlasesStructure
-import flair.gradle.structure.IStructure
+import flair.gradle.structures.AtlasesStructure
+import flair.gradle.structures.IStructure
 import flair.gradle.tasks.variantFactories.IVariantTaskFactory
 import flair.gradle.tasks.variantFactories.PublishAtlasesTaskFactory
 

@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
-import flair.gradle.structure.AndroidStructure
-import flair.gradle.structure.IStructure
+import flair.gradle.structures.AndroidStructure
+import flair.gradle.structures.IStructure
 import flair.gradle.variants.Platforms
 
 /**

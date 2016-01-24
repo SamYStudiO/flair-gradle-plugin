@@ -1,4 +1,4 @@
-package flair.gradle.structure
+package flair.gradle.structures
 
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.Properties

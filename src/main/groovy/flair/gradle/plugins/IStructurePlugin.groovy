@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.structure.IStructure
+import flair.gradle.structures.IStructure
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

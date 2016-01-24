@@ -1,7 +1,7 @@
 package flair.gradle.plugins
 
-import flair.gradle.structure.IStructure
-import flair.gradle.structure.IosStructure
+import flair.gradle.structures.IStructure
+import flair.gradle.structures.IosStructure
 import flair.gradle.variants.Platforms
 
 /**

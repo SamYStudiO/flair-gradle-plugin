@@ -1,4 +1,4 @@
-package flair.gradle.structure
+package flair.gradle.structures
 
 import org.gradle.api.Project
 

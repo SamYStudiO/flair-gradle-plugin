@@ -1,8 +1,8 @@
 package flair.gradle.plugins
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.structure.IStructure
-import flair.gradle.structure.IdeaStructure
+import flair.gradle.structures.IStructure
+import flair.gradle.structures.IdeaStructure
 import org.apache.tools.ant.taskdefs.condition.Os
 
 /**

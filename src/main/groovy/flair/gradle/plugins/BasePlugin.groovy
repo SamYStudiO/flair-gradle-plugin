@@ -8,10 +8,10 @@ import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.Properties
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
-import flair.gradle.structure.ClassTemplateStructure
-import flair.gradle.structure.CommonStructure
-import flair.gradle.structure.IStructure
-import flair.gradle.structure.VariantStructure
+import flair.gradle.structures.ClassTemplateStructure
+import flair.gradle.structures.CommonStructure
+import flair.gradle.structures.IStructure
+import flair.gradle.structures.VariantStructure
 import flair.gradle.directoryWatcher.generated.GenerateFontClass
 import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.tasks.Assemble
