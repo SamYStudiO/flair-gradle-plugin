@@ -9,9 +9,9 @@ public interface IPlatformContainerExtension extends IPlatformExtension
 {
 	List<String> getFlavorDimensions()
 
-	void setFlavorDimensions( List<String> flavorDimensions )
+	void flavorDimensions( List<String> flavorDimensions )
 
-	void setFlavorDimensions( String... flavorDimensions )
+	void flavorDimensions( String... flavorDimensions )
 
 	NamedDomainObjectContainer<IVariantExtension> getProductFlavors()
 

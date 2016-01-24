@@ -55,13 +55,13 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 	}
 
 	@Override
-	public void setFlavorDimensions( List<String> flavorDimensions )
+	public void flavorDimensions( List<String> flavorDimensions )
 	{
 		this.flavorDimensions = flavorDimensions
 	}
 
 	@Override
-	public void setFlavorDimensions( String... flavorDimensions )
+	public void flavorDimensions( String... flavorDimensions )
 	{
 		this.flavorDimensions = flavorDimensions
 	}

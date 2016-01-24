@@ -9,23 +9,26 @@ enum Properties
 	PACKAGE_NAME( "packageName" ) ,
 	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 
-	MAIN_CLASS( "mainClass" ) ,
-	EXCLUDE_RESOURCES( "excludeResources" ) ,
-
-	ADL_SCREEN_SIZE( "screensize" ) ,
-	ADL_X_SCREEN_DPI( "XscreenDPI" ) ,
-
-	APP_ID( "id" ) ,
-	APP_ID_SUFFIX( "idSuffix" ) ,
+	APP_ID( "appId" ) ,
+	APP_ID_SUFFIX( "appIdSuffix" ) ,
 	APP_NAME( "appName" ) ,
 	APP_NAME_SUFFIX( "appNameSuffix" ) ,
-	APP_FILE_NAME( "filename" ) ,
-	APP_VERSION( "version" ) ,
-	APP_FULL_SCREEN( "fullScreen" ) ,
-	APP_ASPECT_RATIO( "aspectRatio" ) ,
-	APP_AUTO_ORIENT( "autoOrient" ) ,
-	APP_DEPTH_AND_STENCIL( "depthAndStencil" ) ,
-	APP_DEFAULT_SUPPORTED_LANGUAGES( "defaultSupportedLanguages" ) ,
+	APP_FILE_NAME( "appFileName" ) ,
+	APP_VERSION( "appVersion" ) ,
+	APP_FULL_SCREEN( "appFullScreen" ) ,
+	APP_ASPECT_RATIO( "appAspectRatio" ) ,
+	APP_AUTO_ORIENT( "appAutoOrient" ) ,
+	APP_DEPTH_AND_STENCIL( "appDepthAndStencil" ) ,
+	APP_DEFAULT_SUPPORTED_LANGUAGES( "appDefaultSupportedLanguages" ) ,
+
+	COMPILE_MAIN_CLASS( "compileMainClass" ) ,
+	COMPILE_OPTIONS( "compileOptions" ) ,
+
+	PACKAGE_EXCLUDE_RESOURCES( "packageExcludeResources" ) ,
+	PACKAGE_OPTIONS( "packageOptions" ) ,
+
+	EMULATOR_SCREEN_SIZE( "emulatorScreenSize" ) ,
+	EMULATOR_SCREEN_DPI( "emulatorScreenDpi" ) ,
 
 	GENERATE_ATF_TEXTURES_FROM_ATLASES( "generateAtfTexturesFromAtlases" )
 

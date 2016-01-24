@@ -10,8 +10,4 @@ public interface IPlatformExtension extends IExtension
 	Platforms getPlatform()
 
 	IExtension getExtension( String name )
-
-	IExtension getAdl()
-
-	IExtension getAppDescriptor()
 }

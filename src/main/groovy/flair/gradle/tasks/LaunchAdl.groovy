@@ -31,9 +31,9 @@ class LaunchAdl extends AbstractVariantTask
 		cli.addArgument( "-profile" )
 		cli.addArgument( variant.platform == Platforms.DESKTOP ? "extendedDesktop" : "mobileDevice" )
 		cli.addArgument( "-screensize" )
-		cli.addArgument( extensionManager.getFlairProperty( Extensions.ADL.name , variant , Properties.ADL_SCREEN_SIZE.name ).toString( ) )
+		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
 		cli.addArgument( "-XscreenDPI" )
-		cli.addArgument( extensionManager.getFlairProperty( Extensions.ADL.name , variant , Properties.ADL_X_SCREEN_DPI.name ).toString( ) )
+		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_DPI.name ).toString( ) )
 
 		cli.addArgument( project.file( output + "/app_descriptor.xml" ).path )
 		cli.addArgument( project.file( output ).path )

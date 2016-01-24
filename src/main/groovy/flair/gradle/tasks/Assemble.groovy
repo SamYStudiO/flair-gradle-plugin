@@ -2,7 +2,6 @@ package flair.gradle.tasks
 
 import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.Properties
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
@@ -27,7 +26,7 @@ public class Assemble extends AbstractVariantTask
 	{
 		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
 		String sPlatform = variant.platform.name.toLowerCase( )
-		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.EXCLUDE_RESOURCES.name ) as List<String>
+		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.PACKAGE_EXCLUDE_RESOURCES.name ) as List<String>
 		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
 		outputDir = project.file( "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }" )
 
@@ -178,15 +177,15 @@ public class Assemble extends AbstractVariantTask
 
 		String appContent = app.text
 		String sdkVersion = new Sdk( project ).version
-		String appId = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ID_SUFFIX.name )
-		String appName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_NAME_SUFFIX.name )
-		String appFileName = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_FILE_NAME.name )
+		String appId = extensionManager.getFlairProperty( variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( variant , Properties.APP_ID_SUFFIX.name )
+		String appName = extensionManager.getFlairProperty( variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( variant , Properties.APP_NAME_SUFFIX.name )
+		String appFileName = extensionManager.getFlairProperty( variant , Properties.APP_FILE_NAME.name )
 		String appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
-		String appVersion = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_VERSION.name )
-		String appFullScreen = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_FULL_SCREEN.name )
-		String appAspectRatio = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_ASPECT_RATIO.name )
-		String appAutoOrient = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_AUTO_ORIENT.name )
-		String appDepthAndStencil = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_DEPTH_AND_STENCIL.name )
+		String appVersion = extensionManager.getFlairProperty( variant , Properties.APP_VERSION.name )
+		String appFullScreen = extensionManager.getFlairProperty( variant , Properties.APP_FULL_SCREEN.name )
+		String appAspectRatio = extensionManager.getFlairProperty( variant , Properties.APP_ASPECT_RATIO.name )
+		String appAutoOrient = extensionManager.getFlairProperty( variant , Properties.APP_AUTO_ORIENT.name )
+		String appDepthAndStencil = extensionManager.getFlairProperty( variant , Properties.APP_DEPTH_AND_STENCIL.name )
 		String supportedLocales = getSupportedLocales( )
 
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
@@ -228,7 +227,7 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( Extensions.APP_DESCRIPTOR.name , variant , Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
+		String defaultLocale = extensionManager.getFlairProperty( variant , Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

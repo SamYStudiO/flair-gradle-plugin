@@ -6,8 +6,6 @@ package flair.gradle.extensions
 public enum Extensions {
 
 	FLAIR( "flair" ) ,
-	ADL( "adl" ) ,
-	APP_DESCRIPTOR( "appDescriptor" ) ,
 	TEXTURE_PACKER( "texturePacker" )
 
 	private String name

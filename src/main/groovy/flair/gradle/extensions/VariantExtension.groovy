@@ -20,7 +20,7 @@ public class VariantExtension extends AbstractPlatformExtension implements IVari
 		return dimension
 	}
 
-	public void setDimension( String dimension )
+	public void dimension( String dimension )
 	{
 		this.dimension = dimension
 	}

@@ -7,11 +7,21 @@ import org.gradle.api.Project
  */
 public class TexturePackerExtension extends AbstractExtension
 {
-	public Boolean generateAtfTexturesFromAtlases
+	private Boolean generateAtfTexturesFromAtlases
 
 	public TexturePackerExtension( String name , Project project )
 	{
 		super( name , project )
+	}
+
+	public Boolean getGenerateAtfTexturesFromAtlases()
+	{
+		return generateAtfTexturesFromAtlases
+	}
+
+	public void generateAtfTexturesFromAtlases( Boolean generateAtfTexturesFromAtlases )
+	{
+		this.generateAtfTexturesFromAtlases = generateAtfTexturesFromAtlases
 	}
 
 	@Override
@@ -21,7 +31,7 @@ public class TexturePackerExtension extends AbstractExtension
 		{
 			switch( property )
 			{
-				case Properties.GENERATE_ATF_TEXTURES_FROM_ATLASES.name: return true
+				case Properties.GENERATE_ATF_TEXTURES_FROM_ATLASES.name: return false
 
 				default: return null
 			}

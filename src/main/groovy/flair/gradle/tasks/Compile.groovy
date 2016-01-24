@@ -63,6 +63,6 @@ class Compile extends AbstractVariantTask
 
 	public void addMainClass()
 	{
-		cli.addArgument( input + "/src/main/actionscript/" + extensionManager.getFlairProperty( variant , Properties.MAIN_CLASS.name ).toString( ).split( "\\." ).join( "/" ) + ".as" )
+		cli.addArgument( input + "/src/main/actionscript/" + extensionManager.getFlairProperty( variant , Properties.COMPILE_MAIN_CLASS.name ).toString( ).split( "\\." ).join( "/" ) + ".as" )
 	}
 }

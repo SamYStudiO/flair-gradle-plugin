@@ -11,15 +11,45 @@ import org.gradle.api.Project
  */
 public class FlairExtension extends PlatformContainerExtension implements IExtensionManager
 {
-	public String moduleName
+	private String moduleName
 
-	public String packageName
+	private String packageName
 
-	public Boolean autoGenerateVariantDirectories
+	private Boolean autoGenerateVariantDirectories
 
 	public FlairExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project , platform )
+	}
+
+	public String getModuleName()
+	{
+		return moduleName
+	}
+
+	public void moduleName( String moduleName )
+	{
+		this.moduleName = moduleName
+	}
+
+	public String getPackageName()
+	{
+		return packageName
+	}
+
+	public void packageName( String packageName )
+	{
+		this.packageName = packageName
+	}
+
+	public Boolean getAutoGenerateVariantDirectories()
+	{
+		return autoGenerateVariantDirectories
+	}
+
+	public void autoGenerateVariantDirectories( Boolean autoGenerateVariantDirectories )
+	{
+		this.autoGenerateVariantDirectories = autoGenerateVariantDirectories
 	}
 
 	@Override
