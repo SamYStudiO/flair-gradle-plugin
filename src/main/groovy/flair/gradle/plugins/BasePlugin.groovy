@@ -12,8 +12,8 @@ import flair.gradle.structure.ClassTemplateStructure
 import flair.gradle.structure.CommonStructure
 import flair.gradle.structure.IStructure
 import flair.gradle.structure.VariantStructure
-import flair.gradle.structure.generated.GenerateFontClass
-import flair.gradle.structure.generated.GenerateRClass
+import flair.gradle.directoryWatcher.generated.GenerateFontClass
+import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.tasks.Assemble
 import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.Tasks

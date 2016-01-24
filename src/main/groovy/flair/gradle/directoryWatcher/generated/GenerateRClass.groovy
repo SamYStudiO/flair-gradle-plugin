@@ -1,4 +1,4 @@
-package flair.gradle.structure.generated
+package flair.gradle.directoryWatcher.generated
 
 import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.IExtensionManager

@@ -157,7 +157,7 @@ public class Assemble extends AbstractVariantTask
 
 			xml.children( ).each { Node node ->
 
-				Node old = output.children( ).find { output.name( ) == node.name( ) && output.@'name' == node.@'name' } as Node
+				Node old = output.children( ).find { output.name( ) == node.name( ) && output.'@name' == node.'@name' } as Node
 
 				if( old ) output.remove( old )
 
