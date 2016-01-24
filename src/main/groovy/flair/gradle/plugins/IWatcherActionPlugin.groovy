@@ -5,7 +5,7 @@ import flair.gradle.directoryWatcher.IWatcherAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IWatcherActionPlugin
+public interface IWatcherActionPlugin
 {
-	public Map<? , IWatcherAction> getWatcherActions()
+	Map<? , IWatcherAction> getWatcherActions()
 }

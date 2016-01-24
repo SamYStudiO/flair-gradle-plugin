@@ -5,19 +5,19 @@ import org.gradle.api.NamedDomainObjectContainer
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IPlatformContainerExtension extends IPlatformExtension
+public interface IPlatformContainerExtension extends IPlatformExtension
 {
-	public List<String> getFlavorDimensions()
+	List<String> getFlavorDimensions()
 
-	public void setFlavorDimensions( List<String> flavorDimensions )
+	void setFlavorDimensions( List<String> flavorDimensions )
 
-	public void setFlavorDimensions( String... flavorDimensions )
+	void setFlavorDimensions( String... flavorDimensions )
 
-	public NamedDomainObjectContainer<IVariantExtension> getProductFlavors()
+	NamedDomainObjectContainer<IVariantExtension> getProductFlavors()
 
-	public NamedDomainObjectContainer<IVariantExtension> getBuildTypes()
+	NamedDomainObjectContainer<IVariantExtension> getBuildTypes()
 
-	public IVariantExtension getProductFlavor( String name )
+	IVariantExtension getProductFlavor( String name )
 
-	public IVariantExtension getBuildType( String name )
+	IVariantExtension getBuildType( String name )
 }

@@ -6,7 +6,7 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IExtensionFactory<T>
+public interface IExtensionFactory<T>
 {
-	public T create( ExtensionAware parent , Project project )
+	T create( ExtensionAware parent , Project project )
 }

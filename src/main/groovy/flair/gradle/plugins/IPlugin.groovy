@@ -6,7 +6,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IPlugin extends Plugin<Project>
+public interface IPlugin extends Plugin<Project>
 {
-	public Project getProject()
+	Project getProject()
 }

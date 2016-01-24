@@ -7,27 +7,27 @@ import org.gradle.api.NamedDomainObjectContainer
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IExtensionManager
+public interface IExtensionManager
 {
-	public IPlatformContainerExtension getPlatformContainer( Platforms platform )
+	IPlatformContainerExtension getPlatformContainer( Platforms platform )
 
-	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformProductFlavors()
+	NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformProductFlavors()
 
-	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformBuildTypes()
+	NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformBuildTypes()
 
-	public List<Variant> getAllActivePlatformVariants()
+	List<Variant> getAllActivePlatformVariants()
 
-	public List<Variant> getPlatformVariants( Platforms platform )
+	List<Variant> getPlatformVariants( Platforms platform )
 
-	public Object getFlairProperty( String name )
+	Object getFlairProperty( String name )
 
-	public Object getFlairProperty( Platforms platform , String name )
+	Object getFlairProperty( Platforms platform , String name )
 
-	public Object getFlairProperty( Variant variant , String name )
+	Object getFlairProperty( Variant variant , String name )
 
-	public Object getFlairProperty( String extensionName , String name )
+	Object getFlairProperty( String extensionName , String name )
 
-	public Object getFlairProperty( String extensionName , Platforms platform , String name )
+	Object getFlairProperty( String extensionName , Platforms platform , String name )
 
-	public Object getFlairProperty( String extensionName , Variant variant , String name )
+	Object getFlairProperty( String extensionName , Variant variant , String name )
 }

@@ -7,5 +7,5 @@ import org.gradle.api.Project
  */
 public interface IStructure
 {
-	public void create( Project project , File source )
+	void create( Project project , File source )
 }

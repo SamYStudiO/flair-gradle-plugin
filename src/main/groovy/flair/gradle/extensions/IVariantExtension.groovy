@@ -3,9 +3,9 @@ package flair.gradle.extensions
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantExtension extends IPlatformExtension
+public interface IVariantExtension extends IPlatformExtension
 {
-	public String getDimension()
+	String getDimension()
 
-	public void setDimension( String dimension )
+	void setDimension( String dimension )
 }

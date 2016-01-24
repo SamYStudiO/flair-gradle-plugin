@@ -5,6 +5,6 @@ import org.gradle.api.Task
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface ITask extends Task
+public interface ITask extends Task
 {
 }

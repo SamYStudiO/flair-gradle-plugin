@@ -5,7 +5,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IWatcherAction
+public interface IWatcherAction
 {
-	public void execute( Project project )
+	void execute( Project project )
 }

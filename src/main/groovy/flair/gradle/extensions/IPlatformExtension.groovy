@@ -5,13 +5,13 @@ import flair.gradle.variants.Platforms
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IPlatformExtension extends IExtension
+public interface IPlatformExtension extends IExtension
 {
-	public Platforms getPlatform()
+	Platforms getPlatform()
 
-	public IExtension getExtension( String name )
+	IExtension getExtension( String name )
 
-	public IExtension getAdl()
+	IExtension getAdl()
 
-	public IExtension getAppDescriptor()
+	IExtension getAppDescriptor()
 }

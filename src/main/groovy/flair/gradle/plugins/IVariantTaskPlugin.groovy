@@ -5,7 +5,7 @@ import flair.gradle.tasks.variantFactories.IVariantTaskFactory
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantTaskPlugin
+public interface IVariantTaskPlugin
 {
-	public List<IVariantTaskFactory> getVariantTaskFactories()
+	List<IVariantTaskFactory> getVariantTaskFactories()
 }

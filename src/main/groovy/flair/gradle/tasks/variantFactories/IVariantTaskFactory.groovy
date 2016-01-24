@@ -7,7 +7,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IVariantTaskFactory<T extends IVariantTask>
+public interface IVariantTaskFactory<T extends IVariantTask>
 {
-	public T create( Project project , Variant variant )
+	T create( Project project , Variant variant )
 }

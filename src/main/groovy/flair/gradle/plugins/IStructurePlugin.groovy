@@ -5,7 +5,7 @@ import flair.gradle.structure.IStructure
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-interface IStructurePlugin
+public interface IStructurePlugin
 {
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 }
