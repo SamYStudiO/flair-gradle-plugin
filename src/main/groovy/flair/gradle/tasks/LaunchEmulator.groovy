@@ -28,6 +28,7 @@ class LaunchEmulator extends AbstractVariantTask
 		cli.addArgument( "-profile" )
 
 		cli.addArgument( variant.platform == Platforms.DESKTOP ? "extendedDesktop" : "mobileDevice" )
+
 		if( variant.platform != Platforms.DESKTOP )
 		{
 			cli.addArgument( "-screensize" )
@@ -42,7 +43,5 @@ class LaunchEmulator extends AbstractVariantTask
 		cli.addArgument( project.file( output ).path )
 
 		cli.execute( project )
-
-		project.file( output + "/extracted_extensions" ).deleteDir( )
 	}
 }
