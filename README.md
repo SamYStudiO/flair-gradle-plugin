@@ -2,10 +2,12 @@
 
 TODO :
 * ~~Upload archive to gradle/bintray/jcenter/maven repositories~~
-* Install/Compile/package/ tasks
-* Manage release types
+* ~~Install/Compile/package/ tasks~~
+* ~~Manage release types~~
+* incremental tasks
+* complete idea plugin
 * Write doc (in progress)
-* Add tests
+* Add unit tests
 * More scaffold tests
 
 # Flair Gradle Plugin
