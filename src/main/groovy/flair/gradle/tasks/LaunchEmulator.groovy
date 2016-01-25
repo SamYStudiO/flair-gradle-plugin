@@ -10,11 +10,11 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class LaunchAdl extends AbstractVariantTask
+class LaunchEmulator extends AbstractVariantTask
 {
 	private ICli cli = new Adl( )
 
-	public LaunchAdl()
+	public LaunchEmulator()
 	{
 		group = Groups.LAUNCH.name
 		description = ""

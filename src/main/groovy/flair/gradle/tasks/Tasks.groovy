@@ -9,7 +9,7 @@ public enum Tasks {
 	COMPILE( "compile" , null , Groups.BUILD ) ,
 	PACKAGE( "package" , null , Groups.PACKAGE ) ,
 	INSTALL( "install" , null , Groups.INSTALL ) ,
-	LAUNCH_ADL( "launchAdl" , null , Groups.LAUNCH ) ,
+	LAUNCH_EMULATOR( "launchAdl" , null , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER )
 
 	private String name
