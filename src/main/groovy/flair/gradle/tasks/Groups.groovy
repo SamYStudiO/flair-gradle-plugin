@@ -9,6 +9,7 @@ public enum Groups {
 	INSTALL( "install" ) ,
 	LAUNCH( "launch" ) ,
 	TEXTURE_PACKER( "texturepacker" ) ,
+	DOCUMENTATION( "documentation" ) ,
 	DEFAULT( "" )
 
 	private String name

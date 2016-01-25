@@ -463,7 +463,7 @@ class Qualifier
 	 */
 	public function test( value : Object ) : Boolean
 	{
-		return matchFunction ? matchFunction( this.value , value ) : value === this.value;
+		return matchFunction != null ? matchFunction( this.value , value ) : value === this.value;
 	}
 }
 

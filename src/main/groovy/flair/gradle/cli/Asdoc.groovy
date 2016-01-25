@@ -17,16 +17,11 @@ public class Asdoc extends AbstractCli
 		ExecResult result = project.exec {
 			executable new Sdk( project ).asdocPath
 
-			arguments.each {
-
-				println( it )
-				args it
-			}
+			arguments.each { args it }
 
 			standardOutput = outputStream
 		}
 
-		println( ">>result1" + result.exitValue + "--" + result.toString( ) )
-		println( ">>result2" + outputStream.toString( ) )
+		println( outputStream.toString( ) )
 	}
 }
