@@ -5,13 +5,15 @@ package flair.gradle.tasks
  */
 public enum Tasks {
 	CLEAN( "clean" , Clean , Groups.BUILD ) ,
-	ASSEMBLE( "assemble" , null , Groups.BUILD ) ,
-	COMPILE( "compile" , null , Groups.BUILD ) ,
-	PACKAGE( "package" , null , Groups.PACKAGE ) ,
-	INSTALL( "install" , null , Groups.INSTALL ) ,
-	LAUNCH_EMULATOR( "launchAdl" , null , Groups.LAUNCH ) ,
+	ASSEMBLE( "assemble" , Assemble , Groups.BUILD ) ,
+	COMPILE( "compile" , Compile , Groups.BUILD ) ,
+	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
+	INSTALL( "install" , Install , Groups.INSTALL ) ,
+	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,
+	LAUNCH_EMULATOR( "launchAdl" , LaunchEmulator , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
-	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION )
+	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ),
+	LIST_DEVICES( "listDevices" , ListDevices , Groups.INSTALL )
 
 	private String name
 

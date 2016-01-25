@@ -114,4 +114,18 @@ public class Sdk
 
 		return path + "/atftools/png2atf"
 	}
+
+	public String getAdbPath()
+	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		return path + "/lib/android/bin/adb"
+	}
+
+	public String getIdbPath()
+	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		return path + "/lib/aot/bin/iOSBin/idb"
+	}
 }

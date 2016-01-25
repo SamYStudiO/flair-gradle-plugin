@@ -7,9 +7,11 @@ public enum Groups {
 	BUILD( "build" ) ,
 	PACKAGE( "package" ) ,
 	INSTALL( "install" ) ,
+	UNINSTALL( "uninstall" ) ,
 	LAUNCH( "launch" ) ,
 	TEXTURE_PACKER( "texturepacker" ) ,
 	DOCUMENTATION( "documentation" ) ,
+	DEVICES( "devices" ) ,
 	DEFAULT( "" )
 
 	private String name

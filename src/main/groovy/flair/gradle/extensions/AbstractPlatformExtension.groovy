@@ -51,7 +51,13 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private List<String> packageExcludeResources
 
-	private List<String> packageOptions = new ArrayList<>( )
+	private String packageConnect
+
+	private String packageListen
+
+	private Boolean packageSampler
+
+	private Boolean packageHideAneLibSymbols
 
 	public AbstractPlatformExtension( String name , Project project , Platforms platform )
 	{
@@ -256,6 +262,16 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.emulatorScreenDpi = emulatorScreenDpi
 	}
 
+	public String getPackageTarget()
+	{
+		return packageTarget
+	}
+
+	public void packageTarget( String packageTarget )
+	{
+		this.packageTarget = packageTarget
+	}
+
 	public List<String> getPackageExcludeResources()
 	{
 		return packageExcludeResources
@@ -266,24 +282,44 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageExcludeResources = packageExcludeResources
 	}
 
-	public List<String> getPackageOptions()
+	public String getPackageConnect()
 	{
-		return packageOptions
+		return packageConnect
 	}
 
-	public void packageOption( String packageOption )
+	public void packageConnect( String packageConnect )
 	{
-		this.packageOptions.add( packageOption )
+		this.packageConnect = packageConnect
 	}
 
-	public void packageOptions( List<String> packageOptions )
+	public String getPackageListen()
 	{
-		this.packageOptions.addAll( packageOptions )
+		return packageListen
 	}
 
-	public void packageOptions( String... packageOptions )
+	public void packageListen( String packageListen )
 	{
-		this.packageOptions.addAll( packageOptions )
+		this.packageListen = packageListen
+	}
+
+	public Boolean getPackageSampler()
+	{
+		return packageSampler
+	}
+
+	public void packageSampler( Boolean packageSampler )
+	{
+		this.packageSampler = packageSampler
+	}
+
+	public Boolean getPackageHideAneLibSymbols()
+	{
+		return packageHideAneLibSymbols
+	}
+
+	public void packageHideAneLibSymbols( Boolean packageHideAneLibSymbols )
+	{
+		this.packageHideAneLibSymbols = packageHideAneLibSymbols
 	}
 
 	@Override
@@ -345,7 +381,13 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 					}
-				case Properties.PACKAGE_OPTIONS.name: return new ArrayList<String>( )
+
+
+				case Properties.PACKAGE_CONNECT: return null
+				case Properties.PACKAGE_LISTEN: return null
+				case Properties.PACKAGE_SAMPLER: return false
+				case Properties.PACKAGE_HIDE_ANE_LIB_SYMBOLS: return false
+
 
 				default: return null
 			}

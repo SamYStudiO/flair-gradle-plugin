@@ -13,11 +13,11 @@ import org.gradle.api.tasks.TaskAction
  */
 class Package extends AbstractVariantTask
 {
-	private ICli cli = new Adt( )
+	protected ICli cli = new Adt( )
 
-	private String input
+	protected String input
 
-	private String output
+	protected String output
 
 	public Package()
 	{
@@ -32,11 +32,22 @@ class Package extends AbstractVariantTask
 		output = project.buildDir
 
 		cli.clearArguments( )
+
 		cli.addArgument( "-package" )
 
-		addArchitecture( )
+		if( variant.platform == Platforms.DESKTOP ) addSigning( )
 		addTarget( )
-		addSigning( )
+		if( variant.platform != Platforms.DESKTOP )
+		{
+			if( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ) != null ) addConnect( ) else if( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ) != null ) addListen( )
+		}
+		if( variant.platform == Platforms.IOS )
+		{
+			if( extensionManager.getFlairProperty( Properties.PACKAGE_SAMPLER.name ) ) addSampler( )
+			if( extensionManager.getFlairProperty( Properties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) ) addHideAneLibSymbols( )
+		}
+		if( variant.platform == Platforms.ANDROID ) addArchitecture( )
+		if( variant.platform != Platforms.DESKTOP ) addSigning( )
 		addOutput( )
 		addFilesAndDirectories( )
 		addExtensionNatives( )
@@ -46,11 +57,8 @@ class Package extends AbstractVariantTask
 
 	private addArchitecture()
 	{
-		if( variant.platform == Platforms.ANDROID )
-		{
-			cli.addArgument( "-arch" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.X86.name ) ? "x86" : "armv7" )
-		}
+		cli.addArgument( "-arch" )
+		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.X86.name ) ? "x86" : "armv7" )
 	}
 
 	private addTarget()
@@ -102,7 +110,7 @@ class Package extends AbstractVariantTask
 
 			case Platforms.DESKTOP:
 
-				if( target == "native" ) cli.addArgument( "native" ) else cli.addArgument( "air" )
+				cli.addArgument( "native" )
 
 				break
 		}
@@ -116,6 +124,29 @@ class Package extends AbstractVariantTask
 		cli.addArgument( project.file( "app/src/android/signing/certificate.p12" ).path )
 		cli.addArgument( "-storepass" )
 		cli.addArgument( "0000" )
+	}
+
+	private addConnect()
+	{
+		cli.addArgument( "-connect" )
+		if( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ).toString( ) )
+	}
+
+	private addListen()
+	{
+		cli.addArgument( "-listen" )
+		if( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ).toString( ) )
+	}
+
+	private addSampler()
+	{
+		cli.addArgument( "-sampler" )
+	}
+
+	private addHideAneLibSymbols()
+	{
+		cli.addArgument( "-hideAneLibSymbols" )
+		cli.addArgument( "yes" )
 	}
 
 	private addOutput()
@@ -134,14 +165,7 @@ class Package extends AbstractVariantTask
 
 			case Platforms.DESKTOP:
 
-				String target = extensionManager.getFlairProperty( variant , Properties.PACKAGE_TARGET.name )
-
-				if( target == "native" )
-				{
-
-					if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
-				}
-				else extension = "air"
+				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
 				break
 		}
 
@@ -159,7 +183,6 @@ class Package extends AbstractVariantTask
 		cli.addArgument( "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 
 		project.file( input ).listFiles( ).each {
-
 			if( it.name.indexOf( ".png" ) > 0 ) cli.addArgument( it.name )
 		}
 	}

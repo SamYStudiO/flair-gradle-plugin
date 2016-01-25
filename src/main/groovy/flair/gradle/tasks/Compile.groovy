@@ -13,11 +13,11 @@ import org.gradle.api.tasks.TaskAction
  */
 class Compile extends AbstractVariantTask
 {
-	private ICli cli = new Mxmlc( )
+	protected ICli cli = new Mxmlc( )
 
-	private String input
+	protected String input
 
-	private String output
+	protected String output
 
 	public Compile()
 	{

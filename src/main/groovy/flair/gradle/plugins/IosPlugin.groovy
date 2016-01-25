@@ -2,6 +2,8 @@ package flair.gradle.plugins
 
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.IosStructure
+import flair.gradle.tasks.ListDevices
+import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Platforms
 
 /**
@@ -21,5 +23,12 @@ public class IosPlugin extends AbstractPlatformPlugin
 		list.add( new IosStructure( ) )
 
 		return list
+	}
+
+	@Override
+	public void addTasks()
+	{
+		ListDevices task = project.tasks.create( Tasks.LIST_DEVICES.name + platform.name.capitalize(  ) , Tasks.LIST_DEVICES.type ) as ListDevices
+		task.platform = platform
 	}
 }

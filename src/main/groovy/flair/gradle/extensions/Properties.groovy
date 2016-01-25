@@ -9,10 +9,10 @@ enum Properties
 	PACKAGE_NAME( "packageName" ) ,
 	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 
-	DEBUG( "debug" ),
-	X86( "x86" ),
+	DEBUG( "debug" ) ,
+	X86( "x86" ) ,
 
-	GENERATE_ATF_TEXTURES_FROM_DRAWABLES( "generateAtfTexturesFromDrawables" ),
+	GENERATE_ATF_TEXTURES_FROM_DRAWABLES( "generateAtfTexturesFromDrawables" ) ,
 
 	APP_ID( "appId" ) ,
 	APP_ID_SUFFIX( "appIdSuffix" ) ,
@@ -31,11 +31,13 @@ enum Properties
 
 	PACKAGE_TARGET( "packageTarget" ) ,
 	PACKAGE_EXCLUDE_RESOURCES( "packageExcludeResources" ) ,
-	PACKAGE_OPTIONS( "packageOptions" ) ,
+	PACKAGE_CONNECT( "packageConnect" ) ,
+	PACKAGE_LISTEN( "packageListen" ) ,
+	PACKAGE_SAMPLER( "packageSampler" ) ,
+	PACKAGE_HIDE_ANE_LIB_SYMBOLS( "packageHideAneLibSymbols" ) ,
 
 	EMULATOR_SCREEN_SIZE( "emulatorScreenSize" ) ,
 	EMULATOR_SCREEN_DPI( "emulatorScreenDpi" )
-
 
 	private String name
 
