@@ -38,6 +38,7 @@ class Compile extends AbstractVariantTask
 		addSourcePaths( )
 		addAsLibraryPaths( )
 		addLibraryPaths( )
+		addConstants( )
 		addCustomArguments( )
 		addOutput( )
 		addMainClass( )
@@ -45,7 +46,7 @@ class Compile extends AbstractVariantTask
 		cli.execute( project )
 	}
 
-	public void addSourcePaths()
+	private void addSourcePaths()
 	{
 		List<String> list = new ArrayList<String>( )
 
@@ -68,7 +69,7 @@ class Compile extends AbstractVariantTask
 		if( file.exists( ) ) cli.addArgument( "-source-path+=${ file.path }" )
 	}
 
-	public void addAsLibraryPaths()
+	private void addAsLibraryPaths()
 	{
 		project.configurations.getByName( Configurations.COMPILE.name ).files.each {
 
@@ -94,7 +95,7 @@ class Compile extends AbstractVariantTask
 		}
 	}
 
-	public void addLibraryPaths()
+	private void addLibraryPaths()
 	{
 		project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files.each {
 
@@ -120,18 +121,36 @@ class Compile extends AbstractVariantTask
 		}
 	}
 
-	public void addCustomArguments()
+	private addConstants()
+	{
+		Platforms.values( ).each {
+
+			cli.addArgument( "-define+=PLATFORM::${ it.name.toUpperCase( ) },${ it == variant.platform }" )
+		}
+
+		extensionManager.allActivePlatformProductFlavors.each {
+
+			cli.addArgument( "-define+=PRODUCT_FLAVOR::${ it.name.toUpperCase( ) },${ variant.productFlavors.indexOf( it.name ) >= 0 }" )
+		}
+
+		extensionManager.allActivePlatformBuildTypes.each {
+
+			cli.addArgument( "-define+=BUILD_TYPE::${ it.name.toUpperCase( ) },${ it.name == variant.buildType }" )
+		}
+	}
+
+	private void addCustomArguments()
 	{
 		cli.addArguments( extensionManager.getFlairProperty( variant , Properties.COMPILE_OPTIONS.name ) as List<String> )
 	}
 
-	public void addOutput()
+	private void addOutput()
 	{
 		cli.addArgument( "-output" )
 		cli.addArgument( "${ output }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 	}
 
-	public void addMainClass()
+	private void addMainClass()
 	{
 		String pClass = extensionManager.getFlairProperty( variant , Properties.COMPILE_MAIN_CLASS.name )
 
