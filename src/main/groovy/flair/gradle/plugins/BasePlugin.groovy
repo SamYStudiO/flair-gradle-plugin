@@ -7,7 +7,7 @@ import flair.gradle.directoryWatcher.generated.GenerateFontClass
 import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.structures.ClassTemplateStructure
@@ -136,7 +136,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( conf.files )
 				{
 					conf.files.each {
-						project.dependencies.add( project.configurations.getByName( conf.name ).name , project.files( "${ flair.getFlairProperty( Properties.MODULE_NAME.name ) }/${ it }" ) )
+						project.dependencies.add( project.configurations.getByName( conf.name ).name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it }" ) )
 					}
 				}
 
@@ -146,7 +146,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 					map.each {
 
-						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( Properties.MODULE_NAME.name ) }/${ it.value }"
+						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it.value }"
 					}
 
 					project.dependencies.add( conf.name , project.fileTree( map ) )
@@ -157,8 +157,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private void createStructures()
 	{
-		String moduleName = flair.getFlairProperty( Properties.MODULE_NAME.name )
-		String packageName = flair.getFlairProperty( Properties.PACKAGE_NAME.name )
+		String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String packageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
 
 		if( !moduleName || !packageName ) return
 

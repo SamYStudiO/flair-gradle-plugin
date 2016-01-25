@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.Adl
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.TaskAction
@@ -32,9 +32,9 @@ class LaunchEmulator extends AbstractVariantTask
 		if( variant.platform != Platforms.DESKTOP )
 		{
 			cli.addArgument( "-screensize" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
 			cli.addArgument( "-XscreenDPI" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_DPI.name ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_DPI.name ).toString( ) )
 		}
 
 		cli.addArgument( "-extdir" )

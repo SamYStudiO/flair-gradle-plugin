@@ -2,7 +2,7 @@ package flair.gradle.directoryWatcher.generated
 
 import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
@@ -18,7 +18,7 @@ class GenerateFontClass implements IWatcherAction
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 
 		if( !moduleName || !template ) return
 

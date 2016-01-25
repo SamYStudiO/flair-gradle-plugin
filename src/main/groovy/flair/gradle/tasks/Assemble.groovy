@@ -4,7 +4,7 @@ import flair.gradle.cli.ICli
 import flair.gradle.cli.Png2Atf
 import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
@@ -26,9 +26,9 @@ public class Assemble extends AbstractVariantTask
 	@TaskAction
 	public void assemble()
 	{
-		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 		String sPlatform = variant.platform.name.toLowerCase( )
-		List<String> excludeResources = extensionManager.getFlairProperty( variant , Properties.PACKAGE_EXCLUDE_RESOURCES.name ) as List<String>
+		List<String> excludeResources = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name ) as List<String>
 		String srcRoot = "${ project.projectDir.absolutePath }/${ moduleName }/src/"
 		outputDir = project.file( "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }" )
 
@@ -106,7 +106,7 @@ public class Assemble extends AbstractVariantTask
 
 		processResourceValues( project.file( "${ srcRoot }/${ variant.buildType }/resources/" ) )
 
-		if( extensionManager.getFlairProperty( variant , Properties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name ) ) generateAtfTextures( )
+		if( extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name ) ) generateAtfTextures( )
 
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/splashs"
@@ -248,15 +248,15 @@ public class Assemble extends AbstractVariantTask
 
 		String appContent = app.text
 		String sdkVersion = new Sdk( project ).version
-		String appId = extensionManager.getFlairProperty( variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( variant , Properties.APP_ID_SUFFIX.name )
-		String appName = extensionManager.getFlairProperty( variant , Properties.APP_NAME.name ) + extensionManager.getFlairProperty( variant , Properties.APP_NAME_SUFFIX.name )
-		String appFileName = extensionManager.getFlairProperty( variant , Properties.APP_FILE_NAME.name )
+		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )
+		String appName = extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME_SUFFIX.name )
+		String appFileName = extensionManager.getFlairProperty( variant , FlairProperties.APP_FILE_NAME.name )
 		String appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
-		String appVersion = extensionManager.getFlairProperty( variant , Properties.APP_VERSION.name )
-		String appFullScreen = extensionManager.getFlairProperty( variant , Properties.APP_FULL_SCREEN.name )
-		String appAspectRatio = extensionManager.getFlairProperty( variant , Properties.APP_ASPECT_RATIO.name )
-		String appAutoOrient = extensionManager.getFlairProperty( variant , Properties.APP_AUTO_ORIENT.name )
-		String appDepthAndStencil = extensionManager.getFlairProperty( variant , Properties.APP_DEPTH_AND_STENCIL.name )
+		String appVersion = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name )
+		String appFullScreen = extensionManager.getFlairProperty( variant , FlairProperties.APP_FULL_SCREEN.name )
+		String appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperties.APP_ASPECT_RATIO.name )
+		String appAutoOrient = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENT.name )
+		String appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEPTH_AND_STENCIL.name )
 		String supportedLocales = getSupportedLocales( )
 
 
@@ -315,7 +315,7 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( variant , Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
+		String defaultLocale = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

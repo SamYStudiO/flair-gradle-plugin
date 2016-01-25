@@ -1,7 +1,7 @@
 package flair.gradle.structures
 
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import org.gradle.api.Project
 
 /**
@@ -14,11 +14,11 @@ public class VariantStructure implements IStructure
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		boolean autoGenerateVariantDirectories = extensionManager.getFlairProperty( Properties.AUTO_GENERATE_VARIANT_DIRECTORIES.name )
+		boolean autoGenerateVariantDirectories = extensionManager.getFlairProperty( FlairProperties.AUTO_GENERATE_VARIANT_DIRECTORIES.name )
 
 		if( !autoGenerateVariantDirectories ) return
 
-		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 
 		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( ) }
 

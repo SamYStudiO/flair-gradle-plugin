@@ -339,24 +339,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 			switch( property )
 			{
-				case Properties.DEBUG.name: return false
-				case Properties.X86.name: return false
-				case Properties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
+				case FlairProperties.DEBUG.name: return false
+				case FlairProperties.X86.name: return false
+				case FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
 
-				case Properties.APP_ID.name: return extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
-				case Properties.APP_ID_SUFFIX.name: return ""
-				case Properties.APP_NAME.name: return project.name
-				case Properties.APP_NAME_SUFFIX.name: return ""
-				case Properties.APP_FILE_NAME.name: return getProp( Properties.APP_NAME.name , true ) + getProp( Properties.APP_NAME_SUFFIX.name , true )
-				case Properties.APP_VERSION.name: return "1.0.0"
-				case Properties.APP_FULL_SCREEN.name: return true
-				case Properties.APP_ASPECT_RATIO.name: return "any"
-				case Properties.APP_AUTO_ORIENT.name: return true
-				case Properties.APP_DEPTH_AND_STENCIL.name: return false
-				case Properties.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
+				case FlairProperties.APP_ID.name: return extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+				case FlairProperties.APP_ID_SUFFIX.name: return ""
+				case FlairProperties.APP_NAME.name: return project.name
+				case FlairProperties.APP_NAME_SUFFIX.name: return ""
+				case FlairProperties.APP_FILE_NAME.name: return getProp( FlairProperties.APP_NAME.name , true ) + getProp( FlairProperties.APP_NAME_SUFFIX.name , true )
+				case FlairProperties.APP_VERSION.name: return "1.0.0"
+				case FlairProperties.APP_FULL_SCREEN.name: return true
+				case FlairProperties.APP_ASPECT_RATIO.name: return "any"
+				case FlairProperties.APP_AUTO_ORIENT.name: return true
+				case FlairProperties.APP_DEPTH_AND_STENCIL.name: return false
+				case FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
 
-				case Properties.COMPILE_MAIN_CLASS.name:
-					String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
+				case FlairProperties.COMPILE_MAIN_CLASS.name:
+					String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
 
 					switch( p )
 					{
@@ -366,13 +366,13 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 						default: return null
 					}
-				case Properties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
+				case FlairProperties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
 
-				case Properties.EMULATOR_SCREEN_SIZE.name: return "540x960:540x960"
-				case Properties.EMULATOR_SCREEN_DPI.name: return 240
+				case FlairProperties.EMULATOR_SCREEN_SIZE.name: return "540x960:540x960"
+				case FlairProperties.EMULATOR_SCREEN_DPI.name: return 240
 
-				case Properties.PACKAGE_TARGET.name: return null
-				case Properties.PACKAGE_EXCLUDE_RESOURCES.name:
+				case FlairProperties.PACKAGE_TARGET.name: return null
+				case FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{
 						case Platforms.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
@@ -383,10 +383,10 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 					}
 
 
-				case Properties.PACKAGE_CONNECT: return null
-				case Properties.PACKAGE_LISTEN: return null
-				case Properties.PACKAGE_SAMPLER: return false
-				case Properties.PACKAGE_HIDE_ANE_LIB_SYMBOLS: return false
+				case FlairProperties.PACKAGE_CONNECT: return null
+				case FlairProperties.PACKAGE_LISTEN: return null
+				case FlairProperties.PACKAGE_SAMPLER: return false
+				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS: return false
 
 
 				default: return null

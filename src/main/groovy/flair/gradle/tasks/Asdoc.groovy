@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.dependencies.Configurations
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.plugins.PluginManager
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
@@ -23,7 +23,7 @@ public class Asdoc extends AbstractTask
 	@TaskAction
 	public void asdoc()
 	{
-		String srcRoot = extensionManager.getFlairProperty( Properties.MODULE_NAME.name ) + "/src"
+		String srcRoot = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) + "/src"
 
 		if( !srcRoot ) return
 

@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.TexturePacker
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -20,7 +20,7 @@ class PublishAtlases extends AbstractVariantTask
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 		ICli tp = new TexturePacker( )
 
 		List<String> list = new ArrayList<String>( )

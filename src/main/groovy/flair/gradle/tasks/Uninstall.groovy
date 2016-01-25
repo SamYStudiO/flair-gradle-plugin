@@ -3,7 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adb
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Idb
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
@@ -26,7 +26,7 @@ class Uninstall extends AbstractVariantTask
 	@TaskAction
 	public void uninstall()
 	{
-		String appId = extensionManager.getFlairProperty( variant , Properties.APP_ID.name ) + extensionManager.getFlairProperty( variant , Properties.APP_ID_SUFFIX.name )
+		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )
 
 		if( variant.platform == Platforms.IOS )
 		{

@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -39,12 +39,12 @@ class Package extends AbstractVariantTask
 		addTarget( )
 		if( variant.platform != Platforms.DESKTOP )
 		{
-			if( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ) != null ) addConnect( ) else if( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ) != null ) addListen( )
+			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ) != null ) addConnect( ) else if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ) != null ) addListen( )
 		}
 		if( variant.platform == Platforms.IOS )
 		{
-			if( extensionManager.getFlairProperty( Properties.PACKAGE_SAMPLER.name ) ) addSampler( )
-			if( extensionManager.getFlairProperty( Properties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) ) addHideAneLibSymbols( )
+			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_SAMPLER.name ) ) addSampler( )
+			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) ) addHideAneLibSymbols( )
 		}
 		if( variant.platform == Platforms.ANDROID ) addArchitecture( )
 		if( variant.platform != Platforms.DESKTOP ) addSigning( )
@@ -58,14 +58,14 @@ class Package extends AbstractVariantTask
 	private addArchitecture()
 	{
 		cli.addArgument( "-arch" )
-		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.X86.name ) ? "x86" : "armv7" )
+		cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.X86.name ) ? "x86" : "armv7" )
 	}
 
 	private addTarget()
 	{
 		cli.addArgument( "-target" )
 
-		String target = extensionManager.getFlairProperty( variant , Properties.PACKAGE_TARGET.name )
+		String target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name )
 
 		switch( variant.platform )
 		{
@@ -83,7 +83,7 @@ class Package extends AbstractVariantTask
 
 					default:
 
-						if( extensionManager.getFlairProperty( variant , Properties.DEBUG.name ) ) cli.addArgument( "ipa-debug" ) else cli.addArgument( "ipa-test" )
+						if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "ipa-debug" ) else cli.addArgument( "ipa-test" )
 						break
 				}
 
@@ -102,7 +102,7 @@ class Package extends AbstractVariantTask
 						break
 
 					default:
-						if( extensionManager.getFlairProperty( variant , Properties.DEBUG.name ) ) cli.addArgument( "apk-debug" ) else cli.addArgument( "apk-captive-runtime" )
+						if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "apk-debug" ) else cli.addArgument( "apk-captive-runtime" )
 						break
 				}
 
@@ -129,13 +129,13 @@ class Package extends AbstractVariantTask
 	private addConnect()
 	{
 		cli.addArgument( "-connect" )
-		if( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( Properties.PACKAGE_CONNECT.name ).toString( ) )
+		if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ).toString( ) )
 	}
 
 	private addListen()
 	{
 		cli.addArgument( "-listen" )
-		if( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( Properties.PACKAGE_LISTEN.name ).toString( ) )
+		if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ).toString( ) )
 	}
 
 	private addSampler()

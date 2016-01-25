@@ -3,7 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
 import flair.gradle.dependencies.Configurations
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.TaskAction
@@ -28,7 +28,7 @@ class Compile extends AbstractVariantTask
 	@TaskAction
 	public void compile()
 	{
-		input = "${ project.projectDir }/${ extensionManager.getFlairProperty( Properties.MODULE_NAME.name ) }"
+		input = "${ project.projectDir }/${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }"
 		output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
 
 
@@ -36,7 +36,7 @@ class Compile extends AbstractVariantTask
 
 		if( variant.platform == Platforms.DESKTOP ) cli.addArgument( "+configname=air" ) else cli.addArgument( "+configname=airmobile" )
 
-		if( extensionManager.getFlairProperty( variant , Properties.DEBUG.name ) ) cli.addArgument( "-debug=true" )
+		if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "-debug=true" )
 
 		addSourcePaths( )
 		addAsLibraryPaths( )
@@ -144,7 +144,7 @@ class Compile extends AbstractVariantTask
 
 	private void addCustomArguments()
 	{
-		cli.addArguments( extensionManager.getFlairProperty( variant , Properties.COMPILE_OPTIONS.name ) as List<String> )
+		cli.addArguments( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List<String> )
 	}
 
 	private void addOutput()
@@ -155,7 +155,7 @@ class Compile extends AbstractVariantTask
 
 	private void addMainClass()
 	{
-		String pClass = extensionManager.getFlairProperty( variant , Properties.COMPILE_MAIN_CLASS.name )
+		String pClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name )
 
 		List<String> list = new ArrayList<String>( )
 

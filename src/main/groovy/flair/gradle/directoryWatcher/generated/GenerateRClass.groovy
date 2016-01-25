@@ -2,7 +2,7 @@ package flair.gradle.directoryWatcher.generated
 
 import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.extensions.Properties
+import flair.gradle.extensions.FlairProperties
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
@@ -18,8 +18,8 @@ class GenerateRClass implements IWatcherAction
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( Properties.MODULE_NAME.name )
-		String packageName = extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
 
 		if( !moduleName || !packageName || !template ) return
 
