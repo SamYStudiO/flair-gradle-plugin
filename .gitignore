@@ -1,9 +1,6 @@
 /local.properties
-*.iml
-!src/main/resources/scaffold/scaffold.iml
+/.idea/
 /.gradle/
-/gradle/
 /build/
 /out/
 /test/
-/.idea/
