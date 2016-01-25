@@ -161,11 +161,24 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) , extensions )
+		File extensionsDir = project.file( "${ outputDir }/extensions" )
+
+		if( extensionsDir.exists( ) )
+		{
+			extensionsDir.listFiles( ).each { file ->
+				project.copy {
+
+					from project.zipTree( file )
+					into "${ outputDir }/extracted_extensions/${ file.name }"
+				}
+			}
+		}
+
+		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
 
 		for( String flavor : variant.productFlavors )
 		{
-			processApp( project.file( "${ srcRoot }/${ flavor }/app_descriptor.xml" ) , extensions )
+			processApp( project.file( "${ srcRoot }/${ flavor }/app_descriptor.xml" ) )
 		}
 	}
 
@@ -204,7 +217,7 @@ public class Assemble extends AbstractVariantTask
 		}
 	}
 
-	private String processApp( File app , List<File> extensions )
+	private String processApp( File app )
 	{
 		if( !app.exists( ) ) return
 
@@ -222,18 +235,21 @@ public class Assemble extends AbstractVariantTask
 		String supportedLocales = getSupportedLocales( )
 
 
+		FileTree extractedExtensions = project.fileTree( "${ outputDir }/extracted_extensions/" )
 		String extensionNodes = System.lineSeparator( )
+		boolean hasExtensions = false
 
-		println( ">>>>>>>>>>>>>" )
+		extractedExtensions.each {
 
-		extensions.each {
-
-			extensionNodes += "\t\t<extensionID>${ it.name }</extensionID>" + System.lineSeparator( )
-
-			println( ">>>>>>>>>>>>>" + extensionNodes )
+			if( it.name == "extension.xml" )
+			{
+				println( "add > " + new XmlParser( ).parse( it ).id[ 0 ].text() )
+				extensionNodes += "\t\t<extensionID>${ new XmlParser( ).parse( it ).id[ 0 ].text() }</extensionID>" + System.lineSeparator( )
+				hasExtensions = true
+			}
 		}
 
-		extensionNodes += "\t"
+		if( hasExtensions ) extensionNodes += "\t"
 
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 				.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )

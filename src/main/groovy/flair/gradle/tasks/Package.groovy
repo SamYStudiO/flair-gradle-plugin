@@ -98,7 +98,7 @@ class Package extends AbstractVariantTask
 			case Platforms.ANDROID:
 
 				cli.addArgument( "apk-debug" )
-				cli.addArgument( "-listen" )
+				//cli.addArgument( "-listen" )
 				break
 
 			case Platforms.DESKTOP:

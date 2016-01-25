@@ -36,19 +36,6 @@ class LaunchAdl extends AbstractVariantTask
 			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_DPI.name ).toString( ) )
 		}
 
-		File extensions = project.file( "${ output }/extensions" )
-
-		if( extensions.exists( ) )
-		{
-			extensions.listFiles( ).each { file ->
-				project.copy {
-
-					from project.zipTree( file )
-					into "${ output }/extracted_extensions/${ file.name }"
-				}
-			}
-		}
-
 		cli.addArgument( "-extdir" )
 		cli.addArgument( project.file( output + "/extracted_extensions" ).path )
 		cli.addArgument( project.file( output + "/app_descriptor.xml" ).path )
