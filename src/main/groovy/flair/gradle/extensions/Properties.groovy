@@ -12,6 +12,8 @@ enum Properties
 	DEBUG( "debug" ),
 	X86( "x86" ),
 
+	GENERATE_ATF_TEXTURES_FROM_DRAWABLES( "generateAtfTexturesFromDrawables" ),
+
 	APP_ID( "appId" ) ,
 	APP_ID_SUFFIX( "appIdSuffix" ) ,
 	APP_NAME( "appName" ) ,
@@ -32,9 +34,8 @@ enum Properties
 	PACKAGE_OPTIONS( "packageOptions" ) ,
 
 	EMULATOR_SCREEN_SIZE( "emulatorScreenSize" ) ,
-	EMULATOR_SCREEN_DPI( "emulatorScreenDpi" ) ,
+	EMULATOR_SCREEN_DPI( "emulatorScreenDpi" )
 
-	GENERATE_ATF_TEXTURES_FROM_ATLASES( "generateAtfTexturesFromAtlases" )
 
 	private String name
 

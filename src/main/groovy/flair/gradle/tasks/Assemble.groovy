@@ -1,5 +1,7 @@
 package flair.gradle.tasks
 
+import flair.gradle.cli.ICli
+import flair.gradle.cli.Png2Atf
 import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.Properties
@@ -13,7 +15,7 @@ import org.gradle.api.tasks.TaskAction
  */
 public class Assemble extends AbstractVariantTask
 {
-	private String outputDir
+	protected String outputDir
 
 	public Assemble()
 	{
@@ -104,6 +106,8 @@ public class Assemble extends AbstractVariantTask
 
 		processResourceValues( project.file( "${ srcRoot }/${ variant.buildType }/resources/" ) )
 
+		if( extensionManager.getFlairProperty( variant , Properties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name ) ) generateAtfTextures( )
+
 		project.copy {
 			from "${ srcRoot }/${ sPlatform }/splashs"
 
@@ -182,6 +186,27 @@ public class Assemble extends AbstractVariantTask
 		}
 	}
 
+	private generateAtfTextures()
+	{
+		ICli png2atf = new Png2Atf( )
+
+		FileTree tree = project.fileTree( "${ outputDir }/resources/" ) { include "**/*.png" }
+
+		tree.each {
+
+			String input = it.absolutePath
+			String output = input.replaceAll( "\\.png" , "\\.atf" )
+
+			png2atf.clearArguments( )
+			png2atf.addArgument( "-i" )
+			png2atf.addArgument( input )
+			png2atf.addArgument( "-o" )
+			png2atf.addArgument( output )
+
+			png2atf.execute( project )
+		}
+	}
+
 	private String processResourceValues( File resourceDir )
 	{
 		if( !resourceDir.exists( ) ) return
@@ -243,7 +268,6 @@ public class Assemble extends AbstractVariantTask
 
 			if( it.name == "extension.xml" )
 			{
-				println( "add > " + new XmlParser( ).parse( it ).id[ 0 ].text( ) )
 				extensionNodes += "\t\t<extensionID>${ new XmlParser( ).parse( it ).id[ 0 ].text( ) }</extensionID>" + System.lineSeparator( )
 				hasExtensions = true
 			}

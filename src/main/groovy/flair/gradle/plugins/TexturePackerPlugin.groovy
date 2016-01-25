@@ -1,7 +1,5 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.factories.IExtensionFactory
-import flair.gradle.extensions.factories.TexturePackerExtensionFactory
 import flair.gradle.structures.AtlasesStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.tasks.variantFactories.IVariantTaskFactory
@@ -10,14 +8,8 @@ import flair.gradle.tasks.variantFactories.PublishAtlasesTaskFactory
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class TexturePackerPlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin
+class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin , IVariantTaskPlugin
 {
-	@Override
-	public IExtensionFactory getExtensionFactory()
-	{
-		return new TexturePackerExtensionFactory( )
-	}
-
 	@Override
 	public List<IStructure> getStructures()
 	{

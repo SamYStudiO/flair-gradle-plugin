@@ -15,6 +15,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean x86
 
+	private Boolean generateAtfTexturesFromDrawables
+
 	private String appId
 
 	private String appIdSuffix
@@ -82,6 +84,16 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public void x86( Boolean x86 )
 	{
 		this.x86 = x86
+	}
+
+	public Boolean getGenerateAtfTexturesFromDrawables()
+	{
+		return generateAtfTexturesFromDrawables
+	}
+
+	public void generateAtfTexturesFromDrawables( Boolean generateAtfTexturesFromDrawables )
+	{
+		this.generateAtfTexturesFromDrawables = generateAtfTexturesFromDrawables
 	}
 
 	public String getAppId()
@@ -293,6 +305,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 			{
 				case Properties.DEBUG.name: return false
 				case Properties.X86.name: return false
+				case Properties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
 
 				case Properties.APP_ID.name: return extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 				case Properties.APP_ID_SUFFIX.name: return ""

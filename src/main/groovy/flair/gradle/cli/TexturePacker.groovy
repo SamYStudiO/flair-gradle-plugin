@@ -23,10 +23,10 @@ public class TexturePacker extends AbstractCli
 				args it
 			}
 
+			ignoreExitValue = true
 			standardOutput = outputStream
 		}
 
-		println( ">>result1" + result.exitValue + "--" + result.toString( ) )
-		println( ">>result2" + outputStream.toString( ) )
+		println( outputStream.toString( ) )
 	}
 }

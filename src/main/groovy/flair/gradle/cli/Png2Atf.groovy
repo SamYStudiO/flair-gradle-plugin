@@ -15,7 +15,8 @@ public class Png2Atf extends AbstractCli
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
-			executable new Sdk( project ).png2AtfPath
+
+			commandLine new Sdk( project ).png2AtfPath , "-c" , "e2" , "-n" , "0,0" , "-r"
 
 			arguments.each {
 
@@ -23,10 +24,10 @@ public class Png2Atf extends AbstractCli
 				args it
 			}
 
+			ignoreExitValue = true
 			standardOutput = outputStream
 		}
 
-		println( ">>result1" + result.exitValue + "--" + result.toString( ) )
-		println( ">>result2" + outputStream.toString( ) )
+		println( outputStream.toString( ) )
 	}
 }
