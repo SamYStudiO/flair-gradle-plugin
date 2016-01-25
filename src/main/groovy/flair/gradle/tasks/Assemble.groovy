@@ -13,7 +13,7 @@ import org.gradle.api.tasks.TaskAction
  */
 public class Assemble extends AbstractVariantTask
 {
-	String outputDir
+	private String outputDir
 
 	public Assemble()
 	{
@@ -243,8 +243,8 @@ public class Assemble extends AbstractVariantTask
 
 			if( it.name == "extension.xml" )
 			{
-				println( "add > " + new XmlParser( ).parse( it ).id[ 0 ].text() )
-				extensionNodes += "\t\t<extensionID>${ new XmlParser( ).parse( it ).id[ 0 ].text() }</extensionID>" + System.lineSeparator( )
+				println( "add > " + new XmlParser( ).parse( it ).id[ 0 ].text( ) )
+				extensionNodes += "\t\t<extensionID>${ new XmlParser( ).parse( it ).id[ 0 ].text( ) }</extensionID>" + System.lineSeparator( )
 				hasExtensions = true
 			}
 		}

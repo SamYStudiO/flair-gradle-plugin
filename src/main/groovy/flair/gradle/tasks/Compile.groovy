@@ -13,11 +13,11 @@ import org.gradle.api.tasks.TaskAction
  */
 class Compile extends AbstractVariantTask
 {
-	public ICli cli = new Mxmlc( )
+	private ICli cli = new Mxmlc( )
 
-	public String input
+	private String input
 
-	public String output
+	private String output
 
 	public Compile()
 	{
@@ -31,9 +31,12 @@ class Compile extends AbstractVariantTask
 		input = "${ project.projectDir }/${ extensionManager.getFlairProperty( Properties.MODULE_NAME.name ) }"
 		output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
 
+
 		cli.clearArguments( )
 
 		if( variant.platform == Platforms.DESKTOP ) cli.addArgument( "+configname=air" ) else cli.addArgument( "+configname=airmobile" )
+
+		if( extensionManager.getFlairProperty( variant , Properties.DEBUG.name ) ) cli.addArgument( "-debug=true" )
 
 		addSourcePaths( )
 		addAsLibraryPaths( )

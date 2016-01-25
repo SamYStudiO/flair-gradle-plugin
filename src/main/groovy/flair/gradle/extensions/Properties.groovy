@@ -9,6 +9,9 @@ enum Properties
 	PACKAGE_NAME( "packageName" ) ,
 	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 
+	DEBUG( "debug" ),
+	X86( "x86" ),
+
 	APP_ID( "appId" ) ,
 	APP_ID_SUFFIX( "appIdSuffix" ) ,
 	APP_NAME( "appName" ) ,
@@ -24,6 +27,7 @@ enum Properties
 	COMPILE_MAIN_CLASS( "compileMainClass" ) ,
 	COMPILE_OPTIONS( "compileOptions" ) ,
 
+	PACKAGE_TARGET( "packageTarget" ) ,
 	PACKAGE_EXCLUDE_RESOURCES( "packageExcludeResources" ) ,
 	PACKAGE_OPTIONS( "packageOptions" ) ,
 

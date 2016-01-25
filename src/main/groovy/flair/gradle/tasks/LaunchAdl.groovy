@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
  */
 class LaunchAdl extends AbstractVariantTask
 {
-	ICli cli = new Adl( )
+	private ICli cli = new Adl( )
 
 	public LaunchAdl()
 	{

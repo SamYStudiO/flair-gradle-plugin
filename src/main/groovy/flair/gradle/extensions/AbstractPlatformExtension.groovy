@@ -11,6 +11,10 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 {
 	private Platforms platform
 
+	private Boolean debug
+
+	private Boolean x86
+
 	private String appId
 
 	private String appIdSuffix
@@ -41,6 +45,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Integer emulatorScreenDpi
 
+	private String packageTarget
+
 	private List<String> packageExcludeResources
 
 	private List<String> packageOptions = new ArrayList<>( )
@@ -56,6 +62,26 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public Platforms getPlatform()
 	{
 		return platform
+	}
+
+	public Boolean getDebug()
+	{
+		return debug
+	}
+
+	public void debug( Boolean debug )
+	{
+		this.debug = debug
+	}
+
+	public Boolean getX86()
+	{
+		return x86
+	}
+
+	public void x86( Boolean x86 )
+	{
+		this.x86 = x86
 	}
 
 	public String getAppId()
@@ -265,6 +291,9 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 			switch( property )
 			{
+				case Properties.DEBUG.name: return false
+				case Properties.X86.name: return false
+
 				case Properties.APP_ID.name: return extensionManager.getFlairProperty( Properties.PACKAGE_NAME.name )
 				case Properties.APP_ID_SUFFIX.name: return ""
 				case Properties.APP_NAME.name: return project.name
@@ -293,6 +322,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case Properties.EMULATOR_SCREEN_SIZE.name: return "540x960:540x960"
 				case Properties.EMULATOR_SCREEN_DPI.name: return 240
 
+				case Properties.PACKAGE_TARGET.name: return null
 				case Properties.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{
