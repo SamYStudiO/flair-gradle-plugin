@@ -63,12 +63,20 @@ public class Sdk
 		return new XmlParser( ).parseText( description.text ).version.text( ).substring( 0 , 4 )
 	}
 
+	public String getFrameworkPath()
+	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		return path + "/frameworks"
+	}
+
 	public String getMxmlcPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "mxmlc.bat" : "mxmlc"
 
+		//return path + "/lib/mxmlc-cli.jar"// + executable
 		return path + "/bin/" + executable
 	}
 
@@ -78,6 +86,7 @@ public class Sdk
 
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "adt.bat" : "adt"
 
+		//return path + "/lib/adt.jar"// + executable
 		return path + "/bin/" + executable
 	}
 
@@ -97,5 +106,12 @@ public class Sdk
 		String executable = Os.isFamily( Os.FAMILY_WINDOWS ) ? "asdoc.bat" : "asdoc"
 
 		return path + "/bin/" + executable
+	}
+
+	public String getPng2AtfPath()
+	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		return path + "/atftools/png2atf"
 	}
 }

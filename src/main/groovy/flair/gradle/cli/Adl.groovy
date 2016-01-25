@@ -12,7 +12,9 @@ public class Adl extends AbstractCli
 	public void execute( Project project )
 	{
 		project.ant.exec( executable: new Sdk( project ).adlPath ) {
-			arguments.each { arg( value: it ) }
+			arguments.each {
+				println( it )
+				arg( value: it ) }
 		}
 	}
 }

@@ -10,7 +10,7 @@ public enum Extensions {
 
 	private String name
 
-	Extensions( String name )
+	public Extensions( String name )
 	{
 		this.name = name
 	}

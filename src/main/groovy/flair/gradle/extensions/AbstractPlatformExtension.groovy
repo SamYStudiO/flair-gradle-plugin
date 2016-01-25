@@ -178,7 +178,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.compileMainClass = compileMainClass
 	}
 
-	public List<String> getCompileOtions()
+	public List<String> getCompileOptions()
 	{
 		return compileOptions
 	}

@@ -2,7 +2,6 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.Adl
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.Properties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
@@ -24,21 +23,39 @@ class LaunchAdl extends AbstractVariantTask
 	@TaskAction
 	public void launch()
 	{
-		cli.reset( )
-
 		String output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
 
 		cli.addArgument( "-profile" )
-		cli.addArgument( variant.platform == Platforms.DESKTOP ? "extendedDesktop" : "mobileDevice" )
-		cli.addArgument( "-screensize" )
-		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
-		cli.addArgument( "-XscreenDPI" )
-		cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_DPI.name ).toString( ) )
 
+		cli.addArgument( variant.platform == Platforms.DESKTOP ? "extendedDesktop" : "mobileDevice" )
+		if( variant.platform != Platforms.DESKTOP )
+		{
+			cli.addArgument( "-screensize" )
+			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
+			cli.addArgument( "-XscreenDPI" )
+			cli.addArgument( extensionManager.getFlairProperty( variant , Properties.EMULATOR_SCREEN_DPI.name ).toString( ) )
+		}
+
+		File extensions = project.file( "${ output }/extensions" )
+
+		if( extensions.exists( ) )
+		{
+			extensions.listFiles( ).each { file ->
+				project.copy {
+
+					from project.zipTree( file )
+					into "${ output }/extracted_extensions/${ file.name }"
+				}
+			}
+		}
+
+		cli.addArgument( "-extdir" )
+		cli.addArgument( project.file( output + "/extracted_extensions" ).path )
 		cli.addArgument( project.file( output + "/app_descriptor.xml" ).path )
 		cli.addArgument( project.file( output ).path )
 
-		cli.arguments.each { arg -> println( arg ) }
 		cli.execute( project )
+
+		project.file( output + "/extracted_extensions" ).deleteDir( )
 	}
 }

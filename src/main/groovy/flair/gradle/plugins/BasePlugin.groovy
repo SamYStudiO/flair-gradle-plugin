@@ -3,6 +3,8 @@ package flair.gradle.plugins
 import flair.gradle.dependencies.Configurations
 import flair.gradle.directoryWatcher.DirectoryWatcher
 import flair.gradle.directoryWatcher.IWatcherAction
+import flair.gradle.directoryWatcher.generated.GenerateFontClass
+import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.Properties
@@ -12,8 +14,6 @@ import flair.gradle.structures.ClassTemplateStructure
 import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
-import flair.gradle.directoryWatcher.generated.GenerateFontClass
-import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.tasks.Assemble
 import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.Tasks
@@ -141,11 +141,14 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 				if( conf.fileTree )
 				{
-					conf.fileTree.each {
+					Map<String , String> map = conf.fileTree.clone( ) as Map<String , String>
+
+					map.each {
+
 						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( Properties.MODULE_NAME.name ) }/${ it.value }"
 					}
 
-					project.dependencies.add( conf.name , project.fileTree( conf.fileTree ) )
+					project.dependencies.add( conf.name , project.fileTree( map ) )
 				}
 			}
 		}

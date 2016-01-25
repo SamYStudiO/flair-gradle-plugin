@@ -5,13 +5,13 @@ package flair.gradle.variants
  */
 public enum Platforms {
 
-	IOS( "Ios" ) ,
-	ANDROID( "Android" ) ,
-	DESKTOP( "Desktop" )
+	IOS( "ios" ) ,
+	ANDROID( "android" ) ,
+	DESKTOP( "desktop" )
 
 	private String name
 
-	Platforms( String name )
+	public Platforms( String name )
 	{
 		this.name = name
 	}

@@ -95,6 +95,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 		Configurations.DEFAULTS.each { conf ->
 
 			String s = name + conf.name.capitalize( )
+
 			if( !project.configurations.findByName( s ) )
 			{
 				project.configurations.create( s )

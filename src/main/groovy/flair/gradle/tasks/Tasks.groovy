@@ -18,7 +18,7 @@ public enum Tasks {
 
 	private Groups group
 
-	Tasks( String name , Class type , Groups group )
+	public Tasks( String name , Class type , Groups group )
 	{
 		this.name = name
 		this.type = type

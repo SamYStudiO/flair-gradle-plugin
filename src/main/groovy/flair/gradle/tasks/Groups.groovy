@@ -13,7 +13,7 @@ public enum Groups {
 
 	private String name
 
-	Groups( String name )
+	public Groups( String name )
 	{
 		this.name = name
 	}

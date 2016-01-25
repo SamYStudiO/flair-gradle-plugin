@@ -7,29 +7,28 @@ import org.gradle.process.ExecResult
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Mxmlc extends AbstractCli
+public class Adt extends AbstractCli
 {
 	@Override
 	public void execute( Project project )
 	{
 		/*Sdk sdk = new Sdk( project )
 
-		println( sdk.mxmlcPath )
-		println( sdk.frameworkPath )
+		println( sdk.adtPath )
 
-		project.ant.java( jar: sdk.mxmlcPath ,
+		project.ant.java( jar: sdk.adtPath ,
 				fork: true ,
-				//dir: sdk.frameworkPath ,
+				dir: rootDir ,
 				resultproperty: "mxmlcResult" ,
 				outputproperty: "mxmlOutput" ,
 				errorproperty: "mxmlError" ,
 				failOnError: false ) {
 
-			jvmarg( value: "-Dsun.io.useCanonCaches=false" )
-			jvmarg( value: "-Xms32m" )
-			jvmarg( value: "-Xmx512m" )
+			//jvmarg( value: "-Dsun.io.useCanonCaches=false" )
+			//jvmarg( value: "-Xms32m" )
+			//jvmarg( value: "-Xmx512m" )
 			jvmarg( value: "-Dfile.encoding=UTF-8" )
-			jvmarg( value: "-Dflexlib=${ sdk.frameworkPath }" )
+			//jvmarg( value: "-Dflexlib=${ sdk.frameworkPath }" )
 
 			arguments.each {
 				println( it )
@@ -44,8 +43,7 @@ public class Mxmlc extends AbstractCli
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
-
-			executable new Sdk( project ).mxmlcPath
+			executable new Sdk( project ).adtPath
 
 			arguments.each {
 

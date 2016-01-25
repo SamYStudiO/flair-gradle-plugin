@@ -11,7 +11,11 @@ public interface ICli
 
 	void addArgument( String arg )
 
-	void reset()
+	void addArguments( String... args )
+
+	void addArguments( List<String> args )
+
+	void clearArguments()
 
 	void execute( Project project )
 }

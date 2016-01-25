@@ -128,11 +128,44 @@ public class Assemble extends AbstractVariantTask
 			into "${ outputDir }/icons"
 		}
 
-		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) )
+		List<File> extensions = new ArrayList<File>( )
+
+		project.configurations.getByName( Configurations.NATIVE_COMPILE.name ).files.each {
+
+			extensions.add( it )
+		}
+
+		project.configurations.getByName( variant.platform.name + Configurations.NATIVE_COMPILE.name.capitalize( ) ).files.each {
+
+			extensions.add( it )
+		}
+
+		variant.productFlavors.each {
+
+			project.configurations.getByName( it + Configurations.NATIVE_COMPILE.name.capitalize( ) ).files.each {
+
+				extensions.add( it )
+			}
+		}
+
+		project.configurations.getByName( variant.buildType + Configurations.NATIVE_COMPILE.name.capitalize( ) ).files.each {
+
+			extensions.add( it )
+		}
+
+		extensions.each { file ->
+			project.copy {
+
+				from file
+				into "${ outputDir }/extensions"
+			}
+		}
+
+		processApp( project.file( "${ srcRoot }/${ variant.platform.name.toLowerCase( ) }/app_descriptor.xml" ) , extensions )
 
 		for( String flavor : variant.productFlavors )
 		{
-			processApp( project.file( "${ srcRoot }/${ flavor }/app_descriptor.xml" ) )
+			processApp( project.file( "${ srcRoot }/${ flavor }/app_descriptor.xml" ) , extensions )
 		}
 	}
 
@@ -157,7 +190,7 @@ public class Assemble extends AbstractVariantTask
 
 			xml.children( ).each { Node node ->
 
-				Node old = output.children( ).find { output.name( ) == node.name( ) && output.'@name' == node.'@name' } as Node
+				Node old = output.children( ).find { it.name( ) == node.name( ) && it.'@name' == node.'@name' } as Node
 
 				if( old ) output.remove( old )
 
@@ -171,7 +204,7 @@ public class Assemble extends AbstractVariantTask
 		}
 	}
 
-	private String processApp( File app )
+	private String processApp( File app , List<File> extensions )
 	{
 		if( !app.exists( ) ) return
 
@@ -188,6 +221,20 @@ public class Assemble extends AbstractVariantTask
 		String appDepthAndStencil = extensionManager.getFlairProperty( variant , Properties.APP_DEPTH_AND_STENCIL.name )
 		String supportedLocales = getSupportedLocales( )
 
+
+		String extensionNodes = System.lineSeparator( )
+
+		println( ">>>>>>>>>>>>>" )
+
+		extensions.each {
+
+			extensionNodes += "\t\t<extensionID>${ it.name }</extensionID>" + System.lineSeparator( )
+
+			println( ">>>>>>>>>>>>>" + extensionNodes )
+		}
+
+		extensionNodes += "\t"
+
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 				.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 				.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
@@ -199,6 +246,7 @@ public class Assemble extends AbstractVariantTask
 				.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
 				.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 				.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
+				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
 
 
 		project.file( "${ outputDir }/app_descriptor.xml" ).write( appContent )
