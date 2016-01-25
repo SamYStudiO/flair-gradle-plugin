@@ -64,13 +64,14 @@ class Package extends AbstractVariantTask
 		cli.addArgument( "icons" )
 		cli.addArgument( "resources" )
 		cli.addArgument( "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
-		cli.addArgument( "-extdir" )
-		cli.addArgument( project.file( "${ input }/extensions" ).path )
 
 		project.file( input ).listFiles( ).each {
 
 			if( it.name.indexOf( ".png" ) > 0 ) cli.addArgument( it.name )
 		}
+
+		cli.addArgument( "-extdir" )
+		cli.addArgument( project.file( "${ input }/extensions" ).path )
 
 		//cli.addArgument( "icons" )
 		//cli.addArgument( "" )
