@@ -199,7 +199,23 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				plugin.variantTaskFactories.each { factory ->
 
+					boolean hasVariant = false
+
 					flair.getPlatformVariants( plugin instanceof IPlatformPlugin ? plugin.platform : null ).each { variant ->
+
+						IVariantTask task = factory.create( project , variant )
+
+						if( task instanceof Assemble && PluginManager.hasPlugin( project , TexturePackerPlugin ) )
+						{
+							task.dependsOn project.tasks.getByName( Tasks.PUBLISH_ATLASES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+						}
+
+						hasVariant = true
+					}
+
+					if( !hasVariant && plugin instanceof IPlatformPlugin )
+					{
+						Variant variant = new Variant( project , plugin.platform )
 
 						IVariantTask task = factory.create( project , variant )
 

@@ -39,7 +39,7 @@ public class Assemble extends AbstractVariantTask
 				from "${ srcRoot }/${ it }/assets"
 			}
 
-			from "${ srcRoot }/${ variant.buildType }/assets"
+			if( variant.buildType ) from "${ srcRoot }/${ variant.buildType }/assets"
 
 			into "${ outputDir }/assets"
 
@@ -93,18 +93,21 @@ public class Assemble extends AbstractVariantTask
 			processResourceValues( project.file( "${ srcRoot }/${ flavor }/resources/" ) )
 		}
 
-		project.copy {
-			from "${ srcRoot }/${ variant.buildType }/resources/"
+		if( variant.buildType )
+		{
+			project.copy {
+				from "${ srcRoot }/${ variant.buildType }/resources/"
 
-			into "${ outputDir }/resources/"
+				into "${ outputDir }/resources/"
 
-			exclude excludeResources
-			exclude "**/value*/**"
+				exclude excludeResources
+				exclude "**/value*/**"
 
-			includeEmptyDirs = false
+				includeEmptyDirs = false
+			}
 		}
 
-		processResourceValues( project.file( "${ srcRoot }/${ variant.buildType }/resources/" ) )
+		if( variant.buildType ) processResourceValues( project.file( "${ srcRoot }/${ variant.buildType }/resources/" ) )
 
 		if( extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name ) ) generateAtfTextures( )
 
@@ -115,7 +118,7 @@ public class Assemble extends AbstractVariantTask
 				from "${ srcRoot }/${ it }/splashs"
 			}
 
-			from "${ srcRoot }/${ variant.buildType }/splashs"
+			if( variant.buildType ) from "${ srcRoot }/${ variant.buildType }/splashs"
 
 			into "${ outputDir }/"
 		}
@@ -127,7 +130,7 @@ public class Assemble extends AbstractVariantTask
 				from "${ srcRoot }/${ it }/icons"
 			}
 
-			from "${ srcRoot }/${ variant.buildType }/icons"
+			if( variant.buildType ) from "${ srcRoot }/${ variant.buildType }/icons"
 
 			into "${ outputDir }/icons"
 		}
@@ -152,9 +155,12 @@ public class Assemble extends AbstractVariantTask
 			}
 		}
 
-		project.configurations.getByName( variant.buildType + Configurations.NATIVE_COMPILE.name.capitalize( ) ).files.each {
+		if( variant.buildType )
+		{
+			project.configurations.getByName( variant.buildType + Configurations.NATIVE_COMPILE.name.capitalize( ) ).files.each {
 
-			extensions.add( it )
+				extensions.add( it )
+			}
 		}
 
 		extensions.each { file ->
