@@ -4,7 +4,7 @@ TODO :
 * ~~Upload archive to gradle/bintray/jcenter/maven repositories~~
 * ~~Install/Compile/package/ tasks~~
 * ~~Manage release types~~
-* incremental tasks
+* ~~incremental tasks~~
 * complete idea plugin
 * Write doc (in progress)
 * Add unit tests
