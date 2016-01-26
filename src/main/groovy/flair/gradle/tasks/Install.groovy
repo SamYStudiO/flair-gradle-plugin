@@ -3,6 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adb
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Idb
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -26,7 +27,7 @@ class Install extends AbstractVariantTask
 	@TaskAction
 	public void install()
 	{
-		String path = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.${ getExtension( ) }"
+		String path = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }.${ getExtension( ) }"
 
 		if( variant.platform == Platforms.DESKTOP )
 		{

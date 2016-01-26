@@ -1,5 +1,6 @@
 package flair.gradle.tasks
 
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Variant
 
 /**
@@ -17,5 +18,15 @@ class AbstractVariantTask extends AbstractTask implements IVariantTask
 	public void setVariant( Variant variant )
 	{
 		this.variant = variant
+	}
+
+	public File getModuleDir()
+	{
+		return project.file( extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) )
+	}
+
+	public File getOutputVariantDir()
+	{
+		return project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }" )
 	}
 }

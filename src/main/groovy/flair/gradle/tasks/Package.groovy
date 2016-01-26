@@ -169,7 +169,7 @@ class Package extends AbstractVariantTask
 				break
 		}
 
-		cli.addArgument( project.file( "${ output }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.${ extension }" ).path )
+		cli.addArgument( project.file( "${ output }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }.${ extension }" ).path )
 	}
 
 	private addFilesAndDirectories()

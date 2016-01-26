@@ -1,6 +1,5 @@
 package flair.gradle.variants
 
-import flair.gradle.plugins.PluginManager
 import org.gradle.api.Project
 
 /**
@@ -48,7 +47,7 @@ public final class Variant
 	{
 		String name = ""
 
-		if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name
+		name += platform.name
 		productFlavors.each { flavor -> name += flavor }
 
 		if( buildType ) name += buildType
@@ -85,8 +84,7 @@ public final class Variant
 		{
 			case NamingTypes.CAPITALIZE:
 			case NamingTypes.CAPITALIZE_BUT_FIRST:
-
-				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.capitalize( )
+				name += platform.name.capitalize( )
 				productFlavors.each { flavor -> name += flavor.capitalize( ) }
 
 				if( buildType ) name += buildType.capitalize( )
@@ -97,10 +95,10 @@ public final class Variant
 
 			default:
 
-				if( platform && !PluginManager.hasSinglePlatform( project ) ) name += platform.name.toLowerCase( ) + type.c
+				name += platform.name.toLowerCase( ) + type.c
 				productFlavors.each { flavor -> name += flavor + type.c }
 
-				if( buildType ) name += buildType else name.substring( 0 , name.size( ) - 1 )
+				if( buildType ) name += buildType else name = name.substring( 0 , name.size( ) - 1 )
 
 				return name
 		}

@@ -53,7 +53,7 @@ class Compile extends AbstractVariantTask
 	{
 		List<String> list = new ArrayList<String>( )
 
-		list.add( variant.buildType )
+		if( variant.buildType ) list.add( variant.buildType )
 		list.addAll( variant.productFlavors )
 		list.add( "main" )
 
@@ -92,9 +92,12 @@ class Compile extends AbstractVariantTask
 			}
 		}
 
-		project.configurations.getByName( "${ variant.buildType }Compile" ).files.each {
+		if( variant.buildType )
+		{
+			project.configurations.getByName( "${ variant.buildType }Compile" ).files.each {
 
-			cli.addArgument( "-source-path+=${ it }" )
+				cli.addArgument( "-source-path+=${ it }" )
+			}
 		}
 	}
 
@@ -118,9 +121,12 @@ class Compile extends AbstractVariantTask
 			}
 		}
 
-		project.configurations.getByName( "${ variant.buildType }LibraryCompile" ).files.each {
+		if( variant.buildType )
+		{
+			project.configurations.getByName( "${ variant.buildType }LibraryCompile" ).files.each {
 
-			cli.addArgument( "-library-path+=${ it }" )
+				cli.addArgument( "-library-path+=${ it }" )
+			}
 		}
 	}
 
@@ -159,7 +165,7 @@ class Compile extends AbstractVariantTask
 
 		List<String> list = new ArrayList<String>( )
 
-		list.add( variant.buildType )
+		if( variant.buildType ) list.add( variant.buildType )
 		list.addAll( variant.productFlavors )
 		list.add( "main" )
 

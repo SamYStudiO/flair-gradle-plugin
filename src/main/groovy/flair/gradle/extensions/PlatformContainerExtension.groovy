@@ -98,7 +98,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 			if( !project.configurations.findByName( s ) )
 			{
-				project.configurations.create( s )
+				project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/src/${ name }/assets" ) )
 			}
 		}
 	}

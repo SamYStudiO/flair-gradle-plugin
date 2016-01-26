@@ -6,8 +6,8 @@ import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.directoryWatcher.generated.GenerateFontClass
 import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
-import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.structures.ClassTemplateStructure
@@ -82,6 +82,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			createVariantTasks( )
 			initDirectoryWatcher( )
 			addDirectoryWatcherActions( )
+
+			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
+			{
+				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
+			}
 		}
 	}
 
@@ -194,7 +199,23 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				plugin.variantTaskFactories.each { factory ->
 
+					boolean hasVariant = false
+
 					flair.getPlatformVariants( plugin instanceof IPlatformPlugin ? plugin.platform : null ).each { variant ->
+
+						IVariantTask task = factory.create( project , variant )
+
+						if( task instanceof Assemble && PluginManager.hasPlugin( project , TexturePackerPlugin ) )
+						{
+							task.dependsOn project.tasks.getByName( Tasks.PUBLISH_ATLASES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+						}
+
+						hasVariant = true
+					}
+
+					if( !hasVariant && plugin instanceof IPlatformPlugin )
+					{
+						Variant variant = new Variant( project , plugin.platform )
 
 						IVariantTask task = factory.create( project , variant )
 

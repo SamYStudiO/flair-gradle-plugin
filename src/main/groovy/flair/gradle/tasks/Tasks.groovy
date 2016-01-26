@@ -1,16 +1,19 @@
 package flair.gradle.tasks
 
+import flair.gradle.tasks.process.ProcessAssets
+
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Tasks {
 	CLEAN( "clean" , Clean , Groups.BUILD ) ,
+	PROCESS_ASSETS( "processAssets" , ProcessAssets , Groups.DEFAULT ) ,
 	ASSEMBLE( "assemble" , Assemble , Groups.BUILD ) ,
 	COMPILE( "compile" , Compile , Groups.BUILD ) ,
 	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
 	INSTALL( "install" , Install , Groups.INSTALL ) ,
 	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,
-	LAUNCH_EMULATOR( "launchAdl" , LaunchEmulator , Groups.LAUNCH ) ,
+	LAUNCH_EMULATOR( "launchEmulator" , LaunchEmulator , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
 	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ),
 	LIST_DEVICES( "listDevices" , ListDevices , Groups.INSTALL )

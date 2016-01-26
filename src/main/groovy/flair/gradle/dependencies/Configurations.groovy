@@ -7,22 +7,22 @@ public enum Configurations {
 	COMPILE( "compile" , "libs_as" ) ,
 	LIBRARY_COMPILE( "libraryCompile" , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
 	NATIVE_COMPILE( "nativeCompile" , [ dir: "libs_ane" , include: "**/*.ane" ] ) ,
-	PACKAGE( "package" ) ,
+	PACKAGE( "pack" , "src/main/assets" ) ,
 
 	IOS_COMPILE( "iosCompile" ) ,
 	IOS_LIBRARY_COMPILE( "iosLibraryCompile" ) ,
 	IOS_NATIVE_COMPILE( "iosNativeCompile" ) ,
-	IOS_PACKAGE( "iosPackage" ) ,
+	IOS_PACKAGE( "iosPack" , "src/ios/assets" ) ,
 
 	ANDROID_COMPILE( "androidCompile" ) ,
 	ANDROID_LIBRARY_COMPILE( "androidLibraryCompile" ) ,
 	ANDROID_NATIVE_COMPILE( "androidNativeCompile" ) ,
-	ANDROID_PACKAGE( "androidPackage" ) ,
+	ANDROID_PACKAGE( "androidPack" , "src/android/assets" ) ,
 
 	DESKTOP_COMPILE( "desktopCompile" ) ,
 	DESKTOP_LIBRARY_COMPILE( "desktopLibraryCompile" ) ,
 	DESKTOP_NATIVE_COMPILE( "desktopNativeCompile" ) ,
-	DESKTOP_PACKAGE( "desktopPackage" ) ,
+	DESKTOP_PACKAGE( "desktopPack" , "src/desktop/assets" ) ,
 
 	public static final List<Configurations> DEFAULTS = [ COMPILE ,
 														  LIBRARY_COMPILE ,

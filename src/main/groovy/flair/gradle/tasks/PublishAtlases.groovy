@@ -28,7 +28,7 @@ class PublishAtlases extends AbstractVariantTask
 		list.add( "main" )
 		list.add( variant.platform.name )
 		variant.productFlavors.each { list.add( it ) }
-		list.add( variant.buildType )
+		if( variant.buildType ) list.add( variant.buildType )
 
 		list.each {
 
