@@ -6,8 +6,8 @@ import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.directoryWatcher.generated.GenerateFontClass
 import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
-import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.structures.ClassTemplateStructure
@@ -82,6 +82,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			createVariantTasks( )
 			initDirectoryWatcher( )
 			addDirectoryWatcherActions( )
+
+			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
+			{
+				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
+			}
 		}
 	}
 
