@@ -1,8 +1,8 @@
 package flair.gradle.directoryWatcher.generated
 
 import flair.gradle.directoryWatcher.IWatcherAction
-import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 

@@ -12,7 +12,8 @@ public class InstallTaskFactory implements IVariantTaskFactory<Install>
 {
 	public Install create( Project project , Variant variant )
 	{
-		String name = Tasks.INSTALL.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = Tasks.INSTALL.name + variantName
 
 		Install t = project.tasks.findByName( name ) as Install
 
@@ -20,7 +21,7 @@ public class InstallTaskFactory implements IVariantTaskFactory<Install>
 
 		t.group = Tasks.INSTALL.group.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Tasks.PACKAGE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+		t.dependsOn Tasks.PACKAGE.name + variantName
 
 		return t
 	}

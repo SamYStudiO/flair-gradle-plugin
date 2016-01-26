@@ -13,8 +13,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean debug
 
-	private Boolean x86
-
 	private Boolean generateAtfTexturesFromDrawables
 
 	private String appId
@@ -49,6 +47,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String packageTarget
 
+	private Boolean packageX86
+
 	private List<String> packageExcludeResources
 
 	private String packageConnect
@@ -80,16 +80,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public void debug( Boolean debug )
 	{
 		this.debug = debug
-	}
-
-	public Boolean getX86()
-	{
-		return x86
-	}
-
-	public void x86( Boolean x86 )
-	{
-		this.x86 = x86
 	}
 
 	public Boolean getGenerateAtfTexturesFromDrawables()
@@ -272,6 +262,16 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageTarget = packageTarget
 	}
 
+	public Boolean getPackageX86()
+	{
+		return packageX86
+	}
+
+	public void packageX86( Boolean packageX86 )
+	{
+		this.packageX86 = packageX86
+	}
+
 	public List<String> getPackageExcludeResources()
 	{
 		return packageExcludeResources
@@ -340,7 +340,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 			switch( property )
 			{
 				case FlairProperties.DEBUG.name: return false
-				case FlairProperties.X86.name: return false
 				case FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
 
 				case FlairProperties.APP_ID.name: return extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
@@ -372,6 +371,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.EMULATOR_SCREEN_DPI.name: return 240
 
 				case FlairProperties.PACKAGE_TARGET.name: return null
+				case FlairProperties.PACKAGE_X86.name: return false
 				case FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{

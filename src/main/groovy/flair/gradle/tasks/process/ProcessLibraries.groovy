@@ -11,7 +11,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessAssets extends AbstractVariantTask
+class ProcessLibraries extends AbstractVariantTask
 {
 	@InputFiles
 	def Set<File> inputDirs
@@ -29,19 +29,19 @@ class ProcessAssets extends AbstractVariantTask
 
 		inputDirs.each {
 
-			File file = project.file( "${ outputVariantDir }/package/${ it.name }" )
+			File file = project.file( "${ outputVariantDir }/libraries" )
 			outputDirs.add( file )
 		}
 	}
 
-	public ProcessAssets()
+	public ProcessLibraries()
 	{
 		group = Groups.DEFAULT.name
 		description = ""
 	}
 
 	@TaskAction
-	public void processAssets()
+	public void processLibraries()
 	{
 		//outputDirs.each { it.deleteDir( ) }
 
@@ -51,7 +51,7 @@ class ProcessAssets extends AbstractVariantTask
 			{
 				project.copy {
 					from file
-					into "${ outputVariantDir }/package/${ file.name }"
+					into "${ outputVariantDir }/libraries"
 				}
 			}
 		}
@@ -59,15 +59,15 @@ class ProcessAssets extends AbstractVariantTask
 
 	private Set<File> getInputFiles()
 	{
-		Set<File> packagedFiles = project.configurations.getByName( Configurations.PACKAGE.name ).files
+		Set<File> packagedFiles = project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files
 
-		packagedFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.PACKAGE.name.capitalize( ) ).files )
+		packagedFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
 
 		variant.productFlavors.each {
-			packagedFiles.addAll( project.configurations.getByName( it + Configurations.PACKAGE.name.capitalize( ) ).files )
+			packagedFiles.addAll( project.configurations.getByName( it + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
 		}
 
-		if( variant.buildType ) packagedFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.PACKAGE.name.capitalize( ) ) )
+		if( variant.buildType ) packagedFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.LIBRARY_COMPILE.name.capitalize( ) ) )
 
 		return packagedFiles
 	}

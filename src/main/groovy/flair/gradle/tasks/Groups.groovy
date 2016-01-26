@@ -12,6 +12,7 @@ public enum Groups {
 	TEXTURE_PACKER( "texturepacker" ) ,
 	DOCUMENTATION( "documentation" ) ,
 	DEVICES( "devices" ) ,
+	PROCESS( "" ) ,
 	DEFAULT( "" )
 
 	private String name

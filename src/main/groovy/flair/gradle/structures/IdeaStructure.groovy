@@ -1,7 +1,7 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.IExtensionManager
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 

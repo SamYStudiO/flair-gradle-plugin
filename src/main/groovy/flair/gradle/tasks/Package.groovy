@@ -6,6 +6,9 @@ import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -15,9 +18,53 @@ class Package extends AbstractVariantTask
 {
 	protected ICli cli = new Adt( )
 
-	protected String input
+	@InputFiles
+	def Set<File> inputDirs
 
-	protected String output
+	@OutputFile
+	def File packageFile
+
+	@Input
+	def String connect
+
+	@Input
+	def String listen
+
+	@Input
+	def String sampler
+
+	@Input
+	def String hideAneLibSymbols
+
+	@Input
+	def String x86
+
+	@Input
+	def String target
+
+	@Input
+	def String debug
+
+	@Input
+	def String version
+
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		inputDirs = getInputFiles( )
+		packageFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
+
+		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT.name )
+		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN.name )
+		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER.name ) as List<String>
+		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) as List<String>
+		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name ) as List<String>
+		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name ) as List<String>
+		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) as List<String>
+		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) as List<String>
+	}
 
 	public Package()
 	{
@@ -28,9 +75,6 @@ class Package extends AbstractVariantTask
 	@TaskAction
 	public void packaging()
 	{
-		input = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
-		output = project.buildDir
-
 		cli.clearArguments( )
 
 		cli.addArgument( "-package" )
@@ -39,12 +83,12 @@ class Package extends AbstractVariantTask
 		addTarget( )
 		if( variant.platform != Platforms.DESKTOP )
 		{
-			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ) != null ) addConnect( ) else if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ) != null ) addListen( )
+			if( connect != null ) addConnect( ) else if( listen != null ) addListen( )
 		}
 		if( variant.platform == Platforms.IOS )
 		{
-			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_SAMPLER.name ) ) addSampler( )
-			if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) ) addHideAneLibSymbols( )
+			if( sampler ) addSampler( )
+			if( hideAneLibSymbols ) addHideAneLibSymbols( )
 		}
 		if( variant.platform == Platforms.ANDROID ) addArchitecture( )
 		if( variant.platform != Platforms.DESKTOP ) addSigning( )
@@ -58,14 +102,12 @@ class Package extends AbstractVariantTask
 	private addArchitecture()
 	{
 		cli.addArgument( "-arch" )
-		cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.X86.name ) ? "x86" : "armv7" )
+		cli.addArgument( x86 ? "x86" : "armv7" )
 	}
 
 	private addTarget()
 	{
 		cli.addArgument( "-target" )
-
-		String target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name )
 
 		switch( variant.platform )
 		{
@@ -83,7 +125,7 @@ class Package extends AbstractVariantTask
 
 					default:
 
-						if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "ipa-debug" ) else cli.addArgument( "ipa-test" )
+						if( debug ) cli.addArgument( "ipa-debug" ) else cli.addArgument( "ipa-test" )
 						break
 				}
 
@@ -102,7 +144,7 @@ class Package extends AbstractVariantTask
 						break
 
 					default:
-						if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "apk-debug" ) else cli.addArgument( "apk-captive-runtime" )
+						if( debug ) cli.addArgument( "apk-debug" ) else cli.addArgument( "apk-captive-runtime" )
 						break
 				}
 
@@ -118,6 +160,7 @@ class Package extends AbstractVariantTask
 
 	private addSigning()
 	{
+		// TODO integrate signing properly
 		cli.addArgument( "-storetype" )
 		cli.addArgument( "pkcs12" )
 		cli.addArgument( "-keystore" )
@@ -129,13 +172,13 @@ class Package extends AbstractVariantTask
 	private addConnect()
 	{
 		cli.addArgument( "-connect" )
-		if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( FlairProperties.PACKAGE_CONNECT.name ).toString( ) )
+		if( connect != "" ) cli.addArgument( connect )
 	}
 
 	private addListen()
 	{
 		cli.addArgument( "-listen" )
-		if( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ) != "" ) cli.addArgument( extensionManager.getFlairProperty( FlairProperties.PACKAGE_LISTEN.name ).toString( ) )
+		if( listen != "" ) cli.addArgument( listen )
 	}
 
 	private addSampler()
@@ -150,6 +193,31 @@ class Package extends AbstractVariantTask
 	}
 
 	private addOutput()
+	{
+		cli.addArgument( packageFile.path )
+	}
+
+	private addFilesAndDirectories()
+	{
+		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
+		cli.addArgument( "-C" )
+		cli.addArgument( outputVariantDir.path )
+
+		outputVariantDir.listFiles( ).each { cli.addArgument( it.name ) }
+	}
+
+	private addExtensionNatives()
+	{
+		File f = project.file( "${ outputVariantDir.path }/extensions" )
+
+		if( f.exists( ) && f.listFiles( ).size( ) > 0 )
+		{
+			cli.addArgument( "-extdir" )
+			cli.addArgument( project.file( "${ outputVariantDir.path }/extensions" ).path )
+		}
+	}
+
+	private getExtension()
 	{
 		String extension = ""
 
@@ -169,32 +237,17 @@ class Package extends AbstractVariantTask
 				break
 		}
 
-		cli.addArgument( project.file( "${ output }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }.${ extension }" ).path )
+		return extension
 	}
 
-	private addFilesAndDirectories()
+	private Set<File> getInputFiles()
 	{
-		cli.addArgument( project.file( "${ input }/app_descriptor.xml" ).path )
+		Set<File> set = new HashSet<File>( )
 
-		cli.addArgument( "-C" )
-		cli.addArgument( project.file( input ).path )
-		cli.addArgument( "icons" )
-		cli.addArgument( "resources" )
-		cli.addArgument( "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
+		set.add( project.file( "${ outputVariantDir.path }/extensions" ) )
+		set.add( project.file( "${ outputVariantDir.path }/package" ) )
+		set.add( project.file( "${ outputVariantDir.path }/app_descriptor" ) )
 
-		project.file( input ).listFiles( ).each {
-			if( it.name.indexOf( ".png" ) > 0 ) cli.addArgument( it.name )
-		}
-	}
-
-	private addExtensionNatives()
-	{
-		File f = project.file( "${ input }/extensions" )
-
-		if( f.exists( ) && f.listFiles( ).size( ) > 0 )
-		{
-			cli.addArgument( "-extdir" )
-			cli.addArgument( project.file( "${ input }/extensions" ).path )
-		}
+		return set
 	}
 }

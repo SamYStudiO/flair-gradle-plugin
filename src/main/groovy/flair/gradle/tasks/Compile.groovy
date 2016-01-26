@@ -2,10 +2,12 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
-import flair.gradle.dependencies.Configurations
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -15,9 +17,34 @@ class Compile extends AbstractVariantTask
 {
 	protected ICli cli = new Mxmlc( )
 
-	protected String input
+	@InputFiles
+	def Set<File> inputDirs
 
-	protected String output
+	@OutputFile
+	def File swfFile
+
+	@Input
+	def boolean debug
+
+	@Input
+	def String mainClass
+
+	@Input
+	def List<String> compileOptions
+
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		inputDirs = getInputFiles( )
+		swfFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
+
+
+		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
+		mainClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name )
+		compileOptions = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List<String>
+	}
 
 	public Compile()
 	{
@@ -28,106 +55,32 @@ class Compile extends AbstractVariantTask
 	@TaskAction
 	public void compile()
 	{
-		input = "${ project.projectDir }/${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }"
-		output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
-
-
 		cli.clearArguments( )
 
 		if( variant.platform == Platforms.DESKTOP ) cli.addArgument( "+configname=air" ) else cli.addArgument( "+configname=airmobile" )
 
-		if( extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ) cli.addArgument( "-debug=true" )
+		if( debug ) cli.addArgument( "-debug=true" )
 
-		addSourcePaths( )
-		addAsLibraryPaths( )
-		addLibraryPaths( )
+		//as files
+		cli.addArgument( "-source-path+=${ project.file( "${ outputVariantDir.path }/classes" ) }" )
+
+		//swc files
+		cli.addArgument( "-library-path+=${ project.file( "${ outputVariantDir.path }/libraries" ) }" )
+
 		addConstants( )
-		addCustomArguments( )
-		addOutput( )
-		addMainClass( )
+
+		// custom options
+		cli.addArguments( compileOptions )
+
+		// swf output
+		cli.addArgument( "-output" )
+		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" ).path )
+
+		// main class
+		File f = project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" )
+		if( f.exists( ) ) cli.addArgument( f.path ) else throw new Exception( "Mxml cannot find Main Class from ${ f.path }" )
 
 		cli.execute( project )
-	}
-
-	private void addSourcePaths()
-	{
-		List<String> list = new ArrayList<String>( )
-
-		if( variant.buildType ) list.add( variant.buildType )
-		list.addAll( variant.productFlavors )
-		list.add( "main" )
-
-		File file
-
-		list.each {
-
-			file = project.file( "${ input }/src/${ it }/actionscript" )
-			if( file.exists( ) ) cli.addArgument( "-source-path+=${ file.path }" )
-
-			file = project.file( "${ input }/src/${ it }/fonts" )
-			if( file.exists( ) ) cli.addArgument( "-source-path+=${ file.path }" )
-		}
-
-		file = project.file( "${ input }/src/main/generated" )
-		if( file.exists( ) ) cli.addArgument( "-source-path+=${ file.path }" )
-	}
-
-	private void addAsLibraryPaths()
-	{
-		project.configurations.getByName( Configurations.COMPILE.name ).files.each {
-
-			cli.addArgument( "-source-path+=${ it }" )
-		}
-
-		project.configurations.getByName( "${ variant.platform.name }Compile" ).files.each {
-
-			cli.addArgument( "-source-path+=${ it }" )
-		}
-
-		variant.productFlavors.each {
-
-			project.configurations.getByName( "${ it }Compile" ).files.each {
-
-				cli.addArgument( "-source-path+=${ it }" )
-			}
-		}
-
-		if( variant.buildType )
-		{
-			project.configurations.getByName( "${ variant.buildType }Compile" ).files.each {
-
-				cli.addArgument( "-source-path+=${ it }" )
-			}
-		}
-	}
-
-	private void addLibraryPaths()
-	{
-		project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files.each {
-
-			cli.addArgument( "-library-path+=${ it }" )
-		}
-
-		project.configurations.getByName( "${ variant.platform.name }LibraryCompile" ).files.each {
-
-			cli.addArgument( "-library-path+=${ it }" )
-		}
-
-		variant.productFlavors.each {
-
-			project.configurations.getByName( "${ it }LibraryCompile" ).files.each {
-
-				cli.addArgument( "-library-path+=${ it }" )
-			}
-		}
-
-		if( variant.buildType )
-		{
-			project.configurations.getByName( "${ variant.buildType }LibraryCompile" ).files.each {
-
-				cli.addArgument( "-library-path+=${ it }" )
-			}
-		}
 	}
 
 	private addConstants()
@@ -148,40 +101,13 @@ class Compile extends AbstractVariantTask
 		}
 	}
 
-	private void addCustomArguments()
+	private Set<File> getInputFiles()
 	{
-		cli.addArguments( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List<String> )
-	}
+		Set<File> set = new HashSet<File>( )
 
-	private void addOutput()
-	{
-		cli.addArgument( "-output" )
-		cli.addArgument( "${ output }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
-	}
+		set.add( project.file( "${ outputVariantDir.path }/classes" ) )
+		set.add( project.file( "${ outputVariantDir.path }/libraries" ) )
 
-	private void addMainClass()
-	{
-		String pClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name )
-
-		List<String> list = new ArrayList<String>( )
-
-		if( variant.buildType ) list.add( variant.buildType )
-		list.addAll( variant.productFlavors )
-		list.add( "main" )
-
-		File file
-
-		for( String s in list )
-		{
-			file = project.file( "${ input }/src/${ s }/actionscript/${ pClass.split( "\\." ).join( "/" ) }.as" )
-
-			if( file.exists( ) )
-			{
-				cli.addArgument( file.path )
-				return
-			}
-		}
-
-		throw new Exception( "Mxml cannot find Main Class from ${ file.path }" )
+		return set
 	}
 }

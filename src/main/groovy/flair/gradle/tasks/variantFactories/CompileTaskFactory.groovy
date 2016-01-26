@@ -13,7 +13,8 @@ public class CompileTaskFactory implements IVariantTaskFactory<Compile>
 
 	public Compile create( Project project , Variant variant )
 	{
-		String name = Tasks.COMPILE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = Tasks.COMPILE.name + variantName
 
 		Compile t = project.tasks.findByName( name ) as Compile
 
@@ -21,7 +22,8 @@ public class CompileTaskFactory implements IVariantTaskFactory<Compile>
 
 		t.group = Tasks.COMPILE.group.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Tasks.ASSEMBLE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+
+		t.dependsOn Tasks.PROCESS_CLASSES.name + variantName , Tasks.PROCESS_LIBRARIES.name + variantName
 
 		return t
 	}

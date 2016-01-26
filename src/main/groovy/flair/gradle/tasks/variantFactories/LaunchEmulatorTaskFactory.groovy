@@ -12,7 +12,8 @@ public class LaunchEmulatorTaskFactory implements IVariantTaskFactory<LaunchEmul
 {
 	public LaunchEmulator create( Project project , Variant variant )
 	{
-		String name = Tasks.LAUNCH_EMULATOR.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = Tasks.LAUNCH_EMULATOR.name + variantName
 
 		LaunchEmulator t = project.tasks.findByName( name ) as LaunchEmulator
 
@@ -20,7 +21,9 @@ public class LaunchEmulatorTaskFactory implements IVariantTaskFactory<LaunchEmul
 
 		t.group = Tasks.LAUNCH_EMULATOR.group.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Tasks.COMPILE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_EXTENSIONS.name + variantName ,
+				Tasks.PROCESS_RESOURCES.name + variantName , Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName ,
+				Tasks.PROCESS_SPLASHS.name + variantName
 
 		return t
 	}

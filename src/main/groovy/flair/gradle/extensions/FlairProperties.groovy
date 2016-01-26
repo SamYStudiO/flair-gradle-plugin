@@ -7,11 +7,9 @@ enum FlairProperties
 {
 	MODULE_NAME( "moduleName" ) ,
 	PACKAGE_NAME( "packageName" ) ,
-	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 
 	DEBUG( "debug" ) ,
-	X86( "x86" ) ,
-
+	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 	GENERATE_ATF_TEXTURES_FROM_DRAWABLES( "generateAtfTexturesFromDrawables" ) ,
 
 	APP_ID( "appId" ) ,
@@ -30,6 +28,7 @@ enum FlairProperties
 	COMPILE_OPTIONS( "compileOptions" ) ,
 
 	PACKAGE_TARGET( "packageTarget" ) ,
+	PACKAGE_X86( "packageX86" ) ,
 	PACKAGE_EXCLUDE_RESOURCES( "packageExcludeResources" ) ,
 	PACKAGE_CONNECT( "packageConnect" ) ,
 	PACKAGE_LISTEN( "packageListen" ) ,

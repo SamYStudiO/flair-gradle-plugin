@@ -1,13 +1,20 @@
 package flair.gradle.tasks
 
-import flair.gradle.tasks.process.ProcessAssets
+import flair.gradle.tasks.process.*
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Tasks {
 	CLEAN( "clean" , Clean , Groups.BUILD ) ,
-	PROCESS_ASSETS( "processAssets" , ProcessAssets , Groups.DEFAULT ) ,
+	PROCESS_ASSETS( "processAssets" , ProcessAssets , Groups.PROCESS ) ,
+	PROCESS_RESOURCES( "processResources" , ProcessResources , Groups.PROCESS ) ,
+	PROCESS_SPLASHS( "processSplashs" , ProcessSplashs , Groups.PROCESS ) ,
+	PROCESS_ICONS( "processIcons" , ProcessIcons , Groups.PROCESS ) ,
+	PROCESS_EXTENSIONS( "processExtensions" , ProcessExtensions , Groups.PROCESS ) ,
+	PROCESS_APP_DESCRIPTOR( "processAppDescriptor" , ProcessAppDescriptor , Groups.PROCESS ) ,
+	PROCESS_CLASSES( "processClasses" , ProcessClasses , Groups.PROCESS ) ,
+	PROCESS_LIBRARIES( "processLibraries" , ProcessLibraries , Groups.PROCESS ) ,
 	ASSEMBLE( "assemble" , Assemble , Groups.BUILD ) ,
 	COMPILE( "compile" , Compile , Groups.BUILD ) ,
 	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
@@ -15,8 +22,8 @@ public enum Tasks {
 	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,
 	LAUNCH_EMULATOR( "launchEmulator" , LaunchEmulator , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
-	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ),
-	LIST_DEVICES( "listDevices" , ListDevices , Groups.INSTALL )
+	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ) ,
+	LIST_DEVICES( "listDevices" , ListDevices , Groups.DEVICES )
 
 	private String name
 

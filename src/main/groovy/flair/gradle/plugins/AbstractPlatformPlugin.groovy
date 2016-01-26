@@ -53,6 +53,13 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 		list.add( new UninstallTaskFactory( ) )
 		list.add( new LaunchEmulatorTaskFactory( ) )
 		list.add( new ProcessAssetsTaskFactory( ) )
+		list.add( new ProcessResourcesTaskFactory( ) )
+		list.add( new ProcessSplashsTaskFactory( ) )
+		list.add( new ProcessIconsTaskFactory( ) )
+		list.add( new ProcessExtensionsTaskFactory( ) )
+		list.add( new ProcessAppDescriptorTaskFactory( ) )
+		list.add( new ProcessClassesTaskFactory( ) )
+		list.add( new ProcessLibrariesTaskFactory( ) )
 
 		return list
 	}

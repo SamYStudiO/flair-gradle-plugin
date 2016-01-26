@@ -14,8 +14,6 @@ import flair.gradle.structures.ClassTemplateStructure
 import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
-import flair.gradle.tasks.Assemble
-import flair.gradle.tasks.IVariantTask
 import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
@@ -87,6 +85,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
 			}
+
+			setupTaskDependencies( )
 		}
 	}
 
@@ -203,26 +203,14 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 					flair.getPlatformVariants( plugin instanceof IPlatformPlugin ? plugin.platform : null ).each { variant ->
 
-						IVariantTask task = factory.create( project , variant )
-
-						if( task instanceof Assemble && PluginManager.hasPlugin( project , TexturePackerPlugin ) )
-						{
-							task.dependsOn project.tasks.getByName( Tasks.PUBLISH_ATLASES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
-						}
+						factory.create( project , variant )
 
 						hasVariant = true
 					}
 
 					if( !hasVariant && plugin instanceof IPlatformPlugin )
 					{
-						Variant variant = new Variant( project , plugin.platform )
-
-						IVariantTask task = factory.create( project , variant )
-
-						if( task instanceof Assemble && PluginManager.hasPlugin( project , TexturePackerPlugin ) )
-						{
-							task.dependsOn project.tasks.getByName( Tasks.PUBLISH_ATLASES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
-						}
+						factory.create( project , new Variant( project , plugin.platform ) )
 					}
 				}
 			}
@@ -256,5 +244,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				}
 			}
 		}
+	}
+
+	private setupTaskDependencies()
+	{
 	}
 }

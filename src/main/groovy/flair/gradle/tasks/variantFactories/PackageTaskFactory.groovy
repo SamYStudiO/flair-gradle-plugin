@@ -12,7 +12,8 @@ public class PackageTaskFactory implements IVariantTaskFactory<Package>
 {
 	public Package create( Project project , Variant variant )
 	{
-		String name = Tasks.PACKAGE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = Tasks.PACKAGE.name + variantName
 
 		Package t = project.tasks.findByName( name ) as Package
 
@@ -20,7 +21,9 @@ public class PackageTaskFactory implements IVariantTaskFactory<Package>
 
 		t.group = Tasks.PACKAGE.group.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Tasks.COMPILE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
+		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_APP_DESCRIPTOR.name + variantName ,
+				Tasks.PROCESS_RESOURCES.name + variantName , Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName ,
+				Tasks.PROCESS_SPLASHS.name + variantName
 
 		return t
 	}

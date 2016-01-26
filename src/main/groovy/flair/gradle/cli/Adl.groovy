@@ -14,7 +14,8 @@ public class Adl extends AbstractCli
 		project.ant.exec( executable: new Sdk( project ).adlPath ) {
 			arguments.each {
 				println( it )
-				arg( value: it ) }
+				arg( value: it )
+			}
 		}
 	}
 }

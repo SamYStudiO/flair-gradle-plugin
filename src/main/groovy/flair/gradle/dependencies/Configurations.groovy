@@ -4,22 +4,22 @@ package flair.gradle.dependencies
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Configurations {
-	COMPILE( "compile" , "libs_as" ) ,
+	COMPILE( "compile" , "src/main/actionscript" , "src/main/fonts" , "src/main/generated" , "libs_as" ) ,
 	LIBRARY_COMPILE( "libraryCompile" , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
 	NATIVE_COMPILE( "nativeCompile" , [ dir: "libs_ane" , include: "**/*.ane" ] ) ,
 	PACKAGE( "pack" , "src/main/assets" ) ,
 
-	IOS_COMPILE( "iosCompile" ) ,
+	IOS_COMPILE( "iosCompile" , "src/ios/actionscript" , "src/ios/fonts" ) ,
 	IOS_LIBRARY_COMPILE( "iosLibraryCompile" ) ,
 	IOS_NATIVE_COMPILE( "iosNativeCompile" ) ,
 	IOS_PACKAGE( "iosPack" , "src/ios/assets" ) ,
 
-	ANDROID_COMPILE( "androidCompile" ) ,
+	ANDROID_COMPILE( "androidCompile" , "src/android/actionscript" , "src/android/fonts" ) ,
 	ANDROID_LIBRARY_COMPILE( "androidLibraryCompile" ) ,
 	ANDROID_NATIVE_COMPILE( "androidNativeCompile" ) ,
 	ANDROID_PACKAGE( "androidPack" , "src/android/assets" ) ,
 
-	DESKTOP_COMPILE( "desktopCompile" ) ,
+	DESKTOP_COMPILE( "desktopCompile" , "src/desktop/actionscript" , "src/desktop/fonts" ) ,
 	DESKTOP_LIBRARY_COMPILE( "desktopLibraryCompile" ) ,
 	DESKTOP_NATIVE_COMPILE( "desktopNativeCompile" ) ,
 	DESKTOP_PACKAGE( "desktopPack" , "src/desktop/assets" ) ,
