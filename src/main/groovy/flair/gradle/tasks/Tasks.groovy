@@ -10,7 +10,7 @@ public enum Tasks {
 	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
 	INSTALL( "install" , Install , Groups.INSTALL ) ,
 	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,
-	LAUNCH_EMULATOR( "launchAdl" , LaunchEmulator , Groups.LAUNCH ) ,
+	LAUNCH_EMULATOR( "launchEmulator" , LaunchEmulator , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
 	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ),
 	LIST_DEVICES( "listDevices" , ListDevices , Groups.INSTALL )
