@@ -20,7 +20,6 @@ public class UninstallTaskFactory implements IVariantTaskFactory<Uninstall>
 
 		t.group = Tasks.UNINSTALL.group.name
 		t.variant = variant
-		t.dependsOn project.tasks.getByName( Tasks.PACKAGE.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE ) ).name
 
 		return t
 	}
