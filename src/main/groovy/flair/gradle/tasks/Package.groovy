@@ -31,19 +31,19 @@ class Package extends AbstractVariantTask
 	def String listen
 
 	@Input
-	def String sampler
+	def boolean sampler
 
 	@Input
-	def String hideAneLibSymbols
+	def boolean hideAneLibSymbols
 
 	@Input
-	def String x86
+	def boolean x86
 
 	@Input
 	def String target
 
 	@Input
-	def String debug
+	def boolean debug
 
 	@Input
 	def String version
@@ -54,16 +54,17 @@ class Package extends AbstractVariantTask
 		super.variant = variant
 
 		inputDirs = getInputFiles( )
-		packageFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 
-		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT.name )
-		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN.name )
-		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER.name ) as List<String>
-		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name ) as List<String>
-		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name ) as List<String>
-		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name ) as List<String>
-		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) as List<String>
-		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) as List<String>
+		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT.name ) ?: "null"
+		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN.name ) ?: "null"
+		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER.name )
+		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name )
+		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name )
+		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name ) ?: "null"
+		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name )
+		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
+
+		packageFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 	}
 
 	public Package()
@@ -83,7 +84,7 @@ class Package extends AbstractVariantTask
 		addTarget( )
 		if( variant.platform != Platforms.DESKTOP )
 		{
-			if( connect != null ) addConnect( ) else if( listen != null ) addListen( )
+			if( connect != "null" ) addConnect( ) else if( listen != "null" ) addListen( )
 		}
 		if( variant.platform == Platforms.IOS )
 		{
@@ -201,9 +202,9 @@ class Package extends AbstractVariantTask
 	{
 		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
 		cli.addArgument( "-C" )
-		cli.addArgument( outputVariantDir.path )
+		cli.addArgument( "${ outputVariantDir.path }/package" )
 
-		outputVariantDir.listFiles( ).each { cli.addArgument( it.name ) }
+		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each { cli.addArgument( it.name ) }
 	}
 
 	private addExtensionNatives()
