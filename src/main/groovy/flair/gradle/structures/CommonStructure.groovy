@@ -1,7 +1,7 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.Project
 
 /**
@@ -36,6 +36,11 @@ public class CommonStructure implements IStructure
 		project.copy {
 			from "${ source.path }/libs_swc"
 			into "${ moduleName }/libs_swc"
+		}
+
+		project.copy {
+			from "${ source.path }/local.properties"
+			into project.rootDir
 		}
 	}
 }
