@@ -256,6 +256,8 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			}
 		}
 
+		if( list.size(  ) == 0 ) list.add( new Variant( project , platform ) )
+
 		return list
 	}
 
