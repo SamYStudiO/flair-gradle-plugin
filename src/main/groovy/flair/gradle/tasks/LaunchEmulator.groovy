@@ -35,6 +35,8 @@ class LaunchEmulator extends AbstractVariantTask
 			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
 			cli.addArgument( "-XscreenDPI" )
 			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_DPI.name ).toString( ) )
+			cli.addArgument( "-XversionPlatform" )
+			cli.addArgument( variant.platform == Platforms.IOS ? "IOS" : "AND" )
 		}
 
 		cli.addArgument( "-extdir" )
