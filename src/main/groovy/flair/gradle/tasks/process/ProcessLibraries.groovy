@@ -51,7 +51,7 @@ class ProcessLibraries extends AbstractVariantTask
 			{
 				project.copy {
 					from file
-					into "${ outputVariantDir }/libraries"
+					into file.isDirectory(  ) ? "${ outputVariantDir }/classes" : "${ outputVariantDir }/libraries"
 				}
 			}
 		}
