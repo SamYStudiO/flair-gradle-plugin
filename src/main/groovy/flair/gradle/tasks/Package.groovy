@@ -161,13 +161,62 @@ class Package extends AbstractVariantTask
 
 	private addSigning()
 	{
-		// TODO integrate signing properly
-		cli.addArgument( "-storetype" )
-		cli.addArgument( "pkcs12" )
-		cli.addArgument( "-keystore" )
-		cli.addArgument( project.file( "app/src/android/signing/certificate.p12" ).path )
-		cli.addArgument( "-storepass" )
-		cli.addArgument( "0000" )
+		String alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name )
+		String provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name )
+		String storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name )
+		String storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name )
+		String keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name )
+		String keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name )
+		String tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name )
+		String provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name )
+
+		if( alias )
+		{
+			cli.addArgument( "-alias" )
+			cli.addArgument( alias )
+		}
+
+		if( provider )
+		{
+			cli.addArgument( "-providerName" )
+			cli.addArgument( provider )
+		}
+
+		if( storeType )
+		{
+			cli.addArgument( "-storetype" )
+			cli.addArgument( storeType )
+		}
+
+		if( storePass )
+		{
+			cli.addArgument( "-storepass" )
+			cli.addArgument( storePass )
+		}
+
+		if( keyStore )
+		{
+			cli.addArgument( "-keystore" )
+			cli.addArgument( keyStore )
+		}
+
+		if( keyPass )
+		{
+			cli.addArgument( "-keypass" )
+			cli.addArgument( keyPass )
+		}
+
+		if( tsa )
+		{
+			cli.addArgument( "-tsa" )
+			cli.addArgument( tsa )
+		}
+
+		if( provisioning )
+		{
+			cli.addArgument( "-provisioning-profile" )
+			cli.addArgument( provisioning )
+		}
 	}
 
 	private addConnect()

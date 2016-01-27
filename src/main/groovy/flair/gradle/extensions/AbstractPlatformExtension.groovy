@@ -59,6 +59,22 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean packageHideAneLibSymbols
 
+	private String signingAlias
+
+	private String signingStoreType
+
+	private String signingKeyStore
+
+	private String signingStorePass
+
+	private String signingKeyPass
+
+	private String signingProviderName
+
+	private String signingTsa
+
+	private String signingProvisioningProfile
+
 	public AbstractPlatformExtension( String name , Project project , Platforms platform )
 	{
 		super( name , project )
@@ -322,6 +338,86 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageHideAneLibSymbols = packageHideAneLibSymbols
 	}
 
+	public String getSigningAlias()
+	{
+		return signingAlias
+	}
+
+	public void signingAlias( String signingAlias )
+	{
+		this.signingAlias = signingAlias
+	}
+
+	public String getSigningStoreType()
+	{
+		return signingStoreType
+	}
+
+	public void signingStoreType( String signingStoreType )
+	{
+		this.signingStoreType = signingStoreType
+	}
+
+	public String getSigningKeyStore()
+	{
+		return signingKeyStore
+	}
+
+	public void signingKeyStore( String signingKeyStore )
+	{
+		this.signingKeyStore = signingKeyStore
+	}
+
+	public String getSigningStorePass()
+	{
+		return signingStorePass
+	}
+
+	public void signingStorePass( String signingStorePass )
+	{
+		this.signingStorePass = signingStorePass
+	}
+
+	public String getSigningKeyPass()
+	{
+		return signingKeyPass
+	}
+
+	public void signingKeyPass( String signingKeyPass )
+	{
+		this.signingKeyPass = signingKeyPass
+	}
+
+	public String getSigningProviderName()
+	{
+		return signingProviderName
+	}
+
+	public void signingProviderName( String signingProviderName )
+	{
+		this.signingProviderName = signingProviderName
+	}
+
+	public String getSigningTsa()
+	{
+		return signingTsa
+	}
+
+	public void signingTsa( String signingTsa )
+	{
+		this.signingTsa = signingTsa
+	}
+
+	public String getSigningProvisioningProfile()
+	{
+		return signingProvisioningProfile
+	}
+
+	public void signingProvisioningProfile( String signingProvisioningProfile )
+	{
+		this.signingProvisioningProfile = signingProvisioningProfile
+	}
+
 	@Override
 	public IExtension getExtension( String name )
 	{
@@ -362,7 +458,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platforms.IOS: return packageName + ".MainIOS"
 						case Platforms.ANDROID: return packageName + ".MainAndroid"
 						case Platforms.DESKTOP: return packageName + ".MainDesktop"
-
 						default: return null
 					}
 				case FlairProperties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
@@ -378,19 +473,90 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platforms.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
 						case Platforms.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 						case Platforms.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
-
 						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 					}
 
 
-				case FlairProperties.PACKAGE_CONNECT: return null
-				case FlairProperties.PACKAGE_LISTEN: return null
-				case FlairProperties.PACKAGE_SAMPLER: return false
-				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS: return false
+				case FlairProperties.PACKAGE_CONNECT.name: return null
+				case FlairProperties.PACKAGE_LISTEN.name: return null
+				case FlairProperties.PACKAGE_SAMPLER.name: return false
+				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name: return false
 
+				case FlairProperties.SIGNING_ALIAS.name: return null
+				case FlairProperties.SIGNING_KEY_PASS.name: return null
+				case FlairProperties.SIGNING_PROVIDER_NAME.name: return null
+				case FlairProperties.SIGNING_TSA.name: return null
+				case FlairProperties.SIGNING_STORE_TYPE.name: return "pkcs12"
+
+				case FlairProperties.SIGNING_KEY_STORE.name:
+					switch( p )
+					{
+						case Platforms.IOS:
+
+							switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
+							{
+								case "ipa-app-store": return getSigningPath( "src/ios/signing/store/certificate.p12" )
+								case "ipa-ad-hoc": return getSigningPath( "src/ios/signing/adhoc/certificate.p12" )
+								default: return getSigningPath( "src/ios/signing/development/certificate.p12" )
+							}
+
+
+						case Platforms.ANDROID: return getSigningPath( "src/android/signing/certificate.p12" )
+						case Platforms.DESKTOP: return getSigningPath( "src/desktop/signing/certificate.p12" )
+						default: return null
+					}
+
+				case FlairProperties.SIGNING_PROVISIONING_PROFILE.name:
+
+					if( p == Platforms.IOS )
+					{
+						switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
+						{
+							case "ipa-app-store": return getSigningPath( "src/ios/signing/store/profile.mobileprovision" )
+							case "ipa-ad-hoc": return getSigningPath( "src/ios/signing/adhoc/profile.mobileprovision" )
+							default: return getSigningPath( "src/ios/signing/development/profile.mobileprovision" )
+						}
+					}
+					else return null
+
+				case FlairProperties.SIGNING_STORE_PASS.name:
+
+					switch( p )
+					{
+						case Platforms.IOS:
+
+							switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
+							{
+								case "ipa-app-store": return getSigningPassword( "src/ios/signing/store/password.txt" )
+								case "ipa-ad-hoc": return getSigningPassword( "src/ios/signing/adhoc/password.txt" )
+								default: return getSigningPassword( "src/ios/signing/development/password.txt" )
+							}
+
+
+						case Platforms.ANDROID: return getSigningPassword( "src/android/signing/password.txt" )
+						case Platforms.DESKTOP: return getSigningPassword( "src/desktop/signing/password.txt" )
+						default: return null
+					}
+
+
+					return null
 
 				default: return null
 			}
 		}
+	}
+
+	private String getSigningPath( String suffix )
+	{
+		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ suffix }" )
+
+		return f.exists( ) ? f.path : null
+	}
+
+	private String getSigningPassword( String suffix )
+	{
+		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ suffix }" )
+
+		return f.exists( ) ? f.text.trim( ) : null
 	}
 }
