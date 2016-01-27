@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="template">
+    <configurations>
+      <configuration name="template" target-platform="Mobile" pure-as="true" skip-build="true">
+        <dependencies>
+          <entries>
+            <entry library-name="libs_swc" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_as" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_ane" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="air_sdk_20.0" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.debug.swf" value="true" />
+          </map>
+          <option name="resourceFilesMode" value="None" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android enabled="true">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/../../../../test/build" path-in-package="build" />
+          </files-to-package>
+        </packaging-android>
+        <packaging-ios enabled="true" />
+      </configuration>
+      <configuration name="azerty" target-platform="Mobile" pure-as="true" output-file="azerty.swf" skip-build="true">
+        <dependencies>
+          <entries>
+            <entry library-name="libs_swc" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_as" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_ane" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="flex_sdk_4.6_air_15.0" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.debug.swf" value="true" />
+          </map>
+          <option name="resourceFilesMode" value="None" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android enabled="true" package-file-name="azerty">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/../../../../test/build" path-in-package="build" />
+          </files-to-package>
+        </packaging-android>
+        <packaging-ios enabled="true" package-file-name="azerty" />
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/fonts" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/generated" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/atlases" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/icons" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/signing" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/desktop/atlases" />
+      <excludeFolder url="file://$MODULE_DIR$/src/desktop/icons" />
+      <excludeFolder url="file://$MODULE_DIR$/src/desktop/signing" />
+      <excludeFolder url="file://$MODULE_DIR$/src/desktop/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/ios/atlases" />
+      <excludeFolder url="file://$MODULE_DIR$/src/ios/icons" />
+      <excludeFolder url="file://$MODULE_DIR$/src/ios/signing" />
+      <excludeFolder url="file://$MODULE_DIR$/src/ios/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/atlases" />
+    </content>
+    <orderEntry type="jdk" jdkName="air_sdk_20.0&#9;flex_sdk_4.6_air_15.0" jdkType="__CompositeFlexSdk__" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="as3_libs" level="project" />
+    <orderEntry type="library" exported="" name="libs_swc" level="project" />
+    <orderEntry type="library" exported="" name="libs_as" level="project" />
+    <orderEntry type="library" exported="" name="libs_ane" level="project" />
+  </component>
+</module>
