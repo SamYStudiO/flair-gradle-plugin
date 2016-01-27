@@ -4,8 +4,8 @@ package flair.gradle.dependencies
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Configurations {
-	COMPILE( "compile" , "src/main/actionscript" , "src/main/fonts" , "src/main/generated" , "libs_as" ) ,
-	LIBRARY_COMPILE( "libraryCompile" , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
+	COMPILE( "compile" , "src/main/actionscript" , "src/main/fonts" , "src/main/generated" ) ,
+	LIBRARY_COMPILE( "libraryCompile" , [ dir: "libs_swc" , include: "**/*.swc" ] , "libs_as" ) ,
 	NATIVE_COMPILE( "nativeCompile" , [ dir: "libs_ane" , include: "**/*.ane" ] ) ,
 	PACKAGE( "pack" , "src/main/assets" ) ,
 
@@ -46,9 +46,10 @@ public enum Configurations {
 		this.files = files
 	}
 
-	public Configurations( String name , Map<String , String> fileTree )
+	public Configurations( String name , Map<String , String> fileTree , String... files )
 	{
 		this.name = name
+		this.files = files
 		this.fileTree = fileTree
 	}
 

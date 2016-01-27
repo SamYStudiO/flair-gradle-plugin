@@ -2,13 +2,14 @@ package flair.gradle.structures
 
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
+import flair.gradle.structures.IStructure
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaStructure implements IStructure
+class IdeaModulesStructure implements IStructure
 {
 	@Override
 	public void create( Project project , File source )

@@ -2,7 +2,9 @@ package flair.gradle.plugins
 
 import flair.gradle.dependencies.Sdk
 import flair.gradle.structures.IStructure
-import flair.gradle.structures.IdeaStructure
+import flair.gradle.structures.IdeaImlStructure
+import flair.gradle.structures.IdeaLibrariesStructure
+import flair.gradle.structures.IdeaModulesStructure
 import org.apache.tools.ant.taskdefs.condition.Os
 
 /**
@@ -14,7 +16,9 @@ class IdeaPlugin extends AbstractIdePlugin
 	public List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
-		list.add( new IdeaStructure( ) )
+		//list.add( new IdeaImlStructure( ) )
+		//list.add( new IdeaModulesStructure( ) )
+		list.add( new IdeaLibrariesStructure( ) )
 
 		return list
 	}

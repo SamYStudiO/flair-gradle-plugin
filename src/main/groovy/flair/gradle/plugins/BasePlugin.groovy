@@ -85,8 +85,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
 			}
-
-			setupTaskDependencies( )
 		}
 	}
 
@@ -141,7 +139,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( conf.files )
 				{
 					conf.files.each {
-						project.dependencies.add( project.configurations.getByName( conf.name ).name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it }" ) )
+						project.dependencies.add( conf.name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it }" ) )
 					}
 				}
 
@@ -184,8 +182,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
 			{
-				it.structures.each { structure -> structure.create( project , project.file( scaffoldTempDir ) )
-				}
+				it.structures.each { structure -> structure.create( project , project.file( scaffoldTempDir ) ) }
 			}
 		}
 
@@ -244,9 +241,5 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				}
 			}
 		}
-	}
-
-	private setupTaskDependencies()
-	{
 	}
 }
