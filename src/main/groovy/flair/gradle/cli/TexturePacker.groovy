@@ -19,7 +19,7 @@ public class TexturePacker extends AbstractCli
 
 			arguments.each {
 
-				println( it )
+				println( "\u001B[34m${ it }\u001B[0m" )
 				args it
 			}
 
@@ -27,6 +27,6 @@ public class TexturePacker extends AbstractCli
 			standardOutput = outputStream
 		}
 
-		println( outputStream.toString( ) )
+		println( "\u001B[32m${ outputStream.toString( ) }\u001B[0m" )
 	}
 }
