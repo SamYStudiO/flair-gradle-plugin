@@ -478,7 +478,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 
 				case FlairProperties.PACKAGE_CONNECT.name: return null
-				case FlairProperties.PACKAGE_LISTEN.name: return null
+				case FlairProperties.PACKAGE_LISTEN.name: return getProp( FlairProperties.DEBUG.name , true ) ? "7936" : null
 				case FlairProperties.PACKAGE_SAMPLER.name: return false
 				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name: return false
 
