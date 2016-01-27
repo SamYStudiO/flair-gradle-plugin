@@ -1,7 +1,5 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.FlairProperties
-import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
@@ -13,9 +11,7 @@ class IdeaLibrariesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name )
-
-		Set<String> libraries = new HashSet<File>( )
+		Set<String> libraries = new HashSet<String>( )
 		project.configurations.findAll {
 			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
 		}.each {
