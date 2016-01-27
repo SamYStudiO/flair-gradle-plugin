@@ -1,0 +1,15 @@
+<configuration name="{configurationName}" target-platform="{target}" pure-as="true" main-class="{mainClass}" output-file="{outputSwf}" output-folder="{buildDir}" >
+	<dependencies>
+		<sdk name="{sdkName}" />
+	</dependencies>
+	<compiler-options>
+		<map>
+			<entry key="compiler.debug.swf" value="{debug}" />
+			<entry key="compiler.define" value="{constants}" />
+		</map>
+		<option name="resourceFilesMode" value="None" />
+	</compiler-options>
+	<packaging-air-desktop />
+	<packaging-android />
+	<packaging-ios />
+</configuration>

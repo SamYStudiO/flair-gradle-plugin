@@ -14,33 +14,38 @@ public class CommonStructure implements IStructure
 	{
 		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name )
 
-		if( project.fileTree( "${ moduleName }/src/main" ).size( ) > 0 ) return
+		if( project.fileTree( "${ moduleName }/src/main" ).size( ) == 0 )
+		{
 
-		project.copy {
-			from "${ source.path }/src/main"
-			into "${ moduleName }/src/main"
+			project.copy {
+				from "${ source.path }/src/main"
+				into "${ moduleName }/src/main"
 
-			exclude "**/ios/**" , "**/android/**" , "**/desktop/**" , "**/_packageName_/**" , "**/atlases/**"
+				exclude "**/ios/**" , "**/android/**" , "**/desktop/**" , "**/_packageName_/**" , "**/atlases/**"
+			}
+
+			project.copy {
+				from "${ source.path }/libs_ane"
+				into "${ moduleName }/libs_ane"
+			}
+
+			project.copy {
+				from "${ source.path }/libs_as"
+				into "${ moduleName }/libs_as"
+			}
+
+			project.copy {
+				from "${ source.path }/libs_swc"
+				into "${ moduleName }/libs_swc"
+			}
 		}
 
-		project.copy {
-			from "${ source.path }/libs_ane"
-			into "${ moduleName }/libs_ane"
-		}
-
-		project.copy {
-			from "${ source.path }/libs_as"
-			into "${ moduleName }/libs_as"
-		}
-
-		project.copy {
-			from "${ source.path }/libs_swc"
-			into "${ moduleName }/libs_swc"
-		}
-
-		project.copy {
-			from "${ source.path }/local.properties"
-			into project.rootDir
+		if( !project.file( "${ project.rootDir.path }/local.properties" ).exists( ) )
+		{
+			project.copy {
+				from "${ source.path }/local.properties"
+				into project.rootDir
+			}
 		}
 	}
 }

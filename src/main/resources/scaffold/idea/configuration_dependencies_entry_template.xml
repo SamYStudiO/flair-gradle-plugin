@@ -1,0 +1,3 @@
+				<entry library-level="project" library-name="{dependencyName}">
+					<dependency linkage="Merged" />
+				</entry>

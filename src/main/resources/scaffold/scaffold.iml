@@ -44,7 +44,7 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_sdk_4.6_air_15.0" />
+          <sdk name="air_sdk_20.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -83,7 +83,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/ios/splashs" />
       <excludeFolder url="file://$MODULE_DIR$/src/main/atlases" />
     </content>
-    <orderEntry type="jdk" jdkName="air_sdk_20.0&#9;flex_sdk_4.6_air_15.0" jdkType="__CompositeFlexSdk__" />
+    <orderEntry type="jdk" jdkName="air_sdk_20.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="as3_libs" level="project" />
     <orderEntry type="library" exported="" name="libs_swc" level="project" />

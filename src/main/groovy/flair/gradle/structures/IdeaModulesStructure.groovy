@@ -2,7 +2,6 @@ package flair.gradle.structures
 
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.structures.IStructure
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 
@@ -16,30 +15,19 @@ class IdeaModulesStructure implements IStructure
 	{
 		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name )
 
-		if( !project.file( "${ moduleName }/${ moduleName }.iml" ).exists( ) )
+		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) )
 		{
 			project.copy {
-				from "${ source.path }/scaffold.iml"
-				into moduleName
+				from "${ source.path }/idea/modules_template.xml"
+				into "${ project.rootDir.path }/.idea"
 
-				rename "scaffold.iml" , "${ moduleName }.iml"
+				rename "modules_template.xml" , "modules.xml"
 			}
+
+			File file = project.file( "${ project.rootDir.path }/.idea/modules.xml" )
+
+			file.write( file.text.replaceAll( "\\{projectName\\}" , project.name ).replaceAll( "\\{moduleName\\}" , moduleName ) )
 		}
-
-		if( !project.rootProject.file( ".idea/libraries/libs_as" ).exists( ) )
-		{
-			project.copy {
-				from "${ source.path }/idea/libraries"
-				into "${ project.rootProject.rootDir }/.idea/libraries"
-			}
-		}
-
-		project.rootProject.fileTree( ".idea/libraries" ).each { file ->
-
-			if( file.name.indexOf( "libs_" ) == 0 ) file.write( file.text.replace( '${moduleName}' , moduleName ) )
-		}
-
-		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) ) return
 
 		Node node = new XmlParser( ).parse( project.rootProject.file( ".idea/modules.xml" ) )
 
