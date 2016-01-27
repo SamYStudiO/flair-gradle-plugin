@@ -84,12 +84,8 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	@TaskAction
 	public void processAppDescriptor()
 	{
-		//outputDir.deleteDir( )
-
-		getInputFiles( ).each { file ->
-
+		for( File file : getInputFiles( ) )
 			if( file.exists( ) ) internalProcessAppDescriptor( file )
-		}
 	}
 
 	protected String internalProcessAppDescriptor( File app )
@@ -125,7 +121,10 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
 
 
-		project.file( "${ outputDir }/package/app_descriptor.xml" ).write( appContent )
+		project.file( "${ outputDir }/package/" ).mkdirs( )
+		File file = project.file( "${ outputDir }/package/app_descriptor.xml" )
+		file.createNewFile( )
+		file.write( appContent )
 	}
 
 	private String getSupportedLocales()
@@ -157,14 +156,16 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		return supportedLocales.trim( )
 	}
 
-	private Set<File> getInputFiles()
+	private List<File> getInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/app_descriptor.xml" ) )
-		variant.productFlavors.each { set.add( project.file( "${ moduleDir }/src/${ it }/app_descriptor.xml" ) ) }
-		if( variant.buildType ) set.add( project.file( "${ moduleDir }/src/${ variant.buildType }/app_descriptor.xml" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/app_descriptor.xml" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/app_descriptor.xml" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/app_descriptor.xml" ) )
 
-		return set
+		list = list.reverse( )
+
+		return list
 	}
 }
