@@ -200,11 +200,11 @@ class Package extends AbstractVariantTask
 
 	private addFilesAndDirectories()
 	{
-		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
+		cli.addArgument( project.file( "${ outputVariantDir.path }/package/app_descriptor.xml" ).path )
 		cli.addArgument( "-C" )
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
-		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each { cli.addArgument( it.name ) }
+		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each { if( it.name != "app_descriptor.xml" ) cli.addArgument( it.name ) }
 	}
 
 	private addExtensionNatives()
@@ -247,7 +247,7 @@ class Package extends AbstractVariantTask
 
 		set.add( project.file( "${ outputVariantDir.path }/extensions" ) )
 		set.add( project.file( "${ outputVariantDir.path }/package" ) )
-		set.add( project.file( "${ outputVariantDir.path }/app_descriptor" ) )
+		set.add( project.file( "${ outputVariantDir.path }/package/app_descriptor" ) )
 
 		return set
 	}

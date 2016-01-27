@@ -125,7 +125,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
 
 
-		project.file( "${ outputDir }/app_descriptor.xml" ).write( appContent )
+		project.file( "${ outputDir }/package/app_descriptor.xml" ).write( appContent )
 	}
 
 	private String getSupportedLocales()
