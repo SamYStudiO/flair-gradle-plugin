@@ -48,6 +48,30 @@ class Package extends AbstractVariantTask
 	@Input
 	def String version
 
+	@Input
+	def String alias
+
+	@Input
+	def String provider
+
+	@Input
+	def String storeType
+
+	@Input
+	def String storePass
+
+	@Input
+	def String keyStore
+
+	@Input
+	def String keyPass
+
+	@Input
+	def String tsa
+
+	@Input
+	def String provisioning
+
 	@Override
 	public void setVariant( Variant variant )
 	{
@@ -63,6 +87,17 @@ class Package extends AbstractVariantTask
 		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name ) ?: "null"
 		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name )
 		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
+
+		alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name ) ?: "null"
+		provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name ) ?: "null"
+		storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name ) ?: "null"
+		storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name ) ?: "null"
+		keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name ) ?: "null"
+		keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name ) ?: "null"
+		tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name ) ?: "null"
+		provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name ) ?: "null"
+
+
 
 		packageFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 	}
@@ -161,58 +196,50 @@ class Package extends AbstractVariantTask
 
 	private addSigning()
 	{
-		String alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name )
-		String provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name )
-		String storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name )
-		String storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name )
-		String keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name )
-		String keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name )
-		String tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name )
-		String provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name )
 
-		if( alias )
+		if( alias != "null" )
 		{
 			cli.addArgument( "-alias" )
 			cli.addArgument( alias )
 		}
 
-		if( provider )
+		if( provider != "null" )
 		{
 			cli.addArgument( "-providerName" )
 			cli.addArgument( provider )
 		}
 
-		if( storeType )
+		if( storeType != "null" )
 		{
 			cli.addArgument( "-storetype" )
 			cli.addArgument( storeType )
 		}
 
-		if( storePass )
+		if( storePass != "null" )
 		{
 			cli.addArgument( "-storepass" )
 			cli.addArgument( storePass )
 		}
 
-		if( keyStore )
+		if( keyStore != "null" )
 		{
 			cli.addArgument( "-keystore" )
 			cli.addArgument( keyStore )
 		}
 
-		if( keyPass )
+		if( keyPass != "null" )
 		{
 			cli.addArgument( "-keypass" )
 			cli.addArgument( keyPass )
 		}
 
-		if( tsa )
+		if( tsa != "null" )
 		{
 			cli.addArgument( "-tsa" )
 			cli.addArgument( tsa )
 		}
 
-		if( provisioning )
+		if( provisioning != "null" )
 		{
 			cli.addArgument( "-provisioning-profile" )
 			cli.addArgument( provisioning )
