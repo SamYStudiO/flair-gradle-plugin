@@ -15,11 +15,12 @@ public class TexturePacker extends AbstractCli
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
+
 			executable Os.isFamily( Os.FAMILY_MAC ) ? "/usr/local/bin/texturepacker" : "texturepacker"
 
 			arguments.each {
 
-				println( "\u001B[34m${ it }\u001B[0m" )
+				println( "\t" + it )
 				args it
 			}
 
@@ -27,6 +28,6 @@ public class TexturePacker extends AbstractCli
 			standardOutput = outputStream
 		}
 
-		println( "\u001B[32m${ outputStream.toString( ) }\u001B[0m" )
+		println( outputStream.toString( ) )
 	}
 }

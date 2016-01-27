@@ -13,7 +13,7 @@ public class Adl extends AbstractCli
 	{
 		project.ant.exec( executable: new Sdk( project ).adlPath ) {
 			arguments.each {
-				println( "\u001B[34m${it}\u001B[0m" )
+				println( "\t" + it )
 				arg( value: it )
 			}
 		}

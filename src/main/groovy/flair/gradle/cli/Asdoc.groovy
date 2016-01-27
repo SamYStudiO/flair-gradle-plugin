@@ -22,6 +22,6 @@ public class Asdoc extends AbstractCli
 			standardOutput = outputStream
 		}
 
-		println( "\u001B[32m${ outputStream.toString( ) }\u001B[0m" )
+		println( outputStream.toString( ) )
 	}
 }

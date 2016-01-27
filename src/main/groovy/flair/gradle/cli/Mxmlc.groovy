@@ -20,13 +20,13 @@ public class Mxmlc extends AbstractCli
 
 			arguments.each {
 
-				println( "\u001B[34m${it}\u001B[0m" )
+				println( "\t" + it )
 				args it
 			}
 
 			standardOutput = outputStream
 		}
 
-		println( "\u001B[32m${ outputStream.toString( ) }\u001B[0m" )
+		println( outputStream.toString( ) )
 	}
 }

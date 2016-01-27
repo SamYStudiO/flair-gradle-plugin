@@ -15,17 +15,18 @@ public class Idb extends AbstractCli
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
+
 			executable new Sdk( project ).idbPath
 
 			arguments.each {
 
-				println( "\u001B[34m${it}\u001B[0m" )
+				println( "\t" + it )
 				args it
 			}
 
 			standardOutput = outputStream
 		}
 
-		println( "\u001B[32m${ outputStream.toString( ) }\u001B[0m" )
+		println( outputStream.toString( ) )
 	}
 }
