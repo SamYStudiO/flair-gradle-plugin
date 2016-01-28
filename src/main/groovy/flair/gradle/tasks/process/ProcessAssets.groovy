@@ -30,7 +30,11 @@ class ProcessAssets extends AbstractVariantTask
 		inputDirs.each {
 
 			File file = project.file( "${ outputVariantDir }/package/${ it.name }" )
-			outputDirs.add( file )
+
+			if( file.exists( ) )
+			{
+				if( file.isDirectory( ) && file.listFiles( ).size( ) > 0 ) outputDirs.add( file ) else if( !file.isDirectory( ) ) outputDirs.add( file )
+			}
 		}
 	}
 
@@ -43,15 +47,25 @@ class ProcessAssets extends AbstractVariantTask
 	@TaskAction
 	public void processAssets()
 	{
-		//outputDirs.each { it.deleteDir( ) }
-
 		getInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
-				project.copy {
-					from file
-					into "${ outputVariantDir }/package/${ file.name }"
+				if( file.isDirectory( ) && file.listFiles( ).size( ) > 0 )
+				{
+					project.copy {
+						from file
+						into "${ outputVariantDir }/package/${ file.name }"
+
+						includeEmptyDirs = false
+					}
+				}
+				else if( !file.isDirectory( ) )
+				{
+					project.copy {
+						from file
+						into "${ outputVariantDir }/package/"
+					}
 				}
 			}
 		}
