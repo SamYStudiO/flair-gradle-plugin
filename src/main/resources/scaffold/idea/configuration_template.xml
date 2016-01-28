@@ -1,4 +1,4 @@
-<configuration name="{configurationName}" target-platform="{target}" pure-as="true" main-class="{mainClass}" output-file="{outputSwf}" output-folder="{buildDir}" skip-build="true">
+<configuration name="{configurationName}" target-platform="{target}" pure-as="true" main-class="{mainClass}" output-file="{outputSwf}" output-folder="{buildDir}">
 	<dependencies>
 		<sdk name="{sdkName}" />
 	</dependencies>
@@ -8,6 +8,7 @@
 			<entry key="compiler.define" value="{constants}" />
 		</map>
 		<option name="resourceFilesMode" value="None" />
+		<option name="additionalOptions" value="{compilerOptions}" />
 	</compiler-options>
 	<packaging-air-desktop />
 	<packaging-android />

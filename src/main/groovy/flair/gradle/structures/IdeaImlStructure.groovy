@@ -1,6 +1,5 @@
 package flair.gradle.structures
 
-import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
@@ -9,7 +8,6 @@ import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -24,6 +22,8 @@ class IdeaImlStructure implements IStructure
 
 	private String configurationTemplate
 
+	private String libraryTemplate
+
 	@Override
 	public void create( Project project , File source )
 	{
@@ -32,6 +32,7 @@ class IdeaImlStructure implements IStructure
 		extensionManager = project.flair as IExtensionManager
 		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 		configurationTemplate = project.file( "${ source.path }/idea/configuration_template.xml" ).text
+		libraryTemplate = project.file( "${ source.path }/idea/library_template.xml" ).text
 
 		File output = project.file( "${ moduleName }/${ moduleName }.iml" )
 		File file = !output.exists( ) ? project.file( "${ source.path }/idea/template.iml" ) : output
@@ -45,10 +46,11 @@ class IdeaImlStructure implements IStructure
 
 		createSourceFolders( content )
 		createExcludeFolders( content )
-		//createLibraries( newModuleRootManager )
-		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node )
+		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node , newModuleRootManager )
 
 		output.withWriter { writer -> XmlUtil.serialize( xml , writer ) }
+
+		output.write( output.text.replaceAll( "#09;" , "&#09;" ) )
 	}
 
 	private String buildPathFromModule( String path , boolean escape = false )
@@ -84,7 +86,6 @@ class IdeaImlStructure implements IStructure
 				return ( escape ? '\\$MODULE_DIR\\$/' : '$MODULE_DIR$/' ) + up + path.replace( modulePath + "/" , "" )
 			}
 		}
-
 
 		return path.replaceAll( "\\\\" , "/" )
 	}
@@ -143,33 +144,7 @@ class IdeaImlStructure implements IStructure
 		}
 	}
 
-	private void createLibraries( Node xml )
-	{
-		xml.children( ).findAll { it.name( ) == "orderEntry" && it.@type == "library" }.each { it.parent( ).remove( it ) }
-
-		List<String> list = new ArrayList<String>( )
-
-		new Node( xml , "orderEntry" , [ exported: "" , name: "as3_libs" , level: "project" ] )
-
-		project.configurations.findAll {
-			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
-		}.each {
-
-			it.files.each { file ->
-
-				if( file.exists( ) )
-				{
-					String path = file.isDirectory( ) ? file.path : file.parentFile.path
-
-					if( !list.contains( path ) ) new Node( xml , "orderEntry" , [ exported: "" , name: project.file( path ).name , level: "project" ] )
-
-					list.add( path )
-				}
-			}
-		}
-	}
-
-	private void createConfigurations( Node xml )
+	private void createConfigurations( Node xml , Node newModuleRootManager )
 	{
 		xml.children( ).findAll { it.@name == null || it.@name.startsWith( "flair_" ) }.each { it.parent( ).remove( it ) }
 
@@ -194,6 +169,23 @@ class IdeaImlStructure implements IStructure
 
 			String configuration = configurationTemplate
 
+			List<String> constants = new ArrayList<String>( )
+
+			Platforms.values( ).each {
+
+				constants.add( "PLATFORM::${ it.name.toUpperCase( ) }#09;${ it == variant.platform }" )
+			}
+
+			extensionManager.allActivePlatformProductFlavors.each {
+
+				constants.add( "PRODUCT_FLAVOR::${ it.name.toUpperCase( ) }#09;${ variant.productFlavors.indexOf( it.name ) >= 0 }" )
+			}
+
+			extensionManager.allActivePlatformBuildTypes.each {
+
+				constants.add( "BUILD_TYPE::${ it.name.toUpperCase( ) }#09;${ it.name == variant.buildType }" )
+			}
+
 			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
 					.replaceAll( "\\{platform\\}" , platform )
 					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name ) as String )
@@ -202,7 +194,8 @@ class IdeaImlStructure implements IStructure
 					.replaceAll( "\\{target\\}" , variant.platform == Platforms.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
 					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ? "true" : "false" )
-					.replaceAll( "\\{constants\\}" , "" )
+					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
+					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List ).join( " " ) )
 
 			Node conf = new XmlParser( ).parseText( configuration )
 
@@ -246,17 +239,40 @@ class IdeaImlStructure implements IStructure
 				}
 			}
 
-			//			<entry library-level="project" library-name="{dependencyName}">
-			//			<dependency linkage="Merged" />
-			//			</entry>
+			Node signingNode = platformNode.AirSigningOptions[ 0 ] as Node
+			if( signingNode == null ) signingNode = new Node( platformNode , "AirSigningOptions" )
 
-			List<Configuration> list = new ArrayList<Configuration>( )
+			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name )
+			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name )
+			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name )
+			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name )
+			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name )
+			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name )
+			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name )
+			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name )
+			boolean x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name )
 
-			project.configurations.each {
+			if( signingAlias ) signingNode."@key-alias" = signingAlias
+			if( signingStoreType ) signingNode."@keystore-type" = signingStoreType
+			if( signingProviderName ) signingNode."@provider" = signingProviderName
+			if( signingProvisioningProfile ) signingNode."@provisioning-profile-path" = buildPathFromModule( signingProvisioningProfile )
+			if( signingKeyStore ) signingNode."@keystore-path" = buildPathFromModule( signingKeyStore )
+			if( signingTsa ) signingNode."@tsa" = signingTsa
+			if( variant.platform == Platforms.ANDROID && x86 ) signingNode."@arch" = "x86"
+			signingNode."@use-temp-certificate" = "false"
 
-				boolean libraryOrNative = it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
 
-				if( it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) list.add( it )
+			List<File> list = new ArrayList<File>( )
+
+			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/asLibraries" ) )
+			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/libraries" ) )
+			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/extensions" ) )
+
+			/*project.configurations.each {
+
+				boolean libraryOrNative = it.name.toLowerCase( ).contains( "aslibrarycompile" ) ||  it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
+
+				if( it.name == Configurations.AS_LIBRARY_COMPILE.name || it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) list.add( it )
 				if( it.name.contains( variant.platform.name ) && libraryOrNative ) list.add( it )
 
 				for( String flavor : variant.productFlavors )
@@ -265,26 +281,38 @@ class IdeaImlStructure implements IStructure
 				}
 
 				if( variant.buildType && it.name.contains( variant.buildType ) && libraryOrNative ) list.add( it )
-			}
-			list.each {
+			}*/
 
-				it.files.each { file ->
+			list.each { file ->
 
-					if( file.exists( ) )
-					{
-						String path = file.isDirectory( ) ? file.path : file.parentFile.path
+				//it.files.each { file ->
 
-						Node dependencies = conf.dependencies[ 0 ] as Node
+				if( file.exists( ) )
+				{
+					Node dependencies = conf.dependencies[ 0 ] as Node
 
-						Node entries = dependencies.entries[ 0 ] as Node
-						if( !entries ) entries = new Node( dependencies , "entries" )
+					Node entries = dependencies.entries[ 0 ] as Node
+					if( !entries ) entries = new Node( dependencies , "entries" )
 
-						Node entry = new Node( entries , "entry" )
-						entry."@library-name" = project.file( path ).name
-						entry."@library-level" = "project"
-						new Node( entry , "dependency" , [ linkage: "Merged" ] )
-					}
+					String id = new Date( ).getTime( ).toString( )
+
+					Node entry = new Node( entries , "entry" )
+					entry."@library-id" = id
+					new Node( entry , "dependency" , [ linkage: "Merged" ] )
+
+					/*String library = libraryTemplate
+
+					library.replaceAll( "\\{id\\}" , id )
+					library.replaceAll( "\\{path\\}" , buildPathFromModule( file.path , true ) )
+
+					println( "--" )
+					println( id )
+
+					newModuleRootManager.appendNode( new XmlParser( ).parseText( library ) )
+
+					println( newModuleRootManager.children(  )[ newModuleRootManager.children(  ).size(  ) - 1 ].library.properties.@id )*/
 				}
+				//}
 			}
 
 			xml.append( conf )
