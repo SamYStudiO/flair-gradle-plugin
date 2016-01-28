@@ -1,5 +1,6 @@
 package flair.gradle.structures
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
@@ -8,6 +9,7 @@ import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -51,7 +53,6 @@ class IdeaImlStructure implements IStructure
 
 	private String buildPathFromModule( String path , boolean escape = false )
 	{
-
 		path = path.replaceAll( "\\\\" , "/" )
 		String modulePath = project.file( moduleName ).path.replaceAll( "\\\\" , "/" )
 
@@ -172,11 +173,11 @@ class IdeaImlStructure implements IStructure
 	{
 		xml.children( ).findAll { it.@name == null || it.@name.startsWith( "flair_" ) }.each { it.parent( ).remove( it ) }
 
-		extensionManager.allActivePlatformVariants.each {
+		extensionManager.allActivePlatformVariants.each { variant ->
 
 			String platform = ""
 
-			switch( it.platform )
+			switch( variant.platform )
 			{
 				case Platforms.IOS:
 					platform = "ios"
@@ -193,23 +194,21 @@ class IdeaImlStructure implements IStructure
 
 			String configuration = configurationTemplate
 
-			println( ">>>" + buildPathFromModule( project.buildDir.path ) )
-
-			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + it.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
+			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
 					.replaceAll( "\\{platform\\}" , platform )
-					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( it , FlairProperties.COMPILE_MAIN_CLASS.name ) as String )
-					.replaceAll( "\\{outputSwf\\}" , it.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
-					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) )
-					.replaceAll( "\\{target\\}" , it.platform == Platforms.DESKTOP ? "Desktop" : "Mobile" )
+					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name ) as String )
+					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
+					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + "/package" )
+					.replaceAll( "\\{target\\}" , variant.platform == Platforms.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
-					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( it , FlairProperties.DEBUG.name ) ? "true" : "false" )
+					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , "" )
 
 			Node conf = new XmlParser( ).parseText( configuration )
 
 			Node platformNode = null
 
-			switch( it.platform )
+			switch( variant.platform )
 			{
 				case Platforms.IOS:
 					platformNode = conf."packaging-ios"[ 0 ] as Node
@@ -226,22 +225,66 @@ class IdeaImlStructure implements IStructure
 
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
-			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ it.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ).path )
-			platformNode.@"package-file-name" = "${ it.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( it , FlairProperties.APP_VERSION.name ) } }"
+			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/package/app_descriptor.xml" ).path )
+			platformNode.@"package-file-name" = "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }"
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
 
-			Node toPackage = platformNode."files-to-package"[ 0 ]
+			Node toPackage = platformNode."files-to-package"[ 0 ] as Node
 
 			toPackage.children( ).each { it.parent( ).remove( it ) }
 
 
-			project.file( "${ project.buildDir.path }/${ it.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/package" ).listFiles( ).each {
+			project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/package" ).listFiles( ).each {
 
-				Node node = new Node( toPackage , "FilePathAndPathInPackage" )
+				if( it.name != "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" && it.name != "app_descriptor.xml" )
+				{
+					Node node = new Node( toPackage , "FilePathAndPathInPackage" )
 
-				node.@"file-path" = buildPathFromModule( it.path )
-				node.@"path-in-package" = it.name
+					node.@"file-path" = buildPathFromModule( it.path )
+					node.@"path-in-package" = it.name
+				}
+			}
+
+			//			<entry library-level="project" library-name="{dependencyName}">
+			//			<dependency linkage="Merged" />
+			//			</entry>
+
+			List<Configuration> list = new ArrayList<Configuration>( )
+
+			project.configurations.each {
+
+				boolean libraryOrNative = it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
+
+				if( it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) list.add( it )
+				if( it.name.contains( variant.platform.name ) && libraryOrNative ) list.add( it )
+
+				for( String flavor : variant.productFlavors )
+				{
+					if( it.name.contains( flavor ) && libraryOrNative ) list.add( it )
+				}
+
+				if( variant.buildType && it.name.contains( variant.buildType ) && libraryOrNative ) list.add( it )
+			}
+			list.each {
+
+				it.files.each { file ->
+
+					if( file.exists( ) )
+					{
+						String path = file.isDirectory( ) ? file.path : file.parentFile.path
+
+						Node dependencies = conf.dependencies[ 0 ] as Node
+
+						Node entries = dependencies.entries[ 0 ] as Node
+						if( !entries ) entries = new Node( dependencies , "entries" )
+
+						Node entry = new Node( entries , "entry" )
+						entry."@library-name" = project.file( path ).name
+						entry."@library-level" = "project"
+						new Node( entry , "dependency" , [ linkage: "Merged" ] )
+					}
+				}
 			}
 
 			xml.append( conf )
