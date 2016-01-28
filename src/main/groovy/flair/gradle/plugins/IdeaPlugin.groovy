@@ -1,10 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.structures.IStructure
-import flair.gradle.structures.IdeaImlStructure
-import flair.gradle.structures.IdeaLibrariesStructure
-import flair.gradle.structures.IdeaModulesStructure
+import flair.gradle.structures.*
 import org.apache.tools.ant.taskdefs.condition.Os
 
 /**
@@ -19,6 +16,7 @@ class IdeaPlugin extends AbstractIdePlugin
 		list.add( new IdeaImlStructure( ) )
 		list.add( new IdeaLibrariesStructure( ) )
 		list.add( new IdeaModulesStructure( ) )
+		list.add( new IdeaRunDebugConfigurationsStructure( ) )
 
 		return list
 	}

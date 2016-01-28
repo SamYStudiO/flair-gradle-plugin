@@ -41,9 +41,19 @@ class LaunchEmulator extends AbstractVariantTask
 
 		cli.addArgument( "-extdir" )
 		cli.addArgument( project.file( output + "/extracted_extensions" ).path )
-		cli.addArgument( project.file( output + "/package/app_descriptor.xml" ).path )
+
+		File f = project.file( output + "/package/app_descriptor.xml" )
+
+		project.copy {
+			from output + "/app_descriptor.xml"
+			into output + "/package"
+		}
+
+		cli.addArgument( f.path )
 		cli.addArgument( project.file( output + "/package" ).path )
 
 		cli.execute( project )
+
+		f.delete( )
 	}
 }

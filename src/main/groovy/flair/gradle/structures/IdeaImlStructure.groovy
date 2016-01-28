@@ -1,5 +1,6 @@
 package flair.gradle.structures
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
@@ -8,6 +9,7 @@ import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -22,8 +24,6 @@ class IdeaImlStructure implements IStructure
 
 	private String configurationTemplate
 
-	private String libraryTemplate
-
 	@Override
 	public void create( Project project , File source )
 	{
@@ -32,7 +32,6 @@ class IdeaImlStructure implements IStructure
 		extensionManager = project.flair as IExtensionManager
 		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 		configurationTemplate = project.file( "${ source.path }/idea/configuration_template.xml" ).text
-		libraryTemplate = project.file( "${ source.path }/idea/library_template.xml" ).text
 
 		File output = project.file( "${ moduleName }/${ moduleName }.iml" )
 		File file = !output.exists( ) ? project.file( "${ source.path }/idea/template.iml" ) : output
@@ -197,28 +196,28 @@ class IdeaImlStructure implements IStructure
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
 					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List ).join( " " ) )
 
-			Node conf = new XmlParser( ).parseText( configuration )
+			Node configurationNode = new XmlParser( ).parseText( configuration )
 
 			Node platformNode = null
 
 			switch( variant.platform )
 			{
 				case Platforms.IOS:
-					platformNode = conf."packaging-ios"[ 0 ] as Node
+					platformNode = configurationNode."packaging-ios"[ 0 ] as Node
 					break
 
 				case Platforms.ANDROID:
-					platformNode = conf."packaging-android"[ 0 ] as Node
+					platformNode = configurationNode."packaging-android"[ 0 ] as Node
 					break
 
 				case Platforms.DESKTOP:
-					platformNode = conf."packaging-air-desktop"[ 0 ] as Node
+					platformNode = configurationNode."packaging-air-desktop"[ 0 ] as Node
 					break
 			}
 
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
-			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/package/app_descriptor.xml" ).path )
+			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ).path )
 			platformNode.@"package-file-name" = "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }"
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
@@ -261,61 +260,51 @@ class IdeaImlStructure implements IStructure
 			if( variant.platform == Platforms.ANDROID && x86 ) signingNode."@arch" = "x86"
 			signingNode."@use-temp-certificate" = "false"
 
+			List<Configuration> libraries = new ArrayList<Configuration>( )
 
-			List<File> list = new ArrayList<File>( )
+			project.configurations.each {
 
-			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/asLibraries" ) )
-			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/libraries" ) )
-			list.add( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/extensions" ) )
+				boolean libraryOrNative = it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
 
-			/*project.configurations.each {
-
-				boolean libraryOrNative = it.name.toLowerCase( ).contains( "aslibrarycompile" ) ||  it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
-
-				if( it.name == Configurations.AS_LIBRARY_COMPILE.name || it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) list.add( it )
-				if( it.name.contains( variant.platform.name ) && libraryOrNative ) list.add( it )
+				if( it.name == Configurations.AS_LIBRARY_COMPILE.name || it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) libraries.add( it )
+				if( it.name.contains( variant.platform.name ) && libraryOrNative ) libraries.add( it )
 
 				for( String flavor : variant.productFlavors )
 				{
-					if( it.name.contains( flavor ) && libraryOrNative ) list.add( it )
+					if( it.name.contains( flavor ) && libraryOrNative ) libraries.add( it )
 				}
 
-				if( variant.buildType && it.name.contains( variant.buildType ) && libraryOrNative ) list.add( it )
-			}*/
-
-			list.each { file ->
-
-				//it.files.each { file ->
-
-				if( file.exists( ) )
-				{
-					Node dependencies = conf.dependencies[ 0 ] as Node
-
-					Node entries = dependencies.entries[ 0 ] as Node
-					if( !entries ) entries = new Node( dependencies , "entries" )
-
-					String id = new Date( ).getTime( ).toString( )
-
-					Node entry = new Node( entries , "entry" )
-					entry."@library-id" = id
-					new Node( entry , "dependency" , [ linkage: "Merged" ] )
-
-					/*String library = libraryTemplate
-
-					library.replaceAll( "\\{id\\}" , id )
-					library.replaceAll( "\\{path\\}" , buildPathFromModule( file.path , true ) )
-
-					println( "--" )
-					println( id )
-
-					newModuleRootManager.appendNode( new XmlParser( ).parseText( library ) )
-
-					println( newModuleRootManager.children(  )[ newModuleRootManager.children(  ).size(  ) - 1 ].library.properties.@id )*/
-				}
-				//}
+				if( variant.buildType && it.name.contains( variant.buildType ) && libraryOrNative ) libraries.add( it )
 			}
 
-			xml.append( conf )
+			List<String> added = new ArrayList<String>( )
+
+			libraries.each { conf ->
+
+				conf.files.each { file ->
+
+					if( file.exists( ) )
+					{
+						String path = file.isDirectory( ) ? file.path : file.parentFile.path
+
+						if( !added.contains( path ) )
+						{
+							Node dependencies = configurationNode.dependencies[ 0 ] as Node
+
+							Node entries = dependencies.entries[ 0 ] as Node
+							if( !entries ) entries = new Node( dependencies , "entries" )
+
+							Node entry = new Node( entries , "entry" )
+							entry."@library-name" = project.file( path ).name
+							entry."@library-level" = "project"
+							new Node( entry , "dependency" , [ linkage: "Merged" ] )
+							added.add( path )
+						}
+					}
+				}
+			}
+
+			xml.append( configurationNode )
 		}
 	}
 }

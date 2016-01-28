@@ -274,7 +274,7 @@ class Package extends AbstractVariantTask
 
 	private addFilesAndDirectories()
 	{
-		cli.addArgument( project.file( "${ outputVariantDir.path }/package/app_descriptor.xml" ).path )
+		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
 		cli.addArgument( "-C" )
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 

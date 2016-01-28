@@ -16,7 +16,9 @@ import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Variant
+import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
 
 /**
@@ -81,7 +83,18 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			initDirectoryWatcher( )
 			addDirectoryWatcherActions( )
 
-			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
+			List<String> list = new ArrayList<String>( )
+
+			flair.allActivePlatformVariants.each {
+
+				list.add( Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE ) )
+			}
+
+			Task t = project.tasks.create( Tasks.ASSEMBLE.name )
+			t.group = Tasks.ASSEMBLE.group.name
+			t.dependsOn list
+
+			if( !project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
 			{
 				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
 			}

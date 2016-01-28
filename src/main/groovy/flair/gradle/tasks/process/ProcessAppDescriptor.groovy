@@ -60,7 +60,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputFile = project.file( "${ outputVariantDir.path }/package/app_descriptor.xml" )
+		outputFile = project.file( "${ outputVariantDir.path }/app_descriptor.xml" )
 
 		sdkVersion = new Sdk( project ).version
 		appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )

@@ -11,7 +11,7 @@ class IdeaLibrariesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		Set<String> libraries = new HashSet<String>( )
+		List<String> libraries = new ArrayList<String>( )
 		project.configurations.findAll {
 			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
 		}.each {
@@ -24,7 +24,7 @@ class IdeaLibrariesStructure implements IStructure
 			}
 		}
 
-		project.file( ".idea/libraries/" ).listFiles( ).each { it.delete( ) }
+		project.file( ".idea/libraries/" ).listFiles( ).each { if( it.name.startsWith( "flair_" ) ) it.delete( ) }
 		libraries.each { path ->
 
 			File pathFile = project.file( path )

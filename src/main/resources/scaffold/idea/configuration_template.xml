@@ -1,4 +1,4 @@
-<configuration name="{configurationName}" target-platform="{target}" pure-as="true" main-class="{mainClass}" output-file="{outputSwf}" output-folder="{buildDir}">
+<configuration name="{configurationName}" target-platform="{target}" pure-as="true" main-class="{mainClass}" output-file="{outputSwf}" output-folder="{buildDir}" skip-build="true">
 	<dependencies>
 		<sdk name="{sdkName}" />
 	</dependencies>

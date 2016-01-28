@@ -462,7 +462,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 					}
 				case FlairProperties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
 
-				case FlairProperties.EMULATOR_SCREEN_SIZE.name: return "540x960:540x960"
+				case FlairProperties.EMULATOR_SCREEN_SIZE.name: return "540x920:540x960"
 				case FlairProperties.EMULATOR_SCREEN_DPI.name: return 240
 
 				case FlairProperties.PACKAGE_TARGET.name: return null

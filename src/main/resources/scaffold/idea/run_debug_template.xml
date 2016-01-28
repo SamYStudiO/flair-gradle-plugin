@@ -1,0 +1,40 @@
+<component name="ProjectRunConfigurationManager">
+	<configuration default="false" name="{name}" type="FlashRunConfigurationType" factoryName="Flash App" singleton="true">
+		<option name="BCName" value="{profileName}" />
+		<option name="IOSSimulatorSdkPath" value="" />
+		<option name="adlOptions" value="" />
+		<option name="airProgramParameters" value="" />
+		<option name="appDescriptorForEmulator" value="{app}" />
+		<option name="debugTransport" value="{transport}" />
+		<option name="debuggerSdkRaw" value="BC SDK" />
+		<option name="emulator" value="{emulator}" />
+		<option name="emulatorAdlOptions" value="" />
+		<option name="fastPackaging" value="false" />
+		<option name="fullScreenHeight" value="{fullHeight}" />
+		<option name="fullScreenWidth" value="{fullWidth}" />
+		<option name="launchUrl" value="false" />
+		<option name="launcherParameters">
+			<LauncherParameters>
+				<option name="browser" value="" />
+				<option name="launcherType" value="OSDefault" />
+				<option name="newPlayerInstance" value="false" />
+				<option name="playerPath" value="" />
+			</LauncherParameters>
+		</option>
+		<option name="mobileRunTarget" value="{target}" />
+		<option name="moduleName" value="{moduleName}" />
+		<option name="overriddenMainClass" value="" />
+		<option name="overriddenOutputFileName" value="" />
+		<option name="overrideMainClass" value="false" />
+		<option name="runTrusted" value="true" />
+		<option name="screenDpi" value="{dpi}" />
+		<option name="screenHeight" value="{height}" />
+		<option name="screenWidth" value="{width}" />
+		<option name="url" value="http://" />
+		<option name="usbDebugPort" value="{port}" />
+		<method>
+			<option name="Make" enabled="false" />
+			<option name="Gradle.BeforeRunTask" enabled="true" tasks="{gradleCompile}" externalProjectPath="$PROJECT_DIR$/test" vmOptions="" scriptParameters="" />
+		</method>
+	</configuration>
+</component>
