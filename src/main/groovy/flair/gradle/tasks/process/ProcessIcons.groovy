@@ -13,7 +13,7 @@ import org.gradle.api.tasks.TaskAction
 class ProcessIcons extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputDirectory
 	def File outputDir
@@ -23,7 +23,7 @@ class ProcessIcons extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
+		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package/icons" )
 	}
 
@@ -36,9 +36,9 @@ class ProcessIcons extends AbstractVariantTask
 	@TaskAction
 	public void processIcons()
 	{
-		//outputDir.deleteDir( )
+		outputDir.deleteDir( )
 
-		getInputFiles( ).each { file ->
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
@@ -50,14 +50,14 @@ class ProcessIcons extends AbstractVariantTask
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/icons/" ) )
-		variant.productFlavors.each { set.add( project.file( "${ moduleDir }/src/${ it }/icons/" ) ) }
-		if( variant.buildType ) set.add( project.file( "${ moduleDir }/src/${ variant.buildType }/icons/" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/icons/" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons/" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/icons/" ) )
 
-		return set
+		return list
 	}
 }

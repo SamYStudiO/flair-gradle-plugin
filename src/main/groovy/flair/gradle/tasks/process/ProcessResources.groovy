@@ -8,6 +8,7 @@ import flair.gradle.tasks.Groups
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
@@ -18,18 +19,27 @@ import org.gradle.api.tasks.TaskAction
 class ProcessResources extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputDirectory
 	def File outputDir
+
+	@Input
+	def List<String> excludeResources
+
+	@Input
+	def boolean generateAtf
 
 	@Override
 	public void setVariant( Variant variant )
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
+		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package/resources" )
+
+		excludeResources = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name ) as List<String>
+		generateAtf = extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name )
 	}
 
 	public ProcessResources()
@@ -41,11 +51,9 @@ class ProcessResources extends AbstractVariantTask
 	@TaskAction
 	public void processResources()
 	{
-		List<String> excludeResources = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name ) as List<String>
+		outputDir.deleteDir( )
 
-		//outputDir.deleteDir(  )
-
-		getInputFiles( ).each { file ->
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
@@ -63,7 +71,7 @@ class ProcessResources extends AbstractVariantTask
 			}
 		}
 
-		if( extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name ) ) generateAtfTextures( )
+		if( generateAtf ) generateAtfTextures( )
 	}
 
 	protected String processResourceValues( File resourceDir )
@@ -121,15 +129,15 @@ class ProcessResources extends AbstractVariantTask
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ moduleDir }/src/main/resources/" ) )
-		set.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/resources/" ) )
-		variant.productFlavors.each { set.add( project.file( "${ moduleDir }/src/${ it }/resources/" ) ) }
-		if( variant.buildType ) set.add( project.file( "${ moduleDir }/src/${ variant.buildType }/resources/" ) )
+		list.add( project.file( "${ moduleDir }/src/main/resources/" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/resources/" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/resources/" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/resources/" ) )
 
-		return set
+		return list
 	}
 }

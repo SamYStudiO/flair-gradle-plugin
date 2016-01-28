@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
 class ProcessExtensions extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputDirectories
 	def Set<File> outputDirs
@@ -24,11 +24,11 @@ class ProcessExtensions extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		outputDirs = new HashSet<File>( )
+		inputFiles = findInputFiles( )
+		outputDirs = new ArrayList<File>( )
 
-		outputDirs.add( project.file( "${ outputVariantDir }/extensions/" ) )
-		outputDirs.add( project.file( "${ outputVariantDir }/extracted_extensions/" ) )
+		outputDirs.add( project.file( "${ outputVariantDir }/extensions" ) )
+		outputDirs.add( project.file( "${ outputVariantDir }/extracted_extensions" ) )
 	}
 
 	public ProcessExtensions()
@@ -40,15 +40,30 @@ class ProcessExtensions extends AbstractVariantTask
 	@TaskAction
 	public void processExtensions()
 	{
-		//outputDirs.each { it.deleteDir( ) }
+		outputDirs.each { it.deleteDir( ) }
 
-		getInputFiles( ).each { file ->
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
-				project.copy {
-					from file
-					into "${ outputVariantDir }/extensions/"
+				if( file.isDirectory( ) )
+				{
+					project.fileTree( file ).each {
+
+						project.copy {
+							from file
+							into "${ outputVariantDir }/extensions"
+
+							include "**/?*.ane"
+						}
+					}
+				}
+				else
+				{
+					project.copy {
+						from file
+						into "${ outputVariantDir }/extensions"
+					}
 				}
 			}
 		}
@@ -67,7 +82,7 @@ class ProcessExtensions extends AbstractVariantTask
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
 		Set<File> extensionsFiles = project.configurations.getByName( Configurations.NATIVE_COMPILE.name ).files
 

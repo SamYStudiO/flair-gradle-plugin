@@ -11,7 +11,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessClasses extends AbstractVariantTask
+class ProcessAsLibraries extends AbstractVariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
@@ -25,17 +25,17 @@ class ProcessClasses extends AbstractVariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputDir = project.file( "${ outputVariantDir }/classes" )
+		outputDir = project.file( "${ outputVariantDir }/asLibraries" )
 	}
 
-	public ProcessClasses()
+	public ProcessAsLibraries()
 	{
 		group = Groups.DEFAULT.name
 		description = ""
 	}
 
 	@TaskAction
-	public void processClasses()
+	public void processAsLibraries()
 	{
 		outputDir.deleteDir( )
 
@@ -45,7 +45,7 @@ class ProcessClasses extends AbstractVariantTask
 			{
 				project.copy {
 					from file
-					into "${ outputVariantDir }/classes"
+					into "${ outputVariantDir }/asLibraries"
 				}
 			}
 		}
@@ -53,16 +53,16 @@ class ProcessClasses extends AbstractVariantTask
 
 	private Set<File> findInputFiles()
 	{
-		Set<File> compileFiles = project.configurations.getByName( Configurations.COMPILE.name ).files
+		Set<File> asLibraryFiles = project.configurations.getByName( Configurations.AS_LIBRARY_COMPILE.name ).files
 
-		compileFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.COMPILE.name.capitalize( ) ).files )
+		asLibraryFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files )
 
 		variant.productFlavors.each {
-			compileFiles.addAll( project.configurations.getByName( it + Configurations.COMPILE.name.capitalize( ) ).files )
+			asLibraryFiles.addAll( project.configurations.getByName( it + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files )
 		}
 
-		if( variant.buildType ) compileFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.COMPILE.name.capitalize( ) ) )
+		if( variant.buildType ) asLibraryFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ) )
 
-		return compileFiles
+		return asLibraryFiles
 	}
 }

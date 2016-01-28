@@ -18,10 +18,10 @@ class Compile extends AbstractVariantTask
 	protected ICli cli = new Mxmlc( )
 
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputFile
-	def File swfFile
+	def File outputFile
 
 	@Input
 	def boolean debug
@@ -37,9 +37,8 @@ class Compile extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		swfFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
-
+		inputFiles = findInputFiles( )
+		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name )
@@ -64,7 +63,10 @@ class Compile extends AbstractVariantTask
 		//as files
 		cli.addArgument( "-source-path+=${ project.file( "${ outputVariantDir.path }/classes" ) }" )
 
-		//swc files
+		//as library files
+		cli.addArgument( "-source-path+=${ project.file( "${ outputVariantDir.path }/asLibraries" ) }" )
+
+		//swc library files
 		cli.addArgument( "-library-path+=${ project.file( "${ outputVariantDir.path }/libraries" ) }" )
 
 		addConstants( )
@@ -77,8 +79,7 @@ class Compile extends AbstractVariantTask
 		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" ).path )
 
 		// main class
-		File f = project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" )
-		if( f.exists( ) ) cli.addArgument( f.path ) else throw new Exception( "Mxml cannot find Main Class from ${ f.path }" )
+		cli.addArgument( project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" ).path )
 
 		cli.execute( project )
 	}
@@ -101,13 +102,14 @@ class Compile extends AbstractVariantTask
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private List<File> findInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ outputVariantDir.path }/classes" ) )
-		set.add( project.file( "${ outputVariantDir.path }/libraries" ) )
+		list.add( project.file( "${ outputVariantDir.path }/classes" ) )
+		list.add( project.file( "${ outputVariantDir.path }/libraries" ) )
+		list.add( project.file( "${ outputVariantDir.path }/asLibraries" ) )
 
-		return set
+		return list
 	}
 }

@@ -7,8 +7,6 @@ import org.gradle.api.tasks.TaskAction
  */
 public class Assemble extends AbstractVariantTask
 {
-	//protected String outputDir
-
 	public Assemble()
 	{
 		group = Groups.BUILD.name

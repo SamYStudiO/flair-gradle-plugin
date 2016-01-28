@@ -30,10 +30,9 @@ public class Asdoc extends AbstractTask
 		asdoc.addArgument( "+configname=airmobile" )
 		asdoc.addArgument( "-exclude-dependencies=true" )
 
+		addSourcePaths( )
 		addAsLibraryPaths( )
 		addLibraryPaths( )
-
-
 
 		List<String> list = new ArrayList<String>( )
 
@@ -77,7 +76,7 @@ public class Asdoc extends AbstractTask
 		asdoc.execute( project )
 	}
 
-	private void addAsLibraryPaths()
+	private void addSourcePaths()
 	{
 		project.configurations.getByName( Configurations.COMPILE.name ).files.each {
 
@@ -86,21 +85,51 @@ public class Asdoc extends AbstractTask
 
 		PluginManager.getCurrentPlatforms( project ).each {
 
-			project.configurations.getByName( "${ it.name }Compile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( "${ it.name }Compile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( "${ it.name }Compile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
+
+				asdoc.addArgument( "-source-path+=${ it }" )
+			}
+		}
+	}
+
+	private void addAsLibraryPaths()
+	{
+		project.configurations.getByName( Configurations.AS_LIBRARY_COMPILE.name ).files.each {
+
+			asdoc.addArgument( "-source-path+=${ it }" )
+		}
+
+		PluginManager.getCurrentPlatforms( project ).each {
+
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+
+				asdoc.addArgument( "-source-path+=${ it }" )
+			}
+		}
+
+		extensionManager.allActivePlatformProductFlavors.each {
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+
+				asdoc.addArgument( "-source-path+=${ it }" )
+			}
+		}
+
+		extensionManager.allActivePlatformBuildTypes.each {
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
@@ -115,21 +144,21 @@ public class Asdoc extends AbstractTask
 		}
 
 		PluginManager.getCurrentPlatforms( project ).each {
-			project.configurations.getByName( "${ it.name }LibraryCompile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( "${ it.name }LibraryCompile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( "${ it.name }LibraryCompile" ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}

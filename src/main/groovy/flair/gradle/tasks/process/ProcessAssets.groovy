@@ -6,6 +6,7 @@ import flair.gradle.tasks.Groups
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectories
+import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -14,7 +15,10 @@ import org.gradle.api.tasks.TaskAction
 class ProcessAssets extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
+
+	@OutputFiles
+	def Set<File> outputFiles
 
 	@OutputDirectories
 	def Set<File> outputDirs
@@ -24,17 +28,15 @@ class ProcessAssets extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		outputDirs = new HashSet<File>( )
+		inputFiles = findInputFiles( )
+		outputFiles = new ArrayList<File>( )
+		outputDirs = new ArrayList<File>( )
 
-		inputDirs.each {
+		inputFiles.each {
 
 			File file = project.file( "${ outputVariantDir }/package/${ it.name }" )
 
-			if( file.exists( ) )
-			{
-				if( file.isDirectory( ) && file.listFiles( ).size( ) > 0 ) outputDirs.add( file ) else if( !file.isDirectory( ) ) outputDirs.add( file )
-			}
+			if( file.isDirectory( ) ) outputDirs.add( file ) else outputFiles.add( file )
 		}
 	}
 
@@ -47,11 +49,14 @@ class ProcessAssets extends AbstractVariantTask
 	@TaskAction
 	public void processAssets()
 	{
-		getInputFiles( ).each { file ->
+		outputFiles.each { it.delete( ) }
+		outputDirs.each { it.deleteDir( ) }
+
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
-				if( file.isDirectory( ) && file.listFiles( ).size( ) > 0 )
+				if( file.isDirectory( ) )
 				{
 					project.copy {
 						from file
@@ -60,29 +65,29 @@ class ProcessAssets extends AbstractVariantTask
 						includeEmptyDirs = false
 					}
 				}
-				else if( !file.isDirectory( ) )
+				else
 				{
 					project.copy {
 						from file
-						into "${ outputVariantDir }/package/"
+						into "${ outputVariantDir }/package"
 					}
 				}
 			}
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
-		Set<File> packagedFiles = project.configurations.getByName( Configurations.PACKAGE.name ).files
+		Set<File> packageFiles = project.configurations.getByName( Configurations.PACKAGE.name ).files
 
-		packagedFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.PACKAGE.name.capitalize( ) ).files )
+		packageFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.PACKAGE.name.capitalize( ) ).files )
 
 		variant.productFlavors.each {
-			packagedFiles.addAll( project.configurations.getByName( it + Configurations.PACKAGE.name.capitalize( ) ).files )
+			packageFiles.addAll( project.configurations.getByName( it + Configurations.PACKAGE.name.capitalize( ) ).files )
 		}
 
-		if( variant.buildType ) packagedFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.PACKAGE.name.capitalize( ) ) )
+		if( variant.buildType ) packageFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.PACKAGE.name.capitalize( ) ) )
 
-		return packagedFiles
+		return packageFiles
 	}
 }

@@ -5,7 +5,7 @@ import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.Groups
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.OutputDirectories
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -14,24 +14,18 @@ import org.gradle.api.tasks.TaskAction
 class ProcessLibraries extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
-	@OutputDirectories
-	def Set<File> outputDirs
+	@OutputDirectory
+	def File outputDir
 
 	@Override
 	public void setVariant( Variant variant )
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		outputDirs = new HashSet<File>( )
-
-		inputDirs.each {
-
-			File file = project.file( "${ outputVariantDir }/libraries" )
-			outputDirs.add( file )
-		}
+		inputFiles = findInputFiles( )
+		outputDir = project.file( "${ outputVariantDir }/libraries" )
 	}
 
 	public ProcessLibraries()
@@ -43,32 +37,45 @@ class ProcessLibraries extends AbstractVariantTask
 	@TaskAction
 	public void processLibraries()
 	{
-		//outputDirs.each { it.deleteDir( ) }
+		outputDir.deleteDir( )
 
-		getInputFiles( ).each { file ->
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
-				project.copy {
-					from file
-					into file.isDirectory(  ) ? "${ outputVariantDir }/classes" : "${ outputVariantDir }/libraries"
+				if( file.isDirectory( ) )
+				{
+					project.fileTree( file ).each {
+						project.copy {
+							from file
+							into "${ outputVariantDir }/libraries"
+							include "**/?*.swc"
+						}
+					}
+				}
+				else
+				{
+					project.copy {
+						from file
+						into "${ outputVariantDir }/libraries"
+					}
 				}
 			}
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
-		Set<File> packagedFiles = project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files
+		Set<File> libraryFiles = project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files
 
-		packagedFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
+		libraryFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
 
 		variant.productFlavors.each {
-			packagedFiles.addAll( project.configurations.getByName( it + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
+			libraryFiles.addAll( project.configurations.getByName( it + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files )
 		}
 
-		if( variant.buildType ) packagedFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.LIBRARY_COMPILE.name.capitalize( ) ) )
+		if( variant.buildType ) libraryFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.LIBRARY_COMPILE.name.capitalize( ) ) )
 
-		return packagedFiles
+		return libraryFiles
 	}
 }

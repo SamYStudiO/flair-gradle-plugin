@@ -6,6 +6,7 @@ import flair.gradle.variants.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -13,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
 class ProcessSplashs extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputDirectory
 	def File outputDir
@@ -23,8 +24,8 @@ class ProcessSplashs extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		outputDir = project.file( "${ outputVariantDir }/package/" )
+		inputFiles = findInputFiles( )
+		outputDir = project.file( "${ outputVariantDir }/package" )
 	}
 
 	public ProcessSplashs()
@@ -34,30 +35,31 @@ class ProcessSplashs extends AbstractVariantTask
 	}
 
 	@TaskAction
-	public void processSplashs()
+	public void processSplashs( IncrementalTaskInputs inputs )
 	{
-		//outputDir.deleteDir( )
+		inputs.outOfDate {}
+		inputs.removed { new File( outputDir , it.file.name ).delete( ) }
 
-		getInputFiles( ).each { file ->
+		findInputFiles( ).each { file ->
 
 			if( file.exists( ) )
 			{
 				project.copy {
 					from file
-					into outputDir
+					into project.file( "${ outputVariantDir }/package/" )
 				}
 			}
 		}
 	}
 
-	private Set<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/splashs/" ) )
-		variant.productFlavors.each { set.add( project.file( "${ moduleDir }/src/${ it }/splashs/" ) ) }
-		if( variant.buildType ) set.add( project.file( "${ moduleDir }/src/${ variant.buildType }/splashs/" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/splashs/" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/splashs/" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/splashs/" ) )
 
-		return set
+		return list
 	}
 }

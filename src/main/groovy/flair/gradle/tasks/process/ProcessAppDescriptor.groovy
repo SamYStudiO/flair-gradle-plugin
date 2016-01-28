@@ -8,7 +8,7 @@ import flair.gradle.variants.Variant
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -17,10 +17,10 @@ import org.gradle.api.tasks.TaskAction
 class ProcessAppDescriptor extends AbstractVariantTask
 {
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
-	@OutputDirectory
-	def File outputDir
+	@OutputFile
+	def File outputFile
 
 	@Input
 	def String sdkVersion
@@ -59,8 +59,8 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
-		outputDir = outputVariantDir
+		inputFiles = findInputFiles( )
+		outputFile = project.file( "${ outputVariantDir.path }/package/app_descriptor.xml" )
 
 		sdkVersion = new Sdk( project ).version
 		appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )
@@ -84,15 +84,14 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	@TaskAction
 	public void processAppDescriptor()
 	{
-		for( File file : getInputFiles( ) )
-			if( file.exists( ) ) internalProcessAppDescriptor( file )
+		for( File file : getInputFiles( ) ) if( file.exists( ) ) internalProcessAppDescriptor( file )
 	}
 
-	protected String internalProcessAppDescriptor( File app )
+	private String internalProcessAppDescriptor( File app )
 	{
 		String appContent = app.text
 
-		FileTree extractedExtensions = project.fileTree( "${ outputDir }/extracted_extensions/" )
+		FileTree extractedExtensions = project.fileTree( "${ outputVariantDir.path }/extracted_extensions/" )
 		String extensionNodes = System.lineSeparator( )
 		boolean hasExtensions = false
 
@@ -121,15 +120,14 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
 
 
-		project.file( "${ outputDir }/package/" ).mkdirs( )
-		File file = project.file( "${ outputDir }/package/app_descriptor.xml" )
-		file.createNewFile( )
-		file.write( appContent )
+		project.file( "${ outputVariantDir.path }/package/" ).mkdirs( )
+		outputFile.createNewFile( )
+		outputFile.write( appContent )
 	}
 
 	private String getSupportedLocales()
 	{
-		FileTree tree = project.fileTree( "${ outputDir }/package/resources/" ) {
+		FileTree tree = project.fileTree( "${ outputVariantDir.path }/package/resources/" ) {
 			include "**/*.xml"
 		}
 
@@ -156,7 +154,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		return supportedLocales.trim( )
 	}
 
-	private List<File> getInputFiles()
+	private Set<File> findInputFiles()
 	{
 		List<File> list = new ArrayList<File>( )
 

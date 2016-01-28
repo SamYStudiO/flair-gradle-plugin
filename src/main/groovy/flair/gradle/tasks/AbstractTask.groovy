@@ -1,5 +1,6 @@
 package flair.gradle.tasks
 
+import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.DefaultTask
 
@@ -8,8 +9,13 @@ import org.gradle.api.DefaultTask
  */
 public abstract class AbstractTask extends DefaultTask implements ITask
 {
-	public IExtensionManager getExtensionManager()
+	protected IExtensionManager getExtensionManager()
 	{
 		return project.flair as IExtensionManager
+	}
+
+	protected File getModuleDir()
+	{
+		return project.file( extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) )
 	}
 }

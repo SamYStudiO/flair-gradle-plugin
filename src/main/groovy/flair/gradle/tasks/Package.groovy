@@ -19,10 +19,10 @@ class Package extends AbstractVariantTask
 	protected ICli cli = new Adt( )
 
 	@InputFiles
-	def Set<File> inputDirs
+	def Set<File> inputFiles
 
 	@OutputFile
-	def File packageFile
+	def File outputFile
 
 	@Input
 	def String connect
@@ -77,7 +77,7 @@ class Package extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		inputDirs = getInputFiles( )
+		inputFiles = findInputFiles( )
 
 		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT.name ) ?: "null"
 		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN.name ) ?: "null"
@@ -97,9 +97,7 @@ class Package extends AbstractVariantTask
 		tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name ) ?: "null"
 		provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name ) ?: "null"
 
-
-
-		packageFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
+		outputFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 	}
 
 	public Package()
@@ -271,7 +269,7 @@ class Package extends AbstractVariantTask
 
 	private addOutput()
 	{
-		cli.addArgument( packageFile.path )
+		cli.addArgument( outputFile.path )
 	}
 
 	private addFilesAndDirectories()
@@ -317,14 +315,13 @@ class Package extends AbstractVariantTask
 		return extension
 	}
 
-	private Set<File> getInputFiles()
+	private List<File> findInputFiles()
 	{
-		Set<File> set = new HashSet<File>( )
+		List<File> list = new ArrayList<File>( )
 
-		set.add( project.file( "${ outputVariantDir.path }/extensions" ) )
-		set.add( project.file( "${ outputVariantDir.path }/package" ) )
-		set.add( project.file( "${ outputVariantDir.path }/package/app_descriptor" ) )
+		list.add( project.file( "${ outputVariantDir.path }/extensions" ) )
+		list.add( project.file( "${ outputVariantDir.path }/package" ) )
 
-		return set
+		return list
 	}
 }
