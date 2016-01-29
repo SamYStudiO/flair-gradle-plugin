@@ -101,11 +101,11 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 				switch( conf )
 				{
 					case Configurations.COMPILE:
-						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/src/${ name }/actionscript" ) )
+						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
 						break
 
 					case Configurations.PACKAGE:
-						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/src/${ name }/assets" ) )
+						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
 						break
 
 					default:

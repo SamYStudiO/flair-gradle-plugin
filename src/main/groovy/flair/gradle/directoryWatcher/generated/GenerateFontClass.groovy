@@ -18,7 +18,7 @@ class GenerateFontClass implements IWatcherAction
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 
 		if( !moduleName || !template ) return
 

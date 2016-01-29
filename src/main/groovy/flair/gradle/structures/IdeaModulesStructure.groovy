@@ -13,7 +13,7 @@ class IdeaModulesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME )
 
 		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) )
 		{

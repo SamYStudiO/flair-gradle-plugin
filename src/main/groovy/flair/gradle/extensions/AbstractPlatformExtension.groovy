@@ -438,7 +438,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.DEBUG.name: return false
 				case FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
 
-				case FlairProperties.APP_ID.name: return extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+				case FlairProperties.APP_ID.name: return extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
 				case FlairProperties.APP_ID_SUFFIX.name: return ""
 				case FlairProperties.APP_NAME.name: return project.name
 				case FlairProperties.APP_NAME_SUFFIX.name: return ""
@@ -451,7 +451,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
 
 				case FlairProperties.COMPILE_MAIN_CLASS.name:
-					String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+					String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
 
 					switch( p )
 					{
@@ -548,14 +548,14 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String getSigningPath( String suffix )
 	{
-		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ suffix }" )
+		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ suffix }" )
 
 		return f.exists( ) ? f.path : null
 	}
 
 	private String getSigningPassword( String suffix )
 	{
-		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ suffix }" )
+		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ suffix }" )
 
 		return f.exists( ) ? f.text.trim( ) : null
 	}

@@ -33,7 +33,7 @@ class IdeaImlStructure implements IStructure
 		this.project = project
 
 		extensionManager = project.flair as IExtensionManager
-		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 		configurationTemplate = project.file( "${ source.path }/idea/configuration_template.xml" ).text
 		sdkTemplate = project.file( "${ source.path }/idea/sdk_template.xml" ).text
 

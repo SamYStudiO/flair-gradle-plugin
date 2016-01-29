@@ -94,7 +94,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			t.group = Tasks.ASSEMBLE.group.name
 			t.dependsOn list
 
-			if( !project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
+			if( !project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) ).exists( ) )
 			{
 				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
 			}
@@ -152,7 +152,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( conf.files )
 				{
 					conf.files.each {
-						project.dependencies.add( conf.name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it }" ) )
+						project.dependencies.add( conf.name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ it }" ) )
 					}
 				}
 
@@ -162,7 +162,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 					map.each {
 
-						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) }/${ it.value }"
+						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ it.value }"
 					}
 
 					project.dependencies.add( conf.name , project.fileTree( map ) )
@@ -173,8 +173,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private void createStructures()
 	{
-		String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME.name )
-		String packageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+		String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME )
+		String packageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME )
 
 		if( !moduleName || !packageName ) return
 
@@ -229,7 +229,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private initDirectoryWatcher()
 	{
-		directoryWatcher = new DirectoryWatcher( project , project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) ) )
+		directoryWatcher = new DirectoryWatcher( project , project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) ) )
 		Thread t = new Thread( directoryWatcher )
 		t.start( )
 	}

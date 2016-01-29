@@ -20,7 +20,7 @@ class PublishAtlases extends AbstractVariantTask
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 		ICli tp = new TexturePacker( )
 
 		List<String> list = new ArrayList<String>( )

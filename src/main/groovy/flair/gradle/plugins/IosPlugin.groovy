@@ -26,7 +26,7 @@ public class IosPlugin extends AbstractPlatformPlugin
 
 		project.afterEvaluate {
 
-			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name ) ).exists( ) )
+			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME ) ).exists( ) )
 			{
 				project.tasks.remove( project.tasks.getByName( Tasks.LIST_DEVICES.name + platform.name.capitalize( ) ) )
 			}

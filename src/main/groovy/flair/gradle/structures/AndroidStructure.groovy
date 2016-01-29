@@ -12,7 +12,7 @@ public class AndroidStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME )
 
 		if( project.fileTree( "${ moduleName }/src/android" ).size( ) > 0 ) return
 

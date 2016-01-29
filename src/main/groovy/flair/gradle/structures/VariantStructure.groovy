@@ -14,11 +14,11 @@ public class VariantStructure implements IStructure
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		boolean autoGenerateVariantDirectories = extensionManager.getFlairProperty( FlairProperties.AUTO_GENERATE_VARIANT_DIRECTORIES.name )
+		boolean autoGenerateVariantDirectories = extensionManager.getFlairProperty( FlairProperties.AUTO_GENERATE_VARIANT_DIRECTORIES )
 
 		if( !autoGenerateVariantDirectories ) return
 
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 
 		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( ) }
 

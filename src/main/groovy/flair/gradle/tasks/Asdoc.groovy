@@ -23,7 +23,7 @@ public class Asdoc extends AbstractTask
 	@TaskAction
 	public void asdoc()
 	{
-		String srcRoot = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) + "/src"
+		String srcRoot = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) + "/src"
 
 		if( !srcRoot ) return
 

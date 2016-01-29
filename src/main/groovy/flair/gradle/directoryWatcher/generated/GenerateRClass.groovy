@@ -18,8 +18,8 @@ class GenerateRClass implements IWatcherAction
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
-		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
 
 		if( !moduleName || !packageName || !template ) return
 

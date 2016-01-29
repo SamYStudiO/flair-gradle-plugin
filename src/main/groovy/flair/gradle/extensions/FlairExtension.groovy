@@ -267,41 +267,41 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		return list
 	}
 
-	public Object getFlairProperty( String name )
+	public Object getFlairProperty( FlairProperties property )
 	{
-		getFlairProperty( ( Variant ) null , name )
+		getFlairProperty( ( Variant ) null , property )
 	}
 
-	public Object getFlairProperty( Platforms platform , String name )
+	public Object getFlairProperty( Platforms platform , FlairProperties property )
 	{
-		getFlairProperty( new Variant( project , platform ) , name )
+		getFlairProperty( new Variant( project , platform ) , property )
 	}
 
-	public Object getFlairProperty( String extensionName , String name )
+	public Object getFlairProperty( String extensionName , FlairProperties property )
 	{
-		getFlairProperty( extensionName , ( Variant ) null , name )
+		getFlairProperty( extensionName , ( Variant ) null , property )
 	}
 
-	public Object getFlairProperty( String extensionName , Platforms platform , String name )
+	public Object getFlairProperty( String extensionName , Platforms platform , FlairProperties property )
 	{
-		getFlairProperty( extensionName , new Variant( project , platform ) , name )
+		getFlairProperty( extensionName , new Variant( project , platform ) , property )
 	}
 
-	public Object getFlairProperty( Variant variant , String name )
+	public Object getFlairProperty( Variant variant , FlairProperties property )
 	{
 		Object value
 
-		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getProp( name )
+		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getProp( property.name )
 		if( value ) return value
 
-		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getProp( name )
+		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getProp( property.name )
 		if( value ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getPlatformContainer( variant.platform ).getProductFlavor( variant.productFlavors[ i ] ).getProp( name )
+				value = getPlatformContainer( variant.platform ).getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name )
 				if( value ) return value
 			}
 		}
@@ -310,35 +310,35 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getProductFlavor( variant.productFlavors[ i ] ).getProp( name )
+				value = getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name )
 				if( value ) return value
 			}
 		}
 
-		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getProp( name )
+		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getProp( property.name )
 		if( value ) return value
 
-		value = getProp( name )
+		value = getProp( property.name )
 		if( value ) return value
 
-		return getPlatformContainer( variant ? variant.platform : null ).getProp( name , true )
+		return getPlatformContainer( variant ? variant.platform : null ).getProp( property.name , true )
 	}
 
-	public Object getFlairProperty( String extensionName , Variant variant , String name )
+	public Object getFlairProperty( String extensionName , Variant variant , FlairProperties property )
 	{
 		Object value
 
-		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getExtension( extensionName ).getProp( name )
+		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name )
 		if( value ) return value
 
-		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getExtension( extensionName ).getProp( name )
+		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name )
 		if( value ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( name )
+				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name )
 				if( value ) return value
 			}
 		}
@@ -347,17 +347,17 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
-				value = getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( name )
+				value = getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name )
 				if( value ) return value
 			}
 		}
 
-		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getExtension( extensionName ).getProp( name )
+		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getExtension( extensionName ).getProp( property.name )
 		if( value ) return value
 
-		value = getExtension( extensionName ).getProp( name )
+		value = getExtension( extensionName ).getProp( property.name )
 		if( value ) return value
 
-		return getPlatformContainer( variant ? variant.platform : null ).getExtension( extensionName ).getProp( name , true )
+		return getPlatformContainer( variant ? variant.platform : null ).getExtension( extensionName ).getProp( property.name , true )
 	}
 }

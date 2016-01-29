@@ -16,6 +16,6 @@ public abstract class AbstractTask extends DefaultTask implements ITask
 
 	protected File getModuleDir()
 	{
-		return project.file( extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name ) )
+		return project.file( extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) )
 	}
 }

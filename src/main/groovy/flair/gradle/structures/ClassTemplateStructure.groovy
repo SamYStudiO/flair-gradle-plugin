@@ -13,11 +13,11 @@ public class ClassTemplateStructure implements IStructure
 	public void create( Project project , File source )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 
 		if( project.fileTree( "${ moduleName }/src/main/actionscript" ).size( ) > 0 ) return
 
-		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME.name )
+		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
 
 		String s = packageName.replace( "." , "/" )
 
