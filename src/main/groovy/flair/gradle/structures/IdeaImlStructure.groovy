@@ -50,7 +50,7 @@ class IdeaImlStructure implements IStructure
 		createSourceFolders( content )
 		createExcludeFolders( content )
 		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node , newModuleRootManager )
-		createSdk( )
+		//createSdk( )
 
 		output.withWriter { writer -> XmlUtil.serialize( xml , writer ) }
 
