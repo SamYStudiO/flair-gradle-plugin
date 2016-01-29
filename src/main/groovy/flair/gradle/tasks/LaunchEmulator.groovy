@@ -32,9 +32,9 @@ class LaunchEmulator extends AbstractVariantTask
 		if( variant.platform != Platforms.DESKTOP )
 		{
 			cli.addArgument( "-screensize" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_SIZE.name ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_SIZE ).toString( ) )
 			cli.addArgument( "-XscreenDPI" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_DPI.name ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_DPI ).toString( ) )
 			cli.addArgument( "-XversionPlatform" )
 			cli.addArgument( variant.platform == Platforms.IOS ? "IOS" : "AND" )
 		}

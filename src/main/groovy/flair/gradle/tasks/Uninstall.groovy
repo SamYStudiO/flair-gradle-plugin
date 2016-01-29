@@ -26,7 +26,7 @@ class Uninstall extends AbstractVariantTask
 	@TaskAction
 	public void uninstall()
 	{
-		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )
+		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
 
 		if( variant.platform == Platforms.IOS )
 		{
