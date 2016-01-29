@@ -85,8 +85,6 @@ package flair.resources
 		 * Get all values required from your device configuration.
 		 * @param screenID The screen id from which retrieve resources, by default it returns all resource at the root resource folder.
 		 * @return A Vector of all values resources as ResourceFile.
-		 *
-		 * TODO check if only one overwritten value from a specific qualifier will not erase all default values
 		 */
 		public function getValues( screenID : String = null ) : Vector.<ResourceFile>
 		{
