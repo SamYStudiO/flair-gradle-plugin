@@ -63,15 +63,15 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		outputFile = project.file( "${ outputVariantDir.path }/app_descriptor.xml" )
 
 		sdkVersion = new Sdk( project ).version
-		appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX.name )
-		appName = extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME.name ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME_SUFFIX.name )
-		appFileName = extensionManager.getFlairProperty( variant , FlairProperties.APP_FILE_NAME.name )
+		appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
+		appName = extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME_SUFFIX )
+		appFileName = extensionManager.getFlairProperty( variant , FlairProperties.APP_FILE_NAME )
 		appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
-		appVersion = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name )
-		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperties.APP_FULL_SCREEN.name )
-		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperties.APP_ASPECT_RATIO.name )
-		appAutoOrient = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENT.name )
-		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEPTH_AND_STENCIL.name )
+		appVersion = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
+		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperties.APP_FULL_SCREEN )
+		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperties.APP_ASPECT_RATIO )
+		appAutoOrient = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENT )
+		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEPTH_AND_STENCIL )
 		supportedLocales = getSupportedLocales( )
 	}
 
@@ -148,7 +148,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES.name )
+		String defaultLocale = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )

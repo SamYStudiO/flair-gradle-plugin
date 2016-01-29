@@ -79,23 +79,23 @@ class Package extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 
-		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT.name ) ?: "null"
-		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN.name ) ?: "null"
-		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER.name )
-		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name )
-		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name )
-		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET.name ) ?: "null"
-		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name )
-		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
+		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT ) ?: "null"
+		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN ) ?: "null"
+		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER )
+		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS )
+		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86 )
+		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET ) ?: "null"
+		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
+		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG )
 
-		alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name ) ?: "null"
-		provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name ) ?: "null"
-		storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name ) ?: "null"
-		storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name ) ?: "null"
-		keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name ) ?: "null"
-		keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name ) ?: "null"
-		tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name ) ?: "null"
-		provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name ) ?: "null"
+		alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS ) ?: "null"
+		provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME ) ?: "null"
+		storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE ) ?: "null"
+		storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS ) ?: "null"
+		keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE ) ?: "null"
+		keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS ) ?: "null"
+		tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA ) ?: "null"
+		provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE ) ?: "null"
 
 		outputFile = project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 	}

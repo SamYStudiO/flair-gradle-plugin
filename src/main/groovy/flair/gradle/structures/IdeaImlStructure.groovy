@@ -192,14 +192,14 @@ class IdeaImlStructure implements IStructure
 
 			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
 					.replaceAll( "\\{platform\\}" , platform )
-					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name ) as String )
+					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS ) as String )
 					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
 					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + "/package" )
 					.replaceAll( "\\{target\\}" , variant.platform == Platforms.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
-					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name ) ? "true" : "false" )
+					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperties.DEBUG ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
-					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List ).join( " " ) )
+					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS ) as List ).join( " " ) )
 
 			Node configurationNode = new XmlParser( ).parseText( configuration )
 
@@ -223,7 +223,7 @@ class IdeaImlStructure implements IStructure
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
 			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ).path )
-			platformNode.@"package-file-name" = "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }"
+			platformNode.@"package-file-name" = "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }"
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
 
@@ -246,15 +246,15 @@ class IdeaImlStructure implements IStructure
 			Node signingNode = platformNode.AirSigningOptions[ 0 ] as Node
 			if( signingNode == null ) signingNode = new Node( platformNode , "AirSigningOptions" )
 
-			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS.name )
-			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE.name )
-			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE.name )
-			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS.name )
-			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS.name )
-			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME.name )
-			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA.name )
-			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE.name )
-			boolean x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86.name )
+			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS )
+			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE )
+			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE )
+			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS )
+			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS )
+			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME )
+			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA )
+			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE )
+			boolean x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86 )
 
 			if( signingAlias ) signingNode."@key-alias" = signingAlias
 			if( signingStoreType ) signingNode."@keystore-type" = signingStoreType

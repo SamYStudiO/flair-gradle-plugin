@@ -40,9 +40,9 @@ class Compile extends AbstractVariantTask
 		inputFiles = findInputFiles( )
 		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 
-		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG.name )
-		mainClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS.name )
-		compileOptions = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS.name ) as List<String>
+		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG )
+		mainClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS )
+		compileOptions = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS ) as List<String>
 	}
 
 	public Compile()
