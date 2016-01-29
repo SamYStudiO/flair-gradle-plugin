@@ -54,7 +54,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				platformPluginCount++
 			}
 
-			if( it instanceof IExtensionPlugin /*&& !( it instanceof IPlatformPlugin && platformPluginCount < 2 )*/ )
+			if( it instanceof IExtensionPlugin )
 			{
 				it.extensionFactory.create( it == this ? project : project.extensions.getByName( Extensions.FLAIR.name ) as ExtensionAware , project )
 
@@ -62,12 +62,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				{
 					flair = project.extensions.getByName( Extensions.FLAIR.name ) as IExtensionManager
 				}
-
-				// TODO try to remove platform extension if only one exist (actual comment code doesn't work)
-				//if( it instanceof IPlatformPlugin && platformPluginCount == 2 )
-				//{
-				//	platformPlugins[ 0 ].extensionFactory.create( project.extensions.getByName( FlairExtension.NAME ) as ExtensionAware , project )
-				//}
 			}
 
 			if( it instanceof IConfigurationPlugin )
