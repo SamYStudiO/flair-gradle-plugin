@@ -11,8 +11,6 @@ class IdeaLibrariesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		if( !project.file( ".idea" ).exists( ) ) return
-
 		List<String> libraries = new ArrayList<String>( )
 		project.configurations.findAll {
 			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )

@@ -13,10 +13,14 @@ class IdeaPlugin extends AbstractIdePlugin
 	public List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
-		list.add( new IdeaImlStructure( ) )
-		list.add( new IdeaLibrariesStructure( ) )
-		list.add( new IdeaModulesStructure( ) )
-		list.add( new IdeaRunDebugConfigurationsStructure( ) )
+
+		if( project.rootProject.file( ".idea" ).exists( ) )
+		{
+			list.add( new IdeaImlStructure( ) )
+			list.add( new IdeaLibrariesStructure( ) )
+			list.add( new IdeaModulesStructure( ) )
+			list.add( new IdeaRunDebugConfigurationsStructure( ) )
+		}
 
 		return list
 	}

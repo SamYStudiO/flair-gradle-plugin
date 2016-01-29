@@ -15,8 +15,6 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		if( !project.file( ".idea" ).exists( ) ) return
-
 		project.file( ".idea/runConfigurations" ).mkdirs( )
 
 		List<String> list = new ArrayList<>( )
