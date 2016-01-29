@@ -229,7 +229,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private initDirectoryWatcher()
 	{
-		directoryWatcher = new DirectoryWatcher( project )
+		directoryWatcher = new DirectoryWatcher( project , project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME.name ) ) )
 		Thread t = new Thread( directoryWatcher )
 		t.start( )
 	}
