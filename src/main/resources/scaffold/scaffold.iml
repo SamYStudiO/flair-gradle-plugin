@@ -86,6 +86,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/actionscript" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/fonts" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/generated" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/android/actionscript" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/desktop/actionscript" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ios/actionscript" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/signing" />

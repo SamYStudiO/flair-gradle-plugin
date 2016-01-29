@@ -2,8 +2,6 @@ package flair.gradle.plugins
 
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.structures.AndroidStructure
-import flair.gradle.structures.IStructure
 import flair.gradle.tasks.ListDevices
 import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Platforms
@@ -31,15 +29,6 @@ public class AndroidPlugin extends AbstractPlatformPlugin
 				project.tasks.remove( project.tasks.getByName( Tasks.LIST_DEVICES.name + platform.name.capitalize( ) ) )
 			}
 		}
-	}
-
-	@Override
-	public List<IStructure> getStructures()
-	{
-		List<IStructure> list = new ArrayList<IStructure>( )
-		list.add( new AndroidStructure( ) )
-
-		return list
 	}
 
 	@Override

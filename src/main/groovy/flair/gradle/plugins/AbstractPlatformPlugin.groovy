@@ -3,6 +3,8 @@ package flair.gradle.plugins
 import flair.gradle.dependencies.Configurations
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.extensions.factories.PlatformExtensionFactory
+import flair.gradle.structures.IStructure
+import flair.gradle.structures.PlatformStructure
 import flair.gradle.tasks.variantFactories.*
 import flair.gradle.variants.Platforms
 
@@ -25,6 +27,15 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 	public void setPlatform( Platforms platform )
 	{
 		this.platform = platform
+	}
+
+	@Override
+	public List<IStructure> getStructures()
+	{
+		List<IStructure> list = new ArrayList<IStructure>( )
+		list.add( new PlatformStructure( platform ) )
+
+		return list
 	}
 
 	@Override
