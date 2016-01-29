@@ -47,6 +47,14 @@ ext {
 	allLicenses = [ "BSD Simplified" ]
 }
 
+sourceSets {
+	main {
+		resources {
+			exclude "**/?*.iml"
+		}
+	}
+}
+
 repositories {
 	mavenLocal( )
 }
