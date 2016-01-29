@@ -40,12 +40,12 @@ public class Sdk
 
 	public Sdk( String path )
 	{
-		this.path = path
+		this( path , null )
 	}
 
 	public Sdk( String path , String name )
 	{
-		this.path = path
+		this.path = path.replaceAll( "\\\\" , "/" )
 		this.name = name
 	}
 
