@@ -12,9 +12,7 @@ class IdeaLibrariesStructure implements IStructure
 	public void create( Project project , File source )
 	{
 		List<String> libraries = new ArrayList<String>( )
-		project.configurations.findAll {
-			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
-		}.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( "library" ) }.each {
 
 			it.files.each { file ->
 

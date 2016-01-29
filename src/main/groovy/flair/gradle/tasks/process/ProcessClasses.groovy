@@ -53,15 +53,15 @@ class ProcessClasses extends AbstractVariantTask
 
 	private Set<File> findInputFiles()
 	{
-		Set<File> compileFiles = project.configurations.getByName( Configurations.COMPILE.name ).files
+		Set<File> compileFiles = project.configurations.getByName( Configurations.SOURCE.name ).files
 
-		compileFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.COMPILE.name.capitalize( ) ).files )
+		compileFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.SOURCE.name.capitalize( ) ).files )
 
 		variant.productFlavors.each {
-			compileFiles.addAll( project.configurations.getByName( it + Configurations.COMPILE.name.capitalize( ) ).files )
+			compileFiles.addAll( project.configurations.getByName( it + Configurations.SOURCE.name.capitalize( ) ).files )
 		}
 
-		if( variant.buildType ) compileFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.COMPILE.name.capitalize( ) ) )
+		if( variant.buildType ) compileFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.SOURCE.name.capitalize( ) ) )
 
 		return compileFiles
 	}

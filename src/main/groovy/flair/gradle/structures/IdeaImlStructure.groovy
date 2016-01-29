@@ -100,9 +100,7 @@ class IdeaImlStructure implements IStructure
 
 		List<String> list = new ArrayList<String>( )
 
-		project.configurations.findAll {
-			it.name.toLowerCase( ).contains( "compile" ) && !it.name.toLowerCase( ).contains( "librarycompile" ) && !it.name.toLowerCase( ).contains( "nativecompile" )
-		}.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( "source" ) }.each {
 
 			it.files.each { file ->
 
@@ -269,17 +267,17 @@ class IdeaImlStructure implements IStructure
 
 			project.configurations.each {
 
-				boolean libraryOrNative = it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
+				boolean isLibrary = it.name.toLowerCase( ).contains( "library" )
 
-				if( it.name == Configurations.AS_LIBRARY_COMPILE.name || it.name == Configurations.LIBRARY_COMPILE.name || it.name == Configurations.NATIVE_COMPILE.name ) libraries.add( it )
-				if( it.name.contains( variant.platform.name ) && libraryOrNative ) libraries.add( it )
+				if( it.name == Configurations.AS_LIBRARY.name || it.name == Configurations.LIBRARY.name || it.name == Configurations.NATIVE_LIBRARY.name ) libraries.add( it )
+				if( it.name.contains( variant.platform.name ) && isLibrary ) libraries.add( it )
 
 				for( String flavor : variant.productFlavors )
 				{
-					if( it.name.contains( flavor ) && libraryOrNative ) libraries.add( it )
+					if( it.name.contains( flavor ) && isLibrary ) libraries.add( it )
 				}
 
-				if( variant.buildType && it.name.contains( variant.buildType ) && libraryOrNative ) libraries.add( it )
+				if( variant.buildType && it.name.contains( variant.buildType ) && isLibrary ) libraries.add( it )
 			}
 
 			List<String> added = new ArrayList<String>( )

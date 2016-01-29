@@ -5,6 +5,7 @@ import flair.gradle.variants.Platforms
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -98,19 +99,20 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 			if( !project.configurations.findByName( s ) )
 			{
+				Configuration c = project.configurations.create( s )
+
 				switch( conf )
 				{
-					case Configurations.COMPILE:
-						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
+					case Configurations.SOURCE:
+						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
+						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/fonts" ) )
 						break
 
 					case Configurations.PACKAGE:
-						project.dependencies.add( project.configurations.create( s ).name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
+						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
 						break
 
-					default:
-						project.configurations.create( s )
-						break
+					default: break
 				}
 			}
 		}

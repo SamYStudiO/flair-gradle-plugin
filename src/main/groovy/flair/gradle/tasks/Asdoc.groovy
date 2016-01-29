@@ -78,28 +78,28 @@ public class Asdoc extends AbstractTask
 
 	private void addSourcePaths()
 	{
-		project.configurations.getByName( Configurations.COMPILE.name ).files.each {
+		project.configurations.getByName( Configurations.SOURCE.name ).files.each {
 
 			asdoc.addArgument( "-source-path+=${ it }" )
 		}
 
 		PluginManager.getCurrentPlatforms( project ).each {
 
-			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
@@ -108,28 +108,28 @@ public class Asdoc extends AbstractTask
 
 	private void addAsLibraryPaths()
 	{
-		project.configurations.getByName( Configurations.AS_LIBRARY_COMPILE.name ).files.each {
+		project.configurations.getByName( Configurations.AS_LIBRARY.name ).files.each {
 
 			asdoc.addArgument( "-source-path+=${ it }" )
 		}
 
 		PluginManager.getCurrentPlatforms( project ).each {
 
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-source-path+=${ it }" )
 			}
@@ -138,27 +138,27 @@ public class Asdoc extends AbstractTask
 
 	private void addLibraryPaths()
 	{
-		project.configurations.getByName( Configurations.LIBRARY_COMPILE.name ).files.each {
+		project.configurations.getByName( Configurations.LIBRARY.name ).files.each {
 
 			asdoc.addArgument( "-library-path+=${ it }" )
 		}
 
 		PluginManager.getCurrentPlatforms( project ).each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY_COMPILE.name.capitalize( ) ).files.each {
+			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
 
 				asdoc.addArgument( "-library-path+=${ it }" )
 			}

@@ -4,34 +4,34 @@ package flair.gradle.dependencies
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public enum Configurations {
-	COMPILE( "compile" , "src/main/actionscript" , "src/main/fonts" , "src/main/generated" ) ,
-	LIBRARY_COMPILE( "libraryCompile" , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
-	AS_LIBRARY_COMPILE( "asLibraryCompile" , "libs_as" ) ,
-	NATIVE_COMPILE( "nativeCompile" , [ dir: "libs_ane" , include: "**/*.ane" ] ) ,
+	SOURCE( "source" , "src/main/actionscript" , "src/main/fonts" , "src/main/generated" ) ,
+	LIBRARY( "library" , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
+	AS_LIBRARY( "asLibrary" , "libs_as" ) ,
+	NATIVE_LIBRARY( "nativeLibrary" , [ dir: "libs_ane" , include: "**/*.ane" ] ) ,
 	PACKAGE( "pack" , "src/main/assets" ) ,
 
-	IOS_COMPILE( "iosCompile" , "src/ios/actionscript" , "src/ios/fonts" ) ,
-	IOS_LIBRARY_COMPILE( "iosLibraryCompile" ) ,
-	IOS_AS_LIBRARY_COMPILE( "iosAsLibraryCompile" ) ,
-	IOS_NATIVE_COMPILE( "iosNativeCompile" ) ,
+	IOS_COMPILE( "iosSource" , "src/ios/actionscript" , "src/ios/fonts" ) ,
+	IOS_LIBRARY_COMPILE( "iosLibrary" ) ,
+	IOS_AS_LIBRARY_COMPILE( "iosAsLibrary" ) ,
+	IOS_NATIVE_COMPILE( "iosNativeLibrary" ) ,
 	IOS_PACKAGE( "iosPack" , "src/ios/assets" ) ,
 
-	ANDROID_COMPILE( "androidCompile" , "src/android/actionscript" , "src/android/fonts" ) ,
-	ANDROID_LIBRARY_COMPILE( "androidLibraryCompile" ) ,
-	ANDROID_AS_LIBRARY_COMPILE( "androidAsLibraryCompile" ) ,
-	ANDROID_NATIVE_COMPILE( "androidNativeCompile" ) ,
+	ANDROID_COMPILE( "androidSource" , "src/android/actionscript" , "src/android/fonts" ) ,
+	ANDROID_LIBRARY_COMPILE( "androidLibrary" ) ,
+	ANDROID_AS_LIBRARY_COMPILE( "androidAsLibrary" ) ,
+	ANDROID_NATIVE_COMPILE( "androidNativeLibrary" ) ,
 	ANDROID_PACKAGE( "androidPack" , "src/android/assets" ) ,
 
-	DESKTOP_COMPILE( "desktopCompile" , "src/desktop/actionscript" , "src/desktop/fonts" ) ,
-	DESKTOP_LIBRARY_COMPILE( "desktopLibraryCompile" ) ,
-	DESKTOP_AS_LIBRARY_COMPILE( "desktopAsLibraryCompile" ) ,
-	DESKTOP_NATIVE_COMPILE( "desktopNativeCompile" ) ,
+	DESKTOP_COMPILE( "desktopSource" , "src/desktop/actionscript" , "src/desktop/fonts" ) ,
+	DESKTOP_LIBRARY_COMPILE( "desktopLibrary" ) ,
+	DESKTOP_AS_LIBRARY_COMPILE( "desktopAsLibrary" ) ,
+	DESKTOP_NATIVE_COMPILE( "desktopNativeLibrary" ) ,
 	DESKTOP_PACKAGE( "desktopPack" , "src/desktop/assets" ) ,
 
-	public static final List<Configurations> DEFAULTS = [ COMPILE ,
-														  LIBRARY_COMPILE ,
-														  AS_LIBRARY_COMPILE ,
-														  NATIVE_COMPILE ,
+	public static final List<Configurations> DEFAULTS = [ SOURCE ,
+														  LIBRARY ,
+														  AS_LIBRARY ,
+														  NATIVE_LIBRARY ,
 														  PACKAGE ]
 
 	private String name
