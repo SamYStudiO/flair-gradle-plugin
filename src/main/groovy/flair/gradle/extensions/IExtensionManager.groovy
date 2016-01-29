@@ -11,9 +11,9 @@ public interface IExtensionManager
 {
 	IPlatformContainerExtension getPlatformContainer( Platforms platform )
 
-	NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformProductFlavors()
+	List<IVariantExtension> getAllActivePlatformProductFlavors()
 
-	NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformBuildTypes()
+	List<IVariantExtension> getAllActivePlatformBuildTypes()
 
 	List<Variant> getAllActivePlatformVariants()
 

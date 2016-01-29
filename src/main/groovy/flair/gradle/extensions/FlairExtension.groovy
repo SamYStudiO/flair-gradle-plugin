@@ -76,32 +76,38 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		}
 	}
 
-	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformProductFlavors()
+	public List<IVariantExtension> getAllActivePlatformProductFlavors()
 	{
 		NamedDomainObjectContainer<IVariantExtension> iosProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getProductFlavors( ) : null
 		NamedDomainObjectContainer<IVariantExtension> androidProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getProductFlavors( ) : null
 		NamedDomainObjectContainer<IVariantExtension> desktopProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getProductFlavors( ) : null
 		NamedDomainObjectContainer<IVariantExtension> commonProductFlavors = getProductFlavors( )
 
-		if( iosProductFlavors ) commonProductFlavors.addAll( iosProductFlavors )
-		if( androidProductFlavors ) commonProductFlavors.addAll( androidProductFlavors )
-		if( desktopProductFlavors ) commonProductFlavors.addAll( desktopProductFlavors )
+		List<IVariantExtension> list = new ArrayList<IVariantExtension>( )
+		list.addAll( commonProductFlavors )
 
-		return commonProductFlavors
+		if( iosProductFlavors ) list.addAll( iosProductFlavors )
+		if( androidProductFlavors ) list.addAll( androidProductFlavors )
+		if( desktopProductFlavors ) list.addAll( desktopProductFlavors )
+
+		return list
 	}
 
-	public NamedDomainObjectContainer<IVariantExtension> getAllActivePlatformBuildTypes()
+	public List<IVariantExtension> getAllActivePlatformBuildTypes()
 	{
 		NamedDomainObjectContainer<IVariantExtension> iosBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getBuildTypes( ) : null
 		NamedDomainObjectContainer<IVariantExtension> androidBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getBuildTypes( ) : null
 		NamedDomainObjectContainer<IVariantExtension> desktopBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getBuildTypes( ) : null
 		NamedDomainObjectContainer<IVariantExtension> commonBuildTypes = getBuildTypes( )
 
-		if( iosBuildTypes ) commonBuildTypes.addAll( iosBuildTypes )
-		if( androidBuildTypes ) commonBuildTypes.addAll( androidBuildTypes )
-		if( desktopBuildTypes ) commonBuildTypes.addAll( desktopBuildTypes )
+		List<IVariantExtension> list = new ArrayList<IVariantExtension>( )
+		list.addAll( commonBuildTypes )
 
-		return commonBuildTypes
+		if( iosBuildTypes ) list.addAll( iosBuildTypes )
+		if( androidBuildTypes ) list.addAll( androidBuildTypes )
+		if( desktopBuildTypes ) list.addAll( desktopBuildTypes )
+
+		return list
 	}
 
 	public List<Variant> getAllActivePlatformVariants()
@@ -256,7 +262,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			}
 		}
 
-		if( list.size(  ) == 0 ) list.add( new Variant( project , platform ) )
+		if( list.size( ) == 0 ) list.add( new Variant( project , platform ) )
 
 		return list
 	}
