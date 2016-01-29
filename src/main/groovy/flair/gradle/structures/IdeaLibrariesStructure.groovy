@@ -11,6 +11,8 @@ class IdeaLibrariesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
+		if( !project.file( ".idea" ).exists( ) ) return
+
 		List<String> libraries = new ArrayList<String>( )
 		project.configurations.findAll {
 			it.name.toLowerCase( ).contains( "librarycompile" ) || it.name.toLowerCase( ).contains( "nativecompile" )
@@ -41,7 +43,7 @@ class IdeaLibrariesStructure implements IStructure
 			}
 
 			File file = project.file( "${ output }/${ pathFile.name }.xml" )
-			file.createNewFile(  )
+			file.createNewFile( )
 
 			file.write( file.text.replaceAll( "\\{libName\\}" , pathFile.name ).replaceAll( "\\{path\\}" , pathFile.path.replace( project.rootDir.path + File.separator , "" ).replaceAll( "\\\\" , "/" ) ) )
 		}

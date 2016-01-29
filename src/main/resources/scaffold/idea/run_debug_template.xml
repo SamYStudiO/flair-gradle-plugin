@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-	<configuration default="false" name="{name}" type="FlashRunConfigurationType" factoryName="Flash App" singleton="true">
+	<configuration name="{name}" default="false" factoryName="Flash App" singleton="true" type="FlashRunConfigurationType">
 		<option name="BCName" value="{profileName}" />
 		<option name="IOSSimulatorSdkPath" value="" />
 		<option name="adlOptions" value="" />
@@ -34,7 +34,7 @@
 		<option name="usbDebugPort" value="{port}" />
 		<method>
 			<option name="Make" enabled="false" />
-			<option name="Gradle.BeforeRunTask" enabled="true" tasks="{gradleCompile}" externalProjectPath="$PROJECT_DIR$/test" vmOptions="" scriptParameters="" />
+			<option name="Gradle.BeforeRunTask" enabled="true" tasks="compileAndroidArmv7Debug" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
 		</method>
 	</configuration>
 </component>
