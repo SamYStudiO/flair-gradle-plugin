@@ -8,6 +8,7 @@ import flair.gradle.plugins.PluginManager
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 
@@ -24,6 +25,8 @@ class IdeaImlStructure implements IStructure
 
 	private String configurationTemplate
 
+	private String sdkTemplate
+
 	@Override
 	public void create( Project project , File source )
 	{
@@ -32,6 +35,7 @@ class IdeaImlStructure implements IStructure
 		extensionManager = project.flair as IExtensionManager
 		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME.name )
 		configurationTemplate = project.file( "${ source.path }/idea/configuration_template.xml" ).text
+		sdkTemplate = project.file( "${ source.path }/idea/sdk_template.xml" ).text
 
 		File output = project.file( "${ moduleName }/${ moduleName }.iml" )
 		File file = !output.exists( ) ? project.file( "${ source.path }/idea/template.iml" ) : output
@@ -46,6 +50,7 @@ class IdeaImlStructure implements IStructure
 		createSourceFolders( content )
 		createExcludeFolders( content )
 		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node , newModuleRootManager )
+		createSdk( )
 
 		output.withWriter { writer -> XmlUtil.serialize( xml , writer ) }
 
@@ -305,6 +310,75 @@ class IdeaImlStructure implements IStructure
 			}
 
 			xml.append( configurationNode )
+		}
+	}
+
+	private void createSdk()
+	{
+		String path = ""
+		String file = ""
+
+		switch( true )
+		{
+			case Os.isFamily( Os.FAMILY_WINDOWS ):
+				path = "${ System.getProperty( "user.home" ) }/."
+				break;
+
+			case Os.isFamily( Os.FAMILY_UNIX ):
+				path = "${ System.getProperty( "user.home" ) }/."
+				break;
+
+			case Os.isFamily( Os.FAMILY_MAC ):
+				path = "${ System.getProperty( "user.home" ) }/"
+				break;
+		}
+
+		switch( true )
+		{
+			case Os.isFamily( Os.FAMILY_WINDOWS ):
+				file = "/config/options/jdk.table.xml"
+				break;
+
+			case Os.isFamily( Os.FAMILY_UNIX ):
+				file = "/config/options/jdk.table.xml"
+				break;
+
+			case Os.isFamily( Os.FAMILY_MAC ):
+				file = "/options/jdk.table.xml"
+				break;
+		}
+
+		Sdk sdk = new Sdk( project )
+
+		for( int i = 10; i <= 20; i++ )
+		{
+			File intellij = project.file( "${ path }IntelliJIdea${ i }${ file }" )
+
+			if( intellij.exists( ) )
+			{
+				Node node = new XmlParser( ).parse( intellij )
+				String sdkPath = project.file( sdk.path ).path.replaceAll( "\\\\" , "/" )
+
+				NodeList list = node.component.jdk.findAll { it.homePath.@value[ 0 ] == sdkPath }
+
+				if( list.size( ) )
+				{
+					list[ 0 ].name.@value == sdk.name
+				}
+				else
+				{
+					String jdk = sdkTemplate.replaceAll( "\\{name\\}" , sdk.name )
+							.replaceAll( "\\{path\\}" , sdkPath )
+							.replaceAll( "\\{fullVersion\\}" , "AIR SDK " + sdk.fullVersion )
+							.replaceAll( "\\{version\\}" , sdk.version )
+
+					Node jdkNode = new XmlParser( ).parseText( jdk )
+
+					node.component[ 0 ].append( jdkNode )
+
+					intellij.withWriter { writer -> XmlUtil.serialize( node , writer ) }
+				}
+			}
 		}
 	}
 }

@@ -63,6 +63,17 @@ public class Sdk
 		return new XmlParser( ).parseText( description.text ).version.text( ).substring( 0 , 4 )
 	}
 
+	public String getFullVersion()
+	{
+		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
+
+		File description = new File( "${ path }/air-sdk-description.xml" )
+
+		Node node = new XmlParser( ).parseText( description.text )
+
+		return node.version.text( ) + "." + node.build.text( )
+	}
+
 	public String getFrameworkPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )

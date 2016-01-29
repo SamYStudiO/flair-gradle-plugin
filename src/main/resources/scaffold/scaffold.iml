@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="default">
+  <component name="FlexBuildConfigurationManager" active="android">
     <configurations>
-      <configuration name="default" target-platform="Desktop" pure-as="true" skip-build="true">
+      <configuration name="android" target-platform="Mobile" pure-as="true" main-class="_packageName_.MainAndroid" output-file="android.swf" output-folder="$MODULE_DIR$/../../../../build">
         <dependencies>
           <entries>
             <entry library-name="libs_swc" library-level="project">
@@ -23,9 +23,59 @@
           </map>
           <option name="resourceFilesMode" value="None" />
         </compiler-options>
-        <packaging-air-desktop package-file-name="default" />
+        <packaging-air-desktop />
+        <packaging-android package-file-name="android" />
+        <packaging-ios package-file-name="android" />
+      </configuration>
+      <configuration name="dekstop" target-platform="Desktop" pure-as="true" main-class="_packageName_.MainDesktop" output-file="dekstop.swf" output-folder="$MODULE_DIR$/../../../../build">
+        <dependencies>
+          <entries>
+            <entry library-name="libs_swc" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_as" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_ane" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="air_sdk_20.0" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.debug.swf" value="true" />
+          </map>
+          <option name="resourceFilesMode" value="None" />
+        </compiler-options>
+        <packaging-air-desktop package-file-name="dekstop" />
         <packaging-android />
         <packaging-ios />
+      </configuration>
+      <configuration name="ios" target-platform="Mobile" pure-as="true" main-class="_packageName_.MainIOS" output-file="ios.swf" output-folder="$MODULE_DIR$/../../../../build">
+        <dependencies>
+          <entries>
+            <entry library-name="libs_swc" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_as" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="libs_ane" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="air_sdk_20.0" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.debug.swf" value="true" />
+          </map>
+          <option name="resourceFilesMode" value="None" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android package-file-name="ios" />
+        <packaging-ios package-file-name="ios" />
       </configuration>
     </configurations>
     <compiler-options />
