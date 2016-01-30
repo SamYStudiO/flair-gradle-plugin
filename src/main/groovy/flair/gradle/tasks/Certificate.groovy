@@ -17,7 +17,7 @@ public class Certificate extends AbstractTask
 
 	public String country
 
-	public String years = "25"
+	public int years = 1000
 
 	public String type = "2048-RSA"
 
@@ -56,7 +56,7 @@ public class Certificate extends AbstractTask
 			adt.addArgument( country )
 		}
 		adt.addArgument( "-validityPeriod" )
-		adt.addArgument( years )
+		adt.addArgument( "${ years }" )
 		adt.addArgument( type )
 		adt.addArgument( output.path )
 		adt.addArgument( password )
