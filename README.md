@@ -18,7 +18,7 @@ Flair is a [gradle](http://gradle.org/) plugin that help you build **Adobe AIR p
 * Almost transparent Flair actionscript library to **manage your resources**
 * Once you're set up you'll be able to compile/test a **template project**
 * **[TexturePacker](https://www.codeandweb.com/texturepacker) plugin** to autogenerate your atlases when compiling
-* **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to allow using standard run/debug configuration from IDEA
+* **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to allow using standard run/debug configurations from IDEA
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...)
 
 #####INSTALLATION
