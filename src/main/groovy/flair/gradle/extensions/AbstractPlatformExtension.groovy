@@ -45,6 +45,14 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Integer adlScreenDpi
 
+	private String adlPubId
+
+	private Boolean adlNoDebug
+
+	private Boolean adlAtLogin
+
+	private List<String> adlParameters = new ArrayList<>( )
+
 	private String packageTarget
 
 	private Boolean packageX86
@@ -270,6 +278,56 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.adlScreenDpi = adlScreenDpi
 	}
 
+	public String getAdlPubId()
+	{
+		return adlPubId
+	}
+
+	public void adlpubId( String adlPubId )
+	{
+		this.adlPubId = adlPubId
+	}
+
+	public Boolean getAdlNoDebug()
+	{
+		return adlNoDebug
+	}
+
+	public void adlNoDebug( Boolean adlNoDebug )
+	{
+		this.adlNoDebug = adlNoDebug
+	}
+
+	public Boolean getAdlAtLogin()
+	{
+		return adlAtLogin
+	}
+
+	public void adlAtLogin( Boolean adlAtLogin )
+	{
+		this.adlAtLogin = adlAtLogin
+	}
+
+	public List<String> getAdlParameters()
+	{
+		return adlParameters
+	}
+
+	public void adlParameter( String adlParameter )
+	{
+		this.adlParameters.add( adlParameter )
+	}
+
+	public void adlParameters( List<String> adlParameters )
+	{
+		this.adlParameters.addAll( adlParameters )
+	}
+
+	public void adlParameters( String... adlParameters )
+	{
+		this.adlParameters.addAll( adlParameters )
+	}
+
 	public String getPackageTarget()
 	{
 		return packageTarget
@@ -476,6 +534,10 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 				case FlairProperties.ADL_SCREEN_SIZE.name: return "540x920:540x960"
 				case FlairProperties.ADL_SCREEN_DPI.name: return 240
+				case FlairProperties.ADL_PUB_ID.name: return null
+				case FlairProperties.ADL_NO_DEBUG.name: return false
+				case FlairProperties.ADL_AT_LOGIN.name: return false
+				case FlairProperties.ADL_PARAMETERS.name: return null
 
 				case FlairProperties.PACKAGE_TARGET.name: return null
 				case FlairProperties.PACKAGE_X86.name: return false

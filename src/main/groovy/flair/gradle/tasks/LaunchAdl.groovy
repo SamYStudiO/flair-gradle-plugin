@@ -24,10 +24,17 @@ class LaunchAdl extends AbstractVariantTask
 	public void launch()
 	{
 		String output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
+		String pubId = extensionManager.getFlairProperty( variant , FlairProperties.ADL_PUB_ID )
+		boolean noDebug = extensionManager.getFlairProperty( variant , FlairProperties.ADL_NO_DEBUG )
+		boolean atLogin = extensionManager.getFlairProperty( variant , FlairProperties.ADL_AT_LOGIN )
+		List<String> parameters = extensionManager.getFlairProperty( variant , FlairProperties.ADL_PARAMETERS ) as List<String>
 
 		cli.addArgument( "-profile" )
-
 		cli.addArgument( variant.platform == Platforms.DESKTOP ? "extendedDesktop" : "mobileDevice" )
+
+		if( pubId ) cli.addArgument( "-pubid ${ pubId }" )
+		if( noDebug ) cli.addArgument( "-noDebug" )
+		if( atLogin ) cli.addArgument( "-atlogin" )
 
 		if( variant.platform != Platforms.DESKTOP )
 		{
@@ -51,6 +58,12 @@ class LaunchAdl extends AbstractVariantTask
 
 		cli.addArgument( f.path )
 		cli.addArgument( project.file( output + "/package" ).path )
+
+		if( parameters && !parameters.empty )
+		{
+			cli.addArgument( "--" )
+			cli.addArguments( parameters )
+		}
 
 		cli.execute( project )
 

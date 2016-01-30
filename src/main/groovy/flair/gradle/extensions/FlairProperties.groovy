@@ -36,17 +36,21 @@ enum FlairProperties
 	PACKAGE_HIDE_ANE_LIB_SYMBOLS( "packageHideAneLibSymbols" ) ,
 	PACKAGE_PLATFORM_SDK( "platformSdk" ) ,
 
-	SIGNING_ALIAS( "signingAlias" ),
-	SIGNING_STORE_TYPE( "signingStoreType" ),
-	SIGNING_KEY_STORE( "signingKeyStore" ),
-	SIGNING_STORE_PASS( "signingStorePass" ),
-	SIGNING_KEY_PASS( "signingKeyPass" ),
-	SIGNING_PROVIDER_NAME( "signingProviderName" ),
-	SIGNING_TSA( "signingTsa" ),
-	SIGNING_PROVISIONING_PROFILE( "signingProvisioningProfile" ),
+	SIGNING_ALIAS( "signingAlias" ) ,
+	SIGNING_STORE_TYPE( "signingStoreType" ) ,
+	SIGNING_KEY_STORE( "signingKeyStore" ) ,
+	SIGNING_STORE_PASS( "signingStorePass" ) ,
+	SIGNING_KEY_PASS( "signingKeyPass" ) ,
+	SIGNING_PROVIDER_NAME( "signingProviderName" ) ,
+	SIGNING_TSA( "signingTsa" ) ,
+	SIGNING_PROVISIONING_PROFILE( "signingProvisioningProfile" ) ,
 
 	ADL_SCREEN_SIZE( "emulatorScreenSize" ) ,
-	ADL_SCREEN_DPI( "emulatorScreenDpi" )
+	ADL_SCREEN_DPI( "emulatorScreenDpi" ) ,
+	ADL_PUB_ID( "adlPubId" ) ,
+	ADL_NO_DEBUG( "adlNoDebug" ) ,
+	ADL_AT_LOGIN( "adlAtLogin" ) ,
+	ADL_PARAMETERS( "adlParameters" )
 
 	private String name
 
