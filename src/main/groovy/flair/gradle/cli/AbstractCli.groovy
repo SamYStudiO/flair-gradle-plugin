@@ -19,19 +19,19 @@ public abstract class AbstractCli implements ICli , IWatcherAction
 	@Override
 	public void addArgument( String arg )
 	{
-		arguments.add( arg )
+		arg.split( " " ).each { arguments.add( arg ) }
 	}
 
 	@Override
 	public void addArguments( List<String> args )
 	{
-		arguments.addAll( args )
+		args.each { addArgument( it ) }
 	}
 
 	@Override
 	public void addArguments( String... args )
 	{
-		arguments.addAll( args )
+		args.each { addArgument( it ) }
 	}
 
 	@Override
