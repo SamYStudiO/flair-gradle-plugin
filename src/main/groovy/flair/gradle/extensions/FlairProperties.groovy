@@ -34,7 +34,7 @@ enum FlairProperties
 	PACKAGE_LISTEN( "packageListen" ) ,
 	PACKAGE_SAMPLER( "packageSampler" ) ,
 	PACKAGE_HIDE_ANE_LIB_SYMBOLS( "packageHideAneLibSymbols" ) ,
-	PACKAGE_PLATFORM_SDK( "platformSdk" ) ,
+	PACKAGE_PLATFORM_SDK( "packagePlatformSdk" ) ,
 
 	SIGNING_ALIAS( "signingAlias" ) ,
 	SIGNING_STORE_TYPE( "signingStoreType" ) ,
