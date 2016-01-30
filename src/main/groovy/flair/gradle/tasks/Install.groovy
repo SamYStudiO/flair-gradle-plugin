@@ -27,7 +27,7 @@ class Install extends AbstractVariantTask
 	@TaskAction
 	public void install()
 	{
-		String path = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION.name ) }.${ getExtension( ) }"
+		String path = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }.${ getExtension( ) }"
 
 		if( variant.platform == Platforms.DESKTOP )
 		{
