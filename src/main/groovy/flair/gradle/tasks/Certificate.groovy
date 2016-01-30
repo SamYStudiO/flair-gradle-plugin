@@ -17,7 +17,7 @@ public class Certificate extends AbstractTask
 
 	public String country
 
-	public int years = 1000
+	public int years = 100
 
 	public String type = "2048-RSA"
 
