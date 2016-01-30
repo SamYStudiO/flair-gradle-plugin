@@ -24,6 +24,7 @@ public enum Tasks {
 	LAUNCH_EMULATOR( "launchEmulator" , LaunchEmulator , Groups.LAUNCH ) ,
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
 	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ) ,
+	CERTIFICATE( "certificate" , Certificate , Groups.SIGNING ) ,
 	LIST_DEVICES( "listDevices" , ListDevices , Groups.DEVICES )
 
 	private String name

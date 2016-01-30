@@ -11,6 +11,7 @@ public enum Groups {
 	LAUNCH( "launch" ) ,
 	TEXTURE_PACKER( "texturepacker" ) ,
 	DOCUMENTATION( "documentation" ) ,
+	SIGNING( "signing" ) ,
 	DEVICES( "devices" ) ,
 	PROCESS( "" ) ,
 	DEFAULT( "" )
