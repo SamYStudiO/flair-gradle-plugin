@@ -1,5 +1,7 @@
 package flair.gradle.structures
 
+import flair.gradle.cli.Adt
+import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.variants.Platforms
@@ -49,5 +51,34 @@ public class PlatformStructure implements IStructure
 
 			file.write( file.text.replace( "_packageName_" , packageName ) )
 		}
+
+
+
+
+		String charset = 'abcdefghijklmnopqrstuvwxyz0123456789!$#{()}@%?'
+		String password = ""
+		int l = Math.round( Math.random( ) * 10 ) + 10
+
+		for( int i = 0; i < l; i++ )
+		{
+			int r = Math.round( Math.random( ) * charset.length( ) )
+
+			char c = charset.charAt( r )
+			if( Math.random(  ) > 0.5 ) c = c.toUpperCase(  )
+			password += c
+		}
+
+		ICli adt = new Adt( )
+		adt.addArgument( "-certificate" )
+		adt.addArgument( "-cn" )
+		adt.addArgument( project.name )
+		adt.addArgument( "-validityPeriod" )
+		adt.addArgument( "100" )
+		adt.addArgument( "2048-RSA" )
+		adt.addArgument( project.file( "${ moduleName }/src/${ platform.name }/signing/certificate.p12" ).path )
+		adt.addArgument( password )
+		adt.execute( project )
+
+		project.file( "${ moduleName }/src/${ platform.name }/signing/password.txt" ).write( password )
 	}
 }
