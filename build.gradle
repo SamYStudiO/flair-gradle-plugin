@@ -50,7 +50,7 @@ ext {
 sourceSets {
 	main {
 		resources {
-			exclude "**/?*.iml"
+			exclude "**/scaffold.iml"
 		}
 	}
 }
