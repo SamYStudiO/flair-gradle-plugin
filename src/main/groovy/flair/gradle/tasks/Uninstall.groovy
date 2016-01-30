@@ -1,11 +1,10 @@
 package flair.gradle.tasks
 
-import flair.gradle.cli.Adb
+import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.cli.Idb
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.variants.Platforms
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -13,9 +12,7 @@ import org.gradle.api.tasks.TaskAction
  */
 class Uninstall extends AbstractVariantTask
 {
-	private ICli adb = new Adb( )
-
-	private ICli idb = new Idb( )
+	private ICli adt = new Adt( )
 
 	public Uninstall()
 	{
@@ -27,45 +24,20 @@ class Uninstall extends AbstractVariantTask
 	public void uninstall()
 	{
 		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
+		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK )
 
-		if( variant.platform == Platforms.IOS )
-		{
+		adt.addArgument( "-devices" )
+		adt.addArgument( "-platform ${ variant.platform.name }" )
+		List<String> ids = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+		String id = ids.empty && platformSdk && variant.platform == Platforms.IOS ? "ios_simulator" : ids[ 0 ]
 
-			idb.addArgument( "-uninstall" )
-			idb.addArgument( appId )
-			//idb.addArgument( device )
+		adt.clearArguments( )
+		adt.addArgument( "-uninstallApp" )
+		adt.addArgument( "-platform ${ variant.platform.name }" )
+		if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
+		adt.addArgument( "-device ${ id }" )
+		adt.addArgument( "-appid ${ appId }" )
 
-			idb.execute( project )
-		}
-		else
-		{
-			adb.addArgument( "uninstall" )
-			adb.addArgument( appId )
-
-			adb.execute( project )
-		}
-	}
-
-	private String getExtension()
-	{
-		String extension = ""
-
-		switch( variant.platform )
-		{
-			case Platforms.IOS:
-				extension = "ipa"
-				break
-
-			case Platforms.ANDROID:
-				extension = "apk"
-				break
-
-			case Platforms.DESKTOP:
-
-				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
-				break
-		}
-
-		return extension
+		adt.execute( project )
 	}
 }
