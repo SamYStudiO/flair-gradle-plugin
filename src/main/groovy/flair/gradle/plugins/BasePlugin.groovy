@@ -1,6 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Sdk
 import flair.gradle.directoryWatcher.DirectoryWatcher
 import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.directoryWatcher.generated.GenerateFontClass
@@ -10,7 +11,6 @@ import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
-import flair.gradle.structures.ClassTemplateStructure
 import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
@@ -66,31 +66,31 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			if( it instanceof IConfigurationPlugin )
 			{
+				// can't do after evaluation since evaluation may need them for dependencies
 				createConfigurations( it.configurations )
 			}
 		}
 
+		checkLocalProperties( )
+
 		project.afterEvaluate {
 
-			createStructures( )
-			createVariantTasks( )
-			initDirectoryWatcher( )
-			addDirectoryWatcherActions( )
-
-			List<String> list = new ArrayList<String>( )
-
-			flair.allActivePlatformVariants.each {
-
-				list.add( Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE ) )
-			}
-
-			Task t = project.tasks.create( Tasks.ASSEMBLE.name )
-			t.group = Tasks.ASSEMBLE.group.name
-			t.dependsOn list
-
-			if( !project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) ).exists( ) )
+			if( isReady( ) )
 			{
-				project.tasks.remove( project.tasks.getByName( Tasks.ASDOC.name ) )
+				createStructures( )
+				createVariantTasks( )
+				initDirectoryWatcher( )
+
+				List<String> list = new ArrayList<String>( )
+
+				flair.allActivePlatformVariants.each {
+
+					list.add( Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE ) )
+				}
+
+				Task t = project.tasks.create( Tasks.ASSEMBLE.name )
+				t.group = Tasks.ASSEMBLE.group.name
+				t.dependsOn list
 			}
 		}
 	}
@@ -113,7 +113,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		List<IStructure> list = new ArrayList<IStructure>( )
 
 		list.add( new CommonStructure( ) )
-		list.add( new ClassTemplateStructure( ) )
 		list.add( new VariantStructure( ) )
 
 		return list
@@ -135,6 +134,34 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	{
 		project.tasks.create( Tasks.CLEAN.name , Tasks.CLEAN.type )
 		project.tasks.create( Tasks.ASDOC.name , Tasks.ASDOC.type )
+	}
+
+	private boolean isReady()
+	{
+		boolean hasPackageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME ) as boolean
+		boolean hasValidSdk = new Sdk( project ).isAirSdk( )
+
+		if( !hasValidSdk )
+		{
+			throw new Exception( "Cannot find AIR SDK home, set a valid AIR SDK home from your local.properties file under project root" )
+		}
+		if( !hasPackageName )
+		{
+			throw new Exception( String.format( "Missing flair property packageName, add it to your build.gradle file :%nflair {%npackageName \"com.hello.world\"%n}" ) )
+		}
+
+		return true
+	}
+
+	private void checkLocalProperties()
+	{
+		File file = project.file( "${ project.rootDir.path }/local.properties" )
+
+		if( !file.exists( ) )
+		{
+			file.createNewFile( )
+			file.write( String.format( "## This file should *NOT* be checked into Version Control Systems,%n# as it contains information specific to your local configuration.%n#%n# Location of the Adobe AIR SDK. This is only used by Gradle.%n# For customization when using a Version Control System, please read the%n# header note.%nsdk.dir=" ) )
+		}
 	}
 
 	private void createConfigurations( List<Configurations> list )
@@ -223,28 +250,30 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private initDirectoryWatcher()
 	{
-		directoryWatcher = new DirectoryWatcher( project , project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) ) )
-		Thread t = new Thread( directoryWatcher )
-		t.start( )
-	}
+		File file = project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) )
 
-	private addDirectoryWatcherActions()
-	{
-		project.plugins.each {
-			if( it instanceof IWatcherActionPlugin )
-			{
-				it.watcherActions.each { action ->
+		if( file.exists( ) )
+		{
+			directoryWatcher = new DirectoryWatcher( project , file )
+			Thread t = new Thread( directoryWatcher )
+			t.start( )
 
-					if( action.key instanceof String )
-					{
-						directoryWatcher.watch( ( String ) action.key , action.value )
+			project.plugins.each {
+				if( it instanceof IWatcherActionPlugin )
+				{
+					it.watcherActions.each { action ->
+
+						if( action.key instanceof String )
+						{
+							directoryWatcher.watch( ( String ) action.key , action.value )
+						}
+						else if( action.key instanceof File )
+						{
+							directoryWatcher.watch( ( File ) action.key , action.value )
+						}
+
+						action.value.execute( project )
 					}
-					else if( action.key instanceof File )
-					{
-						directoryWatcher.watch( ( File ) action.key , action.value )
-					}
-
-					action.value.execute( project )
 				}
 			}
 		}

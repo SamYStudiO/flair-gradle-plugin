@@ -43,7 +43,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String dpi = flair.getFlairProperty( it , FlairProperties.EMULATOR_SCREEN_DPI )
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
-				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) || ""
+				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) ?: "7936"
 				String gradleCompile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
@@ -65,7 +65,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				f.createNewFile( )
 				f.write( content )
 			}
-			else list.removeAt( list.indexOf( name + ".xml" ) )
+			else list.remove( list.indexOf( name + ".xml" ) )
 		}
 
 		project.file( ".idea/runConfigurations" ).listFiles( ).each { if( list.indexOf( it.name ) >= 0 ) it.delete( ) }

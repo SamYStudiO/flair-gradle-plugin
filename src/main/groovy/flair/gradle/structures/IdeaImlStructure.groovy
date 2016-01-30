@@ -49,12 +49,20 @@ class IdeaImlStructure implements IStructure
 
 		createSourceFolders( content )
 		createExcludeFolders( content )
-		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node , newModuleRootManager )
+		createLibraries( newModuleRootManager )
+		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node )
 		//createSdk( )
 
 		output.withWriter { writer -> XmlUtil.serialize( xml , writer ) }
 
-		output.write( output.text.replaceAll( "#09;" , "&#09;" ) )
+		String s = output.text.replaceAll( "#09;" , "&#09;" ).replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
+
+		if( !flexBuildConfigurationManager.configurations[ 0 ].children( ).find { it.@name == flexBuildConfigurationManager.@active } )
+		{
+			s = s.replaceAll( "\\{activeConfiguration\\}" , flexBuildConfigurationManager.configurations[ 0 ].children( )[ 0 ].@name.toString( ) )
+		}
+
+		output.write( s )
 	}
 
 	private String buildPathFromModule( String path , boolean escape = false )
@@ -146,9 +154,29 @@ class IdeaImlStructure implements IStructure
 		}
 	}
 
-	private void createConfigurations( Node xml , Node newModuleRootManager )
+	private void createLibraries( Node moduleRootManagerNode )
 	{
-		xml.children( ).findAll { it.@name == null || it.@name.startsWith( "flair_" ) }.each { it.parent( ).remove( it ) }
+		project.configurations.findAll { it.name.toLowerCase( ).contains( "library" ) }.each {
+
+			it.files.each { file ->
+
+				if( file.exists( ) )
+				{
+					String path = file.isDirectory( ) ? file.path : file.parentFile.path
+					String name = project.file( path ).name
+
+					if( !moduleRootManagerNode.children( ).find { it.name( ) == "orderEntry" && it.@name == name } )
+					{
+						new Node( moduleRootManagerNode , "orderEntry" , [ type: "library" , exported: "" , name: "${ project.file( path ).name }" , level: "project" ] )
+					}
+				}
+			}
+		}
+	}
+
+	private void createConfigurations( Node configurationsNode )
+	{
+		configurationsNode.children( ).findAll { it.@name == null || it.@name.startsWith( "flair_" ) }.each { it.parent( ).remove( it ) }
 
 		extensionManager.allActivePlatformVariants.each { variant ->
 
@@ -307,7 +335,7 @@ class IdeaImlStructure implements IStructure
 				}
 			}
 
-			xml.append( configurationNode )
+			configurationsNode.append( configurationNode )
 		}
 	}
 

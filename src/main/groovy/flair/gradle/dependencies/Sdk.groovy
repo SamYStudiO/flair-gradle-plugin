@@ -30,12 +30,16 @@ public class Sdk
 
 	public Sdk( Project project )
 	{
-		this( new PropertyFile( project.file( "local.properties" ) ).getProp( "sdk.dir" ) )
+		this( project , null )
 	}
 
 	public Sdk( Project project , String name )
 	{
-		this( new PropertyFile( project.file( "local.properties" ) ).getProp( "sdk.dir" ) , name )
+		File file = project.file( "local.properties" )
+
+		if( file.exists( ) ) this.path = new PropertyFile( file ).getProp( "sdk.dir" )
+		this.path = this.path ? this.path.replaceAll( "\\\\" , "/" ) : null
+		this.name = name
 	}
 
 	public Sdk( String path )
@@ -45,7 +49,7 @@ public class Sdk
 
 	public Sdk( String path , String name )
 	{
-		this.path = path.replaceAll( "\\\\" , "/" )
+		this.path = path ? path.replaceAll( "\\\\" , "/" ) : null
 		this.name = name
 	}
 

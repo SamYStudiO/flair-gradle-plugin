@@ -21,7 +21,7 @@ public class LaunchEmulatorTaskFactory implements IVariantTaskFactory<LaunchEmul
 
 		t.group = Tasks.LAUNCH_EMULATOR.group.name
 		t.variant = variant
-		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_EXTENSIONS.name + variantName ,
+		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_APP_DESCRIPTOR.name + variantName ,
 				Tasks.PROCESS_RESOURCES.name + variantName , Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName ,
 				Tasks.PROCESS_SPLASHS.name + variantName
 

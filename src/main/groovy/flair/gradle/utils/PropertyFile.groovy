@@ -18,7 +18,7 @@ public class PropertyFile
 	{
 		this.file = file
 
-		if( file.exists( ) ) properties.load( file.newDataInputStream( ) )
+		if( file && file.exists( ) ) properties.load( file.newDataInputStream( ) )
 	}
 
 	public PropertyFile( String path )

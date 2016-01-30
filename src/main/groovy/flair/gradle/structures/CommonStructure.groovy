@@ -12,10 +12,13 @@ public class CommonStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME )
+		IExtensionManager extensionManager = project.flair as IExtensionManager
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 
-		if( project.fileTree( "${ moduleName }/src/main" ).size( ) == 0 )
+		if( project.fileTree( "${ moduleName }" ).size( ) == 0 )
 		{
+			String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
+			String s = packageName.replace( "." , "/" )
 
 			project.copy {
 				from "${ source.path }/src/main"
@@ -38,13 +41,15 @@ public class CommonStructure implements IStructure
 				from "${ source.path }/libs_swc"
 				into "${ moduleName }/libs_swc"
 			}
-		}
 
-		if( !project.file( "${ project.rootDir.path }/local.properties" ).exists( ) )
-		{
 			project.copy {
-				from "${ source.path }/local.properties"
-				into project.rootDir
+				from "${ source.path }/src/main/actionscript/_packageName_"
+				into "${ moduleName }/src/main/actionscript/${ s }"
+			}
+
+			project.fileTree( "${ moduleName }/src/main/actionscript/${ s }" ).each { file ->
+
+				file.write( file.text.replace( "_packageName_" , packageName ) )
 			}
 		}
 	}

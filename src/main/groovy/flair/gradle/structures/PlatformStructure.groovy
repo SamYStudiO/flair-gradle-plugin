@@ -36,6 +36,13 @@ public class PlatformStructure implements IStructure
 		project.copy {
 			from "${ source.path }/src/${ platform.name }"
 			into "${ moduleName }/src/${ platform.name }"
+
+			exclude "**/_packageName_/**"
+		}
+
+		project.copy {
+			from "${ source.path }/src/${ platform.name }/actionscript/_packageName_"
+			into "${ moduleName }/src/${ platform.name }/actionscript/${ s }"
 		}
 
 		project.fileTree( "${ moduleName }/src/${ platform.name }/actionscript/${ s }" ).each { file ->
