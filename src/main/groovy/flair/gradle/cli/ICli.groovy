@@ -17,5 +17,5 @@ public interface ICli
 
 	void clearArguments()
 
-	void execute( Project project )
+	String execute( Project project )
 }

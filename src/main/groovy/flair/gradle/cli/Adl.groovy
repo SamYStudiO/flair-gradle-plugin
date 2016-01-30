@@ -9,9 +9,9 @@ import org.gradle.api.Project
 public class Adl extends AbstractCli
 {
 	@Override
-	public void execute( Project project )
+	public String execute( Project project )
 	{
-		project.ant.exec( executable: new Sdk( project ).adlPath ) {
+		return project.ant.exec( executable: new Sdk( project ).adlPath ) {
 			arguments.each {
 				println( "\t" + it )
 				arg( value: it )

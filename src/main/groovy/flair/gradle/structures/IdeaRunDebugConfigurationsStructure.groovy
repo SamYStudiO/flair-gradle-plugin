@@ -35,12 +35,12 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String app = it.platform == Platforms.IOS ? "IOS" : it.platform == Platforms.ANDROID ? "Android" : ""
 				String transport = flair.getFlairProperty( it , FlairProperties.PACKAGE_CONNECT ) ? "Network" : "USB"
 				String emulator = it.platform == Platforms.IOS ? "OtherIOSDevice" : it.platform == Platforms.ANDROID ? "OtherAndroidDevice" : ""
-				String size = flair.getFlairProperty( it , FlairProperties.EMULATOR_SCREEN_SIZE )
+				String size = flair.getFlairProperty( it , FlairProperties.ADL_SCREEN_SIZE )
 				String fullHeight = size.split( ":" )[ 1 ].split( "x" )[ 1 ]
 				String fullWidth = size.split( ":" )[ 1 ].split( "x" )[ 0 ]
 				String target = "Emulator"
 				String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME )
-				String dpi = flair.getFlairProperty( it , FlairProperties.EMULATOR_SCREEN_DPI )
+				String dpi = flair.getFlairProperty( it , FlairProperties.ADL_SCREEN_DPI )
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
 				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) ?: "7936"

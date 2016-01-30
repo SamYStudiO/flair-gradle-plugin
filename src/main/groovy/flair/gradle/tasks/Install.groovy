@@ -1,9 +1,10 @@
 package flair.gradle.tasks
 
 import flair.gradle.cli.Adb
+import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.cli.Idb
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -16,7 +17,7 @@ class Install extends AbstractVariantTask
 {
 	private ICli adb = new Adb( )
 
-	private ICli idb = new Idb( )
+	private ICli adt = new Adt( )
 
 	public Install()
 	{
@@ -44,7 +45,11 @@ class Install extends AbstractVariantTask
 		}
 		else if( variant.platform == Platforms.ANDROID )
 		{
+			adb.addArgument( "devices" )
+			String id = new CliDevicesOutputParser( ).parse( adb.execute( project ) )
 
+			adb.clearArguments( )
+			adb.addArgument( "-s ${ id }" )
 			adb.addArgument( "install" )
 			adb.addArgument( "-r" )
 			adb.addArgument( project.file( path ).path )
@@ -53,11 +58,21 @@ class Install extends AbstractVariantTask
 		}
 		else
 		{
-			idb.addArgument( "-install" )
-			idb.addArgument( project.file( path ).path )
-			//idb.addArgument( device )
+			String platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK )
 
-			idb.execute( project )
+			adt.addArgument( "-devices" )
+			adt.addArgument( "-platform ios" )
+			List<String> ids = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+			String id = ids.empty && platformSdk ? "ios_simulator" : ids[ 0 ]
+
+			adt.clearArguments( )
+			adt.addArgument( "-installApp" )
+			adt.addArgument( "-platform ios" )
+			if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
+			adt.addArgument( "-device ${ id }" )
+			adt.addArgument( project.file( path ).path )
+
+			adt.execute( project )
 		}
 	}
 

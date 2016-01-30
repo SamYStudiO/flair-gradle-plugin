@@ -10,11 +10,11 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class LaunchEmulator extends AbstractVariantTask
+class LaunchAdl extends AbstractVariantTask
 {
 	private ICli cli = new Adl( )
 
-	public LaunchEmulator()
+	public LaunchAdl()
 	{
 		group = Groups.LAUNCH.name
 		description = ""
@@ -32,9 +32,9 @@ class LaunchEmulator extends AbstractVariantTask
 		if( variant.platform != Platforms.DESKTOP )
 		{
 			cli.addArgument( "-screensize" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_SIZE ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.ADL_SCREEN_SIZE ).toString( ) )
 			cli.addArgument( "-XscreenDPI" )
-			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.EMULATOR_SCREEN_DPI ).toString( ) )
+			cli.addArgument( extensionManager.getFlairProperty( variant , FlairProperties.ADL_SCREEN_DPI ).toString( ) )
 			cli.addArgument( "-XversionPlatform" )
 			cli.addArgument( variant.platform == Platforms.IOS ? "IOS" : "AND" )
 		}

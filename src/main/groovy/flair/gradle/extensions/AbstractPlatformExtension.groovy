@@ -41,9 +41,9 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private List<String> compileOptions = new ArrayList<>( )
 
-	private String emulatorScreenSize
+	private String adlScreenSize
 
-	private Integer emulatorScreenDpi
+	private Integer adlScreenDpi
 
 	private String packageTarget
 
@@ -58,6 +58,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	private Boolean packageSampler
 
 	private Boolean packageHideAneLibSymbols
+
+	private Boolean packagePlatformSdk
 
 	private String signingAlias
 
@@ -248,24 +250,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.compileOptions.addAll( compileOptions )
 	}
 
-	public String getEmulatorScreenSize()
+	public String getAdlScreenSize()
 	{
-		return emulatorScreenSize
+		return adlScreenSize
 	}
 
-	public void emulatorScreenSize( String emulatorScreenSize )
+	public void adlScreenSize( String adlScreenSize )
 	{
-		this.emulatorScreenSize = emulatorScreenSize
+		this.adlScreenSize = adlScreenSize
 	}
 
-	public Integer getEmulatorScreenDpi()
+	public Integer getAdlScreenDpi()
 	{
-		return emulatorScreenDpi
+		return adlScreenDpi
 	}
 
-	public void emulatorScreenDpi( Integer emulatorScreenDpi )
+	public void adlScreenDpi( Integer adlScreenDpi )
 	{
-		this.emulatorScreenDpi = emulatorScreenDpi
+		this.adlScreenDpi = adlScreenDpi
 	}
 
 	public String getPackageTarget()
@@ -336,6 +338,16 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public void packageHideAneLibSymbols( Boolean packageHideAneLibSymbols )
 	{
 		this.packageHideAneLibSymbols = packageHideAneLibSymbols
+	}
+
+	public Boolean getPackagePlatformSdk()
+	{
+		return packagePlatformSdk
+	}
+
+	public void packagePlatformSdk( String packagePlatformSdk )
+	{
+		this.packagePlatformSdk = packagePlatformSdk
 	}
 
 	public String getSigningAlias()
@@ -462,8 +474,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 					}
 				case FlairProperties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
 
-				case FlairProperties.EMULATOR_SCREEN_SIZE.name: return "540x920:540x960"
-				case FlairProperties.EMULATOR_SCREEN_DPI.name: return 240
+				case FlairProperties.ADL_SCREEN_SIZE.name: return "540x920:540x960"
+				case FlairProperties.ADL_SCREEN_DPI.name: return 240
 
 				case FlairProperties.PACKAGE_TARGET.name: return null
 				case FlairProperties.PACKAGE_X86.name: return false
@@ -481,6 +493,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.PACKAGE_LISTEN.name: return getProp( FlairProperties.DEBUG.name , true ) ? "7936" : null
 				case FlairProperties.PACKAGE_SAMPLER.name: return false
 				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name: return false
+				case FlairProperties.PACKAGE_PLATFORM_SDK.name: return null
 
 				case FlairProperties.SIGNING_ALIAS.name: return null
 				case FlairProperties.SIGNING_KEY_PASS.name: return null

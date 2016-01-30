@@ -43,6 +43,9 @@ class Package extends AbstractVariantTask
 	def String target
 
 	@Input
+	def String platformSdk
+
+	@Input
 	def boolean debug
 
 	@Input
@@ -85,6 +88,7 @@ class Package extends AbstractVariantTask
 		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS )
 		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86 )
 		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET ) ?: "null"
+		platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK ) ?: "null"
 		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
 		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG )
 
@@ -275,10 +279,13 @@ class Package extends AbstractVariantTask
 	private addFilesAndDirectories()
 	{
 		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
+		if( platformSdk != "null" ) cli.addArgument( "-platformsdk ${ platformSdk }" )
 		cli.addArgument( "-C" )
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
-		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each { if( it.name != "app_descriptor.xml" ) cli.addArgument( it.name ) }
+		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each {
+			if( it.name != "app_descriptor.xml" ) cli.addArgument( it.name )
+		}
 	}
 
 	private addExtensionNatives()

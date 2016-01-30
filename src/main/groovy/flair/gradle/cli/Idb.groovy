@@ -10,7 +10,7 @@ import org.gradle.process.ExecResult
 public class Idb extends AbstractCli
 {
 	@Override
-	public void execute( Project project )
+	public String execute( Project project )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
@@ -28,5 +28,7 @@ public class Idb extends AbstractCli
 		}
 
 		println( outputStream.toString( ) )
+
+		return  outputStream.toString( )
 	}
 }

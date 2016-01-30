@@ -1,12 +1,11 @@
 package flair.gradle.cli
 
-import flair.gradle.directoryWatcher.IWatcherAction
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractCli implements ICli , IWatcherAction
+public abstract class AbstractCli implements ICli
 {
 	protected List<String> arguments = new ArrayList<String>( )
 
@@ -43,5 +42,5 @@ public abstract class AbstractCli implements ICli , IWatcherAction
 	}
 
 	@Override
-	public abstract void execute( Project project )
+	public abstract String execute( Project project )
 }

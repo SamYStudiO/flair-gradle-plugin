@@ -34,6 +34,7 @@ enum FlairProperties
 	PACKAGE_LISTEN( "packageListen" ) ,
 	PACKAGE_SAMPLER( "packageSampler" ) ,
 	PACKAGE_HIDE_ANE_LIB_SYMBOLS( "packageHideAneLibSymbols" ) ,
+	PACKAGE_PLATFORM_SDK( "platformSdk" ) ,
 
 	SIGNING_ALIAS( "signingAlias" ),
 	SIGNING_STORE_TYPE( "signingStoreType" ),
@@ -44,8 +45,8 @@ enum FlairProperties
 	SIGNING_TSA( "signingTsa" ),
 	SIGNING_PROVISIONING_PROFILE( "signingProvisioningProfile" ),
 
-	EMULATOR_SCREEN_SIZE( "emulatorScreenSize" ) ,
-	EMULATOR_SCREEN_DPI( "emulatorScreenDpi" )
+	ADL_SCREEN_SIZE( "emulatorScreenSize" ) ,
+	ADL_SCREEN_DPI( "emulatorScreenDpi" )
 
 	private String name
 
