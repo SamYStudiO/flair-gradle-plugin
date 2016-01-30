@@ -8,7 +8,7 @@ import org.gradle.api.Project
  */
 public abstract class AbstractCli implements ICli , IWatcherAction
 {
-	private List<String> arguments = new ArrayList<String>( )
+	protected List<String> arguments = new ArrayList<String>( )
 
 	@Override
 	public List<String> getArguments()
@@ -19,7 +19,9 @@ public abstract class AbstractCli implements ICli , IWatcherAction
 	@Override
 	public void addArgument( String arg )
 	{
-		arg.split( " " ).each { arguments.add( arg ) }
+		String[] a = arg.split( "\\s" )
+
+		for( int i = 0; i < a.size( ); i++ ) { arguments.add( a[ i ] ) }
 	}
 
 	@Override
