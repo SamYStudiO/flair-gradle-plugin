@@ -45,8 +45,8 @@ enum FlairProperties
 	SIGNING_TSA( "signingTsa" ) ,
 	SIGNING_PROVISIONING_PROFILE( "signingProvisioningProfile" ) ,
 
-	ADL_SCREEN_SIZE( "emulatorScreenSize" ) ,
-	ADL_SCREEN_DPI( "emulatorScreenDpi" ) ,
+	ADL_SCREEN_SIZE( "adlScreenSize" ) ,
+	ADL_SCREEN_DPI( "adlScreenDpi" ) ,
 	ADL_PUB_ID( "adlPubId" ) ,
 	ADL_NO_DEBUG( "adlNoDebug" ) ,
 	ADL_AT_LOGIN( "adlAtLogin" ) ,
