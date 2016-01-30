@@ -28,10 +28,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 {
 	private List<IPlugin> plugins = new ArrayList<IPlugin>( )
 
-	private List<IPlatformPlugin> platformPlugins = new ArrayList<IPlatformPlugin>( )
-
-	private int platformPluginCount = 0
-
 	private IExtensionManager flair
 
 	private DirectoryWatcher directoryWatcher
@@ -48,11 +44,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		project.plugins.whenPluginAdded {
 
 			if( it instanceof IPlugin ) plugins.add( it )
-			if( it instanceof IPlatformPlugin )
-			{
-				platformPlugins.add( it )
-				platformPluginCount++
-			}
 
 			if( it instanceof IExtensionPlugin )
 			{
