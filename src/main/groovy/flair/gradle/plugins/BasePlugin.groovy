@@ -89,7 +89,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				}
 
 				Task t = project.tasks.create( Tasks.ASSEMBLE.name )
-				t.group = Tasks.ASSEMBLE.group.name
 				t.dependsOn list
 			}
 		}

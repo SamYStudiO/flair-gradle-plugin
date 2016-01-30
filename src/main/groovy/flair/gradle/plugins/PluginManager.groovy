@@ -10,12 +10,11 @@ public class PluginManager
 {
 	public static boolean hasPlugin( Project project , Class type )
 	{
-		project.plugins.each { plugin ->
+		boolean hasPlugin = false
 
-			if( plugin.getClass( ) == type ) return true
-		}
+		project.plugins.each { plugin -> if( plugin.getClass( ) == type ) hasPlugin = true }
 
-		return false
+		return hasPlugin
 	}
 
 	public static boolean hasPlatformPlugin( Project project , Platforms platform )

@@ -87,7 +87,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		for( File file : getInputFiles( ) ) if( file.exists( ) ) internalProcessAppDescriptor( file )
 	}
 
-	private String internalProcessAppDescriptor( File app )
+	private void internalProcessAppDescriptor( File app )
 	{
 		String appContent = app.text
 
