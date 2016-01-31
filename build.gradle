@@ -64,8 +64,8 @@ dependencies {
 	compile gradleApi( )
 	compile localGroovy( )
 	testCompile gradleTestKit( )
-	testCompile "org.spockframework:spock-core:1.0-groovy-2.4", {
-		exclude group : "org.codehaus.groovy"
+	testCompile "org.spockframework:spock-core:1.0-groovy-2.4" , {
+		exclude group: "org.codehaus.groovy"
 	}
 }
 
@@ -139,22 +139,26 @@ install {
 }
 
 Properties properties = new Properties( )
-properties.load( project.rootProject.file( "local.properties" ).newDataInputStream( ) )
+File f = project.rootProject.file( "local.properties" )
+if( f )
+{
+	properties.load( f.newDataInputStream( ) )
 
-bintray {
-	user = properties.getProperty( "bintray.user" )
-	key = properties.getProperty( "bintray.apikey" )
+	bintray {
+		user = properties.getProperty( "bintray.user" )
+		key = properties.getProperty( "bintray.apikey" )
 
-	configurations = [ "archives" ]
-	pkg {
-		repo = bintrayRepo
-		name = bintrayName
-		desc = libraryDescription
-		websiteUrl = siteUrl
-		vcsUrl = gitUrl
-		licenses = allLicenses
-		publish = true
-		publicDownloadNumbers = true
+		configurations = [ "archives" ]
+		pkg {
+			repo = bintrayRepo
+			name = bintrayName
+			desc = libraryDescription
+			websiteUrl = siteUrl
+			vcsUrl = gitUrl
+			licenses = allLicenses
+			publish = true
+			publicDownloadNumbers = true
+		}
 	}
 }
 
