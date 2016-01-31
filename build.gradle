@@ -140,7 +140,7 @@ install {
 
 Properties properties = new Properties( )
 File f = project.rootProject.file( "local.properties" )
-if( f )
+if( f.exists(  ) )
 {
 	properties.load( f.newDataInputStream( ) )
 

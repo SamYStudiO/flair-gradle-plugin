@@ -8,7 +8,7 @@ import spock.lang.Specification
  */
 public class PluginSpec extends Specification
 {
-	Project project = new ProjectBuilder( ).withProjectDir( new File( "src/test/project" ) ).build( )
+	Project project = ProjectBuilder.builder( ).build( )
 
 	def "apply Ios plugin"()
 	{
