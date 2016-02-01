@@ -44,7 +44,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
 				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) ?: "7936"
-				String gradleCompile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				String gradleAssemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
 						.replaceAll( "\\{profileName\\}" , profileName )
@@ -59,7 +59,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 						.replaceAll( "\\{height\\}" , height )
 						.replaceAll( "\\{width\\}" , width )
 						.replaceAll( "\\{port\\}" , port )
-						.replaceAll( "\\{gradleCompile\\}" , gradleCompile )
+						.replaceAll( "\\{gradleAssemble\\}" , gradleAssemble )
 
 				File f = project.file( ".idea/runConfigurations/${ name }.xml" )
 				f.createNewFile( )

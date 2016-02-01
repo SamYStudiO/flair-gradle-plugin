@@ -23,9 +23,7 @@ public class CompileTaskFactory implements IVariantTaskFactory<Compile>
 		t.group = Tasks.COMPILE.group.name
 		t.variant = variant
 
-		t.dependsOn Tasks.PROCESS_CLASSES.name + variantName , Tasks.PROCESS_LIBRARIES.name + variantName ,
-				Tasks.PROCESS_AS_LIBRARIES.name + variantName , Tasks.PROCESS_RESOURCES.name + variantName ,
-				Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName , Tasks.PROCESS_SPLASHS.name + variantName
+		t.dependsOn Tasks.PROCESS_CLASSES.name + variantName , Tasks.PROCESS_LIBRARIES.name + variantName , Tasks.PROCESS_AS_LIBRARIES.name + variantName
 
 		return t
 	}

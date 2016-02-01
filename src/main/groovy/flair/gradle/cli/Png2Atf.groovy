@@ -29,6 +29,6 @@ public class Png2Atf extends AbstractCli
 
 		//println( outputStream.toString( ) )
 
-		return  outputStream.toString( )
+		return outputStream.toString( )
 	}
 }

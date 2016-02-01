@@ -22,11 +22,11 @@ public enum Configurations {
 	ANDROID_NATIVE_COMPILE( "androidNativeLibrary" ) ,
 	ANDROID_PACKAGE( "androidPack" , [ "src/android/assets" ] ) ,
 
-	DESKTOP_COMPILE( "desktopSource" , [ "src/desktop/actionscript" , "src/desktop/fonts" ]  ) ,
+	DESKTOP_COMPILE( "desktopSource" , [ "src/desktop/actionscript" , "src/desktop/fonts" ] ) ,
 	DESKTOP_LIBRARY_COMPILE( "desktopLibrary" ) ,
 	DESKTOP_AS_LIBRARY_COMPILE( "desktopAsLibrary" ) ,
 	DESKTOP_NATIVE_COMPILE( "desktopNativeLibrary" ) ,
-	DESKTOP_PACKAGE( "desktopPack" , [ "src/desktop/assets" ]  ) ,
+	DESKTOP_PACKAGE( "desktopPack" , [ "src/desktop/assets" ] ) ,
 
 	public static final List<Configurations> DEFAULTS = [ SOURCE ,
 														  LIBRARY ,

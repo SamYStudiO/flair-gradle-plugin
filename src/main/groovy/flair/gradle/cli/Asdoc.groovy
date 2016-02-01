@@ -24,6 +24,6 @@ public class Asdoc extends AbstractCli
 
 		println( outputStream.toString( ) )
 
-		return  outputStream.toString( )
+		return outputStream.toString( )
 	}
 }
