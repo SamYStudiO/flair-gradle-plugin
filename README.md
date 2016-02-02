@@ -33,5 +33,5 @@ To initialize plugin you'll need as well to set a **valid AIR SDK path** in **lo
 
 ===
 ####DOCUMENTATION
-* Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
+Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
 
