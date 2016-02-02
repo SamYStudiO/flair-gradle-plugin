@@ -15,8 +15,13 @@ Flair is a [gradle](http://gradle.org/) plugin that help you build **Adobe AIR p
 ####QUICK START
 Create a gradle project and set up your build.gradle file with the following:
 ```
-plugins {
-  id "com.github.samystudio.flair" version "0.7.0"
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.0"
+  }
 }
 
 apply plugin: "flair.ios" // only if your project need to target ios devides
