@@ -16,7 +16,7 @@ public enum Tasks {
 	PROCESS_CLASSES( "processClasses" , ProcessClasses , Groups.PROCESS ) ,
 	PROCESS_LIBRARIES( "processLibraries" , ProcessLibraries , Groups.PROCESS ) ,
 	PROCESS_AS_LIBRARIES( "processAsLibraries" , ProcessAsLibraries , Groups.PROCESS ) ,
-	ASSEMBLE( "assemble" , Assemble , Groups.BUILD ) ,
+	ASSEMBLE( "assemble" , VariantContainer , Groups.BUILD ) ,
 	COMPILE( "compile" , Compile , Groups.BUILD ) ,
 	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
 	INSTALL( "install" , Install , Groups.INSTALL ) ,

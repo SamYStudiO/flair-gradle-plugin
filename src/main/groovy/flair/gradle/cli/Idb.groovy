@@ -29,6 +29,6 @@ public class Idb extends AbstractCli
 
 		println( outputStream.toString( ) )
 
-		return  outputStream.toString( )
+		return outputStream.toString( )
 	}
 }
