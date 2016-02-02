@@ -283,7 +283,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		return adlPubId
 	}
 
-	public void adlpubId( String adlPubId )
+	public void adlPubId( String adlPubId )
 	{
 		this.adlPubId = adlPubId
 	}
