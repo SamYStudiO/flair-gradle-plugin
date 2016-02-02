@@ -11,7 +11,8 @@ Flair is a [gradle](http://gradle.org/) plugin that help you build **Adobe AIR p
 * **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to allow using standard run/debug configurations from IDEA
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...)
 
-#####QUICK START
+===
+####QUICK START
 Create a gradle project and set up your build.gradle file with the following:
 ```
 plugins {
@@ -30,7 +31,7 @@ flair{
 ```
 To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when build.gradle is refreshed), after build.gradle and project tree are refreshed, your project structure should be set under app folder
 
-
-#####DOCUMENTATION
+===
+####DOCUMENTATION
 * Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
 
