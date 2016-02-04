@@ -15,6 +15,7 @@ import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.Tasks
+import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
@@ -70,18 +71,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				createStructures( )
 				createVariantTasks( )
+				createHandlerTasks( )
 				initDirectoryWatcher( )
-
-				List<String> list = new ArrayList<String>( )
-
-				flair.allActivePlatformVariants.each {
-
-					list.add( Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE ) )
-				}
-
-				Task t = project.tasks.create( Tasks.ASSEMBLE.name )
-				t.group = Tasks.ASSEMBLE.group.name
-				t.dependsOn list
 			}
 		}
 	}
@@ -234,6 +225,132 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					{
 						factory.create( project , new Variant( project , plugin.platform ) )
 					}
+				}
+			}
+		}
+	}
+
+	private void createHandlerTasks()
+	{
+		List<String> listAssemble = new ArrayList<String>( )
+		List<String> listCompile = new ArrayList<String>( )
+		List<String> listPackage = new ArrayList<String>( )
+
+		String assemble
+		String compile
+		String pack
+
+		Task t
+
+		flair.allActivePlatformVariants.each {
+
+			assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+			compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+			pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+
+			if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
+			if( project.tasks.findByName( compile ) ) listCompile.add( compile )
+			if( project.tasks.findByName( pack ) ) listPackage.add( pack )
+		}
+
+
+		if( listAssemble.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
+		{
+			t = project.tasks.create( Tasks.ASSEMBLE.name + "All" )
+			t.group = Tasks.ASSEMBLE.group.name
+			t.dependsOn listAssemble
+		}
+
+		if( listCompile.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
+		{
+			t = project.tasks.create( Tasks.COMPILE.name + "All" )
+			t.group = Tasks.COMPILE.group.name
+			t.dependsOn listCompile
+		}
+
+		if( listPackage.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
+		{
+			t = project.tasks.create( Tasks.PACKAGE.name + "All" )
+			t.group = Tasks.PACKAGE.group.name
+			t.dependsOn listPackage
+		}
+
+
+		Platforms.values( ).each {
+
+			listAssemble = new ArrayList<String>( )
+			listCompile = new ArrayList<String>( )
+			listPackage = new ArrayList<String>( )
+
+			flair.getPlatformVariants( it ).each {
+				assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+
+				if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
+				if( project.tasks.findByName( compile ) ) listCompile.add( compile )
+				if( project.tasks.findByName( pack ) ) listPackage.add( pack )
+			}
+
+			if( listAssemble.size( ) > 1 )
+			{
+				t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
+				t.group = Tasks.ASSEMBLE.group.name
+				t.dependsOn listAssemble
+			}
+
+			if( listCompile.size( ) > 1 )
+			{
+				t = project.tasks.create( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
+				t.group = Tasks.COMPILE.group.name
+				t.dependsOn listCompile
+			}
+
+			if( listPackage.size( ) > 1 )
+			{
+				t = project.tasks.create( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
+				t.group = Tasks.PACKAGE.group.name
+				t.dependsOn listPackage
+			}
+		}
+
+		if( flair.allActivePlatformBuildTypes.size( ) > 1 )
+		{
+			flair.allActivePlatformBuildTypes.each { type ->
+
+				listAssemble = new ArrayList<String>( )
+				listCompile = new ArrayList<String>( )
+				listPackage = new ArrayList<String>( )
+
+				flair.allActivePlatformVariants.each {
+					assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+					compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+					pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+
+					if( it.buildType == type.name && project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
+					if( it.buildType == type.name && project.tasks.findByName( compile ) ) listCompile.add( compile )
+					if( it.buildType == type.name && project.tasks.findByName( pack ) ) listPackage.add( pack )
+				}
+
+				if( listAssemble.size( ) > 1 )
+				{
+					t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
+					t.group = Tasks.ASSEMBLE.group.name
+					t.dependsOn listAssemble
+				}
+
+				if( listCompile.size( ) > 1 )
+				{
+					t = project.tasks.create( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
+					t.group = Tasks.COMPILE.group.name
+					t.dependsOn listCompile
+				}
+
+				if( listPackage.size( ) > 1 )
+				{
+					t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
+					t.group = Tasks.PACKAGE.group.name
+					t.dependsOn listPackage
 				}
 			}
 		}
