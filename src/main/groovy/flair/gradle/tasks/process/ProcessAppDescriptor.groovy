@@ -84,7 +84,14 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	@TaskAction
 	public void processAppDescriptor()
 	{
-		for( File file : getInputFiles( ) ) if( file.exists( ) ) internalProcessAppDescriptor( file )
+		for( File file : getInputFiles( ) )
+		{
+			if( file.exists( ) )
+			{
+				internalProcessAppDescriptor( file )
+				break
+			}
+		}
 	}
 
 	private void internalProcessAppDescriptor( File app )
