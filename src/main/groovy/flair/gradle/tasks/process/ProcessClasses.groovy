@@ -39,7 +39,7 @@ class ProcessClasses extends AbstractVariantTask
 	{
 		outputDir.deleteDir( )
 
-		findInputFiles( ).each { file ->
+		inputFiles.each { file ->
 
 			if( file.exists( ) )
 			{

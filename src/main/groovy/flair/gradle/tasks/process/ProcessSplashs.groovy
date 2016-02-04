@@ -40,14 +40,16 @@ class ProcessSplashs extends AbstractVariantTask
 		inputs.outOfDate {}
 		inputs.removed { new File( outputDir , it.file.name ).delete( ) }
 
-		findInputFiles( ).each { file ->
-
-			if( file.exists( ) )
+		for( File file : inputFiles )
+		{
+			if( file.exists( ) && project.fileTree( file.path ).size(  ) > 0 )
 			{
 				project.copy {
 					from file
-					into project.file( "${ outputVariantDir }/package/" )
+					into outputDir
 				}
+
+				break
 			}
 		}
 	}
@@ -56,9 +58,12 @@ class ProcessSplashs extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/splashs/" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/splashs/" ) ) }
-		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/splashs/" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/splashs" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/splashs" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/splashs" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ it }/splashs" ) ) }
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ variant.buildType }/splashs" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/splashs" ) )
 
 		return list
 	}

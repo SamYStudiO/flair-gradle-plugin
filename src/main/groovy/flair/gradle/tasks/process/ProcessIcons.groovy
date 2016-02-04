@@ -38,9 +38,9 @@ class ProcessIcons extends AbstractVariantTask
 	{
 		outputDir.deleteDir( )
 
-		findInputFiles( ).each { file ->
-
-			if( file.exists( ) )
+		for( File file : inputFiles )
+		{
+			if( file.exists( ) && project.fileTree( file.path ).size( ) > 0 )
 			{
 				project.copy {
 					from file
@@ -54,9 +54,12 @@ class ProcessIcons extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/icons/" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons/" ) ) }
-		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/icons/" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/icons" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons" ) ) }
+		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/icons" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ it }/icons" ) ) }
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ variant.buildType }/icons" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/icons" ) )
 
 		return list
 	}

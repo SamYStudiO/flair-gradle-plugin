@@ -42,7 +42,7 @@ class ProcessExtensions extends AbstractVariantTask
 	{
 		outputDirs.each { it.deleteDir( ) }
 
-		findInputFiles( ).each { file ->
+		inputFiles.each { file ->
 
 			if( file.exists( ) )
 			{

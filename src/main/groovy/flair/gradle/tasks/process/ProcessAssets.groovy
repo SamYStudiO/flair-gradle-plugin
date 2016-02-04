@@ -52,7 +52,7 @@ class ProcessAssets extends AbstractVariantTask
 		outputFiles.each { it.delete( ) }
 		outputDirs.each { it.deleteDir( ) }
 
-		findInputFiles( ).each { file ->
+		inputFiles.each { file ->
 
 			if( file.exists( ) )
 			{

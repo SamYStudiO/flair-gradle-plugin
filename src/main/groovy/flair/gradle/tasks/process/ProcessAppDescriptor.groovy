@@ -84,7 +84,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	@TaskAction
 	public void processAppDescriptor()
 	{
-		for( File file : getInputFiles( ) )
+		for( File file : inputFiles )
 		{
 			if( file.exists( ) )
 			{
@@ -168,6 +168,9 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/app_descriptor.xml" ) )
 		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/app_descriptor.xml" ) ) }
 		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/app_descriptor.xml" ) )
+		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ it }/app_descriptor.xml" ) ) }
+		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ variant.buildType }/app_descriptor.xml" ) )
+		list.add( project.file( "${ moduleDir }/src/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ) )
 
 		list = list.reverse( )
 
