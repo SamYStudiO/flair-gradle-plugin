@@ -13,7 +13,7 @@ class PublishAtlases extends AbstractVariantTask
 {
 	public PublishAtlases()
 	{
-		group = Groups.TEXTURE_PACKER.name
+		group = Groups.DEFAULT.name
 		description = ""
 	}
 

@@ -9,7 +9,6 @@ public enum Groups {
 	INSTALL( "install" ) ,
 	UNINSTALL( "uninstall" ) ,
 	LAUNCH( "launch" ) ,
-	TEXTURE_PACKER( "texturepacker" ) ,
 	DOCUMENTATION( "documentation" ) ,
 	SIGNING( "signing" ) ,
 	DEVICES( "devices" ) ,
