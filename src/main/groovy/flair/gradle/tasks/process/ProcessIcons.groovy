@@ -46,6 +46,8 @@ class ProcessIcons extends AbstractVariantTask
 					from file
 					into outputDir
 				}
+
+				break
 			}
 		}
 	}
@@ -54,13 +56,8 @@ class ProcessIcons extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/icons" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons" ) ) }
-		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/icons" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ it }/icons" ) ) }
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ variant.buildType }/icons" ) )
-		list.add( project.file( "${ moduleDir }/src/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/icons" ) )
+		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons" ) ) }
 
-		return list
+		return list.reverse( )
 	}
 }

@@ -108,7 +108,7 @@ class IdeaImlStructure implements IStructure
 
 		List<String> list = new ArrayList<String>( )
 
-		project.configurations.findAll { it.name.toLowerCase( ).contains( "source" ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.SOURCE.name ) }.each {
 
 			it.files.each { file ->
 
@@ -156,7 +156,7 @@ class IdeaImlStructure implements IStructure
 
 	private void createLibraries( Node moduleRootManagerNode )
 	{
-		project.configurations.findAll { it.name.toLowerCase( ).contains( "library" ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.LIBRARY.name ) }.each {
 
 			it.files.each { file ->
 
@@ -295,7 +295,7 @@ class IdeaImlStructure implements IStructure
 
 			project.configurations.each {
 
-				boolean isLibrary = it.name.toLowerCase( ).contains( "library" )
+				boolean isLibrary = it.name.toLowerCase( ).contains( Configurations.LIBRARY.name )
 
 				if( it.name == Configurations.AS_LIBRARY.name || it.name == Configurations.LIBRARY.name || it.name == Configurations.NATIVE_LIBRARY.name ) libraries.add( it )
 				if( it.name.contains( variant.platform.name ) && isLibrary ) libraries.add( it )

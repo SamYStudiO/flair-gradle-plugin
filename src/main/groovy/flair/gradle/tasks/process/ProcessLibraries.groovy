@@ -66,16 +66,15 @@ class ProcessLibraries extends AbstractVariantTask
 
 	private Set<File> findInputFiles()
 	{
-		Set<File> libraryFiles = project.configurations.getByName( Configurations.LIBRARY.name ).files
+		List<File> list = new ArrayList<File>( )
 
-		libraryFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.LIBRARY.name.capitalize( ) ).files )
+		variant.directoriesCapitalized.each {
 
-		variant.productFlavors.each {
-			libraryFiles.addAll( project.configurations.getByName( it + Configurations.LIBRARY.name.capitalize( ) ).files )
+			String s = it == "main" ? Configurations.LIBRARY.name : it + Configurations.LIBRARY.name.capitalize( )
+
+			list.addAll( project.configurations.getByName( s ).files )
 		}
 
-		if( variant.buildType ) libraryFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.LIBRARY.name.capitalize( ) ) )
-
-		return libraryFiles
+		return list
 	}
 }

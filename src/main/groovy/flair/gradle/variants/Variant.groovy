@@ -133,4 +133,42 @@ public final class Variant
 	{
 		this.buildType = buildType
 	}
+
+	public List<String> getDirectories()
+	{
+		List<String> list = new ArrayList<String>( )
+		list.add( "main" )
+		list.add( platform.name )
+		productFlavors.each { list.add( it ) }
+		if( buildType ) list.add( buildType )
+		productFlavors.each { list.add( "${ platform.name }_${ it }" ) }
+		if( productFlavors.size( ) > 1 ) list.add( "${ platform.name }_${ productFlavors.join( "_" ) }" )
+		if( buildType ) list.add( "${ platform.name }_${ buildType }" )
+		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingTypes.UNDERSCORE ) )
+
+		return list
+	}
+
+	public List<String> getDirectoriesCapitalized()
+	{
+		List<String> list = new ArrayList<String>( )
+		list.add( "main" )
+		list.add( platform.name )
+		productFlavors.each { list.add( it ) }
+		if( buildType ) list.add( buildType )
+		productFlavors.each { list.add( "${ platform.name }${ it.capitalize( ) }" ) }
+		if( productFlavors.size( ) > 1 )
+		{
+			String name = platform.name
+			productFlavors.each {
+				name += it.capitalize( )
+			}
+
+			list.add( name )
+		}
+		if( buildType ) list.add( "${ platform.name }${ buildType.capitalize( ) }" )
+		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingTypes.CAPITALIZE_BUT_FIRST ) )
+
+		return list
+	}
 }

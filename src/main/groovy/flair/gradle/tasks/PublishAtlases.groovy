@@ -23,14 +23,7 @@ class PublishAtlases extends AbstractVariantTask
 		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 		ICli tp = new TexturePacker( )
 
-		List<String> list = new ArrayList<String>( )
-
-		list.add( "main" )
-		list.add( variant.platform.name )
-		variant.productFlavors.each { list.add( it ) }
-		if( variant.buildType ) list.add( variant.buildType )
-
-		list.each {
+		variant.directories.each {
 
 			FileTree tree = project.fileTree( "${ moduleName }/src/${ it }/" )
 

@@ -31,11 +31,11 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 		}
 
 		productFlavors.whenObjectAdded {
-			addConfiguration( it.name )
+			updateConfigurations( )
 		}
 
 		buildTypes.whenObjectAdded {
-			addConfiguration( it.name )
+			updateConfigurations( )
 		}
 	}
 
@@ -91,28 +91,34 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 		return buildTypes.findByName( name ) ? buildTypes.getByName( name ) : new VariantExtension( name , project , platform )
 	}
 
-	protected addConfiguration( String name )
+	protected updateConfigurations()
 	{
 		Configurations.DEFAULTS.each { conf ->
 
-			String s = name + conf.name.capitalize( )
+			extensionManager.allActivePlatformVariants.each {
 
-			if( !project.configurations.findByName( s ) )
-			{
-				Configuration c = project.configurations.create( s )
+				it.directoriesCapitalized.each { directory ->
 
-				switch( conf )
-				{
-					case Configurations.SOURCE:
-						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
-						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/fonts" ) )
-						break
+					String s = directory + conf.name.capitalize( )
 
-					case Configurations.PACKAGE:
-						project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
-						break
+					if( directory != "main" && !project.configurations.findByName( s ) )
+					{
+						Configuration c = project.configurations.create( s )
 
-					default: break
+						switch( conf )
+						{
+							case Configurations.SOURCE:
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/fonts" ) )
+								break
+
+							case Configurations.PACKAGE:
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
+								break
+
+							default: break
+						}
+					}
 				}
 			}
 		}

@@ -3,7 +3,6 @@ package flair.gradle.tasks
 import flair.gradle.cli.ICli
 import flair.gradle.dependencies.Configurations
 import flair.gradle.extensions.FlairProperties
-import flair.gradle.plugins.PluginManager
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -30,45 +29,9 @@ public class Asdoc extends AbstractTask
 		asdoc.addArgument( "+configname=airmobile" )
 		asdoc.addArgument( "-exclude-dependencies=true" )
 
-		addSourcePaths( )
 		addAsLibraryPaths( )
 		addLibraryPaths( )
-
-		List<String> list = new ArrayList<String>( )
-
-		list.add( "main" )
-
-		PluginManager.getCurrentPlatforms( project ).each { list.add( it.name ) }
-		extensionManager.allActivePlatformProductFlavors.each { list.add( it.name ) }
-		extensionManager.allActivePlatformBuildTypes.each { list.add( it.name ) }
-
-		list.each {
-
-			String path = project.file( "${ srcRoot }/${ it }/actionscript" ).path
-			FileTree tree = project.fileTree( path )
-
-			if( tree.size( ) > 0 ) asdoc.addArgument( "-source-path+=${ path }" )
-
-			tree.each { file ->
-
-				asdoc.addArgument( "-doc-classes" )
-				asdoc.addArgument( file.path.replace( path + File.separator , "" ).replace( File.separator , "." ).replace( ".as" , "" ) )
-			}
-
-			if( it == "main" )
-			{
-				path = project.file( "${ srcRoot }/${ it }/generated" ).path
-				tree = project.fileTree( path )
-
-				if( tree.size( ) > 0 ) asdoc.addArgument( "-source-path+=${ path }" )
-
-				tree.each { file ->
-
-					asdoc.addArgument( "-doc-classes" )
-					asdoc.addArgument( file.path.replace( path + File.separator , "" ).replace( File.separator , "." ).replace( ".as" , "" ) )
-				}
-			}
-		}
+		addSourcePaths( )
 
 		asdoc.addArgument( "-output" )
 		asdoc.addArgument( project.buildDir.path + "/asdoc" )
@@ -78,89 +41,46 @@ public class Asdoc extends AbstractTask
 
 	private void addSourcePaths()
 	{
-		project.configurations.getByName( Configurations.SOURCE.name ).files.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.SOURCE.name.toLowerCase( ) ) }.each {
 
-			if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-		}
+			it.files.each { file ->
 
-		PluginManager.getCurrentPlatforms( project ).each {
+				if( file.exists( ) )
+				{
+					String path = file.path
+					FileTree tree = project.fileTree( path )
 
-			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
+					if( tree.size( ) > 0 ) asdoc.addArgument( "-source-path+=${ path }" )
 
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-			}
-		}
+					tree.each { asFile ->
 
-		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-			}
-		}
-
-		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.SOURCE.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
+						asdoc.addArgument( "-doc-classes" )
+						asdoc.addArgument( asFile.path.replace( path + File.separator , "" ).replace( File.separator , "." ).replace( ".as" , "" ) )
+					}
+				}
 			}
 		}
 	}
 
 	private void addAsLibraryPaths()
 	{
-		project.configurations.getByName( Configurations.AS_LIBRARY.name ).files.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.AS_LIBRARY.name.toLowerCase( ) ) }.each {
 
-			if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-		}
+			it.files.each { file ->
 
-		PluginManager.getCurrentPlatforms( project ).each {
-
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-			}
-		}
-
-		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
-			}
-		}
-
-		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.AS_LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-source-path+=${ it }" )
+				println( file )
+				if( file.exists( ) ) asdoc.addArgument( "-source-path+=${ file.path }" )
 			}
 		}
 	}
 
 	private void addLibraryPaths()
 	{
-		project.configurations.getByName( Configurations.LIBRARY.name ).files.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.LIBRARY.name.toLowerCase( ) ) }.each {
 
-			if( it.exists( ) ) asdoc.addArgument( "-library-path+=${ it }" )
-		}
+			it.files.each { file ->
 
-		PluginManager.getCurrentPlatforms( project ).each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-library-path+=${ it }" )
-			}
-		}
-
-		extensionManager.allActivePlatformProductFlavors.each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-library-path+=${ it }" )
-			}
-		}
-
-		extensionManager.allActivePlatformBuildTypes.each {
-			project.configurations.getByName( it.name + Configurations.LIBRARY.name.capitalize( ) ).files.each {
-
-				if( it.exists( ) ) asdoc.addArgument( "-library-path+=${ it }" )
+				if( file.exists( ) ) asdoc.addArgument( "-library-path+=${ file.path }" )
 			}
 		}
 	}

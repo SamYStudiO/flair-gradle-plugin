@@ -22,8 +22,9 @@ public class VariantStructure implements IStructure
 
 		project.file( "${ moduleName }/src/" ).listFiles( ).each { file -> if( file.isDirectory( ) && file.listFiles( ).size( ) == 0 ) file.deleteDir( ) }
 
-		extensionManager.allActivePlatformProductFlavors.each { project.file( "${ moduleName }/src/${ it.name }" ).mkdirs( ) }
-		extensionManager.allActivePlatformBuildTypes.each { project.file( "${ moduleName }/src/${ it.name }" ).mkdirs( ) }
+		extensionManager.allActivePlatformVariants.each {
+			it.directories.each { directory -> project.file( "${ moduleName }/src/${ directory }" ).mkdirs( ) }
+		}
 	}
 }
 

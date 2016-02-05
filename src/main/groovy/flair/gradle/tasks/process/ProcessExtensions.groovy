@@ -84,16 +84,15 @@ class ProcessExtensions extends AbstractVariantTask
 
 	private Set<File> findInputFiles()
 	{
-		Set<File> extensionsFiles = project.configurations.getByName( Configurations.NATIVE_LIBRARY.name ).files
+		List<File> list = new ArrayList<File>( )
 
-		extensionsFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.NATIVE_LIBRARY.name.capitalize( ) ).files )
+		variant.directoriesCapitalized.each {
 
-		variant.productFlavors.each {
-			extensionsFiles.addAll( project.configurations.getByName( it + Configurations.NATIVE_LIBRARY.name.capitalize( ) ).files )
+			String s = it == "main" ? Configurations.NATIVE_LIBRARY.name : it + Configurations.NATIVE_LIBRARY.name.capitalize( )
+
+			list.addAll( project.configurations.getByName( s ).files )
 		}
 
-		if( variant.buildType ) extensionsFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.NATIVE_LIBRARY.name.capitalize( ) ) )
-
-		return extensionsFiles
+		return list
 	}
 }

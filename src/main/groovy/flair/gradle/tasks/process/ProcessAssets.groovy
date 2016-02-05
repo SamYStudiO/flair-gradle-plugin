@@ -78,16 +78,15 @@ class ProcessAssets extends AbstractVariantTask
 
 	private Set<File> findInputFiles()
 	{
-		Set<File> packageFiles = project.configurations.getByName( Configurations.PACKAGE.name ).files
+		List<File> list = new ArrayList<File>( )
 
-		packageFiles.addAll( project.configurations.getByName( variant.platform.name + Configurations.PACKAGE.name.capitalize( ) ).files )
+		variant.directoriesCapitalized.each {
 
-		variant.productFlavors.each {
-			packageFiles.addAll( project.configurations.getByName( it + Configurations.PACKAGE.name.capitalize( ) ).files )
+			String s = it == "main" ? Configurations.PACKAGE.name : it + Configurations.PACKAGE.name.capitalize( )
+
+			list.addAll( project.configurations.getByName( s ).files )
 		}
 
-		if( variant.buildType ) packageFiles.addAll( project.configurations.getByName( variant.buildType + Configurations.PACKAGE.name.capitalize( ) ) )
-
-		return packageFiles
+		return list
 	}
 }

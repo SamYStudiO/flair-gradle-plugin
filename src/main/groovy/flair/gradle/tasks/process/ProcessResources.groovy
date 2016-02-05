@@ -133,13 +133,7 @@ class ProcessResources extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		list.add( project.file( "${ moduleDir }/src/main/resources" ) )
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }/resources" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ it }/resources" ) ) }
-		if( variant.buildType ) list.add( project.file( "${ moduleDir }/src/${ variant.buildType }/resources" ) )
-		variant.productFlavors.each { list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ it }/resources" ) ) }
-		list.add( project.file( "${ moduleDir }/src/${ variant.platform.name }_${ variant.buildType }/resources" ) )
-		list.add( project.file( "${ moduleDir }/src/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/resources" ) )
+		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/resources" ) ) }
 
 		return list
 	}
