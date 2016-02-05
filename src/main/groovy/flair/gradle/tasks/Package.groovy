@@ -6,6 +6,7 @@ import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
@@ -222,11 +223,42 @@ class Package extends AbstractVariantTask
 			cli.addArgument( "-storepass" )
 			cli.addArgument( storePass )
 		}
-
-		if( keyStore != "null" )
+		else if( storeType == "pkcs12" )
 		{
-			cli.addArgument( "-keystore" )
-			cli.addArgument( keyStore )
+			File file = project.file( "${ outputVariantDir.path }/signing" )
+
+			if( file.exists( ) )
+			{
+				FileTree tree = project.fileTree( file )
+
+				tree.each {
+
+					if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "txt" )
+					{
+						cli.addArgument( "-storepass" )
+						cli.addArgument( it.text.trim( ) )
+					}
+				}
+			}
+		}
+
+		if( storeType == "pkcs12" )
+		{
+			File file = project.file( "${ outputVariantDir.path }/signing" )
+
+			if( file.exists( ) )
+			{
+				FileTree tree = project.fileTree( file )
+
+				tree.each {
+
+					if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "p12" )
+					{
+						cli.addArgument( "-keystore" )
+						cli.addArgument( it.path )
+					}
+				}
+			}
 		}
 
 		if( keyPass != "null" )
@@ -241,10 +273,21 @@ class Package extends AbstractVariantTask
 			cli.addArgument( tsa )
 		}
 
-		if( provisioning != "null" )
+
+		File file = project.file( "${ outputVariantDir.path }/signing" )
+
+		if( file.exists( ) )
 		{
-			cli.addArgument( "-provisioning-profile" )
-			cli.addArgument( provisioning )
+			FileTree tree = project.fileTree( file )
+
+			tree.each {
+
+				if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "mobileprovision" )
+				{
+					cli.addArgument( "-provisioning-profile" )
+					cli.addArgument( it.path )
+				}
+			}
 		}
 	}
 
@@ -328,6 +371,7 @@ class Package extends AbstractVariantTask
 
 		list.add( project.file( "${ outputVariantDir.path }/extensions" ) )
 		list.add( project.file( "${ outputVariantDir.path }/package" ) )
+		list.add( project.file( "${ outputVariantDir.path }/signing" ) )
 
 		return list
 	}

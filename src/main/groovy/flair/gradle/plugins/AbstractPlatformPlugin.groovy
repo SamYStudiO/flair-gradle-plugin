@@ -71,6 +71,7 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 		list.add( new ProcessClassesTaskFactory( ) )
 		list.add( new ProcessAsLibrariesTaskFactory( ) )
 		list.add( new ProcessLibrariesTaskFactory( ) )
+		list.add( new ProcessSigningTaskFactory( ) )
 
 		return list
 	}

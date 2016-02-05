@@ -438,6 +438,11 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.signingKeyStore = signingKeyStore
 	}
 
+	public void signingKeyStore( File file )
+	{
+		this.signingKeyStore = file.path
+	}
+
 	public String getSigningStorePass()
 	{
 		return signingStorePass
@@ -486,6 +491,11 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public void signingProvisioningProfile( String signingProvisioningProfile )
 	{
 		this.signingProvisioningProfile = signingProvisioningProfile
+	}
+
+	public void signingProvisioningProfile( File file )
+	{
+		this.signingProvisioningProfile = file.path
 	}
 
 	@Override
@@ -562,59 +572,9 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.SIGNING_PROVIDER_NAME.name: return null
 				case FlairProperties.SIGNING_TSA.name: return null
 				case FlairProperties.SIGNING_STORE_TYPE.name: return "pkcs12"
-
-				case FlairProperties.SIGNING_KEY_STORE.name:
-					switch( p )
-					{
-						case Platforms.IOS:
-
-							switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
-							{
-								case "ipa-app-store": return getSigningPath( "src/ios/signing/store/certificate.p12" )
-								case "ipa-ad-hoc": return getSigningPath( "src/ios/signing/adhoc/certificate.p12" )
-								default: return getSigningPath( "src/ios/signing/development/certificate.p12" )
-							}
-
-
-						case Platforms.ANDROID: return getSigningPath( "src/android/signing/certificate.p12" )
-						case Platforms.DESKTOP: return getSigningPath( "src/desktop/signing/certificate.p12" )
-						default: return null
-					}
-
-				case FlairProperties.SIGNING_PROVISIONING_PROFILE.name:
-
-					if( p == Platforms.IOS )
-					{
-						switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
-						{
-							case "ipa-app-store": return getSigningPath( "src/ios/signing/store/profile.mobileprovision" )
-							case "ipa-ad-hoc": return getSigningPath( "src/ios/signing/adhoc/profile.mobileprovision" )
-							default: return getSigningPath( "src/ios/signing/development/profile.mobileprovision" )
-						}
-					}
-					else return null
-
-				case FlairProperties.SIGNING_STORE_PASS.name:
-
-					switch( p )
-					{
-						case Platforms.IOS:
-
-							switch( getProp( FlairProperties.PACKAGE_TARGET.name , true ) )
-							{
-								case "ipa-app-store": return getSigningPassword( "src/ios/signing/store/password.txt" )
-								case "ipa-ad-hoc": return getSigningPassword( "src/ios/signing/adhoc/password.txt" )
-								default: return getSigningPassword( "src/ios/signing/development/password.txt" )
-							}
-
-
-						case Platforms.ANDROID: return getSigningPassword( "src/android/signing/password.txt" )
-						case Platforms.DESKTOP: return getSigningPassword( "src/desktop/signing/password.txt" )
-						default: return null
-					}
-
-
-					return null
+				case FlairProperties.SIGNING_KEY_STORE.name: return null
+				case FlairProperties.SIGNING_PROVISIONING_PROFILE.name: return null
+				case FlairProperties.SIGNING_STORE_PASS.name: return null
 
 				default: return null
 			}

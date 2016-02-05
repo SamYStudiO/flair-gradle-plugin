@@ -10,6 +10,7 @@ public enum Tasks {
 	PROCESS_ASSETS( "processAssets" , ProcessAssets , Groups.PROCESS ) ,
 	PROCESS_RESOURCES( "processResources" , ProcessResources , Groups.PROCESS ) ,
 	PROCESS_SPLASHS( "processSplashs" , ProcessSplashs , Groups.PROCESS ) ,
+	PROCESS_SIGNING( "processSigning" , ProcessSigning , Groups.PROCESS ) ,
 	PROCESS_ICONS( "processIcons" , ProcessIcons , Groups.PROCESS ) ,
 	PROCESS_EXTENSIONS( "processExtensions" , ProcessExtensions , Groups.PROCESS ) ,
 	PROCESS_APP_DESCRIPTOR( "processAppDescriptor" , ProcessAppDescriptor , Groups.PROCESS ) ,
