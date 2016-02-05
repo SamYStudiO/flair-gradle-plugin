@@ -269,7 +269,7 @@ class IdeaImlStructure implements IStructure
 				}
 			}
 
-			Node signingNode = platformNode.AirSigningOptions[ 0 ] as Node
+			/*Node signingNode = platformNode.AirSigningOptions[ 0 ] as Node
 			if( signingNode == null ) signingNode = new Node( platformNode , "AirSigningOptions" )
 
 			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS )
@@ -289,7 +289,7 @@ class IdeaImlStructure implements IStructure
 			if( signingKeyStore ) signingNode."@keystore-path" = buildPathFromModule( signingKeyStore )
 			if( signingTsa ) signingNode."@tsa" = signingTsa
 			if( variant.platform == Platforms.ANDROID && x86 ) signingNode."@arch" = "x86"
-			signingNode."@use-temp-certificate" = "false"
+			signingNode."@use-temp-certificate" = "false"*/
 
 			List<Configuration> libraries = new ArrayList<Configuration>( )
 
