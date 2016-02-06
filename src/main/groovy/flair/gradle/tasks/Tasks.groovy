@@ -24,7 +24,7 @@ public enum Tasks {
 	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,
 	LAUNCH_ADL( "launchAdl" , LaunchAdl , Groups.LAUNCH ) ,
 	LAUNCH_DEVICE( "launchDevice" , LaunchDevice , Groups.LAUNCH ) ,
-	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.DEFAULT ) ,
+	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , Groups.TEXTURE_PACKER ) ,
 	ASDOC( "asdoc" , Asdoc , Groups.DOCUMENTATION ) ,
 	CERTIFICATE( "certificate" , Certificate , Groups.SIGNING ) ,
 	LIST_DEVICES( "listDevices" , ListDevices , Groups.DEVICES )
