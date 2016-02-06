@@ -41,7 +41,7 @@ class ProcessSigning extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		packageTarget = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET ) ?: "null"
+		packageTarget = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET )
 		signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE )
 		signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE ) ?: "null"
 		signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE ) ?: "null"
@@ -69,8 +69,11 @@ class ProcessSigning extends AbstractVariantTask
 					from file
 					into outputDir
 
-					if( signingStorePass != "null" ) exclude "*.txt"
-					if( outputDir.listFiles( ).find { it.name.split( "\\." )[ 1 ].toLowerCase( ) == "p12" } ) exclude "*.p12"
+					exclude "*.txt"
+
+					if( outputDir.listFiles( ).find {
+						it.name.split( "\\." )[ 1 ].toLowerCase( ) == "p12"
+					} || signingStoreType != "pkcs12" ) exclude "*.p12"
 					if( outputDir.listFiles( ).find { it.name.split( "\\." )[ 1 ].toLowerCase( ) == "mobileprovision" } ) exclude "*.mobileprovision"
 				}
 
@@ -83,10 +86,10 @@ class ProcessSigning extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		if( signingStoreType == "pkcs12" && ( signingKeyStore == "null" || signingStorePass == "null" || ( variant.platform == Platforms.IOS && signingProvisioningProfile == "null" ) ) )
-		{
-			String subFolder = ""
+		String subFolder = ""
 
+		if( signingStoreType == "pkcs12" || variant.platform == Platforms.IOS )
+		{
 			switch( true )
 			{
 				case variant.platform == Platforms.IOS && packageTarget == "ipa-app-store":
@@ -109,11 +112,8 @@ class ProcessSigning extends AbstractVariantTask
 			}
 		}
 
-		if( signingStoreType == "pkcs12" )
-		{
-			if( signingKeyStore != "null" ) list.add( project.file( signingKeyStore ) )
-			if( signingProvisioningProfile != "null" ) list.add( project.file( signingProvisioningProfile ) )
-		}
+		if( signingKeyStore != "null" ) list.add( project.file( signingKeyStore ) )
+		if( signingProvisioningProfile != "null" && variant.platform == Platforms.IOS ) list.add( project.file( signingProvisioningProfile ) )
 
 		return list.reverse( )
 	}

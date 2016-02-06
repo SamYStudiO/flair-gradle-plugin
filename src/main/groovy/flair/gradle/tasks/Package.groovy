@@ -6,7 +6,6 @@ import flair.gradle.extensions.FlairProperties
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
@@ -147,54 +146,7 @@ class Package extends AbstractVariantTask
 	private addTarget()
 	{
 		cli.addArgument( "-target" )
-
-		switch( variant.platform )
-		{
-			case Platforms.IOS:
-
-				switch( target )
-				{
-					case "ipa-ad-hoc":
-					case "ipa-app-store":
-					case "ipa-debug":
-					case "ipa-test":
-
-						cli.addArgument( target )
-						break
-
-					default:
-
-						if( debug ) cli.addArgument( "ipa-debug" ) else cli.addArgument( "ipa-test" )
-						break
-				}
-
-				break
-
-			case Platforms.ANDROID:
-
-				switch( target )
-				{
-					case "apk-captive-runtime":
-					case "apk-debug":
-					case "apk-emulator":
-					case "apk-profile":
-
-						cli.addArgument( target )
-						break
-
-					default:
-						if( debug ) cli.addArgument( "apk-debug" ) else cli.addArgument( "apk-captive-runtime" )
-						break
-				}
-
-				break
-
-			case Platforms.DESKTOP:
-
-				cli.addArgument( "native" )
-
-				break
-		}
+		cli.addArgument( target )
 	}
 
 	private addSigning()
@@ -223,42 +175,11 @@ class Package extends AbstractVariantTask
 			cli.addArgument( "-storepass" )
 			cli.addArgument( storePass )
 		}
-		else if( storeType == "pkcs12" )
+
+		if( keyStore != "null" )
 		{
-			File file = project.file( "${ outputVariantDir.path }/signing" )
-
-			if( file.exists( ) )
-			{
-				FileTree tree = project.fileTree( file )
-
-				tree.each {
-
-					if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "txt" )
-					{
-						cli.addArgument( "-storepass" )
-						cli.addArgument( it.text.trim( ) )
-					}
-				}
-			}
-		}
-
-		if( storeType == "pkcs12" )
-		{
-			File file = project.file( "${ outputVariantDir.path }/signing" )
-
-			if( file.exists( ) )
-			{
-				FileTree tree = project.fileTree( file )
-
-				tree.each {
-
-					if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "p12" )
-					{
-						cli.addArgument( "-keystore" )
-						cli.addArgument( it.path )
-					}
-				}
-			}
+			cli.addArgument( "-keystore" )
+			cli.addArgument( keyStore )
 		}
 
 		if( keyPass != "null" )
@@ -273,21 +194,10 @@ class Package extends AbstractVariantTask
 			cli.addArgument( tsa )
 		}
 
-
-		File file = project.file( "${ outputVariantDir.path }/signing" )
-
-		if( file.exists( ) )
+		if( provisioning != "null" )
 		{
-			FileTree tree = project.fileTree( file )
-
-			tree.each {
-
-				if( it.name.split( "\\." )[ 1 ].toLowerCase( ) == "mobileprovision" )
-				{
-					cli.addArgument( "-provisioning-profile" )
-					cli.addArgument( it.path )
-				}
-			}
+			cli.addArgument( "-provisioning-profile" )
+			cli.addArgument( provisioning )
 		}
 	}
 
@@ -327,7 +237,7 @@ class Package extends AbstractVariantTask
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
 		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each {
-			if( it.name != "app_descriptor.xml" ) cli.addArgument( it.name )
+			if( it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 ) cli.addArgument( it.name )
 		}
 	}
 

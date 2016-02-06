@@ -1,5 +1,6 @@
 package flair.gradle.extensions
 
+import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
@@ -13,7 +14,7 @@ public interface IExtension
 
 	IExtensionManager getExtensionManager()
 
-	Object getProp( String property )
+	Object getProp( String property , Variant variant )
 
-	Object getProp( String property , boolean returnDefaultIfNull )
+	Object getProp( String property , Variant variant , boolean returnDefaultIfNull )
 }

@@ -2,6 +2,7 @@ package flair.gradle.extensions
 
 import flair.gradle.plugins.PluginManager
 import flair.gradle.variants.Platforms
+import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
@@ -378,6 +379,11 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageListen = packageListen
 	}
 
+	public void packageListen( int packageListen )
+	{
+		this.packageListen = packageListen.toString( )
+	}
+
 	public Boolean getPackageSampler()
 	{
 		return packageSampler
@@ -505,7 +511,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	}
 
 	@Override
-	public Object getProp( String property , boolean returnDefaultIfNull )
+	public Object getProp( String property , Variant variant , boolean returnDefaultIfNull )
 	{
 		if( this[ property ] || !returnDefaultIfNull ) return this[ property ] else
 		{
@@ -522,7 +528,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.APP_ID_SUFFIX.name: return ""
 				case FlairProperties.APP_NAME.name: return project.name
 				case FlairProperties.APP_NAME_SUFFIX.name: return ""
-				case FlairProperties.APP_FILE_NAME.name: return getProp( FlairProperties.APP_NAME.name , true ) + getProp( FlairProperties.APP_NAME_SUFFIX.name , true )
+				case FlairProperties.APP_FILE_NAME.name: return extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME_SUFFIX )
 				case FlairProperties.APP_VERSION.name: return "1.0.0"
 				case FlairProperties.APP_FULL_SCREEN.name: return true
 				case FlairProperties.APP_ASPECT_RATIO.name: return "any"
@@ -548,8 +554,17 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.ADL_NO_DEBUG.name: return false
 				case FlairProperties.ADL_AT_LOGIN.name: return false
 				case FlairProperties.ADL_PARAMETERS.name: return null
+				case FlairProperties.PACKAGE_TARGET.name:
 
-				case FlairProperties.PACKAGE_TARGET.name: return null
+					switch( p )
+					{
+						case Platforms.IOS: return extensionManager.getFlairProperty( variant , FlairProperties.DEBUG ) ? "ipa-debug" : "ipa-test"
+						case Platforms.ANDROID: return extensionManager.getFlairProperty( variant , FlairProperties.DEBUG ) ? "apk-debug" : "apk-captive-runtime"
+						case Platforms.DESKTOP: return "native"
+						default: return null
+					}
+
+
 				case FlairProperties.PACKAGE_X86.name: return false
 				case FlairProperties.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
@@ -562,7 +577,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 
 				case FlairProperties.PACKAGE_CONNECT.name: return null
-				case FlairProperties.PACKAGE_LISTEN.name: return getProp( FlairProperties.DEBUG.name , true ) ? "7936" : null
+				case FlairProperties.PACKAGE_LISTEN.name: return extensionManager.getFlairProperty( variant , FlairProperties.DEBUG ) ? "7936" : null
 				case FlairProperties.PACKAGE_SAMPLER.name: return false
 				case FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS.name: return false
 				case FlairProperties.PACKAGE_PLATFORM_SDK.name: return null
@@ -572,26 +587,66 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.SIGNING_PROVIDER_NAME.name: return null
 				case FlairProperties.SIGNING_TSA.name: return null
 				case FlairProperties.SIGNING_STORE_TYPE.name: return "pkcs12"
-				case FlairProperties.SIGNING_KEY_STORE.name: return null
-				case FlairProperties.SIGNING_PROVISIONING_PROFILE.name: return null
-				case FlairProperties.SIGNING_STORE_PASS.name: return null
+				case FlairProperties.SIGNING_KEY_STORE.name: return extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE ) == "pkcs12" ? getSigningFilePath( variant , "p12" ) : null
+				case FlairProperties.SIGNING_STORE_PASS.name:
+
+					File f = getSigningFile( variant , "txt" )
+					return f && f.exists(  ) ? f.text.trim( ) : null
+
+				case FlairProperties.SIGNING_PROVISIONING_PROFILE.name: return p == Platforms.IOS ? getSigningFilePath( variant , "mobileprovision" ) : null
 
 				default: return null
 			}
 		}
 	}
 
-	private String getSigningPath( String suffix )
+	private File getSigningFile( Variant variant , String type )
 	{
-		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ suffix }" )
+		String subFolder
+		String target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET )
 
-		return f.exists( ) ? f.path : null
+		switch( true )
+		{
+			case variant.platform == Platforms.IOS && target == "ipa-app-store":
+				subFolder = "store"
+				break
+			case variant.platform == Platforms.IOS && target == "ipa-ad-hoc":
+				subFolder = "adhoc"
+				break
+
+			case variant.platform == Platforms.IOS:
+				subFolder = "development"
+				break
+			default:
+				subFolder = ""
+				break
+		}
+
+		List<File> list = new ArrayList<File>( )
+
+		variant.directories.each {
+			list.add( project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ it }/signing/${ subFolder }" ) )
+		}
+
+		list = list.reverse( )
+
+		for( File file : list )
+		{
+			if( file.exists( ) )
+			{
+				File f = file.listFiles( ).find { it.name.split( "\\." )[ 1 ].toLowerCase( ) == type }
+
+				if( f ) return f
+			}
+		}
+
+		return null
 	}
 
-	private String getSigningPassword( String suffix )
+	private String getSigningFilePath( Variant variant , String type )
 	{
-		File f = project.file( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ suffix }" )
+		File f = getSigningFile( variant , type )
 
-		return f.exists( ) ? f.text.trim( ) : null
+		return f ? "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/signing/${ f.name }" : null
 	}
 }

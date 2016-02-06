@@ -1,5 +1,6 @@
 package flair.gradle.extensions
 
+import flair.gradle.variants.Variant
 import org.gradle.api.Project
 
 /**
@@ -36,11 +37,11 @@ public abstract class AbstractExtension implements IExtension
 	}
 
 	@Override
-	public Object getProp( String property )
+	public Object getProp( String property , Variant variant )
 	{
-		getProp( property , false )
+		getProp( property , variant , false )
 	}
 
 	@Override
-	public abstract Object getProp( String property , boolean returnDefaultIfNull )
+	public abstract Object getProp( String property , Variant variant , boolean returnDefaultIfNull )
 }
