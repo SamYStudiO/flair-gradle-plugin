@@ -36,7 +36,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean appDepthAndStencil
 
-	private String appDefaultSupportedLanguages
+	private String appDefaultSupportedLanguage
 
 	private String compileMainClass
 
@@ -219,14 +219,14 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.appDepthAndStencil = appDepthAndStencil
 	}
 
-	public String getAppDefaultSupportedLanguages()
+	public String getAppDefaultSupportedLanguage()
 	{
-		return appDefaultSupportedLanguages
+		return appDefaultSupportedLanguage
 	}
 
-	public void appDefaultSupportedLanguages( String appDefaultSupportedLanguages )
+	public void appDefaultSupportedLanguage( String appDefaultSupportedLanguage )
 	{
-		this.appDefaultSupportedLanguages = appDefaultSupportedLanguages
+		this.appDefaultSupportedLanguage = appDefaultSupportedLanguage
 	}
 
 	public String getCompileMainClass()
