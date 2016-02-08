@@ -104,6 +104,31 @@ public final class Variant
 		}
 	}
 
+	public String getProductFlavorsBuildTypeWithType( NamingTypes type )
+	{
+		String name = ""
+
+		switch( type )
+		{
+			case NamingTypes.CAPITALIZE:
+			case NamingTypes.CAPITALIZE_BUT_FIRST:
+				productFlavors.each { flavor -> name += flavor.capitalize( ) }
+
+				if( buildType ) name += buildType.capitalize( )
+
+				if( type == NamingTypes.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
+
+				return name
+
+			default:
+				productFlavors.each { flavor -> name += flavor + type.c }
+
+				if( buildType ) name += buildType else name = name.substring( 0 , name.size( ) - 1 )
+
+				return name
+		}
+	}
+
 	public Platforms getPlatform()
 	{
 		return platform
