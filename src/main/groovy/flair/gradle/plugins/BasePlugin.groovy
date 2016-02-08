@@ -256,23 +256,36 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 		if( listAssemble.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.create( Tasks.ASSEMBLE.name + "All" )
-			t.group = Tasks.ASSEMBLE.group.name
-			t.dependsOn listAssemble
+			t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" )
+			if( !t )
+			{
+				t = project.tasks.create( Tasks.ASSEMBLE.name + "All" )
+				t.group = Tasks.ASSEMBLE.group.name
+				t.dependsOn listAssemble
+			}
 		}
 
 		if( listCompile.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.create( Tasks.COMPILE.name + "All" )
-			t.group = Tasks.COMPILE.group.name
-			t.dependsOn listCompile
+			t = project.tasks.findByName( Tasks.COMPILE.name + "All" )
+			if( !t )
+			{
+				t = project.tasks.create( Tasks.COMPILE.name + "All" )
+				t.group = Tasks.COMPILE.group.name
+				t.dependsOn listCompile
+			}
 		}
 
 		if( listPackage.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.create( Tasks.PACKAGE.name + "All" )
-			t.group = Tasks.PACKAGE.group.name
-			t.dependsOn listPackage
+			t = project.tasks.findByName( Tasks.PACKAGE.name + "All" )
+			if( !t )
+			{
+
+				t = project.tasks.create( Tasks.PACKAGE.name + "All" )
+				t.group = Tasks.PACKAGE.group.name
+				t.dependsOn listPackage
+			}
 		}
 
 
@@ -294,23 +307,38 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			if( listAssemble.size( ) > 1 )
 			{
+				t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
+				if( !t )
+				{
+
 				t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
 				t.group = Tasks.ASSEMBLE.group.name
 				t.dependsOn listAssemble
+				}
 			}
 
 			if( listCompile.size( ) > 1 )
 			{
-				t = project.tasks.create( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
-				t.group = Tasks.COMPILE.group.name
-				t.dependsOn listCompile
+
+				t = project.tasks.findByName( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
+				if( !t )
+				{
+					t = project.tasks.create( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
+					t.group = Tasks.COMPILE.group.name
+					t.dependsOn listCompile
+				}
 			}
 
 			if( listPackage.size( ) > 1 )
 			{
-				t = project.tasks.create( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
-				t.group = Tasks.PACKAGE.group.name
-				t.dependsOn listPackage
+
+				t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
+				if( !t )
+				{
+					t = project.tasks.create( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
+					t.group = Tasks.PACKAGE.group.name
+					t.dependsOn listPackage
+				}
 			}
 		}
 
@@ -334,23 +362,38 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 				if( listAssemble.size( ) > 1 )
 				{
-					t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
-					t.group = Tasks.ASSEMBLE.group.name
-					t.dependsOn listAssemble
+
+					t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
+					if( !t )
+					{
+						t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
+						t.group = Tasks.ASSEMBLE.group.name
+						t.dependsOn listAssemble
+					}
 				}
 
 				if( listCompile.size( ) > 1 )
 				{
-					t = project.tasks.create( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
-					t.group = Tasks.COMPILE.group.name
-					t.dependsOn listCompile
+
+					t = project.tasks.findByName( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
+					if( !t )
+					{
+						t = project.tasks.create( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
+						t.group = Tasks.COMPILE.group.name
+						t.dependsOn listCompile
+					}
 				}
 
 				if( listPackage.size( ) > 1 )
 				{
-					t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
-					t.group = Tasks.PACKAGE.group.name
-					t.dependsOn listPackage
+
+					t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
+					if( !t )
+					{
+						t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
+						t.group = Tasks.PACKAGE.group.name
+						t.dependsOn listPackage
+					}
 				}
 			}
 		}
