@@ -22,7 +22,7 @@ package _packageName_.view
 		/**
 		 *
 		 */
-		protected var _navigator : StackScreenNavigator;
+		private var _navigator : StackScreenNavigator;
 
 		/**
 		 *
