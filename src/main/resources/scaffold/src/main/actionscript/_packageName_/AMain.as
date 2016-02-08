@@ -116,8 +116,6 @@ package _packageName_
 			_starling.enableErrorChecking = Capabilities.isDebugger;
 			_starling.supportHighResolutions = isDesktop();
 
-			_onStageResize();
-
 			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 			_starling.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 
@@ -302,6 +300,7 @@ package _packageName_
 		{
 			info( this , "_onStarlingRootCreate" );
 
+			_onStageResize();
 			_starling.removeEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 			stage.addEventListener( flash.events.Event.RESIZE , _onStageResize , false , int.MAX_VALUE );
 			_starling.root.addEventListener( FeathersEventType.INITIALIZE , _onMainInitialized );
