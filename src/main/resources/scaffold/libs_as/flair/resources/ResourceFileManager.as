@@ -131,6 +131,7 @@ package flair.resources
 				var test : Array;
 				var match : String;
 				var validDirectories : Vector.<File> = new Vector.<File>();
+				var directoryPaths : Vector.<String> = new Vector.<String>();
 				var file : File;
 				var directory : File;
 				var sw : Array = [];
@@ -139,7 +140,11 @@ package flair.resources
 				{
 					directory = !screenID ? file.parent : file.parent.parent;
 
-					if( directoryList.indexOf( directory ) < 0 ) directoryList.push( directory );
+					if( directoryPaths.indexOf( directory.nativePath ) < 0 )
+					{
+						directoryPaths.push( directory.nativePath );
+						directoryList.push( directory );
+					}
 				}
 
 				directories : for each ( directory in directoryList )
