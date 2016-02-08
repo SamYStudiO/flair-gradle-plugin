@@ -2,6 +2,9 @@ package _packageName_
 {
 	import _packageName_.view.StarlingMain;
 
+	import feathers.controls.text.TextFieldTextRenderer;
+	import feathers.core.FeathersControl;
+	import feathers.core.ITextRenderer;
 	import feathers.events.FeathersEventType;
 
 	import flair.logging.info;
@@ -118,6 +121,12 @@ package _packageName_
 
 			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 			_starling.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
+
+			// use standard textfield to display text, removed this to use Bitmap fonts
+			FeathersControl.defaultTextRendererFactory = function () : ITextRenderer
+			{
+				return new TextFieldTextRenderer();
+			};
 
 			Gestouch.inputAdapter = new NativeInputAdapter( stage );
 			Gestouch.addDisplayListAdapter( DisplayObject , new StarlingDisplayListAdapter() );
