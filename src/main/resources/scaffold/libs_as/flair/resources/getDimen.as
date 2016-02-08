@@ -14,11 +14,11 @@ package flair.resources
 	{
 		var dim : String = getAssetManager( groupID ).getXml( "values" ).dimen.( @name == id ).toString();
 		var value : int = parseInt( dim );
-		var matches : Array = dim.match( /^\d([a-z]+)/ );
+		var matches : Array = dim.match( /^\d+(dp|px|mm|in)/ );
 
 		if( matches && matches.length )
 		{
-			var unit : String = matches[ 0 ];
+			var unit : String = matches[ 1 ];
 
 			switch( unit )
 			{
@@ -39,6 +39,7 @@ package flair.resources
 					return mm;
 			}
 		}
-		else return NaN;
+
+		return NaN;
 	}
 }
