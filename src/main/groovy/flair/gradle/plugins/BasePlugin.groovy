@@ -253,7 +253,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			if( project.tasks.findByName( pack ) ) listPackage.add( pack )
 		}
 
-
 		if( listAssemble.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
 			t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" )
@@ -281,13 +280,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			t = project.tasks.findByName( Tasks.PACKAGE.name + "All" )
 			if( !t )
 			{
-
 				t = project.tasks.create( Tasks.PACKAGE.name + "All" )
 				t.group = Tasks.PACKAGE.group.name
 				t.dependsOn listPackage
 			}
 		}
-
 
 		Platforms.values( ).each {
 
@@ -310,10 +307,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
 				if( !t )
 				{
-
-				t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
-				t.group = Tasks.ASSEMBLE.group.name
-				t.dependsOn listAssemble
+					t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
+					t.group = Tasks.ASSEMBLE.group.name
+					t.dependsOn listAssemble
 				}
 			}
 

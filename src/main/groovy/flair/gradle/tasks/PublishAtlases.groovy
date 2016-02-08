@@ -9,7 +9,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class PublishAtlases extends AbstractVariantTask
+class PublishAtlases extends AbstractTask
 {
 	public PublishAtlases()
 	{
@@ -23,16 +23,13 @@ class PublishAtlases extends AbstractVariantTask
 		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
 		ICli tp = new TexturePacker( )
 
-		variant.directories.each {
+		FileTree tree = project.fileTree( "${ moduleName }/src" )
 
-			FileTree tree = project.fileTree( "${ moduleName }/src/${ it }/" )
+		tree.each { file ->
 
-			tree.each { file ->
-
-				if( file.name.toLowerCase( ).indexOf( ".tps" ) >= 0 )
-				{
-					tp.addArgument( file.path )
-				}
+			if( file.name.toLowerCase( ).indexOf( ".tps" ) >= 0 )
+			{
+				tp.addArgument( file.path )
 			}
 		}
 

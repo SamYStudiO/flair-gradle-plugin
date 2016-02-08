@@ -2,13 +2,12 @@ package flair.gradle.plugins
 
 import flair.gradle.structures.AtlasesStructure
 import flair.gradle.structures.IStructure
-import flair.gradle.tasks.variantFactories.IVariantTaskFactory
-import flair.gradle.tasks.variantFactories.PublishAtlasesTaskFactory
+import flair.gradle.tasks.Tasks
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin , IVariantTaskPlugin
+class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin
 {
 	@Override
 	public List<IStructure> getStructures()
@@ -20,12 +19,8 @@ class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin , I
 	}
 
 	@Override
-	public List<IVariantTaskFactory> getVariantTaskFactories()
+	protected void addTasks()
 	{
-		List<IVariantTaskFactory> list = new ArrayList<IVariantTaskFactory>( )
-
-		list.add( new PublishAtlasesTaskFactory( ) )
-
-		return list
+		project.tasks.create( Tasks.PUBLISH_ATLASES.name , Tasks.PUBLISH_ATLASES.type )
 	}
 }
