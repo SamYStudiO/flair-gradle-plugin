@@ -17,7 +17,7 @@ public class CliDevicesOutputParser
 
 		adtOutput.eachLine {
 
-			if( startExtraction ) list.add( it.split( "\\s" )[ 0 ] )
+			if( startExtraction && !it.startsWith( "Handle" ) ) list.add( it.split( "\\s" )[ 0 ] )
 			if( it == "List of devices attached" ) startExtraction = true
 		}
 

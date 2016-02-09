@@ -98,8 +98,20 @@ class DirectoryWatcher implements Runnable
 				change = true
 			}
 
+			boolean valid = key.reset( )
+			boolean needToBreak = false
+
+			if( !valid )
+			{
+				keys.remove( key )
+
+				if( keys.isEmpty( ) ) needToBreak = true
+			}
+
 			if( change )
 			{
+				Thread.sleep( 1000 )
+
 				for( Map.Entry<File , IWatcherAction> fileMap : watchDirectories )
 				{
 					if( dir.toFile( ).path.startsWith( fileMap.key.path ) ) fileMap.value.execute( project )
@@ -111,14 +123,7 @@ class DirectoryWatcher implements Runnable
 				}
 			}
 
-			boolean valid = key.reset( )
-
-			if( !valid )
-			{
-				keys.remove( key )
-
-				if( keys.isEmpty( ) ) break
-			}
+			if( needToBreak ) break
 		}
 	}
 
