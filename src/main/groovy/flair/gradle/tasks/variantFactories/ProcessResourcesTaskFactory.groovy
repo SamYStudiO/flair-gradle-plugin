@@ -24,7 +24,7 @@ class ProcessResourcesTaskFactory implements IVariantTaskFactory<ProcessResource
 		t.group = Tasks.PROCESS_RESOURCES.group.name
 		t.variant = variant
 
-		if( PluginManager.hasPlugin( project , TexturePackerPlugin ) ) t.dependsOn Tasks.PUBLISH_ATLASES.name + variantName
+		if( PluginManager.hasPlugin( project , TexturePackerPlugin ) ) t.dependsOn Tasks.PUBLISH_ATLASES.name
 
 		return t
 	}

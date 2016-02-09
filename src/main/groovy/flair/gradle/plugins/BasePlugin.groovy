@@ -402,7 +402,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		if( file.exists( ) )
 		{
 			directoryWatcher = new DirectoryWatcher( project , file )
-			Thread t = new Thread( directoryWatcher )
+			Thread t = new Thread( null , directoryWatcher , "flair_${ project.name }" )
 			t.start( )
 
 			project.plugins.each {
