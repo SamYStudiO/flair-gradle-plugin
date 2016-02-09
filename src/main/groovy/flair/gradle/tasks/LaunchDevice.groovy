@@ -26,19 +26,22 @@ public class LaunchDevice extends AbstractVariantTask
 		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK )
 		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
 
-
 		adt.addArgument( "-devices" )
 		adt.addArgument( "-platform ${ variant.platform.name }" )
-		List<String> ids = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
-		String deviceId = ids.empty && platformSdk && variant.platform == Platforms.IOS ? "ios_simulator" : ids[ 0 ]
+		String id = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+		String deviceId = !id && platformSdk && variant.platform == Platforms.IOS ? "ios_simulator" : id
 
-		adt.clearArguments( )
-		adt.addArgument( "-launchApp" )
-		adt.addArgument( "-platform ${ variant.platform.name }" )
-		if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
+		if( deviceId )
+		{
+			adt.clearArguments( )
+			adt.addArgument( "-launchApp" )
+			adt.addArgument( "-platform ${ variant.platform.name }" )
+			if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
 
-		adt.addArgument( "-device ${ deviceId }" )
-		adt.addArgument( "-appi ${ appId }" )
-		adt.execute( project )
+			adt.addArgument( "-device ${ deviceId }" )
+			adt.addArgument( "-appid ${ appId }" )
+			adt.execute( project )
+		}
+		else println( "No device detected" )
 	}
 }

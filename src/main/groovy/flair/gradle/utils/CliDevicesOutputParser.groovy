@@ -9,7 +9,7 @@ public class CliDevicesOutputParser
 	{
 	}
 
-	public List<String> parse( String adtOutput )
+	public String parse ( String adtOutput )
 	{
 		List<String> list = new ArrayList<String>( )
 
@@ -21,6 +21,6 @@ public class CliDevicesOutputParser
 			if( it == "List of devices attached" ) startExtraction = true
 		}
 
-		return list
+		return list.size(  ) > 0 ? list[ 0 ] : null
 	}
 }

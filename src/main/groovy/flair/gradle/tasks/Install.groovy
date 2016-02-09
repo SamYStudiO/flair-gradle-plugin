@@ -28,7 +28,7 @@ class Install extends AbstractVariantTask
 	@TaskAction
 	public void install()
 	{
-		String path = "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }.${ getExtension( ) }"
+		String path = "${ project.buildDir.path }/${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }.${ getExtension( ) }"
 
 		if( variant.platform == Platforms.DESKTOP )
 		{
@@ -48,13 +48,17 @@ class Install extends AbstractVariantTask
 			adb.addArgument( "devices" )
 			String id = new CliDevicesOutputParser( ).parse( adb.execute( project ) )
 
-			adb.clearArguments( )
-			adb.addArgument( "-s ${ id }" )
-			adb.addArgument( "install" )
-			adb.addArgument( "-r" )
-			adb.addArgument( project.file( path ).path )
+			if( id )
+			{
+				adb.clearArguments( )
+				adb.addArgument( "-s ${ id }" )
+				adb.addArgument( "install" )
+				adb.addArgument( "-r" )
+				adb.addArgument( project.file( path ).path )
 
-			adb.execute( project )
+				adb.execute( project )
+			}
+			else println( "No device detected" )
 		}
 		else
 		{
@@ -62,17 +66,20 @@ class Install extends AbstractVariantTask
 
 			adt.addArgument( "-devices" )
 			adt.addArgument( "-platform ios" )
-			List<String> ids = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
-			String id = ids.empty && platformSdk ? "ios_simulator" : ids[ 0 ]
+			String id = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+			id = !id && platformSdk ? "ios_simulator" : id
 
-			adt.clearArguments( )
-			adt.addArgument( "-installApp" )
-			adt.addArgument( "-platform ios" )
-			if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
-			adt.addArgument( "-device ${ id }" )
-			adt.addArgument( project.file( path ).path )
-
-			adt.execute( project )
+			if( id )
+			{
+				adt.clearArguments( )
+				adt.addArgument( "-installApp" )
+				adt.addArgument( "-platform ios" )
+				if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
+				adt.addArgument( "-device ${ id }" )
+				adt.addArgument( project.file( path ).path )
+				adt.execute( project )
+			}
+			else println( "No device detected" )
 		}
 	}
 
