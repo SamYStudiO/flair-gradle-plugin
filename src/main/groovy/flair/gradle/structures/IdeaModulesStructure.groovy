@@ -35,7 +35,7 @@ class IdeaModulesStructure implements IStructure
 		{
 			new Node( ( Node ) node.component.modules.first( ) , "module" , [ 'fileurl': "file://\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" , 'filepath': "\$PROJECT_DIR\$/${ moduleName }/${ moduleName }.iml" ] )
 
-			project.rootProject.file( ".idea/modules.xml" ).withWriter { out -> XmlUtil.serialize( node , out ) }
+			project.rootProject.file( ".idea/modules.xml" ).withOutputStream { out -> XmlUtil.serialize( node , out ) }
 		}
 	}
 }

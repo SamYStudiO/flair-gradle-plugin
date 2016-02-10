@@ -103,7 +103,7 @@ class ProcessResources extends AbstractVariantTask
 
 			if( output.children( ).size( ) > 0 )
 			{
-				outputFile.withWriter { writer -> XmlUtil.serialize( output , writer ) }
+				outputFile.withOutputStream { writer -> XmlUtil.serialize( output , writer ) }
 			}
 		}
 	}

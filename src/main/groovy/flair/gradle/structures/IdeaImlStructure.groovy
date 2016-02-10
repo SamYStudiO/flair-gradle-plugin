@@ -53,7 +53,7 @@ class IdeaImlStructure implements IStructure
 		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node )
 		//createSdk( )
 
-		output.withWriter { writer -> XmlUtil.serialize( xml , writer ) }
+		output.withOutputStream { writer -> XmlUtil.serialize( xml , writer ) }
 
 		String s = output.text.replaceAll( "#09;" , "&#09;" ).replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
 
@@ -402,7 +402,7 @@ class IdeaImlStructure implements IStructure
 
 					node.component[ 0 ].append( jdkNode )
 
-					intellij.withWriter { writer -> XmlUtil.serialize( node , writer ) }
+					intellij.withOutputStream { writer -> XmlUtil.serialize( node , writer ) }
 				}
 			}
 		}
