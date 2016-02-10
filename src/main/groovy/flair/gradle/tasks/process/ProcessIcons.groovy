@@ -45,6 +45,8 @@ class ProcessIcons extends AbstractVariantTask
 				project.copy {
 					from file
 					into outputDir
+
+					include "*.png"
 				}
 
 				break
