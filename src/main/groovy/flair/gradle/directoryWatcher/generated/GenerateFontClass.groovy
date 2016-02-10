@@ -36,24 +36,17 @@ class GenerateFontClass implements IWatcherAction
 			{
 				String name = file.getName( )
 				String fontFamily = getFontFamily( name )
-				String flavor = parent.parentFile.name
-				String conditional = flavor == "main" ? "" : "CONFIG::${ flavor.toUpperCase( ) } "
-				String conditionalOpen = flavor == "main" ? "" : "CONFIG::${ flavor.toUpperCase( ) }{%n\t\t"
-				String conditionalClose = flavor == "main" ? "" : "%n\t\t}"
 				String upper = getUpperCaseFontFamily( getFontFamily( name ) )
 
 				if( fonts.indexOf( fontFamily ) < 0 )
 				{
 
 					fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
-					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\t${ conditional }public static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
+					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
 					fonts = fonts.concat( fontFamily )
 				}
 
-				//TODO remove conditional if same font family is added to main
-				//else if( conditional == "" ) fontsClassContent.replace( "CONFIG::?* public static const ${ upper }" , "public static const ${ upper }" )
-
-				fontsClassContent = fontsClassContent.concat( generateFont( name , conditionalOpen , conditionalClose ) )
+				fontsClassContent = fontsClassContent.concat( generateFont( name ) )
 			}
 		}
 
@@ -89,7 +82,7 @@ class GenerateFontClass implements IWatcherAction
 		return upName
 	}
 
-	private String generateFont( String filename , String conditionalOpen , String conditionalClose )
+	private String generateFont( String filename )
 	{
 		String fontFamily = getFontFamily( filename )
 		String fontWeight = filename.toLowerCase( ).indexOf( "bold" ) >= 0 ? "bold" : "normal"
@@ -97,6 +90,6 @@ class GenerateFontClass implements IWatcherAction
 		String cff = filename.toLowerCase( ).indexOf( "cff" ) >= 0 ? "true" : "false"
 		String upper = getUpperCaseFontFamily( trimExt( filename ) )
 
-		return String.format( "\t\t${ conditionalOpen }[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]%n\t\tprivate static var ${ upper }_CLASS : Class;${ conditionalClose }%n" )
+		return String.format( "\t\t[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]%n\t\tprivate static var ${ upper }_CLASS : Class;%n" )
 	}
 }
