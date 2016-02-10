@@ -1,5 +1,6 @@
 package flair.gradle.tasks.process
 
+import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.tasks.AbstractVariantTask
@@ -126,7 +127,6 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
 
-
 		project.file( "${ outputVariantDir.path }/package/" ).mkdirs( )
 		outputFile.createNewFile( )
 		outputFile.write( appContent )
@@ -167,6 +167,13 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/app_descriptor.xml" ) ) }
 
-		return list.reverse( )
+		variant.directoriesCapitalized.each {
+
+			String s = it == "main" ? Configurations.NATIVE_LIBRARY.name : it + Configurations.NATIVE_LIBRARY.name.capitalize( )
+
+			list.addAll( project.configurations.getByName( s ).files )
+		}
+
+		return list
 	}
 }
