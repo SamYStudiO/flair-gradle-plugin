@@ -69,6 +69,9 @@ class Compile extends AbstractVariantTask
 		//swc library files
 		cli.addArgument( "-library-path+=${ project.file( "${ outputVariantDir.path }/libraries" ) }" )
 
+		//ane library files
+		cli.addArgument( "-external-library-path+=${ project.file( "${ outputVariantDir.path }/extensions" ) }" )
+
 		addConstants( )
 
 		// custom options
