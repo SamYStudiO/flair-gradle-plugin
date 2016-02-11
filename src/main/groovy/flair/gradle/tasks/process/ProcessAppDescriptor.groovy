@@ -87,7 +87,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	{
 		for( File file : inputFiles )
 		{
-			if( file.exists( ) )
+			if( file.exists( ) && file.name.indexOf( ".xml" ) > 0 )
 			{
 				internalProcessAppDescriptor( file )
 				break
@@ -174,6 +174,6 @@ class ProcessAppDescriptor extends AbstractVariantTask
 			list.addAll( project.configurations.getByName( s ).files )
 		}
 
-		return list
+		return list.reverse(  )
 	}
 }
