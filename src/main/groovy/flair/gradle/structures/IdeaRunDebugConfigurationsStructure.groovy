@@ -44,7 +44,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
 				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) ?: "7936"
-				String gradleAssemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				String gradleAssemble = Tasks.PREPARE_ADL.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
 						.replaceAll( "\\{profileName\\}" , profileName )

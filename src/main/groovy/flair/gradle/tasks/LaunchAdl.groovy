@@ -23,7 +23,6 @@ class LaunchAdl extends AbstractVariantTask
 	@TaskAction
 	public void launch()
 	{
-		String output = "${ project.buildDir }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }"
 		String pubId = extensionManager.getFlairProperty( variant , FlairProperties.ADL_PUB_ID )
 		boolean noDebug = extensionManager.getFlairProperty( variant , FlairProperties.ADL_NO_DEBUG )
 		boolean atLogin = extensionManager.getFlairProperty( variant , FlairProperties.ADL_AT_LOGIN )
@@ -47,17 +46,10 @@ class LaunchAdl extends AbstractVariantTask
 		}
 
 		cli.addArgument( "-extdir" )
-		cli.addArgument( project.file( output + "/extracted_extensions" ).path )
+		cli.addArgument( project.file( outputVariantDir.path + "/extracted_extensions" ).path )
 
-		File f = project.file( output + "/package/app_descriptor.xml" )
-
-		project.copy {
-			from output + "/app_descriptor.xml"
-			into output + "/package"
-		}
-
-		cli.addArgument( f.path )
-		cli.addArgument( project.file( output + "/package" ).path )
+		cli.addArgument( "${ outputVariantDir.path }/package/app_descriptor.xml" )
+		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
 		if( parameters && !parameters.empty )
 		{
@@ -66,7 +58,5 @@ class LaunchAdl extends AbstractVariantTask
 		}
 
 		cli.execute( project )
-
-		f.delete( )
 	}
 }
