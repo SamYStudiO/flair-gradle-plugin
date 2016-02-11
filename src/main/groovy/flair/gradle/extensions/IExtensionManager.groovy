@@ -10,9 +10,9 @@ public interface IExtensionManager
 {
 	IPlatformContainerExtension getPlatformContainer( Platforms platform )
 
-	List<IVariantExtension> getAllActivePlatformProductFlavors()
+	List<String> getAllActivePlatformProductFlavors()
 
-	List<IVariantExtension> getAllActivePlatformBuildTypes()
+	List<String> getAllActivePlatformBuildTypes()
 
 	List<Variant> getAllActivePlatformVariants()
 

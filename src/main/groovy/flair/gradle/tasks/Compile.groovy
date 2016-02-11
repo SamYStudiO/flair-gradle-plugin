@@ -3,6 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
 import flair.gradle.extensions.FlairProperties
+import flair.gradle.plugins.PluginManager
 import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.Input
@@ -89,19 +90,19 @@ class Compile extends AbstractVariantTask
 
 	private addConstants()
 	{
-		Platforms.values( ).each {
+		PluginManager.getCurrentPlatforms( project ).each {
 
 			cli.addArgument( "-define+=PLATFORM::${ it.name.toUpperCase( ) },${ it == variant.platform }" )
 		}
 
 		extensionManager.allActivePlatformProductFlavors.each {
 
-			cli.addArgument( "-define+=PRODUCT_FLAVOR::${ it.name.toUpperCase( ) },${ variant.productFlavors.indexOf( it.name ) >= 0 }" )
+			cli.addArgument( "-define+=PRODUCT_FLAVOR::${ it.toUpperCase( ) },${ variant.productFlavors.indexOf( it ) >= 0 }" )
 		}
 
 		extensionManager.allActivePlatformBuildTypes.each {
 
-			cli.addArgument( "-define+=BUILD_TYPE::${ it.name.toUpperCase( ) },${ it.name == variant.buildType }" )
+			cli.addArgument( "-define+=BUILD_TYPE::${ it.toUpperCase( ) },${ it == variant.buildType }" )
 		}
 	}
 

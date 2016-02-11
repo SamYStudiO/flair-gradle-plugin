@@ -135,9 +135,8 @@ class IdeaImlStructure implements IStructure
 		List<String> list = new ArrayList<String>( )
 
 		PluginManager.getCurrentPlatforms( project ).each { list.add( it.name ) }
-
-		extensionManager.allActivePlatformProductFlavors.each { list.add( it.name ) }
-		extensionManager.allActivePlatformBuildTypes.each { list.add( it.name ) }
+		list.addAll( extensionManager.allActivePlatformProductFlavors )
+		list.addAll( extensionManager.allActivePlatformBuildTypes )
 
 		list.each {
 			file = project.file( "${ moduleName }/src/${ it }/icons" )
@@ -201,19 +200,20 @@ class IdeaImlStructure implements IStructure
 
 			List<String> constants = new ArrayList<String>( )
 
-			Platforms.values( ).each {
+
+			PluginManager.getCurrentPlatforms( project ).each {
 
 				constants.add( "PLATFORM::${ it.name.toUpperCase( ) }#09;${ it == variant.platform }" )
 			}
 
 			extensionManager.allActivePlatformProductFlavors.each {
 
-				constants.add( "PRODUCT_FLAVOR::${ it.name.toUpperCase( ) }#09;${ variant.productFlavors.indexOf( it.name ) >= 0 }" )
+				constants.add( "PRODUCT_FLAVOR::${ it.toUpperCase( ) }#09;${ variant.productFlavors.indexOf( it ) >= 0 }" )
 			}
 
 			extensionManager.allActivePlatformBuildTypes.each {
 
-				constants.add( "BUILD_TYPE::${ it.name.toUpperCase( ) }#09;${ it.name == variant.buildType }" )
+				constants.add( "BUILD_TYPE::${ it.toUpperCase( ) }#09;${ it == variant.buildType }" )
 			}
 
 			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )

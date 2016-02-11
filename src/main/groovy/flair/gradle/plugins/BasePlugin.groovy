@@ -15,7 +15,6 @@ import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.Tasks
-import flair.gradle.variants.Platforms
 import flair.gradle.variants.Variant
 import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
@@ -286,7 +285,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			}
 		}
 
-		Platforms.values( ).each {
+		PluginManager.getCurrentPlatforms( project ).each {
 
 			listAssemble = new ArrayList<String>( )
 			listCompile = new ArrayList<String>( )
@@ -338,9 +337,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			}
 		}
 
-		if( flair.allActivePlatformBuildTypes.size( ) > 1 )
+		List<String> buildTypes = flair.allActivePlatformBuildTypes
+
+		if( buildTypes.size( ) > 1 )
 		{
-			flair.allActivePlatformBuildTypes.each { type ->
+			buildTypes.each { type ->
 
 				listAssemble = new ArrayList<String>( )
 				listCompile = new ArrayList<String>( )
@@ -351,18 +352,18 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 					pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
-					if( it.buildType == type.name && project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
-					if( it.buildType == type.name && project.tasks.findByName( compile ) ) listCompile.add( compile )
-					if( it.buildType == type.name && project.tasks.findByName( pack ) ) listPackage.add( pack )
+					if( it.buildType == type && project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
+					if( it.buildType == type && project.tasks.findByName( compile ) ) listCompile.add( compile )
+					if( it.buildType == type && project.tasks.findByName( pack ) ) listPackage.add( pack )
 				}
 
 				if( listAssemble.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
+					t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.name.capitalize( ) )
+						t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.capitalize( ) )
 						t.group = Tasks.ASSEMBLE.group.name
 						t.dependsOn listAssemble
 					}
@@ -371,10 +372,10 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( listCompile.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
+					t = project.tasks.findByName( Tasks.COMPILE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.COMPILE.name + "All" + type.name.capitalize( ) )
+						t = project.tasks.create( Tasks.COMPILE.name + "All" + type.capitalize( ) )
 						t.group = Tasks.COMPILE.group.name
 						t.dependsOn listCompile
 					}
@@ -383,10 +384,10 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( listPackage.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
+					t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.name.capitalize( ) )
+						t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.capitalize( ) )
 						t.group = Tasks.PACKAGE.group.name
 						t.dependsOn listPackage
 					}
