@@ -19,7 +19,7 @@ public enum Tasks {
 	PROCESS_AS_LIBRARIES( "processAsLibraries" , ProcessAsLibraries , Groups.PROCESS ) ,
 	ASSEMBLE( "assemble" , VariantContainer , Groups.BUILD ) ,
 	COMPILE( "compile" , Compile , Groups.BUILD ) ,
-	PREPARE_ADL( "prepareAdl" , PrepareAdl , Groups.DEFAULT ) ,
+	PREPARE_PACKAGE( "preparePackage" , PreparePackage , Groups.DEFAULT ) ,
 	PACKAGE( "package" , Package , Groups.PACKAGE ) ,
 	INSTALL( "install" , Install , Groups.INSTALL ) ,
 	UNINSTALL( "uninstall" , Uninstall , Groups.UNINSTALL ) ,

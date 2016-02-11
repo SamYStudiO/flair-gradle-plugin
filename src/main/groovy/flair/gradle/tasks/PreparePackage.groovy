@@ -10,7 +10,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class PrepareAdl extends AbstractVariantTask
+class PreparePackage extends AbstractVariantTask
 {
 	protected ICli cli = new Mxmlc( )
 
@@ -29,7 +29,7 @@ class PrepareAdl extends AbstractVariantTask
 		outputFile = project.file( "${ outputVariantDir }/package/app_descriptor.xml" )
 	}
 
-	public PrepareAdl()
+	public PreparePackage()
 	{
 		group = Groups.DEFAULT.name
 		description = ""

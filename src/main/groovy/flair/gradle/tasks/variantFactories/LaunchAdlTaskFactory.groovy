@@ -21,9 +21,7 @@ public class LaunchAdlTaskFactory implements IVariantTaskFactory<LaunchAdl>
 
 		t.group = Tasks.LAUNCH_ADL.group.name
 		t.variant = variant
-		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_APP_DESCRIPTOR.name + variantName ,
-				Tasks.PROCESS_RESOURCES.name + variantName , Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName ,
-				Tasks.PROCESS_SPLASHS.name + variantName
+		t.dependsOn Tasks.PREPARE_PACKAGE.name + variantName
 
 		return t
 	}
