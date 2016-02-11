@@ -46,8 +46,9 @@ package _packageName_
 		 */
 		override protected function _init( e : InvokeEvent ) : void
 		{
-			// use custom dpi, you may adjust this value to match the scale you want for desktop
-			DeviceCapabilities.dpi = 160;
+			// use custom dpi, you may adjust this value to match the scale you want for desktop,
+			// actually this is set to mdpi for standard screens and xhdpi for retina screens
+			DeviceCapabilities.dpi = 160 * stage.contentsScaleFactor;
 
 			super._init( e );
 		}
