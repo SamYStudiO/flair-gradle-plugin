@@ -2,10 +2,6 @@ package flair.gradle.plugins
 
 import flair.gradle.dependencies.Configurations
 import flair.gradle.dependencies.Sdk
-import flair.gradle.directoryWatcher.DirectoryWatcher
-import flair.gradle.directoryWatcher.IWatcherAction
-import flair.gradle.directoryWatcher.generated.GenerateFontClass
-import flair.gradle.directoryWatcher.generated.GenerateRClass
 import flair.gradle.extensions.Extensions
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
@@ -14,6 +10,8 @@ import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.structures.CommonStructure
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
+import flair.gradle.tasks.GenerateFontsClass
+import flair.gradle.tasks.GenerateResourcesClass
 import flair.gradle.tasks.Tasks
 import flair.gradle.variants.Variant
 import flair.gradle.variants.Variant.NamingTypes
@@ -24,13 +22,11 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IWatcherActionPlugin , IConfigurationPlugin
+class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IConfigurationPlugin
 {
 	private List<IPlugin> plugins = new ArrayList<IPlugin>( )
 
 	private IExtensionManager flair
-
-	private DirectoryWatcher directoryWatcher
 
 	public BasePlugin()
 	{
@@ -71,7 +67,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				createStructures( )
 				createVariantTasks( )
 				createHandlerTasks( )
-				initDirectoryWatcher( )
+				createGeneratedTasks( )
 			}
 		}
 	}
@@ -97,17 +93,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		list.add( new VariantStructure( ) )
 
 		return list
-	}
-
-	@Override
-	public Map<? , IWatcherAction> getWatcherActions()
-	{
-		Map<? , IWatcherAction> map = new HashMap<? , IWatcherAction>( )
-
-		map.put( File.separator + "resources" , new GenerateRClass( ) )
-		map.put( File.separator + "fonts" , new GenerateFontClass( ) )
-
-		return map
 	}
 
 	@Override
@@ -191,8 +176,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			exclude "**/.gitkeep"
 		}
 
-		GenerateFontClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).text
-		GenerateRClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).text
+		GenerateFontsClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).text
+		GenerateResourcesClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).text
 
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
@@ -396,34 +381,12 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		}
 	}
 
-	private initDirectoryWatcher()
+	private createGeneratedTasks()
 	{
-		File file = project.file( flair.getFlairProperty( FlairProperties.MODULE_NAME ) )
+		GenerateResourcesClass resourcesTask = project.tasks.create( Tasks.GENERATE_RESOURCES_CLASS.name , Tasks.GENERATE_RESOURCES_CLASS.type ) as GenerateResourcesClass
+		resourcesTask.findInputAndOutputFiles( )
 
-		if( file.exists( ) )
-		{
-			directoryWatcher = new DirectoryWatcher( project , file )
-			Thread t = new Thread( null , directoryWatcher , "flair_${ project.name }" )
-			t.start( )
-
-			project.plugins.each {
-				if( it instanceof IWatcherActionPlugin )
-				{
-					it.watcherActions.each { action ->
-
-						if( action.key instanceof String )
-						{
-							directoryWatcher.watch( ( String ) action.key , action.value )
-						}
-						else if( action.key instanceof File )
-						{
-							directoryWatcher.watch( ( File ) action.key , action.value )
-						}
-
-						action.value.execute( project )
-					}
-				}
-			}
-		}
+		GenerateFontsClass fontsTask = project.tasks.create( Tasks.GENERATE_FONTS_CLASS.name , Tasks.GENERATE_FONTS_CLASS.type ) as GenerateFontsClass
+		fontsTask.findInputAndOutputFiles( )
 	}
 }

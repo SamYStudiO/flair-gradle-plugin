@@ -1,20 +1,34 @@
-package flair.gradle.directoryWatcher.generated
+package flair.gradle.tasks
 
-import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
-import org.gradle.api.Project
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class GenerateRClass implements IWatcherAction
+public class GenerateResourcesClass extends AbstractTask
 {
 	public static String template
 
-	@Override
-	public void execute( Project project )
+	@InputFiles
+	def Set<File> inputFiles
+
+	@OutputFile
+	def File outputFile
+
+	public GenerateResourcesClass()
+	{
+		group = Groups.GENERATED.name
+		description = ""
+	}
+
+	@TaskAction
+	public void generate( IncrementalTaskInputs inputs )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
@@ -168,5 +182,30 @@ class GenerateRClass implements IWatcherAction
 		classFileContent = classFileContent.replaceAll( /class RXml\s*\{[^}]*}/ , "class RXml" + System.lineSeparator( ) + "{" + System.lineSeparator( ) + xmls + "}" )
 
 		classFile.write( classFileContent )
+	}
+
+	public void findInputAndOutputFiles()
+	{
+		IExtensionManager extensionManager = project.flair as IExtensionManager
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+
+		inputFiles = new ArrayList<File>( )
+
+		List<String> list = new ArrayList<String>( )
+
+		extensionManager.allActivePlatformVariants.each {
+
+			it.directories.each { directory ->
+
+				if( list.indexOf( directory ) < 0 ) list.add( directory )
+			}
+		}
+
+		list.each {
+
+			inputFiles.add( project.file( "${ moduleName }/src/${ it }/resources" ) )
+		}
+
+		outputFile = project.file( "${ moduleName }/src/main/generated/R.as" )
 	}
 }

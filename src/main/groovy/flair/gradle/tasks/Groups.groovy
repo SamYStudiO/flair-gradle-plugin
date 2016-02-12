@@ -13,6 +13,7 @@ public enum Groups {
 	DOCUMENTATION( "documentation" ) ,
 	SIGNING( "signing" ) ,
 	DEVICES( "devices" ) ,
+	GENERATED( "generated" ) ,
 	PROCESS( "" ) ,
 	DEFAULT( "" )
 

@@ -1,20 +1,34 @@
-package flair.gradle.directoryWatcher.generated
+package flair.gradle.tasks
 
-import flair.gradle.directoryWatcher.IWatcherAction
 import flair.gradle.extensions.FlairProperties
 import flair.gradle.extensions.IExtensionManager
-import org.gradle.api.Project
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class GenerateFontClass implements IWatcherAction
+public class GenerateFontsClass extends AbstractTask
 {
 	public static String template
 
-	@Override
-	public void execute( Project project )
+	@InputFiles
+	def Set<File> inputFiles
+
+	@OutputFile
+	def File outputFile
+
+	public GenerateFontsClass()
+	{
+		group = Groups.GENERATED.name
+		description = ""
+	}
+
+	@TaskAction
+	public void generate( IncrementalTaskInputs inputs )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
@@ -91,5 +105,30 @@ class GenerateFontClass implements IWatcherAction
 		String upper = getUpperCaseFontFamily( trimExt( filename ) )
 
 		return String.format( "\t\t[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]%n\t\tprivate static var ${ upper }_CLASS : Class;%n" )
+	}
+
+	public void findInputAndOutputFiles()
+	{
+		IExtensionManager extensionManager = project.flair as IExtensionManager
+		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+
+		inputFiles = new ArrayList<File>( )
+
+		List<String> list = new ArrayList<String>( )
+
+		extensionManager.allActivePlatformVariants.each {
+
+			it.directories.each { directory ->
+
+				if( list.indexOf( directory ) < 0 ) list.add( directory )
+			}
+		}
+
+		list.each {
+
+			inputFiles.add( project.file( "${ moduleName }/src/${ it }/fonts" ) )
+		}
+
+		outputFile = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
 	}
 }
