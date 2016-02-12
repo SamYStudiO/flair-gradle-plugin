@@ -6,7 +6,6 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -28,7 +27,7 @@ public class GenerateResourcesClass extends AbstractTask
 	}
 
 	@TaskAction
-	public void generate( IncrementalTaskInputs inputs )
+	public void generate()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 

@@ -6,7 +6,6 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -28,7 +27,7 @@ public class GenerateFontsClass extends AbstractTask
 	}
 
 	@TaskAction
-	public void generate( IncrementalTaskInputs inputs )
+	public void generate()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
@@ -54,7 +53,6 @@ public class GenerateFontsClass extends AbstractTask
 
 				if( fonts.indexOf( fontFamily ) < 0 )
 				{
-
 					fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
 					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
 					fonts = fonts.concat( fontFamily )
@@ -77,17 +75,17 @@ public class GenerateFontsClass extends AbstractTask
 		}
 	}
 
-	private String trimExt( String filename )
+	protected String trimExt( String filename )
 	{
 		return filename.split( "\\." ).first( )
 	}
 
-	private String getFontFamily( String filename )
+	protected String getFontFamily( String filename )
 	{
 		return trimExt( filename ).replaceAll( /(?i)bold/ , "" ).replaceAll( /(?i)italic/ , "" ).replaceAll( /(?i)cff/ , "" )
 	}
 
-	private String getUpperCaseFontFamily( String filename )
+	protected String getUpperCaseFontFamily( String filename )
 	{
 		String upName = filename.replaceAll( /[A-Z]/ , /_$0/ ).toUpperCase( )
 
@@ -96,7 +94,7 @@ public class GenerateFontsClass extends AbstractTask
 		return upName
 	}
 
-	private String generateFont( String filename )
+	protected String generateFont( String filename )
 	{
 		String fontFamily = getFontFamily( filename )
 		String fontWeight = filename.toLowerCase( ).indexOf( "bold" ) >= 0 ? "bold" : "normal"
