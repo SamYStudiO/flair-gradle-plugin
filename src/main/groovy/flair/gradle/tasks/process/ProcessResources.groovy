@@ -36,7 +36,7 @@ class ProcessResources extends AbstractVariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputDir = project.file( "${ outputVariantDir }/package/resources" )
+		outputDir = project.file( "${ outputVariantDir }/package/res" )
 
 		excludeResources = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_EXCLUDE_RESOURCES ) as List<String>
 		generateAtf = extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES )
@@ -81,8 +81,8 @@ class ProcessResources extends AbstractVariantTask
 			// TODO maybe need to check if parent folder is not a screen here since we may add resources for screens
 			String qualifiers = file.parentFile.name.replace( "values" , "" )
 
-			project.file( "${ outputVariantDir }/package/resources/values${ qualifiers }/" ).mkdirs( )
-			File outputFile = project.file( "${ outputVariantDir }/package/resources/values${ qualifiers }/values${ qualifiers }.xml" )
+			project.file( "${ outputVariantDir }/package/res/values${ qualifiers }/" ).mkdirs( )
+			File outputFile = project.file( "${ outputVariantDir }/package/res/values${ qualifiers }/values${ qualifiers }.xml" )
 
 			if( !outputFile.exists( ) ) outputFile.createNewFile( )
 
@@ -112,7 +112,7 @@ class ProcessResources extends AbstractVariantTask
 	{
 		ICli png2atf = new Png2Atf( )
 
-		FileTree tree = project.fileTree( "${ outputVariantDir }/package/resources/" ) { include "**/*.png" }
+		FileTree tree = project.fileTree( "${ outputVariantDir }/package/res" ) { include "**/*.png" }
 
 		tree.each {
 
@@ -133,7 +133,7 @@ class ProcessResources extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/resources" ) ) }
+		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/res" ) ) }
 
 		return list
 	}

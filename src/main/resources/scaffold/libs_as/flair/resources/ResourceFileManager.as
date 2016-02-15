@@ -367,7 +367,7 @@ package flair.resources
 		private function _getResourceList( resourceType : String , screenID : String = null ) : Dictionary
 		{
 			var d : Dictionary = new Dictionary( true );
-			var directoryList : Array = File.applicationDirectory.resolvePath( "resources" ).getDirectoryListing();
+			var directoryList : Array = File.applicationDirectory.resolvePath( "res" ).getDirectoryListing();
 
 			for each ( var directory : File in directoryList )
 			{

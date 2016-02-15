@@ -134,7 +134,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 	private String getSupportedLocales()
 	{
-		FileTree tree = project.fileTree( "${ outputVariantDir.path }/package/resources/" ) {
+		FileTree tree = project.fileTree( "${ outputVariantDir.path }/package/res" ) {
 			include "**/*.xml"
 		}
 

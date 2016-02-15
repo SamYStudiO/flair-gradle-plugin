@@ -68,11 +68,11 @@ public class GenerateResourcesClass extends AbstractTask
 		Node node
 
 		resources.each { file ->
-			if( file.parentFile.parentFile.name == "resources" || file.parentFile.parentFile.parentFile.name == "resources" )
+			if( file.parentFile.parentFile.name == "res" || file.parentFile.parentFile.parentFile.name == "res" )
 			{
 				File parent = file.parentFile
 
-				while( parent.parentFile.name != "resources" )
+				while( parent.parentFile.name != "res" )
 				{
 					parent = parent.parentFile
 				}
@@ -202,7 +202,7 @@ public class GenerateResourcesClass extends AbstractTask
 
 		list.each {
 
-			inputFiles.add( project.file( "${ moduleName }/src/${ it }/resources" ) )
+			inputFiles.add( project.file( "${ moduleName }/src/${ it }/res" ) )
 		}
 
 		outputFile = project.file( "${ moduleName }/src/main/generated/R.as" )
