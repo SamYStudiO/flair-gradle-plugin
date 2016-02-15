@@ -76,6 +76,7 @@ class Install extends AbstractVariantTask
 				adt.addArgument( "-platform ios" )
 				if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
 				adt.addArgument( "-device ${ id }" )
+				adt.addArgument( "-package" )
 				adt.addArgument( project.file( path ).path )
 				adt.execute( project )
 			}
