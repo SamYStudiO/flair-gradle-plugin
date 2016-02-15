@@ -12,6 +12,8 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
+import java.nio.charset.Charset
+
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
@@ -129,7 +131,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		project.file( "${ outputVariantDir.path }/package/" ).mkdirs( )
 		outputFile.createNewFile( )
-		outputFile.write( appContent )
+		outputFile.withOutputStream { writer -> writer.write( appContent.getBytes( Charset.forName("UTF-8") ) ) }
 	}
 
 	private String getSupportedLocales()
