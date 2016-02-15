@@ -25,7 +25,7 @@ public class PreparePackageTaskFactory implements IVariantTaskFactory<PreparePac
 
 		t.dependsOn Tasks.COMPILE.name + variantName , Tasks.PROCESS_APP_DESCRIPTOR.name + variantName ,
 				Tasks.PROCESS_RESOURCES.name + variantName , Tasks.PROCESS_ASSETS.name + variantName , Tasks.PROCESS_ICONS.name + variantName ,
-				Tasks.PROCESS_SPLASHS.name + variantName
+				Tasks.PROCESS_SPLASHS.name + variantName , Tasks.PROCESS_SIGNING.name + variantName
 
 		return t
 	}
