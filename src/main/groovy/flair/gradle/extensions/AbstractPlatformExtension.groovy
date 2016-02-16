@@ -549,7 +549,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.COMPILE_OPTIONS.name: return new ArrayList<String>( )
 
 				case FlairProperties.ADL_SCREEN_SIZE.name: return "540x920:540x960"
-				case FlairProperties.ADL_SCREEN_DPI.name: return 240
+				case FlairProperties.ADL_SCREEN_DPI.name: return p == Platforms.IOS ? 200 : 240
 				case FlairProperties.ADL_PUB_ID.name: return null
 				case FlairProperties.ADL_NO_DEBUG.name: return false
 				case FlairProperties.ADL_AT_LOGIN.name: return false
