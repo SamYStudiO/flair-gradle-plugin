@@ -20,7 +20,7 @@ enum FlairProperties
 	APP_VERSION( "appVersion" ) ,
 	APP_FULL_SCREEN( "appFullScreen" ) ,
 	APP_ASPECT_RATIO( "appAspectRatio" ) ,
-	APP_AUTO_ORIENT( "appAutoOrient" ) ,
+	APP_AUTO_ORIENTS( "appAutoOrients" ) ,
 	APP_DEPTH_AND_STENCIL( "appDepthAndStencil" ) ,
 	APP_DEFAULT_SUPPORTED_LANGUAGES( "appDefaultSupportedLanguage" ) ,
 

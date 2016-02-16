@@ -49,7 +49,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 	def String appAspectRatio
 
 	@Input
-	def String appAutoOrient
+	def String appAutoOrients
 
 	@Input
 	def String appDepthAndStencil
@@ -73,7 +73,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		appVersion = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
 		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperties.APP_FULL_SCREEN )
 		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperties.APP_ASPECT_RATIO )
-		appAutoOrient = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENT )
+		appAutoOrients = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENTS )
 		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEPTH_AND_STENCIL )
 		supportedLocales = getSupportedLocales( )
 	}
@@ -124,7 +124,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
 				.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
 				.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
-				.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrient }</autoOrients>" )
+				.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrients }</autoOrients>" )
 				.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 				.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )

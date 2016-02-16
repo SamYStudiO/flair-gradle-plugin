@@ -32,7 +32,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String appAspectRatio
 
-	private Boolean appAutoOrient
+	private Boolean appAutoOrients
 
 	private Boolean appDepthAndStencil
 
@@ -199,14 +199,14 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.appAspectRatio = appAspectRatio
 	}
 
-	public Boolean getAppAutoOrient()
+	public Boolean getAppAutoOrients()
 	{
-		return appAutoOrient
+		return appAutoOrients
 	}
 
-	public void appAutoOrient( Boolean appAutoOrient )
+	public void appAutoOrients( Boolean appAutoOrients )
 	{
-		this.appAutoOrient = appAutoOrient
+		this.appAutoOrients = appAutoOrients
 	}
 
 	public Boolean getAppDepthAndStencil()
@@ -532,7 +532,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperties.APP_VERSION.name: return "1.0.0"
 				case FlairProperties.APP_FULL_SCREEN.name: return true
 				case FlairProperties.APP_ASPECT_RATIO.name: return "any"
-				case FlairProperties.APP_AUTO_ORIENT.name: return true
+				case FlairProperties.APP_AUTO_ORIENTS.name: return true
 				case FlairProperties.APP_DEPTH_AND_STENCIL.name: return false
 				case FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
 
