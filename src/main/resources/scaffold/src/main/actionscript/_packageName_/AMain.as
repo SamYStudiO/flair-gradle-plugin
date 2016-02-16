@@ -116,7 +116,6 @@ package _packageName_
 			_starling = new Starling( StarlingMain , stage );
 			_starling.showStats = Capabilities.isDebugger;
 			_starling.simulateMultitouch = isDesktop();
-			_starling.enableErrorChecking = Capabilities.isDebugger;
 			_starling.supportHighResolutions = isDesktop();
 
 			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
