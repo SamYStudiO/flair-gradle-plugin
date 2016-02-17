@@ -9,7 +9,7 @@ public class VariantContainer extends AbstractVariantTask
 {
 	public VariantContainer()
 	{
-		group = Groups.BUILD.name
+		group = TaskGroup.BUILD.name
 		description = ""
 	}
 

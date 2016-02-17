@@ -2,9 +2,9 @@ package flair.gradle.structures
 
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**
@@ -12,14 +12,14 @@ import org.gradle.api.Project
  */
 public class PlatformStructure implements IStructure
 {
-	private Platforms platform
+	private Platform platform
 
-	public Platforms getPlatform()
+	public Platform getPlatform()
 	{
 		return platform
 	}
 
-	public PlatformStructure( Platforms platform )
+	public PlatformStructure( Platform platform )
 	{
 		this.platform = platform
 	}
@@ -28,11 +28,11 @@ public class PlatformStructure implements IStructure
 	public void create( Project project , File source )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
 		if( project.fileTree( "${ moduleName }/src/${ platform.name }" ).size( ) > 0 ) return
 
-		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
+		String packageName = extensionManager.getFlairProperty( FlairProperty.PACKAGE_NAME )
 		String s = packageName.replace( "." , "/" )
 
 		project.copy {
@@ -52,7 +52,7 @@ public class PlatformStructure implements IStructure
 			file.write( file.text.replace( "_packageName_" , packageName ) )
 		}
 
-		if( platform != Platforms.IOS )
+		if( platform != Platform.IOS )
 		{
 			String charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!$#{()}@%?_[]-+=*/'
 			String password = ""

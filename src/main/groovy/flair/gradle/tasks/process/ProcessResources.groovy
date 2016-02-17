@@ -2,9 +2,9 @@ package flair.gradle.tasks.process
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Png2Atf
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Groups
+import flair.gradle.tasks.TaskGroup
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
@@ -38,13 +38,13 @@ class ProcessResources extends AbstractVariantTask
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package/res" )
 
-		excludeResources = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_EXCLUDE_RESOURCES ) as List<String>
-		generateAtf = extensionManager.getFlairProperty( variant , FlairProperties.GENERATE_ATF_TEXTURES_FROM_DRAWABLES )
+		excludeResources = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_EXCLUDE_RESOURCES ) as List<String>
+		generateAtf = extensionManager.getFlairProperty( variant , FlairProperty.GENERATE_ATF_TEXTURES_FROM_DRAWABLES )
 	}
 
 	public ProcessResources()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 

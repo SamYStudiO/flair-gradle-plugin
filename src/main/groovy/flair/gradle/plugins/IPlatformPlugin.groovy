@@ -1,13 +1,13 @@
 package flair.gradle.plugins
 
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public interface IPlatformPlugin extends IExtensionPlugin , IStructurePlugin , IVariantTaskPlugin , IConfigurationPlugin
 {
-	Platforms getPlatform()
+	Platform getPlatform()
 
-	void setPlatform( Platforms platform )
+	void setPlatform( Platform platform )
 }

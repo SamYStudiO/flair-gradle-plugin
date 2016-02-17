@@ -3,7 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adb
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Idb
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -15,23 +15,23 @@ class ListDevices extends AbstractTask
 
 	private ICli adb = new Adb( )
 
-	public Platforms platform
+	public Platform platform
 
 	public ListDevices()
 	{
-		group = Groups.DEVICES.name
+		group = TaskGroup.DEVICES.name
 		description = ""
 	}
 
 	@TaskAction
 	public void list()
 	{
-		if( platform == Platforms.IOS )
+		if( platform == Platform.IOS )
 		{
 			idb.addArgument( "-devices" )
 			idb.execute( project )
 		}
-		else if( platform == Platforms.ANDROID )
+		else if( platform == Platform.ANDROID )
 		{
 			adb.addArgument( "devices" )
 			adb.execute( project )

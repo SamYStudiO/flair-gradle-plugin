@@ -3,7 +3,7 @@ package flair.gradle.extensions
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-enum FlairProperties
+enum FlairProperty
 {
 	MODULE_NAME( "moduleName" ) ,
 	PACKAGE_NAME( "packageName" ) ,
@@ -54,7 +54,7 @@ enum FlairProperties
 
 	private String name
 
-	FlairProperties( String name )
+	FlairProperty( String name )
 	{
 		this.name = name
 	}

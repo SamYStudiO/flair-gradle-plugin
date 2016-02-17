@@ -2,9 +2,9 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -41,14 +41,14 @@ class Compile extends AbstractVariantTask
 		inputFiles = findInputFiles( )
 		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 
-		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG )
-		mainClass = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS )
-		compileOptions = extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS ) as List<String>
+		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
+		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_MAIN_CLASS )
+		compileOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) as List<String>
 	}
 
 	public Compile()
 	{
-		group = Groups.BUILD.name
+		group = TaskGroup.BUILD.name
 		description = ""
 	}
 
@@ -57,7 +57,7 @@ class Compile extends AbstractVariantTask
 	{
 		cli.clearArguments( )
 
-		if( variant.platform == Platforms.DESKTOP ) cli.addArgument( "+configname=air" ) else cli.addArgument( "+configname=airmobile" )
+		if( variant.platform == Platform.DESKTOP ) cli.addArgument( "+configname=air" ) else cli.addArgument( "+configname=airmobile" )
 
 		if( debug ) cli.addArgument( "-debug=true" )
 

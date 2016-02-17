@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**
@@ -17,7 +17,7 @@ public class PluginManager
 		return hasPlugin
 	}
 
-	public static boolean hasPlatformPlugin( Project project , Platforms platform )
+	public static boolean hasPlatformPlugin( Project project , Platform platform )
 	{
 		boolean hasPlatform = false
 
@@ -29,9 +29,9 @@ public class PluginManager
 		return hasPlatform
 	}
 
-	public static List<Platforms> getCurrentPlatforms( Project project )
+	public static List<Platform> getCurrentPlatforms( Project project )
 	{
-		List<Platforms> list = new ArrayList<Platforms>( )
+		List<Platform> list = new ArrayList<Platform>( )
 
 		project.plugins.each { plugin ->
 

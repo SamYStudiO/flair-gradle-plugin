@@ -1,11 +1,11 @@
 package flair.gradle.plugins
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
 public interface IConfigurationPlugin
 {
-	List<Configurations> getConfigurations()
+	List<Config> getConfigurations()
 }

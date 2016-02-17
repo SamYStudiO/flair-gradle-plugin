@@ -1,7 +1,7 @@
 package flair.gradle.tasks.process
 
 import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Groups
+import flair.gradle.tasks.TaskGroup
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
@@ -30,7 +30,7 @@ class ProcessSplashs extends AbstractVariantTask
 
 	public ProcessSplashs()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 

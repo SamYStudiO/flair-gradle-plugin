@@ -1,9 +1,9 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
-import flair.gradle.tasks.Tasks
-import flair.gradle.variants.Platforms
+import flair.gradle.tasks.TaskDefinition
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
 
@@ -32,19 +32,19 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 			if( list.indexOf( name + ".xml" ) < 0 )
 			{
 				String profileName = "flair_" + it.getNameWithType( NamingTypes.UNDERSCORE )
-				String app = it.platform == Platforms.IOS ? "IOS" : it.platform == Platforms.ANDROID ? "Android" : ""
-				String transport = flair.getFlairProperty( it , FlairProperties.PACKAGE_CONNECT ) ? "Network" : "USB"
-				String emulator = it.platform == Platforms.IOS ? "OtherIOSDevice" : it.platform == Platforms.ANDROID ? "OtherAndroidDevice" : ""
-				String size = flair.getFlairProperty( it , FlairProperties.ADL_SCREEN_SIZE )
+				String app = it.platform == Platform.IOS ? "IOS" : it.platform == Platform.ANDROID ? "Android" : ""
+				String transport = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.PACKAGE_CONNECT ) ? "Network" : "USB"
+				String emulator = it.platform == Platform.IOS ? "OtherIOSDevice" : it.platform == Platform.ANDROID ? "OtherAndroidDevice" : ""
+				String size = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.ADL_SCREEN_SIZE )
 				String fullHeight = size.split( ":" )[ 1 ].split( "x" )[ 1 ]
 				String fullWidth = size.split( ":" )[ 1 ].split( "x" )[ 0 ]
 				String target = "Emulator"
-				String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME )
-				String dpi = flair.getFlairProperty( it , FlairProperties.ADL_SCREEN_DPI )
+				String moduleName = flair.getFlairProperty( flair.gradle.extensions.FlairProperty.MODULE_NAME )
+				String dpi = flair.getFlairProperty( it , FlairProperty.ADL_SCREEN_DPI )
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
-				String port = flair.getFlairProperty( it , FlairProperties.PACKAGE_LISTEN ) ?: "7936"
-				String gradleAssemble = Tasks.PREPARE_PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				String port = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.PACKAGE_LISTEN ) ?: "7936"
+				String gradleAssemble = TaskDefinition.PREPARE_PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
 						.replaceAll( "\\{profileName\\}" , profileName )

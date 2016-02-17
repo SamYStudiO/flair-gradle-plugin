@@ -27,7 +27,7 @@ public class Certificate extends AbstractTask
 
 	public Certificate()
 	{
-		group = Groups.SIGNING.name
+		group = TaskGroup.SIGNING.name
 		description = ""
 	}
 

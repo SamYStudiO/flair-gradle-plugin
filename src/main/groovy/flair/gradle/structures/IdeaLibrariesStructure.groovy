@@ -1,6 +1,6 @@
 package flair.gradle.structures
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
@@ -13,7 +13,7 @@ class IdeaLibrariesStructure implements IStructure
 	public void create( Project project , File source )
 	{
 		List<String> libraries = new ArrayList<String>( )
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.LIBRARY.name ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.LIBRARY.name ) }.each {
 
 			it.files.each { file ->
 

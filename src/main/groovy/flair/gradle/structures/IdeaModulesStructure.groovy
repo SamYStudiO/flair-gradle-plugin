@@ -1,6 +1,6 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
@@ -13,7 +13,7 @@ class IdeaModulesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperty.MODULE_NAME )
 
 		if( !project.rootProject.file( ".idea/modules.xml" ).exists( ) )
 		{

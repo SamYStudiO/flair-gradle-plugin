@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.InputFiles
@@ -22,7 +22,7 @@ public class GenerateResourcesClass extends AbstractTask
 
 	public GenerateResourcesClass()
 	{
-		group = Groups.GENERATED.name
+		group = TaskGroup.GENERATED.name
 		description = ""
 	}
 
@@ -31,8 +31,8 @@ public class GenerateResourcesClass extends AbstractTask
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
-		String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
+		String packageName = extensionManager.getFlairProperty( FlairProperty.PACKAGE_NAME )
 
 		if( !moduleName || !packageName || !template ) return
 
@@ -186,7 +186,7 @@ public class GenerateResourcesClass extends AbstractTask
 	public void findInputAndOutputFiles()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
 		inputFiles = new ArrayList<File>( )
 

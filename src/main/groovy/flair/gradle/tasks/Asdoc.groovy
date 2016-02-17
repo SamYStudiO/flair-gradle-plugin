@@ -1,8 +1,8 @@
 package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
-import flair.gradle.dependencies.Configurations
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.dependencies.Config
+import flair.gradle.extensions.FlairProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -15,14 +15,14 @@ public class Asdoc extends AbstractTask
 
 	public Asdoc()
 	{
-		group = Groups.DOCUMENTATION.name
+		group = TaskGroup.DOCUMENTATION.name
 		description = ""
 	}
 
 	@TaskAction
 	public void asdoc()
 	{
-		String srcRoot = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) + "/src"
+		String srcRoot = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) + "/src"
 
 		if( !srcRoot ) return
 
@@ -41,7 +41,7 @@ public class Asdoc extends AbstractTask
 
 	private void addSourcePaths()
 	{
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.SOURCE.name.toLowerCase( ) ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.SOURCE.name.toLowerCase( ) ) }.each {
 
 			it.files.each { file ->
 
@@ -64,7 +64,7 @@ public class Asdoc extends AbstractTask
 
 	private void addAsLibraryPaths()
 	{
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.AS_LIBRARY.name.toLowerCase( ) ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.AS_LIBRARY.name.toLowerCase( ) ) }.each {
 
 			it.files.each { file ->
 
@@ -76,7 +76,7 @@ public class Asdoc extends AbstractTask
 
 	private void addLibraryPaths()
 	{
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.LIBRARY.name.toLowerCase( ) ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.LIBRARY.name.toLowerCase( ) ) }.each {
 
 			it.files.each { file ->
 

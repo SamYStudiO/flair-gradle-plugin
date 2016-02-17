@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**
@@ -10,7 +10,7 @@ public class VariantExtension extends AbstractPlatformExtension implements IVari
 {
 	private String dimension
 
-	public VariantExtension( String name , Project project , Platforms platform )
+	public VariantExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 	}

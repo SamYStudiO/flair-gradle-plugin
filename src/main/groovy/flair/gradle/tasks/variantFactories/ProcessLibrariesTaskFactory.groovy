@@ -1,6 +1,6 @@
 package flair.gradle.tasks.variantFactories
 
-import flair.gradle.tasks.Tasks
+import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.process.ProcessLibraries
 import flair.gradle.variants.Variant
 import org.gradle.api.Project
@@ -12,13 +12,13 @@ class ProcessLibrariesTaskFactory implements IVariantTaskFactory<ProcessLibrarie
 {
 	public ProcessLibraries create( Project project , Variant variant )
 	{
-		String name = Tasks.PROCESS_LIBRARIES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_LIBRARIES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
 
 		ProcessLibraries t = project.tasks.findByName( name ) as ProcessLibraries
 
 		if( !t ) t = project.tasks.create( name , ProcessLibraries )
 
-		t.group = Tasks.PROCESS_LIBRARIES.group.name
+		t.group = TaskDefinition.PROCESS_LIBRARIES.group.name
 		t.variant = variant
 
 		return t

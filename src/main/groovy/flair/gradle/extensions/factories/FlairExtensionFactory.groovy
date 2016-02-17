@@ -1,6 +1,6 @@
 package flair.gradle.extensions.factories
 
-import flair.gradle.extensions.Extensions
+import flair.gradle.extensions.Extension
 import flair.gradle.extensions.FlairExtension
 import flair.gradle.extensions.IPlatformContainerExtension
 import org.gradle.api.Project
@@ -14,6 +14,6 @@ public class FlairExtensionFactory implements IExtensionFactory<IPlatformContain
 	@Override
 	public IPlatformContainerExtension create( ExtensionAware parent , Project project )
 	{
-		return parent.extensions.create( Extensions.FLAIR.name , FlairExtension , Extensions.FLAIR.name , project , null )
+		return parent.extensions.create( Extension.FLAIR.name , FlairExtension , Extension.FLAIR.name , project , null )
 	}
 }

@@ -2,7 +2,7 @@ package flair.gradle.extensions.factories
 
 import flair.gradle.extensions.IPlatformContainerExtension
 import flair.gradle.extensions.PlatformContainerExtension
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 
@@ -11,9 +11,9 @@ import org.gradle.api.plugins.ExtensionAware
  */
 public class PlatformExtensionFactory implements IExtensionFactory<IPlatformContainerExtension>
 {
-	private Platforms platform
+	private Platform platform
 
-	public PlatformExtensionFactory( Platforms platform )
+	public PlatformExtensionFactory( Platform platform )
 	{
 		this.platform = platform
 	}

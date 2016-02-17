@@ -3,7 +3,7 @@ package flair.gradle.dependencies
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Configurations {
+public enum Config {
 	SOURCE( "source" , [ "src/main/actionscript" , "src/main/fonts" , "src/main/generated" ] ) ,
 	LIBRARY( "library" , null , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
 	AS_LIBRARY( "asLibrary" , [ "libs_as" ] ) ,
@@ -28,11 +28,11 @@ public enum Configurations {
 	DESKTOP_NATIVE_COMPILE( "desktopNativeLibrary" ) ,
 	DESKTOP_PACKAGE( "desktopPack" , [ "src/desktop/assets" ] ) ,
 
-	public static final List<Configurations> DEFAULTS = [ SOURCE ,
-														  LIBRARY ,
-														  AS_LIBRARY ,
-														  NATIVE_LIBRARY ,
-														  PACKAGE ]
+	public static final List<Config> DEFAULTS = [ SOURCE ,
+												  LIBRARY ,
+												  AS_LIBRARY ,
+												  NATIVE_LIBRARY ,
+												  PACKAGE ]
 
 	private String name
 
@@ -40,12 +40,12 @@ public enum Configurations {
 
 	private Map<String , String> fileTree
 
-	public Configurations( String name )
+	public Config( String name )
 	{
 		this.name = name
 	}
 
-	public Configurations( String name , List<String> files , Map<String , String> fileTree = null )
+	public Config( String name , List<String> files , Map<String , String> fileTree = null )
 	{
 		this.name = name
 		this.files = files

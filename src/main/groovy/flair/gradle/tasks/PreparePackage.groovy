@@ -31,7 +31,7 @@ class PreparePackage extends AbstractVariantTask
 
 	public PreparePackage()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 

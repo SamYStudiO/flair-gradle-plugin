@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.InputFiles
@@ -22,7 +22,7 @@ public class GenerateFontsClass extends AbstractTask
 
 	public GenerateFontsClass()
 	{
-		group = Groups.GENERATED.name
+		group = TaskGroup.GENERATED.name
 		description = ""
 	}
 
@@ -31,7 +31,7 @@ public class GenerateFontsClass extends AbstractTask
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
 		if( !moduleName || !template ) return
 
@@ -108,7 +108,7 @@ public class GenerateFontsClass extends AbstractTask
 	public void findInputAndOutputFiles()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
 		inputFiles = new ArrayList<File>( )
 

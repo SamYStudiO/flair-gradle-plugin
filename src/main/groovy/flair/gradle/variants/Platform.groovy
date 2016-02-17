@@ -1,16 +1,17 @@
-package flair.gradle.extensions
+package flair.gradle.variants
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Extensions {
+public enum Platform {
 
-	FLAIR( "flair" ) ,
-	TEXTURE_PACKER( "texturePacker" )
+	IOS( "ios" ) ,
+	ANDROID( "android" ) ,
+	DESKTOP( "desktop" )
 
 	private String name
 
-	public Extensions( String name )
+	public Platform( String name )
 	{
 		this.name = name
 	}

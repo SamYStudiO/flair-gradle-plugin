@@ -2,8 +2,8 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.FlairProperties
-import flair.gradle.variants.Platforms
+import flair.gradle.extensions.FlairProperty
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.Input
@@ -82,31 +82,31 @@ class Package extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 
-		connect = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_CONNECT ) ?: "null"
-		listen = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_LISTEN ) ?: "null"
-		sampler = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_SAMPLER )
-		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_HIDE_ANE_LIB_SYMBOLS )
-		x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86 )
-		target = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET ) ?: "null"
-		platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK ) ?: "null"
-		version = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
-		debug = extensionManager.getFlairProperty( variant , FlairProperties.DEBUG )
+		connect = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_CONNECT ) ?: "null"
+		listen = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_LISTEN ) ?: "null"
+		sampler = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_SAMPLER )
+		hideAneLibSymbols = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_HIDE_ANE_LIB_SYMBOLS )
+		x86 = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_X86 )
+		target = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_TARGET ) ?: "null"
+		platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK ) ?: "null"
+		version = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
+		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 
-		alias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS ) ?: "null"
-		provider = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME ) ?: "null"
-		storeType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE ) ?: "null"
-		storePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS ) ?: "null"
-		keyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE ) ?: "null"
-		keyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS ) ?: "null"
-		tsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA ) ?: "null"
-		provisioning = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE ) ?: "null"
+		alias = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_ALIAS ) ?: "null"
+		provider = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVIDER_NAME ) ?: "null"
+		storeType = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_TYPE ) ?: "null"
+		storePass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS ) ?: "null"
+		keyStore = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_STORE ) ?: "null"
+		keyPass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_PASS ) ?: "null"
+		tsa = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_TSA ) ?: "null"
+		provisioning = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ) ?: "null"
 
 		outputFile = project.file( "${ project.buildDir.path }/${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
 	}
 
 	public Package()
 	{
-		group = Groups.PACKAGE.name
+		group = TaskGroup.PACKAGE.name
 		description = ""
 	}
 
@@ -117,19 +117,19 @@ class Package extends AbstractVariantTask
 
 		cli.addArgument( "-package" )
 
-		if( variant.platform == Platforms.DESKTOP ) addSigning( )
+		if( variant.platform == Platform.DESKTOP ) addSigning( )
 		addTarget( )
-		if( variant.platform != Platforms.DESKTOP )
+		if( variant.platform != Platform.DESKTOP )
 		{
 			if( connect != "null" ) addConnect( ) else if( listen != "null" ) addListen( )
 		}
-		if( variant.platform == Platforms.IOS )
+		if( variant.platform == Platform.IOS )
 		{
 			if( sampler ) addSampler( )
 			if( hideAneLibSymbols ) addHideAneLibSymbols( )
 		}
-		if( variant.platform == Platforms.ANDROID ) addArchitecture( )
-		if( variant.platform != Platforms.DESKTOP ) addSigning( )
+		if( variant.platform == Platform.ANDROID ) addArchitecture( )
+		if( variant.platform != Platform.DESKTOP ) addSigning( )
 		addOutput( )
 		addFilesAndDirectories( )
 		addExtensionNatives( )
@@ -258,15 +258,15 @@ class Package extends AbstractVariantTask
 
 		switch( variant.platform )
 		{
-			case Platforms.IOS:
+			case Platform.IOS:
 				extension = "ipa"
 				break
 
-			case Platforms.ANDROID:
+			case Platform.ANDROID:
 				extension = "apk"
 				break
 
-			case Platforms.DESKTOP:
+			case Platform.DESKTOP:
 
 				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
 				break

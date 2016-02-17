@@ -1,12 +1,12 @@
 package flair.gradle.plugins
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import flair.gradle.extensions.factories.IExtensionFactory
 import flair.gradle.extensions.factories.PlatformExtensionFactory
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.PlatformStructure
 import flair.gradle.tasks.variantFactories.*
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -15,16 +15,16 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 {
 	protected List<IVariantTaskFactory> variantFactories = new ArrayList<IVariantTaskFactory>( )
 
-	protected Platforms platform
+	protected Platform platform
 
 	@Override
-	public Platforms getPlatform()
+	public Platform getPlatform()
 	{
 		return platform
 	}
 
 	@Override
-	public void setPlatform( Platforms platform )
+	public void setPlatform( Platform platform )
 	{
 		this.platform = platform
 	}
@@ -39,9 +39,9 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 	}
 
 	@Override
-	public List<Configurations> getConfigurations()
+	public List<Config> getConfigurations()
 	{
-		return Configurations.values( ).findAll {
+		return Config.values( ).findAll {
 			it.name.toLowerCase( ).indexOf( platform.name.toLowerCase( ) ) == 0
 		}
 	}

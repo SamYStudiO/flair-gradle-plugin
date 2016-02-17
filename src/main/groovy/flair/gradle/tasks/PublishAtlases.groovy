@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.TexturePacker
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
 
@@ -13,14 +13,14 @@ class PublishAtlases extends AbstractTask
 {
 	public PublishAtlases()
 	{
-		group = Groups.TEXTURE_PACKER.name
+		group = TaskGroup.TEXTURE_PACKER.name
 		description = ""
 	}
 
 	@TaskAction
 	public void publishAtlases()
 	{
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 		ICli tp = new TexturePacker( )
 
 		FileTree tree = project.fileTree( "${ moduleName }/src" )

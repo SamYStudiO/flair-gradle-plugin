@@ -1,9 +1,9 @@
 package flair.gradle.plugins
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.Extensions
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.Extension
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.extensions.factories.FlairExtensionFactory
 import flair.gradle.extensions.factories.IExtensionFactory
@@ -12,7 +12,7 @@ import flair.gradle.structures.IStructure
 import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.GenerateFontsClass
 import flair.gradle.tasks.GenerateResourcesClass
-import flair.gradle.tasks.Tasks
+import flair.gradle.tasks.TaskDefinition
 import flair.gradle.variants.Variant
 import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
@@ -43,11 +43,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			if( it instanceof IExtensionPlugin )
 			{
-				it.extensionFactory.create( it == this ? project : project.extensions.getByName( Extensions.FLAIR.name ) as ExtensionAware , project )
+				it.extensionFactory.create( it == this ? project : project.extensions.getByName( Extension.FLAIR.name ) as ExtensionAware , project )
 
 				if( it == this )
 				{
-					flair = project.extensions.getByName( Extensions.FLAIR.name ) as IExtensionManager
+					flair = project.extensions.getByName( Extension.FLAIR.name ) as IExtensionManager
 				}
 			}
 
@@ -79,9 +79,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	}
 
 	@Override
-	public List<Configurations> getConfigurations()
+	public List<Config> getConfigurations()
 	{
-		return Configurations.DEFAULTS
+		return Config.DEFAULTS
 	}
 
 	@Override
@@ -98,13 +98,13 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	@Override
 	protected void addTasks()
 	{
-		project.tasks.create( Tasks.CLEAN.name , Tasks.CLEAN.type )
-		project.tasks.create( Tasks.ASDOC.name , Tasks.ASDOC.type )
+		project.tasks.create( TaskDefinition.CLEAN.name , TaskDefinition.CLEAN.type )
+		project.tasks.create( TaskDefinition.ASDOC.name , TaskDefinition.ASDOC.type )
 	}
 
 	private boolean isReady()
 	{
-		boolean hasPackageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME ) as boolean
+		boolean hasPackageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME ) as boolean
 		boolean hasValidSdk = new Sdk( project ).isAirSdk( )
 
 		if( !hasValidSdk )
@@ -130,7 +130,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		}
 	}
 
-	private void createConfigurations( List<Configurations> list )
+	private void createConfigurations( List<Config> list )
 	{
 		list.each { conf ->
 
@@ -139,7 +139,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( conf.files )
 				{
 					conf.files.each {
-						project.dependencies.add( conf.name , project.files( "${ flair.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ it }" ) )
+						project.dependencies.add( conf.name , project.files( "${ flair.getFlairProperty( FlairProperty.MODULE_NAME ) }/${ it }" ) )
 					}
 				}
 
@@ -149,7 +149,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 					map.each {
 
-						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( FlairProperties.MODULE_NAME ) }/${ it.value }"
+						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( flair.gradle.extensions.FlairProperty.MODULE_NAME ) }/${ it.value }"
 					}
 
 					project.dependencies.add( conf.name , project.fileTree( map ) )
@@ -160,8 +160,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private void createStructures()
 	{
-		String moduleName = flair.getFlairProperty( FlairProperties.MODULE_NAME )
-		String packageName = flair.getFlairProperty( FlairProperties.PACKAGE_NAME )
+		String moduleName = flair.getFlairProperty( FlairProperty.MODULE_NAME )
+		String packageName = flair.getFlairProperty( flair.gradle.extensions.FlairProperty.PACKAGE_NAME )
 
 		if( !moduleName || !packageName ) return
 
@@ -228,9 +228,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 		flair.allActivePlatformVariants.each {
 
-			assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-			compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-			pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+			assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+			compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+			pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 			if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 			if( project.tasks.findByName( compile ) ) listCompile.add( compile )
@@ -239,33 +239,33 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 		if( listAssemble.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" )
+			t = project.tasks.findByName( TaskDefinition.ASSEMBLE.name + "All" )
 			if( !t )
 			{
-				t = project.tasks.create( Tasks.ASSEMBLE.name + "All" )
-				t.group = Tasks.ASSEMBLE.group.name
+				t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" )
+				t.group = TaskDefinition.ASSEMBLE.group.name
 				t.dependsOn listAssemble
 			}
 		}
 
 		if( listCompile.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.findByName( Tasks.COMPILE.name + "All" )
+			t = project.tasks.findByName( TaskDefinition.COMPILE.name + "All" )
 			if( !t )
 			{
-				t = project.tasks.create( Tasks.COMPILE.name + "All" )
-				t.group = Tasks.COMPILE.group.name
+				t = project.tasks.create( TaskDefinition.COMPILE.name + "All" )
+				t.group = TaskDefinition.COMPILE.group.name
 				t.dependsOn listCompile
 			}
 		}
 
 		if( listPackage.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
-			t = project.tasks.findByName( Tasks.PACKAGE.name + "All" )
+			t = project.tasks.findByName( TaskDefinition.PACKAGE.name + "All" )
 			if( !t )
 			{
-				t = project.tasks.create( Tasks.PACKAGE.name + "All" )
-				t.group = Tasks.PACKAGE.group.name
+				t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" )
+				t.group = TaskDefinition.PACKAGE.group.name
 				t.dependsOn listPackage
 			}
 		}
@@ -277,9 +277,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			listPackage = new ArrayList<String>( )
 
 			flair.getPlatformVariants( it ).each {
-				assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-				compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-				pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+				pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 				if( project.tasks.findByName( compile ) ) listCompile.add( compile )
@@ -288,11 +288,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			if( listAssemble.size( ) > 1 )
 			{
-				t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
+				t = project.tasks.findByName( TaskDefinition.ASSEMBLE.name + "All" + it.name.capitalize( ) )
 				if( !t )
 				{
-					t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + it.name.capitalize( ) )
-					t.group = Tasks.ASSEMBLE.group.name
+					t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" + it.name.capitalize( ) )
+					t.group = TaskDefinition.ASSEMBLE.group.name
 					t.dependsOn listAssemble
 				}
 			}
@@ -300,11 +300,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			if( listCompile.size( ) > 1 )
 			{
 
-				t = project.tasks.findByName( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
+				t = project.tasks.findByName( TaskDefinition.COMPILE.name + "All" + it.name.capitalize( ) )
 				if( !t )
 				{
-					t = project.tasks.create( Tasks.COMPILE.name + "All" + it.name.capitalize( ) )
-					t.group = Tasks.COMPILE.group.name
+					t = project.tasks.create( TaskDefinition.COMPILE.name + "All" + it.name.capitalize( ) )
+					t.group = TaskDefinition.COMPILE.group.name
 					t.dependsOn listCompile
 				}
 			}
@@ -312,11 +312,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			if( listPackage.size( ) > 1 )
 			{
 
-				t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
+				t = project.tasks.findByName( TaskDefinition.PACKAGE.name + "All" + it.name.capitalize( ) )
 				if( !t )
 				{
-					t = project.tasks.create( Tasks.PACKAGE.name + "All" + it.name.capitalize( ) )
-					t.group = Tasks.PACKAGE.group.name
+					t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" + it.name.capitalize( ) )
+					t.group = TaskDefinition.PACKAGE.group.name
 					t.dependsOn listPackage
 				}
 			}
@@ -333,9 +333,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				listPackage = new ArrayList<String>( )
 
 				flair.allActivePlatformVariants.each {
-					assemble = Tasks.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-					compile = Tasks.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
-					pack = Tasks.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+					assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+					compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
+					pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 					if( it.buildType == type && project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 					if( it.buildType == type && project.tasks.findByName( compile ) ) listCompile.add( compile )
@@ -345,11 +345,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( listAssemble.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.ASSEMBLE.name + "All" + type.capitalize( ) )
+					t = project.tasks.findByName( TaskDefinition.ASSEMBLE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.ASSEMBLE.name + "All" + type.capitalize( ) )
-						t.group = Tasks.ASSEMBLE.group.name
+						t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" + type.capitalize( ) )
+						t.group = TaskDefinition.ASSEMBLE.group.name
 						t.dependsOn listAssemble
 					}
 				}
@@ -357,11 +357,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( listCompile.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.COMPILE.name + "All" + type.capitalize( ) )
+					t = project.tasks.findByName( TaskDefinition.COMPILE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.COMPILE.name + "All" + type.capitalize( ) )
-						t.group = Tasks.COMPILE.group.name
+						t = project.tasks.create( TaskDefinition.COMPILE.name + "All" + type.capitalize( ) )
+						t.group = TaskDefinition.COMPILE.group.name
 						t.dependsOn listCompile
 					}
 				}
@@ -369,11 +369,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				if( listPackage.size( ) > 1 )
 				{
 
-					t = project.tasks.findByName( Tasks.PACKAGE.name + "All" + type.capitalize( ) )
+					t = project.tasks.findByName( TaskDefinition.PACKAGE.name + "All" + type.capitalize( ) )
 					if( !t )
 					{
-						t = project.tasks.create( Tasks.PACKAGE.name + "All" + type.capitalize( ) )
-						t.group = Tasks.PACKAGE.group.name
+						t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" + type.capitalize( ) )
+						t.group = TaskDefinition.PACKAGE.group.name
 						t.dependsOn listPackage
 					}
 				}
@@ -383,10 +383,10 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private createGeneratedTasks()
 	{
-		GenerateResourcesClass resourcesTask = project.tasks.create( Tasks.GENERATE_RESOURCES_CLASS.name , Tasks.GENERATE_RESOURCES_CLASS.type ) as GenerateResourcesClass
+		GenerateResourcesClass resourcesTask = project.tasks.create( TaskDefinition.GENERATE_RESOURCES_CLASS.name , TaskDefinition.GENERATE_RESOURCES_CLASS.type ) as GenerateResourcesClass
 		resourcesTask.findInputAndOutputFiles( )
 
-		GenerateFontsClass fontsTask = project.tasks.create( Tasks.GENERATE_FONTS_CLASS.name , Tasks.GENERATE_FONTS_CLASS.type ) as GenerateFontsClass
+		GenerateFontsClass fontsTask = project.tasks.create( TaskDefinition.GENERATE_FONTS_CLASS.name , TaskDefinition.GENERATE_FONTS_CLASS.type ) as GenerateFontsClass
 		fontsTask.findInputAndOutputFiles( )
 	}
 }

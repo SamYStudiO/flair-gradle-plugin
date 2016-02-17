@@ -1,6 +1,6 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 
 /**
@@ -8,7 +8,7 @@ import flair.gradle.variants.Variant
  */
 public interface IExtensionManager
 {
-	IPlatformContainerExtension getPlatformContainer( Platforms platform )
+	IPlatformContainerExtension getPlatformContainer( Platform platform )
 
 	List<String> getAllActivePlatformProductFlavors()
 
@@ -16,17 +16,17 @@ public interface IExtensionManager
 
 	List<Variant> getAllActivePlatformVariants()
 
-	List<Variant> getPlatformVariants( Platforms platform )
+	List<Variant> getPlatformVariants( Platform platform )
 
-	Object getFlairProperty( FlairProperties property )
+	Object getFlairProperty( FlairProperty property )
 
-	Object getFlairProperty( Platforms platform , FlairProperties property )
+	Object getFlairProperty( Platform platform , FlairProperty property )
 
-	Object getFlairProperty( Variant variant , FlairProperties property )
+	Object getFlairProperty( Variant variant , FlairProperty property )
 
-	Object getFlairProperty( String extensionName , FlairProperties property )
+	Object getFlairProperty( String extensionName , FlairProperty property )
 
-	Object getFlairProperty( String extensionName , Platforms platform , FlairProperties property )
+	Object getFlairProperty( String extensionName , Platform platform , FlairProperty property )
 
-	Object getFlairProperty( String extensionName , Variant variant , FlairProperties property )
+	Object getFlairProperty( String extensionName , Variant variant , FlairProperty property )
 }

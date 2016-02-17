@@ -3,9 +3,9 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adb
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
@@ -21,16 +21,16 @@ class Install extends AbstractVariantTask
 
 	public Install()
 	{
-		group = Groups.INSTALL.name
+		group = TaskGroup.INSTALL.name
 		description = ""
 	}
 
 	@TaskAction
 	public void install()
 	{
-		String path = "${ project.buildDir.path }/${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }.${ getExtension( ) }"
+		String path = "${ project.buildDir.path }/${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }.${ getExtension( ) }"
 
-		if( variant.platform == Platforms.DESKTOP )
+		if( variant.platform == Platform.DESKTOP )
 		{
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
@@ -43,7 +43,7 @@ class Install extends AbstractVariantTask
 
 			println( outputStream.toString( ) )
 		}
-		else if( variant.platform == Platforms.ANDROID )
+		else if( variant.platform == Platform.ANDROID )
 		{
 			adb.addArgument( "devices" )
 			String id = new CliDevicesOutputParser( ).parse( adb.execute( project ) )
@@ -62,7 +62,7 @@ class Install extends AbstractVariantTask
 		}
 		else
 		{
-			String platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK )
+			String platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK )
 
 			adt.addArgument( "-devices" )
 			adt.addArgument( "-platform ios" )
@@ -90,15 +90,15 @@ class Install extends AbstractVariantTask
 
 		switch( variant.platform )
 		{
-			case Platforms.IOS:
+			case Platform.IOS:
 				extension = "ipa"
 				break
 
-			case Platforms.ANDROID:
+			case Platform.ANDROID:
 				extension = "apk"
 				break
 
-			case Platforms.DESKTOP:
+			case Platform.DESKTOP:
 
 				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
 				break

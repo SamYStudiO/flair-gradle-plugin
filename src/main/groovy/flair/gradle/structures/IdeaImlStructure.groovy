@@ -1,11 +1,11 @@
 package flair.gradle.structures
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -33,7 +33,7 @@ class IdeaImlStructure implements IStructure
 		this.project = project
 
 		extensionManager = project.flair as IExtensionManager
-		moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 		configurationTemplate = project.file( "${ source.path }/idea/configuration_template.xml" ).text
 		sdkTemplate = project.file( "${ source.path }/idea/sdk_template.xml" ).text
 
@@ -108,7 +108,7 @@ class IdeaImlStructure implements IStructure
 
 		List<String> list = new ArrayList<String>( )
 
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.SOURCE.name ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.SOURCE.name ) }.each {
 
 			it.files.each { file ->
 
@@ -155,7 +155,7 @@ class IdeaImlStructure implements IStructure
 
 	private void createLibraries( Node moduleRootManagerNode )
 	{
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Configurations.LIBRARY.name ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.LIBRARY.name ) }.each {
 
 			it.files.each { file ->
 
@@ -183,15 +183,15 @@ class IdeaImlStructure implements IStructure
 
 			switch( variant.platform )
 			{
-				case Platforms.IOS:
+				case Platform.IOS:
 					platform = "ios"
 					break
 
-				case Platforms.ANDROID:
+				case Platform.ANDROID:
 					platform = "android"
 					break
 
-				case Platforms.DESKTOP:
+				case Platform.DESKTOP:
 					platform = "air-desktop"
 					break
 			}
@@ -218,14 +218,14 @@ class IdeaImlStructure implements IStructure
 
 			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
 					.replaceAll( "\\{platform\\}" , platform )
-					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_MAIN_CLASS ) as String )
+					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_MAIN_CLASS ) as String )
 					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
 					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + "/package" )
-					.replaceAll( "\\{target\\}" , variant.platform == Platforms.DESKTOP ? "Desktop" : "Mobile" )
+					.replaceAll( "\\{target\\}" , variant.platform == Platform.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
-					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperties.DEBUG ) ? "true" : "false" )
+					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
-					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperties.COMPILE_OPTIONS ) as List ).join( " " ) )
+					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) as List ).join( " " ) )
 
 			Node configurationNode = new XmlParser( ).parseText( configuration )
 
@@ -233,15 +233,15 @@ class IdeaImlStructure implements IStructure
 
 			switch( variant.platform )
 			{
-				case Platforms.IOS:
+				case Platform.IOS:
 					platformNode = configurationNode."packaging-ios"[ 0 ] as Node
 					break
 
-				case Platforms.ANDROID:
+				case Platform.ANDROID:
 					platformNode = configurationNode."packaging-android"[ 0 ] as Node
 					break
 
-				case Platforms.DESKTOP:
+				case Platform.DESKTOP:
 					platformNode = configurationNode."packaging-air-desktop"[ 0 ] as Node
 					break
 			}
@@ -249,7 +249,7 @@ class IdeaImlStructure implements IStructure
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
 			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ).path )
-			platformNode.@"package-file-name" = "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION ) }"
+			platformNode.@"package-file-name" = "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }"
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
 
@@ -272,15 +272,15 @@ class IdeaImlStructure implements IStructure
 			Node signingNode = platformNode.AirSigningOptions[ 0 ] as Node
 			if( signingNode == null ) signingNode = new Node( platformNode , "AirSigningOptions" )
 
-			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_ALIAS )
-			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE )
-			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE )
-			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS )
-			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_PASS )
-			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVIDER_NAME )
-			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_TSA )
-			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE )
-			boolean x86 = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_X86 )
+			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_ALIAS )
+			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_TYPE )
+			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_STORE )
+			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS )
+			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_PASS )
+			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVIDER_NAME )
+			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_TSA )
+			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE )
+			boolean x86 = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_X86 )
 
 			if( signingAlias ) signingNode."@key-alias" = signingAlias
 			if( signingStoreType ) signingNode."@keystore-type" = signingStoreType
@@ -288,16 +288,16 @@ class IdeaImlStructure implements IStructure
 			if( signingProvisioningProfile ) signingNode."@provisioning-profile-path" = buildPathFromModule( signingProvisioningProfile )
 			if( signingKeyStore ) signingNode."@keystore-path" = buildPathFromModule( signingKeyStore )
 			if( signingTsa ) signingNode."@tsa" = signingTsa
-			if( variant.platform == Platforms.ANDROID && x86 ) signingNode."@arch" = "x86"
+			if( variant.platform == Platform.ANDROID && x86 ) signingNode."@arch" = "x86"
 			signingNode."@use-temp-certificate" = "false"
 
 			List<Configuration> libraries = new ArrayList<Configuration>( )
 
 			project.configurations.each {
 
-				boolean isLibrary = it.name.toLowerCase( ).contains( Configurations.LIBRARY.name )
+				boolean isLibrary = it.name.toLowerCase( ).contains( Config.LIBRARY.name )
 
-				if( it.name == Configurations.AS_LIBRARY.name || it.name == Configurations.LIBRARY.name || it.name == Configurations.NATIVE_LIBRARY.name ) libraries.add( it )
+				if( it.name == Config.AS_LIBRARY.name || it.name == Config.LIBRARY.name || it.name == Config.NATIVE_LIBRARY.name ) libraries.add( it )
 				if( it.name.contains( variant.platform.name ) && isLibrary ) libraries.add( it )
 
 				for( String flavor : variant.productFlavors )

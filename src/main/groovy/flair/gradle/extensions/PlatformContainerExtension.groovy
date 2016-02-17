@@ -1,7 +1,7 @@
 package flair.gradle.extensions
 
-import flair.gradle.dependencies.Configurations
-import flair.gradle.variants.Platforms
+import flair.gradle.dependencies.Config
+import flair.gradle.variants.Platform
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -18,7 +18,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 	private List<String> flavorDimensions
 
-	public PlatformContainerExtension( String name , Project project , Platforms platform )
+	public PlatformContainerExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 
@@ -93,7 +93,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 	protected updateConfigurations()
 	{
-		Configurations.DEFAULTS.each { conf ->
+		Config.DEFAULTS.each { conf ->
 
 			extensionManager.allActivePlatformVariants.each {
 
@@ -107,13 +107,13 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 						switch( conf )
 						{
-							case Configurations.SOURCE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/actionscript" ) )
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/fonts" ) )
+							case Config.SOURCE:
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/actionscript" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/fonts" ) )
 								break
 
-							case Configurations.PACKAGE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperties.MODULE_NAME ) }/src/${ name }/assets" ) )
+							case Config.PACKAGE:
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/assets" ) )
 								break
 
 							default: break

@@ -1,10 +1,10 @@
 package flair.gradle.tasks.process
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import flair.gradle.dependencies.Sdk
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Groups
+import flair.gradle.tasks.TaskGroup
 import flair.gradle.variants.Variant
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
@@ -66,21 +66,21 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		outputFile = project.file( "${ outputVariantDir.path }/app_descriptor.xml" )
 
 		sdkVersion = new Sdk( project ).version
-		appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
-		appName = extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_NAME_SUFFIX )
-		appFileName = extensionManager.getFlairProperty( variant , FlairProperties.APP_FILE_NAME )
+		appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )
+		appName = extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME_SUFFIX )
+		appFileName = extensionManager.getFlairProperty( variant , FlairProperty.APP_FILE_NAME )
 		appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
-		appVersion = extensionManager.getFlairProperty( variant , FlairProperties.APP_VERSION )
-		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperties.APP_FULL_SCREEN )
-		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperties.APP_ASPECT_RATIO )
-		appAutoOrients = extensionManager.getFlairProperty( variant , FlairProperties.APP_AUTO_ORIENTS )
-		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEPTH_AND_STENCIL )
+		appVersion = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
+		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperty.APP_FULL_SCREEN )
+		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperty.APP_ASPECT_RATIO )
+		appAutoOrients = extensionManager.getFlairProperty( variant , FlairProperty.APP_AUTO_ORIENTS )
+		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperty.APP_DEPTH_AND_STENCIL )
 		supportedLocales = getSupportedLocales( )
 	}
 
 	public ProcessAppDescriptor()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 
@@ -157,7 +157,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 			}
 		}
 
-		String defaultLocale = extensionManager.getFlairProperty( variant , FlairProperties.APP_DEFAULT_SUPPORTED_LANGUAGES )
+		String defaultLocale = extensionManager.getFlairProperty( variant , FlairProperty.APP_DEFAULT_SUPPORTED_LANGUAGES )
 		if( defaultLocale && supportedLocales.indexOf( defaultLocale ) < 0 ) supportedLocales = supportedLocales.concat( defaultLocale )
 
 		return supportedLocales.trim( )
@@ -171,7 +171,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		variant.directoriesCapitalized.each {
 
-			String s = it == "main" ? Configurations.NATIVE_LIBRARY.name : it + Configurations.NATIVE_LIBRARY.name.capitalize( )
+			String s = it == "main" ? Config.NATIVE_LIBRARY.name : it + Config.NATIVE_LIBRARY.name.capitalize( )
 
 			list.addAll( project.configurations.getByName( s ).files )
 		}

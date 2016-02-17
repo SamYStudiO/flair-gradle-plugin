@@ -1,9 +1,9 @@
 package flair.gradle.plugins
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.tasks.ListDevices
-import flair.gradle.tasks.Tasks
+import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.variantFactories.IVariantTaskFactory
 import flair.gradle.tasks.variantFactories.LaunchDeviceTaskFactory
 import flair.gradle.tasks.variantFactories.UninstallTaskFactory
@@ -21,9 +21,9 @@ public abstract class AbstractMobilePlatformPlugin extends AbstractPlatformPlugi
 
 		project.afterEvaluate {
 
-			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME ) ).exists( ) )
+			if( !project.file( ( project.flair as IExtensionManager ).getFlairProperty( FlairProperty.MODULE_NAME ) ).exists( ) )
 			{
-				project.tasks.remove( project.tasks.getByName( Tasks.LIST_DEVICES.name + platform.name.capitalize( ) ) )
+				project.tasks.remove( project.tasks.getByName( TaskDefinition.LIST_DEVICES.name + platform.name.capitalize( ) ) )
 			}
 		}
 	}
@@ -31,7 +31,7 @@ public abstract class AbstractMobilePlatformPlugin extends AbstractPlatformPlugi
 	@Override
 	public void addTasks()
 	{
-		ListDevices task = project.tasks.create( Tasks.LIST_DEVICES.name + platform.name.capitalize( ) , Tasks.LIST_DEVICES.type ) as ListDevices
+		ListDevices task = project.tasks.create( TaskDefinition.LIST_DEVICES.name + platform.name.capitalize( ) , TaskDefinition.LIST_DEVICES.type ) as ListDevices
 		task.platform = platform
 	}
 

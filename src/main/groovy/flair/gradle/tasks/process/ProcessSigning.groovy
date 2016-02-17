@@ -1,9 +1,9 @@
 package flair.gradle.tasks.process
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Groups
-import flair.gradle.variants.Platforms
+import flair.gradle.tasks.TaskGroup
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -41,18 +41,18 @@ class ProcessSigning extends AbstractVariantTask
 	{
 		super.variant = variant
 
-		packageTarget = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_TARGET )
-		signingStoreType = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_TYPE )
-		signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_KEY_STORE ) ?: "null"
-		signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_PROVISIONING_PROFILE ) ?: "null"
-		signingStorePass = extensionManager.getFlairProperty( variant , FlairProperties.SIGNING_STORE_PASS ) ?: "null"
+		packageTarget = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_TARGET )
+		signingStoreType = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_TYPE )
+		signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_STORE ) ?: "null"
+		signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ) ?: "null"
+		signingStorePass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS ) ?: "null"
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/signing" )
 	}
 
 	public ProcessSigning()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 
@@ -88,18 +88,18 @@ class ProcessSigning extends AbstractVariantTask
 
 		String subFolder = ""
 
-		if( signingStoreType == "pkcs12" || variant.platform == Platforms.IOS )
+		if( signingStoreType == "pkcs12" || variant.platform == Platform.IOS )
 		{
 			switch( true )
 			{
-				case variant.platform == Platforms.IOS && packageTarget == "ipa-app-store":
+				case variant.platform == Platform.IOS && packageTarget == "ipa-app-store":
 					subFolder = "store"
 					break
-				case variant.platform == Platforms.IOS && packageTarget == "ipa-ad-hoc":
+				case variant.platform == Platform.IOS && packageTarget == "ipa-ad-hoc":
 					subFolder = "adhoc"
 					break
 
-				case variant.platform == Platforms.IOS:
+				case variant.platform == Platform.IOS:
 					subFolder = "development"
 					break
 
@@ -113,7 +113,7 @@ class ProcessSigning extends AbstractVariantTask
 		}
 
 		if( signingKeyStore != "null" ) list.add( project.file( signingKeyStore ) )
-		if( signingProvisioningProfile != "null" && variant.platform == Platforms.IOS ) list.add( project.file( signingProvisioningProfile ) )
+		if( signingProvisioningProfile != "null" && variant.platform == Platform.IOS ) list.add( project.file( signingProvisioningProfile ) )
 
 		return list.reverse( )
 	}

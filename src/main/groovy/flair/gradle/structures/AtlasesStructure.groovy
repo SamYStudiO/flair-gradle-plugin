@@ -1,6 +1,6 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.Project
 
@@ -12,7 +12,7 @@ public class AtlasesStructure implements IStructure
 	@Override
 	public void create( Project project , File source )
 	{
-		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperty.MODULE_NAME )
 
 		if( project.fileTree( "${ moduleName }/src/main/atlases" ).size( ) > 0 ) return
 

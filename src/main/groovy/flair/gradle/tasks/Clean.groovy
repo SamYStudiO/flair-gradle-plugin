@@ -9,7 +9,7 @@ public class Clean extends AbstractTask
 {
 	public Clean()
 	{
-		group = Groups.BUILD.name
+		group = TaskGroup.BUILD.name
 		description = ""
 	}
 

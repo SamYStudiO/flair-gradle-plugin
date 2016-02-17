@@ -1,8 +1,8 @@
 package flair.gradle.tasks.process
 
-import flair.gradle.dependencies.Configurations
+import flair.gradle.dependencies.Config
 import flair.gradle.tasks.AbstractVariantTask
-import flair.gradle.tasks.Groups
+import flair.gradle.tasks.TaskGroup
 import flair.gradle.variants.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectories
@@ -33,7 +33,7 @@ class ProcessExtensions extends AbstractVariantTask
 
 	public ProcessExtensions()
 	{
-		group = Groups.DEFAULT.name
+		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 
@@ -88,7 +88,7 @@ class ProcessExtensions extends AbstractVariantTask
 
 		variant.directoriesCapitalized.each {
 
-			String s = it == "main" ? Configurations.NATIVE_LIBRARY.name : it + Configurations.NATIVE_LIBRARY.name.capitalize( )
+			String s = it == "main" ? Config.NATIVE_LIBRARY.name : it + Config.NATIVE_LIBRARY.name.capitalize( )
 
 			list.addAll( project.configurations.getByName( s ).files )
 		}

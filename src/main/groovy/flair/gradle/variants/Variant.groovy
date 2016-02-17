@@ -9,33 +9,33 @@ public final class Variant
 {
 	private Project project
 
-	private Platforms platform
+	private Platform platform
 
 	private List<String> productFlavors
 
 	private String buildType
 
-	public Variant( Project project , Platforms platform )
+	public Variant( Project project , Platform platform )
 	{
 		this( project , platform , ( String ) null )
 	}
 
-	public Variant( Project project , Platforms platform , String flavor )
+	public Variant( Project project , Platform platform , String flavor )
 	{
 		this( project , platform , flavor , null )
 	}
 
-	public Variant( Project project , Platforms platform , String flavor , String type )
+	public Variant( Project project , Platform platform , String flavor , String type )
 	{
 		this( project , platform , flavor ? [ flavor ] : null , type )
 	}
 
-	public Variant( Project project , Platforms platform , List<String> flavors )
+	public Variant( Project project , Platform platform , List<String> flavors )
 	{
 		this( project , platform , flavors , null )
 	}
 
-	public Variant( Project project , Platforms platform , List<String> flavors , String type )
+	public Variant( Project project , Platform platform , List<String> flavors , String type )
 	{
 		this.project = project
 		this.platform = platform
@@ -129,12 +129,12 @@ public final class Variant
 		}
 	}
 
-	public Platforms getPlatform()
+	public Platform getPlatform()
 	{
 		return platform
 	}
 
-	public setPlatform( Platforms platform )
+	public setPlatform( Platform platform )
 	{
 		this.platform = platform
 	}

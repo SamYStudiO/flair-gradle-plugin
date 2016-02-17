@@ -2,7 +2,7 @@ package flair.gradle.plugins
 
 import flair.gradle.structures.AtlasesStructure
 import flair.gradle.structures.IStructure
-import flair.gradle.tasks.Tasks
+import flair.gradle.tasks.TaskDefinition
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -21,6 +21,6 @@ class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin
 	@Override
 	protected void addTasks()
 	{
-		project.tasks.create( Tasks.PUBLISH_ATLASES.name , Tasks.PUBLISH_ATLASES.type )
+		project.tasks.create( TaskDefinition.PUBLISH_ATLASES.name , TaskDefinition.PUBLISH_ATLASES.type )
 	}
 }

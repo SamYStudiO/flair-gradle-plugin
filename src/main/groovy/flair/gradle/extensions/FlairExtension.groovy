@@ -1,7 +1,7 @@
 package flair.gradle.extensions
 
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -17,7 +17,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 
 	private Boolean autoGenerateVariantDirectories
 
-	public FlairExtension( String name , Project project , Platforms platform )
+	public FlairExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 	}
@@ -53,7 +53,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	}
 
 	@Override
-	public IPlatformContainerExtension getPlatformContainer( Platforms platform )
+	public IPlatformContainerExtension getPlatformContainer( Platform platform )
 	{
 		return ( platform && PluginManager.hasPlatformPlugin( project , platform ) ? project.flair[ platform.name.toLowerCase( ) ] : project.flair ) as IPlatformContainerExtension
 	}
@@ -67,9 +67,9 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		{
 			switch( property )
 			{
-				case FlairProperties.MODULE_NAME.name: return "app"
-				case FlairProperties.PACKAGE_NAME.name: return ""
-				case FlairProperties.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return true
+				case FlairProperty.MODULE_NAME.name: return "app"
+				case FlairProperty.PACKAGE_NAME.name: return ""
+				case FlairProperty.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return true
 
 				default: return null
 			}
@@ -79,9 +79,9 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	@Override
 	public List<String> getAllActivePlatformProductFlavors()
 	{
-		NamedDomainObjectContainer<IVariantExtension> iosProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getProductFlavors( ) : null
-		NamedDomainObjectContainer<IVariantExtension> androidProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getProductFlavors( ) : null
-		NamedDomainObjectContainer<IVariantExtension> desktopProductFlavors = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> iosProductFlavors = PluginManager.hasPlatformPlugin( project , Platform.IOS ) ? getPlatformContainer( Platform.IOS ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> androidProductFlavors = PluginManager.hasPlatformPlugin( project , Platform.ANDROID ) ? getPlatformContainer( Platform.ANDROID ).getProductFlavors( ) : null
+		NamedDomainObjectContainer<IVariantExtension> desktopProductFlavors = PluginManager.hasPlatformPlugin( project , Platform.DESKTOP ) ? getPlatformContainer( Platform.DESKTOP ).getProductFlavors( ) : null
 		NamedDomainObjectContainer<IVariantExtension> commonProductFlavors = getProductFlavors( )
 
 		List<String> list = new ArrayList<String>( )
@@ -129,9 +129,9 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	@Override
 	public List<String> getAllActivePlatformBuildTypes()
 	{
-		NamedDomainObjectContainer<IVariantExtension> iosBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ? getPlatformContainer( Platforms.IOS ).getBuildTypes( ) : null
-		NamedDomainObjectContainer<IVariantExtension> androidBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ? getPlatformContainer( Platforms.ANDROID ).getBuildTypes( ) : null
-		NamedDomainObjectContainer<IVariantExtension> desktopBuildTypes = PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ? getPlatformContainer( Platforms.DESKTOP ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> iosBuildTypes = PluginManager.hasPlatformPlugin( project , Platform.IOS ) ? getPlatformContainer( Platform.IOS ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> androidBuildTypes = PluginManager.hasPlatformPlugin( project , Platform.ANDROID ) ? getPlatformContainer( Platform.ANDROID ).getBuildTypes( ) : null
+		NamedDomainObjectContainer<IVariantExtension> desktopBuildTypes = PluginManager.hasPlatformPlugin( project , Platform.DESKTOP ) ? getPlatformContainer( Platform.DESKTOP ).getBuildTypes( ) : null
 		NamedDomainObjectContainer<IVariantExtension> commonBuildTypes = getBuildTypes( )
 
 		List<String> list = new ArrayList<String>( )
@@ -181,15 +181,15 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	{
 		List<Variant> list = new ArrayList<Variant>( )
 
-		if( PluginManager.hasPlatformPlugin( project , Platforms.IOS ) ) list.addAll( getPlatformVariants( Platforms.IOS ) )
-		if( PluginManager.hasPlatformPlugin( project , Platforms.ANDROID ) ) list.addAll( getPlatformVariants( Platforms.ANDROID ) )
-		if( PluginManager.hasPlatformPlugin( project , Platforms.DESKTOP ) ) list.addAll( getPlatformVariants( Platforms.DESKTOP ) )
+		if( PluginManager.hasPlatformPlugin( project , Platform.IOS ) ) list.addAll( getPlatformVariants( Platform.IOS ) )
+		if( PluginManager.hasPlatformPlugin( project , Platform.ANDROID ) ) list.addAll( getPlatformVariants( Platform.ANDROID ) )
+		if( PluginManager.hasPlatformPlugin( project , Platform.DESKTOP ) ) list.addAll( getPlatformVariants( Platform.DESKTOP ) )
 
 		return list
 	}
 
 	@Override
-	public List<Variant> getPlatformVariants( Platforms platform )
+	public List<Variant> getPlatformVariants( Platform platform )
 	{
 		if( !platform ) return getAllActivePlatformVariants( )
 
@@ -336,31 +336,31 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	}
 
 	@Override
-	public Object getFlairProperty( FlairProperties property )
+	public Object getFlairProperty( FlairProperty property )
 	{
 		getFlairProperty( ( Variant ) null , property )
 	}
 
 	@Override
-	public Object getFlairProperty( Platforms platform , FlairProperties property )
+	public Object getFlairProperty( Platform platform , FlairProperty property )
 	{
 		getFlairProperty( new Variant( project , platform ) , property )
 	}
 
 	@Override
-	public Object getFlairProperty( String extensionName , FlairProperties property )
+	public Object getFlairProperty( String extensionName , FlairProperty property )
 	{
 		getFlairProperty( extensionName , ( Variant ) null , property )
 	}
 
 	@Override
-	public Object getFlairProperty( String extensionName , Platforms platform , FlairProperties property )
+	public Object getFlairProperty( String extensionName , Platform platform , FlairProperty property )
 	{
 		getFlairProperty( extensionName , new Variant( project , platform ) , property )
 	}
 
 	@Override
-	public Object getFlairProperty( Variant variant , FlairProperties property )
+	public Object getFlairProperty( Variant variant , FlairProperty property )
 	{
 		Object value
 
@@ -398,7 +398,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	}
 
 	@Override
-	public Object getFlairProperty( String extensionName , Variant variant , FlairProperties property )
+	public Object getFlairProperty( String extensionName , Variant variant , FlairProperty property )
 	{
 		Object value
 

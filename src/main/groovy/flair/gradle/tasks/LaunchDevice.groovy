@@ -2,9 +2,9 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
-import flair.gradle.variants.Platforms
+import flair.gradle.variants.Platform
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -16,20 +16,20 @@ public class LaunchDevice extends AbstractVariantTask
 
 	public LaunchDevice()
 	{
-		group = Groups.LAUNCH.name
+		group = TaskGroup.LAUNCH.name
 		description = ""
 	}
 
 	@TaskAction
 	public void launch()
 	{
-		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperties.PACKAGE_PLATFORM_SDK )
-		String appId = extensionManager.getFlairProperty( variant , FlairProperties.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperties.APP_ID_SUFFIX )
+		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK )
+		String appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )
 
 		adt.addArgument( "-devices" )
 		adt.addArgument( "-platform ${ variant.platform.name }" )
 		String id = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
-		String deviceId = !id && platformSdk && variant.platform == Platforms.IOS ? "ios_simulator" : id
+		String deviceId = !id && platformSdk && variant.platform == Platform.IOS ? "ios_simulator" : id
 
 		if( deviceId )
 		{

@@ -1,6 +1,6 @@
 package flair.gradle.structures
 
-import flair.gradle.extensions.FlairProperties
+import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import org.gradle.api.Project
 
@@ -13,11 +13,11 @@ public class CommonStructure implements IStructure
 	public void create( Project project , File source )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
-		String moduleName = extensionManager.getFlairProperty( FlairProperties.MODULE_NAME )
+		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
 		if( project.fileTree( "${ moduleName }" ).size( ) == 0 )
 		{
-			String packageName = extensionManager.getFlairProperty( FlairProperties.PACKAGE_NAME )
+			String packageName = extensionManager.getFlairProperty( FlairProperty.PACKAGE_NAME )
 			String s = packageName.replace( "." , "/" )
 
 			project.copy {
