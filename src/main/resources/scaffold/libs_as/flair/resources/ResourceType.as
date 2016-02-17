@@ -4,7 +4,7 @@ package flair.resources
 	 * Constants used to defined resource type.
 	 * @see http://developer.android.com/guide/topics/resources/available-resources.html
 	 */
-	public final class EnumResourceType
+	public final class ResourceType
 	{
 		/**
 		 * A drawable resource is an image stored under a drawable folder.
@@ -36,7 +36,7 @@ package flair.resources
 		/**
 		 * @private
 		 */
-		public function EnumResourceType()
+		public function ResourceType()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}

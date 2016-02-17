@@ -3,7 +3,7 @@ package _packageName_.view
 	/**
 	 * Constants for all screen ids
 	 */
-	public final class EnumScreen
+	public final class ScreenID
 	{
 		/**
 		 * Example screen (you may modify or remove)
@@ -18,7 +18,7 @@ package _packageName_.view
 		/**
 		 * @private
 		 */
-		public function EnumScreen()
+		public function ScreenID()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}

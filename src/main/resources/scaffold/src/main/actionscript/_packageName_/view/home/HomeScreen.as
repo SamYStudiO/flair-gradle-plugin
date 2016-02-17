@@ -1,6 +1,6 @@
 package _packageName_.view.home
 {
-	import _packageName_.view.EnumScreen;
+	import _packageName_.view.ScreenID;
 
 	import feathers.controls.Button;
 	import feathers.controls.Screen;
@@ -47,7 +47,7 @@ package _packageName_.view.home
 			_button.label = R.string.hello;
 			_button.addEventListener( Event.TRIGGERED , function () : void
 			{
-				( _owner as StackScreenNavigator ).pushScreen( EnumScreen.OTHER_SCREEN );
+				( _owner as StackScreenNavigator ).pushScreen( ScreenID.OTHER_SCREEN );
 			} );
 			addChild( _button );
 		}

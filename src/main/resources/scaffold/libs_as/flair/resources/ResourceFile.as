@@ -10,7 +10,7 @@ package flair.resources
 		/**
 		 * Create a new ResourceFile instance from a file instance.
 		 * @param file File instance ton convert to a ResourceFile instance.
-		 * @param resource Type of resource as defined by EnumResourceType constants.
+		 * @param resource Type of resource as defined by ResourceType constants.
 		 * @param drawableScale If resource is a drawable this returns the scale to apply to resource if resource is picked from wrong dpi bucket,
 		 * for example if your device bucket is xxhdpi and you provide only hdpi resource scale will return 2 to match your device bucket.
 		 * @return A ResourceFile instance.
@@ -21,7 +21,7 @@ package flair.resources
 		}
 
 		/**
-		 * Type of resource as defined by EnumResourceType constants.
+		 * Type of resource as defined by ResourceType constants.
 		 */
 		public var resource : String;
 
@@ -35,7 +35,7 @@ package flair.resources
 		/**
 		 * Constructor.
 		 * @param path The absolute file path.
-		 * @param resource Type of resource as defined by EnumResourceType constants.
+		 * @param resource Type of resource as defined by ResourceType constants.
 		 * @param drawableScale scale to apply to match device dpi bucket.
 		 */
 		public function ResourceFile( path : String , resource : String , drawableScale : Number = 1.0 )
@@ -43,7 +43,7 @@ package flair.resources
 			super( path );
 
 			this.resource = resource;
-			this.drawableScale = resource == EnumResourceType.DRAWABLE ? drawableScale : 1.0;
+			this.drawableScale = resource == ResourceType.DRAWABLE ? drawableScale : 1.0;
 		}
 
 		/**

@@ -3,7 +3,7 @@ package flair.utils.displayMetrics
 	/**
 	 * Defined constants for all density dpi buckets.
 	 */
-	public final class EnumDensityDpi
+	public final class Density
 	{
 		/**
 		 *
@@ -73,7 +73,7 @@ package flair.utils.displayMetrics
 		/**
 		 * @private
 		 */
-		public function EnumDensityDpi()
+		public function Density()
 		{
 			throw new Error( this + " cannot be instantiated" );
 		}

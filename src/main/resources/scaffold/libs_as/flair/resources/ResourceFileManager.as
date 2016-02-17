@@ -1,7 +1,7 @@
 package flair.resources
 {
 	import flair.utils.device.locale;
-	import flair.utils.displayMetrics.EnumDensityDpi;
+	import flair.utils.displayMetrics.Density;
 	import flair.utils.displayMetrics.densityDpi;
 
 	import flash.display3D.Context3DProfile;
@@ -78,7 +78,7 @@ package flair.resources
 		 */
 		public function getDrawables( screenID : String = null ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.DRAWABLE , screenID );
+			return getResource( ResourceType.DRAWABLE , screenID );
 		}
 
 		/**
@@ -88,7 +88,7 @@ package flair.resources
 		 */
 		public function getValues( screenID : String = null ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.VALUES , screenID );
+			return getResource( ResourceType.VALUES , screenID );
 		}
 
 		/**
@@ -98,7 +98,7 @@ package flair.resources
 		 */
 		public function getXML( screenID : String = null ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.XML , screenID );
+			return getResource( ResourceType.XML , screenID );
 		}
 
 		/**
@@ -108,7 +108,7 @@ package flair.resources
 		 */
 		public function getRaw( screenID : String = null ) : Vector.<ResourceFile>
 		{
-			return getResource( EnumResourceType.RAW , screenID );
+			return getResource( ResourceType.RAW , screenID );
 		}
 
 		/**
@@ -276,27 +276,27 @@ package flair.resources
 							var parentDirectoryName : String = parentDirectory.name;
 							var scale : Number = 1.0;
 
-							if( resourceType == EnumResourceType.DRAWABLE )
+							if( resourceType == ResourceType.DRAWABLE )
 							{
 								switch( true )
 								{
 									case parentDirectoryName == "drawable" || parentDirectoryName.indexOf( "-mdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_MDPI / densityDpi;
+										scale = Density.DENSITY_MDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-ldpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_LDPI / densityDpi;
+										scale = Density.DENSITY_LDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-hdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_HDPI / densityDpi;
+										scale = Density.DENSITY_HDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XHDPI / densityDpi;
+										scale = Density.DENSITY_XHDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xxhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XXHDPI / densityDpi;
+										scale = Density.DENSITY_XXHDPI / densityDpi;
 										break;
 									case parentDirectoryName.indexOf( "-xxxhdpi" ) > 0 :
-										scale = EnumDensityDpi.DENSITY_XXXHDPI / densityDpi;
+										scale = Density.DENSITY_XXXHDPI / densityDpi;
 										break;
 
 									default :

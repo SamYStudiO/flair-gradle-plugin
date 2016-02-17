@@ -52,8 +52,8 @@ package _packageName_.view
 			_navigator = new StackScreenNavigator();
 			_navigator.pushTransition = Slide.createSlideLeftTransition();
 			_navigator.popTransition = Slide.createSlideRightTransition();
-			_navigator.addScreen( EnumScreen.HOME , new StackScreenNavigatorItem( HomeScreen ) );
-			_navigator.addScreen( EnumScreen.OTHER_SCREEN , new StackScreenNavigatorItem( OtherScreen ) );
+			_navigator.addScreen( ScreenID.HOME , new StackScreenNavigatorItem( HomeScreen ) );
+			_navigator.addScreen( ScreenID.OTHER_SCREEN , new StackScreenNavigatorItem( OtherScreen ) );
 			_navigator.pushScreen( R.string.first_screen );
 			_navigator.layoutData = new AnchorLayoutData( 0 , 0 , 0 , 0 );
 
