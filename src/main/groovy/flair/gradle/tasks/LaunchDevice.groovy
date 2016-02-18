@@ -28,7 +28,7 @@ public class LaunchDevice extends AbstractVariantTask
 
 		adt.addArgument( "-devices" )
 		adt.addArgument( "-platform ${ variant.platform.name }" )
-		String id = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+		String id = new CliDevicesOutputParser( ).parse( adt.execute( project , variant.platform ) )
 		String deviceId = !id && platformSdk && variant.platform == Platform.IOS ? "ios_simulator" : id
 
 		if( deviceId )
@@ -40,7 +40,7 @@ public class LaunchDevice extends AbstractVariantTask
 
 			adt.addArgument( "-device ${ deviceId }" )
 			adt.addArgument( "-appid ${ appId }" )
-			adt.execute( project )
+			adt.execute( project , variant.platform )
 		}
 		else println( "No device detected" )
 	}

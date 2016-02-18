@@ -85,7 +85,7 @@ class Compile extends AbstractVariantTask
 		// main class
 		cli.addArgument( project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" ).path )
 
-		cli.execute( project )
+		cli.execute( project , variant.platform )
 	}
 
 	private addConstants()

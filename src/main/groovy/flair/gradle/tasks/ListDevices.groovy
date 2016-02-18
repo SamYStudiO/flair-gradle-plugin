@@ -29,12 +29,12 @@ class ListDevices extends AbstractTask
 		if( platform == Platform.IOS )
 		{
 			idb.addArgument( "-devices" )
-			idb.execute( project )
+			idb.execute( project , Platform.IOS )
 		}
 		else if( platform == Platform.ANDROID )
 		{
 			adb.addArgument( "devices" )
-			adb.execute( project )
+			adb.execute( project , Platform.ANDROID )
 		}
 	}
 }

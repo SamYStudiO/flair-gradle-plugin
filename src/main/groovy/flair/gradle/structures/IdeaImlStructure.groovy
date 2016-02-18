@@ -8,7 +8,6 @@ import flair.gradle.plugins.PluginManager
 import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 
@@ -51,11 +50,18 @@ class IdeaImlStructure implements IStructure
 		createExcludeFolders( content )
 		createLibraries( newModuleRootManager )
 		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node )
-		//createSdk( )
 
 		output.withOutputStream { writer -> XmlUtil.serialize( xml , writer ) }
 
-		String s = output.text.replaceAll( "#09;" , "&#09;" ).replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
+		List<String> sdks = new ArrayList<String>( )
+
+		Platform.values( ).each {
+
+			String name = new Sdk( project , it ).name
+			if( !sdks.contains( name ) ) sdks.push( name )
+		}
+
+		String s = output.text.replaceAll( "#09;" , "&#09;" ).replaceAll( /jdkName=".*" j/ , "jdkName=\"${ sdks.join( "&#9;" ) }\" j" ).replaceAll( /jdkType=".*"/ , "jdkType=\"${ sdks.size( ) > 1 ? "__CompositeFlexSdk__" : "Flex SDK Type (new)" }\"" )
 
 		if( !flexBuildConfigurationManager.configurations[ 0 ].children( ).find { it.@name == flexBuildConfigurationManager.@active } )
 		{
@@ -222,7 +228,7 @@ class IdeaImlStructure implements IStructure
 					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
 					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + "/package" )
 					.replaceAll( "\\{target\\}" , variant.platform == Platform.DESKTOP ? "Desktop" : "Mobile" )
-					.replaceAll( "\\{sdkName\\}" , new Sdk( project ).name )
+					.replaceAll( "\\{sdkName\\}" , new Sdk( project , variant.platform ).name )
 					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
 					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) as List ).join( " " ) )
@@ -336,75 +342,6 @@ class IdeaImlStructure implements IStructure
 			}
 
 			configurationsNode.append( configurationNode )
-		}
-	}
-
-	private void createSdk()
-	{
-		String path = ""
-		String file = ""
-
-		switch( true )
-		{
-			case Os.isFamily( Os.FAMILY_WINDOWS ):
-				path = "${ System.getProperty( "user.home" ) }/."
-				break;
-
-			case Os.isFamily( Os.FAMILY_UNIX ):
-				path = "${ System.getProperty( "user.home" ) }/."
-				break;
-
-			case Os.isFamily( Os.FAMILY_MAC ):
-				path = "${ System.getProperty( "user.home" ) }/"
-				break;
-		}
-
-		switch( true )
-		{
-			case Os.isFamily( Os.FAMILY_WINDOWS ):
-				file = "/config/options/jdk.table.xml"
-				break;
-
-			case Os.isFamily( Os.FAMILY_UNIX ):
-				file = "/config/options/jdk.table.xml"
-				break;
-
-			case Os.isFamily( Os.FAMILY_MAC ):
-				file = "/options/jdk.table.xml"
-				break;
-		}
-
-		Sdk sdk = new Sdk( project )
-
-		for( int i = 10; i <= 20; i++ )
-		{
-			File intellij = project.file( "${ path }IntelliJIdea${ i }${ file }" )
-
-			if( intellij.exists( ) )
-			{
-				Node node = new XmlParser( ).parse( intellij )
-				String sdkPath = project.file( sdk.path ).path.replaceAll( "\\\\" , "/" )
-
-				NodeList list = node.component.jdk.findAll { it.homePath.@value[ 0 ] == sdkPath }
-
-				if( list.size( ) )
-				{
-					list[ 0 ].name.@value == sdk.name
-				}
-				else
-				{
-					String jdk = sdkTemplate.replaceAll( "\\{name\\}" , sdk.name )
-							.replaceAll( "\\{path\\}" , sdkPath )
-							.replaceAll( "\\{fullVersion\\}" , "AIR SDK " + sdk.fullVersion )
-							.replaceAll( "\\{version\\}" , sdk.version )
-
-					Node jdkNode = new XmlParser( ).parseText( jdk )
-
-					node.component[ 0 ].append( jdkNode )
-
-					intellij.withOutputStream { writer -> XmlUtil.serialize( node , writer ) }
-				}
-			}
 		}
 	}
 }

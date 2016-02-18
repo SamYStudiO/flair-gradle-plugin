@@ -125,7 +125,7 @@ class ProcessResources extends AbstractVariantTask
 			png2atf.addArgument( "-o" )
 			png2atf.addArgument( output )
 
-			png2atf.execute( project )
+			png2atf.execute( project , variant.platform )
 		}
 	}
 

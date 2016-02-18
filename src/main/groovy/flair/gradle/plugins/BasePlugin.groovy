@@ -13,6 +13,7 @@ import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.GenerateFontsClass
 import flair.gradle.tasks.GenerateResourcesClass
 import flair.gradle.tasks.TaskDefinition
+import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
@@ -105,11 +106,21 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	private boolean isReady()
 	{
 		boolean hasPackageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME ) as boolean
-		boolean hasValidSdk = new Sdk( project ).isAirSdk( )
+		boolean hasValidSdk = true
+		Platform platform = null
+
+		PluginManager.getCurrentPlatforms( project ).each {
+
+			if( !new Sdk( project , it ).isAirSdk( ) )
+			{
+				platform = it
+				hasValidSdk = false
+			}
+		}
 
 		if( !hasValidSdk )
 		{
-			throw new Exception( "Cannot find AIR SDK home, set a valid AIR SDK home from your local.properties file under project root" )
+			throw new Exception( "Cannot find AIR SDK home for ${ platform.name }, set a valid AIR SDK home from your local.properties file under project root" )
 		}
 		if( !hasPackageName )
 		{
@@ -126,7 +137,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		if( !file.exists( ) )
 		{
 			file.createNewFile( )
-			file.write( String.format( "## This file should *NOT* be checked into Version Control Systems,%n# as it contains information specific to your local configuration.%n#%n# Location of the Adobe AIR SDK. This is only used by Gradle.%n# For customization when using a Version Control System, please read the%n# header note.%nsdk.dir=" ) )
+			file.write( String.format( "## This file should *NOT* be checked into Version Control Systems,%n# as it contains information specific to your local configuration.%n#%n# Location of the Adobe AIR SDK. Use sdk.dir for common SDK, if you need%n# different SDK for each platforms you may use {platform}.sdk.dir.%nsdk.dir=%n# ios.sdk.dir=%n# android.sdk.dir=%n# desktop.sdk.dir=" ) )
 		}
 	}
 
@@ -149,7 +160,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 					map.each {
 
-						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( flair.gradle.extensions.FlairProperty.MODULE_NAME ) }/${ it.value }"
+						if( it.key == "dir" ) it.value = "${ flair.getFlairProperty( FlairProperty.MODULE_NAME ) }/${ it.value }"
 					}
 
 					project.dependencies.add( conf.name , project.fileTree( map ) )
@@ -161,7 +172,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	private void createStructures()
 	{
 		String moduleName = flair.getFlairProperty( FlairProperty.MODULE_NAME )
-		String packageName = flair.getFlairProperty( flair.gradle.extensions.FlairProperty.PACKAGE_NAME )
+		String packageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME )
 
 		if( !moduleName || !packageName ) return
 

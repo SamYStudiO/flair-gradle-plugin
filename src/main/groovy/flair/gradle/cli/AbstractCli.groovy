@@ -1,5 +1,6 @@
 package flair.gradle.cli
 
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**
@@ -42,5 +43,11 @@ public abstract class AbstractCli implements ICli
 	}
 
 	@Override
-	public abstract String execute( Project project )
+	public String execute( Project project )
+	{
+		execute( project , null )
+	}
+
+	@Override
+	public abstract String execute( Project project , Platform platform )
 }

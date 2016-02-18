@@ -134,7 +134,7 @@ class Package extends AbstractVariantTask
 		addFilesAndDirectories( )
 		addExtensionNatives( )
 
-		cli.execute( project )
+		cli.execute( project , variant.platform )
 	}
 
 	private addArchitecture()

@@ -1,6 +1,7 @@
 package flair.gradle.cli
 
 import flair.gradle.dependencies.Sdk
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
 
@@ -10,12 +11,12 @@ import org.gradle.process.ExecResult
 public class Adt extends AbstractCli
 {
 	@Override
-	public String execute( Project project )
+	public String execute( Project project , Platform platform )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
-			executable new Sdk( project ).adtPath
+			executable new Sdk( project , platform ).adtPath
 
 			arguments.each {
 

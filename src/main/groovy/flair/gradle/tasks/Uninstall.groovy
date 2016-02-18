@@ -28,8 +28,8 @@ class Uninstall extends AbstractVariantTask
 
 		adt.addArgument( "-devices" )
 		adt.addArgument( "-platform ${ variant.platform.name }" )
-		List<String> ids = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
-		String id = ids.empty && platformSdk && variant.platform == Platform.IOS ? "ios_simulator" : ids[ 0 ]
+		String id = new CliDevicesOutputParser( ).parse( adt.execute( project , variant.platform ) )
+		id = !id && platformSdk ? "ios_simulator" : id
 
 		adt.clearArguments( )
 		adt.addArgument( "-uninstallApp" )
@@ -38,6 +38,6 @@ class Uninstall extends AbstractVariantTask
 		adt.addArgument( "-device ${ id }" )
 		adt.addArgument( "-appid ${ appId }" )
 
-		adt.execute( project )
+		adt.execute( project , variant.platform )
 	}
 }

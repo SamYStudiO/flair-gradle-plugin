@@ -46,7 +46,7 @@ class Install extends AbstractVariantTask
 		else if( variant.platform == Platform.ANDROID )
 		{
 			adb.addArgument( "devices" )
-			String id = new CliDevicesOutputParser( ).parse( adb.execute( project ) )
+			String id = new CliDevicesOutputParser( ).parse( adb.execute( project , variant.platform ) )
 
 			if( id )
 			{
@@ -56,7 +56,7 @@ class Install extends AbstractVariantTask
 				adb.addArgument( "-r" )
 				adb.addArgument( project.file( path ).path )
 
-				adb.execute( project )
+				adb.execute( project , variant.platform )
 			}
 			else println( "No device detected" )
 		}
@@ -66,7 +66,7 @@ class Install extends AbstractVariantTask
 
 			adt.addArgument( "-devices" )
 			adt.addArgument( "-platform ios" )
-			String id = new CliDevicesOutputParser( ).parse( adt.execute( project ) )
+			String id = new CliDevicesOutputParser( ).parse( adt.execute( project , variant.platform ) )
 			id = !id && platformSdk ? "ios_simulator" : id
 
 			if( id )
@@ -78,7 +78,7 @@ class Install extends AbstractVariantTask
 				adt.addArgument( "-device ${ id }" )
 				adt.addArgument( "-package" )
 				adt.addArgument( project.file( path ).path )
-				adt.execute( project )
+				adt.execute( project , variant.platform )
 			}
 			else println( "No device detected" )
 		}

@@ -33,17 +33,17 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 			{
 				String profileName = "flair_" + it.getNameWithType( NamingTypes.UNDERSCORE )
 				String app = it.platform == Platform.IOS ? "IOS" : it.platform == Platform.ANDROID ? "Android" : ""
-				String transport = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.PACKAGE_CONNECT ) ? "Network" : "USB"
+				String transport = flair.getFlairProperty( it , FlairProperty.PACKAGE_CONNECT ) ? "Network" : "USB"
 				String emulator = it.platform == Platform.IOS ? "OtherIOSDevice" : it.platform == Platform.ANDROID ? "OtherAndroidDevice" : ""
-				String size = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.ADL_SCREEN_SIZE )
+				String size = flair.getFlairProperty( it , FlairProperty.ADL_SCREEN_SIZE )
 				String fullHeight = size.split( ":" )[ 1 ].split( "x" )[ 1 ]
 				String fullWidth = size.split( ":" )[ 1 ].split( "x" )[ 0 ]
 				String target = "Emulator"
-				String moduleName = flair.getFlairProperty( flair.gradle.extensions.FlairProperty.MODULE_NAME )
+				String moduleName = flair.getFlairProperty( FlairProperty.MODULE_NAME )
 				String dpi = flair.getFlairProperty( it , FlairProperty.ADL_SCREEN_DPI )
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
-				String port = flair.getFlairProperty( it , flair.gradle.extensions.FlairProperty.PACKAGE_LISTEN ) ?: "7936"
+				String port = flair.getFlairProperty( it , FlairProperty.PACKAGE_LISTEN ) ?: "7936"
 				String gradleAssemble = TaskDefinition.PREPARE_PACKAGE.name + it.getNameWithType( NamingTypes.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )

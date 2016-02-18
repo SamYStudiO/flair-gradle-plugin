@@ -1,6 +1,7 @@
 package flair.gradle.cli
 
 import flair.gradle.dependencies.Sdk
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
 
@@ -10,13 +11,13 @@ import org.gradle.process.ExecResult
 public class Png2Atf extends AbstractCli
 {
 	@Override
-	public String execute( Project project )
+	public String execute( Project project , Platform platform )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
 
-			commandLine new Sdk( project ).png2AtfPath , "-c" , "e2" , "-n" , "0,0" , "-r"
+			commandLine new Sdk( project , platform ).png2AtfPath , "-c" , "e2" , "-n" , "0,0" , "-r"
 
 			arguments.each {
 

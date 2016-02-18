@@ -56,6 +56,6 @@ class LaunchAdl extends AbstractVariantTask
 			cli.addArguments( parameters )
 		}
 
-		cli.execute( project )
+		cli.execute( project , variant.platform )
 	}
 }

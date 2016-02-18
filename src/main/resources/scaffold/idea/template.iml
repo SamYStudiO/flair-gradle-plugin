@@ -9,7 +9,7 @@
 		<exclude-output />
 		<content url="file://$MODULE_DIR$">
 		</content>
-		<orderEntry type="jdk" jdkName="{sdkName}" jdkType="Flex SDK Type (new)" />
+		<orderEntry type="jdk" jdkName="{sdkName}" jdkType="{sdkType}" />
 		<orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

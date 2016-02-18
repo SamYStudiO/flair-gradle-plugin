@@ -1,5 +1,6 @@
 package flair.gradle.cli
 
+import flair.gradle.variants.Platform
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
@@ -10,7 +11,7 @@ import org.gradle.process.ExecResult
 public class TexturePacker extends AbstractCli
 {
 	@Override
-	public String execute( Project project )
+	public String execute( Project project , Platform platform )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 

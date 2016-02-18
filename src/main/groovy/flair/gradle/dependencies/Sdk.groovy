@@ -1,6 +1,7 @@
 package flair.gradle.dependencies
 
 import flair.gradle.utils.PropertyFile
+import flair.gradle.variants.Platform
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 
@@ -21,11 +22,9 @@ public class Sdk
 		this.path = path
 	}
 
-	private String name
-
 	public String getName()
 	{
-		return name ?: path ? path.split( "/" ).last( ) : null
+		return path ? path.split( "/" ).last( ) : null
 	}
 
 	public Sdk( Project project )
@@ -33,24 +32,31 @@ public class Sdk
 		this( project , null )
 	}
 
-	public Sdk( Project project , String name )
+	public Sdk( Project project , Platform platform )
 	{
 		File file = project.file( "local.properties" )
 
-		if( file.exists( ) ) this.path = new PropertyFile( file ).getProp( "sdk.dir" )
+		if( file.exists( ) )
+		{
+			switch( platform )
+			{
+				case Platform.IOS:
+					this.path = new PropertyFile( file ).getProp( "ios.sdk.dir" )
+					break
+
+				case Platform.ANDROID:
+					this.path = new PropertyFile( file ).getProp( "android.sdk.dir" )
+					break
+
+				case Platform.DESKTOP:
+					this.path = new PropertyFile( file ).getProp( "desktop.sdk.dir" )
+					break
+			}
+
+			if( !this.path ) this.path = new PropertyFile( file ).getProp( "sdk.dir" )
+		}
+
 		this.path = this.path ? this.path.replaceAll( "\\\\" , "/" ) : null
-		this.name = name
-	}
-
-	public Sdk( String path )
-	{
-		this( path , null )
-	}
-
-	public Sdk( String path , String name )
-	{
-		this.path = path ? path.replaceAll( "\\\\" , "/" ) : null
-		this.name = name
 	}
 
 	public Boolean isAirSdk()

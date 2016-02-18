@@ -1,6 +1,7 @@
 package flair.gradle.cli
 
 import flair.gradle.dependencies.Sdk
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
 
@@ -10,13 +11,13 @@ import org.gradle.process.ExecResult
 public class Mxmlc extends AbstractCli
 {
 	@Override
-	public String execute( Project project )
+	public String execute( Project project , Platform platform )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 
 		ExecResult result = project.exec {
 
-			executable new Sdk( project ).mxmlcPath
+			executable new Sdk( project , platform ).mxmlcPath
 
 			arguments.each {
 

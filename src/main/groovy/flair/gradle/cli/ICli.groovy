@@ -1,5 +1,6 @@
 package flair.gradle.cli
 
+import flair.gradle.variants.Platform
 import org.gradle.api.Project
 
 /**
@@ -18,4 +19,6 @@ public interface ICli
 	void clearArguments()
 
 	String execute( Project project )
+
+	String execute( Project project , Platform platform )
 }
