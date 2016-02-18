@@ -101,7 +101,7 @@ class Package extends AbstractVariantTask
 		tsa = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_TSA ) ?: "null"
 		provisioning = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ) ?: "null"
 
-		outputFile = project.file( "${ project.buildDir.path }/${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ version }.${ getExtension( ) }" )
+		outputFile = project.file( "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ getExtension( ) }" )
 	}
 
 	public Package()

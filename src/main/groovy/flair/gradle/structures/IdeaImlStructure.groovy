@@ -255,7 +255,7 @@ class IdeaImlStructure implements IStructure
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
 			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/app_descriptor.xml" ).path )
-			platformNode.@"package-file-name" = "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }"
+			platformNode.@"package-file-name" = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME )
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
 

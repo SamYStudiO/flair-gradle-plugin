@@ -12,6 +12,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 {
 	private Platform platform
 
+	private String packageFileName
+
 	private Boolean debug
 
 	private Boolean generateAtfTexturesFromDrawables
@@ -97,6 +99,16 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	public Platform getPlatform()
 	{
 		return platform
+	}
+
+	public String getPackageFileName()
+	{
+		return packageFileName
+	}
+
+	public void packageFileName( String packageFileName )
+	{
+		this.packageFileName = packageFileName
 	}
 
 	public Boolean getDebug()
@@ -521,6 +533,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 			switch( property )
 			{
+				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }"
 				case FlairProperty.DEBUG.name: return false
 				case FlairProperty.GENERATE_ATF_TEXTURES_FROM_DRAWABLES.name: return false
 
