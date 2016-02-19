@@ -1,5 +1,7 @@
-package _packageName_.view.otherScreen
+package _packageName_.view
 {
+	import _packageName_.view.ScreenID;
+
 	import feathers.controls.Button;
 	import feathers.controls.Screen;
 	import feathers.controls.StackScreenNavigator;
@@ -12,21 +14,16 @@ package _packageName_.view.otherScreen
 	/**
 	 * Example screen (you may modify or remove)
 	 */
-	public class OtherScreen extends Screen
+	public class HelloScreen extends Screen
 	{
 		/**
 		 *
 		 */
-		private var _button : Button;
-
-		/**
-		 *
-		 */
-		public function OtherScreen()
+		public function HelloScreen()
 		{
 			super();
 
-			debug( this , "OtherScreen" );
+			debug( this , "HelloScreen" );
 		}
 
 		/**
@@ -41,13 +38,13 @@ package _packageName_.view.otherScreen
 			l.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
 			layout = l;
 
-			_button = new Button();
-			_button.label = R.string.world;
-			_button.addEventListener( Event.TRIGGERED , function () : void
+			var button : Button = new Button();
+			button.label = R.string.hello;
+			button.addEventListener( Event.TRIGGERED , function () : void
 			{
-				( _owner as StackScreenNavigator ).popScreen();
+				( _owner as StackScreenNavigator ).pushScreen( ScreenID.WORLD );
 			} );
-			addChild( _button );
+			addChild( button );
 		}
 	}
 }

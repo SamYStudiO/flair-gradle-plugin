@@ -1,7 +1,7 @@
 package _packageName_.view
 {
-	import _packageName_.view.home.HomeScreen;
-	import _packageName_.view.otherScreen.OtherScreen;
+	import _packageName_.view.HelloScreen;
+	import _packageName_.view.WorldScreen;
 
 	import feathers.controls.StackScreenNavigator;
 	import feathers.controls.StackScreenNavigatorItem;
@@ -52,8 +52,8 @@ package _packageName_.view
 			_navigator = new StackScreenNavigator();
 			_navigator.pushTransition = Slide.createSlideLeftTransition();
 			_navigator.popTransition = Slide.createSlideRightTransition();
-			_navigator.addScreen( ScreenID.HOME , new StackScreenNavigatorItem( HomeScreen ) );
-			_navigator.addScreen( ScreenID.OTHER_SCREEN , new StackScreenNavigatorItem( OtherScreen ) );
+			_navigator.addScreen( ScreenID.HELLO , new StackScreenNavigatorItem( HelloScreen ) );
+			_navigator.addScreen( ScreenID.WORLD , new StackScreenNavigatorItem( WorldScreen ) );
 			_navigator.pushScreen( R.string.first_screen );
 			_navigator.layoutData = new AnchorLayoutData( 0 , 0 , 0 , 0 );
 

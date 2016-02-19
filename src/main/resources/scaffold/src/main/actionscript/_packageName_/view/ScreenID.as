@@ -8,12 +8,12 @@ package _packageName_.view
 		/**
 		 * Example screen (you may modify or remove)
 		 */
-		public static const HOME : String = "home";
+		public static const HELLO : String = "hello";
 
 		/**
 		 * Example screen (you may modify or remove)
 		 */
-		public static const OTHER_SCREEN : String = "otherScreen";
+		public static const WORLD : String = "world";
 
 		/**
 		 * @private
