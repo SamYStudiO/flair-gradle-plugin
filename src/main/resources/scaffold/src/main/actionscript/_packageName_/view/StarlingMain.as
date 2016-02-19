@@ -1,8 +1,5 @@
 package _packageName_.view
 {
-	import _packageName_.view.HelloScreen;
-	import _packageName_.view.WorldScreen;
-
 	import feathers.controls.StackScreenNavigator;
 	import feathers.controls.StackScreenNavigatorItem;
 	import feathers.layout.AnchorLayout;

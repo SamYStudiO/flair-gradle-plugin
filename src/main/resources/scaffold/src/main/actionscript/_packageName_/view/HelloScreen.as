@@ -1,7 +1,5 @@
 package _packageName_.view
 {
-	import _packageName_.view.ScreenID;
-
 	import feathers.controls.Button;
 	import feathers.controls.Screen;
 	import feathers.controls.StackScreenNavigator;
