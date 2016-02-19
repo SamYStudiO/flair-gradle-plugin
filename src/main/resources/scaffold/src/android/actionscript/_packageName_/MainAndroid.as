@@ -1,6 +1,6 @@
 package _packageName_
 {
-	import feathers.utils.display.calculateScaleRatioToFit;
+	import feathers.utils.display.calculateScaleRatioToFill;
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
@@ -62,7 +62,7 @@ package _packageName_
 			var w : Number = _orientationManager.isStagePortrait ? stage.stageWidth : stage.stageHeight;
 			var h : Number = _orientationManager.isStagePortrait ? stage.stageHeight : stage.stageWidth;
 
-			var scale : Number = calculateScaleRatioToFit( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
+			var scale : Number = calculateScaleRatioToFill( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
 			_splashScreenPortrait.scaleX = _splashScreenPortrait.scaleY = scale;
 			_splashScreenPortrait.x = Math.round( ( w - _splashScreenPortrait.width ) / 2 );
@@ -79,7 +79,7 @@ package _packageName_
 			var w : Number = _orientationManager.isStageLandscape ? stage.stageWidth : stage.stageHeight;
 			var h : Number = _orientationManager.isStageLandscape ? stage.stageHeight : stage.stageWidth;
 
-			var scale : Number = calculateScaleRatioToFit( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
+			var scale : Number = calculateScaleRatioToFill( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 
 			_splashScreenLandscape.scaleX = _splashScreenLandscape.scaleY = scale;
 			_splashScreenLandscape.x = Math.round( ( w - _splashScreenLandscape.width ) / 2 );
