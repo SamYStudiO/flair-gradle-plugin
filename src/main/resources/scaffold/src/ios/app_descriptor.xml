@@ -186,8 +186,8 @@
                 <!-- iPad devices -->
                 <string>2</string>
             </array>
-            <!--<key>MinimumOSVersion</key>-->
-            <!--<string>7.0</string>-->
+            <key>MinimumOSVersion</key>
+            <string>7.0</string>
             <!--<key>UIStatusBarStyle</key>-->
             <!--<string>UIStatusBarStyleBlackOpaque</string>-->
             <!--<key>UIRequiresPersistentWiFi</key>-->
