@@ -28,17 +28,11 @@
     <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
     <!--<versionLabel></versionLabel>-->
 
-    <!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required for namespace < 2.5. -->
-    <!--<version>0.0.0</version>-->
-
     <!-- Description, displayed in the AIR application installer. May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <!--<description></description>-->
 
     <!-- Copyright information. Optional -->
     <!--<copyright></copyright>-->
-
-    <!-- Publisher ID. Used if you're updating an application created prior to 1.5.3 -->
-    <!--<publisherID></publisherID>-->
 
     <!-- Identifies the ActionScript extensions used by an application. -->
     <extensions>!!!set automatically!!!</extensions>
@@ -47,45 +41,6 @@
     <initialWindow>
         <!-- The main SWF or HTML file of the application. Required. -->
         <content>!!!set automatically!!!</content>
-
-        <!-- The title of the main window. Optional. -->
-        <!--<title></title>-->
-
-        <!-- The type of system chrome to use (either "standard" or "none"). Optional. Default standard. -->
-        <!--<systemChrome></systemChrome>-->
-
-        <!-- Whether the window is transparent. Only applicable when systemChrome is none. Optional. Default false. -->
-        <!--<transparent></transparent>-->
-
-        <!-- Whether the window is initially visible. Optional. Default false. -->
-        <visible>true</visible>
-
-        <!-- Whether the user can minimize the window. Optional. Default true. -->
-        <!--<minimizable></minimizable>-->
-
-        <!-- Whether the user can maximize the window. Optional. Default true. -->
-        <!--<maximizable></maximizable>-->
-
-        <!-- Whether the user can resize the window. Optional. Default true. -->
-        <!--<resizable></resizable>-->
-
-        <!-- The window's initial width in pixels. Optional. -->
-        <!--<width></width>-->
-
-        <!-- The window's initial height in pixels. Optional. -->
-        <!--<height></height>-->
-
-        <!-- The window's initial x position. Optional. -->
-        <!--<x></x>-->
-
-        <!-- The window's initial y position. Optional. -->
-        <!--<y></y>-->
-
-        <!-- The window's minimum size, specified as a width/height pair in pixels, such as "400 200". Optional. -->
-        <!--<minSize></minSize>-->
-
-        <!-- The window's initial maximum size, specified as a width/height pair in pixels, such as "1600 1200". Optional. -->
-        <!--<maxSize></maxSize>-->
 
         <!-- The aspect ratio of the app ("portrait" or "landscape" or "any"). Optional. Mobile only. Default is the natural orientation of the device -->
         <aspectRatio>!!!set automatically!!!</aspectRatio>
@@ -104,9 +59,6 @@
 
         <!-- Whether or not to pan when a soft keyboard is raised or lowered (either "pan" or "none").  Optional.  Defaults "pan." -->
         <!--<softKeyboardBehavior></softKeyboardBehavior>-->
-
-        <!-- Display Resolution for the app (either "standard" or "high"). Optional, OSX-only. Default "standard" -->
-        <!-- <requestedDisplayResolution></requestedDisplayResolution> -->
     </initialWindow>
 
     <!-- We recommend omitting the supportedProfiles element, which in turn permits your application to be deployed to all devices supported by AIR.
@@ -115,12 +67,6 @@
 
     <!-- Languages supported by application. Only these languages can be specified -->
     <supportedLanguages>!!!set automatically!!!</supportedLanguages>
-
-    <!-- The subpath of the standard default installation location to use. Optional. -->
-    <!--<installFolder></installFolder>-->
-
-    <!-- The subpath of the Programs menu to use. (Ignored on operating systems without a Programs menu.) Optional. -->
-    <!--<programMenuFolder></programMenuFolder>-->
 
     <!-- The icon the system uses for the application. For at least one resolution, specify the path to a PNG file included in the AIR package. Optional. -->
     <icon>
@@ -138,35 +84,6 @@
         <image180x180>icons/icon180x180.png</image180x180> <!--app icon iphone 6 plus-->
         <image1024x1024>icons/icon1024x1024.png</image1024x1024> <!--store icon ipad/iphone retina-->
     </icon>
-
-    <!-- Whether the application handles the update when a user double-clicks an update version of the AIR file (true),
-         or the default AIR application installer handles the update (false). Optional. Default false. -->
-    <!--<customUpdateUI></customUpdateUI>-->
-
-    <!-- Whether the application can be launched when the user clicks a link in a web browser. Optional. Default false. -->
-    <!--<allowBrowserInvocation></allowBrowserInvocation>-->
-
-    <!-- Listing of file types for which the application can register. Optional. -->
-    <!--<fileTypes>-->
-    <!-- Defines one file type. Optional. -->
-    <!--<fileType>-->
-    <!-- The name that the system displays for the registered file type. Required. -->
-    <!--<name></name>-->
-    <!-- The extension to register. Required. -->
-    <!--<extension></extension>-->
-    <!-- The description of the file type. Optional. -->
-    <!--<description></description>-->
-    <!-- The MIME content type. -->
-    <!--<contentType></contentType>-->
-    <!-- The icon to display for the file type. Optional. -->
-    <!--<icon>
-        <image16x16></image16x16>
-        <image32x32></image32x32>
-        <image48x48></image48x48>
-        <image128x128></image128x128>
-    </icon>-->
-    <!--</fileType>-->
-    <!--</fileTypes>-->
 
     <!-- iOS specific capabilities -->
     <iPhone>
