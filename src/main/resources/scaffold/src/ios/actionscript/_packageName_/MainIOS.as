@@ -1,5 +1,9 @@
 package _packageName_
 {
+	import feathers.utils.display.calculateScaleRatioToFill;
+
+	import flash.display.Bitmap;
+	import flash.events.Event;
 	import flash.system.Capabilities;
 
 	/**
@@ -21,8 +25,8 @@ package _packageName_
 		override protected function _getSplashScreenFilePath( portrait : Boolean ) : String
 		{
 			var filePath : String;
-			var stageWidth : Number = Capabilities.screenResolutionX;
-			var stageHeight : Number = Capabilities.screenResolutionY;
+			var stageWidth : Number = stage.fullScreenWidth;
+			var stageHeight : Number = stage.fullScreenHeight;
 
 			switch( true )
 			{
@@ -54,9 +58,53 @@ package _packageName_
 				case stageWidth == 320 || stageWidth == 480 :
 					filePath = portrait ? "Default.png" : "Default-Phone-Landscape.png";
 					break;
+
+				default :
+
+					var minWidth : Number = Math.min( stageWidth , stageHeight );
+					var maxHeight : Number = Math.max( stageWidth , stageHeight );
+					var r : Number = minWidth / maxHeight;
+
+					if( r > .7 ) filePath = portrait ? "Default-Portrait@2x.png" : "Default-Landscape@2x.png";
+					else if( r > .6 ) filePath = portrait ? "Default-414w-736h@3x.png" : "Default-414w-736h-Landscape@3x.png";
+					else filePath = portrait ? "Default@2x.png" : "Default-Phone-Landscape@2x.png";
 			}
 
 			return filePath;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		override protected function _splashScreenPortraitLoaded( e : Event ) : void
+		{
+			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
+
+			var w : Number = _orientationManager.isStagePortrait ? stage.fullScreenWidth : stage.fullScreenHeight;
+			var h : Number = _orientationManager.isStagePortrait ? stage.fullScreenHeight : stage.fullScreenWidth;
+
+			var scale : Number = calculateScaleRatioToFill( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
+
+			_splashScreenPortrait.scaleX = _splashScreenPortrait.scaleY = scale;
+			_splashScreenPortrait.x = Math.round( ( w - _splashScreenPortrait.width ) / 2 );
+			_splashScreenPortrait.y = Math.round( ( h - _splashScreenPortrait.height ) / 2 );
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		override protected function _splashScreenLandscapeLoaded( e : Event ) : void
+		{
+			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
+
+			var w : Number = _orientationManager.isStageLandscape ? stage.fullScreenWidth : stage.fullScreenHeight;
+			var h : Number = _orientationManager.isStageLandscape ? stage.fullScreenHeight : stage.fullScreenWidth;
+
+			var scale : Number = calculateScaleRatioToFill( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
+
+			_splashScreenLandscape.scaleX = _splashScreenLandscape.scaleY = scale;
+			_splashScreenLandscape.x = Math.round( ( w - _splashScreenLandscape.width ) / 2 );
+			_splashScreenLandscape.y = Math.round( ( h - _splashScreenLandscape.height ) / 2 );
 		}
 	}
 }
