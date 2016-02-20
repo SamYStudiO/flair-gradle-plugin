@@ -52,7 +52,7 @@
         <!--<transparent></transparent>-->
 
         <!-- Whether the window is initially visible. Optional. Default false. -->
-        <!-- <visible></visible> -->
+        <visible>true</visible>
 
         <!-- Whether the user can minimize the window. Optional. Default true. -->
         <!--<minimizable></minimizable>-->
