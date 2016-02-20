@@ -38,9 +38,9 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String appDefaultSupportedLanguage
 
-	private String compileMainClass
+	private String compilerMainClass
 
-	private List<String> compileOptionsList = new ArrayList<String>()
+	private List<String> compilerOptionsList = new ArrayList<String>()
 
 	private String adlScreenSize
 
@@ -231,34 +231,34 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.appDefaultSupportedLanguage = appDefaultSupportedLanguage
 	}
 
-	public String getCompileMainClass()
+	public String getCompilerMainClass()
 	{
-		return compileMainClass
+		return compilerMainClass
 	}
 
-	public void compileMainClass( String compileMainClass )
+	public void compilerMainClass( String compilerMainClass )
 	{
-		this.compileMainClass = compileMainClass
+		this.compilerMainClass = compilerMainClass
 	}
 
-	public String getCompileOptions()
+	public String getCompilerOptions()
 	{
-		return compileOptionsList.size(  ) ? compileOptionsList.join( " " ) : null
+		return compilerOptionsList.size(  ) ? compilerOptionsList.join( " " ) : null
 	}
 
-	public void compileOption( String compileOption )
+	public void compilerOption( String compilerOption )
 	{
-		this.compileOptionsList.add( compileOption )
+		this.compilerOptionsList.add( compilerOption )
 	}
 
-	public void compileOptions( List<String> compileOptions )
+	public void compileOptions( List<String> compilerOptions )
 	{
-		this.compileOptionsList.addAll( compileOptions )
+		this.compilerOptionsList.addAll( compilerOptions )
 	}
 
-	public void compileOptions( String... compileOptions )
+	public void compilerOptions( String... compilerOptions )
 	{
-		this.compileOptionsList.addAll( compileOptions )
+		this.compilerOptionsList.addAll( compilerOptions )
 	}
 
 	public String getAdlScreenSize()
@@ -548,7 +548,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.APP_DEPTH_AND_STENCIL.name: return false
 				case FlairProperty.APP_DEFAULT_SUPPORTED_LANGUAGES.name: return "en"
 
-				case FlairProperty.COMPILE_MAIN_CLASS.name:
+				case FlairProperty.COMPILER_MAIN_CLASS.name:
 					String packageName = extensionManager.getFlairProperty( FlairProperty.PACKAGE_NAME )
 
 					switch( p )
@@ -558,7 +558,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platform.DESKTOP: return packageName + ".MainDesktop"
 						default: return null
 					}
-				case FlairProperty.COMPILE_OPTIONS.name: return null
+				case FlairProperty.COMPILER_OPTIONS.name: return null
 
 				case FlairProperty.ADL_SCREEN_SIZE.name: return "540x920:540x960"
 				case FlairProperty.ADL_SCREEN_DPI.name: return p == Platform.IOS ? 200 : 240

@@ -31,7 +31,7 @@ class Compile extends AbstractVariantTask
 	def String mainClass
 
 	@Input
-	def String compileOptions
+	def String compilerOptions
 
 	@Override
 	public void setVariant( Variant variant )
@@ -42,8 +42,8 @@ class Compile extends AbstractVariantTask
 		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
-		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_MAIN_CLASS )
-		compileOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) ?: "null"
+		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS )
+		compilerOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_OPTIONS ) ?: "null"
 	}
 
 	public Compile()
@@ -76,7 +76,7 @@ class Compile extends AbstractVariantTask
 		addConstants( )
 
 		// custom options
-		if( compileOptions != "null" ) cli.addArguments( compileOptions.split( " " ) )
+		if( compilerOptions != "null" ) cli.addArguments( compilerOptions.split( " " ) )
 
 		// swf output
 		cli.addArgument( "-output" )

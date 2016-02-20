@@ -224,14 +224,14 @@ class IdeaImlStructure implements IStructure
 
 			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) )
 					.replaceAll( "\\{platform\\}" , platform )
-					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_MAIN_CLASS ) as String )
+					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS ) as String )
 					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf" )
 					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + "/package" )
 					.replaceAll( "\\{target\\}" , variant.platform == Platform.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project , variant.platform ).name )
 					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
-					.replaceAll( "\\{compilerOptions\\}" , (String) extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) ?: "" )
+					.replaceAll( "\\{compilerOptions\\}" , (String) extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_OPTIONS ) ?: "" )
 
 			Node configurationNode = new XmlParser( ).parseText( configuration )
 

@@ -24,8 +24,8 @@ enum FlairProperty
 	APP_DEPTH_AND_STENCIL( "appDepthAndStencil" ) ,
 	APP_DEFAULT_SUPPORTED_LANGUAGES( "appDefaultSupportedLanguage" ) ,
 
-	COMPILE_MAIN_CLASS( "compileMainClass" ) ,
-	COMPILE_OPTIONS( "compileOptions" ) ,
+	COMPILER_MAIN_CLASS( "compilerMainClass" ) ,
+	COMPILER_OPTIONS( "compilerOptions" ) ,
 
 	PACKAGE_FILE_NAME( "packageFileName" ) ,
 	PACKAGE_TARGET( "packageTarget" ) ,
