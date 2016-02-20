@@ -36,7 +36,7 @@
 
 	<!-- Identifies the ActionScript extensions used by an application. -->
 	<extensions>!!!set automatically!!!</extensions>
-	
+
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>
 		<!-- The main SWF or HTML file of the application. Required. -->
@@ -91,7 +91,7 @@
                                   android:normalScreens="true"
                                   android:largeScreens="true"
                                   android:xlargeScreens="true" />
-                                  <!-- android:requiresSmallestWidthDp="600" --> > tablet 7"
+                                  <!--android:requiresSmallestWidthDp="600"--> <!--tablet 7"-->
 
                 <uses-permission android:name="android.permission.INTERNET"/>
 
