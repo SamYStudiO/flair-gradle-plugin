@@ -550,7 +550,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.APP_ID_SUFFIX.name: return ""
 				case FlairProperty.APP_NAME.name: return project.name
 				case FlairProperty.APP_NAME_SUFFIX.name: return ""
-				case FlairProperty.APP_FILE_NAME.name: return project.name
+				case FlairProperty.APP_FILE_NAME.name: return formatProjectName()
 				case FlairProperty.APP_VERSION.name: return "1.0.0"
 				case FlairProperty.APP_FULL_SCREEN.name: return true
 				case FlairProperty.APP_ASPECT_RATIO.name: return "any"
@@ -576,7 +576,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.ADL_AT_LOGIN.name: return false
 				case FlairProperty.ADL_PARAMETERS.name: return new ArrayList<String>()
 
-				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }"
+				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ formatProjectName() }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }".toLowerCase(  )
 				case FlairProperty.PACKAGE_TARGET.name:
 					switch( p )
 					{
@@ -657,6 +657,14 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		}
 
 		return null
+	}
+
+	private String formatProjectName( )
+	{
+		String name = project.name
+		name = name.replaceAll( " " , "_" ).replaceAll( /[a-z]([A-Z])/ , /_$0/ )
+
+		return name.toLowerCase( )
 	}
 
 	private String getSigningFilePath( Variant variant , String type )
