@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="first_screen">home</string>
+    <string name="first_screen">hello</string>
 </resources>
