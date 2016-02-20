@@ -1,6 +1,5 @@
 package flair.gradle.tasks.process
 
-import flair.gradle.dependencies.Config
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
@@ -142,7 +141,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		project.file( "${ outputVariantDir.path }/package/" ).mkdirs( )
 		outputFile.createNewFile( )
-		outputFile.withOutputStream { writer -> writer.write( appContent.getBytes( Charset.forName("UTF-8") ) ) }
+		outputFile.withOutputStream { writer -> writer.write( appContent.getBytes( Charset.forName( "UTF-8" ) ) ) }
 	}
 
 	private String getSupportedLocales()
@@ -183,6 +182,6 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		list.add( project.file( "${ outputVariantDir }/extracted_extensions" ) )
 		list.add( project.file( "${ outputVariantDir }/package/icons" ) )
 
-		return list.reverse(  )
+		return list.reverse( )
 	}
 }

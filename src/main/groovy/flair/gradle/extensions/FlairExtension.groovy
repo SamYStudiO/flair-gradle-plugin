@@ -59,7 +59,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	}
 
 	@Override
-	public Object getProp( String property , Variant variant ,  boolean returnDefaultIfNull )
+	public Object getProp( String property , Variant variant , boolean returnDefaultIfNull )
 	{
 		Object value = super.getProp( property , variant , returnDefaultIfNull )
 

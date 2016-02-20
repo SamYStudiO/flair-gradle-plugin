@@ -4,7 +4,6 @@ import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
-import flair.gradle.variants.Platform
 import org.gradle.api.tasks.TaskAction
 
 /**

@@ -605,7 +605,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.SIGNING_STORE_PASS.name:
 
 					File f = getSigningFile( variant , "txt" )
-					return f && f.exists(  ) ? f.text.trim( ) : null
+					return f && f.exists( ) ? f.text.trim( ) : null
 
 				case FlairProperty.SIGNING_PROVISIONING_PROFILE.name: return p == Platform.IOS ? getSigningFilePath( variant , "mobileprovision" ) : null
 

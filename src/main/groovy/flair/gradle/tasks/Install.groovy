@@ -6,7 +6,6 @@ import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
 

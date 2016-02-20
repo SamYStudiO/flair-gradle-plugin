@@ -21,7 +21,10 @@ public abstract class AbstractCli implements ICli
 	{
 		String[] a = arg.split( "\\s" )
 
-		for( int i = 0; i < a.size( ); i++ ) { arguments.add( a[ i ] ) }
+		for( int i = 0; i < a.size( ); i++ )
+		{
+			arguments.add( a[ i ] )
+		}
 	}
 
 	@Override
