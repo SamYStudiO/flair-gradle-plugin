@@ -237,7 +237,7 @@ class Package extends AbstractVariantTask
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
 		project.file( "${ outputVariantDir.path }/package" ).listFiles( ).each {
-			if( it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) ) cli.addArgument( it.name )
+			if( it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 ) cli.addArgument( it.name )
 		}
 	}
 
