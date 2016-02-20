@@ -25,7 +25,7 @@ class LaunchAdl extends AbstractVariantTask
 		String pubId = extensionManager.getFlairProperty( variant , FlairProperty.ADL_PUB_ID )
 		boolean noDebug = extensionManager.getFlairProperty( variant , FlairProperty.ADL_NO_DEBUG )
 		boolean atLogin = extensionManager.getFlairProperty( variant , FlairProperty.ADL_AT_LOGIN )
-		List<String> parameters = extensionManager.getFlairProperty( variant , FlairProperty.ADL_PARAMETERS ) as List<String>
+		String parameters = extensionManager.getFlairProperty( variant , FlairProperty.ADL_PARAMETERS )
 
 		cli.addArgument( "-profile" )
 		cli.addArgument( variant.platform == Platform.DESKTOP ? "extendedDesktop" : "mobileDevice" )
@@ -50,10 +50,10 @@ class LaunchAdl extends AbstractVariantTask
 		cli.addArgument( "${ outputVariantDir.path }/package/app_descriptor.xml" )
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )
 
-		if( parameters && !parameters.empty )
+		if( parameters && parameters.length(  ) )
 		{
 			cli.addArgument( "--" )
-			cli.addArguments( parameters )
+			cli.addArguments( parameters.split( " " ) )
 		}
 
 		cli.execute( project , variant.platform )

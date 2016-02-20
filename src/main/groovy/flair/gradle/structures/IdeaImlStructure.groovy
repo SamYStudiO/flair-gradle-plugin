@@ -231,7 +231,7 @@ class IdeaImlStructure implements IStructure
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project , variant.platform ).name )
 					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "true" : "false" )
 					.replaceAll( "\\{constants\\}" , constants.join( "&#10;" ) )
-					.replaceAll( "\\{compilerOptions\\}" , ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) as List ).join( " " ) )
+					.replaceAll( "\\{compilerOptions\\}" , (String) extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) ?: "" )
 
 			Node configurationNode = new XmlParser( ).parseText( configuration )
 

@@ -40,7 +40,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String compileMainClass
 
-	private List<String> compileOptions = new ArrayList<>( )
+	private List<String> compileOptionsList = new ArrayList<String>()
 
 	private String adlScreenSize
 
@@ -52,7 +52,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean adlAtLogin
 
-	private List<String> adlParameters = new ArrayList<>( )
+	private List<String> adlParametersList = new ArrayList<String>()
 
 	private String packageFileName
 
@@ -241,24 +241,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.compileMainClass = compileMainClass
 	}
 
-	public List<String> getCompileOptions()
+	public String getCompileOptions()
 	{
-		return compileOptions
+		return compileOptionsList.size(  ) ? compileOptionsList.join( " " ) : null
 	}
 
 	public void compileOption( String compileOption )
 	{
-		this.compileOptions.add( compileOption )
+		this.compileOptionsList.add( compileOption )
 	}
 
 	public void compileOptions( List<String> compileOptions )
 	{
-		this.compileOptions.addAll( compileOptions )
+		this.compileOptionsList.addAll( compileOptions )
 	}
 
 	public void compileOptions( String... compileOptions )
 	{
-		this.compileOptions.addAll( compileOptions )
+		this.compileOptionsList.addAll( compileOptions )
 	}
 
 	public String getAdlScreenSize()
@@ -311,24 +311,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.adlAtLogin = adlAtLogin
 	}
 
-	public List<String> getAdlParameters()
+	public String getAdlParameters()
 	{
-		return adlParameters
+		return adlParametersList.size(  ) ? adlParametersList.join( " " ) : null
 	}
 
 	public void adlParameter( String adlParameter )
 	{
-		this.adlParameters.add( adlParameter )
+		this.adlParametersList.add( adlParameter )
 	}
 
 	public void adlParameters( List<String> adlParameters )
 	{
-		this.adlParameters.addAll( adlParameters )
+		this.adlParametersList.addAll( adlParameters )
 	}
 
 	public void adlParameters( String... adlParameters )
 	{
-		this.adlParameters.addAll( adlParameters )
+		this.adlParametersList.addAll( adlParameters )
 	}
 
 	public String getPackageFileName()
@@ -558,7 +558,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platform.DESKTOP: return packageName + ".MainDesktop"
 						default: return null
 					}
-				case FlairProperty.COMPILE_OPTIONS.name: return new ArrayList<String>( )
+				case FlairProperty.COMPILE_OPTIONS.name: return null
 
 				case FlairProperty.ADL_SCREEN_SIZE.name: return "540x920:540x960"
 				case FlairProperty.ADL_SCREEN_DPI.name: return p == Platform.IOS ? 200 : 240

@@ -31,7 +31,7 @@ class Compile extends AbstractVariantTask
 	def String mainClass
 
 	@Input
-	def List<String> compileOptions
+	def String compileOptions
 
 	@Override
 	public void setVariant( Variant variant )
@@ -43,7 +43,7 @@ class Compile extends AbstractVariantTask
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_MAIN_CLASS )
-		compileOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) as List<String>
+		compileOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILE_OPTIONS ) ?: "null"
 	}
 
 	public Compile()
@@ -76,7 +76,7 @@ class Compile extends AbstractVariantTask
 		addConstants( )
 
 		// custom options
-		cli.addArguments( compileOptions )
+		if( compileOptions != "null" ) cli.addArguments( compileOptions.split( " " ) )
 
 		// swf output
 		cli.addArgument( "-output" )
