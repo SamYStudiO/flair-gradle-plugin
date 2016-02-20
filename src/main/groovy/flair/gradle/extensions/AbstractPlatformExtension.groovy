@@ -550,7 +550,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.APP_ID_SUFFIX.name: return ""
 				case FlairProperty.APP_NAME.name: return project.name
 				case FlairProperty.APP_NAME_SUFFIX.name: return ""
-				case FlairProperty.APP_FILE_NAME.name: return extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME_SUFFIX )
+				case FlairProperty.APP_FILE_NAME.name: return project.name
 				case FlairProperty.APP_VERSION.name: return "1.0.0"
 				case FlairProperty.APP_FULL_SCREEN.name: return true
 				case FlairProperty.APP_ASPECT_RATIO.name: return "any"
