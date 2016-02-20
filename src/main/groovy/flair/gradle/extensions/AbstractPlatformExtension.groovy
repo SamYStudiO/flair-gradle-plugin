@@ -60,7 +60,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean packageX86
 
-	private List<String> packageExcludeResources
+	private List<String> packageExcludeResourcesList = new ArrayList<String>()
 
 	private String packageConnect
 
@@ -361,14 +361,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageX86 = packageX86
 	}
 
-	public List<String> getPackageExcludeResources()
+	public String getPackageExcludeResources()
 	{
-		return packageExcludeResources
+		return packageExcludeResources.size(  ) ? packageExcludeResources.join( " " ) : null
+	}
+
+	public void packageExcludeResource( String packageExcludeResource )
+	{
+		this.packageExcludeResourcesList.add( packageExcludeResource )
 	}
 
 	public void packageExcludeResources( List<String> packageExcludeResources )
 	{
-		this.packageExcludeResources = packageExcludeResources
+		this.packageExcludeResourcesList.addAll( packageExcludeResources )
+	}
+
+	public void packageExcludeResources( String... packageExcludeResources )
+	{
+		this.packageExcludeResourcesList.addAll( packageExcludeResources )
 	}
 
 	public String getPackageConnect()
@@ -583,10 +593,10 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{
-						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case Platform.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case Platform.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
-						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.IOS: return "drawable*-ldpi*/** drawable*-mdpi*/** drawable*-hdpi*/** drawable*-xxxhdpi*/**"
+						case Platform.ANDROID: return "drawable*-ldpi*/** drawable*-xxxhdpi*/**"
+						case Platform.DESKTOP: return "drawable*-ldpi*/** drawable*-hdpi*/** drawable*-xxhdpi*/** drawable*-xxxhdpi*/**"
+						default: return "drawable*-ldpi*/** drawable*-xxxhdpi*/**"
 					}
 
 
