@@ -79,8 +79,8 @@ package _packageName_
 		{
 			( _splashScreenPortrait.content as Bitmap ).smoothing = true;
 
-			var w : Number = _orientationManager.isStagePortrait ? stage.fullScreenWidth : stage.fullScreenHeight;
-			var h : Number = _orientationManager.isStagePortrait ? stage.fullScreenHeight : stage.fullScreenWidth;
+			var w : Number = _orientationManager.isStagePortrait ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _orientationManager.isStagePortrait ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFill( _splashScreenPortrait.width , _splashScreenPortrait.height , w , h );
 
@@ -96,8 +96,8 @@ package _packageName_
 		{
 			( _splashScreenLandscape.content as Bitmap ).smoothing = true;
 
-			var w : Number = _orientationManager.isStageLandscape ? stage.fullScreenWidth : stage.fullScreenHeight;
-			var h : Number = _orientationManager.isStageLandscape ? stage.fullScreenHeight : stage.fullScreenWidth;
+			var w : Number = _orientationManager.isStageLandscape ? stage.stageWidth : stage.stageHeight;
+			var h : Number = _orientationManager.isStageLandscape ? stage.stageHeight : stage.stageWidth;
 
 			var scale : Number = calculateScaleRatioToFill( _splashScreenLandscape.width , _splashScreenLandscape.height , w , h );
 
