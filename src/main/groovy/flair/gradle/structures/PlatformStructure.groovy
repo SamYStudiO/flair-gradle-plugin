@@ -71,7 +71,7 @@ public class PlatformStructure implements IStructure
 			adt.addArgument( "2048-RSA" )
 			adt.addArgument( project.file( "${ moduleName }/src/${ platform.name }/signing/certificate.p12" ).path )
 			adt.addArgument( password )
-			adt.execute( project )
+			adt.execute( project , platform )
 
 			project.file( "${ moduleName }/src/${ platform.name }/signing/password.txt" ).write( password )
 		}
