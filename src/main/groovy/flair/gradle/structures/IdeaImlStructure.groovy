@@ -266,7 +266,7 @@ class IdeaImlStructure implements IStructure
 
 			project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/package" ).listFiles( ).each {
 
-				if( it.name != "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 )
+				if( it.name != "${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 )
 				{
 					Node node = new Node( toPackage , "FilePathAndPathInPackage" )
 
