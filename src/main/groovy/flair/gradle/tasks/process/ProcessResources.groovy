@@ -38,7 +38,7 @@ class ProcessResources extends AbstractVariantTask
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package/res" )
 
-		excludeResources = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_EXCLUDE_RESOURCES ) ?: "null"
+		excludeResources = ( extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_EXCLUDE_RESOURCES ) as List<String> ).join( " " )
 		generateAtf = extensionManager.getFlairProperty( variant , FlairProperty.GENERATE_ATF_TEXTURES_FROM_DRAWABLES )
 	}
 
@@ -61,7 +61,7 @@ class ProcessResources extends AbstractVariantTask
 					from file
 					into outputDir
 
-					if( excludeResources != "null" ) exclude excludeResources.split( " " )
+					if( excludeResources.length(  ) ) exclude excludeResources.split( " " )
 					exclude "**/value*/**"
 
 					includeEmptyDirs = false

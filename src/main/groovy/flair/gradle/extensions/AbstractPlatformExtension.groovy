@@ -40,7 +40,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String compilerMainClass
 
-	private List<String> compilerOptionsList = new ArrayList<String>()
+	private List<String> compilerOptions = new ArrayList<String>()
 
 	private String adlScreenSize
 
@@ -52,7 +52,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean adlAtLogin
 
-	private List<String> adlParametersList = new ArrayList<String>()
+	private List<String> adlParameters = new ArrayList<String>()
 
 	private String packageFileName
 
@@ -60,7 +60,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean packageX86
 
-	private List<String> packageExcludeResourcesList = new ArrayList<String>()
+	private List<String> packageExcludeResources = new ArrayList<String>()
 
 	private String packageConnect
 
@@ -241,24 +241,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.compilerMainClass = compilerMainClass
 	}
 
-	public String getCompilerOptions()
+	public List<String> getCompilerOptions()
 	{
-		return compilerOptionsList.size(  ) ? compilerOptionsList.join( " " ) : null
+		return compilerOptions
 	}
 
 	public void compilerOption( String compilerOption )
 	{
-		this.compilerOptionsList.add( compilerOption )
+		this.compilerOptions.add( compilerOption )
 	}
 
 	public void compileOptions( List<String> compilerOptions )
 	{
-		this.compilerOptionsList.addAll( compilerOptions )
+		this.compilerOptions.addAll( compilerOptions )
 	}
 
 	public void compilerOptions( String... compilerOptions )
 	{
-		this.compilerOptionsList.addAll( compilerOptions )
+		this.compilerOptions.addAll( compilerOptions )
 	}
 
 	public String getAdlScreenSize()
@@ -311,24 +311,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.adlAtLogin = adlAtLogin
 	}
 
-	public String getAdlParameters()
+	public List<String> getAdlParameters()
 	{
-		return adlParametersList.size(  ) ? adlParametersList.join( " " ) : null
+		return adlParameters
 	}
 
 	public void adlParameter( String adlParameter )
 	{
-		this.adlParametersList.add( adlParameter )
+		this.adlParameters.add( adlParameter )
 	}
 
 	public void adlParameters( List<String> adlParameters )
 	{
-		this.adlParametersList.addAll( adlParameters )
+		this.adlParameters.addAll( adlParameters )
 	}
 
 	public void adlParameters( String... adlParameters )
 	{
-		this.adlParametersList.addAll( adlParameters )
+		this.adlParameters.addAll( adlParameters )
 	}
 
 	public String getPackageFileName()
@@ -361,24 +361,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageX86 = packageX86
 	}
 
-	public String getPackageExcludeResources()
+	public List<String> getPackageExcludeResources()
 	{
-		return packageExcludeResources.size(  ) ? packageExcludeResources.join( " " ) : null
+		return packageExcludeResources
 	}
 
 	public void packageExcludeResource( String packageExcludeResource )
 	{
-		this.packageExcludeResourcesList.add( packageExcludeResource )
+		this.packageExcludeResources.add( packageExcludeResource )
 	}
 
 	public void packageExcludeResources( List<String> packageExcludeResources )
 	{
-		this.packageExcludeResourcesList.addAll( packageExcludeResources )
+		this.packageExcludeResources.addAll( packageExcludeResources )
 	}
 
 	public void packageExcludeResources( String... packageExcludeResources )
 	{
-		this.packageExcludeResourcesList.addAll( packageExcludeResources )
+		this.packageExcludeResources.addAll( packageExcludeResources )
 	}
 
 	public String getPackageConnect()
@@ -560,7 +560,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 				case FlairProperty.COMPILER_MAIN_CLASS.name:
 					String packageName = extensionManager.getFlairProperty( FlairProperty.PACKAGE_NAME )
-
 					switch( p )
 					{
 						case Platform.IOS: return packageName + ".MainIOS"
@@ -568,18 +567,17 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platform.DESKTOP: return packageName + ".MainDesktop"
 						default: return null
 					}
-				case FlairProperty.COMPILER_OPTIONS.name: return null
+				case FlairProperty.COMPILER_OPTIONS.name: return new ArrayList<String>()
 
 				case FlairProperty.ADL_SCREEN_SIZE.name: return "540x920:540x960"
 				case FlairProperty.ADL_SCREEN_DPI.name: return p == Platform.IOS ? 200 : 240
 				case FlairProperty.ADL_PUB_ID.name: return null
 				case FlairProperty.ADL_NO_DEBUG.name: return false
 				case FlairProperty.ADL_AT_LOGIN.name: return false
-				case FlairProperty.ADL_PARAMETERS.name: return null
+				case FlairProperty.ADL_PARAMETERS.name: return new ArrayList<String>()
 
 				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ project.name }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }"
 				case FlairProperty.PACKAGE_TARGET.name:
-
 					switch( p )
 					{
 						case Platform.IOS: return extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "ipa-debug" : "ipa-test"
@@ -587,19 +585,15 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						case Platform.DESKTOP: return "native"
 						default: return null
 					}
-
-
 				case FlairProperty.PACKAGE_X86.name: return false
 				case FlairProperty.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{
-						case Platform.IOS: return "drawable*-ldpi*/** drawable*-mdpi*/** drawable*-hdpi*/** drawable*-xxxhdpi*/**"
-						case Platform.ANDROID: return "drawable*-ldpi*/** drawable*-xxxhdpi*/**"
-						case Platform.DESKTOP: return "drawable*-ldpi*/** drawable*-hdpi*/** drawable*-xxhdpi*/** drawable*-xxxhdpi*/**"
-						default: return "drawable*-ldpi*/** drawable*-xxxhdpi*/**"
+						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
+						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 					}
-
-
 				case FlairProperty.PACKAGE_CONNECT.name: return null
 				case FlairProperty.PACKAGE_LISTEN.name: return extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "7936" : null
 				case FlairProperty.PACKAGE_SAMPLER.name: return false
@@ -613,10 +607,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.SIGNING_STORE_TYPE.name: return "pkcs12"
 				case FlairProperty.SIGNING_KEY_STORE.name: return extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_TYPE ) == "pkcs12" ? getSigningFilePath( variant , "p12" ) : null
 				case FlairProperty.SIGNING_STORE_PASS.name:
-
 					File f = getSigningFile( variant , "txt" )
 					return f && f.exists( ) ? f.text.trim( ) : null
-
 				case FlairProperty.SIGNING_PROVISIONING_PROFILE.name: return p == Platform.IOS ? getSigningFilePath( variant , "mobileprovision" ) : null
 
 				default: return null

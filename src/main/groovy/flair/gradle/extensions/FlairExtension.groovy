@@ -362,20 +362,32 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	@Override
 	public Object getFlairProperty( Variant variant , FlairProperty property )
 	{
-		Object value
+		Object value = null
+		List list = null
 
 		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List ) list = value
+		else if( value != null ) return value
 
 		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+		}
+		else if( value != null ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getPlatformContainer( variant.platform ).getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name , variant )
-				if( value != null ) return value
+				if( value instanceof List )
+				{
+					if( list ) list.addAll( value )
+					else list = value
+				}
+				else if( value != null ) return value
 			}
 		}
 
@@ -384,15 +396,32 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name , variant )
-				if( value != null ) return value
+				if( value instanceof List )
+				{
+					if( list ) list.addAll( value )
+					else list = value
+				}
+				else if( value != null ) return value
 			}
 		}
 
 		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+		}
+		else if( value != null ) return value
 
 		value = getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+
+			if( list.size(  ) ) return list
+		}
+		else if( value != null ) return value
 
 		return getPlatformContainer( variant ? variant.platform : null ).getProp( property.name , variant , true )
 	}
@@ -400,20 +429,32 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	@Override
 	public Object getFlairProperty( String extensionName , Variant variant , FlairProperty property )
 	{
-		Object value
+		Object value = null
+		List list = null
 
 		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List ) list = value
+		else if( value != null ) return value
 
 		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+		}
+		else if( value != null ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name , variant )
-				if( value != null ) return value
+				if( value instanceof List )
+				{
+					if( list ) list.addAll( value )
+					else list = value
+				}
+				else if( value != null ) return value
 			}
 		}
 
@@ -422,15 +463,32 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name , variant )
-				if( value != null ) return value
+				if( value instanceof List )
+				{
+					if( list ) list.addAll( value )
+					else list = value
+				}
+				else if( value != null ) return value
 			}
 		}
 
 		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+		}
+		else if( value != null ) return value
 
 		value = getExtension( extensionName ).getProp( property.name , variant )
-		if( value != null ) return value
+		if( value instanceof List )
+		{
+			if( list ) list.addAll( value )
+			else list = value
+
+			if( list.size(  ) ) return list
+		}
+		else if( value != null ) return value
 
 		return getPlatformContainer( variant ? variant.platform : null ).getExtension( extensionName ).getProp( property.name , variant , true )
 	}

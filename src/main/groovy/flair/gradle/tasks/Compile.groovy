@@ -43,7 +43,7 @@ class Compile extends AbstractVariantTask
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS )
-		compilerOptions = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_OPTIONS ) ?: "null"
+		compilerOptions = ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_OPTIONS ) as List<String> ).join( " " )
 	}
 
 	public Compile()
@@ -76,7 +76,7 @@ class Compile extends AbstractVariantTask
 		addConstants( )
 
 		// custom options
-		if( compilerOptions != "null" ) cli.addArguments( compilerOptions.split( " " ) )
+		if( compilerOptions.length(  ) ) cli.addArguments( compilerOptions.split( " " ) )
 
 		// swf output
 		cli.addArgument( "-output" )
