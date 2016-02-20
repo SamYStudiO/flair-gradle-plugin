@@ -30,13 +30,17 @@ class Uninstall extends AbstractVariantTask
 		String id = new CliDevicesOutputParser( ).parse( adt.execute( project , variant.platform ) )
 		id = !id && platformSdk ? "ios_simulator" : id
 
-		adt.clearArguments( )
-		adt.addArgument( "-uninstallApp" )
-		adt.addArgument( "-platform ${ variant.platform.name }" )
-		if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
-		adt.addArgument( "-device ${ id }" )
-		adt.addArgument( "-appid ${ appId }" )
+		if( id )
+		{
+			adt.clearArguments( )
+			adt.addArgument( "-uninstallApp" )
+			adt.addArgument( "-platform ${ variant.platform.name }" )
+			if( platformSdk ) adt.addArgument( "-platformsdk ${ platformSdk }" )
+			adt.addArgument( "-device ${ id }" )
+			adt.addArgument( "-appid ${ appId }" )
 
-		adt.execute( project , variant.platform )
+			adt.execute( project , variant.platform )
+		}
+		else println( "No device detected" )
 	}
 }
