@@ -4,7 +4,6 @@ package _packageName_
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
-	import flash.system.Capabilities;
 
 	/**
 	 *
