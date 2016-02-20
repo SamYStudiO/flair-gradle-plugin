@@ -21,7 +21,7 @@ class ProcessAppDescriptorTaskFactory implements IVariantTaskFactory<ProcessAppD
 
 		t.group = TaskDefinition.PROCESS_APP_DESCRIPTOR.group.name
 		t.variant = variant
-		t.dependsOn TaskDefinition.PROCESS_EXTENSIONS.name + variantName
+		t.dependsOn TaskDefinition.PROCESS_EXTENSIONS.name + variantName , TaskDefinition.PROCESS_ICONS.name + variantName
 
 		return t
 	}

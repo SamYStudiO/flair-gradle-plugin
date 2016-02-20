@@ -116,6 +116,16 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		if( hasExtensions ) extensionNodes += "\t"
 
+		String iconNodes = System.lineSeparator( )
+
+		project.file( "${ outputVariantDir.path }/package/icons" ).listFiles( ).each {
+
+			String size = it.name.replace( "icon" , "" ).split( "\\." )[ 0 ]
+			iconNodes += "\t\t<image${ size }>icons/${ it.name.replace( "icon" , "image" ).split( "\\." )[ 0 ] }</image${ size }>" + System.lineSeparator( )
+		}
+
+		iconNodes += "\t"
+
 		appContent = appContent.replaceAll( /<id>.*<\\/id>/ , "<id>${ appId }</id>" )
 				.replaceAll( /<application xmlns=".*">/ , "<application xmlns=\"http://ns.adobe.com/air/application/${ sdkVersion }\">" )
 				.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
@@ -128,6 +138,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 				.replaceAll( /<depthAndStencil>.*<\\/depthAndStencil>/ , "<depthAndStencil>${ appDepthAndStencil }</depthAndStencil>" )
 				.replaceAll( /<supportedLanguages>.*<\\/supportedLanguages>/ , "<supportedLanguages>${ supportedLocales }</supportedLanguages>" )
 				.replaceAll( /<extensions>.*<\\/extensions>/ , "<extensions>${ extensionNodes }</extensions>" )
+				.replaceAll( /<icon>.*<\\/icon>/ , "<icon>${ iconNodes }</icon>" )
 
 		project.file( "${ outputVariantDir.path }/package/" ).mkdirs( )
 		outputFile.createNewFile( )
@@ -169,12 +180,8 @@ class ProcessAppDescriptor extends AbstractVariantTask
 
 		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/app_descriptor.xml" ) ) }
 
-		variant.directoriesCapitalized.each {
-
-			String s = it == "main" ? Config.NATIVE_LIBRARY.name : it + Config.NATIVE_LIBRARY.name.capitalize( )
-
-			list.addAll( project.configurations.getByName( s ).files )
-		}
+		list.add( project.file( "${ outputVariantDir }/extracted_extensions" ) )
+		list.add( project.file( "${ outputVariantDir }/package/icons" ) )
 
 		return list.reverse(  )
 	}

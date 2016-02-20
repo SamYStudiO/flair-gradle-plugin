@@ -69,21 +69,7 @@
     <supportedLanguages>!!!set automatically!!!</supportedLanguages>
 
     <!-- The icon the system uses for the application. For at least one resolution, specify the path to a PNG file included in the AIR package. Optional. -->
-    <icon>
-        <image29x29>icons/icon29x29.png</image29x29> <!--settings ipad/iphone-->
-        <image40x40>icons/icon40x40.png</image40x40> <!--spotlight ipad/iphone-->
-        <image48x48>icons/icon48x48.png</image48x48> <!--spotlight air only-->
-        <image58x58>icons/icon58x58.png</image58x58> <!--settings ipad/iphone retina-->
-        <image60x60>icons/icon60x60.png</image60x60> <!--app icon iphone-->
-        <image76x76>icons/icon76x76.png</image76x76> <!--app icon ipad-->
-        <image80x80>icons/icon80x80.png</image80x80> <!--spotlight ipad/iphone retina-->
-        <image87x87>icons/icon87x87.png</image87x87> <!--settings iphone 6 plus-->
-        <image120x120>icons/icon120x120.png</image120x120> <!--app icon iphone retina-->
-        <image152x152>icons/icon152x152.png</image152x152> <!--app icon ipad retina-->
-        <image180x180>icons/icon167x167.png</image180x180> <!--app icon ipad pro-->
-        <image180x180>icons/icon180x180.png</image180x180> <!--app icon iphone 6 plus-->
-        <image1024x1024>icons/icon1024x1024.png</image1024x1024> <!--store icon ipad/iphone retina-->
-    </icon>
+    <icon>!!!set automatically!!!</icon>
 
     <!-- iOS specific capabilities -->
     <iPhone>

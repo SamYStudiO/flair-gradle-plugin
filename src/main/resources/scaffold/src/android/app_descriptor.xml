@@ -69,15 +69,7 @@
 	<supportedLanguages>!!!set automatically!!!</supportedLanguages>
 
 	<!-- The icon the system uses for the application. For at least one resolution, specify the path to a PNG file included in the AIR package. Optional. -->
-	<icon>
-		<image36x36>icons/icon36x36.png</image36x36>
-		<image48x48>icons/icon48x48.png</image48x48>
-		<image72x72>icons/icon72x72.png</image72x72>
-		<image96x96>icons/icon96x96.png</image96x96>
-		<image144x144>icons/icon144x144.png</image144x144>
-		<image192x192>icons/icon192x192.png</image192x192>
-		<!--<image732x412>icons/icon732x412.png</image732x412>-->
-	</icon>
+	<icon>!!!set automatically!!!</icon>
 
 	<!-- Android specific tags that get passed to AndroidManifest.xml file. -->
 	<android>
