@@ -113,6 +113,7 @@ class Compile extends AbstractVariantTask
 		list.add( project.file( "${ outputVariantDir.path }/classes" ) )
 		list.add( project.file( "${ outputVariantDir.path }/libraries" ) )
 		list.add( project.file( "${ outputVariantDir.path }/asLibraries" ) )
+		list.add( project.file( "${ outputVariantDir.path }/extensions" ) )
 
 		return list
 	}
