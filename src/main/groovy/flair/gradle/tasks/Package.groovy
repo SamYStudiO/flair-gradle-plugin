@@ -268,7 +268,7 @@ class Package extends AbstractVariantTask
 
 			case Platform.DESKTOP:
 
-				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else if( Os.isFamily( Os.FAMILY_WINDOWS ) ) extension = "exe" else extension = "deb"
+				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else extension = "exe"
 				break
 		}
 
