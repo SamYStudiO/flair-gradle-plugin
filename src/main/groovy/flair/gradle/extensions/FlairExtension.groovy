@@ -6,6 +6,8 @@ import flair.gradle.variants.Variant
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 
+import java.util.regex.Pattern
+
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
@@ -366,28 +368,17 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		List list = null
 
 		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getProp( property.name , variant )
-		if( value instanceof List ) list = value
-		else if( value != null ) return value
+		if( value instanceof List ) list = value.clone( ) as List else if( value != null ) return value
 
 		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getProp( property.name , variant )
-		if( value instanceof List )
-		{
-			if( list ) list.addAll( value )
-			else list = value
-		}
-		else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getPlatformContainer( variant.platform ).getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name , variant )
-				if( value instanceof List )
-				{
-					if( list ) list.addAll( value )
-					else list = value
-				}
-				else if( value != null ) return value
+				if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 			}
 		}
 
@@ -396,30 +387,19 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getProductFlavor( variant.productFlavors[ i ] ).getProp( property.name , variant )
-				if( value instanceof List )
-				{
-					if( list ) list.addAll( value )
-					else list = value
-				}
-				else if( value != null ) return value
+				if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 			}
 		}
 
 		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getProp( property.name , variant )
-		if( value instanceof List )
-		{
-			if( list ) list.addAll( value )
-			else list = value
-		}
-		else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		value = getProp( property.name , variant )
 		if( value instanceof List )
 		{
-			if( list ) list.addAll( value )
-			else list = value
+			list = mergeLists( value , list )
 
-			if( list.size(  ) ) return list
+			if( list.size( ) ) return list
 		}
 		else if( value != null ) return value
 
@@ -433,28 +413,17 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		List list = null
 
 		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value instanceof List ) list = value
-		else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value instanceof List )
-		{
-			if( list ) list.addAll( value )
-			else list = value
-		}
-		else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		if( variant && variant.platform && variant.productFlavors )
 		{
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getPlatformContainer( platform ).getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name , variant )
-				if( value instanceof List )
-				{
-					if( list ) list.addAll( value )
-					else list = value
-				}
-				else if( value != null ) return value
+				if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 			}
 		}
 
@@ -463,33 +432,42 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			for( int i = variant.productFlavors.size( ) - 1; i >= 0; i-- )
 			{
 				value = getProductFlavor( variant.productFlavors[ i ] ).getExtension( extensionName ).getProp( property.name , variant )
-				if( value instanceof List )
-				{
-					if( list ) list.addAll( value )
-					else list = value
-				}
-				else if( value != null ) return value
+				if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 			}
 		}
 
 		if( variant && variant.platform ) value = getPlatformContainer( variant.platform ).getExtension( extensionName ).getProp( property.name , variant )
-		if( value instanceof List )
-		{
-			if( list ) list.addAll( value )
-			else list = value
-		}
-		else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		value = getExtension( extensionName ).getProp( property.name , variant )
 		if( value instanceof List )
 		{
-			if( list ) list.addAll( value )
-			else list = value
+			list = mergeLists( value , list )
 
-			if( list.size(  ) ) return list
+			if( list.size( ) ) return list
 		}
 		else if( value != null ) return value
 
 		return getPlatformContainer( variant ? variant.platform : null ).getExtension( extensionName ).getProp( property.name , variant , true )
+	}
+
+	private List mergeLists( List from , List to )
+	{
+		if( !to ) return from.clone( ) as List
+
+		from.each {
+
+			String content = it as String
+			Pattern p = Pattern.compile( /.*[a-z]=/ )
+			String match = content.find( p )
+
+			if( match )
+			{
+				if( !to.find { ( it as String ).indexOf( match ) == 0 } ) to.add( content )
+			}
+			else if( to.indexOf( it ) < 0 ) to.add( it )
+		}
+
+		return to
 	}
 }
