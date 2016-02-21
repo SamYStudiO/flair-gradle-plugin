@@ -51,7 +51,7 @@ package _packageName_
 					break;
 				// iPhone 4
 				case stageWidth == 640 || stageWidth == 960 :
-					filePath = portrait ? "Default@2x.png" : "Default-Landscape-320h@2x.png";
+					filePath = portrait ? "Default@2x.png" : "Default-Landscape-480h@2x.png";
 					break;
 
 				default :
@@ -62,7 +62,7 @@ package _packageName_
 
 					if( r > .7 ) filePath = portrait ? "Default-Portrait@2x.png" : "Default-Landscape@2x.png";
 					else if( r > .6 ) filePath = portrait ? "Default-414w-736h@3x.png" : "Default-Landscape-414w-736h@3x.png";
-					else filePath = portrait ? "Default@2x.png" : "Default-Landscape-320h@2x.png";
+					else filePath = portrait ? "Default@2x.png" : "Default-Landscape-480h@2x.png";
 			}
 
 			return filePath;
