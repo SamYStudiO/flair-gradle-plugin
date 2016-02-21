@@ -368,7 +368,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 		List list = null
 
 		if( variant && variant.platform && variant.buildType ) value = getPlatformContainer( variant.platform ).getBuildType( variant.buildType ).getProp( property.name , variant )
-		if( value instanceof List ) list = value.clone( ) as List else if( value != null ) return value
+		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
 
 		if( variant && variant.buildType ) value = getBuildType( variant.buildType ).getProp( property.name , variant )
 		if( value instanceof List ) list = mergeLists( value , list ) else if( value != null ) return value
@@ -453,7 +453,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 
 	private List mergeLists( List from , List to )
 	{
-		if( !to ) return from.clone( ) as List
+		if( !to ) return from
 
 		from.each {
 

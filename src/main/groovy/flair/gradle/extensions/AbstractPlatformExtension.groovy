@@ -60,7 +60,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private Boolean packageX86
 
-	private List<String> packageExcludeResources = new ArrayList<String>()
+	private List<String> packageExcludeDrawables = new ArrayList<String>( )
 
 	private String packageConnect
 
@@ -243,7 +243,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	public List<String> getCompilerOptions()
 	{
-		return compilerOptions
+		return compilerOptions.clone( ) as List<String>
 	}
 
 	public void compilerOption( String compilerOption )
@@ -313,7 +313,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	public List<String> getAdlParameters()
 	{
-		return adlParameters
+		return adlParameters.clone( ) as List<String>
 	}
 
 	public void adlParameter( String adlParameter )
@@ -361,24 +361,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.packageX86 = packageX86
 	}
 
-	public List<String> getPackageExcludeResources()
+	public List<String> getPackageExcludeDrawables()
 	{
-		return packageExcludeResources
+		return packageExcludeDrawables.clone( ) as List<String>
 	}
 
-	public void packageExcludeResource( String packageExcludeResource )
+	public void packageExcludeDrawable( String packageExcludeDrawable )
 	{
-		this.packageExcludeResources.add( packageExcludeResource )
+		this.packageExcludeDrawables.add( packageExcludeDrawable )
 	}
 
-	public void packageExcludeResources( List<String> packageExcludeResources )
+	public void packageExcludeDrawables( List<String> packageExcludeDrawables )
 	{
-		this.packageExcludeResources.addAll( packageExcludeResources )
+		this.packageExcludeDrawables.addAll( packageExcludeDrawables )
 	}
 
-	public void packageExcludeResources( String... packageExcludeResources )
+	public void packageExcludeDrawables( String... packageExcludeDrawables )
 	{
-		this.packageExcludeResources.addAll( packageExcludeResources )
+		this.packageExcludeDrawables.addAll( packageExcludeDrawables )
 	}
 
 	public String getPackageConnect()
@@ -586,13 +586,13 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 						default: return null
 					}
 				case FlairProperty.PACKAGE_X86.name: return false
-				case FlairProperty.PACKAGE_EXCLUDE_RESOURCES.name:
+				case FlairProperty.PACKAGE_EXCLUDE_DRAWABLES.name:
 					switch( p )
 					{
-						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case Platform.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
-						case Platform.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
-						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.IOS: return [ "ldpi" , "hdpi" , "xxxhdpi" ]
+						case Platform.ANDROID: return [ "ldpi" , "xxxhdpi" ]
+						case Platform.DESKTOP: return [ "ldpi" , "hdpi" , "xxhdpi" , "xxxhdpi" ]
+						default: return [ ]
 					}
 				case FlairProperty.PACKAGE_CONNECT.name: return null
 				case FlairProperty.PACKAGE_LISTEN.name: return extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "7936" : null

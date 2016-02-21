@@ -30,7 +30,7 @@ enum FlairProperty
 	PACKAGE_FILE_NAME( "packageFileName" ) ,
 	PACKAGE_TARGET( "packageTarget" ) ,
 	PACKAGE_X86( "packageX86" ) ,
-	PACKAGE_EXCLUDE_RESOURCES( "packageExcludeResources" ) ,
+	PACKAGE_EXCLUDE_DRAWABLES( "packageExcludeDrawables" ) ,
 	PACKAGE_CONNECT( "packageConnect" ) ,
 	PACKAGE_LISTEN( "packageListen" ) ,
 	PACKAGE_SAMPLER( "packageSampler" ) ,
