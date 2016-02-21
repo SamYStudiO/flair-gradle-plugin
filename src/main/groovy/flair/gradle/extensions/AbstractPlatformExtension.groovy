@@ -589,7 +589,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.PACKAGE_EXCLUDE_RESOURCES.name:
 					switch( p )
 					{
-						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-mdpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
+						case Platform.IOS: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxxhdpi*/**" ]
 						case Platform.ANDROID: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
 						case Platform.DESKTOP: return [ "drawable*-ldpi*/**" , "drawable*-hdpi*/**" , "drawable*-xxhdpi*/**" , "drawable*-xxxhdpi*/**" ]
 						default: return [ "drawable*-ldpi*/**" , "drawable*-xxxhdpi*/**" ]
