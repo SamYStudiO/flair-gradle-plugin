@@ -39,23 +39,19 @@ package _packageName_
 					break;
 				// iPhone 6+
 				case stageWidth == 1080 || stageWidth == 1920 :
-					filePath = portrait ? "Default-414w-736h@3x.png" : "Default-414w-736h-Landscape@3x.png";
+					filePath = portrait ? "Default-414w-736h@3x.png" : "Default-Landscape-414w-736h@3x.png";
 					break;
 				// iPhone 6
 				case stageWidth == 750 || stageWidth == 1334 :
-					filePath = portrait ? "Default-375w-667h@2x.png" : "Default-375w-667h-Landscape@2x.png";
+					filePath = portrait ? "Default-375w-667h@2x.png" : "Default-Landscape-375w-667h@2x.png";
 					break;
 				// iPhone 5
 				case ( stageWidth == 640 && stageHeight == 1136 ) || stageWidth == 1136 :
-					filePath = portrait ? "Default-568h@2x.png" : "Default-568h-Landscape@2x.png";
+					filePath = portrait ? "Default-568h@2x.png" : "Default-Landscape-568h@2x.png";
 					break;
 				// iPhone 4
 				case stageWidth == 640 || stageWidth == 960 :
 					filePath = portrait ? "Default@2x.png" : "Default-Phone-Landscape@2x.png";
-					break;
-				// iPhone
-				case stageWidth == 320 || stageWidth == 480 :
-					filePath = portrait ? "Default.png" : "Default-Phone-Landscape.png";
 					break;
 
 				default :
@@ -65,7 +61,7 @@ package _packageName_
 					var r : Number = minWidth / maxHeight;
 
 					if( r > .7 ) filePath = portrait ? "Default-Portrait@2x.png" : "Default-Landscape@2x.png";
-					else if( r > .6 ) filePath = portrait ? "Default-414w-736h@3x.png" : "Default-414w-736h-Landscape@3x.png";
+					else if( r > .6 ) filePath = portrait ? "Default-414w-736h@3x.png" : "Default-Landscape-414w-736h@3x.png";
 					else filePath = portrait ? "Default@2x.png" : "Default-Phone-Landscape@2x.png";
 			}
 
