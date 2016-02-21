@@ -1,12 +1,12 @@
 ### Handset splashs
 * **Default@2x**
 * **Default-375w-667h@2x**
-* **Default-375w-667h-Landscape@2x**
 * **Default-414w-736h@3x**
-* **Default-414w-736h-Landscape@3x**
 * **Default-568h@2x**
-* **Default-Phone-Landscape@2x**
-* **Default-Phone-Landscape-568h@2x**
+* **Default-Landscape-320h@2x**
+* **Default-Landscape-375w-667h@2x**
+* **Default-Landscape-414w-736h@3x**
+* **Default-Landscape-568h@2x**
 
 ### Tablet splashs
 * **Default-Landscape**
