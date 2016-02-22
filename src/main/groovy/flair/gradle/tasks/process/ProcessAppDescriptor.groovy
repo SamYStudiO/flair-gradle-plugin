@@ -120,7 +120,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		project.file( "${ outputVariantDir.path }/package/icons" ).listFiles( ).each {
 
 			String size = it.name.replace( "icon" , "" ).split( "\\." )[ 0 ]
-			iconNodes += "\t\t<image${ size }>icons/${ it.name.replace( "icon" , "image" ).split( "\\." )[ 0 ] }</image${ size }>" + System.lineSeparator( )
+			iconNodes += "\t\t<image${ size }>icons/${ it.name }</image${ size }>" + System.lineSeparator( )
 		}
 
 		iconNodes += "\t"
