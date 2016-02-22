@@ -116,14 +116,14 @@ public final class Variant
 
 				if( buildType ) name += buildType.capitalize( )
 
-				if( type == NamingTypes.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
+				if( type == NamingTypes.CAPITALIZE_BUT_FIRST && name.length( ) ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
 
 				return name
 
 			default:
 				productFlavors.each { flavor -> name += flavor + type.c }
 
-				if( buildType ) name += buildType else name = name.substring( 0 , name.size( ) - 1 )
+				if( buildType ) name += buildType else if( name.length( ) ) name = name.substring( 0 , name.size( ) - 1 )
 
 				return name
 		}
