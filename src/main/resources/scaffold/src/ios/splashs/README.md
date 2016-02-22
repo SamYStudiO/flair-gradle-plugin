@@ -14,5 +14,7 @@
 * **Default-Portrait**
 * **Default-Portrait@x2**
 
-You may removed corresponding splashs if you are targeting handsets or tablets only.
+You may removed corresponding splashs if you are targeting handsets/tablets only or locking device orientation to portrait/landscape.
+
+Splash template from http://appicontemplate.com/
 
