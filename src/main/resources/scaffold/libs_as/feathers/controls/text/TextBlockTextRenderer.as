@@ -944,37 +944,6 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _snapToPixels:Boolean = true;
-
-		/**
-		 * Determines if the text should be snapped to the nearest whole pixel
-		 * when rendered. When this is <code>false</code>, text may be displayed
-		 * on sub-pixels, which often results in blurred rendering due to
-		 * texture smoothing.
-		 *
-		 * <p>In the following example, the text is not snapped to pixels:</p>
-		 *
-		 * <listing version="3.0">
-		 * textRenderer.snapToPixels = false;</listing>
-		 *
-		 * @default true
-		 */
-		public function get snapToPixels():Boolean
-		{
-			return this._snapToPixels;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set snapToPixels(value:Boolean):void
-		{
-			this._snapToPixels = value;
-		}
-
-		/**
-		 * @private
-		 */
 		protected var _maxTextureDimensions:int = 2048;
 
 		/**
@@ -1290,11 +1259,6 @@ package feathers.controls.text
 					offsetX = this._textSnapshotOffsetX / scaleFactor;
 					offsetY = this._textSnapshotOffsetY / scaleFactor;
 				}
-				if(this._snapToPixels)
-				{
-					offsetX += Math.round(HELPER_MATRIX.tx) - HELPER_MATRIX.tx;
-					offsetY += Math.round(HELPER_MATRIX.ty) - HELPER_MATRIX.ty;
-				}
 
 				var snapshotIndex:int = -1;
 				var totalBitmapWidth:Number = this._snapshotWidth;
@@ -1355,12 +1319,12 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
-				result.x = this.explicitWidth;
-				result.y = this.explicitHeight;
+				result.x = this._explicitWidth;
+				result.y = this._explicitHeight;
 				return result;
 			}
 
@@ -1495,10 +1459,10 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
-			var newWidth:Number = this.explicitWidth;
-			var newHeight:Number = this.explicitHeight;
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
+			var newWidth:Number = this._explicitWidth;
+			var newHeight:Number = this._explicitHeight;
 			if(needsWidth)
 			{
 				newWidth = this._maxWidth;
@@ -1664,8 +1628,8 @@ package feathers.controls.text
 		 */
 		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
 				return false;
@@ -1987,28 +1951,37 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function refreshTextLines(textLines:Vector.<TextLine>, textLineParent:DisplayObjectContainer, width:Number, height:Number):void
+		protected function refreshTextElementText():void
 		{
-			if(this._textElement)
+			if(this._textElement === null)
 			{
-				if(this._text)
+				return;
+			}
+			if(this._text)
+			{
+				this._textElement.text = this._text;
+				if(this._text !== null && this._text.charAt(this._text.length - 1) == " ")
 				{
-					this._textElement.text = this._text;
-					if(this._text !== null && this._text.charAt(this._text.length - 1) == " ")
-					{
-						//add an invisible control character because FTE apparently
-						//doesn't think that it's important to include trailing
-						//spaces in its width measurement.
-						this._textElement.text += String.fromCharCode(3);
-					}
-				}
-				else
-				{
-					//similar to above. this hack ensures that the baseline is
-					//measured properly when the text is an empty string.
-					this._textElement.text = String.fromCharCode(3);
+					//add an invisible control character because FTE apparently
+					//doesn't think that it's important to include trailing
+					//spaces in its width measurement.
+					this._textElement.text += String.fromCharCode(3);
 				}
 			}
+			else
+			{
+				//similar to above. this hack ensures that the baseline is
+				//measured properly when the text is an empty string.
+				this._textElement.text = String.fromCharCode(3);
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshTextLines(textLines:Vector.<TextLine>, textLineParent:DisplayObjectContainer, width:Number, height:Number):void
+		{
+			this.refreshTextElementText();
 			HELPER_TEXT_LINES.length = 0;
 			var yPosition:Number = 0;
 			var lineCount:int = textLines.length;

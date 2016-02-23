@@ -9,6 +9,8 @@ package feathers.controls
 {
 	import feathers.core.FeathersControl;
 	import feathers.events.FeathersEventType;
+	import feathers.layout.HorizontalAlign;
+	import feathers.layout.VerticalAlign;
 	import feathers.skins.IStyleProvider;
 	import feathers.utils.display.stageToStarling;
 	import feathers.utils.textures.TextureCache;
@@ -180,11 +182,6 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		private static const HELPER_MATRIX:Matrix = new Matrix();
-
-		/**
-		 * @private
-		 */
 		private static const HELPER_RECTANGLE:Rectangle = new Rectangle();
 
 		/**
@@ -219,50 +216,68 @@ package feathers.controls
 		protected static var textureQueueTail:ImageLoader;
 
 		/**
-		 * The content will be aligned horizontally to the left edge of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.LEFT</code>.
 		 *
-		 * @see #horizontalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const HORIZONTAL_ALIGN_LEFT:String = "left";
 
 		/**
-		 * The content will be aligned horizontally to the center of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.CENTER</code>.
 		 *
-		 * @see #horizontalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const HORIZONTAL_ALIGN_CENTER:String = "center";
 
 		/**
-		 * The content will be aligned horizontally to the right edge of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.RIGHT</code>.
 		 *
-		 * @see #horizontalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const HORIZONTAL_ALIGN_RIGHT:String = "right";
 
 		/**
-		 * The content will be aligned vertically to the top edge of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.VerticalAlign.TOP</code>.
 		 *
-		 * @see #verticalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const VERTICAL_ALIGN_TOP:String = "top";
 
 		/**
-		 * The content will be aligned vertically to the middle of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.VerticalAlign.MIDDLE</code>.
 		 *
-		 * @see #verticalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const VERTICAL_ALIGN_MIDDLE:String = "middle";
 
 		/**
-		 * The content will be aligned vertically to the bottom edge of the
-		 * <code>ImageLoader</code>.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.VerticalAlign.BOTTOM</code>.
 		 *
-		 * @see #verticalAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const VERTICAL_ALIGN_BOTTOM:String = "bottom";
 
@@ -400,7 +415,6 @@ package feathers.controls
 			{
 				this.removeFromTextureQueue();
 			}
-			this._source = value;
 			
 			var oldTexture:Texture;
 			//we should try to reuse the existing texture, if possible.
@@ -410,6 +424,12 @@ package feathers.controls
 				this._isTextureOwner = false;
 			}
 			this.cleanupTexture();
+			
+			//the source variable needs to be set after cleanupTexture() is
+			//called because cleanupTexture() needs to know the old source if
+			//a TextureCache is in use.
+			this._source = value;
+			
 			if(oldTexture)
 			{
 				this._texture = oldTexture;
@@ -678,6 +698,114 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		private var _scale9Grid:Rectangle;
+
+		/**
+		 * The <code>scale9Grid</code> value to use on the internal <code>Image</code>.
+		 *
+		 * <p>In the following example, the image loader's scale9Grid is set to a
+		 * custom value:</p>
+		 *
+		 * <listing version="3.0">
+		 * loader.scale9Grid = Rectangle(2, 3, 7, 12);</listing>
+		 *
+		 * @default null
+		 *
+		 * @see http://doc.starling-framework.org/core/starling/display/Image.html#scale9Grid starling.display.Image.scale9Grid
+		 */
+		public function get scale9Grid():Rectangle
+		{
+			return this._scale9Grid;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set scale9Grid(value:Rectangle):void
+		{
+			if(this._scale9Grid == value)
+			{
+				return;
+			}
+			this._scale9Grid = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		private var _tileGrid:Rectangle;
+
+		/**
+		 * The <code>tileGrid</code> value to use on the internal <code>Image</code>.
+		 *
+		 * <p>In the following example, the image loader's tileGrid is set to a
+		 * custom value:</p>
+		 *
+		 * <listing version="3.0">
+		 * loader.tileGrid = Rectangle();</listing>
+		 *
+		 * @default null
+		 *
+		 * @see http://doc.starling-framework.org/core/starling/display/Image.html#tileGrid starling.display.Image.tileGrid
+		 */
+		public function get tileGrid():Rectangle
+		{
+			return this._tileGrid;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set tileGrid(value:Rectangle):void
+		{
+			if(this._tileGrid == value)
+			{
+				return;
+			}
+			this._tileGrid = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		private var _pixelSnapping:Boolean = true;
+
+		/**
+		 * The <code>pixelSnapping</code> value to use on the internal <code>Image</code>.
+		 *
+		 * <p>In the following example, the image loader's pixelSnapping is
+		 * disabled:</p>
+		 *
+		 * <listing version="3.0">
+		 * loader.pixelSnapping = false;</listing>
+		 *
+		 * @default true
+		 *
+		 * @see http://doc.starling-framework.org/core/starling/display/Mesh.html#pixelSnapping starling.display.Mesh.pixelSnapping
+		 */
+		public function get pixelSnapping():Boolean
+		{
+			return this._pixelSnapping;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set pixelSnapping(value:Boolean):void
+		{
+			if(this._pixelSnapping == value)
+			{
+				return;
+			}
+			this._pixelSnapping = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
 		private var _color:uint = 0xffffff;
 
 		/**
@@ -747,41 +875,6 @@ package feathers.controls
 			this._lastURL = null;
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
-
-		/**
-		 * @private
-		 */
-		private var _snapToPixels:Boolean = false;
-
-		/**
-		 * Determines if the image should be snapped to the nearest global whole
-		 * pixel when rendered. Turning this on helps to avoid blurring.
-		 *
-		 * <p>In the following example, the image loader's position is snapped
-		 * to pixels:</p>
-		 *
-		 * <listing version="3.0">
-		 * loader.snapToPixels = true;</listing>
-		 *
-		 * @default false
-		 */
-		public function get snapToPixels():Boolean
-		{
-			return this._snapToPixels;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set snapToPixels(value:Boolean):void
-		{
-			if(this._snapToPixels == value)
-			{
-				return;
-			}
-			this._snapToPixels = value;
-		}
-
 
 		/**
 		 * @private
@@ -913,7 +1006,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _horizontalAlign:String = HORIZONTAL_ALIGN_LEFT;
+		protected var _horizontalAlign:String = HorizontalAlign.LEFT;
 
 		[Inspectable(type="String",enumeration="left,center,right")]
 		/**
@@ -928,14 +1021,14 @@ package feathers.controls
 		 * <p>The following example aligns the content to the right:</p>
 		 *
 		 * <listing version="3.0">
-		 * loader.horizontalAlign = ImageLoader.HORIZONTAL_ALIGN_RIGHT;</listing>
+		 * loader.horizontalAlign = HorizontalAlign.RIGHT;</listing>
 		 *
-		 * @default ImageLoader.HORIZONTAL_ALIGN_LEFT
+		 * @default feathers.layout.HorizontalAlign.LEFT
 		 *
 		 * @see #scaleContent
-		 * @see #HORIZONTAL_ALIGN_LEFT
-		 * @see #HORIZONTAL_ALIGN_CENTER
-		 * @see #HORIZONTAL_ALIGN_RIGHT
+		 * @see feathers.layout.HorizontalAlign#LEFT
+		 * @see feathers.layout.HorizontalAlign#CENTER
+		 * @see feathers.layout.HorizontalAlign#RIGHT
 		 */
 		public function get horizontalAlign():String
 		{
@@ -958,7 +1051,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _verticalAlign:String = VERTICAL_ALIGN_TOP;
+		protected var _verticalAlign:String = VerticalAlign.TOP;
 
 		[Inspectable(type="String",enumeration="top,middle,bottom")]
 		/**
@@ -973,14 +1066,14 @@ package feathers.controls
 		 * <p>The following example aligns the content to the bottom:</p>
 		 *
 		 * <listing version="3.0">
-		 * loader.verticalAlign = ImageLoader.VERTICAL_ALIGN_BOTTOM;</listing>
+		 * loader.verticalAlign = VerticalAlign.BOTTOM;</listing>
 		 *
-		 * @default ImageLoader.VERTICAL_ALIGN_TOP
+		 * @default feathers.layout.VerticalAlign.TOP
 		 * 
 		 * @see #scaleContent
-		 * @see #VERTICAL_ALIGN_TOP
-		 * @see #VERTICAL_ALIGN_MIDDLE
-		 * @see #VERTICAL_ALIGN_BOTTOM
+		 * @see feathers.layout.VerticalAlign#TOP
+		 * @see feathers.layout.VerticalAlign#MIDDLE
+		 * @see feathers.layout.VerticalAlign#BOTTOM
 		 */
 		public function get verticalAlign():String
 		{
@@ -1426,14 +1519,14 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 
-			var newWidth:Number = this.explicitWidth;
+			var newWidth:Number = this._explicitWidth;
 			if(needsWidth)
 			{
 				if(this._currentTextureWidth === this._currentTextureWidth) //!isNaN
@@ -1444,15 +1537,15 @@ package feathers.controls
 						var heightScale:Number = 1;
 						if(!needsHeight)
 						{
-							heightScale = this.explicitHeight / (this._currentTextureHeight * this._textureScale);
+							heightScale = this._explicitHeight / (this._currentTextureHeight * this._textureScale);
 						}
 						else if(this._maxHeight < this._currentTextureHeight)
 						{
 							heightScale = this._maxHeight / (this._currentTextureHeight * this._textureScale);
 						}
-						else if(this.explicitMinHeight > this._currentTextureHeight)
+						else if(this._explicitMinHeight > this._currentTextureHeight)
 						{
-							heightScale = this.explicitMinHeight / (this._currentTextureHeight * this._textureScale);
+							heightScale = this._explicitMinHeight / (this._currentTextureHeight * this._textureScale);
 						}
 						if(heightScale !== 1)
 						{
@@ -1467,7 +1560,7 @@ package feathers.controls
 				newWidth += this._paddingLeft + this._paddingRight;
 			}
 
-			var newHeight:Number = this.explicitHeight;
+			var newHeight:Number = this._explicitHeight;
 			if(needsHeight)
 			{
 				if(this._currentTextureHeight === this._currentTextureHeight) //!isNaN
@@ -1478,15 +1571,15 @@ package feathers.controls
 						var widthScale:Number = 1;
 						if(!needsWidth)
 						{
-							widthScale = this.explicitWidth / (this._currentTextureWidth * this._textureScale);
+							widthScale = this._explicitWidth / (this._currentTextureWidth * this._textureScale);
 						}
 						else if(this._maxWidth < this._currentTextureWidth)
 						{
 							widthScale = this._maxWidth / (this._currentTextureWidth * this._textureScale);
 						}
-						else if(this.explicitMinWidth > this._currentTextureWidth)
+						else if(this._explicitMinWidth > this._currentTextureWidth)
 						{
-							widthScale = this.explicitMinWidth / (this._currentTextureWidth * this._textureScale);
+							widthScale = this._explicitMinWidth / (this._currentTextureWidth * this._textureScale);
 						}
 						if(widthScale !== 1)
 						{
@@ -1501,7 +1594,7 @@ package feathers.controls
 				newHeight += this._paddingTop + this._paddingBottom;
 			}
 
-			return this.setSizeInternal(newWidth, newHeight, false);
+			return this.saveMeasurements(newWidth, newHeight, newWidth, newHeight);
 		}
 
 		/**
@@ -1581,6 +1674,9 @@ package feathers.controls
 			}
 			this.image.textureSmoothing = this._textureSmoothing;
 			this.image.color = this._color;
+			this.image.scale9Grid = this._scale9Grid;
+			this.image.tileGrid = this._tileGrid;
+			this.image.pixelSnapping = this._pixelSnapping;
 		}
 
 		/**
@@ -1622,11 +1718,11 @@ package feathers.controls
 			{
 				var imageWidth:Number = this._currentTextureWidth * this._textureScale;
 				var imageHeight:Number = this._currentTextureHeight * this._textureScale;
-				if(this._horizontalAlign === HORIZONTAL_ALIGN_RIGHT)
+				if(this._horizontalAlign === HorizontalAlign.RIGHT)
 				{
 					this.image.x = this.actualWidth - this._paddingRight - imageWidth;
 				}
-				else if(this._horizontalAlign === HORIZONTAL_ALIGN_CENTER)
+				else if(this._horizontalAlign === HorizontalAlign.CENTER)
 				{
 					this.image.x = this._paddingLeft + ((this.actualWidth - this._paddingLeft - this._paddingRight) - imageWidth) / 2;
 				}
@@ -1634,11 +1730,11 @@ package feathers.controls
 				{
 					this.image.x = this._paddingLeft;
 				}
-				if(this._verticalAlign === VERTICAL_ALIGN_BOTTOM)
+				if(this._verticalAlign === VerticalAlign.BOTTOM)
 				{
 					this.image.y = this.actualHeight - this._paddingBottom - imageHeight;
 				}
-				else if(this._verticalAlign === VERTICAL_ALIGN_MIDDLE)
+				else if(this._verticalAlign === VerticalAlign.MIDDLE)
 				{
 					this.image.y = this._paddingTop + ((this.actualHeight - this._paddingTop - this._paddingBottom) - imageHeight) / 2;
 				}
@@ -1662,7 +1758,12 @@ package feathers.controls
 				}
 				else
 				{
-					this.mask = new Quad(this.actualWidth, this.actualHeight, 0xff00ff)
+					mask = new Quad(1, 1, 0xff00ff);
+					//the initial dimensions cannot be 0 or there's a runtime error,
+					//and these values might be 0
+					mask.width = this.actualWidth;
+					mask.height = this.actualHeight;
+					this.mask = mask;
 				}
 			}
 			else

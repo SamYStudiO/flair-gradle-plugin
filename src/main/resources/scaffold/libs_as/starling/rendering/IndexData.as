@@ -102,9 +102,9 @@ package starling.rendering
          *  Quad layout will be restored (until adding data violating that layout). */
         public function clear():void
         {
-            if (_rawData) _rawData.clear();
+            if (_rawData)
+                _rawData.clear();
 
-            _rawData = null;
             _numIndices = 0;
             _useQuadLayout = true;
         }
@@ -143,7 +143,7 @@ package starling.rendering
             if (target._numIndices < newNumIndices)
             {
                 target._numIndices = newNumIndices;
-                setMinimumSizeForQuadData(newNumIndices);
+                ensureQuadDataCapacity(newNumIndices);
             }
 
             if (_useQuadLayout)
@@ -191,7 +191,7 @@ package starling.rendering
                 {
                     indexID += 6 * offset / 4;
                     offset = 0;
-                    setMinimumSizeForQuadData(indexID + numIndices);
+                    ensureQuadDataCapacity(indexID + numIndices);
                 }
             }
             else
@@ -273,7 +273,7 @@ package starling.rendering
 
         /** Appends three indices representing a triangle. Reference the vertices clockwise,
          *  as this defines the front side of the triangle. */
-        public function appendTriangle(a:uint, b:uint, c:uint):void
+        public function addTriangle(a:uint, b:uint, c:uint):void
         {
             if (_useQuadLayout)
             {
@@ -286,7 +286,7 @@ package starling.rendering
                          (oddTriangleID && c == a + 1 && b == c + 1))
                     {
                         _numIndices += 3;
-                        setMinimumSizeForQuadData(_numIndices);
+                        ensureQuadDataCapacity(_numIndices);
                         return;
                     }
                 }
@@ -313,7 +313,7 @@ package starling.rendering
          *  <p>To make sure the indices will follow the basic quad layout, make sure each
          *  parameter increments the one before it (e.g. <code>0, 1, 2, 3</code>).</p>
          */
-        public function appendQuad(a:uint, b:uint, c:uint, d:uint):void
+        public function addQuad(a:uint, b:uint, c:uint, d:uint):void
         {
             if (_useQuadLayout)
             {
@@ -321,7 +321,7 @@ package starling.rendering
                     b == a + 1 && c == b + 1 && d == c + 1)
                 {
                     _numIndices += 6;
-                    setMinimumSizeForQuadData(_numIndices);
+                    ensureQuadDataCapacity(_numIndices);
                     return;
                 }
                 else switchToGenericData();
@@ -368,21 +368,27 @@ package starling.rendering
 
         private function switchToGenericData():void
         {
-            if (_rawData) return;
+            if (_useQuadLayout)
+            {
+                _useQuadLayout = false;
 
-            _rawData = new ByteArray();
-            _rawData.endian = Endian.LITTLE_ENDIAN;
-            _rawData.length = _initialCapacity * INDEX_SIZE; // just for the initial allocation
-            _rawData.length = 0;                             // changes length, but not memory!
-            _useQuadLayout = false;
+                if (_rawData == null)
+                {
+                    _rawData = new ByteArray();
+                    _rawData.endian = Endian.LITTLE_ENDIAN;
+                    _rawData.length = _initialCapacity * INDEX_SIZE; // -> allocated memory
+                    _rawData.length = _numIndices * INDEX_SIZE;      // -> actual length
+                }
 
-            if (_numIndices)
-                _rawData.writeBytes(sQuadData, 0, _numIndices * INDEX_SIZE);
+                if (_numIndices)
+                    _rawData.writeBytes(sQuadData, 0, _numIndices * INDEX_SIZE);
+            }
         }
 
-        /** Resizes the ByteArray containing the normalized, basic quad data.
-         *  Note that the size can only get bigger, never smaller. */
-        private function setMinimumSizeForQuadData(numIndices:int):void
+        /** Makes sure that the ByteArray containing the normalized, basic quad data contains at
+         *  least <code>numIndices</code> indices. The array might grow, but it will never be
+         *  made smaller. */
+        private function ensureQuadDataCapacity(numIndices:int):void
         {
             if (sQuadData.length >= numIndices * INDEX_SIZE) return;
 
@@ -470,20 +476,19 @@ package starling.rendering
          *
          *  <p>If this instance contains only standardized, basic quad indices, resizing
          *  will automatically fill up with appropriate quad indices. Otherwise, it will fill
-         *  up with zeroes.</p> */
+         *  up with zeroes.</p>
+         *
+         *  <p>If you set the number of indices to zero, quad layout will be restored.</p> */
         public function get numIndices():int { return _numIndices; }
         public function set numIndices(value:int):void
         {
             if (value != _numIndices)
             {
-                if (value == 0) clear();
-                else
-                {
-                    if (_useQuadLayout) setMinimumSizeForQuadData(value);
-                    else _rawData.length = value * INDEX_SIZE;
+                if (_useQuadLayout) ensureQuadDataCapacity(value);
+                else _rawData.length = value * INDEX_SIZE;
+                if (value == 0) _useQuadLayout = true;
 
-                    _numIndices = value;
-                }
+                _numIndices = value;
             }
         }
 
@@ -522,8 +527,8 @@ package starling.rendering
             {
                 if (value)
                 {
-                    _rawData.clear();
-                    _rawData = null;
+                    ensureQuadDataCapacity(_numIndices);
+                    _rawData.length = 0;
                     _useQuadLayout = true;
                 }
                 else switchToGenericData();

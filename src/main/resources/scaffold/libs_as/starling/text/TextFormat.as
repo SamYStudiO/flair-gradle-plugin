@@ -16,6 +16,9 @@ package starling.text
     import starling.events.EventDispatcher;
     import starling.utils.Align;
 
+    /** Dispatched when any property of the instance changes. */
+    [Event(name="change", type="starling.events.Event")]
+
     /** The TextFormat class represents character formatting information. It is used by the
      *  TextField and BitmapFont classes to characterize the way the glyphs will be rendered.
      *
@@ -71,6 +74,19 @@ package starling.text
             var clone:starling.text.TextFormat = new starling.text.TextFormat();
             clone.copyFrom(this);
             return clone;
+        }
+
+        /** Sets the most common properties at once. */
+        public function setTo(font:String="Verdana", size:Number=12, color:uint=0x0,
+                              horizontalAlign:String="center", verticalAlign:String="center"):void
+        {
+            _font = font;
+            _size = size;
+            _color = color;
+            _horizontalAlign = horizontalAlign;
+            _verticalAlign = verticalAlign;
+
+            dispatchEventWith(Event.CHANGE);
         }
 
         /** Converts the Starling TextFormat instance to a Flash TextFormat. */

@@ -49,6 +49,7 @@ package starling.display
         /** @private */ internal var _indexData:IndexData;
 
         private var _pixelSnapping:Boolean;
+        private static var sDefaultStyle:Class = MeshStyle;
 
         /** Creates a new mesh with the given vertices and indices.
          *  If you don't pass a style, an instance of <code>MeshStyle</code> will be created
@@ -63,7 +64,7 @@ package starling.display
             _indexData = indexData;
             _pixelSnapping = true;
 
-            this.style = style ? style : new MeshStyle();
+            setStyle(style, false);
         }
 
         /** @inheritDoc */
@@ -139,23 +140,21 @@ package starling.display
          *  Do not use the same style instance on multiple objects! Instead, make use of
          *  <code>style.clone()</code> to assign an identical style to multiple meshes.</p>
          *
-         *  @param meshStyle             the style to assign.
+         *  @param meshStyle             the style to assign. If <code>null</code>, an instance of
+         *                               a standard <code>MeshStyle</code> will be created.
          *  @param mergeWithPredecessor  if enabled, all attributes of the previous style will be
          *                               be copied to the new one, if possible.
          */
-        public function setStyle(meshStyle:MeshStyle, mergeWithPredecessor:Boolean=true):void
+        public function setStyle(meshStyle:MeshStyle=null, mergeWithPredecessor:Boolean=true):void
         {
-            if (meshStyle == null)
-                throw new ArgumentError("'meshStyle' must not be null");
-
-            if (meshStyle.target)
-                throw new ArgumentError("This style is already used on another mesh. " +
-                    "Call 'style.clone()' to use an identical style on multiple meshes.");
+            if (meshStyle == null) meshStyle = new sDefaultStyle() as MeshStyle;
+            else if (meshStyle == _style) return;
+            else if (meshStyle.target) meshStyle.target.setStyle();
 
             if (_style)
             {
                 if (mergeWithPredecessor) meshStyle.copyFrom(_style);
-                _style.clearTarget();
+                _style.setTarget(null);
             }
 
             _style = meshStyle;
@@ -214,13 +213,7 @@ package starling.display
          *  <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
          *  For example, they may add support for color transformations or normal mapping.
          *
-         *  <ul>
-         *    <li>When assigning a new style, the vertex format will be changed to fit it.</li>
-         *    <li>Do not use the same style instance on multiple objects! Instead, make use of
-         *  <code>style.clone()</code> to assign an identical style to multiple meshes.</li>
-         *    <li>Note that all attributes of the previous style will be copied to the new one
-         *       (if possible). To prevent that, call the <code>setStyle</code> method instead.</li>
-         *  </ul>
+         *  <p>The setter will simply forward the assignee to <code>setStyle(value)</code>.</p>
          *
          *  @default MeshStyle
          */
@@ -263,5 +256,16 @@ package starling.display
 
         /** The format used to store the vertices. */
         public function get vertexFormat():VertexDataFormat { return _style.vertexFormat; }
+
+        // static properties
+
+        /** The default style used for meshes if no specific style is provided. The default is
+         *  <code>starling.rendering.MeshStyle</code>, and any assigned class must be a subclass
+         *  of the same. */
+        public static function get defaultStyle():Class { return sDefaultStyle; }
+        public static function set defaultStyle(value:Class):void
+        {
+            sDefaultStyle = value;
+        }
     }
 }

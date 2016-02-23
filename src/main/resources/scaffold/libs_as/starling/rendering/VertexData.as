@@ -49,12 +49,12 @@ package starling.rendering
      *  of the VertexDataFormat class. Here is an example:</p>
      *
      *  <listing>
-     *  vertexData = new VertexData("position(float2), color(bytes4)");
+     *  vertexData = new VertexData("position:float2, color:bytes4");
      *  vertexData.setPoint(0, "position", 320, 480);
      *  vertexData.setColor(0, "color", 0xff00ff);</listing>
      *
      *  <p>This instance is set up with two attributes: "position" and "color". The keywords
-     *  in parentheses depict the format and size of the data that each property uses; in this
+     *  after the colons depict the format and size of the data that each property uses; in this
      *  case, we store two floats for the position (for the x- and y-coordinates) and four
      *  bytes for the color. Please refer to the VertexDataFormat documentation for details.</p>
      *
@@ -79,6 +79,10 @@ package starling.rendering
      *  before saving them. You can change this behavior with the <code>premultipliedAlpha</code>
      *  property.</p>
      *
+     *  <p>Beware: with premultiplied alpha, the alpha value always effects the resolution of
+     *  the RGB channels. A small alpha value results in a lower accuracy of the other channels,
+     *  and if the alpha value reaches zero, the color information is lost altogether.</p>
+     *
      *  @see VertexDataFormat
      *  @see IndexData
      */
@@ -90,7 +94,9 @@ package starling.rendering
         private var _attributes:Vector.<VertexDataAttribute>;
         private var _numAttributes:int;
         private var _premultipliedAlpha:Boolean;
+
         private var _posOffset:int;  // in bytes
+        private var _colOffset:int;  // in bytes
         private var _vertexSize:int; // in bytes
 
         // helper objects
@@ -132,6 +138,7 @@ package starling.rendering
             _attributes = _format.attributes;
             _numAttributes = _attributes.length;
             _posOffset = _format.hasAttribute("position") ? _format.getOffsetInBytes("position") : 0;
+            _colOffset = _format.hasAttribute("color")    ? _format.getOffsetInBytes("color")    : 0;
             _vertexSize = _format.vertexSizeInBytes;
             _numVertices = 0;
             _premultipliedAlpha = true;
@@ -359,7 +366,8 @@ package starling.rendering
         {
             if (out == null) out = new Point();
 
-            _rawData.position = vertexID * _vertexSize + getAttribute(attrName).offset;
+            var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+            _rawData.position = vertexID * _vertexSize + offset;
             out.x = _rawData.readFloat();
             out.y = _rawData.readFloat();
 
@@ -372,7 +380,8 @@ package starling.rendering
             if (_numVertices < vertexID + 1)
                  numVertices = vertexID + 1;
 
-            _rawData.position = vertexID * _vertexSize + getAttribute(attrName).offset;
+            var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+            _rawData.position = vertexID * _vertexSize + offset;
             _rawData.writeFloat(x);
             _rawData.writeFloat(y);
         }
@@ -435,8 +444,8 @@ package starling.rendering
         /** Reads an RGB color from the specified vertex and attribute (no alpha). */
         public function getColor(vertexID:int, attrName:String="color"):uint
         {
-            var attribute:VertexDataAttribute = getAttribute(attrName);
-            _rawData.position = vertexID * _vertexSize + attribute.offset;
+            var offset:int = attrName == "color" ? _colOffset : getAttribute(attrName).offset;
+            _rawData.position = vertexID * _vertexSize + offset;
             var rgba:uint = switchEndian(_rawData.readUnsignedInt());
             if (_premultipliedAlpha) rgba = unmultiplyAlpha(rgba);
             return (rgba >> 8) & 0xffffff;
@@ -445,14 +454,18 @@ package starling.rendering
         /** Writes the RGB color to the specified vertex and attribute (alpha is not changed). */
         public function setColor(vertexID:int, attrName:String, color:uint):void
         {
-            var alpha:Number = vertexID < _numVertices ? getAlpha(vertexID, attrName) : 1.0;
-            setColorAndAlpha(vertexID, attrName, color, alpha);
+            if (_numVertices < vertexID + 1)
+                 numVertices = vertexID + 1;
+
+            var alpha:Number = getAlpha(vertexID, attrName);
+            colorize(attrName, color, alpha, vertexID, 1);
         }
 
         /** Reads the alpha value from the specified vertex and attribute. */
         public function getAlpha(vertexID:int, attrName:String="color"):Number
         {
-            _rawData.position = vertexID * _vertexSize + getAttribute(attrName).offset;
+            var offset:int = attrName == "color" ? _colOffset : getAttribute(attrName).offset;
+            _rawData.position = vertexID * _vertexSize + offset;
             var rgba:uint = switchEndian(_rawData.readUnsignedInt());
             return (rgba & 0xff) / 255.0;
         }
@@ -460,60 +473,14 @@ package starling.rendering
         /** Writes the given alpha value to the specified vertex and attribute (range 0-1). */
         public function setAlpha(vertexID:int, attrName:String, alpha:Number):void
         {
-            var color:uint = vertexID < _numVertices ? getColor(vertexID, attrName) : 0x0;
-            setColorAndAlpha(vertexID, attrName, color, alpha);
-        }
-
-        /** Writes the given RGB and alpha values to the specified vertex and attribute. */
-        public function setColorAndAlpha(vertexID:int, attrName:String, color:uint, alpha:Number):void
-        {
             if (_numVertices < vertexID + 1)
                  numVertices = vertexID + 1;
 
-            var attribute:VertexDataAttribute = getAttribute(attrName);
-            var minAlpha:Number = _premultipliedAlpha ? 5.0 / 255.0 : 0.0;
-
-            if (alpha < minAlpha) alpha = minAlpha;
-            else if (alpha > 1.0) alpha = 1.0;
-
-            var rgba:uint = ((color << 8) & 0xffffff00) | (int(alpha * 255.0) & 0xff);
-            if (_premultipliedAlpha && alpha != 1.0) rgba = premultiplyAlpha(rgba);
-
-            _rawData.position = vertexID * _vertexSize + attribute.offset;
-            _rawData.writeUnsignedInt(switchEndian(rgba));
-
-            if (_numVertices < vertexID + 1)
-                 numVertices = vertexID + 1;
+            var color:uint = getColor(vertexID, attrName);
+            colorize(attrName, color, alpha, vertexID, 1);
         }
 
-        /** Multiplies the alpha values of subsequent vertices by a certain factor. */
-        public function scaleAlphas(attrName:String, factor:Number, vertexID:int=0, numVertices:int=-1):void
-        {
-            if (factor == 1.0) return;
-            if (numVertices < 0 || vertexID + numVertices > _numVertices)
-                numVertices = _numVertices - vertexID;
-
-            var i:int;
-
-            if (_premultipliedAlpha)
-            {
-                for (i = 0; i < numVertices; ++i)
-                    setAlpha(vertexID + i, attrName, getAlpha(vertexID + i) * factor);
-            }
-            else
-            {
-                var attribute:VertexDataAttribute = getAttribute(attrName);
-                var offset:int = vertexID * _vertexSize + attribute.offset + 3;
-                var oldAlpha:Number;
-
-                for (i = 0; i < numVertices; ++i)
-                {
-                    oldAlpha = _rawData[offset] / 255.0;
-                    _rawData[offset] = int(oldAlpha * factor * 255.0);
-                    offset += _vertexSize;
-                }
-            }
-        }
+        // bounds helpers
 
         /** Calculates the bounds of the 2D vertex positions identified by the given name.
          *  The positions may optionally be transformed by a matrix before calculating the bounds.
@@ -539,20 +506,20 @@ package starling.rendering
             }
             else
             {
-                var attribute:VertexDataAttribute = getAttribute(attrName);
                 var minX:Number = Number.MAX_VALUE, maxX:Number = -Number.MAX_VALUE;
                 var minY:Number = Number.MAX_VALUE, maxY:Number = -Number.MAX_VALUE;
-                var offset:int = vertexID * _vertexSize + attribute.offset;
+                var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+                var position:int = vertexID * _vertexSize + offset;
                 var x:Number, y:Number, i:int;
 
                 if (matrix == null)
                 {
                     for (i=0; i<numVertices; ++i)
                     {
-                        _rawData.position = offset;
+                        _rawData.position = position;
                         x = _rawData.readFloat();
                         y = _rawData.readFloat();
-                        offset += _vertexSize;
+                        position += _vertexSize;
 
                         if (minX > x) minX = x;
                         if (maxX < x) maxX = x;
@@ -564,10 +531,10 @@ package starling.rendering
                 {
                     for (i=0; i<numVertices; ++i)
                     {
-                        _rawData.position = offset;
+                        _rawData.position = position;
                         x = _rawData.readFloat();
                         y = _rawData.readFloat();
-                        offset += _vertexSize;
+                        position += _vertexSize;
 
                         MatrixUtil.transformCoords(matrix, x, y, sHelperPoint);
 
@@ -613,18 +580,18 @@ package starling.rendering
             }
             else
             {
-                var attribute:VertexDataAttribute = getAttribute(attrName);
                 var minX:Number = Number.MAX_VALUE, maxX:Number = -Number.MAX_VALUE;
                 var minY:Number = Number.MAX_VALUE, maxY:Number = -Number.MAX_VALUE;
-                var offset:int = vertexID * _vertexSize + attribute.offset;
+                var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+                var position:int = vertexID * _vertexSize + offset;
                 var x:Number, y:Number, i:int;
 
                 for (i=0; i<numVertices; ++i)
                 {
-                    _rawData.position = offset;
+                    _rawData.position = position;
                     x = _rawData.readFloat();
                     y = _rawData.readFloat();
-                    offset += _vertexSize;
+                    position += _vertexSize;
 
                     if (matrix)
                         MatrixUtil.transformCoords3D(matrix, x, y, 0, sHelperPoint3D);
@@ -691,7 +658,7 @@ package starling.rendering
         /** Indicates if any vertices have a non-white color or are not fully opaque. */
         public function isTinted(attrName:String="color"):Boolean
         {
-            var offset:int = getAttribute(attrName).offset;
+            var offset:int = attrName == "color" ? _colOffset : getAttribute(attrName).offset;
 
             for (var i:int=0; i<_numVertices; ++i)
             {
@@ -706,17 +673,19 @@ package starling.rendering
             return false;
         }
 
+        // modify multiple attributes
+
         /** Transforms the 2D positions of subsequent vertices by multiplication with a
          *  transformation matrix. */
         public function transformPoints(attrName:String, matrix:Matrix,
-                                        vertexID:int=0, numVertices:int=1):void
+                                        vertexID:int=0, numVertices:int=-1):void
         {
             if (numVertices < 0 || vertexID + numVertices > _numVertices)
                 numVertices = _numVertices - vertexID;
 
             var x:Number, y:Number;
-            var attribute:VertexDataAttribute = getAttribute(attrName);
-            var position:int = vertexID * _vertexSize + attribute.offset;
+            var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+            var position:int = vertexID * _vertexSize + offset;
             var endPosition:int = position + (numVertices * _vertexSize);
 
             while (position < endPosition)
@@ -733,20 +702,101 @@ package starling.rendering
             }
         }
 
-        /** Translate the position of a vertex by a certain offset. */
-        public function translatePoint(vertexID:int, attrName:String, deltaX:Number, deltaY:Number):void
+        /** Translates the 2D positions of subsequent vertices by a certain offset. */
+        public function translatePoints(attrName:String, deltaX:Number, deltaY:Number,
+                                        vertexID:int=0, numVertices:int=-1):void
         {
+            if (numVertices < 0 || vertexID + numVertices > _numVertices)
+                numVertices = _numVertices - vertexID;
+
             var x:Number, y:Number;
-            var position:int = vertexID * _vertexSize + getAttribute(attrName).offset;
+            var offset:int = attrName == "position" ? _posOffset : getAttribute(attrName).offset;
+            var position:int = vertexID * _vertexSize + offset;
+            var endPosition:int = position + (numVertices * _vertexSize);
 
-            _rawData.position = position;
-            x = _rawData.readFloat();
-            y = _rawData.readFloat();
+            while (position < endPosition)
+            {
+                _rawData.position = position;
+                x = _rawData.readFloat();
+                y = _rawData.readFloat();
 
-            _rawData.position = position;
-            _rawData.writeFloat(x + deltaX);
-            _rawData.writeFloat(y + deltaY);
+                _rawData.position = position;
+                _rawData.writeFloat(x + deltaX);
+                _rawData.writeFloat(y + deltaY);
+
+                position += _vertexSize;
+            }
         }
+
+        /** Multiplies the alpha values of subsequent vertices by a certain factor. */
+        public function scaleAlphas(attrName:String, factor:Number,
+                                    vertexID:int=0, numVertices:int=-1):void
+        {
+            if (factor == 1.0) return;
+            if (numVertices < 0 || vertexID + numVertices > _numVertices)
+                numVertices = _numVertices - vertexID;
+
+            var i:int;
+            var offset:int = attrName == "color" ? _colOffset : getAttribute(attrName).offset;
+            var colorPos:int = vertexID * _vertexSize + offset;
+            var alphaPos:int, alpha:Number, rgba:uint;
+
+            for (i=0; i<numVertices; ++i)
+            {
+                alphaPos = colorPos + 3;
+                alpha = _rawData[alphaPos] / 255.0 * factor;
+
+                if (alpha > 1.0)      alpha = 1.0;
+                else if (alpha < 0.0) alpha = 0.0;
+
+                if (alpha == 1.0 || !_premultipliedAlpha)
+                {
+                    _rawData[alphaPos] = int(alpha * 255.0);
+                }
+                else
+                {
+                    _rawData.position = colorPos;
+                    rgba = unmultiplyAlpha(switchEndian(_rawData.readUnsignedInt()));
+                    rgba = (rgba & 0xffffff00) | (int(alpha * 255.0) & 0xff);
+                    rgba = premultiplyAlpha(rgba);
+
+                    _rawData.position = colorPos;
+                    _rawData.writeUnsignedInt(switchEndian(rgba));
+                }
+
+                colorPos += _vertexSize;
+            }
+        }
+
+        /** Writes the given RGB and alpha values to the specified vertices. */
+        public function colorize(attrName:String, color:uint, alpha:Number=1.0,
+                                 vertexID:int=0, numVertices:int=-1):void
+        {
+            if (numVertices < 0 || vertexID + numVertices > _numVertices)
+                numVertices = _numVertices - vertexID;
+
+            var offset:int = attrName == "color" ? _colOffset : getAttribute(attrName).offset;
+            var position:int = vertexID * _vertexSize + offset;
+            var endPosition:int = position + (numVertices * _vertexSize);
+
+            if (alpha > 1.0)      alpha = 1.0;
+            else if (alpha < 0.0) alpha = 0.0;
+
+            var rgba:uint = ((color << 8) & 0xffffff00) | (int(alpha * 255.0) & 0xff);
+            if (_premultipliedAlpha && alpha != 1.0) rgba = premultiplyAlpha(rgba);
+
+            _rawData.position = vertexID * _vertexSize + offset;
+            _rawData.writeUnsignedInt(switchEndian(rgba));
+
+            while (position < endPosition)
+            {
+                _rawData.position = position;
+                _rawData.writeUnsignedInt(switchEndian(rgba));
+                position += _vertexSize;
+            }
+        }
+
+        // format helpers
 
         /** Returns the format of a certain vertex attribute, identified by its name.
           * Typical values: <code>float1, float2, float3, float4, bytes4</code>. */
@@ -963,8 +1013,9 @@ package starling.rendering
             _format = value;
             _attributes = _format.attributes;
             _numAttributes = _attributes.length;
-            _posOffset = _format.hasAttribute("position") ? _format.getOffsetInBytes("position") : 0;
             _vertexSize = _format.vertexSizeInBytes;
+            _posOffset = _format.hasAttribute("position") ? _format.getOffsetInBytes("position") : 0;
+            _colOffset = _format.hasAttribute("color")    ? _format.getOffsetInBytes("color")    : 0;
         }
 
         /** The format string that describes the attributes of each vertex. */

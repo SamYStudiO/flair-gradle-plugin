@@ -19,6 +19,8 @@ package starling.display
     import starling.core.starling_internal;
     import starling.errors.AbstractClassError;
     import starling.events.Event;
+    import starling.filters.FragmentFilter;
+    import starling.rendering.BatchToken;
     import starling.rendering.Painter;
     import starling.utils.MatrixUtil;
 
@@ -68,11 +70,12 @@ package starling.display
         private var _children:Vector.<DisplayObject>;
         private var _touchGroup:Boolean;
         
-        /** Helper objects. */
+        // helper objects
         private static var sHelperMatrix:Matrix = new Matrix();
         private static var sHelperPoint:Point = new Point();
         private static var sBroadcastListeners:Vector.<DisplayObject> = new <DisplayObject>[];
         private static var sSortBuffer:Vector.<DisplayObject> = new <DisplayObject>[];
+        private static var sCacheToken:BatchToken = new BatchToken();
         
         // construction
         
@@ -360,27 +363,34 @@ package starling.display
                         child._lastParentOrSelfChangeFrameID = frameID;
 
                     if (child._lastParentOrSelfChangeFrameID != frameID &&
-                        child._lastChildChangeFrameID != frameID)
+                        child._lastChildChangeFrameID != frameID &&
+                        child._tokenFrameID == frameID - 1)
                     {
+                        painter.pushState(sCacheToken);
                         painter.drawFromCache(child._pushToken, child._popToken);
+                        painter.popState(child._popToken);
+
+                        child._pushToken.copyFrom(sCacheToken);
                     }
                     else
                     {
-                        // TODO add support for filters
-
                         var mask:DisplayObject = child._mask;
+                        var filter:FragmentFilter = child._filter;
 
                         painter.pushState(child._pushToken);
                         painter.setStateTo(child.transformationMatrix, child.alpha, child.blendMode);
 
                         if (mask) painter.drawMask(mask);
 
-                        child.render(painter);
+                        if (filter) filter.render(painter);
+                        else        child.render(painter);
 
                         if (mask) painter.eraseMask(mask);
 
                         painter.popState(child._popToken);
                     }
+
+                    child._tokenFrameID = frameID;
                 }
             }
         }

@@ -14,12 +14,13 @@ package starling.rendering
 
     import starling.display.Mesh;
     import starling.display.MeshBatch;
+    import starling.utils.MathUtil;
     import starling.utils.MeshSubset;
 
     /** This class manages a list of mesh batches of different types;
      *  it acts as a "meta" MeshBatch that initiates all rendering.
      */
-    public class BatchProcessor
+    internal class BatchProcessor
     {
         private var _batches:Vector.<MeshBatch>;
         private var _batchPool:BatchPool;
@@ -29,7 +30,6 @@ package starling.rendering
         private var _cacheToken:BatchToken;
 
         // helper objects
-        private static var sCacheToken:BatchToken = new BatchToken();
         private static var sMeshSubset:MeshSubset = new MeshSubset();
 
         /** Creates a new batch processor. */
@@ -56,19 +56,16 @@ package starling.rendering
          *  one.
          *
          *  @param mesh       the mesh to add to the current (or new) batch.
-         *  @param matrix     transform all vertex positions with a certain matrix. If this
-         *                    parameter is omitted, <code>mesh.transformationMatrix</code>
-         *                    will be used instead (except if the last parameter is enabled).
-         *  @param alpha      will be multiplied with each vertex' alpha value.
-         *  @param blendMode  if given, replaces the blend mode of the mesh instance.
+         *  @param state      the render state from which to take the current settings for alpha,
+         *                    modelview matrix, and blend mode.
          *  @param subset     the subset of the mesh you want to add, or <code>null</code> for
          *                    the complete mesh.
-         *  @param ignoreTransformation  to copy the vertices without any transformation, pass
-         *                    <code>null</code> as 'matrix' parameter and <code>true</code> for this
-         *                    one.
+         *  @param ignoreTransformations   when enabled, the mesh's vertices will be added
+         *                    without transforming them in any way (no matter the value of the
+         *                    state's <code>modelviewMatrix</code>).
          */
-        public function addMesh(mesh:Mesh, matrix:Matrix=null, alpha:Number=1.0, blendMode:String=null,
-                                subset:MeshSubset=null, ignoreTransformation:Boolean=false):void
+        public function addMesh(mesh:Mesh, state:RenderState, subset:MeshSubset=null,
+                                ignoreTransformations:Boolean=false):void
         {
             if (subset == null)
             {
@@ -85,17 +82,21 @@ package starling.rendering
 
             if (subset.numVertices > 0)
             {
-                if (_currentBatch == null || !_currentBatch.canAddMesh(mesh, blendMode, subset.numVertices))
+                if (_currentBatch == null || !_currentBatch.canAddMesh(mesh, subset.numVertices))
                 {
                     finishBatch();
 
                     _currentStyleType = mesh.style.type;
                     _currentBatch = _batchPool.get(_currentStyleType);
+                    _currentBatch.blendMode = state ? state.blendMode : mesh.blendMode;
                     _cacheToken.setTo(_batches.length);
                     _batches[_batches.length] = _currentBatch;
                 }
 
-                _currentBatch.addMesh(mesh, matrix, alpha, blendMode, subset, ignoreTransformation);
+                var matrix:Matrix = state ? state.modelviewMatrix : null;
+                var alpha:Number  = state ? state.alpha : 1.0;
+
+                _currentBatch.addMesh(mesh, matrix, alpha, subset, ignoreTransformations);
                 _cacheToken.vertexID += subset.numVertices;
                 _cacheToken.indexID  += subset.numIndices;
             }
@@ -131,10 +132,35 @@ package starling.rendering
             _cacheToken.reset();
         }
 
+        /** Returns the batch at a certain index. */
+        public function getBatchAt(batchID:int):MeshBatch
+        {
+            return _batches[batchID];
+        }
+
         /** Disposes all batches that are currently unused. */
         public function trim():void
         {
             _batchPool.purge();
+        }
+
+        public function rewindTo(token:BatchToken):void
+        {
+            if (token.batchID > _cacheToken.batchID)
+                throw new RangeError("Token outside available range");
+
+            for (var i:int = _cacheToken.batchID; i > token.batchID; --i)
+                _batchPool.put(_batches.pop());
+
+            if (_batches.length > token.batchID)
+            {
+                var batch:MeshBatch = _batches[token.batchID];
+                batch.numIndices  = MathUtil.min(batch.numIndices,  token.indexID);
+                batch.numVertices = MathUtil.min(batch.numVertices, token.vertexID);
+            }
+
+            _currentBatch = null;
+            _cacheToken.copyFrom(token);
         }
 
         /** Sets all properties of the given token so that it describes the current position
@@ -147,53 +173,8 @@ package starling.rendering
             return token;
         }
 
-        /** Adds the meshes from the given BatchProcessor to this instance. The given tokens
-         *  act as both input and output: when passed to the method, they need to describe the
-         *  range of vertices and indices to be copied from the given batch processor; when the
-         *  method returns, they will contain the range of the same meshes in the current
-         *  batch processor.
-         *
-         *  @param batchProcessor  the object the meshes should be taken from.
-         *  @param startToken      the position of the first vertex / index to be copied.
-         *  @param endToken        the position of the last vertex / index to be copied.
-         */
-        public function addMeshesFrom(batchProcessor:BatchProcessor,
-                                      startToken:BatchToken, endToken:BatchToken):void
-        {
-            var meshBatch:MeshBatch;
-            var subset:MeshSubset = sMeshSubset;
-
-            fillToken(sCacheToken);
-
-            if (!startToken.equals(endToken))
-            {
-                for (var i:int = startToken.batchID; i <= endToken.batchID; ++i)
-                {
-                    meshBatch = batchProcessor._batches[i];
-                    subset.setTo(); // resets subset
-
-                    if (i == startToken.batchID)
-                    {
-                        subset.vertexID = startToken.vertexID;
-                        subset.indexID  = startToken.indexID;
-                        subset.numVertices = meshBatch.numVertices - subset.vertexID;
-                        subset.numIndices  = meshBatch.numIndices  - subset.indexID;
-                    }
-
-                    if (i == endToken.batchID)
-                    {
-                        subset.numVertices = endToken.vertexID - subset.vertexID;
-                        subset.numIndices  = endToken.indexID  - subset.indexID;
-                    }
-
-                    if (subset.numVertices)
-                        addMesh(meshBatch, null, 1.0, null, subset, true);
-                }
-            }
-
-            fillToken(endToken);
-            startToken.copyFrom(sCacheToken);
-        }
+        /** The number of batches currently stored in the BatchProcessor. */
+        public function get numBatches():int { return _batches.length; }
 
         /** This callback is executed whenever a batch is finished and replaced by a new one.
          *  The finished MeshBatch is passed to the callback. Typically, this callback is used
@@ -237,7 +218,12 @@ class BatchPool
         }
 
         if (batchList.length > 0) return batchList.pop();
-        else return new MeshBatch();
+        else
+        {
+            var batch:MeshBatch = new MeshBatch();
+            batch.batchable = false;
+            return batch;
+        }
     }
 
     public function put(meshBatch:MeshBatch):void

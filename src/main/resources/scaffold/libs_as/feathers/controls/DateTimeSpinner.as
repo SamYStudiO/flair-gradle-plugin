@@ -10,7 +10,9 @@ package feathers.controls
 	import feathers.controls.renderers.DefaultListItemRenderer;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
+	import feathers.layout.HorizontalAlign;
 	import feathers.layout.HorizontalLayout;
+	import feathers.layout.VerticalAlign;
 	import feathers.skins.IStyleProvider;
 	import feathers.utils.math.roundDownToNearest;
 	import feathers.utils.math.roundUpToNearest;
@@ -882,8 +884,8 @@ package feathers.controls
 			if(!this.listGroup)
 			{
 				var groupLayout:HorizontalLayout = new HorizontalLayout();
-				groupLayout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
-				groupLayout.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_JUSTIFY;
+				groupLayout.horizontalAlign = HorizontalAlign.CENTER;
+				groupLayout.verticalAlign = VerticalAlign.JUSTIFY;
 				this.listGroup = new LayoutGroup();
 				this.listGroup.layout = groupLayout;
 				this.addChild(this.listGroup);
@@ -940,15 +942,15 @@ package feathers.controls
 		 */
 		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
 				return false;
 			}
 			
-			this.listGroup.width = this.explicitWidth;
-			this.listGroup.height = this.explicitHeight;
+			this.listGroup.width = this._explicitWidth;
+			this.listGroup.height = this._explicitHeight;
 			this.listGroup.validate();
 			return this.setSizeInternal(this.listGroup.width, this.listGroup.height, false);
 		}

@@ -30,6 +30,7 @@ package feathers.controls.text
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureSmoothing;
+	import starling.utils.MathUtil;
 
 	/**
 	 * Renders text using
@@ -57,11 +58,6 @@ package feathers.controls.text
 		 * @private
 		 */
 		private static var HELPER_IMAGE:Image;
-
-		/**
-		 * @private
-		 */
-		private static const HELPER_MATRIX:Matrix = new Matrix();
 
 		/**
 		 * @private
@@ -138,6 +134,8 @@ package feathers.controls.text
 
 		/**
 		 * @private
+		 * This variable may be used by subclasses to affect the x position of
+		 * the text.
 		 */
 		protected var _batchX:Number = 0;
 
@@ -378,42 +376,6 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _snapToPixels:Boolean = true;
-
-		/**
-		 * Determines if the position of the text should be snapped to the
-		 * nearest whole pixel when rendered. When snapped to a whole pixel, the
-		 * text is often more readable. When not snapped, the text may become
-		 * blurry due to texture smoothing.
-		 *
-		 * <p>In the following example, the text is not snapped to pixels:</p>
-		 *
-		 * <listing version="3.0">
-		 * textRenderer.snapToPixels = false;</listing>
-		 *
-		 * @default true
-		 */
-		public function get snapToPixels():Boolean
-		{
-			return _snapToPixels;
-		}
-
-		/**
-		 * @private
-		 */
-		public function set snapToPixels(value:Boolean):void
-		{
-			if(this._snapToPixels == value)
-			{
-				return;
-			}
-			this._snapToPixels = value;
-			this.invalidate(INVALIDATION_FLAG_STYLES);
-		}
-
-		/**
-		 * @private
-		 */
 		protected var _truncateToFit:Boolean = true;
 
 		/**
@@ -608,16 +570,7 @@ package feathers.controls.text
 		 */
 		override public function render(painter:Painter):void
 		{
-			var offsetX:Number = 0;
-			var offsetY:Number = 0;
-			if(this._snapToPixels)
-			{
-				this.getTransformationMatrix(this.stage, HELPER_MATRIX);
-				offsetX = Math.round(HELPER_MATRIX.tx) - HELPER_MATRIX.tx;
-				offsetY = Math.round(HELPER_MATRIX.ty) - HELPER_MATRIX.ty;
-			}
-			this._characterBatch.x = this._batchX + offsetX;
-			this._characterBatch.y = offsetY;
+			this._characterBatch.x = this._batchX;
 			super.render(painter);
 		}
 		
@@ -631,12 +584,12 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
-				result.x = this.explicitWidth;
-				result.y = this.explicitHeight;
+				result.x = this._explicitWidth;
+				result.y = this._explicitHeight;
 				return result;
 			}
 
@@ -661,7 +614,7 @@ package feathers.controls.text
 				scale = 1;
 			}
 			var lineHeight:Number = font.lineHeight * scale + this.currentTextFormat.leading;
-			var maxLineWidth:Number = this.explicitWidth;
+			var maxLineWidth:Number = this._explicitWidth;
 			if(maxLineWidth !== maxLineWidth) //isNaN
 			{
 				maxLineWidth = this._maxWidth;
@@ -713,7 +666,7 @@ package feathers.controls.text
 					currentX += charData.getKerning(previousCharID) * scale;
 				}
 
-				var offsetX:Number = charData.xAdvance * scale;
+				var xAdvance:Number = charData.xAdvance * scale;
 				if(this._wordWrap)
 				{
 					var currentCharIsWhitespace:Boolean = charID == CHARACTER_ID_SPACE || charID == CHARACTER_ID_TAB;
@@ -724,7 +677,7 @@ package feathers.controls.text
 						{
 							widthOfWhitespaceAfterWord = 0;
 						}
-						widthOfWhitespaceAfterWord += offsetX;
+						widthOfWhitespaceAfterWord += xAdvance;
 					}
 					else if(previousCharIsWhitespace)
 					{
@@ -734,7 +687,7 @@ package feathers.controls.text
 						word = "";
 					}
 
-					if(!currentCharIsWhitespace && wordCountForLine > 0 && (currentX + offsetX) > maxLineWidth)
+					if(!currentCharIsWhitespace && wordCountForLine > 0 && (currentX + xAdvance) > maxLineWidth)
 					{
 						//we're just reusing this variable to avoid creating a
 						//new one. it'll be reset to 0 in a moment.
@@ -752,7 +705,7 @@ package feathers.controls.text
 						line = "";
 					}
 				}
-				currentX += offsetX + customLetterSpacing;
+				currentX += xAdvance + customLetterSpacing;
 				previousCharID = charID;
 				word += String.fromCharCode(charID);
 			}
@@ -766,7 +719,7 @@ package feathers.controls.text
 			//lines.
 			if(this._wordWrap)
 			{
-				while(currentX > maxLineWidth)
+				while(currentX > maxLineWidth && !MathUtil.isEquivalent(currentX, maxLineWidth))
 				{
 					currentX -= maxLineWidth;
 					currentY += lineHeight;
@@ -882,10 +835,12 @@ package feathers.controls.text
 				scale = 1;
 			}
 			var lineHeight:Number = font.lineHeight * scale + this.currentTextFormat.leading;
+			var offsetX:Number = font.offsetX * scale;
+			var offsetY:Number = font.offsetY * scale;
 
-			var hasExplicitWidth:Boolean = this.explicitWidth === this.explicitWidth; //!isNaN
+			var hasExplicitWidth:Boolean = this._explicitWidth === this._explicitWidth; //!isNaN
 			var isAligned:Boolean = this.currentTextFormat.align != TextFormatAlign.LEFT;
-			var maxLineWidth:Number = hasExplicitWidth ? this.explicitWidth : this._maxWidth;
+			var maxLineWidth:Number = hasExplicitWidth ? this._explicitWidth : this._maxWidth;
 			if(isAligned && maxLineWidth == Number.POSITIVE_INFINITY)
 			{
 				//we need to measure the text to get the maximum line width
@@ -953,7 +908,7 @@ package feathers.controls.text
 					currentX += charData.getKerning(previousCharID) * scale;
 				}
 
-				var offsetX:Number = charData.xAdvance * scale;
+				var xAdvance:Number = charData.xAdvance * scale;
 				if(this._wordWrap)
 				{
 					var currentCharIsWhitespace:Boolean = charID == CHARACTER_ID_SPACE || charID == CHARACTER_ID_TAB;
@@ -964,7 +919,7 @@ package feathers.controls.text
 						{
 							widthOfWhitespaceAfterWord = 0;
 						}
-						widthOfWhitespaceAfterWord += offsetX;
+						widthOfWhitespaceAfterWord += xAdvance;
 					}
 					else if(previousCharIsWhitespace)
 					{
@@ -986,7 +941,7 @@ package feathers.controls.text
 					//floating point errors can cause unnecessary line breaks,
 					//so we're going to be a little bit fuzzy on the greater
 					//than check. such tiny numbers shouldn't break anything.
-					if(!currentCharIsWhitespace && wordCountForLine > 0 && ((currentX + offsetX) - maxLineWidth) > FUZZY_MAX_WIDTH_PADDING)
+					if(!currentCharIsWhitespace && wordCountForLine > 0 && ((currentX + xAdvance) - maxLineWidth) > FUZZY_MAX_WIDTH_PADDING)
 					{
 						if(isAligned)
 						{
@@ -1016,18 +971,21 @@ package feathers.controls.text
 				{
 					var charLocation:CharLocation = CHAR_LOCATION_POOL.length > 0 ? CHAR_LOCATION_POOL.shift() : new CharLocation();
 					charLocation.char = charData;
-					charLocation.x = currentX + charData.xOffset * scale;
-					charLocation.y = currentY + charData.yOffset * scale;
+					charLocation.x = currentX + offsetX + charData.xOffset * scale;
+					charLocation.y = currentY + offsetY + charData.yOffset * scale;
 					charLocation.scale = scale;
 					CHARACTER_BUFFER[CHARACTER_BUFFER.length] = charLocation;
 					wordLength++;
 				}
 				else
 				{
-					this.addCharacterToBatch(charData, currentX + charData.xOffset * scale, currentY + charData.yOffset * scale, scale);
+					this.addCharacterToBatch(charData,
+						currentX + offsetX + charData.xOffset * scale,
+						currentY + offsetY + charData.yOffset * scale,
+						scale);
 				}
 
-				currentX += offsetX + customLetterSpacing;
+				currentX += xAdvance + customLetterSpacing;
 				previousCharID = charID;
 			}
 			currentX = currentX - customLetterSpacing;
@@ -1045,7 +1003,7 @@ package feathers.controls.text
 			//lines.
 			if(this._wordWrap)
 			{
-				while(currentX > maxLineWidth)
+				while(currentX > maxLineWidth && !MathUtil.isEquivalent(currentX, maxLineWidth))
 				{
 					currentX -= maxLineWidth;
 					currentY += lineHeight;

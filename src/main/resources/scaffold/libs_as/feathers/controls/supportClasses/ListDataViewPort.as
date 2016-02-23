@@ -782,7 +782,8 @@ package feathers.controls.supportClasses
 					//typical item wasn't in the data provider. otherwise, it
 					//may still be needed for the same item.
 					var canReuse:Boolean = !this._typicalItemIsInDataProvider;
-					var oldTypicalItemRemoved:Boolean = this._typicalItemIsInDataProvider && this._dataProvider.getItemIndex(this._typicalItemRenderer.data) < 0;
+					var oldTypicalItemRemoved:Boolean = this._typicalItemIsInDataProvider &&
+						this._dataProvider && this._dataProvider.getItemIndex(this._typicalItemRenderer.data) < 0;
 					if(!canReuse && oldTypicalItemRemoved)
 					{
 						//special case: if the old typical item was in the data
@@ -1112,7 +1113,7 @@ package feathers.controls.supportClasses
 						}
 						else
 						{
-							throw new IllegalOperationError("ListDataViewPort: renderer map contains bad data.");
+							throw new IllegalOperationError("ListDataViewPort: renderer map contains bad data. This may be caused by duplicate items in the data provider, which is not allowed.");
 						}
 					}
 					this._layoutItems[index + this._layoutIndexOffset] = DisplayObject(itemRenderer);
@@ -1540,6 +1541,11 @@ import feathers.controls.renderers.IListItemRenderer;
 
 class ItemRendererFactoryStorage
 {
+	public function ItemRendererFactoryStorage()
+	{
+		
+	}
+	
 	public var activeItemRenderers:Vector.<IListItemRenderer> = new <IListItemRenderer>[];
 	public var inactiveItemRenderers:Vector.<IListItemRenderer> = new <IListItemRenderer>[];
 }

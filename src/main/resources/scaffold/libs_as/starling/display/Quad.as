@@ -24,23 +24,29 @@ package starling.display
 
     /** A Quad represents a colored and/or textured rectangle.
      *
-     *  <p>You can set one color per vertex. The colors will smoothly fade into each other over the
-     *  area of the quad. To display a simple linear color gradient, assign one color to vertices
-     *  0 and 1 and another color to vertices 2 and 3.</p>
+     *  <p>Quads may have a color and a texture. When assigning a texture, the colors of the
+     *  vertices will "tint" the texture, i.e. the vertex color will be multiplied with the color
+     *  of the texture at the same position. That's why the default color of a quad is pure white:
+     *  tinting with white does not change the texture color (that's a multiplication with one).</p>
      *
-     *  <p>When assigning a texture, the colors of the vertices will "tint" the texture, i.e. the
-     *  vertex color will be multiplied with the color of the texture at the same position. That's
-     *  why the default color of a quad is pure white: tinting with white does not change the
-     *  texture color (that's a multiplication with one).</p>
+     *  <p>A quad is, by definition, always rectangular. The basic quad class will always contain
+     *  exactly four vertices, arranged like this:</p>
      *
-     *  <p>The indices of the vertices are arranged like this:</p>
-     *  
      *  <pre>
      *  0 - 1
      *  | / |
      *  2 - 3
      *  </pre>
-     * 
+     *
+     *  <p>You can set the color of each vertex individually; and since the colors will smoothly
+     *  fade into each other over the area of the quad, you can use this to create simple linear
+     *  color gradients (e.g. by assigning one color to vertices 0 and 1 and another to vertices
+     *  2 and 3).</p>
+     *
+     *  <p>However, note that the number of vertices may be different in subclasses.
+     *  Check the property <code>numVertices</code> if you are unsure.</p>
+     *
+     *  @see starling.textures.Texture
      *  @see Image
      */
     public class Quad extends Mesh
@@ -60,39 +66,54 @@ package starling.display
             var vertexData:VertexData = new VertexData(MeshStyle.VERTEX_FORMAT, 4);
             var indexData:IndexData = new IndexData(6);
 
-            setupVertexPositions(vertexData, _bounds);
-            setupTextureCoordinates(vertexData);
-            indexData.appendQuad(0, 1, 2, 3);
-
             super(vertexData, indexData);
 
             if (width == 0.0 || height == 0.0)
                 throw new ArgumentError("Invalid size: width and height must not be zero");
 
+            setupVertices();
             this.color = color;
         }
 
-        private function setupVertexPositions(vertexData:VertexData, bounds:Rectangle):void
+        /** Sets up vertex- and index-data according to the current settings. */
+        protected function setupVertices():void
         {
-            vertexData.setPoint(0, "position", bounds.left,  bounds.top);
-            vertexData.setPoint(1, "position", bounds.right, bounds.top);
-            vertexData.setPoint(2, "position", bounds.left,  bounds.bottom);
-            vertexData.setPoint(3, "position", bounds.right, bounds.bottom);
-        }
+            var posAttr:String = "position";
+            var texAttr:String = "texCoords";
+            var texture:Texture = style.texture;
+            var vertexData:VertexData = this.vertexData;
+            var indexData:IndexData = this.indexData;
 
-        private function setupTextureCoordinates(vertexData:VertexData):void
-        {
-            vertexData.setPoint(0, "texCoords", 0.0, 0.0);
-            vertexData.setPoint(1, "texCoords", 1.0, 0.0);
-            vertexData.setPoint(2, "texCoords", 0.0, 1.0);
-            vertexData.setPoint(3, "texCoords", 1.0, 1.0);
+            indexData.numIndices = 0;
+            indexData.addQuad(0, 1, 2, 3);
+            vertexData.numVertices = 4;
+
+            if (texture)
+            {
+                texture.setupVertexPositions(vertexData, 0, "position", _bounds);
+                texture.setupTextureCoordinates(vertexData, 0, texAttr);
+            }
+            else
+            {
+                vertexData.setPoint(0, posAttr, _bounds.left,  _bounds.top);
+                vertexData.setPoint(1, posAttr, _bounds.right, _bounds.top);
+                vertexData.setPoint(2, posAttr, _bounds.left,  _bounds.bottom);
+                vertexData.setPoint(3, posAttr, _bounds.right, _bounds.bottom);
+
+                vertexData.setPoint(0, texAttr, 0.0, 0.0);
+                vertexData.setPoint(1, texAttr, 1.0, 0.0);
+                vertexData.setPoint(2, texAttr, 0.0, 1.0);
+                vertexData.setPoint(3, texAttr, 1.0, 1.0);
+            }
+
+            setRequiresRedraw();
         }
 
         /** @inheritDoc */
         public override function getBounds(targetSpace:DisplayObject, out:Rectangle=null):Rectangle
         {
             if (out == null) out = new Rectangle();
-            
+
             if (targetSpace == this) // optimization
             {
                 out.copyFrom(_bounds);
@@ -131,16 +152,19 @@ package starling.display
             else return null;
         }
 
-        /** Readjusts the dimensions of the quad according to its current texture. Call this method
-         *  to synchronize quad and texture size after assigning a texture with a different size.*/
-        public function readjustSize():void
+        /** Readjusts the dimensions of the quad. Use this method without any arguments to
+         *  synchronize quad and texture size after assigning a texture with a different size.
+         *  You can also force a certain width and height by passing positive, non-zero
+         *  values for width and height. */
+        public function readjustSize(width:Number=-1, height:Number=-1):void
         {
-            var texture:Texture = style.texture;
+            if (width  <= 0) width  = texture ? texture.frameWidth  : _bounds.width;
+            if (height <= 0) height = texture ? texture.frameHeight : _bounds.height;
 
-            if (texture)
+            if (width != _bounds.width || height != _bounds.height)
             {
-                _bounds.setTo(0, 0, texture.frameWidth, texture.frameHeight);
-                texture.setupVertexPositions(vertexData);
+                _bounds.setTo(0, 0, width, height);
+                setupVertices();
             }
         }
 
@@ -170,12 +194,11 @@ package starling.display
          */
         override public function set texture(value:Texture):void
         {
-            if (value == texture) return;
-
-            if (value) value.setupVertexPositions(vertexData, 0, "position", _bounds);
-            else setupVertexPositions(vertexData, _bounds);
-
-            super.texture = value;
+            if (value != texture)
+            {
+                super.texture = value;
+                setupVertices();
+            }
         }
     }
 }

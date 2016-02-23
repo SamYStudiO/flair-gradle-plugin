@@ -24,46 +24,26 @@ package starling.rendering
     import starling.utils.execute;
 
     /** An effect encapsulates all steps of a Stage3D draw operation. It configures the
-     *  render context and sets up shader programs as well as index- and vertex-buffers.
-     *  Extend this class when you need custom rendering code for your display objects.
+     *  render context and sets up shader programs as well as index- and vertex-buffers, thus
+     *  providing the basic mechanisms of all low-level rendering.
      *
-     *  <p><strong>Extending the Effect class</strong></p>
+     *  <p><strong>Using the Effect class</strong></p>
      *
-     *  <p>This class provides the basic mechanisms of low-level rendering. The implementation
-     *  of the base class can only render white triangles with a constant alpha value; most of the
-     *  time, you'll want to use an existing subclass, or create your own. For the latter, it is
-     *  recommended to override the following methods:</p>
+     *  <p>Effects are mostly used by the <code>MeshStyle</code> and <code>FragmentFilter</code>
+     *  classes. When you extend those classes, you'll be required to provide a custom effect.
+     *  Setting it up for rendering is done by the base class, though, so you rarely have to
+     *  initiate the rendering yourself. Nevertheless, it's good to know how an effect is doing
+     *  its work.</p>
      *
-     *  <ul>
-     *    <li><code>createProgram():Program</code> — must create the actual program containing 
-     *        vertex- and fragment-shaders. A program will be created only once for each render
-     *        context; this is taken care of by the base class.</li>
-     *    <li><code>get programVariantName():uint</code> (optional) — implement this if your
-     *        effect requires different programs, depending on its settings. The recommended
-     *        way to do this is via a bit-mask that uniquely encodes the current settings.</li>
-     *    <li><code>get vertexFormat():String</code> — must return the <code>VertexData</code>
-     *        format that this effect requires for its vertices.</li>
-     *    <li><code>beforeDraw(context:Context3D):void</code> — Set up your context by
-     *        configuring program constants and buffer attributes.</li>
-     *    <li><code>afterDraw(context:Context3D):void</code> — Will be called directly after
-     *        <code>context.drawTriangles()</code>. Clean up any context configuration here.</li>
-     *  </ul>
-     *
-     *  <p>Furthermore, you should add properties that manage the data you need during rendering,
-     *  e.g. the texture(s) that should be used, program constants, etc. I recommend to look
-     *  at the implementation of Starling's <code>MeshEffect</code> for a simple blueprint
-     *  of a custom effect.</p>
-     *
-     *  <strong>Using the Effect class</strong>
-     *
-     *  <p>Using an effect always follows steps similar to those shown in the following example:</p>
+     *  <p>Using an effect always follows steps shown in the example below. You create the
+     *  effect, configure it, upload vertex data and then: draw!</p>
      *
      *  <listing>
      *  // create effect
      *  var effect:MeshEffect = new MeshEffect();
      *  
      *  // configure effect
-     *  effect.mvpMatrix = painter.mvpMatrix;
+     *  effect.mvpMatrix3D = painter.state.mvpMatrix3D;
      *  effect.texture = getHeroTexture();
      *  effect.color = 0xf0f0f0;
      *  
@@ -77,37 +57,68 @@ package starling.rendering
      *  <p>Note that the <code>VertexData</code> being uploaded has to be created with the same
      *  format as the one returned by the effect's <code>vertexFormat</code> property.</p>
      *
+     *  <p><strong>Extending the Effect class</strong></p>
+     *
+     *  <p>The base <code>Effect</code>-class can only render white triangles, which is not much
+     *  use in itself. However, it is designed to be extended; subclasses can easily implement any
+     *  kinds of shaders.</p>
+     *
+     *  <p>Normally, you won't extend this class directly, but either <code>FilterEffect</code>
+     *  or <code>MeshEffect</code>, depending on your needs (i.e. if you want to create a new
+     *  fragment filter or a new mesh style). Whichever base class you're extending, you should
+     *  override the following methods:</p>
+     *
+     *  <ul>
+     *    <li><code>createProgram():Program</code> — must create the actual program containing 
+     *        vertex- and fragment-shaders. A program will be created only once for each render
+     *        context; this is taken care of by the base class.</li>
+     *    <li><code>get programVariantName():uint</code> (optional) — override this if your
+     *        effect requires different programs, depending on its settings. The recommended
+     *        way to do this is via a bit-mask that uniquely encodes the current settings.</li>
+     *    <li><code>get vertexFormat():String</code> (optional) — must return the
+     *        <code>VertexData</code> format that this effect requires for its vertices. If
+     *        the effect does not require any special attributes, you can leave this out.</li>
+     *    <li><code>beforeDraw(context:Context3D):void</code> — Set up your context by
+     *        configuring program constants and buffer attributes.</li>
+     *    <li><code>afterDraw(context:Context3D):void</code> — Will be called directly after
+     *        <code>context.drawTriangles()</code>. Clean up any context configuration here.</li>
+     *  </ul>
+     *
+     *  <p>Furthermore, you need to add properties that manage the data you require on rendering,
+     *  e.g. the texture(s) that should be used, program constants, etc. I recommend looking at
+     *  the implementations of Starling's <code>FilterEffect</code> and <code>MeshEffect</code>
+     *  classes to see how to approach sub-classing.</p>
+     *
+     *  @see FilterEffect
      *  @see MeshEffect
      *  @see starling.rendering.MeshStyle
+     *  @see starling.filters.FragmentFilter
      *  @see starling.utils.RenderUtil
      */
     public class Effect
     {
         /** The vertex format expected by <code>uploadVertexData</code>:
-         *  <code>"position(float2)"</code> */
+         *  <code>"position:float2"</code> */
         public static const VERTEX_FORMAT:VertexDataFormat =
-            VertexDataFormat.fromString("position(float2)");
+            VertexDataFormat.fromString("position:float2");
 
         private var _indexBuffer:IndexBuffer3D;
         private var _indexBufferSize:int;  // in number of indices
         private var _vertexBuffer:VertexBuffer3D;
         private var _vertexBufferSize:int; // in blocks of 32 bits
 
-        private var _alpha:Number;
-        private var _mvpMatrix:Matrix3D;
+        private var _mvpMatrix3D:Matrix3D;
         private var _onRestore:Function;
         private var _programBaseName:String;
 
         // helper objects
-        private static var sRenderAlpha:Vector.<Number> = new Vector.<Number>(4, true);
         private static var sProgramNameCache:Dictionary = new Dictionary();
 
         /** Creates a new effect. */
         public function Effect()
         {
-            _alpha = 1.0;
-            _mvpMatrix = new Matrix3D();
-            _programBaseName = getQualifiedClassName(this).split("::").pop();
+            _mvpMatrix3D = new Matrix3D();
+            _programBaseName = getQualifiedClassName(this);
 
             // Handle lost context (using conventional Flash event for weak listener support)
             Starling.current.stage3D.addEventListener(Event.CONTEXT3D_CREATE,
@@ -203,18 +214,14 @@ package starling.rendering
          *
          *  <ul>
          *    <li><code>vc0-vc3</code> — MVP matrix</li>
-         *    <li><code>vc4</code> — alpha value (same value for all components)</li>
          *    <li><code>va0</code> — vertex position (xy)</li>
          *  </ul>
          */
         protected function beforeDraw(context:Context3D):void
         {
-            sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = sRenderAlpha[3] = _alpha;
-
             program.activate(context);
             vertexFormat.setVertexBufferAttribute(vertexBuffer, 0, "position");
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix, true);
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha, 1);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
         }
 
         /** This method is called by <code>render</code>, directly after
@@ -231,15 +238,18 @@ package starling.rendering
          *  the effect with the current settings. Override this method in a subclass to create
          *  your shaders. This method will only be called once; the program is automatically stored
          *  in the <code>Painter</code> and re-used by all instances of this effect.
+         *
+         *  <p>The basic implementation always outputs pure white.</p>
          */
         protected function createProgram():Program
         {
-            var vertexShader:String =
-                "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clipspace
-                "mov v0, vc4      \n";  // pass alpha to fragment program
+            var vertexShader:String = [
+                "m44 op, va0, vc0", // 4x4 matrix transform to output clipspace
+                "seq v0, va0, va0"  // this is a hack that always produces "1"
+            ].join("\n");
 
             var fragmentShader:String =
-                "mov oc, v0       \n";  // output color
+                "mov oc, v0";       // output color: white
 
             return Program.fromSource(vertexShader, fragmentShader);
         }
@@ -256,7 +266,7 @@ package starling.rendering
         }
 
         /** Returns the base name for the program.
-         *  @default the class name
+         *  @default the fully qualified class name
          */
         protected function get programBaseName():String { return _programBaseName; }
         protected function set programBaseName(value:String):void { _programBaseName = value; }
@@ -294,7 +304,8 @@ package starling.rendering
         }
 
         /** Returns the current program, either by creating a new one (via
-         *  <code>createProgram</code>) or by getting it from the <code>Painter</code>. */
+         *  <code>createProgram</code>) or by getting it from the <code>Painter</code>.
+         *  Do not override this method! Instead, implement <code>createProgram</code>. */
         protected function get program():Program
         {
             var name:String = this.programName;
@@ -319,17 +330,12 @@ package starling.rendering
         public function set onRestore(value:Function):void { _onRestore = value; }
 
         /** The data format that this effect requires from the VertexData that it renders:
-         *  <code>"position(float2)"</code> */
+         *  <code>"position:float2"</code> */
         public function get vertexFormat():VertexDataFormat { return VERTEX_FORMAT; }
 
-        /** The alpha value of the object rendered by the effect. Must be taken into account
-         *  by all subclasses. */
-        public function get alpha():Number { return _alpha; }
-        public function set alpha(value:Number):void { _alpha = value; }
-
         /** The MVP (modelview-projection) matrix transforms vertices into clipspace. */
-        public function get mvpMatrix():Matrix3D { return _mvpMatrix; }
-        public function set mvpMatrix(value:Matrix3D):void { _mvpMatrix.copyFrom(value); }
+        public function get mvpMatrix3D():Matrix3D { return _mvpMatrix3D; }
+        public function set mvpMatrix3D(value:Matrix3D):void { _mvpMatrix3D.copyFrom(value); }
 
         /** The internally used index buffer used on rendering. */
         protected function get indexBuffer():IndexBuffer3D { return _indexBuffer; }

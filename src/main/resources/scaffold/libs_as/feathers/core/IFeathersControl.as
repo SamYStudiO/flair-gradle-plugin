@@ -85,28 +85,8 @@ package feathers.core
 	 * Basic interface for Feathers UI controls. A Feathers control must also
 	 * be a Starling display object.
 	 */
-	public interface IFeathersControl extends IValidating
+	public interface IFeathersControl extends IValidating, IMeasureDisplayObject
 	{
-		/**
-		 * @copy feathers.core.FeathersControl#minWidth
-		 */
-		function get minWidth():Number;
-
-		/**
-		 * @private
-		 */
-		function set minWidth(value:Number):void;
-
-		/**
-		 * @copy feathers.core.FeathersControl#minHeight
-		 */
-		function get minHeight():Number;
-
-		/**
-		 * @private
-		 */
-		function set minHeight(value:Number):void;
-
 		/**
 		 * @copy feathers.core.FeathersControl#maxWidth
 		 */
@@ -126,7 +106,7 @@ package feathers.core
 		 * @private
 		 */
 		function set maxHeight(value:Number):void;
-
+		
 		/**
 		 * @copy feathers.core.FeathersControl#isEnabled
 		 */
@@ -173,6 +153,16 @@ package feathers.core
 		function set styleProvider(value:IStyleProvider):void
 
 		/**
+		 * @copy feathers.core.FeathersControl#toolTip
+		 */
+		function get toolTip():String;
+
+		/**
+		 * @private
+		 */
+		function set toolTip(value:String):void
+
+		/**
 		 * @copy feathers.core.FeathersControl#setSize()
 		 */
 		function setSize(width:Number, height:Number):void;
@@ -181,5 +171,10 @@ package feathers.core
 		 * @copy feathers.core.FeathersControl#move()
 		 */
 		function move(x:Number, y:Number):void;
+
+		/**
+		 * @copy feathers.core.FeathersControl#resetStyleProvider()
+		 */
+		function resetStyleProvider():void;
 	}
 }

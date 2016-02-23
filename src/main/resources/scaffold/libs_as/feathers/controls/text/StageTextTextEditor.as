@@ -888,7 +888,7 @@ package feathers.controls.text
 		 *
 		 * When setting this property to <code>true</code>, it is recommended
 		 * that the text input's <code>verticalAlign</code> property is set to
-		 * <code>TextInput.VERTICAL_ALIGN_JUSTIFY</code>.
+		 * <code>VerticalAlign.JUSTIFY</code>.
 		 *
 		 * @default false
 		 *
@@ -1302,12 +1302,12 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
-				result.x = this.explicitWidth;
-				result.y = this.explicitHeight;
+				result.x = this._explicitWidth;
+				result.y = this._explicitHeight;
 				return result;
 			}
 
@@ -1422,18 +1422,18 @@ package feathers.controls.text
 				result = new Point();
 			}
 
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 
 			this._measureTextField.autoSize = TextFieldAutoSize.LEFT;
 
-			var newWidth:Number = this.explicitWidth;
+			var newWidth:Number = this._explicitWidth;
 			if(needsWidth)
 			{
 				newWidth = this._measureTextField.textWidth;
-				if(newWidth < this.explicitMinWidth)
+				if(newWidth < this._explicitMinWidth)
 				{
-					newWidth = this.explicitMinWidth;
+					newWidth = this._explicitMinWidth;
 				}
 				else if(newWidth > this._maxWidth)
 				{
@@ -1443,7 +1443,7 @@ package feathers.controls.text
 
 			//the +4 is accounting for the TextField gutter
 			this._measureTextField.width = newWidth + 4;
-			var newHeight:Number = this.explicitHeight;
+			var newHeight:Number = this._explicitHeight;
 			if(needsHeight)
 			{
 				if(this._stageTextIsTextField)
@@ -1462,9 +1462,9 @@ package feathers.controls.text
 					//be in this mess...
 					newHeight = this._measureTextField.height;
 				}
-				if(newHeight < this.explicitMinHeight)
+				if(newHeight < this._explicitMinHeight)
 				{
-					newHeight = this.explicitMinHeight;
+					newHeight = this._explicitMinHeight;
 				}
 				else if(newHeight > this._maxHeight)
 				{
@@ -1543,8 +1543,8 @@ package feathers.controls.text
 		 */
 		protected function autoSizeIfNeeded():Boolean
 		{
-			var needsWidth:Boolean = this.explicitWidth !== this.explicitWidth; //isNaN
-			var needsHeight:Boolean = this.explicitHeight !== this.explicitHeight; //isNaN
+			var needsWidth:Boolean = this._explicitWidth !== this._explicitWidth; //isNaN
+			var needsHeight:Boolean = this._explicitHeight !== this._explicitHeight; //isNaN
 			if(!needsWidth && !needsHeight)
 			{
 				return false;

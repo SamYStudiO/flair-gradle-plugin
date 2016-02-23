@@ -22,6 +22,7 @@ package starling.display
     import flash.utils.getQualifiedClassName;
 
     import starling.core.Starling;
+    import starling.core.starling_internal;
     import starling.errors.AbstractClassError;
     import starling.errors.AbstractMethodError;
     import starling.events.Event;
@@ -33,6 +34,8 @@ package starling.display
     import starling.utils.Align;
     import starling.utils.MathUtil;
     import starling.utils.MatrixUtil;
+
+    use namespace starling_internal;
 
     /** Dispatched when an object is added to a parent. */
     [Event(name="added", type="starling.events.Event")]
@@ -156,6 +159,7 @@ package starling.display
 
         /** @private */ internal var _lastParentOrSelfChangeFrameID:uint;
         /** @private */ internal var _lastChildChangeFrameID:uint;
+        /** @private */ internal var _tokenFrameID:uint;
         /** @private */ internal var _pushToken:BatchToken = new BatchToken();
         /** @private */ internal var _popToken:BatchToken = new BatchToken();
         /** @private */ internal var _hasVisibleArea:Boolean;
@@ -601,13 +605,8 @@ package starling.display
             setRequiresRedraw();
         }
         
-        private final function isEquivalent(a:Number, b:Number, epsilon:Number=0.0001):Boolean
-        {
-            return (a - epsilon < b) && (a + epsilon > b);
-        }
-        
-        private final function findCommonParent(object1:DisplayObject,
-                                                object2:DisplayObject):DisplayObject
+        private static function findCommonParent(object1:DisplayObject,
+                                                 object2:DisplayObject):DisplayObject
         {
             var currentObject:DisplayObject = object1;
 
@@ -781,7 +780,7 @@ package starling.display
             _scaleX = (_skewY > -PI_Q && _skewY < PI_Q) ?  matrix.a / Math.cos(_skewY)
                                                         :  matrix.b / Math.sin(_skewY);
 
-            if (isEquivalent(_skewX, _skewY))
+            if (MathUtil.isEquivalent(_skewX, _skewY))
             {
                 _rotation = _skewX;
                 _skewX = _skewY = 0;
@@ -800,7 +799,7 @@ package starling.display
          *  <p>CAUTION: not a copy, but the actual object!</p> */
         public function get transformationMatrix3D():Matrix3D
         {
-            // this method needs to be overriden in 3D-supporting subclasses (like Sprite3D).
+            // this method needs to be overridden in 3D-supporting subclasses (like Sprite3D).
 
             if (_transformationMatrix3D == null)
                 _transformationMatrix3D = new Matrix3D();
@@ -1029,6 +1028,9 @@ package starling.display
         {
             if (value != _filter)
             {
+                if (_filter) _filter.setTarget(null);
+                if (value) value.setTarget(this);
+
                 _filter = value;
                 setRequiresRedraw();
             }
@@ -1048,8 +1050,12 @@ package starling.display
          *  <p>For rectangular masks, you can use simple quads; for other forms (like circles
          *  or arbitrary shapes) it is recommended to use a 'Canvas' instance.</p>
          *
-         *  <p>Beware that a mask will cause at least two additional draw calls: one to draw the
-         *  mask to the stencil buffer and one to erase it.</p>
+         *  <p>Beware that a mask will typically cause at least two additional draw calls:
+         *  one to draw the mask to the stencil buffer and one to erase it. However, if the
+         *  mask object is an instance of <code>starling.display.Quad</code> and is aligned
+         *  parallel to the stage axes, rendering will be optimized: instead of using the
+         *  stencil buffer, the object will be clipped using the scissor rectangle. That's
+         *  faster and reduces the number of draw calls, so make use of this when possible.</p>
          *
          *  @see Canvas
          *  @default null

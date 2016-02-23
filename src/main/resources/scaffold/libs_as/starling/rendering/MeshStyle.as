@@ -15,47 +15,61 @@ package starling.rendering
 
     import starling.core.starling_internal;
     import starling.display.Mesh;
+    import starling.events.Event;
+    import starling.events.EventDispatcher;
     import starling.textures.Texture;
     import starling.textures.TextureSmoothing;
+
+    /** Dispatched every frame on styles assigned to display objects connected to the stage. */
+    [Event(name="enterFrame", type="starling.events.EnterFrameEvent")]
 
     /** MeshStyles provide a means to completely modify the way a mesh is rendered.
      *  The base class provides Starling's standard mesh rendering functionality: colored and
      *  (optionally) textured meshes. Subclasses may add support for additional features like
      *  color transformations, normal mapping, etc.
      *
-     *  <p><strong>Using 'MeshStyle'</strong></p>
+     *  <p><strong>Using styles</strong></p>
      *
      *  <p>First, create an instance of the desired style. Configure the style by updating its
      *  properties, then assign it to the mesh. Here is an example that uses a fictitious
-     *  <code>ColorizedMeshStyle</code>:</p>
+     *  <code>ColorStyle</code>:</p>
      *
      *  <listing>
      *  var image:Image = new Image(heroTexture);
-     *  var colorStyle:ColorizedMeshStyle = new ColorizedMeshStyle();
+     *  var colorStyle:ColorStyle = new ColorStyle();
      *  colorStyle.redOffset = 0.5;
      *  colorStyle.redMultiplier = 2.0;
      *  image.style = colorStyle;</listing>
      *
-     *  <p>Note that a style might require the use of a specific vertex format; when the style
-     *  is assigned, the mesh is converted to that format.</p>
+     *  <p>Beware:</p>
      *
-     *  <p><strong>Extending 'MeshStyle'</strong></p>
+     *  <ul>
+     *    <li>A style instance may only be used on one object at a time.</li>
+     *    <li>A style might require the use of a specific vertex format;
+     *        when the style is assigned, the mesh is converted to that format.</li>
+     *  </ul>
+     *
+     *  <p><strong>Creating your own styles</strong></p>
      *
      *  <p>To create custom rendering code in Starling, you need to extend two classes:
      *  <code>MeshStyle</code> and <code>MeshEffect</code>. While the effect class contains
-     *  the actual AGAL rendering code, the style provides the API that developers will
-     *  interact with when using a style.</p>
+     *  the actual AGAL rendering code, the style provides the API that other developers will
+     *  interact with.</p>
      *
-     *  <p>Subclasses will, of course, add specific properties that configure the style's usage,
-     *  like the <code>redOffset</code> and <code>redMultiplier</code> properties in the sample
-     *  above. Furthermore, they have to follow some rules:</p>
+     *  <p>Subclasses of <code>MeshStyle</code> will add specific properties that configure the
+     *  style's outcome, like the <code>redOffset</code> and <code>redMultiplier</code> properties
+     *  in the sample above. Here's how to properly create such a class:</p>
      *
      *  <ul>
-     *    <li>They must provide a constructor that can be called without any arguments.</li>
-     *    <li>They must override <code>copyFrom</code>.</li>
-     *    <li>They must override <code>createEffect</code>.</li>
-     *    <li>They must override <code>updateEffect</code>.</li>
-     *    <li>They must override <code>canBatchWith</code>.</li>
+     *    <li>Always provide a constructor that can be called without any arguments.</li>
+     *    <li>Override <code>copyFrom</code> — that's necessary for batching.</li>
+     *    <li>Override <code>createEffect</code> — this method must return the
+     *        <code>MeshEffect</code> that will do the actual Stage3D rendering.</li>
+     *    <li>Override <code>updateEffect</code> — this configures the effect created above
+     *        right before rendering.</li>
+     *    <li>Override <code>canBatchWith</code> if necessary — this method figures out if one
+     *        instance of the style can be batched with another. If they all can, you can leave
+     *        this out.</li>
      *  </ul>
      *
      *  <p>If the style requires a custom vertex format, you must also:</p>
@@ -74,7 +88,7 @@ package starling.rendering
      *  @see VertexDataFormat
      *  @see starling.display.Mesh
      */
-    public class MeshStyle
+    public class MeshStyle extends EventDispatcher
     {
         /** The vertex format expected by this style (the same as found in the MeshEffect-class). */
         public static const VERTEX_FORMAT:VertexDataFormat = MeshEffect.VERTEX_FORMAT;
@@ -83,17 +97,16 @@ package starling.rendering
         private var _target:Mesh;
         private var _texture:Texture;
         private var _textureSmoothing:String;
-        private var _vertexData:VertexData;
-        private var _indexData:IndexData;
+        private var _vertexData:VertexData;   // just a reference to the target's vertex data
+        private var _indexData:IndexData;     // just a reference to the target's index data
 
         // helper objects
         private static var sPoint:Point = new Point();
 
         /** Creates a new MeshStyle instance.
          *  Subclasses must provide a constructor that can be called without any arguments. */
-        public function MeshStyle(texture:Texture=null)
+        public function MeshStyle()
         {
-            _texture = texture;
             _textureSmoothing = TextureSmoothing.BILINEAR;
             _type = Object(this).constructor as Class;
         }
@@ -134,12 +147,14 @@ package starling.rendering
         {
             effect.texture = _texture;
             effect.textureSmoothing = _textureSmoothing;
-            effect.mvpMatrix = state.mvpMatrix3D;
+            effect.mvpMatrix3D = state.mvpMatrix3D;
             effect.alpha = state.alpha;
         }
 
         /** Indicates if the current instance can be batched with the given style.
-         *  Must be overridden by all subclasses!
+         *  To be overridden by subclasses if default behavior is not sufficient.
+         *  The base implementation just checks if the styles are of the same type
+         *  and if the textures are compatible.
          */
         public function canBatchWith(meshStyle:MeshStyle):Boolean
         {
@@ -185,33 +200,59 @@ package starling.rendering
          *  The call is simply forwarded to the mesh. */
         protected function setRequiresRedraw():void
         {
-            if (_target)
-                _target.setRequiresRedraw();
+            if (_target) _target.setRequiresRedraw();
         }
 
-        /** Called when assigning the target mesh. Override to plug in class-specific logic. */
+        /** Called when assigning a target mesh. Override to plug in class-specific logic. */
         protected function onTargetAssigned(target:Mesh):void
         { }
+
+        // enter frame event
+
+        override public function addEventListener(type:String, listener:Function):void
+        {
+            if (type == Event.ENTER_FRAME && _target)
+                _target.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+            super.addEventListener(type, listener);
+        }
+
+        override public function removeEventListener(type:String, listener:Function):void
+        {
+            if (type == Event.ENTER_FRAME && _target)
+                _target.removeEventListener(type, onEnterFrame);
+
+            super.removeEventListener(type, listener);
+        }
+
+        private function onEnterFrame(event:Event):void
+        {
+            dispatchEvent(event);
+        }
 
         // internal methods
 
         /** @private */
-        starling_internal function setTarget(target:Mesh, vertexData:VertexData, indexData:IndexData):void
+        starling_internal function setTarget(target:Mesh=null, vertexData:VertexData=null,
+                                             indexData:IndexData=null):void
         {
-            _target = target;
-            _vertexData = vertexData;
-            _vertexData.format = vertexFormat;
-            _indexData = indexData;
+            if (_target != target)
+            {
+                if (_target) _target.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+                if (vertexData) vertexData.format = vertexFormat;
 
-            onTargetAssigned(target);
-        }
+                _target = target;
+                _vertexData = vertexData;
+                _indexData = indexData;
 
-        /** @private */
-        starling_internal function clearTarget():void
-        {
-            _target = null;
-            _vertexData = null;
-            _indexData = null;
+                if (target)
+                {
+                    if (hasEventListener(Event.ENTER_FRAME))
+                        target.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+
+                    onTargetAssigned(target);
+                }
+            }
         }
 
         // vertex manipulation
@@ -260,10 +301,14 @@ package starling.rendering
 
         // properties
 
-        /** References the vertex data from the assigned target. */
+        /** Returns a reference to the vertex data of the assigned target (or <code>null</code>
+         *  if there is no target). Beware: the style itself does not own any vertices;
+         *  it is limited to manipulating those of the target mesh. */
         protected function get vertexData():VertexData { return _vertexData; }
 
-        /** References the index data from the assigned target. */
+        /** Returns a reference to the index data of the assigned target (or <code>null</code>
+         *  if there is no target). Beware: the style itself does not own any indices;
+         *  it is limited to manipulating those of the target mesh. */
         protected function get indexData():IndexData { return _indexData; }
 
         /** The actual class of this style. */
@@ -300,13 +345,16 @@ package starling.rendering
         {
             if (value != _texture)
             {
-                var i:int;
-                var numVertices:int = _vertexData ? _vertexData.numVertices : 0;
-
-                for (i = 0; i < numVertices; ++i)
+                if (value)
                 {
-                    getTexCoords(i, sPoint);
-                    if (value) value.setTexCoords(_vertexData, i, "texCoords", sPoint.x, sPoint.y);
+                    var i:int;
+                    var numVertices:int = _vertexData ? _vertexData.numVertices : 0;
+
+                    for (i = 0; i < numVertices; ++i)
+                    {
+                        getTexCoords(i, sPoint);
+                        value.setTexCoords(_vertexData, i, "texCoords", sPoint.x, sPoint.y);
+                    }
                 }
 
                 _texture = value;

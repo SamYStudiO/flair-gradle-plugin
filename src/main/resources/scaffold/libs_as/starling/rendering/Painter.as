@@ -27,9 +27,13 @@ package starling.rendering
     import starling.display.DisplayObject;
     import starling.display.Mesh;
     import starling.display.MeshBatch;
+    import starling.display.Quad;
     import starling.events.Event;
     import starling.textures.Texture;
+    import starling.utils.MathUtil;
     import starling.utils.MatrixUtil;
+    import starling.utils.MeshSubset;
+    import starling.utils.Pool;
     import starling.utils.RectangleUtil;
     import starling.utils.RenderUtil;
     import starling.utils.SystemUtil;
@@ -37,9 +41,8 @@ package starling.rendering
     /** A class that orchestrates rendering of all Starling display objects.
      *
      *  <p>A Starling instance contains exactly one 'Painter' instance that should be used for all
-     *  rendering purposes. Each frame, it is passed to the render methods of all visible display
-     *  objects. To access it outside a render method, call <code>Starling.current.painter</code>.
-     *  </p>
+     *  rendering purposes. Each frame, it is passed to the render methods of all rendered display
+     *  objects. To access it outside a render method, call <code>Starling.painter</code>.</p>
      *
      *  <p>The painter is responsible for drawing all display objects to the screen. At its
      *  core, it is a wrapper for many Context3D methods, but that's not all: it also provides
@@ -80,11 +83,13 @@ package starling.rendering
         private var _pixelSize:Number;
         private var _enableErrorChecking:Boolean;
         private var _stencilReferenceValues:Dictionary;
+        private var _clipRectStack:Vector.<Rectangle>;
         private var _batchProcessor:BatchProcessor;
         private var _batchCache:BatchProcessor;
 
         private var _actualRenderTarget:TextureBase;
         private var _actualCulling:String;
+        private var _actualBlendMode:String;
 
         private var _backBufferWidth:Number;
         private var _backBufferHeight:Number;
@@ -95,10 +100,12 @@ package starling.rendering
         private var _stateStackPos:int;
 
         // helper objects
+        private static var sMatrix:Matrix = new Matrix();
         private static var sPoint3D:Vector3D = new Vector3D();
         private static var sClipRect:Rectangle = new Rectangle();
         private static var sBufferRect:Rectangle = new Rectangle();
         private static var sScissorRect:Rectangle = new Rectangle();
+        private static var sMeshSubset:MeshSubset = new MeshSubset();
 
         // construction
         
@@ -114,18 +121,20 @@ package starling.rendering
             _backBufferHeight = _context ? _context.backBufferHeight : 0;
             _backBufferScaleFactor = _pixelSize = 1.0;
             _stencilReferenceValues = new Dictionary(true);
+            _clipRectStack = new <Rectangle>[];
             _programs = new Dictionary();
             _data = new Dictionary();
-
-            _state = new RenderState();
-            _stateStack = new <RenderState>[];
-            _stateStackPos = -1;
 
             _batchProcessor = new BatchProcessor();
             _batchProcessor.onBatchComplete = drawBatch;
 
             _batchCache = new BatchProcessor();
             _batchCache.onBatchComplete = drawBatch;
+
+            _state = new RenderState();
+            _state.onDrawRequired = finishMeshBatch;
+            _stateStack = new <RenderState>[];
+            _stateStackPos = -1;
         }
         
         /** Disposes all quad batches, programs, and - if it is not being shared -
@@ -133,6 +142,7 @@ package starling.rendering
         public function dispose():void
         {
             _batchProcessor.dispose();
+            _batchCache.dispose();
 
             if (!_shareContext)
                 _context.dispose(false);
@@ -160,6 +170,8 @@ package starling.rendering
         {
             _context = _stage3D.context3D;
             _context.enableErrorChecking = _enableErrorChecking;
+            _actualBlendMode = null;
+            _actualCulling = null;
         }
 
         /** Sets the viewport dimensions and other attributes of the rendering buffer.
@@ -237,11 +249,6 @@ package starling.rendering
 
         /** Pushes the current render state to a stack from which it can be restored later.
          *
-         *  <p>Note that any call to <code>drawTriangles</code> will use the currently set state.
-         *  That means that if you're going to change clipping rectangle, render target or culling,
-         *  you should call <code>finishQuadBatch</code> before pushing the new state, so that
-         *  all batched objects are drawn with the intended settings.</p>
-         *
          *  <p>If you pass a BatchToken, it will be updated to point to the current location within
          *  the render cache. That way, you can later reference this location to render a subset of
          *  the cache.</p>
@@ -272,23 +279,25 @@ package starling.rendering
         }
 
         /** Restores the render state that was last pushed to the stack. If this changes
-         *  clipping rectangle, render target or culling, the current batch will be drawn
-         *  right away. */
+         *  blend mode, clipping rectangle, render target or culling, the current batch
+         *  will be drawn right away.
+         *
+         *  <p>If you pass a BatchToken, it will be updated to point to the current location within
+         *  the render cache. That way, you can later reference this location to render a subset of
+         *  the cache.</p>
+         */
         public function popState(token:BatchToken=null):void
         {
             if (_stateStackPos < 0)
                 throw new IllegalOperationError("Cannot pop empty state stack");
 
-            var nextState:RenderState = _stateStack[_stateStackPos];
-
-            if (_state.switchRequiresDraw(nextState)) finishMeshBatch();
-            if (token) _batchProcessor.fillToken(token);
-
-            _state.copyFrom(nextState);
+            _state.copyFrom(_stateStack[_stateStackPos]); // -> might cause 'finishMeshBatch'
             _stateStackPos--;
+
+            if (token) _batchProcessor.fillToken(token);
         }
 
-        // stencil masks
+        // masks
 
         /** Draws a display object into the stencil buffer, incrementing the buffer on each
          *  used pixel. The stencil reference value is incremented as well; thus, any subsequent
@@ -296,6 +305,11 @@ package starling.rendering
          *
          *  <p>If 'mask' is part of the display list, it will be drawn at its conventional stage
          *  coordinates. Otherwise, it will be drawn with the current modelview matrix.</p>
+         *
+         *  <p>As an optimization, this method might update the clipping rectangle of the render
+         *  state instead of utilizing the stencil buffer. This is possible when the mask object
+         *  is of type <code>starling.display.Quad</code> and is aligned parallel to the stage
+         *  axes.</p>
          */
         public function drawMask(mask:DisplayObject):void
         {
@@ -303,19 +317,32 @@ package starling.rendering
 
             finishMeshBatch();
 
-            _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+            if (isRectangularMask(mask, sMatrix))
+            {
+                mask.getBounds(mask, sClipRect);
+                RectangleUtil.getBounds(sClipRect, sMatrix, sClipRect);
+                pushClipRect(sClipRect);
+            }
+            else
+            {
+                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                     Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE);
 
-            renderMask(mask);
-            stencilReferenceValue++;
+                renderMask(mask);
+                stencilReferenceValue++;
 
-            _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                     Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
+            }
         }
 
         /** Draws a display object into the stencil buffer, decrementing the
          *  buffer on each used pixel. This effectively erases the object from the stencil buffer,
          *  restoring the previous state. The stencil reference value will be decremented.
+         *
+         *  <p>Note: if the mask object meets the requirements of using the clipping rectangle,
+         *  it will be assumed that this erase operation undoes the clipping rectangle change
+         *  caused by the corresponding <code>drawMask()</code> call.</p>
          */
         public function eraseMask(mask:DisplayObject):void
         {
@@ -323,14 +350,21 @@ package starling.rendering
 
             finishMeshBatch();
 
-            _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+            if (isRectangularMask(mask, sMatrix))
+            {
+                popClipRect();
+            }
+            else
+            {
+                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                     Context3DCompareMode.EQUAL, Context3DStencilAction.DECREMENT_SATURATE);
 
-            renderMask(mask);
-            stencilReferenceValue--;
+                renderMask(mask);
+                stencilReferenceValue--;
 
-            _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                     Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
+            }
         }
 
         private function renderMask(mask:DisplayObject):void
@@ -349,15 +383,69 @@ package starling.rendering
             popState();
         }
 
+        private function pushClipRect(clipRect:Rectangle):void
+        {
+            var stack:Vector.<Rectangle> = _clipRectStack;
+            var stackLength:uint = stack.length;
+            var intersection:Rectangle = Pool.getRectangle();
+
+            if (stackLength)
+                RectangleUtil.intersect(stack[stackLength - 1], clipRect, intersection);
+            else
+                intersection.copyFrom(clipRect);
+
+            stack[stackLength] = intersection;
+            _state.clipRect = intersection;
+        }
+
+        private function popClipRect():void
+        {
+            var stack:Vector.<Rectangle> = _clipRectStack;
+            var stackLength:uint = stack.length;
+
+            if (stackLength == 0)
+                throw new Error("Trying to pop from empty clip rectangle stack");
+
+            stackLength--;
+            Pool.putRectangle(stack.pop());
+            _state.clipRect = stackLength ? stack[stackLength - 1] : null;
+        }
+
+        /** Figures out if the mask can be represented by a scissor rectangle; this is possible
+         *  if it's just a simple quad that is parallel to the stage axes. The 'out' parameter
+         *  will be filled with the transformation matrix required to move the mask into stage
+         *  coordinates. */
+        private function isRectangularMask(mask:DisplayObject, out:Matrix):Boolean
+        {
+            var quad:Quad = mask as Quad;
+            if (quad && !quad.is3D && quad.style.type == MeshStyle)
+            {
+                if (mask.stage) mask.getTransformationMatrix(null, out);
+                else
+                {
+                    out.copyFrom(mask.transformationMatrix);
+                    out.concat(_state.modelviewMatrix);
+                }
+
+                return (MathUtil.isEquivalent(out.a, 0) && MathUtil.isEquivalent(out.d, 0)) ||
+                       (MathUtil.isEquivalent(out.b, 0) && MathUtil.isEquivalent(out.c, 0));
+            }
+            return false;
+        }
+
         // mesh rendering
         
         /** Adds a mesh to the current batch of unrendered meshes. If the current batch is not
          *  compatible with the mesh, all previous meshes are rendered at once and the batch
          *  is cleared.
+         *
+         *  @param mesh    The mesh to batch.
+         *  @param subset  The range of vertices to be batched. If <code>null</code>, the complete
+         *                 mesh will be used.
          */
-        public function batchMesh(mesh:Mesh):void
+        public function batchMesh(mesh:Mesh, subset:MeshSubset=null):void
         {
-            _batchProcessor.addMesh(mesh, _state.modelviewMatrix, _state.alpha, _state.blendMode);
+            _batchProcessor.addMesh(mesh, _state, subset);
         }
 
         /** Finishes the current mesh batch and prepares the next one. */
@@ -384,11 +472,12 @@ package starling.rendering
             _batchCache = tmp;
         }
 
-        /** Resets the current state, the state stack, mesh batch index, stencil reference value,
-         *  and draw count. Furthermore, depth testing is disabled. */
+        /** Resets the current state, state stack, batch processor, stencil reference value,
+         *  clipping rectangle, and draw count. Furthermore, depth testing is disabled. */
         public function nextFrame():void
         {
             stencilReferenceValue = 0;
+            _clipRectStack.length = 0;
             _drawCount = 0;
             _stateStackPos = -1;
             _batchProcessor.clear();
@@ -396,12 +485,54 @@ package starling.rendering
             _state.reset();
         }
 
-        /** Draws all meshes from the render cache between <code>startToken</code> and (but
-         *  not including) <code>endToken</code>. The render cache contains all meshes
+        /** Draws all meshes from the render cache between <code>startToken</code> and
+         *  (but not including) <code>endToken</code>. The render cache contains all meshes
          *  rendered in the previous frame. */
         public function drawFromCache(startToken:BatchToken, endToken:BatchToken):void
         {
-            _batchProcessor.addMeshesFrom(_batchCache, startToken, endToken);
+            var meshBatch:MeshBatch;
+            var subset:MeshSubset = sMeshSubset;
+
+            if (!startToken.equals(endToken))
+            {
+                pushState();
+
+                for (var i:int = startToken.batchID; i <= endToken.batchID; ++i)
+                {
+                    meshBatch = _batchCache.getBatchAt(i);
+                    subset.setTo(); // resets subset
+
+                    if (i == startToken.batchID)
+                    {
+                        subset.vertexID = startToken.vertexID;
+                        subset.indexID  = startToken.indexID;
+                        subset.numVertices = meshBatch.numVertices - subset.vertexID;
+                        subset.numIndices  = meshBatch.numIndices  - subset.indexID;
+                    }
+
+                    if (i == endToken.batchID)
+                    {
+                        subset.numVertices = endToken.vertexID - subset.vertexID;
+                        subset.numIndices  = endToken.indexID  - subset.indexID;
+                    }
+
+                    if (subset.numVertices)
+                    {
+                        setStateTo(null, 1.0, meshBatch.blendMode);
+                        _batchProcessor.addMesh(meshBatch, _state, subset, true);
+                    }
+                }
+
+                popState();
+            }
+        }
+
+        /** Removes all parts of the render cache past the given token. Beware that some display
+         *  objects might still reference those parts of the cache! Only call it if you know
+         *  exactly what you're doing. */
+        public function rewindCacheTo(token:BatchToken):void
+        {
+            _batchProcessor.rewindTo(token);
         }
 
         private function drawBatch(meshBatch:MeshBatch):void
@@ -450,7 +581,13 @@ package starling.rendering
 
         private function applyBlendMode():void
         {
-            BlendMode.get(_state.blendMode).activate();
+            var blendMode:String = _state.blendMode;
+
+            if (blendMode != _actualBlendMode)
+            {
+                BlendMode.get(_state.blendMode).activate();
+                _actualBlendMode = blendMode;
+            }
         }
 
         private function applyCulling():void
@@ -467,12 +604,15 @@ package starling.rendering
         private function applyRenderTarget():void
         {
             var target:TextureBase = _state.renderTargetBase;
-            var antiAlias:int  = _state.renderTargetAntiAlias;
 
             if (target != _actualRenderTarget)
             {
                 if (target)
-                    _context.setRenderToTexture(target, SystemUtil.supportsDepthAndStencil, antiAlias);
+                {
+                    var antiAlias:int  = _state.renderTargetAntiAlias;
+                    var depthAndStencil:Boolean = _state.renderTargetSupportsDepthAndStencil;
+                    _context.setRenderToTexture(target, depthAndStencil, antiAlias);
+                }
                 else
                     _context.setRenderToBackBuffer();
 
@@ -558,6 +698,10 @@ package starling.rendering
         /** The current render state, containing some of the context settings, projection- and
          *  modelview-matrix, etc. Always returns the same instance, even after calls to "pushState"
          *  and "popState".
+         *
+         *  <p>When you change the current RenderState, and this change is not compatible with
+         *  the current render batch, the batch will be concluded right away. Thus, watch out
+         *  for changes of blend mode, clipping rectangle, render target or culling.</p>
          */
         public function get state():RenderState { return _state; }
 

@@ -58,13 +58,12 @@ package starling.display
         /** Creates a new, empty MeshBatch instance. */
         public function MeshBatch()
         {
-            var vertexData:VertexData = new VertexData(MeshStyle.VERTEX_FORMAT);
+            var vertexData:VertexData = new VertexData();
             var indexData:IndexData = new IndexData();
 
             super(vertexData, indexData);
 
-            // per default, 'batchable' is false -> no render cache
-            updateSupportsRenderCache();
+            _batchable = true;
         }
 
         // display object overrides
@@ -115,18 +114,17 @@ package starling.display
          *                   parameter is omitted, <code>mesh.transformationMatrix</code>
          *                   will be used instead (except if the last parameter is enabled).
          *  @param alpha     will be multiplied with each vertex' alpha value.
-         *  @param blendMode if given, replaces the blend mode of the mesh instance.
          *  @param subset    the subset of the mesh you want to add, or <code>null</code> for
          *                   the complete mesh.
-         *  @param ignoreTransformation  to copy the vertices without any transformation, pass
-         *                   <code>null</code> as 'matrix' parameter and <code>true</code> for this
-         *                   one.
+         *  @param ignoreTransformations   when enabled, the mesh's vertices will be added
+         *                   without transforming them in any way (no matter the value of the
+         *                   <code>matrix</code> parameter).
          */
-        public function addMesh(mesh:Mesh, matrix:Matrix=null, alpha:Number=1.0, blendMode:String=null,
-                                subset:MeshSubset=null, ignoreTransformation:Boolean=false):void
+        public function addMesh(mesh:Mesh, matrix:Matrix=null, alpha:Number=1.0,
+                                subset:MeshSubset=null, ignoreTransformations:Boolean=false):void
         {
-            if (matrix == null && !ignoreTransformation) matrix = mesh.transformationMatrix;
-            if (blendMode == null) blendMode = mesh.blendMode;
+            if (ignoreTransformations) matrix = null;
+            else if (matrix == null) matrix = mesh.transformationMatrix;
             if (subset == null) subset = sFullMeshSubset;
 
             var targetVertexID:int = _vertexData.numVertices;
@@ -134,7 +132,7 @@ package starling.display
             var meshStyle:MeshStyle = mesh._style;
 
             if (targetVertexID == 0)
-                setupFor(mesh, blendMode);
+                setupFor(mesh);
 
             meshStyle.copyVertexDataTo(_vertexData, targetVertexID, matrix, subset.vertexID, subset.numVertices);
             meshStyle.copyIndexDataTo(_indexData, targetIndexID, targetVertexID - subset.vertexID,
@@ -163,7 +161,7 @@ package starling.display
             var meshStyle:MeshStyle = mesh._style;
 
             if (_vertexData.numVertices == 0)
-                setupFor(mesh, mesh.blendMode);
+                setupFor(mesh);
 
             meshStyle.copyVertexDataTo(_vertexData, vertexID, matrix, 0, numVertices);
             meshStyle.copyIndexDataTo(_indexData, indexID, vertexID, 0, numIndices);
@@ -174,49 +172,35 @@ package starling.display
             _indexSyncRequired = _vertexSyncRequired = true;
         }
 
-        private function setupFor(mesh:Mesh, blendMode:String):void
+        private function setupFor(mesh:Mesh):void
         {
             var meshStyle:MeshStyle = mesh._style;
             var meshStyleType:Class = meshStyle.type;
 
             if (_style.type != meshStyleType)
-            {
-                if (_effect)
-                {
-                    _effect.dispose();
-                    _effect = null;
-                }
-
                 setStyle(new meshStyleType() as MeshStyle, false);
-            }
-
-            if (_effect == null)
-            {
-                _effect = _style.createEffect();
-                _effect.onRestore = setVertexAndIndexDataChanged;
-            }
 
             _style.copyFrom(meshStyle);
-            this.blendMode = blendMode;
         }
 
         /** Indicates if the given mesh instance fits to the current state of the batch.
-         *  Will always return <code>true</code> for the first added object; later calls
-         *  will check if style or blend mode differ in any way.
+         *  Will always return <code>true</code> for the first added mesh; later calls
+         *  will check if the style matches and if the maximum number of vertices is not
+         *  exceeded.
          *
          *  @param mesh         the mesh to add to the batch.
-         *  @param blendMode    if <code>null</code>, <code>mesh.blendMode</code> will be used
          *  @param numVertices  if <code>-1</code>, <code>mesh.numVertices</code> will be used
-         *  @return
          */
-        public function canAddMesh(mesh:Mesh, blendMode:String=null, numVertices:int=-1):Boolean
+        public function canAddMesh(mesh:Mesh, numVertices:int=-1):Boolean
         {
+            var currentNumVertices:int = _vertexData.numVertices;
+
+            if (currentNumVertices == 0) return true;
             if (numVertices  < 0) numVertices = mesh.numVertices;
             if (numVertices == 0) return true;
-            if (numVertices + _vertexData.numVertices > MAX_NUM_VERTICES) return false;
-            if (blendMode == null) blendMode = mesh.blendMode;
+            if (numVertices + currentNumVertices > MAX_NUM_VERTICES) return false;
 
-            return _style.canBatchWith(mesh._style) && this.blendMode == blendMode;
+            return _style.canBatchWith(mesh._style);
         }
 
         /** If the <code>batchable</code> property is enabled, this method will add the batch
@@ -245,6 +229,19 @@ package starling.display
             }
         }
 
+        /** @inheritDoc */
+        override public function setStyle(meshStyle:MeshStyle=null,
+                                          mergeWithPredecessor:Boolean=true):void
+        {
+            super.setStyle(meshStyle, mergeWithPredecessor);
+
+            if (_effect)
+                _effect.dispose();
+
+            _effect = style.createEffect();
+            _effect.onRestore = setVertexAndIndexDataChanged;
+        }
+
         /** The total number of vertices in the mesh. If you change this to a smaller value,
          *  the surplus will be deleted. Make sure that no indices reference those deleted
          *  vertices! */
@@ -264,7 +261,15 @@ package starling.display
         }
 
         /** Indicates if this object will be added to the painter's batch on rendering,
-         *  or if it will draw itself right away. */
+         *  or if it will draw itself right away.
+         *
+         *  <p>Only batchable meshes can profit from the render cache; but batching large meshes
+         *  may take up a lot of CPU time. Thus, for meshes that contain a large number of vertices
+         *  or are constantly changing (i.e. can't use the render cache anyway), it makes
+         *  sense to deactivate batching.</p>
+         *
+         *  @default true
+         */
         public function get batchable():Boolean { return _batchable; }
         public function set batchable(value:Boolean):void
         {

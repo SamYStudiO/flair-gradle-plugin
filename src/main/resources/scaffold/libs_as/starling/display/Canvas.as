@@ -107,15 +107,14 @@ package starling.display
         private function appendPolygon(polygon:Polygon):void
         {
             var numVertices:int = polygon.numVertices;
-            var vertexFormat:String = "position(float2), color(bytes4)";
+            var vertexFormat:String = "position:float2, color:bytes4";
             var vertexData:VertexData = new VertexData(vertexFormat, numVertices);
             var indexData:IndexData = new IndexData(polygon.numTriangles * 3);
 
             polygon.triangulate(indexData);
             polygon.copyToVertexData(vertexData);
 
-            for (var i:int=0; i<numVertices; ++i)
-                vertexData.setColorAndAlpha(i, "color", _fillColor, _fillAlpha);
+            vertexData.colorize("color", _fillColor, _fillAlpha);
 
             addChild(new Mesh(vertexData, indexData));
             _polygons[_polygons.length] = polygon;

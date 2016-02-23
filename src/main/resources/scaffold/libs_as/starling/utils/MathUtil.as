@@ -94,5 +94,31 @@ package starling.utils
                 return result;
             }
         }
+
+        /** Indicates if two float (Number) values are equal, give or take <code>epsilon</code>. */
+        public static function isEquivalent(a:Number, b:Number, epsilon:Number=0.0001):Boolean
+        {
+            return (a - epsilon < b) && (a + epsilon > b);
+        }
+
+        /** Returns the larger of the two values. Different to the native <code>Math.max</code>,
+         *  this doesn't create any temporary objects when using the AOT compiler. */
+        public static function max(a:Number, b:Number):Number
+        {
+            return a > b ? a : b;
+        }
+
+        /** Returns the smaller of the two values. Different to the native <code>Math.min</code>,
+         *  this doesn't create any temporary objects when using the AOT compiler. */
+        public static function min(a:Number, b:Number):Number
+        {
+            return a < b ? a : b;
+        }
+
+        /** Moves <code>value</code> into the range between <code>min</code> and <code>max</code>. */
+        public static function clamp(value:Number, min:Number, max:Number):Number
+        {
+            return value < min ? min : (value > max ? max : value);
+        }
     }
 }
