@@ -1,5 +1,5 @@
 # Flair Change Logs
 
-### 0.7.0 | 2016-xx-xx
-* Initial public release
+### 0.6.3 | 2016-02-23
+* Initial public beta
 
