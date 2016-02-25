@@ -38,7 +38,7 @@ package _packageName_
 	import starling.events.Event;
 
 	/**
-	 * Base class for all platforms, it handle stage/starling initialisation and splash screens
+	 * Base class for all platforms, it handles stage/starling initialisation and splash screens
 	 */
 	public class AMain extends Sprite
 	{
