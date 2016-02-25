@@ -172,7 +172,7 @@ pluginBundle {
 		flairPlugin {
 			id = publishedGroupId
 			displayName = libraryName
-			description = ""
+			description = libraryDescription
 		}
 	}
 }

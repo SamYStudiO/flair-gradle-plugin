@@ -4,4 +4,5 @@
 /build/
 /test/
 /local.properties
+/gradle.properties
 /flair-gradle-plugin.wiki/
