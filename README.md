@@ -11,6 +11,7 @@ Actually comes up with beta Starling/Feathers libraries (Starling 2.0 and Feathe
 ___
 * Almost transparent Flair actionscript library to **manage your resources**.
 * Once you're set up you'll be able to compile/test a **template project**.
+* **Variant builds** (build type and product flavor as Android).
 * **[TexturePacker](https://www.codeandweb.com/texturepacker) plugin** to autogenerate your atlases when compiling.
 * **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to allow using standard run/debug configurations from IDEA.
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...).
@@ -38,7 +39,7 @@ flair{
   packageName "com.hello.world" // set your sources root package here (this is required to initialize flair plugin)
 }
 ```
-To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when build.gradle is refreshed), after build.gradle and project tree are refreshed, your project structure should be set under app folder.
+To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when `build.gradle` and project tree are refreshed), after you set your sdk refresh your `gradle.build` and project tree again, then your project structure should be set under `app` folder.
 
 ===
 ####DOCUMENTATION
