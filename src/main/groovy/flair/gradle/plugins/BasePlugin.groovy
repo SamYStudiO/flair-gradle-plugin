@@ -105,7 +105,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 	private boolean isReady()
 	{
-		boolean hasPackageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME ) as boolean
+		String packageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME )
 		Platform platform = null
 		int invalidCount = 0
 
@@ -122,7 +122,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		{
 			if( invalidCount > 1 ) throw new Exception( "Cannot find AIR SDK home, set a valid AIR SDK home from your local.properties file under project root" ) else throw new Exception( "Cannot find AIR SDK home for ${ platform.name }, set a valid AIR SDK home from your local.properties file under project root" )
 		}
-		if( !hasPackageName )
+		if( !packageName || packageName.length(  ) == 0 )
 		{
 			throw new Exception( String.format( "Missing flair property packageName, add it to your build.gradle file :%nflair {%npackageName \"com.hello.world\"%n}" ) )
 		}
