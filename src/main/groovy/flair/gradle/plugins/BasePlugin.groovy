@@ -106,21 +106,21 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	private boolean isReady()
 	{
 		boolean hasPackageName = flair.getFlairProperty( FlairProperty.PACKAGE_NAME ) as boolean
-		boolean hasValidSdk = true
 		Platform platform = null
+		int invalidCount = 0
 
 		PluginManager.getCurrentPlatforms( project ).each {
 
 			if( !new Sdk( project , it ).isAirSdk( ) )
 			{
 				platform = it
-				hasValidSdk = false
+				invalidCount++
 			}
 		}
 
-		if( !hasValidSdk )
+		if( invalidCount > 0 )
 		{
-			throw new Exception( "Cannot find AIR SDK home for ${ platform.name }, set a valid AIR SDK home from your local.properties file under project root" )
+			if( invalidCount > 1 ) throw new Exception( "Cannot find AIR SDK home, set a valid AIR SDK home from your local.properties file under project root" ) else throw new Exception( "Cannot find AIR SDK home for ${ platform.name }, set a valid AIR SDK home from your local.properties file under project root" )
 		}
 		if( !hasPackageName )
 		{
