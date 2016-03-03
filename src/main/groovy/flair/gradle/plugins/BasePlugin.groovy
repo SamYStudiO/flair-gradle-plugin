@@ -65,7 +65,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			if( isReady( ) )
 			{
-				createStructures( )
+				if( project.gradle.startParameter.taskRequests.isEmpty( ) ) createStructures( )
 				createVariantTasks( )
 				createHandlerTasks( )
 				createGeneratedTasks( )
