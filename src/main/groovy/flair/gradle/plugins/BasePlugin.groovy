@@ -187,9 +187,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			exclude "**/.gitkeep"
 		}
 
-		GenerateFontsClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/Fonts.as" ).text
-		GenerateResourcesClass.template = project.file( "${ scaffoldTempDir }/src/main/generated/R.as" ).text
-
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
 			{

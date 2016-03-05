@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
  */
 public class GenerateFontsClass extends AbstractTask
 {
-	public static String template
+	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your fonts directories.\n" + "\t * To make it work properly you need to add \"Bold/Italic/Cff\" explicitly in your font file name\n" + "\t * (for example arialBold.ttf, arialBoldItalicCff.ttf, verdanaCff.ttf),\n" + "\t * for better readability and class property name generation use camelCase with your font file names.\n" + "\t */\n" + "\tpublic final class Fonts\n" + "\t{\n" + "\t\t/**\n" + "\t\t * @private\n" + "\t\t */\n" + "\t\tpublic function Fonts()\n" + "\t\t{\n" + "\t\t\tthrow new Error( this + \" cannot be instantiated\" );\n" + "\t\t}\n" + "\t}\n" + "}"
 
 	@InputFiles
 	def Set<File> inputFiles
@@ -33,7 +33,7 @@ public class GenerateFontsClass extends AbstractTask
 
 		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 
-		if( !moduleName || !template ) return
+		if( !moduleName ) return
 
 		FileTree tree = project.fileTree( "${ moduleName }/src" )
 
@@ -63,10 +63,9 @@ public class GenerateFontsClass extends AbstractTask
 		}
 
 		File f = project.file( "${ moduleName }/src/main/generated/Fonts.as" )
+		f.createNewFile(  );
 
-		if( !f.exists( ) ) return
-
-		String content = template
+		String content = TEMPLATE
 
 		if( fontsClassContent != "" || content.indexOf( "Embed" ) > 0 )
 		{
