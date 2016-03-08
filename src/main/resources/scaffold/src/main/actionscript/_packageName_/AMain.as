@@ -121,12 +121,6 @@ package _packageName_
 			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 			_starling.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
 
-			// use standard textfield to display text, removed this to use Bitmap fonts
-			FeathersControl.defaultTextRendererFactory = function () : ITextRenderer
-			{
-				return new TextFieldTextRenderer();
-			};
-
 			Gestouch.inputAdapter = new NativeInputAdapter( stage );
 			Gestouch.addDisplayListAdapter( DisplayObject , new StarlingDisplayListAdapter() );
 			Gestouch.addTouchHitTester( new StarlingTouchHitTester( _starling ) , -1 );
