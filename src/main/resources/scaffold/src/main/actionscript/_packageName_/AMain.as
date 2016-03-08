@@ -2,9 +2,6 @@ package _packageName_
 {
 	import _packageName_.view.StarlingMain;
 
-	import feathers.controls.text.TextFieldTextRenderer;
-	import feathers.core.FeathersControl;
-	import feathers.core.ITextRenderer;
 	import feathers.events.FeathersEventType;
 
 	import flair.logging.info;
