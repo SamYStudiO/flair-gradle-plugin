@@ -21,6 +21,6 @@ public abstract class AbstractVariantTask extends AbstractTask implements IVaria
 
 	protected File getOutputVariantDir()
 	{
-		return project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }" )
+		return project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }" )
 	}
 }

@@ -12,7 +12,7 @@ class ProcessIconsTaskFactory implements IVariantTaskFactory<ProcessIcons>
 {
 	public ProcessIcons create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_ICONS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_ICONS.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessIcons t = project.tasks.findByName( name ) as ProcessIcons
 

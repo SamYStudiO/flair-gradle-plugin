@@ -12,7 +12,7 @@ public class LaunchDeviceTaskFactory implements IVariantTaskFactory<LaunchDevice
 {
 	public LaunchDevice create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.LAUNCH_DEVICE.name + variantName
 
 		LaunchDevice t = project.tasks.findByName( name ) as LaunchDevice

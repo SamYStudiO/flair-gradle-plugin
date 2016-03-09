@@ -39,7 +39,7 @@ class Compile extends AbstractVariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" )
+		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }.swf" )
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS )
@@ -80,7 +80,7 @@ class Compile extends AbstractVariantTask
 
 		// swf output
 		cli.addArgument( "-output" )
-		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }.swf" ).path )
+		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }.swf" ).path )
 
 		// main class
 		cli.addArgument( project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" ).path )

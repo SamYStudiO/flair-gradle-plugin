@@ -12,7 +12,7 @@ class ProcessAssetsTaskFactory implements IVariantTaskFactory<ProcessAssets>
 {
 	public ProcessAssets create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_ASSETS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_ASSETS.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessAssets t = project.tasks.findByName( name ) as ProcessAssets
 

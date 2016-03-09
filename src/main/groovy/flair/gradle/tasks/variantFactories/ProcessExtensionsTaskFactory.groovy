@@ -12,7 +12,7 @@ class ProcessExtensionsTaskFactory implements IVariantTaskFactory<ProcessExtensi
 {
 	public ProcessExtensions create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_EXTENSIONS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_EXTENSIONS.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessExtensions t = project.tasks.findByName( name ) as ProcessExtensions
 

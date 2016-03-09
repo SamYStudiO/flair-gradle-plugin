@@ -12,7 +12,7 @@ class ProcessAppDescriptorTaskFactory implements IVariantTaskFactory<ProcessAppD
 {
 	public ProcessAppDescriptor create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PROCESS_APP_DESCRIPTOR.name + variantName
 
 		ProcessAppDescriptor t = project.tasks.findByName( name ) as ProcessAppDescriptor

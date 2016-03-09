@@ -13,7 +13,7 @@ public class PreparePackageTaskFactory implements IVariantTaskFactory<PreparePac
 
 	public PreparePackage create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PREPARE_PACKAGE.name + variantName
 
 		PreparePackage t = project.tasks.findByName( name ) as PreparePackage

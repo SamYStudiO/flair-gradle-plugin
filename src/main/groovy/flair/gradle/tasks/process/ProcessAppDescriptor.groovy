@@ -68,7 +68,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )
 		appName = extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME_SUFFIX )
 		appFileName = extensionManager.getFlairProperty( variant , FlairProperty.APP_FILE_NAME )
-		appSWF = variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) + ".swf"
+		appSWF = variant.getNameWithType( Variant.NamingType.UNDERSCORE ) + ".swf"
 		appVersion = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
 		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperty.APP_FULL_SCREEN )
 		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperty.APP_ASPECT_RATIO )

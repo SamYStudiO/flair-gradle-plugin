@@ -12,7 +12,7 @@ class ProcessLibrariesTaskFactory implements IVariantTaskFactory<ProcessLibrarie
 {
 	public ProcessLibraries create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_LIBRARIES.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_LIBRARIES.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessLibraries t = project.tasks.findByName( name ) as ProcessLibraries
 

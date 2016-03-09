@@ -12,7 +12,7 @@ class ProcessSigningTaskFactory implements IVariantTaskFactory<ProcessSigning>
 {
 	public ProcessSigning create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_SIGNING.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_SIGNING.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessSigning t = project.tasks.findByName( name ) as ProcessSigning
 

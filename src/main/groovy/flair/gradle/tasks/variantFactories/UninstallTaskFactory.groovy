@@ -12,7 +12,7 @@ public class UninstallTaskFactory implements IVariantTaskFactory<Uninstall>
 {
 	public Uninstall create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.UNINSTALL.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.UNINSTALL.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		Uninstall t = project.tasks.findByName( name ) as Uninstall
 

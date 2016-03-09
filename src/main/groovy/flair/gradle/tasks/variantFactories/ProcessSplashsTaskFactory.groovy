@@ -12,7 +12,7 @@ class ProcessSplashsTaskFactory implements IVariantTaskFactory<ProcessSplashs>
 {
 	public ProcessSplashs create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_SPLASHS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_SPLASHS.name + variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 
 		ProcessSplashs t = project.tasks.findByName( name ) as ProcessSplashs
 

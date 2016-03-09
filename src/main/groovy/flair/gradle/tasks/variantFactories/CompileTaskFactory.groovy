@@ -13,7 +13,7 @@ public class CompileTaskFactory implements IVariantTaskFactory<Compile>
 
 	public Compile create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.COMPILE.name + variantName
 
 		Compile t = project.tasks.findByName( name ) as Compile

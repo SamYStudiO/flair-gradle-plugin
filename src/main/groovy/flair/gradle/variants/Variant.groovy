@@ -55,7 +55,7 @@ public final class Variant
 		return name
 	}
 
-	public enum NamingTypes
+	public enum NamingType
 	{
 		CAPITALIZE( "" ) ,
 		CAPITALIZE_BUT_FIRST( "" ) ,
@@ -65,7 +65,7 @@ public final class Variant
 
 		private String c
 
-		public NamingTypes( String c )
+		public NamingType( String c )
 		{
 			this.c = c
 		}
@@ -76,20 +76,20 @@ public final class Variant
 		}
 	}
 
-	public String getNameWithType( NamingTypes type )
+	public String getNameWithType( NamingType type )
 	{
 		String name = ""
 
 		switch( type )
 		{
-			case NamingTypes.CAPITALIZE:
-			case NamingTypes.CAPITALIZE_BUT_FIRST:
+			case NamingType.CAPITALIZE:
+			case NamingType.CAPITALIZE_BUT_FIRST:
 				name += platform.name.capitalize( )
 				productFlavors.each { flavor -> name += flavor.capitalize( ) }
 
 				if( buildType ) name += buildType.capitalize( )
 
-				if( type == NamingTypes.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
+				if( type == NamingType.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
 
 				return name
 
@@ -104,19 +104,19 @@ public final class Variant
 		}
 	}
 
-	public String getProductFlavorsBuildTypeWithType( NamingTypes type )
+	public String getProductFlavorsBuildTypeWithType( NamingType type )
 	{
 		String name = ""
 
 		switch( type )
 		{
-			case NamingTypes.CAPITALIZE:
-			case NamingTypes.CAPITALIZE_BUT_FIRST:
+			case NamingType.CAPITALIZE:
+			case NamingType.CAPITALIZE_BUT_FIRST:
 				productFlavors.each { flavor -> name += flavor.capitalize( ) }
 
 				if( buildType ) name += buildType.capitalize( )
 
-				if( type == NamingTypes.CAPITALIZE_BUT_FIRST && name.length( ) ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
+				if( type == NamingType.CAPITALIZE_BUT_FIRST && name.length( ) ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
 
 				return name
 
@@ -169,7 +169,7 @@ public final class Variant
 		productFlavors.each { list.add( "${ platform.name }_${ it }" ) }
 		if( productFlavors.size( ) > 1 ) list.add( "${ platform.name }_${ productFlavors.join( "_" ) }" )
 		if( buildType ) list.add( "${ platform.name }_${ buildType }" )
-		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingTypes.UNDERSCORE ) )
+		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingType.UNDERSCORE ) )
 
 		return list
 	}
@@ -192,7 +192,7 @@ public final class Variant
 			list.add( name )
 		}
 		if( buildType ) list.add( "${ platform.name }${ buildType.capitalize( ) }" )
-		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingTypes.CAPITALIZE_BUT_FIRST ) )
+		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingType.CAPITALIZE_BUT_FIRST ) )
 
 		return list
 	}
