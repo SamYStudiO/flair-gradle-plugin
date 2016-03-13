@@ -75,17 +75,17 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 				if( project.gradle.startParameter.taskRequests.isEmpty( ) && flair.getFlairProperty( FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH ) )
 				{
-					ProjectConnection connection = GradleConnector.newConnector( ).forProjectDirectory( project.rootDir ).connect( );
+					ProjectConnection connection = GradleConnector.newConnector( ).forProjectDirectory( project.rootDir ).connect( )
 
 					try
 					{
-						BuildLauncher build = connection.newBuild( );
-						build.forTasks( "assembleAll" );
-						build.run( );
+						BuildLauncher build = connection.newBuild( )
+						build.forTasks( "assembleAll" )
+						build.run( )
 					}
 					finally
 					{
-						connection.close( );
+						connection.close( )
 					}
 				}
 			}
