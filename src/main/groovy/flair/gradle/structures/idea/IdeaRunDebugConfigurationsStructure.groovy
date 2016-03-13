@@ -1,7 +1,8 @@
-package flair.gradle.structures
+package flair.gradle.structures.idea
 
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
+import flair.gradle.structures.IStructure
 import flair.gradle.tasks.TaskDefinition
 import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant.NamingTypes

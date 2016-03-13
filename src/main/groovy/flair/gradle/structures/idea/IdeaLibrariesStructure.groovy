@@ -1,6 +1,7 @@
-package flair.gradle.structures
+package flair.gradle.structures.idea
 
 import flair.gradle.dependencies.Config
+import flair.gradle.structures.IStructure
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 

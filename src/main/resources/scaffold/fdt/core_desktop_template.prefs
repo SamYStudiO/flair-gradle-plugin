@@ -1,0 +1,19 @@
+com.powerflasher.fdt.core.mobile.AirDesktop.ACTIVE=false
+com.powerflasher.fdt.core.mobile.AirDesktop.AVAILABLE.EXTENSIONS=flair.PhysicalDensity
+com.powerflasher.fdt.core.mobile.AirDesktop.CUSTOM.ADT.CMD.LINE=${package} ${signing} ${target} ${connection} ${sampler} ${provision} ${output} ${content} ${icons}
+com.powerflasher.fdt.core.mobile.AirDesktop.CUSTOMIZE.ADT.ARGS=false
+com.powerflasher.fdt.core.mobile.AirDesktop.DEPLOY.ARCH=
+com.powerflasher.fdt.core.mobile.AirDesktop.DEPLOY.LOCATION=
+com.powerflasher.fdt.core.mobile.AirDesktop.DEPLOY.PRE.PACKAGE.LAUNCHER=
+com.powerflasher.fdt.core.mobile.AirDesktop.DEPLOY.TYPE.AIR.DESKTOP=AIR
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.114x114=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.128x128=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.16x16=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.32x32=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.36x36=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.48x48=
+com.powerflasher.fdt.core.mobile.AirDesktop.ICON.PATH.72x72=
+com.powerflasher.fdt.core.mobile.AirDesktop.MOBILE.DESCRIPTOR=bin/flair-app.xml
+com.powerflasher.fdt.core.mobile.AirDesktop.PACKAGE.CONTENT=bin/flair-app.xml > flair-app.xml;;
+com.powerflasher.fdt.core.mobile.AirDesktop.SIGNATURE.CERTIFICATE=
+com.powerflasher.fdt.core.mobile.AirDesktop.SIGNATURE.PWD=HZsdm2UDN/4\=

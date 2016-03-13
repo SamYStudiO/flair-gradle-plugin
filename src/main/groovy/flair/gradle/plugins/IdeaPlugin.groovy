@@ -1,6 +1,10 @@
 package flair.gradle.plugins
 
-import flair.gradle.structures.*
+import flair.gradle.structures.IStructure
+import flair.gradle.structures.idea.IdeaImlStructure
+import flair.gradle.structures.idea.IdeaLibrariesStructure
+import flair.gradle.structures.idea.IdeaModulesStructure
+import flair.gradle.structures.idea.IdeaRunDebugConfigurationsStructure
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

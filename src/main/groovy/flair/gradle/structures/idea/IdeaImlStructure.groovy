@@ -1,10 +1,11 @@
-package flair.gradle.structures
+package flair.gradle.structures.idea
 
 import flair.gradle.dependencies.Config
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
+import flair.gradle.structures.IStructure
 import flair.gradle.variants.Platform
 import flair.gradle.variants.Variant
 import groovy.xml.XmlUtil
