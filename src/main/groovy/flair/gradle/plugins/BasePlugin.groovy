@@ -70,17 +70,17 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				if( project.gradle.startParameter.taskRequests.isEmpty( ) ) createStructures( )
 				createVariantTasks( )
-				createHandlerTasks( )
+				String assembleAll = createHandlerTasks( )
 				createGeneratedTasks( )
 
-				if( project.gradle.startParameter.taskRequests.isEmpty( ) && flair.getFlairProperty( FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH ) )
+				if( assembleAll != null && project.gradle.startParameter.taskRequests.isEmpty( ) && flair.getFlairProperty( FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH ) )
 				{
 					ProjectConnection connection = GradleConnector.newConnector( ).forProjectDirectory( project.rootDir ).connect( )
 
 					try
 					{
 						BuildLauncher build = connection.newBuild( )
-						build.forTasks( "assembleAll" )
+						build.forTasks( assembleAll )
 						build.run( )
 					}
 					finally
@@ -241,7 +241,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		}
 	}
 
-	private void createHandlerTasks()
+	private String createHandlerTasks()
 	{
 		List<String> listAssemble = new ArrayList<String>( )
 		List<String> listCompile = new ArrayList<String>( )
@@ -250,6 +250,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		String assemble
 		String compile
 		String pack
+		String assembleAll
 
 		Task t
 
@@ -273,7 +274,10 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				t.group = TaskDefinition.ASSEMBLE.group.name
 				t.dependsOn listAssemble
 			}
+
+			assembleAll = "assembleAll"
 		}
+		else assembleAll = listAssemble.size(  ) > 0 ? listAssemble.get( 0 ) : null
 
 		if( listCompile.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
@@ -406,6 +410,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				}
 			}
 		}
+
+		return assembleAll
 	}
 
 	private createGeneratedTasks()
