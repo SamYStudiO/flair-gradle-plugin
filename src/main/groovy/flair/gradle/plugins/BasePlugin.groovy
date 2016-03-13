@@ -277,7 +277,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 			assembleAll = "assembleAll"
 		}
-		else assembleAll = listAssemble.size(  ) > 0 ? listAssemble.get( 0 ) : null
+		else assembleAll = listAssemble.size(  ) == 1 ? listAssemble.get( 0 ) : null
 
 		if( listCompile.size( ) > 1 && PluginManager.getCurrentPlatforms( project ).size( ) > 1 )
 		{
@@ -326,6 +326,8 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					t.group = TaskDefinition.ASSEMBLE.group.name
 					t.dependsOn listAssemble
 				}
+
+				if( assembleAll == null ) assembleAll = TaskDefinition.ASSEMBLE.name + "All" + it.name.capitalize( )
 			}
 
 			if( listCompile.size( ) > 1 )
