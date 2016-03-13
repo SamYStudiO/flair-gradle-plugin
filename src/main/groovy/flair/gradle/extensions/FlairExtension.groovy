@@ -17,6 +17,8 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 
 	private String packageName
 
+	private Boolean autoAssembleOnBuildRefresh
+
 	private Boolean autoGenerateVariantDirectories
 
 	public FlairExtension( String name , Project project , Platform platform )
@@ -42,6 +44,16 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 	public void packageName( String packageName )
 	{
 		this.packageName = packageName
+	}
+
+	public Boolean getAutoAssembleOnBuildRefresh()
+	{
+		return autoAssembleOnBuildRefresh
+	}
+
+	public void autoAssembleOnBuildRefresh( Boolean autoAssembleOnBuildRefresh )
+	{
+		this.autoAssembleOnBuildRefresh = autoAssembleOnBuildRefresh
 	}
 
 	public Boolean getAutoGenerateVariantDirectories()
@@ -71,6 +83,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 			{
 				case FlairProperty.MODULE_NAME.name: return "app"
 				case FlairProperty.PACKAGE_NAME.name: return ""
+				case FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH.name: return true
 				case FlairProperty.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return true
 
 				default: return null

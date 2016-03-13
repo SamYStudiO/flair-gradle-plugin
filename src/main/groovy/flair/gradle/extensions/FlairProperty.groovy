@@ -9,6 +9,7 @@ enum FlairProperty
 	PACKAGE_NAME( "packageName" ) ,
 
 	DEBUG( "debug" ) ,
+	AUTO_ASSEMBLE_ON_BUILD_REFRESH( "autoAssembleOnBuildRefresh" ) ,
 	AUTO_GENERATE_VARIANT_DIRECTORIES( "autoGenerateVariantDirectories" ) ,
 	GENERATE_ATF_TEXTURES_FROM_DRAWABLES( "generateAtfTexturesFromDrawables" ) ,
 

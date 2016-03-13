@@ -19,6 +19,9 @@ import flair.gradle.variants.Variant.NamingTypes
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.tooling.BuildLauncher
+import org.gradle.tooling.GradleConnector
+import org.gradle.tooling.ProjectConnection
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -69,6 +72,22 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				createVariantTasks( )
 				createHandlerTasks( )
 				createGeneratedTasks( )
+
+				if( project.gradle.startParameter.taskRequests.isEmpty( ) && flair.getFlairProperty( FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH ) )
+				{
+					ProjectConnection connection = GradleConnector.newConnector( ).forProjectDirectory( project.rootDir ).connect( );
+
+					try
+					{
+						BuildLauncher build = connection.newBuild( );
+						build.forTasks( "assembleAll" );
+						build.run( );
+					}
+					finally
+					{
+						connection.close( );
+					}
+				}
 			}
 		}
 	}
@@ -122,7 +141,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		{
 			if( invalidCount > 1 ) throw new Exception( "Cannot find AIR SDK home, set a valid AIR SDK home from your local.properties file under project root" ) else throw new Exception( "Cannot find AIR SDK home for ${ platform.name }, set a valid AIR SDK home from your local.properties file under project root" )
 		}
-		if( !packageName || packageName.length(  ) == 0 )
+		if( !packageName || packageName.length( ) == 0 )
 		{
 			throw new Exception( String.format( "Missing flair property packageName, add it to your build.gradle file :%nflair {%npackageName \"com.hello.world\"%n}" ) )
 		}
@@ -194,7 +213,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			}
 		}
 
-		project.file( scaffoldTempDir ).deleteDir( )
+		//project.file( scaffoldTempDir ).deleteDir( )
 	}
 
 	private void createVariantTasks()
