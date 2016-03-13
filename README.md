@@ -13,7 +13,8 @@ ___
 * Once you're set up you'll be able to compile/test a **template project**.
 * **Variant builds** (build type and product flavor as Android).
 * **[TexturePacker](https://www.codeandweb.com/texturepacker) plugin** to autogenerate your atlases when compiling.
-* **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to allow using standard run/debug configurations from IDEA.
+* **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to configure project IDEA files and allow using standard run/debug configurations from IDEA.
+* **[FDT](http://fdt.powerflasher.com/) plugin** to configure project FDT files and allow using standard run/debug configurations from FDT.
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...).
 
 ===
@@ -34,6 +35,7 @@ apply plugin: "flair.android" // only if your project need to target android dev
 apply plugin: "flair.desktop" // only if your project need to target desktop
 apply plugin: "flair.texturepacker" // only if you want to use TexturePacker with your project
 apply plugin: "flair.idea" // only if you are using IntelliJ IDEA
+apply plugin: "flair.fdt" // only if you are using FDT
 
 flair{
   packageName "com.hello.world" // set your sources root package here (this is required to initialize flair plugin)
