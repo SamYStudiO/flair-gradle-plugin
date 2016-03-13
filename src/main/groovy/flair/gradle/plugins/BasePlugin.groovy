@@ -196,11 +196,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		if( !moduleName || !packageName ) return
 
 		String tempDir = System.getProperty( "java.io.tmpdir" )
-		String scaffoldTempDir = "${ tempDir }/scaffold"
+		String scaffoldTempDir = "${ tempDir }/scaffold_${ project.name }"
 
 		project.copy {
 			from project.zipTree( getClass( ).getProtectionDomain( ).getCodeSource( ).getLocation( ).getPath( ) )
-			into tempDir
+			into scaffoldTempDir
 
 			include "scaffold/**"
 			exclude "**/.gitkeep"
@@ -209,11 +209,11 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		project.plugins.each {
 			if( it instanceof IStructurePlugin )
 			{
-				it.structures.each { structure -> structure.create( project , project.file( scaffoldTempDir ) ) }
+				it.structures.each { structure -> structure.create( project , project.file( "${ scaffoldTempDir }/scaffold" ) ) }
 			}
 		}
 
-		//project.file( scaffoldTempDir ).deleteDir( )
+		project.file( scaffoldTempDir ).deleteDir( )
 	}
 
 	private void createVariantTasks()
