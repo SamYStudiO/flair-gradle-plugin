@@ -1,4 +1,4 @@
-package flair.gradle.variants
+package flair.gradle.utils
 
 import org.gradle.api.Project
 
@@ -43,18 +43,6 @@ public final class Variant
 		buildType = type
 	}
 
-	public String getName()
-	{
-		String name = ""
-
-		name += platform.name
-		productFlavors.each { flavor -> name += flavor }
-
-		if( buildType ) name += buildType
-
-		return name
-	}
-
 	public enum NamingType
 	{
 		CAPITALIZE( "" ) ,
@@ -76,35 +64,17 @@ public final class Variant
 		}
 	}
 
-	public String getNameWithType( NamingType type )
+	public String getName()
 	{
-		String name = ""
-
-		switch( type )
-		{
-			case NamingType.CAPITALIZE:
-			case NamingType.CAPITALIZE_BUT_FIRST:
-				name += platform.name.capitalize( )
-				productFlavors.each { flavor -> name += flavor.capitalize( ) }
-
-				if( buildType ) name += buildType.capitalize( )
-
-				if( type == NamingType.CAPITALIZE_BUT_FIRST ) name = name.substring( 0 , 1 ).toLowerCase( ) + name.substring( 1 )
-
-				return name
-
-			default:
-
-				name += platform.name.toLowerCase( ) + type.c
-				productFlavors.each { flavor -> name += flavor + type.c }
-
-				if( buildType ) name += buildType else name = name.substring( 0 , name.size( ) - 1 )
-
-				return name
-		}
+		return getName( NamingType.UNDERSCORE , true )
 	}
 
-	public String getProductFlavorsBuildTypeWithType( NamingType type )
+	public String getName( NamingType type )
+	{
+		return getName( type , true )
+	}
+
+	public String getName( NamingType type , boolean withPlatform )
 	{
 		String name = ""
 
@@ -112,6 +82,9 @@ public final class Variant
 		{
 			case NamingType.CAPITALIZE:
 			case NamingType.CAPITALIZE_BUT_FIRST:
+
+				if( withPlatform ) name += platform.name.capitalize( )
+
 				productFlavors.each { flavor -> name += flavor.capitalize( ) }
 
 				if( buildType ) name += buildType.capitalize( )
@@ -121,6 +94,9 @@ public final class Variant
 				return name
 
 			default:
+
+				type = NamingType.UNDERSCORE;
+				name += platform.name.toLowerCase( ) + type.c
 				productFlavors.each { flavor -> name += flavor + type.c }
 
 				if( buildType ) name += buildType else if( name.length( ) ) name = name.substring( 0 , name.size( ) - 1 )
@@ -161,38 +137,47 @@ public final class Variant
 
 	public List<String> getDirectories()
 	{
-		List<String> list = new ArrayList<String>( )
-		list.add( "main" )
-		list.add( platform.name )
-		productFlavors.each { list.add( it ) }
-		if( buildType ) list.add( buildType )
-		productFlavors.each { list.add( "${ platform.name }_${ it }" ) }
-		if( productFlavors.size( ) > 1 ) list.add( "${ platform.name }_${ productFlavors.join( "_" ) }" )
-		if( buildType ) list.add( "${ platform.name }_${ buildType }" )
-		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingType.UNDERSCORE ) )
-
-		return list
+		getDirectories( NamingType.UNDERSCORE )
 	}
 
-	public List<String> getDirectoriesCapitalized()
+	public List<String> getDirectories( NamingType type )
 	{
 		List<String> list = new ArrayList<String>( )
-		list.add( "main" )
-		list.add( platform.name )
-		productFlavors.each { list.add( it ) }
-		if( buildType ) list.add( buildType )
-		productFlavors.each { list.add( "${ platform.name }${ it.capitalize( ) }" ) }
-		if( productFlavors.size( ) > 1 )
-		{
-			String name = platform.name
-			productFlavors.each {
-				name += it.capitalize( )
-			}
+		list.add( type == NamingType.CAPITALIZE ? "Main" : "main" )
+		list.add( type == NamingType.CAPITALIZE ? platform.name.capitalize( ) : platform.name )
+		productFlavors.each { list.add( type == NamingType.CAPITALIZE ? it.capitalize( ) : it ) }
+		if( buildType ) list.add( type == NamingType.CAPITALIZE ? buildType.capitalize( ) : buildType )
 
-			list.add( name )
+		switch( type )
+		{
+			case NamingType.CAPITALIZE:
+			case NamingType.CAPITALIZE_BUT_FIRST:
+
+				productFlavors.each {
+					list.add( "${ type == NamingType.CAPITALIZE ? platform.name.capitalize( ) : platform.name }${ it.capitalize( ) }" )
+				}
+				if( productFlavors.size( ) > 1 )
+				{
+					String name = type == NamingType.CAPITALIZE ? platform.name.capitalize( ) : platform.name
+					productFlavors.each {
+						name += it.capitalize( )
+					}
+
+					list.add( name )
+				}
+				if( buildType ) list.add( "${ type == NamingType.CAPITALIZE ? platform.name.capitalize( ) : platform.name }${ buildType.capitalize( ) }" )
+				if( productFlavors.size( ) > 0 ) list.add( getName( type ) )
+
+				break
+
+			default:
+
+				type = NamingType.UNDERSCORE;
+				productFlavors.each { list.add( "${ platform.name }${ type.c }${ it }" ) }
+				if( productFlavors.size( ) > 1 ) list.add( "${ platform.name }${ type.c }${ productFlavors.join( type.c ) }" )
+				if( buildType ) list.add( "${ platform.name }${ type.c }${ buildType }" )
+				if( productFlavors.size( ) > 0 ) list.add( getName( type ) )
 		}
-		if( buildType ) list.add( "${ platform.name }${ buildType.capitalize( ) }" )
-		if( productFlavors.size( ) > 0 ) list.add( getNameWithType( NamingType.CAPITALIZE_BUT_FIRST ) )
 
 		return list
 	}

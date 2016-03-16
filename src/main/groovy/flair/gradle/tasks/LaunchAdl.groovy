@@ -3,7 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adl
 import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 import org.gradle.api.tasks.TaskAction
 
 /**

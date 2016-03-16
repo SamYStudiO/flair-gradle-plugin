@@ -3,7 +3,7 @@ package flair.gradle.tasks.process
 import flair.gradle.dependencies.Config
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectories
 import org.gradle.api.tasks.OutputFiles
@@ -80,7 +80,7 @@ class ProcessAssets extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		variant.directoriesCapitalized.each {
+		variant.getDirectories( Variant.NamingType.CAPITALIZE_BUT_FIRST ).each {
 
 			String s = it == "main" ? Config.PACKAGE.name : it + Config.PACKAGE.name.capitalize( )
 

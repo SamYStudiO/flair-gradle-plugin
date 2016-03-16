@@ -3,7 +3,7 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adb
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Idb
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 import org.gradle.api.tasks.TaskAction
 
 /**

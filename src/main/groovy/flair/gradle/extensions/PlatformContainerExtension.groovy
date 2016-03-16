@@ -1,7 +1,8 @@
 package flair.gradle.extensions
 
 import flair.gradle.dependencies.Config
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -97,7 +98,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 			extensionManager.allActivePlatformVariants.each {
 
-				it.directoriesCapitalized.each { directory ->
+				it.getDirectories( Variant.NamingType.CAPITALIZE_BUT_FIRST ).each { directory ->
 
 					String s = directory + conf.name.capitalize( )
 

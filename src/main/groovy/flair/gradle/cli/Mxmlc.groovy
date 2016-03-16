@@ -1,7 +1,7 @@
 package flair.gradle.cli
 
 import flair.gradle.dependencies.Sdk
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
 

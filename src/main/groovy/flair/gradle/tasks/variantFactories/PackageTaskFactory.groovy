@@ -2,7 +2,7 @@ package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.Package
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ public class PackageTaskFactory implements IVariantTaskFactory<Package>
 {
 	public Package create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
+		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PACKAGE.name + variantName
 
 		Package t = project.tasks.findByName( name ) as Package

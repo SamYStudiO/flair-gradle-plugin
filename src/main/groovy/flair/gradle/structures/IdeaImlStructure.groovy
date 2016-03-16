@@ -5,8 +5,8 @@ import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -222,11 +222,11 @@ class IdeaImlStructure implements IStructure
 				constants.add( "BUILD_TYPE::${ it.toUpperCase( ) }#09;${ it == variant.buildType }" )
 			}
 
-			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.getNameWithType( Variant.NamingType.UNDERSCORE ) )
+			configuration = configuration.replaceAll( "\\{configurationName\\}" , "flair_" + variant.name )
 					.replaceAll( "\\{platform\\}" , platform )
 					.replaceAll( "\\{mainClass\\}" , extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS ) as String )
-					.replaceAll( "\\{outputSwf\\}" , variant.getNameWithType( Variant.NamingType.UNDERSCORE ) + ".swf" )
-					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.getNameWithType( Variant.NamingType.UNDERSCORE ) + "/package" )
+					.replaceAll( "\\{outputSwf\\}" , variant.name + ".swf" )
+					.replaceAll( "\\{buildDir\\}" , buildPathFromModule( project.buildDir.path , true ) + "/" + variant.name + "/package" )
 					.replaceAll( "\\{target\\}" , variant.platform == Platform.DESKTOP ? "Desktop" : "Mobile" )
 					.replaceAll( "\\{sdkName\\}" , new Sdk( project , variant.platform ).name )
 					.replaceAll( "\\{debug\\}" , extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ) ? "true" : "false" )
@@ -254,7 +254,7 @@ class IdeaImlStructure implements IStructure
 
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
-			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }/app_descriptor.xml" ).path )
+			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.name }/app_descriptor.xml" ).path )
 			platformNode.@"package-file-name" = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME )
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
@@ -264,9 +264,9 @@ class IdeaImlStructure implements IStructure
 			toPackage.children( ).each { it.parent( ).remove( it ) }
 
 
-			project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }/package" ).listFiles( ).each {
+			project.file( "${ project.buildDir.path }/${ variant.name }/package" ).listFiles( ).each {
 
-				if( it.name != "${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }.swf" && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 )
+				if( it.name != "${ variant.name }.swf" && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 )
 				{
 					Node node = new Node( toPackage , "FilePathAndPathInPackage" )
 

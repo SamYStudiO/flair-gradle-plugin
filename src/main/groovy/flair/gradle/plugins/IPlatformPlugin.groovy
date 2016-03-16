@@ -1,6 +1,6 @@
 package flair.gradle.plugins
 
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

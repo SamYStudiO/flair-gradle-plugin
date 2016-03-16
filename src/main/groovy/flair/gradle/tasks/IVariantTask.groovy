@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

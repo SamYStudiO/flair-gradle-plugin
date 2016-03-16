@@ -4,7 +4,7 @@ import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -68,7 +68,7 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )
 		appName = extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME_SUFFIX )
 		appFileName = extensionManager.getFlairProperty( variant , FlairProperty.APP_FILE_NAME )
-		appSWF = variant.getNameWithType( Variant.NamingType.UNDERSCORE ) + ".swf"
+		appSWF = variant.name + ".swf"
 		appVersion = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
 		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperty.APP_FULL_SCREEN )
 		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperty.APP_ASPECT_RATIO )

@@ -4,8 +4,8 @@ import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
@@ -39,7 +39,7 @@ class Compile extends AbstractVariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputFile = project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }.swf" )
+		outputFile = project.file( "${ outputVariantDir }/package/${ variant.name }.swf" )
 
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS )
@@ -80,7 +80,7 @@ class Compile extends AbstractVariantTask
 
 		// swf output
 		cli.addArgument( "-output" )
-		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }.swf" ).path )
+		cli.addArgument( project.file( "${ outputVariantDir }/package/${ variant.name }.swf" ).path )
 
 		// main class
 		cli.addArgument( project.file( "${ outputVariantDir }/classes/${ mainClass.split( "\\." ).join( "/" ) }.as" ).path )

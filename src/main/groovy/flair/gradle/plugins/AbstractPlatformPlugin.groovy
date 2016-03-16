@@ -6,7 +6,7 @@ import flair.gradle.extensions.factories.PlatformExtensionFactory
 import flair.gradle.structures.IStructure
 import flair.gradle.structures.PlatformStructure
 import flair.gradle.tasks.variantFactories.*
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

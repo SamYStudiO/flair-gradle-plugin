@@ -4,7 +4,7 @@ import flair.gradle.plugins.PluginManager
 import flair.gradle.plugins.TexturePackerPlugin
 import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.process.ProcessResources
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -14,7 +14,7 @@ class ProcessResourcesTaskFactory implements IVariantTaskFactory<ProcessResource
 {
 	public ProcessResources create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingType.CAPITALIZE )
+		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PROCESS_RESOURCES.name + variantName
 
 		ProcessResources t = project.tasks.findByName( name ) as ProcessResources

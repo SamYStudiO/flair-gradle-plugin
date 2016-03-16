@@ -2,7 +2,7 @@ package flair.gradle.tasks
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Mxmlc
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction

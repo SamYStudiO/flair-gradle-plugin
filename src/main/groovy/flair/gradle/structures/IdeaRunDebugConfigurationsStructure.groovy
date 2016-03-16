@@ -3,8 +3,8 @@ package flair.gradle.structures
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant.NamingType
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant.NamingType
 import org.gradle.api.Project
 
 /**
@@ -27,11 +27,11 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 
 		flair.allActivePlatformVariants.each {
 
-			String name = "flair_" + it.getNameWithType( NamingType.UNDERSCORE )
+			String name = "flair_" + it.name
 
 			if( list.indexOf( name + ".xml" ) < 0 )
 			{
-				String profileName = "flair_" + it.getNameWithType( NamingType.UNDERSCORE )
+				String profileName = "flair_" + it.name
 				String app = it.platform == Platform.IOS ? "IOS" : it.platform == Platform.ANDROID ? "Android" : ""
 				String transport = flair.getFlairProperty( it , FlairProperty.PACKAGE_CONNECT ) ? "Network" : "USB"
 				String emulator = it.platform == Platform.IOS ? "OtherIOSDevice" : it.platform == Platform.ANDROID ? "OtherAndroidDevice" : ""
@@ -44,7 +44,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
 				String port = flair.getFlairProperty( it , FlairProperty.PACKAGE_LISTEN ) ?: "7936"
-				String gradleAssemble = TaskDefinition.PREPARE_PACKAGE.name + it.getNameWithType( NamingType.CAPITALIZE )
+				String gradleAssemble = TaskDefinition.PREPARE_PACKAGE.name + it.getName( NamingType.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
 						.replaceAll( "\\{profileName\\}" , profileName )

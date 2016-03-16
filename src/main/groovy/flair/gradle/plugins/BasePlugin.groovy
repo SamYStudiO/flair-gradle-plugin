@@ -13,9 +13,9 @@ import flair.gradle.structures.VariantStructure
 import flair.gradle.tasks.GenerateFontsClass
 import flair.gradle.tasks.GenerateResourcesClass
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
-import flair.gradle.variants.Variant.NamingType
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
+import flair.gradle.utils.Variant.NamingType
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.ExtensionAware
@@ -236,9 +236,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 
 		flair.allActivePlatformVariants.each {
 
-			assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingType.CAPITALIZE )
-			compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingType.CAPITALIZE )
-			pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingType.CAPITALIZE )
+			assemble = TaskDefinition.ASSEMBLE.name + it.getName( NamingType.CAPITALIZE )
+			compile = TaskDefinition.COMPILE.name + it.getName( NamingType.CAPITALIZE )
+			pack = TaskDefinition.PACKAGE.name + it.getName( NamingType.CAPITALIZE )
 
 			if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 			if( project.tasks.findByName( compile ) ) listCompile.add( compile )
@@ -285,9 +285,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			listPackage = new ArrayList<String>( )
 
 			flair.getPlatformVariants( it ).each {
-				assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingType.CAPITALIZE )
-				compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingType.CAPITALIZE )
-				pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingType.CAPITALIZE )
+				assemble = TaskDefinition.ASSEMBLE.name + it.getName( NamingType.CAPITALIZE )
+				compile = TaskDefinition.COMPILE.name + it.getName( NamingType.CAPITALIZE )
+				pack = TaskDefinition.PACKAGE.name + it.getName( NamingType.CAPITALIZE )
 
 				if( project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 				if( project.tasks.findByName( compile ) ) listCompile.add( compile )
@@ -341,9 +341,9 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				listPackage = new ArrayList<String>( )
 
 				flair.allActivePlatformVariants.each {
-					assemble = TaskDefinition.ASSEMBLE.name + it.getNameWithType( NamingType.CAPITALIZE )
-					compile = TaskDefinition.COMPILE.name + it.getNameWithType( NamingType.CAPITALIZE )
-					pack = TaskDefinition.PACKAGE.name + it.getNameWithType( NamingType.CAPITALIZE )
+					assemble = TaskDefinition.ASSEMBLE.name + it.getName( NamingType.CAPITALIZE )
+					compile = TaskDefinition.COMPILE.name + it.getName( NamingType.CAPITALIZE )
+					pack = TaskDefinition.PACKAGE.name + it.getName( NamingType.CAPITALIZE )
 
 					if( it.buildType == type && project.tasks.findByName( assemble ) ) listAssemble.add( assemble )
 					if( it.buildType == type && project.tasks.findByName( compile ) ) listCompile.add( compile )

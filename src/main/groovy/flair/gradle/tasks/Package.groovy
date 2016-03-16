@@ -3,8 +3,8 @@ package flair.gradle.tasks
 import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles

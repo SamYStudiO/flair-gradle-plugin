@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -21,6 +21,6 @@ public abstract class AbstractVariantTask extends AbstractTask implements IVaria
 
 	protected File getOutputVariantDir()
 	{
-		return project.file( "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingType.UNDERSCORE ) }" )
+		return project.file( "${ project.buildDir.path }/${ variant.name }" )
 	}
 }
