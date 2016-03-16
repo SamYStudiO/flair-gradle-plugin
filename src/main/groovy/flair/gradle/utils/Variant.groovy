@@ -96,7 +96,7 @@ public final class Variant
 			default:
 
 				type = NamingType.UNDERSCORE;
-				name += platform.name.toLowerCase( ) + type.c
+				if( withPlatform ) name += platform.name.toLowerCase( ) + type.c
 				productFlavors.each { flavor -> name += flavor + type.c }
 
 				if( buildType ) name += buildType else if( name.length( ) ) name = name.substring( 0 , name.size( ) - 1 )
