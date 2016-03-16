@@ -25,8 +25,6 @@ import org.gradle.api.plugins.ExtensionAware
  */
 class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructurePlugin , IConfigurationPlugin
 {
-	private List<IPlugin> plugins = new ArrayList<IPlugin>( )
-
 	private IExtensionManager flair
 
 	public BasePlugin()
@@ -39,8 +37,6 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		super.apply( project )
 
 		project.plugins.whenPluginAdded {
-
-			if( it instanceof IPlugin ) plugins.add( it )
 
 			if( it instanceof IExtensionPlugin )
 			{
