@@ -1,4 +1,4 @@
-package flair.gradle.variants
+package flair.gradle.utils
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

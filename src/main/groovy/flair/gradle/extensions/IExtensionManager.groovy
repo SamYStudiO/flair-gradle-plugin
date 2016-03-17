@@ -1,7 +1,7 @@
 package flair.gradle.extensions
 
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )

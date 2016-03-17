@@ -4,6 +4,7 @@ package _packageName_
 
 	import flash.display.Bitmap;
 	import flash.events.Event;
+	import flash.filesystem.File;
 
 	/**
 	 *
@@ -31,6 +32,9 @@ package _packageName_
 			var min : Number = Math.min( stageWidth , stageHeight );
 			var pixels : Number = stageWidth * stageHeight;
 			var n : Number = max / min;
+
+			if( portrait && File.applicationDirectory.resolvePath( min + "x" + max + ".png" ).exists ) return min + "x" + max + ".png";
+			else if( !portrait && File.applicationDirectory.resolvePath( max + "x" + min + ".png" ).exists ) return max + "x" + min + ".png";
 
 			if( n > 1.68 ) // 16/9
 			{

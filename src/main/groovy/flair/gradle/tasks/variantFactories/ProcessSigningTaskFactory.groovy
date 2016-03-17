@@ -2,7 +2,7 @@ package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.process.ProcessSigning
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ class ProcessSigningTaskFactory implements IVariantTaskFactory<ProcessSigning>
 {
 	public ProcessSigning create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_SIGNING.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_SIGNING.name + variant.getName( Variant.NamingType.CAPITALIZE )
 
 		ProcessSigning t = project.tasks.findByName( name ) as ProcessSigning
 

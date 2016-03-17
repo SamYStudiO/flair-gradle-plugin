@@ -2,7 +2,7 @@ package flair.gradle.extensions.factories
 
 import flair.gradle.extensions.IPlatformContainerExtension
 import flair.gradle.extensions.PlatformContainerExtension
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 

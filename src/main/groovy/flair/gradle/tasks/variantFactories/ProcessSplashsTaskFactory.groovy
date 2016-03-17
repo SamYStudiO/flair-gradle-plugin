@@ -2,7 +2,7 @@ package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.process.ProcessSplashs
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ class ProcessSplashsTaskFactory implements IVariantTaskFactory<ProcessSplashs>
 {
 	public ProcessSplashs create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_SPLASHS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_SPLASHS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 
 		ProcessSplashs t = project.tasks.findByName( name ) as ProcessSplashs
 

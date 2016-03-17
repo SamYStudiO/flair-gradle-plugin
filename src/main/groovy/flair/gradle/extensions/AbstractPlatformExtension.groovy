@@ -1,8 +1,8 @@
 package flair.gradle.extensions
 
 import flair.gradle.plugins.PluginManager
-import flair.gradle.variants.Platform
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -576,7 +576,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.ADL_AT_LOGIN.name: return false
 				case FlairProperty.ADL_PARAMETERS.name: return new ArrayList<String>()
 
-				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ formatProjectName() }_${ variant.getProductFlavorsBuildTypeWithType( Variant.NamingTypes.UNDERSCORE ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }".toLowerCase(  )
+				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ formatProjectName() }_${ variant.getName( Variant.NamingType.UNDERSCORE , false ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }".toLowerCase(  )
 				case FlairProperty.PACKAGE_TARGET.name:
 					switch( p )
 					{
@@ -671,6 +671,6 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 	{
 		File f = getSigningFile( variant , type )
 
-		return f ? "${ project.buildDir.path }/${ variant.getNameWithType( Variant.NamingTypes.UNDERSCORE ) }/signing/${ f.name }" : null
+		return f ? "${ project.buildDir.path }/${ variant.name }/signing/${ f.name }" : null
 	}
 }

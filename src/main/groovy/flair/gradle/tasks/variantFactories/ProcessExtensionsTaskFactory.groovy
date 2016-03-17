@@ -2,7 +2,7 @@ package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.TaskDefinition
 import flair.gradle.tasks.process.ProcessExtensions
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ class ProcessExtensionsTaskFactory implements IVariantTaskFactory<ProcessExtensi
 {
 	public ProcessExtensions create( Project project , Variant variant )
 	{
-		String name = TaskDefinition.PROCESS_EXTENSIONS.name + variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String name = TaskDefinition.PROCESS_EXTENSIONS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 
 		ProcessExtensions t = project.tasks.findByName( name ) as ProcessExtensions
 

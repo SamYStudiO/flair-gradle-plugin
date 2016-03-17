@@ -5,7 +5,7 @@ import flair.gradle.cli.Png2Atf
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input

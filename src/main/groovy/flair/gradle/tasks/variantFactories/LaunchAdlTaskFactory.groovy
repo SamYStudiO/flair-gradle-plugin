@@ -2,7 +2,7 @@ package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.LaunchAdl
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.variants.Variant
+import flair.gradle.utils.Variant
 import org.gradle.api.Project
 
 /**
@@ -12,7 +12,7 @@ public class LaunchAdlTaskFactory implements IVariantTaskFactory<LaunchAdl>
 {
 	public LaunchAdl create( Project project , Variant variant )
 	{
-		String variantName = variant.getNameWithType( Variant.NamingTypes.CAPITALIZE )
+		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.LAUNCH_ADL.name + variantName
 
 		LaunchAdl t = project.tasks.findByName( name ) as LaunchAdl
