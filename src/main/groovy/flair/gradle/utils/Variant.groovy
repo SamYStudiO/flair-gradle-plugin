@@ -137,7 +137,7 @@ public final class Variant
 
 	public List<String> getDirectories()
 	{
-		getDirectories( NamingType.UNDERSCORE )
+		return getDirectories( NamingType.UNDERSCORE )
 	}
 
 	public List<String> getDirectories( NamingType type )
