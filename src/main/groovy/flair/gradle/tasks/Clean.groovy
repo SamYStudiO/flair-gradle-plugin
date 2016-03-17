@@ -10,7 +10,7 @@ public class Clean extends AbstractTask
 	public Clean()
 	{
 		group = TaskGroup.BUILD.name
-		description = ""
+		description = "Deletes ${ project.buildDir.name } directory"
 	}
 
 	@TaskAction

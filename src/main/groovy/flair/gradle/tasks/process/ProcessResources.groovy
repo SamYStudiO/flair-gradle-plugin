@@ -44,12 +44,13 @@ class ProcessResources extends AbstractVariantTask
 		excludeDrawables = excludeDrawables.trim( )
 
 		generateAtf = extensionManager.getFlairProperty( variant , FlairProperty.GENERATE_ATF_TEXTURES_FROM_DRAWABLES )
+
+		description = "Processes ressources into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessResources()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

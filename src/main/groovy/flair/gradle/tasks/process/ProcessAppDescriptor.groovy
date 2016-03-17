@@ -75,12 +75,13 @@ class ProcessAppDescriptor extends AbstractVariantTask
 		appAutoOrients = extensionManager.getFlairProperty( variant , FlairProperty.APP_AUTO_ORIENTS )
 		appDepthAndStencil = extensionManager.getFlairProperty( variant , FlairProperty.APP_DEPTH_AND_STENCIL )
 		supportedLocales = getSupportedLocales( )
+
+		description = "Processes app descriptor templates into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessAppDescriptor()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

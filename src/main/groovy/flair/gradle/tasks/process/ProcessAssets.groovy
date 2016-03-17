@@ -38,12 +38,13 @@ class ProcessAssets extends AbstractVariantTask
 
 			if( file.isDirectory( ) ) outputDirs.add( file ) else outputFiles.add( file )
 		}
+
+		description = "Processes assets directories into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessAssets()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

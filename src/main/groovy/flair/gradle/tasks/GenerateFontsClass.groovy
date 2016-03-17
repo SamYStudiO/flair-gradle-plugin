@@ -23,7 +23,7 @@ public class GenerateFontsClass extends AbstractTask
 	public GenerateFontsClass()
 	{
 		group = TaskGroup.GENERATED.name
-		description = ""
+		description = "Generates main/generated/Fonts.as from fonts directories"
 	}
 
 	@TaskAction

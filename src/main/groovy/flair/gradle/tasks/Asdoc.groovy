@@ -16,7 +16,7 @@ public class Asdoc extends AbstractTask
 	public Asdoc()
 	{
 		group = TaskGroup.DOCUMENTATION.name
-		description = ""
+		description = "Generates asdoc from source classes into ${ project.buildDir.name }/asdoc"
 	}
 
 	@TaskAction

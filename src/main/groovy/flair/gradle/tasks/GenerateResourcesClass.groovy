@@ -23,7 +23,7 @@ public class GenerateResourcesClass extends AbstractTask
 	public GenerateResourcesClass()
 	{
 		group = TaskGroup.GENERATED.name
-		description = ""
+		description = "Generates main/generated/R.as from res directories"
 	}
 
 	@TaskAction

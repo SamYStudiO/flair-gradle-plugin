@@ -4,6 +4,7 @@ import flair.gradle.cli.Adt
 import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -13,10 +14,17 @@ class Uninstall extends AbstractVariantTask
 {
 	private ICli adt = new Adt( )
 
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		description = "Uninstalls ${ variant.name } from first connect device"
+	}
+
 	public Uninstall()
 	{
 		group = TaskGroup.UNINSTALL.name
-		description = ""
 	}
 
 	@TaskAction

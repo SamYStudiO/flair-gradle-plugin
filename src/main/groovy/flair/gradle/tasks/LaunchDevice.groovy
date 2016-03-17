@@ -5,6 +5,7 @@ import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -14,10 +15,17 @@ public class LaunchDevice extends AbstractVariantTask
 {
 	private ICli adt = new Adt( )
 
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		description = "Launches ${ variant.name } from first connect device"
+	}
+
 	public LaunchDevice()
 	{
 		group = TaskGroup.LAUNCH.name
-		description = ""
 	}
 
 	@TaskAction

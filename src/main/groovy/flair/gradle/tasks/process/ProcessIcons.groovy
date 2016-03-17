@@ -25,12 +25,13 @@ class ProcessIcons extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package/icons" )
+
+		description = "Processes icons into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessIcons()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

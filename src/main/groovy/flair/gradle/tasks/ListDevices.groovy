@@ -20,7 +20,7 @@ class ListDevices extends AbstractTask
 	public ListDevices()
 	{
 		group = TaskGroup.DEVICES.name
-		description = ""
+		description = "Displays ${ platform.name } connected devices"
 	}
 
 	@TaskAction

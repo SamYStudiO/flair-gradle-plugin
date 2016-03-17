@@ -26,12 +26,13 @@ class ProcessSplashs extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package" )
+
+		description = "Processes splashscreens into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessSplashs()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

@@ -28,7 +28,7 @@ public class Certificate extends AbstractTask
 	public Certificate()
 	{
 		group = TaskGroup.SIGNING.name
-		description = ""
+		description = "Generates a self-signed certificate"
 	}
 
 	@TaskAction

@@ -26,12 +26,13 @@ class ProcessAsLibraries extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/asLibraries" )
+
+		description = "Processes as libraries into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessAsLibraries()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

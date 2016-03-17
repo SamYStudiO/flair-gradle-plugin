@@ -10,7 +10,6 @@ public class VariantContainer extends AbstractVariantTask
 	public VariantContainer()
 	{
 		group = TaskGroup.BUILD.name
-		description = ""
 	}
 
 	@TaskAction

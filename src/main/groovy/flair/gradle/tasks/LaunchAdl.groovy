@@ -4,6 +4,7 @@ import flair.gradle.cli.Adl
 import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -13,10 +14,17 @@ class LaunchAdl extends AbstractVariantTask
 {
 	private ICli cli = new Adl( )
 
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		description = "Launches ${ variant.name } using ADL emulator"
+	}
+
 	public LaunchAdl()
 	{
 		group = TaskGroup.LAUNCH.name
-		description = ""
 	}
 
 	@TaskAction

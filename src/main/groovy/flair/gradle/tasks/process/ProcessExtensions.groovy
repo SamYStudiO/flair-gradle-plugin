@@ -29,12 +29,13 @@ class ProcessExtensions extends AbstractVariantTask
 
 		outputDirs.add( project.file( "${ outputVariantDir }/extensions" ) )
 		outputDirs.add( project.file( "${ outputVariantDir }/extracted_extensions" ) )
+
+		description = "Processes natives extensions and unzipped extensions into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessExtensions()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

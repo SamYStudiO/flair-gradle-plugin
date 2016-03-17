@@ -6,6 +6,7 @@ import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.utils.Platform
+import flair.gradle.utils.Variant
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
 
@@ -18,10 +19,17 @@ class Install extends AbstractVariantTask
 
 	private ICli adt = new Adt( )
 
+	@Override
+	public void setVariant( Variant variant )
+	{
+		super.variant = variant
+
+		description = "Installs ${ variant.name } from first connect device"
+	}
+
 	public Install()
 	{
 		group = TaskGroup.INSTALL.name
-		description = ""
 	}
 
 	@TaskAction

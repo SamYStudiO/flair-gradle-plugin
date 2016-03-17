@@ -102,12 +102,13 @@ class Package extends AbstractVariantTask
 		provisioning = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ) ?: "null"
 
 		outputFile = project.file( "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ getExtension( ) }" )
+
+		description = "Packages ${ variant.name } into ${ project.buildDir.name } directory"
 	}
 
 	public Package()
 	{
 		group = TaskGroup.PACKAGE.name
-		description = ""
 	}
 
 	@TaskAction

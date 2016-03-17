@@ -14,7 +14,7 @@ class PublishAtlases extends AbstractTask
 	public PublishAtlases()
 	{
 		group = TaskGroup.TEXTURE_PACKER.name
-		description = ""
+		description = "Publishes all TexturePacker atlases within project"
 	}
 
 	@TaskAction

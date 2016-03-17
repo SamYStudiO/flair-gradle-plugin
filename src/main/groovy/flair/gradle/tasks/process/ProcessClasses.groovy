@@ -26,12 +26,13 @@ class ProcessClasses extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/classes" )
+
+		description = "Processes source classes into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessClasses()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

@@ -48,12 +48,13 @@ class ProcessSigning extends AbstractVariantTask
 		signingStorePass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS ) ?: "null"
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/signing" )
+
+		description = "Processes signing files into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessSigning()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

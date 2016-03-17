@@ -26,12 +26,13 @@ class ProcessLibraries extends AbstractVariantTask
 
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/libraries" )
+
+		description = "Processes swc libraries into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
 	public ProcessLibraries()
 	{
 		group = TaskGroup.DEFAULT.name
-		description = ""
 	}
 
 	@TaskAction

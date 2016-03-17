@@ -44,12 +44,13 @@ class Compile extends AbstractVariantTask
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 		mainClass = extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS )
 		compilerOptions = ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_OPTIONS ) as List<String> ).join( " " )
+
+		description = "Compiles ${ variant.name } swf"
 	}
 
 	public Compile()
 	{
 		group = TaskGroup.BUILD.name
-		description = ""
 	}
 
 	@TaskAction
