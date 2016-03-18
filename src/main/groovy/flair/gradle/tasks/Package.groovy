@@ -101,7 +101,7 @@ class Package extends AbstractVariantTask
 		tsa = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_TSA ) ?: "null"
 		provisioning = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ) ?: "null"
 
-		outputFile = project.file( "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ getExtension( ) }" )
+		outputFile = project.file( "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ variant.platform.extension }" )
 
 		description = "Packages ${ variant.name } into ${ project.buildDir.name } directory"
 	}
@@ -251,29 +251,6 @@ class Package extends AbstractVariantTask
 			cli.addArgument( "-extdir" )
 			cli.addArgument( project.file( "${ outputVariantDir.path }/extensions" ).path )
 		}
-	}
-
-	private getExtension()
-	{
-		String extension = ""
-
-		switch( variant.platform )
-		{
-			case Platform.IOS:
-				extension = "ipa"
-				break
-
-			case Platform.ANDROID:
-				extension = "apk"
-				break
-
-			case Platform.DESKTOP:
-
-				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else extension = "exe"
-				break
-		}
-
-		return extension
 	}
 
 	private List<File> findInputFiles()

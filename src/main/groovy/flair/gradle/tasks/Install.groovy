@@ -35,7 +35,7 @@ class Install extends AbstractVariantTask
 	@TaskAction
 	public void install()
 	{
-		String path = "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ getExtension( ) }"
+		String path = "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ variant.platform.extension }"
 
 		if( variant.platform == Platform.DESKTOP )
 		{
@@ -89,28 +89,5 @@ class Install extends AbstractVariantTask
 			}
 			else println( "No device detected" )
 		}
-	}
-
-	private String getExtension()
-	{
-		String extension = ""
-
-		switch( variant.platform )
-		{
-			case Platform.IOS:
-				extension = "ipa"
-				break
-
-			case Platform.ANDROID:
-				extension = "apk"
-				break
-
-			case Platform.DESKTOP:
-
-				if( Os.isFamily( Os.FAMILY_MAC ) ) extension = "dmg" else extension = "exe"
-				break
-		}
-
-		return extension
 	}
 }
