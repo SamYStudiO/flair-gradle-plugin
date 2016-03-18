@@ -21,6 +21,7 @@ public class AssembleTaskFactory implements IVariantTaskFactory<VariantContainer
 		if( !t ) t = project.tasks.create( name , VariantContainer )
 
 		t.group = TaskDefinition.ASSEMBLE.group.name
+		t.description = "Handler to run all process from ${ variant.name } variant"
 		t.variant = variant
 		t.dependsOn TaskDefinition.values( ).findAll { it.group == TaskGroup.PROCESS }.collect { it.name + variantName }
 

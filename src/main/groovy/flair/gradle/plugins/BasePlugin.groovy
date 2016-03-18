@@ -268,6 +268,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" )
 				t.group = TaskDefinition.ASSEMBLE.group.name
+				t.description = "Handler to assemble all variants"
 				t.dependsOn listAssemble
 			}
 
@@ -282,6 +283,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				t = project.tasks.create( TaskDefinition.COMPILE.name + "All" )
 				t.group = TaskDefinition.COMPILE.group.name
+				t.description = "Handler to compile all variants"
 				t.dependsOn listCompile
 			}
 		}
@@ -293,6 +295,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 			{
 				t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" )
 				t.group = TaskDefinition.PACKAGE.group.name
+				t.description = "Handler to package all variants"
 				t.dependsOn listPackage
 			}
 		}
@@ -320,6 +323,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				{
 					t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" + it.name.capitalize( ) )
 					t.group = TaskDefinition.ASSEMBLE.group.name
+					t.description = "Handler to assemble all ${ it.name } variants"
 					t.dependsOn listAssemble
 				}
 
@@ -334,6 +338,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				{
 					t = project.tasks.create( TaskDefinition.COMPILE.name + "All" + it.name.capitalize( ) )
 					t.group = TaskDefinition.COMPILE.group.name
+					t.description = "Handler to compile all ${ it.name } variants"
 					t.dependsOn listCompile
 				}
 			}
@@ -346,6 +351,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 				{
 					t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" + it.name.capitalize( ) )
 					t.group = TaskDefinition.PACKAGE.group.name
+					t.description = "Handler to package all ${ it.name } variants"
 					t.dependsOn listPackage
 				}
 			}
@@ -379,6 +385,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					{
 						t = project.tasks.create( TaskDefinition.ASSEMBLE.name + "All" + type.capitalize( ) )
 						t.group = TaskDefinition.ASSEMBLE.group.name
+						t.description = "Handler to assemble all ${ type } variants"
 						t.dependsOn listAssemble
 					}
 				}
@@ -391,6 +398,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					{
 						t = project.tasks.create( TaskDefinition.COMPILE.name + "All" + type.capitalize( ) )
 						t.group = TaskDefinition.COMPILE.group.name
+						t.description = "Handler to compile all ${ type } variants"
 						t.dependsOn listCompile
 					}
 				}
@@ -403,6 +411,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 					{
 						t = project.tasks.create( TaskDefinition.PACKAGE.name + "All" + type.capitalize( ) )
 						t.group = TaskDefinition.PACKAGE.group.name
+						t.description = "Handler to package all ${ type } variants"
 						t.dependsOn listPackage
 					}
 				}
