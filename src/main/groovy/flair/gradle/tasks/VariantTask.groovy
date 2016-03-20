@@ -5,7 +5,7 @@ import flair.gradle.utils.Variant
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractVariantTask extends AbstractTask implements IVariantTask
+public abstract class VariantTask extends AbstractTask implements IVariantTask
 {
 	protected Variant variant
 

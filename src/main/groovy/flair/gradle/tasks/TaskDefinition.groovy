@@ -17,7 +17,7 @@ public enum TaskDefinition {
 	PROCESS_CLASSES( "processClasses" , ProcessClasses , TaskGroup.PROCESS ) ,
 	PROCESS_LIBRARIES( "processLibraries" , ProcessLibraries , TaskGroup.PROCESS ) ,
 	PROCESS_AS_LIBRARIES( "processAsLibraries" , ProcessAsLibraries , TaskGroup.PROCESS ) ,
-	ASSEMBLE( "assemble" , VariantContainer , TaskGroup.BUILD ) ,
+	ASSEMBLE( "assemble" , VariantTask , TaskGroup.BUILD ) ,
 	COMPILE( "compile" , Compile , TaskGroup.BUILD ) ,
 	PREPARE_PACKAGE( "preparePackage" , PreparePackage , TaskGroup.DEFAULT ) ,
 	PACKAGE( "package" , Package , TaskGroup.PACKAGE ) ,

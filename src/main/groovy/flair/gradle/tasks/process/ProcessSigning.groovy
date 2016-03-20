@@ -1,8 +1,8 @@
 package flair.gradle.tasks.process
 
 import flair.gradle.extensions.FlairProperty
-import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
+import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Platform
 import flair.gradle.utils.Variant
 import org.gradle.api.tasks.Input
@@ -13,7 +13,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessSigning extends AbstractVariantTask
+class ProcessSigning extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles

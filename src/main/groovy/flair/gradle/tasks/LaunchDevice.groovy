@@ -11,7 +11,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LaunchDevice extends AbstractVariantTask
+public class LaunchDevice extends VariantTask
 {
 	private ICli adt = new Adt( )
 

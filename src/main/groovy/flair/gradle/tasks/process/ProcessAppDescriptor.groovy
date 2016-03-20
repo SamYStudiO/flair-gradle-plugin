@@ -2,8 +2,8 @@ package flair.gradle.tasks.process
 
 import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
-import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
+import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.Input
@@ -16,7 +16,7 @@ import java.nio.charset.Charset
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessAppDescriptor extends AbstractVariantTask
+class ProcessAppDescriptor extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles

@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Compile extends AbstractVariantTask
+class Compile extends VariantTask
 {
 	protected ICli cli = new Mxmlc( )
 

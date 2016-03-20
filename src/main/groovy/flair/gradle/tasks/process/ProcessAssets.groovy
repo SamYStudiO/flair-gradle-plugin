@@ -1,8 +1,8 @@
 package flair.gradle.tasks.process
 
 import flair.gradle.dependencies.Config
-import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
+import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectories
@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessAssets extends AbstractVariantTask
+class ProcessAssets extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
