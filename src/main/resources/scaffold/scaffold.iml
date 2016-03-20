@@ -92,7 +92,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/android/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/android/signing" />
-      <excludeFolder url="file://$MODULE_DIR$/src/android/splashs" />
+      <excludeFolder url="file://$MODULE_DIR$/src/android/splash_screens" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/atlases" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/icons" />
       <excludeFolder url="file://$MODULE_DIR$/src/desktop/signing" />

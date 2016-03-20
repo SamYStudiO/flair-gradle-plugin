@@ -9,7 +9,7 @@ public enum TaskDefinition {
 	CLEAN( "clean" , Clean , TaskGroup.BUILD ) ,
 	PROCESS_ASSETS( "processAssets" , ProcessAssets , TaskGroup.PROCESS ) ,
 	PROCESS_RESOURCES( "processResources" , ProcessResources , TaskGroup.PROCESS ) ,
-	PROCESS_SPLASHS( "processSplashs" , ProcessSplashs , TaskGroup.PROCESS ) ,
+	PROCESS_SPLASH_SCREENS( "processSplashScreens" , ProcessSplashScreens , TaskGroup.PROCESS ) ,
 	PROCESS_SIGNING( "processSigning" , ProcessSigning , TaskGroup.PROCESS ) ,
 	PROCESS_ICONS( "processIcons" , ProcessIcons , TaskGroup.PROCESS ) ,
 	PROCESS_EXTENSIONS( "processExtensions" , ProcessExtensions , TaskGroup.PROCESS ) ,
@@ -28,7 +28,7 @@ public enum TaskDefinition {
 	PUBLISH_ATLASES( "publishAtlases" , PublishAtlases , TaskGroup.TEXTURE_PACKER ) ,
 	GENERATE_RESOURCES_CLASS( "generateResourcesClass" , GenerateResourcesClass , TaskGroup.GENERATED ) ,
 	GENERATE_FONTS_CLASS( "generateFontsClass" , GenerateFontsClass , TaskGroup.GENERATED ) ,
-	ASDOC( "asdoc" , Asdoc , TaskGroup.DOCUMENTATION ) ,
+	AS_DOC( "asdoc" , Asdoc , TaskGroup.DOCUMENTATION ) ,
 	CERTIFICATE( "certificate" , Certificate , TaskGroup.SIGNING ) ,
 	LIST_DEVICES( "listDevices" , ListDevices , TaskGroup.DEVICES )
 

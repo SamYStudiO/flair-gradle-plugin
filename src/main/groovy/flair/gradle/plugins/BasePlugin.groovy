@@ -115,7 +115,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	protected void addTasks()
 	{
 		project.tasks.create( TaskDefinition.CLEAN.name , TaskDefinition.CLEAN.type )
-		project.tasks.create( TaskDefinition.ASDOC.name , TaskDefinition.ASDOC.type )
+		project.tasks.create( TaskDefinition.AS_DOC.name , TaskDefinition.AS_DOC.type )
 	}
 
 	private boolean isReady()
