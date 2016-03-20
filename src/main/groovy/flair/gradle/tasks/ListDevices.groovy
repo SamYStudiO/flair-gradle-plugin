@@ -15,12 +15,22 @@ class ListDevices extends AbstractTask
 
 	private ICli adb = new Adb( )
 
-	public Platform platform
+	private Platform platform
+
+	Platform getPlatform()
+	{
+		return platform
+	}
+
+	void setPlatform( Platform platform )
+	{
+		this.platform = platform
+		description = "Displays ${ platform.name } connected devices"
+	}
 
 	public ListDevices()
 	{
 		group = TaskGroup.DEVICES.name
-		description = "Displays ${ platform.name } connected devices"
 	}
 
 	@TaskAction
