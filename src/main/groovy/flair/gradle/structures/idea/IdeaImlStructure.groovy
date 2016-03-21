@@ -148,7 +148,7 @@ class IdeaImlStructure implements IStructure
 			file = project.file( "${ moduleName }/src/${ it }/icons" )
 			if( file.exists( ) ) new Node( xml , "excludeFolder" , [ url: "file://${ buildPathFromModule( file.path ) }" ] )
 
-			file = project.file( "${ moduleName }/src/${ it }/splashs" )
+			file = project.file( "${ moduleName }/src/${ it }/splash_screens" )
 			if( file.exists( ) ) new Node( xml , "excludeFolder" , [ url: "file://${ buildPathFromModule( file.path ) }" ] )
 
 			file = project.file( "${ moduleName }/src/${ it }/signing" )

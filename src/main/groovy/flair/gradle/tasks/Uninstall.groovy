@@ -10,7 +10,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Uninstall extends AbstractVariantTask
+class Uninstall extends VariantTask
 {
 	private ICli adt = new Adt( )
 

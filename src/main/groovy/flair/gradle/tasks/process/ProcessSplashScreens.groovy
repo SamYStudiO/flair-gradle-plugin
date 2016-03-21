@@ -1,7 +1,7 @@
 package flair.gradle.tasks.process
 
-import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
+import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
@@ -11,7 +11,7 @@ import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessSplashs extends AbstractVariantTask
+class ProcessSplashScreens extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
@@ -27,16 +27,16 @@ class ProcessSplashs extends AbstractVariantTask
 		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package" )
 
-		description = "Processes splashscreens into ${ variant.name } ${ project.buildDir.name } directory"
+		description = "Processes splash screens into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessSplashs()
+	public ProcessSplashScreens()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
 	@TaskAction
-	public void processSplashs( IncrementalTaskInputs inputs )
+	public void processSplashScreens( IncrementalTaskInputs inputs )
 	{
 		inputs.outOfDate {}
 		inputs.removed { new File( outputDir , it.file.name ).delete( ) }
@@ -61,7 +61,7 @@ class ProcessSplashs extends AbstractVariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/splashs" ) ) }
+		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/splash_screens" ) ) }
 
 		return list.reverse( )
 	}

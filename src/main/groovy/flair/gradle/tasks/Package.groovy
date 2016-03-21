@@ -5,7 +5,6 @@ import flair.gradle.cli.ICli
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.Platform
 import flair.gradle.utils.Variant
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
@@ -14,7 +13,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Package extends AbstractVariantTask
+class Package extends VariantTask
 {
 	protected ICli cli = new Adt( )
 

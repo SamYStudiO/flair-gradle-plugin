@@ -7,13 +7,12 @@ import flair.gradle.extensions.FlairProperty
 import flair.gradle.utils.CliDevicesOutputParser
 import flair.gradle.utils.Platform
 import flair.gradle.utils.Variant
-import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class Install extends AbstractVariantTask
+class Install extends VariantTask
 {
 	private ICli adb = new Adb( )
 

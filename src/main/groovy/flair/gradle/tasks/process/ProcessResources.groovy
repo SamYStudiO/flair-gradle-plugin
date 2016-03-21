@@ -3,8 +3,8 @@ package flair.gradle.tasks.process
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Png2Atf
 import flair.gradle.extensions.FlairProperty
-import flair.gradle.tasks.AbstractVariantTask
 import flair.gradle.tasks.TaskGroup
+import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.file.FileTree
@@ -16,7 +16,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessResources extends AbstractVariantTask
+class ProcessResources extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
