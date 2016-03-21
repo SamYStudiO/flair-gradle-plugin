@@ -9,7 +9,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaModulesStructure implements IStructure
+public class IdeaModulesStructure implements IStructure
 {
 	@Override
 	public void create( Project project , File source )

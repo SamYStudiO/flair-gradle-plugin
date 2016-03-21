@@ -8,7 +8,7 @@ import org.gradle.api.file.FileTree
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaLibrariesStructure implements IStructure
+public class IdeaLibrariesStructure implements IStructure
 {
 	@Override
 	public void create( Project project , File source )

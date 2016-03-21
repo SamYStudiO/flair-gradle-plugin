@@ -1,3 +1,5 @@
+AnePlatforms//Id.app/libs_ane/flair.PhysicalDensity.ane=flair.PhysicalDensity
+AnePlatforms//Platforms.app/libs_ane/flair.PhysicalDensity.ane=Android-ARM,Android-x86,default
 com.powerflasher.fdt.core.CompatiblePlayers=AIR_Debug_Launcher
 com.powerflasher.fdt.core.CompilerArguments=-static-link-runtime-shared-libraries\=true\n-target-player\={playerVersion}\n-library-path+\="{flexSDK}/frameworks/locale/en_US"\n-default-size\=550,400
 com.powerflasher.fdt.core.CompilerConstants=
@@ -18,6 +20,7 @@ com.powerflasher.fdt.core.PlayerVersion=
 com.powerflasher.fdt.core.ProjectTypeHint=
 com.powerflasher.fdt.core.Runtime=AIR
 com.powerflasher.fdt.core.SdkName=
-com.powerflasher.fdt.core.useProjectFormatterSettings=false
-com.powerflasher.fdt.core.useProjectMetadataTagSettings=false
+com.powerflasher.fdt.core.mobile.iOS.ACTIVE=
+com.powerflasher.fdt.core.mobile.Android.ACTIVE=
+com.powerflasher.fdt.core.mobile.AirDesktop.ACTIVE=
 eclipse.preferences.version=1

@@ -1,9 +1,7 @@
 package flair.gradle.plugins
 
 import flair.gradle.structures.IStructure
-import flair.gradle.structures.fdt.FdtClasspathStructure
-import flair.gradle.structures.fdt.FdtCleanup
-import flair.gradle.structures.fdt.FdtProjectStructure
+import flair.gradle.structures.fdt.*
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
@@ -20,6 +18,8 @@ class FdtPlugin extends AbstractPlugin implements IdePlugin
 			list.add( new FdtProjectStructure( ) )
 			list.add( new FdtClasspathStructure( ) )
 			list.add( new FdtCleanup( ) )
+			list.add( new FdtCoreStructure( ) )
+			list.add( new FdtRunDebugConfigurationsStructure( ) )
 		}
 
 		return list

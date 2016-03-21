@@ -5,8 +5,8 @@ import flair.gradle.dependencies.Sdk
 import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
+import flair.gradle.structures.IStructure
 import flair.gradle.utils.Platform
-import flair.gradle.utils.Variant
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -14,7 +14,7 @@ import org.gradle.api.artifacts.Configuration
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaImlStructure implements IStructure
+public class IdeaImlStructure implements IStructure
 {
 	private Project project
 
@@ -254,7 +254,7 @@ class IdeaImlStructure implements IStructure
 
 			platformNode.@"enabled" = "true"
 			platformNode.@"use-generated-descriptor" = "false"
-			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.name }/app_descriptor.xml" ).path )
+			platformNode.@"custom-descriptor-path" = buildPathFromModule( project.file( "${ project.buildDir.path }/${ variant.name }/package/app_descriptor.xml" ).path )
 			platformNode.@"package-file-name" = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME )
 
 			if( platformNode."files-to-package"[ 0 ] == null ) new Node( platformNode , "files-to-package" )
@@ -262,7 +262,6 @@ class IdeaImlStructure implements IStructure
 			Node toPackage = platformNode."files-to-package"[ 0 ] as Node
 
 			toPackage.children( ).each { it.parent( ).remove( it ) }
-
 
 			project.file( "${ project.buildDir.path }/${ variant.name }/package" ).listFiles( ).each {
 
@@ -281,8 +280,6 @@ class IdeaImlStructure implements IStructure
 			String signingAlias = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_ALIAS )
 			String signingStoreType = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_TYPE )
 			String signingKeyStore = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_STORE )
-			//String signingStorePass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS )
-			//String signingKeyPass = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_KEY_PASS )
 			String signingProviderName = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVIDER_NAME )
 			String signingTsa = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_TSA )
 			String signingProvisioningProfile = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE )
@@ -295,7 +292,7 @@ class IdeaImlStructure implements IStructure
 			if( signingKeyStore ) signingNode."@keystore-path" = buildPathFromModule( signingKeyStore )
 			if( signingTsa ) signingNode."@tsa" = signingTsa
 			if( variant.platform == Platform.ANDROID && x86 ) signingNode."@arch" = "x86"
-			signingNode."@use-temp-certificate" = "false"
+			signingNode."@use-temp-certificate" = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ).toString(  )
 
 			List<Configuration> libraries = new ArrayList<Configuration>( )
 

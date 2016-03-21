@@ -231,7 +231,7 @@ class Package extends VariantTask
 
 	private addFilesAndDirectories()
 	{
-		cli.addArgument( project.file( "${ outputVariantDir.path }/app_descriptor.xml" ).path )
+		cli.addArgument( project.file( "${ outputVariantDir.path }/package/app_descriptor.xml" ).path )
 		if( platformSdk != "null" ) cli.addArgument( "-platformsdk ${ platformSdk }" )
 		cli.addArgument( "-C" )
 		cli.addArgument( project.file( "${ outputVariantDir.path }/package" ).path )

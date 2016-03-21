@@ -11,7 +11,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class IdeaRunDebugConfigurationsStructure implements IStructure
+public class IdeaRunDebugConfigurationsStructure implements IStructure
 {
 	@Override
 	public void create( Project project , File source )
@@ -45,7 +45,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 				String height = size.split( ":" )[ 0 ].split( "x" )[ 1 ]
 				String width = size.split( ":" )[ 0 ].split( "x" )[ 0 ]
 				String port = flair.getFlairProperty( it , FlairProperty.PACKAGE_LISTEN ) ?: "7936"
-				String gradleAssemble = TaskDefinition.PREPARE_PACKAGE.name + it.getName( NamingType.CAPITALIZE )
+				String gradlePrepareTask = TaskDefinition.PREPARE_PACKAGE.name + it.getName( NamingType.CAPITALIZE )
 
 				String content = template.replaceAll( "\\{name\\}" , name )
 						.replaceAll( "\\{profileName\\}" , profileName )
@@ -60,7 +60,7 @@ class IdeaRunDebugConfigurationsStructure implements IStructure
 						.replaceAll( "\\{height\\}" , height )
 						.replaceAll( "\\{width\\}" , width )
 						.replaceAll( "\\{port\\}" , port )
-						.replaceAll( "\\{gradleAssemble\\}" , gradleAssemble )
+						.replaceAll( "\\{gradlePrepareTask\\}" , gradlePrepareTask )
 
 				File f = project.file( ".idea/runConfigurations/${ name }.xml" )
 				f.createNewFile( )

@@ -5,14 +5,14 @@ import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
 import flair.gradle.structures.IStructure
-import flair.gradle.variants.Platform
+import flair.gradle.utils.Platform
 import groovy.xml.XmlUtil
 import org.gradle.api.Project
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class FdtClasspathStructure implements IStructure
+public class FdtClasspathStructure implements IStructure
 {
 	private Project project
 
@@ -56,7 +56,7 @@ class FdtClasspathStructure implements IStructure
 				{
 					String path = buildPathFromModule( it.isDirectory( ) ? it.path : it.parentFile.path )
 
-					if( !xml.children( ).find { it.name( ) == "AS3LibraryFolder" && it.toString( ) == path } )
+					if( !xml.children( ).find { it.name( ) == "AS3LibraryFolder" && it.text( ) == path } )
 					{
 						new Node( xml , "AS3LibraryFolder" , path )
 					}
