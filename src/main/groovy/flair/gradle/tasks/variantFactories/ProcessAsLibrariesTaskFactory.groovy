@@ -1,7 +1,7 @@
 package flair.gradle.tasks.variantFactories
 
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.tasks.process.ProcessAsLibraries
+import flair.gradle.tasks.processes.ProcessAsLibraries
 import flair.gradle.utils.Variant
 import org.gradle.api.Project
 

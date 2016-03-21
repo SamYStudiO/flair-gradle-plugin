@@ -1,4 +1,4 @@
-package flair.gradle.tasks.process
+package flair.gradle.tasks.processes
 
 import flair.gradle.cli.ICli
 import flair.gradle.cli.Png2Atf

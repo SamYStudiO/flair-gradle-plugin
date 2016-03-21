@@ -1,4 +1,4 @@
-package flair.gradle.tasks.process
+package flair.gradle.tasks.processes
 
 import flair.gradle.dependencies.Config
 import flair.gradle.tasks.TaskGroup
@@ -11,7 +11,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessLibraries extends VariantTask
+class ProcessClasses extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
@@ -25,18 +25,18 @@ class ProcessLibraries extends VariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputDir = project.file( "${ outputVariantDir }/libraries" )
+		outputDir = project.file( "${ outputVariantDir }/classes" )
 
-		description = "Processes swc libraries into ${ variant.name } ${ project.buildDir.name } directory"
+		description = "Processes source classes into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessLibraries()
+	public ProcessClasses()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
 	@TaskAction
-	public void processLibraries()
+	public void processClasses()
 	{
 		outputDir.deleteDir( )
 
@@ -44,22 +44,9 @@ class ProcessLibraries extends VariantTask
 
 			if( file.exists( ) )
 			{
-				if( file.isDirectory( ) )
-				{
-					project.fileTree( file ).each {
-						project.copy {
-							from file
-							into "${ outputVariantDir }/libraries"
-							include "**/?*.swc"
-						}
-					}
-				}
-				else
-				{
-					project.copy {
-						from file
-						into "${ outputVariantDir }/libraries"
-					}
+				project.copy {
+					from file
+					into "${ outputVariantDir }/classes"
 				}
 			}
 		}
@@ -71,7 +58,7 @@ class ProcessLibraries extends VariantTask
 
 		variant.getDirectories( Variant.NamingType.CAPITALIZE_BUT_FIRST ).each {
 
-			String s = it == "main" ? Config.LIBRARY.name : it + Config.LIBRARY.name.capitalize( )
+			String s = it == "main" ? Config.SOURCE.name : it + Config.SOURCE.name.capitalize( )
 
 			list.addAll( project.configurations.getByName( s ).files )
 		}

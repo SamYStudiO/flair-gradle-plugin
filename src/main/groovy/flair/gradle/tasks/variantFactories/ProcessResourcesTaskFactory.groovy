@@ -3,7 +3,7 @@ package flair.gradle.tasks.variantFactories
 import flair.gradle.plugins.PluginManager
 import flair.gradle.plugins.TexturePackerPlugin
 import flair.gradle.tasks.TaskDefinition
-import flair.gradle.tasks.process.ProcessResources
+import flair.gradle.tasks.processes.ProcessResources
 import flair.gradle.utils.Variant
 import org.gradle.api.Project
 

@@ -1,4 +1,4 @@
-package flair.gradle.tasks.process
+package flair.gradle.tasks.processes
 
 import flair.gradle.tasks.TaskGroup
 import flair.gradle.tasks.VariantTask
@@ -6,11 +6,12 @@ import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessIcons extends VariantTask
+class ProcessSplashScreens extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
@@ -24,20 +25,21 @@ class ProcessIcons extends VariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputDir = project.file( "${ outputVariantDir }/package/icons" )
+		outputDir = project.file( "${ outputVariantDir }/package" )
 
-		description = "Processes icons into ${ variant.name } ${ project.buildDir.name } directory"
+		description = "Processes splash screens into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessIcons()
+	public ProcessSplashScreens()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
 	@TaskAction
-	public void processIcons()
+	public void processSplashScreens( IncrementalTaskInputs inputs )
 	{
-		outputDir.deleteDir( )
+		inputs.outOfDate {}
+		inputs.removed { new File( outputDir , it.file.name ).delete( ) }
 
 		for( File file : inputFiles )
 		{
@@ -59,7 +61,7 @@ class ProcessIcons extends VariantTask
 	{
 		List<File> list = new ArrayList<File>( )
 
-		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/icons" ) ) }
+		variant.directories.each { list.add( project.file( "${ moduleDir }/src/${ it }/splash_screens" ) ) }
 
 		return list.reverse( )
 	}

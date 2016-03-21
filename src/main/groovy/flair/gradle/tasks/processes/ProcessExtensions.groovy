@@ -1,4 +1,4 @@
-package flair.gradle.tasks.process
+package flair.gradle.tasks.processes
 
 import flair.gradle.dependencies.Config
 import flair.gradle.tasks.TaskGroup
@@ -6,19 +6,15 @@ import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectories
-import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-class ProcessAssets extends VariantTask
+class ProcessExtensions extends VariantTask
 {
 	@InputFiles
 	def Set<File> inputFiles
-
-	@OutputFiles
-	def Set<File> outputFiles
 
 	@OutputDirectories
 	def Set<File> outputDirs
@@ -29,28 +25,22 @@ class ProcessAssets extends VariantTask
 		super.variant = variant
 
 		inputFiles = findInputFiles( )
-		outputFiles = new ArrayList<File>( )
 		outputDirs = new ArrayList<File>( )
 
-		inputFiles.each {
+		outputDirs.add( project.file( "${ outputVariantDir }/extensions" ) )
+		outputDirs.add( project.file( "${ outputVariantDir }/extracted_extensions" ) )
 
-			File file = project.file( "${ outputVariantDir }/package/${ it.name }" )
-
-			if( file.isDirectory( ) ) outputDirs.add( file ) else outputFiles.add( file )
-		}
-
-		description = "Processes assets directories into ${ variant.name } ${ project.buildDir.name } directory"
+		description = "Processes natives extensions and unzipped extensions into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessAssets()
+	public ProcessExtensions()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
 	@TaskAction
-	public void processAssets()
+	public void processExtensions()
 	{
-		outputFiles.each { it.delete( ) }
 		outputDirs.each { it.deleteDir( ) }
 
 		inputFiles.each { file ->
@@ -59,19 +49,35 @@ class ProcessAssets extends VariantTask
 			{
 				if( file.isDirectory( ) )
 				{
-					project.copy {
-						from file
-						into "${ outputVariantDir }/package/${ file.name }"
+					project.fileTree( file ).each {
 
-						includeEmptyDirs = false
+						project.copy {
+							from file
+							into "${ outputVariantDir }/extensions"
+
+							include "**/?*.ane"
+						}
 					}
 				}
 				else
 				{
 					project.copy {
 						from file
-						into "${ outputVariantDir }/package"
+						into "${ outputVariantDir }/extensions"
 					}
+				}
+			}
+		}
+
+		File extensionsDir = project.file( "${ outputVariantDir }/extensions" )
+
+		if( extensionsDir.exists( ) )
+		{
+			extensionsDir.listFiles( ).each { file ->
+				project.copy {
+
+					from project.zipTree( file )
+					into "${ outputVariantDir }/extracted_extensions/${ file.name }"
 				}
 			}
 		}
@@ -83,7 +89,7 @@ class ProcessAssets extends VariantTask
 
 		variant.getDirectories( Variant.NamingType.CAPITALIZE_BUT_FIRST ).each {
 
-			String s = it == "main" ? Config.PACKAGE.name : it + Config.PACKAGE.name.capitalize( )
+			String s = it == "main" ? Config.NATIVE_LIBRARY.name : it + Config.NATIVE_LIBRARY.name.capitalize( )
 
 			list.addAll( project.configurations.getByName( s ).files )
 		}

@@ -1,6 +1,6 @@
 package flair.gradle.tasks
 
-import flair.gradle.tasks.process.*
+import flair.gradle.tasks.processes.*
 
 /**
  * @author SamYStudiO ( contact@samystudio.net )
