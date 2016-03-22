@@ -67,8 +67,6 @@ public class Asdoc extends AbstractTask
 		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.AS_LIBRARY.name.toLowerCase( ) ) }.each {
 
 			it.files.each { file ->
-
-				println( file )
 				if( file.exists( ) ) asdoc.addArgument( "-source-path+=${ file.path }" )
 			}
 		}
