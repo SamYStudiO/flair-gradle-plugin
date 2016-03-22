@@ -1,2 +1,2 @@
-Splash template from http://appicontemplate.com/
+Splash screens template from http://appicontemplate.com/
 
