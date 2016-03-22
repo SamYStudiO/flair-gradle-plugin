@@ -34,11 +34,11 @@ package flair.resources
 		 *
 		 * @see starling.utils.AssetManager
 		 */
-		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = File.cacheDirectory.resolvePath( "assets" ) )
+		public function CacheAssetManager( scaleFactor : Number = 1 , useMipmaps : Boolean = false , cacheDirectory : File = null )
 		{
 			super( scaleFactor , useMipmaps );
 
-			_cacheDirectory = cacheDirectory;
+			_cacheDirectory = cacheDirectory || File.cacheDirectory.resolvePath( "assets" );
 		}
 
 		/**
@@ -67,7 +67,7 @@ package flair.resources
 
 				if( !processCachedAsset ) return null;
 			}
-			
+
 			return data;
 		}
 
