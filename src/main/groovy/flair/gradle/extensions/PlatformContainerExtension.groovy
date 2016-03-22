@@ -109,12 +109,12 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 						switch( conf )
 						{
 							case Config.SOURCE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/actionscript" ) )
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/fonts" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/actionscript" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/fonts" ) )
 								break
 
 							case Config.PACKAGE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ name }/assets" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/assets" ) )
 								break
 
 							default: break
