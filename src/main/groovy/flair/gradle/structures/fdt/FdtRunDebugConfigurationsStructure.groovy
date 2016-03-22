@@ -184,7 +184,13 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 
 				File f = project.file( ".settings/launch/${ name }.launch" )
 
-				String content = f.text.replaceAll( /(<listAttribute key="COMPILER_CONSTANTS">[\s\S]*<\/listAttribute>)/ , "<listAttribute key=\"COMPILER_CONSTANTS\">${ System.lineSeparator( ) }${ constants.join( System.lineSeparator( ) ) }${ System.lineSeparator( ) }</listAttribute>" )
+				String content = f.text
+				content = content.replaceAll( /<listAttribute key="COMPILER_CONSTANTS">[\s\S]*<\/listAttribute>[\s]*<stringAttribute/ , "<listAttribute key=\"COMPILER_CONSTANTS\">${ System.lineSeparator( ) }${ constants.join( System.lineSeparator( ) ) }${ System.lineSeparator( ) }</listAttribute>${ System.lineSeparator( ) }<stringAttribute" )
+
+				println( f.text )
+				println( "----" )
+				println( content )
+				println( "--------------------------" )
 
 				f.write( content )
 
