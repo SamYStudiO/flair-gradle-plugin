@@ -25,7 +25,7 @@
 	<stringAttribute key="INSTALL_TARGET" value="installManually"/>
 	<booleanAttribute key="KILL_ADB_BEFORE_INSTALL" value="false"/>
 	<booleanAttribute key="KILL_ADB_ON_STOP_DEBUG" value="false"/>
-	<stringAttribute key="LAUNCHER_DEPENDENCIES" value="{gradleAssembleTask}&#10;[Self]"/>
+	<stringAttribute key="LAUNCHER_DEPENDENCIES" value="{gradlePrepareTask}&#10;[Self]"/>
 	<intAttribute key="LAUNCH_METHOD" value="0"/>
 	<stringAttribute key="MAIN_CLASS" value="{mainClass}"/>
 	<stringAttribute key="MOBILE_PRESET" value="Apple iPad1/2"/>

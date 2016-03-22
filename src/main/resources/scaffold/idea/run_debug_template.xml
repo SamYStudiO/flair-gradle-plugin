@@ -33,7 +33,7 @@
 		<option name="url" value="http://" />
 		<option name="usbDebugPort" value="{port}" />
 		<method>
-			<option name="Gradle.BeforeRunTask" enabled="true" tasks="{gradleAssembleTask}" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+			<option name="Gradle.BeforeRunTask" enabled="true" tasks="{gradlePrepareTask}" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
 			<option name="Make" enabled="true" />
 		</method>
 	</configuration>
