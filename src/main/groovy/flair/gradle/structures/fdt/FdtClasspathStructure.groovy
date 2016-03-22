@@ -37,11 +37,11 @@ public class FdtClasspathStructure implements IStructure
 
 				if( it.exists( ) )
 				{
-					String path = buildPathFromModule( it.isDirectory( ) ? it.path : it.parentFile.path )
-
-					if( !list.contains( path ) ) new Node( xml , "AS3Classpath" , [ generateProblems: "true" , sdkBased: "false" , type: "source" , useAsSharedCode: "false" ] , path )
-
-					list.add( path )
+					if( !list.contains( it.path ) )
+					{
+						new Node( xml , "AS3Classpath" , [ generateProblems: "true" , sdkBased: "false" , type: "source" , useAsSharedCode: "false" ] , buildPathFromModule( it.path ) )
+						list.add( it.path )
+					}
 				}
 			}
 		}

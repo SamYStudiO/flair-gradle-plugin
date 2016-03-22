@@ -120,11 +120,11 @@ public class IdeaImlStructure implements IStructure
 
 				if( file.exists( ) )
 				{
-					String path = file.isDirectory( ) ? file.path : file.parentFile.path
-
-					if( !list.contains( path ) ) new Node( xml , "sourceFolder" , [ url: "file://${ buildPathFromModule( path ) }" , isTestSource: "false" ] )
-
-					list.add( path )
+					if( !list.contains( file.path ) )
+					{
+						new Node( xml , "sourceFolder" , [ url: "file://${ buildPathFromModule( file.path ) }" , isTestSource: "false" ] )
+						list.add( file.path )
+					}
 				}
 			}
 		}
@@ -292,7 +292,7 @@ public class IdeaImlStructure implements IStructure
 			if( signingKeyStore ) signingNode."@keystore-path" = buildPathFromModule( signingKeyStore )
 			if( signingTsa ) signingNode."@tsa" = signingTsa
 			if( variant.platform == Platform.ANDROID && x86 ) signingNode."@arch" = "x86"
-			signingNode."@use-temp-certificate" = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ).toString(  )
+			signingNode."@use-temp-certificate" = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG ).toString( )
 
 			List<Configuration> libraries = new ArrayList<Configuration>( )
 

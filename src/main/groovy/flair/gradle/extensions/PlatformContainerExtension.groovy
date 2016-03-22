@@ -105,16 +105,17 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 					if( directory != "main" && !project.configurations.findByName( s ) )
 					{
 						Configuration c = project.configurations.create( s )
+						String underscoredName = directory.replaceAll( /([A-Z])/ , /_$1/ ).toLowerCase( )
 
 						switch( conf )
 						{
 							case Config.SOURCE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/actionscript" ) )
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/fonts" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ underscoredName }/actionscript" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ underscoredName }/fonts" ) )
 								break
 
 							case Config.PACKAGE:
-								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ c.name }/assets" ) )
+								project.dependencies.add( c.name , project.files( "${ extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) }/src/${ underscoredName }/assets" ) )
 								break
 
 							default: break
