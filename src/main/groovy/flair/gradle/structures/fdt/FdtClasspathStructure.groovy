@@ -31,7 +31,7 @@ public class FdtClasspathStructure implements IStructure
 		Node xml = new XmlParser( ).parse( file )
 		List<String> list = new ArrayList<String>( )
 
-		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.SOURCE.name ) }.each {
+		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.SOURCE.name ) || it.name.contains( Config.AS_LIBRARY.name ) }.each {
 
 			it.files.each {
 
