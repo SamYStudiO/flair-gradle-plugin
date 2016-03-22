@@ -67,7 +67,8 @@ package flair.resources
 
 				if( !processCachedAsset ) return null;
 			}
-			else return data;
+			
+			return data;
 		}
 
 		/**
