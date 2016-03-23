@@ -29,8 +29,14 @@ class ProcessSplashScreens extends VariantTask
 		outputDir = project.file( "${ outputVariantDir }/package" )
 		inputFiles = findInputFiles( )
 		outputFiles = new ArrayList<File>( )
-		inputFiles.each {
-			project.fileTree( it ).each { file -> outputFiles.add( project.file( "${ outputVariantDir }/package/${ file.name }" ) ) }
+		for( File file : inputFiles )
+		{
+			if( file.exists( ) && project.fileTree( file.path ).size( ) > 0 )
+			{
+				project.fileTree( file ).each { outputFiles.add( project.file( "${ outputVariantDir }/package/${ it.name }" ) ) }
+
+				break
+			}
 		}
 
 		description = "Processes splash screens into ${ variant.name } ${ project.buildDir.name } directory"
