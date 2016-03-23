@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -273,8 +273,8 @@ package starling.rendering
         public function setStateTo(transformationMatrix:Matrix, alphaFactor:Number=1.0,
                                    blendMode:String="auto"):void
         {
-            if (transformationMatrix) _state.transformModelviewMatrix(transformationMatrix);
-            if (alphaFactor != 1.0) _state.alpha *= alphaFactor;
+            if (transformationMatrix) MatrixUtil.prependMatrix(state._modelviewMatrix, transformationMatrix);
+            if (alphaFactor != 1.0) _state._alpha *= alphaFactor;
             if (blendMode != BlendMode.AUTO) _state.blendMode = blendMode;
         }
 
@@ -412,13 +412,13 @@ package starling.rendering
         }
 
         /** Figures out if the mask can be represented by a scissor rectangle; this is possible
-         *  if it's just a simple quad that is parallel to the stage axes. The 'out' parameter
-         *  will be filled with the transformation matrix required to move the mask into stage
-         *  coordinates. */
+         *  if it's just a simple (untextured) quad that is parallel to the stage axes. The 'out'
+         *  parameter will be filled with the transformation matrix required to move the mask into
+         *  stage coordinates. */
         private function isRectangularMask(mask:DisplayObject, out:Matrix):Boolean
         {
             var quad:Quad = mask as Quad;
-            if (quad && !quad.is3D && quad.style.type == MeshStyle)
+            if (quad && !quad.is3D && quad.texture == null)
             {
                 if (mask.stage) mask.getTransformationMatrix(null, out);
                 else
@@ -518,7 +518,8 @@ package starling.rendering
 
                     if (subset.numVertices)
                     {
-                        setStateTo(null, 1.0, meshBatch.blendMode);
+                        _state.alpha = 1.0;
+                        _state.blendMode = meshBatch.blendMode;
                         _batchProcessor.addMesh(meshBatch, _state, subset, true);
                     }
                 }

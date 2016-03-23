@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -29,7 +29,6 @@ package feathers.controls
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Quad;
-	import starling.display.Sprite;
 	import starling.display.Stage;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
@@ -253,16 +252,24 @@ package feathers.controls
 		public static const OPEN_MODE_BELOW:String = "below";
 
 		/**
-		 * The drawers container  will auto size itself to fill the entire stage.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.STAGE</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
 
 		/**
-		 * The drawers container will auto size itself to fit its content.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.CONTENT</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
 
@@ -442,7 +449,7 @@ package feathers.controls
 				{
 					this._content.addEventListener(this._contentEventDispatcherChangeEventType, content_eventDispatcherChangeHandler);
 				}
-				if(this._autoSizeMode === AUTO_SIZE_MODE_CONTENT || !this.stage)
+				if(this._autoSizeMode === AutoSizeMode.CONTENT || !this.stage)
 				{
 					this._content.addEventListener(FeathersEventType.RESIZE, content_resizeHandler);
 				}
@@ -1685,7 +1692,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _autoSizeMode:String = AUTO_SIZE_MODE_STAGE;
+		protected var _autoSizeMode:String = AutoSizeMode.STAGE;
 
 		[Inspectable(type="String",enumeration="stage,content")]
 		/**
@@ -1696,12 +1703,12 @@ package feathers.controls
 		 * match its content:</p>
 		 *
 		 * <listing version="3.0">
-		 * drawers.autoSizeMode = Drawers.AUTO_SIZE_MODE_CONTENT;</listing>
+		 * drawers.autoSizeMode = AutoSizeMode.CONTENT;</listing>
 		 *
-		 * @default Drawers.AUTO_SIZE_MODE_STAGE
+		 * @default feathers.controls.AutoSizeMode.STAGE
 		 *
-		 * @see #AUTO_SIZE_MODE_STAGE
-		 * @see #AUTO_SIZE_MODE_CONTENT
+		 * @see feathers.controls.AutoSizeMode#STAGE
+		 * @see feathers.controls.AutoSizeMode#CONTENT
 		 */
 		public function get autoSizeMode():String
 		{
@@ -1720,7 +1727,7 @@ package feathers.controls
 			this._autoSizeMode = value;
 			if(this._content)
 			{
-				if(this._autoSizeMode == AUTO_SIZE_MODE_CONTENT)
+				if(this._autoSizeMode == AutoSizeMode.CONTENT)
 				{
 					this._content.addEventListener(FeathersEventType.RESIZE, content_resizeHandler);
 				}
@@ -2509,7 +2516,7 @@ package feathers.controls
 				return false;
 			}
 			
-			var measureContent:Boolean = this._autoSizeMode === AUTO_SIZE_MODE_CONTENT || !this.stage;
+			var measureContent:Boolean = this._autoSizeMode === AutoSizeMode.CONTENT || !this.stage;
 			var isTopDrawerDocked:Boolean = this.isTopDrawerDocked;
 			var isRightDrawerDocked:Boolean = this.isRightDrawerDocked;
 			var isBottomDrawerDocked:Boolean = this.isBottomDrawerDocked;
@@ -2840,7 +2847,7 @@ package feathers.controls
 				}
 			}
 			this._content.y = contentY;
-			if(this._autoSizeMode !== AUTO_SIZE_MODE_CONTENT)
+			if(this._autoSizeMode !== AutoSizeMode.CONTENT)
 			{
 				this._content.width = contentWidth;
 				this._content.height = contentHeight;
@@ -4162,45 +4169,57 @@ package feathers.controls
 				var isRightDrawerDocked:Boolean = this.isRightDrawerDocked;
 				var isBottomDrawerDocked:Boolean = this.isBottomDrawerDocked;
 				var isLeftDrawerDocked:Boolean = this.isLeftDrawerDocked;
-				var mask:Quad = this._topDrawer.mask as Quad;
-				if(mask)
+				if(this._topDrawer)
 				{
-					mask.height = this._content.y;
-				}
-				mask = this._rightDrawer.mask as Quad;
-				if(mask)
-				{
-					var rightClipWidth:Number = -this._content.x;
-					if(isLeftDrawerDocked)
+					var mask:Quad = this._topDrawer.mask as Quad;
+					if(mask)
 					{
-						rightClipWidth += this.leftDrawer.width;
-						if(this._leftDrawerDivider)
-						{
-							rightClipWidth += this._leftDrawerDivider.width;
-						}
+						mask.height = this._content.y;
 					}
-					mask.x = this._rightDrawer.width - rightClipWidth;
-					mask.width = rightClipWidth;
 				}
-				mask = this._bottomDrawer.mask as Quad;
-				if(mask)
+				if(this._rightDrawer)
 				{
-					var bottomClipHeight:Number = -this._content.y;
-					if(isTopDrawerDocked)
+					mask = this._rightDrawer.mask as Quad;
+					if(mask)
 					{
-						bottomClipHeight += this.topDrawer.height;
-						if(this._topDrawerDivider)
+						var rightClipWidth:Number = -this._content.x;
+						if(isLeftDrawerDocked)
 						{
-							bottomClipHeight += this._topDrawerDivider.height;
+							rightClipWidth += this.leftDrawer.width;
+							if(this._leftDrawerDivider)
+							{
+								rightClipWidth += this._leftDrawerDivider.width;
+							}
 						}
+						mask.x = this._rightDrawer.width - rightClipWidth;
+						mask.width = rightClipWidth;
 					}
-					mask.y = this._bottomDrawer.height - bottomClipHeight;
-					mask.height = bottomClipHeight;
 				}
-				mask = this._leftDrawer.mask as Quad;
-				if(mask)
+				if(this._bottomDrawer)
 				{
-					mask.width = this._content.x;
+					mask = this._bottomDrawer.mask as Quad;
+					if(mask)
+					{
+						var bottomClipHeight:Number = -this._content.y;
+						if(isTopDrawerDocked)
+						{
+							bottomClipHeight += this.topDrawer.height;
+							if(this._topDrawerDivider)
+							{
+								bottomClipHeight += this._topDrawerDivider.height;
+							}
+						}
+						mask.y = this._bottomDrawer.height - bottomClipHeight;
+						mask.height = bottomClipHeight;
+					}
+				}
+				if(this._leftDrawer)
+				{
+					mask = this._leftDrawer.mask as Quad;
+					if(mask)
+					{
+						mask.width = this._content.x;
+					}
 				}
 				var contentX:Number = this._content.x;
 				var contentY:Number = this._content.y;
@@ -4616,7 +4635,7 @@ package feathers.controls
 		 */
 		protected function content_resizeHandler(event:Event):void
 		{
-			if(this._isValidating || this._autoSizeMode != AUTO_SIZE_MODE_CONTENT)
+			if(this._isValidating || this._autoSizeMode != AutoSizeMode.CONTENT)
 			{
 				return;
 			}

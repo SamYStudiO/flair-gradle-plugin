@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -15,7 +15,9 @@ package feathers.controls
 	import feathers.layout.ILayoutDisplayObject;
 	import feathers.layout.IVirtualLayout;
 	import feathers.skins.IStyleProvider;
+	import feathers.utils.display.stageToStarling;
 
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
@@ -270,16 +272,24 @@ package feathers.controls
 		public static const DECELERATION_RATE_FAST:Number = 0.99;
 
 		/**
-		 * The container will auto size itself to fill the entire stage.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.STAGE</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
 
 		/**
-		 * The container will auto size itself to fit its content.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.CONTENT</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
 
@@ -389,7 +399,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _autoSizeMode:String = AUTO_SIZE_MODE_CONTENT;
+		protected var _autoSizeMode:String = AutoSizeMode.CONTENT;
 
 		[Inspectable(type="String",enumeration="stage,content")]
 		/**
@@ -400,14 +410,14 @@ package feathers.controls
 		 * match the stage:</p>
 		 *
 		 * <listing version="3.0">
-		 * container.autoSizeMode = ScrollContainer.AUTO_SIZE_MODE_STAGE;</listing>
+		 * container.autoSizeMode = AutoSizeMode.STAGE;</listing>
 		 *
-		 * <p>Usually defaults to <code>ScrollContainer.AUTO_SIZE_MODE_CONTENT</code>.
-		 * However, if this component is the root of the Starling display list,
-		 * defaults to <code>ScrollContainer.AUTO_SIZE_MODE_STAGE</code> instead.</p>
+		 * <p>Usually defaults to <code>AutoSizeMode.CONTENT</code>. However, if
+		 * this component is the root of the Starling display list, defaults to
+		 * <code>AutoSizeMode.STAGE</code> instead.</p>
 		 *
-		 * @see #AUTO_SIZE_MODE_STAGE
-		 * @see #AUTO_SIZE_MODE_CONTENT
+		 * @see feathers.controls.AutoSizeMode#STAGE
+		 * @see feathers.controls.AutoSizeMode#CONTENT
 		 */
 		public function get autoSizeMode():String
 		{
@@ -424,10 +434,10 @@ package feathers.controls
 				return;
 			}
 			this._autoSizeMode = value;
-			this._measureViewPort = this._autoSizeMode != AUTO_SIZE_MODE_STAGE;
+			this._measureViewPort = this._autoSizeMode != AutoSizeMode.STAGE;
 			if(this.stage)
 			{
-				if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
+				if(this._autoSizeMode == AutoSizeMode.STAGE)
 				{
 					this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 				}
@@ -759,9 +769,15 @@ package feathers.controls
 		 */
 		override protected function initialize():void
 		{
-			if(this.stage !== null && this.stage.root === this)
+			if(this.stage !== null)
 			{
-				this.autoSizeMode = AUTO_SIZE_MODE_STAGE;
+				var starling:Starling = stageToStarling(this.stage);
+				//we use starling.root because a pop-up's root and the stage
+				//root may be different.
+				if(starling.root === this)
+				{
+					this.autoSizeMode = AutoSizeMode.STAGE;
+				}
 			}
 			super.initialize();
 		}
@@ -799,7 +815,7 @@ package feathers.controls
 			{
 				return false;
 			}
-			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
+			if(this._autoSizeMode == AutoSizeMode.STAGE)
 			{
 				return this.setSizeInternal(this.stage.stageWidth, this.stage.stageHeight, false);
 			}
@@ -811,7 +827,7 @@ package feathers.controls
 		 */
 		protected function scrollContainer_addedToStageHandler(event:Event):void
 		{
-			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
+			if(this._autoSizeMode == AutoSizeMode.STAGE)
 			{
 				this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 			}

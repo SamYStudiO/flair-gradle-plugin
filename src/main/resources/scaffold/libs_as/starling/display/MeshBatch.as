@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -17,6 +17,7 @@ package starling.display
     import starling.rendering.MeshStyle;
     import starling.rendering.Painter;
     import starling.rendering.VertexData;
+    import starling.utils.MatrixUtil;
     import starling.utils.MeshSubset;
 
     /** Combines a number of meshes to one display object and renders them efficiently.
@@ -134,8 +135,8 @@ package starling.display
             if (targetVertexID == 0)
                 setupFor(mesh);
 
-            meshStyle.copyVertexDataTo(_vertexData, targetVertexID, matrix, subset.vertexID, subset.numVertices);
-            meshStyle.copyIndexDataTo(_indexData, targetIndexID, targetVertexID - subset.vertexID,
+            meshStyle.batchVertexData(_style, targetVertexID, matrix, subset.vertexID, subset.numVertices);
+            meshStyle.batchIndexData(_style, targetIndexID, targetVertexID - subset.vertexID,
                 subset.indexID, subset.numIndices);
 
             if (alpha != 1.0) _vertexData.scaleAlphas("color", alpha, targetVertexID, subset.numVertices);
@@ -163,8 +164,8 @@ package starling.display
             if (_vertexData.numVertices == 0)
                 setupFor(mesh);
 
-            meshStyle.copyVertexDataTo(_vertexData, vertexID, matrix, 0, numVertices);
-            meshStyle.copyIndexDataTo(_indexData, indexID, vertexID, 0, numIndices);
+            meshStyle.batchVertexData(_style, vertexID, matrix, 0, numVertices);
+            meshStyle.batchIndexData(_style, indexID, vertexID, 0, numIndices);
 
             if (alpha != 1.0) _vertexData.scaleAlphas("color", alpha, vertexID, numVertices);
             if (_batchable) setRequiresRedraw();
@@ -207,11 +208,11 @@ package starling.display
          *  to the painter's current batch. Otherwise, this will actually do the drawing. */
         override public function render(painter:Painter):void
         {
-            if (_vertexData.numVertices == 0)
-            {
-                // nothing to do =)
-            }
-            else if (_batchable)
+            if (_vertexData.numVertices == 0) return;
+            if (_pixelSnapping) MatrixUtil.snapToPixels(
+                painter.state.modelviewMatrix, painter.pixelSize);
+
+            if (_batchable)
             {
                 painter.batchMesh(this);
             }

@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -17,13 +17,16 @@ package feathers.controls
 	import feathers.layout.LayoutBoundsResult;
 	import feathers.layout.ViewPortBounds;
 	import feathers.skins.IStyleProvider;
+	import feathers.utils.display.stageToStarling;
 
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.events.Event;
+	import starling.filters.FragmentFilter;
 	import starling.rendering.BatchToken;
 	import starling.rendering.Painter;
 
@@ -66,16 +69,24 @@ package feathers.controls
 		protected static const INVALIDATION_FLAG_CLIPPING:String = "clipping";
 
 		/**
-		 * The layout group will auto size itself to fill the entire stage.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.STAGE</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_STAGE:String = "stage";
 
 		/**
-		 * The layout group will auto size itself to fit its content.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.AutoSizeMode.CONTENT</code>.
 		 *
-		 * @see #autoSizeMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const AUTO_SIZE_MODE_CONTENT:String = "content";
 
@@ -249,16 +260,6 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _backgroundSkinPushToken:BatchToken = new BatchToken();
-
-		/**
-		 * @private
-		 */
-		protected var _backgroundSkinPopToken:BatchToken = new BatchToken();
-
-		/**
-		 * @private
-		 */
 		protected var currentBackgroundSkin:DisplayObject;
 
 		/**
@@ -342,7 +343,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _autoSizeMode:String = AUTO_SIZE_MODE_CONTENT;
+		protected var _autoSizeMode:String = AutoSizeMode.CONTENT;
 
 		[Inspectable(type="String",enumeration="stage,content")]
 		/**
@@ -353,14 +354,14 @@ package feathers.controls
 		 * match the stage:</p>
 		 *
 		 * <listing version="3.0">
-		 * group.autoSizeMode = LayoutGroup.AUTO_SIZE_MODE_STAGE;</listing>
+		 * group.autoSizeMode = AutoSizeMode.STAGE;</listing>
 		 *
-		 * <p>Usually defaults to <code>LayoutGroup.AUTO_SIZE_MODE_CONTENT</code>.
-		 * However, if this component is the root of the Starling display list,
-		 * defaults to <code>LayoutGroup.AUTO_SIZE_MODE_STAGE</code> instead.</p>
+		 * <p>Usually defaults to <code>AutoSizeMode.CONTENT</code>. However, if
+		 * this component is the root of the Starling display list, defaults to
+		 * <code>AutoSizeMode.STAGE</code> instead.</p>
 		 *
-		 * @see #AUTO_SIZE_MODE_STAGE
-		 * @see #AUTO_SIZE_MODE_CONTENT
+		 * @see feathers.controls.AutoSizeMode#STAGE
+		 * @see feathers.controls.AutoSizeMode#CONTENT
 		 */
 		public function get autoSizeMode():String
 		{
@@ -379,7 +380,7 @@ package feathers.controls
 			this._autoSizeMode = value;
 			if(this.stage)
 			{
-				if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
+				if(this._autoSizeMode == AutoSizeMode.STAGE)
 				{
 					this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 				}
@@ -524,20 +525,40 @@ package feathers.controls
 				this.currentBackgroundSkin.alpha > 0)
 			{
 				var mask:DisplayObject = this.currentBackgroundSkin.mask;
-				painter.pushState(this._backgroundSkinPushToken);
+				var filter:FragmentFilter = this.currentBackgroundSkin.filter;
+				painter.pushState();
 				painter.setStateTo(this.currentBackgroundSkin.transformationMatrix, this.currentBackgroundSkin.alpha, this.currentBackgroundSkin.blendMode);
-				if(mask)
+				if(mask !== null)
 				{
 					painter.drawMask(mask);
 				}
-				this.currentBackgroundSkin.render(painter);
-				if(mask)
+				if(filter !== null)
+				{
+					filter.render(painter);
+				}
+				else
+				{
+					this.currentBackgroundSkin.render(painter);
+				}
+				if(mask !== null)
 				{
 					painter.eraseMask(mask);
 				}
-				painter.popState(this._backgroundSkinPopToken);
+				painter.popState();
 			}
 			super.render(painter);
+		}
+
+		/**
+		 * @private
+		 */
+		override public function setRequiresRedraw():void
+		{
+			if(this.currentBackgroundSkin !== null)
+			{
+				this.currentBackgroundSkin.setRequiresRedraw();
+			}
+			super.setRequiresRedraw();
 		}
 
 		/**
@@ -575,9 +596,15 @@ package feathers.controls
 		 */
 		override protected function initialize():void
 		{
-			if(this.stage !== null && this.stage.root === this)
+			if(this.stage !== null)
 			{
-				this.autoSizeMode = AUTO_SIZE_MODE_STAGE;
+				var starling:Starling = stageToStarling(this.stage);
+				//we use starling.root because a pop-up's root and the stage
+				//root may be different.
+				if(starling.root === this)
+				{
+					this.autoSizeMode = AutoSizeMode.STAGE;
+				}
 			}
 			super.initialize();
 		}
@@ -695,7 +722,7 @@ package feathers.controls
 			this.viewPortBounds.y = 0;
 			this.viewPortBounds.scrollX = 0;
 			this.viewPortBounds.scrollY = 0;
-			if(this._autoSizeMode === AUTO_SIZE_MODE_STAGE &&
+			if(this._autoSizeMode === AutoSizeMode.STAGE &&
 				this._explicitWidth !== this._explicitWidth)
 			{
 				this.viewPortBounds.explicitWidth = this.stage.stageWidth;
@@ -704,7 +731,7 @@ package feathers.controls
 			{
 				this.viewPortBounds.explicitWidth = this._explicitWidth;
 			}
-			if(this._autoSizeMode === AUTO_SIZE_MODE_STAGE &&
+			if(this._autoSizeMode === AutoSizeMode.STAGE &&
 					this._explicitHeight !== this._explicitHeight)
 			{
 				this.viewPortBounds.explicitHeight = this.stage.stageHeight;
@@ -873,7 +900,7 @@ package feathers.controls
 		 */
 		protected function layoutGroup_addedToStageHandler(event:Event):void
 		{
-			if(this._autoSizeMode == AUTO_SIZE_MODE_STAGE)
+			if(this._autoSizeMode == AutoSizeMode.STAGE)
 			{
 				this.stage.addEventListener(Event.RESIZE, stage_resizeHandler);
 			}

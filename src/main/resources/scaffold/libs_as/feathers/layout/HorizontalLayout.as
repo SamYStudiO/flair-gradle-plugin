@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -8,6 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.layout
 {
 	import feathers.core.IFeathersControl;
+	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IValidating;
 
 	import flash.errors.IllegalOperationError;
@@ -1715,6 +1716,54 @@ package feathers.layout
 						feathersItem.maxHeight = maxHeight;
 					}
 				}
+				else if(item is ILayoutDisplayObject)
+				{
+					var layoutItem:ILayoutDisplayObject = ILayoutDisplayObject(item);
+					var layoutData:HorizontalLayoutData = layoutItem.layoutData as HorizontalLayoutData;
+					if(layoutData !== null)
+					{
+						var percentWidth:Number = layoutData.percentWidth;
+						var percentHeight:Number = layoutData.percentHeight;
+						if(percentWidth === percentWidth) //!isNaN
+						{
+							//we need to clear the explicitWidth because some
+							//components may change their minWidth based on
+							//whether it is set or not, and the minWidth is used
+							//with percentWidth calculations
+							item.width = NaN;
+						}
+						if(percentHeight === percentHeight) //!isNaN
+						{
+							if(percentHeight < 0)
+							{
+								percentHeight = 0;
+							}
+							if(percentHeight > 100)
+							{
+								percentHeight = 100;
+							}
+							var itemHeight:Number = explicitHeight * percentHeight / 100;
+							var measureItem:IMeasureDisplayObject = IMeasureDisplayObject(item);
+							//we use the explicitMinHeight to make an accurate
+							//measurement, and we'll use the component's
+							//measured minHeight later, after we validate it.
+							var itemExplicitMinHeight:Number = measureItem.explicitMinHeight;
+							//for some reason, if we don't call a function right here,
+							//compiling with the flex 4.6 SDK will throw a VerifyError
+							//for a stack overflow.
+							//we could change the === check back to !isNaN() instead, but
+							//isNaN() can allocate an object, so we should call a different
+							//function without allocation.
+							this.doNothing();
+							if(itemExplicitMinHeight === itemExplicitMinHeight && //!isNaN
+								itemHeight < itemExplicitMinHeight)
+							{
+								itemHeight = itemExplicitMinHeight;
+							}
+							item.height = itemHeight;
+						}
+					}
+				}
 				if(item is IValidating)
 				{
 					IValidating(item).validate()
@@ -1746,10 +1795,22 @@ package feathers.layout
 			{
 				var layoutItem:ILayoutDisplayObject = ILayoutDisplayObject(this._typicalItem);
 				var layoutData:VerticalLayoutData = layoutItem.layoutData as VerticalLayoutData;
-				if(layoutData && layoutData.percentHeight === layoutData.percentHeight)
+				if(layoutData !== null)
 				{
-					hasSetHeight = true;
-					this._typicalItem.height = justifyHeight * layoutData.percentHeight / 100;
+					var percentHeight:Number = layoutData.percentHeight;
+					if(percentHeight === percentHeight) //!isNaN
+					{
+						if(percentHeight < 0)
+						{
+							percentHeight = 0;
+						}
+						if(percentHeight > 100)
+						{
+							percentHeight = 100;
+						}
+						hasSetHeight = true;
+						this._typicalItem.height = justifyHeight * percentHeight / 100;
+					}
 				}
 			}
 			if(!hasSetHeight && this._resetTypicalItemDimensionsOnMeasure)
@@ -2037,5 +2098,12 @@ package feathers.layout
 			positionX -= (lastWidth + gap);
 			return positionX;
 		}
+
+		/**
+		 * @private
+		 * This function is here to work around a bug in the Flex 4.6 SDK
+		 * compiler. For explanation, see the places where it gets called.
+		 */
+		protected function doNothing():void {}
 	}
 }

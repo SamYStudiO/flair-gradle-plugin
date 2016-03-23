@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -9,6 +9,7 @@ package feathers.controls.text
 {
 	import feathers.controls.Scroller;
 	import feathers.skins.IStyleProvider;
+	import feathers.utils.display.stageToStarling;
 	import feathers.utils.geom.matrixToRotation;
 	import feathers.utils.geom.matrixToScaleX;
 	import feathers.utils.geom.matrixToScaleY;
@@ -487,6 +488,19 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		override public function setFocus(position:Point = null):void
+		{
+			if(position !== null)
+			{
+				position.x -= this._paddingLeft;
+				position.y -= this._paddingTop;
+			}
+			super.setFocus(position);
+		}
+
+		/**
+		 * @private
+		 */
 		override protected function measure(result:Point = null):Point
 		{
 			if(!result)
@@ -539,15 +553,6 @@ package feathers.controls.text
 			result.y = newHeight;
 
 			return result;
-		}
-
-		/**
-		 * @private
-		 */
-		override protected function getSelectionIndexAtPoint(pointX:Number, pointY:Number):int
-		{
-			pointY += this._verticalScrollPosition;
-			return this.textField.getCharIndexAtPoint(pointX, pointY);
 		}
 
 		/**
@@ -649,16 +654,17 @@ package feathers.controls.text
 		 */
 		override protected function transformTextField():void
 		{
-			if(!this.textField.visible)
+			var starling:Starling = stageToStarling(this.stage);
+			if(starling === null)
 			{
-				return;
+				starling = Starling.current;
 			}
 			var nativeScaleFactor:Number = 1;
-			if(Starling.current.supportHighResolutions)
+			if(starling.supportHighResolutions)
 			{
-				nativeScaleFactor = Starling.current.nativeStage.contentsScaleFactor;
+				nativeScaleFactor = starling.nativeStage.contentsScaleFactor;
 			}
-			var scaleFactor:Number = Starling.contentScaleFactor / nativeScaleFactor;
+			var scaleFactor:Number = starling.contentScaleFactor / nativeScaleFactor;
 			HELPER_POINT.x = HELPER_POINT.y = 0;
 			this.getTransformationMatrix(this.stage, HELPER_MATRIX);
 			MatrixUtil.transformCoords(HELPER_MATRIX, 0, 0, HELPER_POINT);
@@ -666,7 +672,7 @@ package feathers.controls.text
 			var scaleY:Number = matrixToScaleY(HELPER_MATRIX) * scaleFactor;
 			var offsetX:Number = Math.round(this._paddingLeft * scaleX);
 			var offsetY:Number = Math.round((this._paddingTop + this._verticalScrollPosition) * scaleY);
-			var starlingViewPort:Rectangle = Starling.current.viewPort;
+			var starlingViewPort:Rectangle = starling.viewPort;
 			var gutterPositionOffset:Number = 2;
 			if(this._useGutter)
 			{

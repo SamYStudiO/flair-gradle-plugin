@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -238,7 +238,7 @@ package starling.utils
         {
             return getDictionaryKeys(_atlases, prefix, out);
         }
-        
+
         /** Returns a sound with a certain name, or null if it's not found. */
         public function getSound(name:String):Sound
         {

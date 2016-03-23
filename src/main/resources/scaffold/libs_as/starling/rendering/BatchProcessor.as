@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -93,8 +93,8 @@ package starling.rendering
                     _batches[_batches.length] = _currentBatch;
                 }
 
-                var matrix:Matrix = state ? state.modelviewMatrix : null;
-                var alpha:Number  = state ? state.alpha : 1.0;
+                var matrix:Matrix = state ? state._modelviewMatrix : null;
+                var alpha:Number  = state ? state._alpha : 1.0;
 
                 _currentBatch.addMesh(mesh, matrix, alpha, subset, ignoreTransformations);
                 _cacheToken.vertexID += subset.numVertices;

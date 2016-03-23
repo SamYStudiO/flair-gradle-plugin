@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -32,7 +32,7 @@ package starling.rendering
         /** The vertex format expected by <code>uploadVertexData</code>:
          *  <code>"position:float2, texCoords:float2"</code> */
         public static const VERTEX_FORMAT:VertexDataFormat =
-            VertexDataFormat.fromString("position:float2, texCoords:float2");
+            Effect.VERTEX_FORMAT.extend("texCoords:float2");
 
         /** The AGAL code for the standard vertex shader that most filters will use.
          *  It simply transforms the vertex coordinates to clip-space and passes the texture
@@ -98,7 +98,7 @@ package starling.rendering
             {
                 RenderUtil.setSamplerStateAt(0, _texture.mipMapping, _textureSmoothing, _textureRepeat);
                 context.setTextureAt(0, _texture.base);
-                vertexFormat.setVertexBufferAttribute(vertexBuffer, 1, "texCoords");
+                vertexFormat.setVertexBufferAt(1, vertexBuffer, "texCoords");
             }
         }
 

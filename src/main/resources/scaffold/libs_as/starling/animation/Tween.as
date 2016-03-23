@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -231,6 +231,7 @@ package starling.animation
                     // executing 'onComplete'.
                     dispatchEventWith(Event.REMOVE_FROM_JUGGLER);
                     if (onComplete != null) onComplete.apply(this, onCompleteArgs);
+                    if (_currentTime == 0) carryOverTime = 0; // tween was reset
                 }
             }
             

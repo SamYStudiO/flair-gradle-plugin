@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -18,10 +18,10 @@ package starling.display
     import starling.events.Touch;
     import starling.events.TouchEvent;
     import starling.events.TouchPhase;
+    import starling.rendering.MeshStyle;
     import starling.text.TextField;
     import starling.text.TextFormat;
     import starling.textures.Texture;
-    import starling.utils.RectangleUtil;
 
     /** Dispatched when the user triggers the button. Bubbles. */
     [Event(name="triggered", type="starling.events.Event")]
@@ -78,6 +78,7 @@ package starling.display
 
             _state = ButtonState.UP;
             _body = new Image(upState);
+            _body.pixelSnapping = true;
             _scaleWhenDown = downState ? 1.0 : 0.9;
             _scaleWhenOver = _alphaWhenDown = 1.0;
             _alphaWhenDisabled = disabledState ? 1.0: 0.5;
@@ -131,6 +132,7 @@ package starling.display
             if (_textField == null)
             {
                 _textField = new TextField(_textBounds.width, _textBounds.height);
+                _textField.pixelSnapping = _body.pixelSnapping;
                 _textField.touchable = false;
                 _textField.autoScale = true;
                 _textField.batchable = true;
@@ -296,6 +298,23 @@ package starling.display
             _textField.format = value;
         }
 
+        /** The style that is used to render the button's TextField. */
+        public function get textStyle():MeshStyle
+        {
+            if (_textField == null) createTextField();
+            return _textField.style;
+        }
+
+        public function set textStyle(value:MeshStyle):void
+        {
+            if (_textField == null) createTextField();
+            _textField.style = value;
+        }
+
+        /** The style that is used to render the Button. */
+        public function get style():MeshStyle { return _body.style; }
+        public function set style(value:MeshStyle):void { _body.style = value; }
+
         /** The texture that is displayed when the button is not being touched. */
         public function get upState():Texture { return _upState; }
         public function set upState(value:Texture):void
@@ -383,6 +402,16 @@ package starling.display
          *  @default true */
         public override function get useHandCursor():Boolean { return _useHandCursor; }
         public override function set useHandCursor(value:Boolean):void { _useHandCursor = value; }
+
+        /** Controls whether or not the instance snaps to the nearest pixel. This can prevent the
+         *  object from looking blurry when it's not exactly aligned with the pixels of the screen.
+         *  @default true */
+        public function get pixelSnapping():Boolean { return _body.pixelSnapping; }
+        public function set pixelSnapping(value:Boolean):void
+        {
+            _body.pixelSnapping = value;
+            if (_textField) _textField.pixelSnapping = value;
+        }
 
         /** @private */
         override public function set width(value:Number):void

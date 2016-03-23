@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -673,7 +673,9 @@ package feathers.controls
 			var newMinWidth:Number = this._explicitMinWidth;
 			if(needsMinWidth)
 			{
-				if(this._text)
+				//if we don't have an explicitWidth, then the minimum width
+				//should be small to allow wrapping or truncation
+				if(this._text && !needsWidth)
 				{
 					newMinWidth = HELPER_POINT.x;
 				}

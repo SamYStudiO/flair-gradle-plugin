@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -60,11 +60,12 @@ package starling.rendering
         }
 
         /** Creates a new Program instance from AGAL assembly language. */
-        public static function fromSource(vertexShader:String, fragmentShader:String):Program
+        public static function fromSource(vertexShader:String, fragmentShader:String,
+                                          agalVersion:uint=1):Program
         {
             return new Program(
-                sAssembler.assemble(Context3DProgramType.VERTEX, vertexShader),
-                sAssembler.assemble(Context3DProgramType.FRAGMENT, fragmentShader));
+                sAssembler.assemble(Context3DProgramType.VERTEX, vertexShader, agalVersion),
+                sAssembler.assemble(Context3DProgramType.FRAGMENT, fragmentShader, agalVersion));
         }
 
         /** Activates the program on the given context. If you don't pass a context, the current

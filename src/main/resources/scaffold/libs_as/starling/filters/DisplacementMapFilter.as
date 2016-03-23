@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2016 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -187,7 +187,7 @@ import starling.utils.RenderUtil;
 class DisplacementMapEffect extends FilterEffect
 {
     public static const VERTEX_FORMAT:VertexDataFormat =
-        VertexDataFormat.fromString("position:float2, texCoords:float2, mapTexCoords:float2");
+        FilterEffect.VERTEX_FORMAT.extend("mapTexCoords:float2");
 
     private var _mapTexture:Texture;
     private var _mapPoint:Point;
@@ -258,7 +258,7 @@ class DisplacementMapEffect extends FilterEffect
 
             getMapMatrix(sMatrix);
 
-            vertexFormat.setVertexBufferAttribute(vertexBuffer, 2, "mapTexCoords");
+            vertexFormat.setVertexBufferAt(2, vertexBuffer, "mapTexCoords");
             context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, sOneHalf);
             context.setProgramConstantsFromMatrix(Context3DProgramType.FRAGMENT, 1, sMatrix, true);
             RenderUtil.setSamplerStateAt(1, _mapTexture.mipMapping, textureSmoothing, _mapRepeat);

@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -1411,6 +1411,8 @@ package feathers.controls
 				this.globalToLocal(HELPER_POINT, HELPER_POINT);
 				HELPER_POINT.x -= this._paddingLeft;
 				HELPER_POINT.y -= this._paddingTop;
+				//we account for the scroll position in the text editor view
+				//port, so don't do it here!
 				this._isWaitingToSetFocus = false;
 				this.textEditorViewPort.setFocus(HELPER_POINT);
 			}

@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -356,7 +356,7 @@ package starling.filters
                 {
                     if (_pool)   _pool.purge();
                     if (_effect) _effect.purgeBuffers();
-                    if (_quad) { _quad.texture.dispose(); _quad.texture = null; }
+                    if (_quad && _quad.texture) { _quad.texture.dispose(); _quad.texture = null; }
                 }
 
                 if (prevTarget)

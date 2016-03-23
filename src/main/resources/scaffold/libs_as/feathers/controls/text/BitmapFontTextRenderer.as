@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -16,7 +16,6 @@ package feathers.controls.text
 	import feathers.skins.IStyleProvider;
 	import feathers.text.BitmapFontTextFormat;
 
-	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormatAlign;
@@ -337,6 +336,42 @@ package feathers.controls.text
 				return;
 			}
 			this._textureSmoothing = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _pixelSnapping:Boolean = true;
+
+		/**
+		 * Determines if the position of the text should be snapped to the
+		 * nearest whole pixel when rendered. When snapped to a whole pixel, the
+		 * text is often more readable. When not snapped, the text may become
+		 * blurry due to texture smoothing.
+		 *
+		 * <p>In the following example, the text is not snapped to pixels:</p>
+		 *
+		 * <listing version="3.0">
+		 * textRenderer.pixelSnapping = false;</listing>
+		 *
+		 * @default true
+		 */
+		public function get pixelSnapping():Boolean
+		{
+			return _pixelSnapping;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set pixelSnapping(value:Boolean):void
+		{
+			if(this._pixelSnapping === value)
+			{
+				return;
+			}
+			this._pixelSnapping = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
@@ -730,8 +765,22 @@ package feathers.controls.text
 				maxX = currentX;
 			}
 
-			result.x = maxX;
-			result.y = currentY + lineHeight - this.currentTextFormat.leading;
+			if(needsWidth)
+			{
+				result.x = maxX;
+			}
+			else
+			{
+				result.x = this._explicitWidth;
+			}
+			if(needsHeight)
+			{
+				result.y = currentY + lineHeight - this.currentTextFormat.leading;
+			}
+			else
+			{
+				result.y = this._explicitHeight;
+			}
 			return result;
 		}
 
@@ -803,15 +852,16 @@ package feathers.controls.text
 
 			if(dataInvalid || stylesInvalid || sizeInvalid || stateInvalid)
 			{
+				this._characterBatch.pixelSnapping = this._pixelSnapping;
 				this._characterBatch.batchable = !this._useSeparateBatch;
 				this._characterBatch.clear();
 				if(!this.currentTextFormat || this._text === null)
 				{
-					this.setSizeInternal(0, 0, false);
+					this.saveMeasurements(0, 0, 0, 0);
 					return;
 				}
 				this.layoutCharacters(HELPER_POINT);
-				this.setSizeInternal(HELPER_POINT.x, HELPER_POINT.y, false);
+				this.saveMeasurements(HELPER_POINT.x, HELPER_POINT.y, HELPER_POINT.x, HELPER_POINT.y);
 			}
 		}
 
@@ -1143,13 +1193,14 @@ package feathers.controls.text
 			HELPER_IMAGE.y = y;
 			HELPER_IMAGE.color = this.currentTextFormat.color;
 			HELPER_IMAGE.textureSmoothing = this._textureSmoothing;
+			HELPER_IMAGE.pixelSnapping = this._pixelSnapping;
 
-			if(painter)
+			if(painter !== null)
 			{
-				/*support.pushMatrix();
-				support.transformMatrix(HELPER_IMAGE);
-				support.batchQuad(HELPER_IMAGE, parentAlpha, HELPER_IMAGE.texture, this._textureSmoothing);
-				support.popMatrix();*/
+				painter.pushState();
+				painter.setStateTo(HELPER_IMAGE.transformationMatrix);
+				painter.batchMesh(HELPER_IMAGE);
+				painter.popState();
 			}
 			else
 			{

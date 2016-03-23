@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -106,9 +106,7 @@ package starling.display
 
         private function appendPolygon(polygon:Polygon):void
         {
-            var numVertices:int = polygon.numVertices;
-            var vertexFormat:String = "position:float2, color:bytes4";
-            var vertexData:VertexData = new VertexData(vertexFormat, numVertices);
+            var vertexData:VertexData = new VertexData();
             var indexData:IndexData = new IndexData(polygon.numTriangles * 3);
 
             polygon.triangulate(indexData);

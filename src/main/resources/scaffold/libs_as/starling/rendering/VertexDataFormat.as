@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -41,7 +41,7 @@ package starling.rendering
      *
      *  @see VertexData
      */
-     public class VertexDataFormat
+    public class VertexDataFormat
     {
         private var _format:String;
         private var _vertexSize:int;
@@ -104,10 +104,17 @@ package starling.rendering
             }
         }
 
+        /** Creates a new VertexDataFormat instance by appending the given format string
+         *  to the current instance's format. */
+        public function extend(format:String):VertexDataFormat
+        {
+            return fromString(_format + ", " + format);
+        }
+
         // query methods
 
         /** Returns the size of a certain vertex attribute in bytes. */
-        public function getSizeInBytes(attrName:String):int
+        public function getSize(attrName:String):int
         {
             return getAttribute(attrName).size;
         }
@@ -119,7 +126,7 @@ package starling.rendering
         }
 
         /** Returns the offset (in bytes) of an attribute within a vertex. */
-        public function getOffsetInBytes(attrName:String):int
+        public function getOffset(attrName:String):int
         {
             return getAttribute(attrName).offset;
         }
@@ -156,9 +163,11 @@ package starling.rendering
 
         // context methods
 
-        /** Specifies the attribute to use at a certain register (identified by its index)
-         *  in the vertex shader. */
-        public function setVertexBufferAttribute(buffer:VertexBuffer3D, index:int, attrName:String):void
+        /** Specifies which vertex data attribute corresponds to a single vertex shader
+         *  program input. This wraps the <code>Context3D</code>-method with the same name,
+         *  automatically replacing <code>attrName</code> with the corresponding values for
+         *  <code>bufferOffset</code> and <code>format</code>. */
+        public function setVertexBufferAt(index:int, buffer:VertexBuffer3D, attrName:String):void
         {
             var attribute:VertexDataAttribute = getAttribute(attrName);
             Starling.context.setVertexBufferAt(index, buffer, attribute.offset / 4, attribute.format);
@@ -246,7 +255,7 @@ package starling.rendering
         }
 
         /** The size (in bytes) of each vertex. */
-        public function get vertexSizeInBytes():int
+        public function get vertexSize():int
         {
             return _vertexSize;
         }

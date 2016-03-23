@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -765,6 +765,9 @@ package feathers.core
 		/**
 		 * The minimum width value explicitly set by passing a value to the
 		 * <code>minWidth</code> setter.
+		 * 
+		 * <p>If no value has been passed to the <code>minWidth</code> setter,
+		 * this property returns <code>NaN</code>.</p>
 		 */
 		public function get explicitMinWidth():Number
 		{
@@ -844,6 +847,9 @@ package feathers.core
 		/**
 		 * The minimum height value explicitly set by passing a value to the
 		 * <code>minHeight</code> setter.
+		 *
+		 * <p>If no value has been passed to the <code>minHeight</code> setter,
+		 * this property returns <code>NaN</code>.</p>
 		 */
 		public function get explicitMinHeight():Number
 		{

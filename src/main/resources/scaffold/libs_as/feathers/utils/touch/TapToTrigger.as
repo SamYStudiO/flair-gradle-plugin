@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -158,18 +158,21 @@ package feathers.utils.touch
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					var stage:Stage = this._target.stage;
-					touch.getLocation(stage, HELPER_POINT);
-					if(this._target is DisplayObjectContainer)
+					if(stage !== null)
 					{
-						var isInBounds:Boolean = DisplayObjectContainer(this._target).contains(stage.hitTest(HELPER_POINT));
-					}
-					else
-					{
-						isInBounds = this._target === stage.hitTest(HELPER_POINT);
-					}
-					if(isInBounds)
-					{
-						this._target.dispatchEventWith(Event.TRIGGERED);
+						touch.getLocation(stage, HELPER_POINT);
+						if(this._target is DisplayObjectContainer)
+						{
+							var isInBounds:Boolean = DisplayObjectContainer(this._target).contains(stage.hitTest(HELPER_POINT));
+						}
+						else
+						{
+							isInBounds = this._target === stage.hitTest(HELPER_POINT);
+						}
+						if(isInBounds)
+						{
+							this._target.dispatchEventWith(Event.TRIGGERED);
+						}
 					}
 					
 					//the touch has ended, so now we can start watching for a

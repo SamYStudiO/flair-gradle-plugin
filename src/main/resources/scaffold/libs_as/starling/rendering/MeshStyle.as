@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -10,6 +10,7 @@
 
 package starling.rendering
 {
+    import flash.display3D.textures.TextureBase;
     import flash.geom.Matrix;
     import flash.geom.Point;
 
@@ -96,6 +97,7 @@ package starling.rendering
         private var _type:Class;
         private var _target:Mesh;
         private var _texture:Texture;
+        private var _textureBase:TextureBase;
         private var _textureSmoothing:String;
         private var _vertexData:VertexData;   // just a reference to the target's vertex data
         private var _indexData:IndexData;     // just a reference to the target's index data
@@ -117,6 +119,7 @@ package starling.rendering
         public function copyFrom(meshStyle:MeshStyle):void
         {
             _texture = meshStyle._texture;
+            _textureBase = meshStyle._textureBase;
             _textureSmoothing = meshStyle._textureSmoothing;
         }
 
@@ -130,7 +133,7 @@ package starling.rendering
         }
 
         /** Creates the effect that does the actual, low-level rendering.
-         *  Must be overridden by all subclasses!
+         *  To be overridden by subclasses!
          */
         public function createEffect():MeshEffect
         {
@@ -141,7 +144,7 @@ package starling.rendering
          *  The given <code>effect</code> will always match the class returned by
          *  <code>createEffect</code>.
          *
-         *  <p>Must be overridden by all subclasses!</p>
+         *  <p>To be overridden by subclasses!</p>
          */
         public function updateEffect(effect:MeshEffect, state:RenderState):void
         {
@@ -149,6 +152,7 @@ package starling.rendering
             effect.textureSmoothing = _textureSmoothing;
             effect.mvpMatrix3D = state.mvpMatrix3D;
             effect.alpha = state.alpha;
+            effect.tinted = _vertexData.tinted;
         }
 
         /** Indicates if the current instance can be batched with the given style.
@@ -164,36 +168,39 @@ package starling.rendering
 
                 if (_texture == null && newTexture == null) return true;
                 else if (_texture && newTexture)
-                    return _texture.base == newTexture.base &&
+                    return _textureBase == meshStyle._textureBase &&
                            _textureSmoothing == meshStyle._textureSmoothing;
                 else return false;
             }
             else return false;
         }
 
-        /** Copies the raw vertex data of the target mesh to the given VertexData instance.
+        /** Copies the vertex data of the style's current target to the target of another style.
          *  If you pass a matrix, all vertices will be transformed during the process.
          *
-         *  <p>This method is called on batching. Subclasses may override it if they need to modify
-         *  the vertex data in that process. Per default, just the "position" attribute is
-         *  transformed.</p>
+         *  <p>This method is used when batching meshes together for rendering. The parameter
+         *  <code>targetStyle</code> will point to the style of a <code>MeshBatch</code> (a
+         *  subclass of <code>Mesh</code>). Subclasses may override this method if they need
+         *  to modify the vertex data in that process.</p>
          */
-        public function copyVertexDataTo(target:VertexData, targetVertexID:int=0, matrix:Matrix=null,
-                                         vertexID:int=0, numVertices:int=-1):void
+        public function batchVertexData(targetStyle:MeshStyle, targetVertexID:int=0,
+                                        matrix:Matrix=null, vertexID:int=0, numVertices:int=-1):void
         {
-            _vertexData.copyTo(target, targetVertexID, matrix, vertexID, numVertices);
+            _vertexData.copyTo(targetStyle._vertexData, targetVertexID, matrix, vertexID, numVertices);
         }
 
-        /** Copies the raw index data to the given IndexData instance.
+        /** Copies the index data of the style's current target to the target of another style.
          *  The given offset value will be added to all indices during the process.
          *
-         *  <p>This method is called on batching. Subclasses may override it if they need to modify
-         *  the index data in that process.</p>
+         *  <p>This method is used when batching meshes together for rendering. The parameter
+         *  <code>targetStyle</code> will point to the style of a <code>MeshBatch</code> (a
+         *  subclass of <code>Mesh</code>). Subclasses may override this method if they need
+         *  to modify the index data in that process.</p>
          */
-        public function copyIndexDataTo(target:IndexData, targetIndexID:int=0, offset:int=0,
-                                        indexID:int=0, numIndices:int=-1):void
+        public function batchIndexData(targetStyle:MeshStyle, targetIndexID:int=0, offset:int=0,
+                                       indexID:int=0, numIndices:int=-1):void
         {
-            _indexData.copyTo(target, targetIndexID, offset, indexID, numIndices);
+            _indexData.copyTo(targetStyle._indexData, targetIndexID, offset, indexID, numIndices);
         }
 
         /** Call this method if the target needs to be redrawn.
@@ -330,6 +337,9 @@ package starling.rendering
             for (i=0; i<numVertices; ++i)
                 _vertexData.setColor(i, "color", value);
 
+            if (value == 0xffffff && _vertexData.tinted)
+                _vertexData.updateTinted();
+
             setRequiresRedraw();
         }
 
@@ -358,6 +368,7 @@ package starling.rendering
                 }
 
                 _texture = value;
+                _textureBase = value ? value.base : null;
                 setRequiresRedraw();
             }
         }

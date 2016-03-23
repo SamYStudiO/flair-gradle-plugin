@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -16,6 +16,7 @@ package feathers.utils
 	import flash.system.Capabilities;
 
 	import starling.core.Starling;
+	import starling.utils.SystemUtil;
 
 	/**
 	 * Automatically manages the Starling view port and stage dimensions to
@@ -106,6 +107,11 @@ package feathers.utils
 		 */
 		protected function calculateScaleFactor():Number
 		{
+			if(SystemUtil.isDesktop)
+			{
+				//Starling will handle nativeStage.contentsScaleFactor
+				return 1;
+			}
 			var nativeStage:Stage = this._starling.nativeStage;
 			var screenDensity:Number = DeviceCapabilities.dpi;
 			//workaround because these rules derived from Android's behavior

@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -23,6 +23,7 @@ package starling.text
     import starling.display.Quad;
     import starling.display.Sprite;
     import starling.events.Event;
+    import starling.rendering.MeshStyle;
     import starling.rendering.Painter;
     import starling.utils.RectangleUtil;
 
@@ -109,6 +110,7 @@ package starling.text
 
             _meshBatch = new MeshBatch();
             _meshBatch.touchable = false;
+            _meshBatch.pixelSnapping = true;
             addChild(_meshBatch);
         }
         
@@ -170,8 +172,11 @@ package starling.text
 
             format.copyFrom(_format);
 
-            if (isHorizontalAutoSize) width = 100000;
-            if (isVerticalAutoSize)  height = 100000;
+            // Horizontal autoSize does not work for HTML text, since it supports custom alignment.
+            // What should we do if one line is aligned to the left, another to the right?
+
+            if (isHorizontalAutoSize && !_options.isHtmlText) width = 100000;
+            if (isVerticalAutoSize) height = 100000;
 
             _options.textureScale = Starling.contentScaleFactor;
             _options.textureFormat = sDefaultTextureFormat;
@@ -221,7 +226,8 @@ package starling.text
             topLine.color = rightLine.color = bottomLine.color = leftLine.color = _format.color;
         }
 
-        private function setRequiresRecomposition():void
+        /** Forces the text to be recomposed before rendering it in the upcoming frame. */
+        protected function setRequiresRecomposition():void
         {
             _requiresRecomposition = true;
             setRequiresRedraw();
@@ -402,6 +408,16 @@ package starling.text
                 setRequiresRecomposition();
             }
         }
+
+        /** Controls whether or not the instance snaps to the nearest pixel. This can prevent the
+         *  object from looking blurry when it's not exactly aligned with the pixels of the screen.
+         *  @default true */
+        public function get pixelSnapping():Boolean { return _meshBatch.pixelSnapping; }
+        public function set pixelSnapping(value:Boolean):void { _meshBatch.pixelSnapping = value }
+
+        /** The style that is used to render the text's mesh. */
+        public function get style():MeshStyle { return _meshBatch.style; }
+        public function set style(value:MeshStyle):void { _meshBatch.style = value; }
 
         /** The Context3D texture format that is used for rendering of all TrueType texts.
          *  The default (<pre>Context3DTextureFormat.BGRA_PACKED</pre>) provides a good

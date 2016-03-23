@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -11,6 +11,7 @@
 package starling.text
 {
     import flash.display.BitmapData;
+    import flash.display3D.Context3DTextureFormat;
     import flash.geom.Rectangle;
     import flash.utils.ByteArray;
 
@@ -276,7 +277,8 @@ package starling.text
         public static function get texture():Texture
         {
             var bitmapData:BitmapData = getBitmapData();
-            var texture:Texture = Texture.fromBitmapData(bitmapData, false);
+            var format:String = Context3DTextureFormat.BGRA_PACKED;
+            var texture:Texture = Texture.fromBitmapData(bitmapData, false, false, 1, format);
             bitmapData.dispose();
             bitmapData = null;
 

@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011-2015 Gamua. All Rights Reserved.
+//	Copyright Gamua GmbH. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -65,15 +65,15 @@ package starling.rendering
      */
     public class RenderState
     {
-        private var _alpha:Number;
-        private var _blendMode:String;
+        /** @private */ internal var _alpha:Number;
+        /** @private */ internal var _blendMode:String;
+        /** @private */ internal var _modelviewMatrix:Matrix;
+
         private var _renderTarget:Texture;
         private var _renderTargetOptions:uint;
         private var _culling:String;
         private var _clipRect:Rectangle;
         private var _onDrawRequired:Function;
-
-        private var _modelviewMatrix:Matrix;
         private var _modelviewMatrix3D:Matrix3D;
         private var _projectionMatrix3D:Matrix3D;
         private var _mvpMatrix3D:Matrix3D;

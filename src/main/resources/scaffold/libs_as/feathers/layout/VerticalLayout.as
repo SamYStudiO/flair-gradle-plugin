@@ -1,6 +1,6 @@
 /*
 Feathers
-Copyright 2012-2015 Bowler Hat LLC. All Rights Reserved.
+Copyright 2012-2016 Bowler Hat LLC. All Rights Reserved.
 
 This program is free software. You can redistribute and/or modify it in
 accordance with the terms of the accompanying license agreement.
@@ -8,6 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.layout
 {
 	import feathers.core.IFeathersControl;
+	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IValidating;
 
 	import flash.errors.IllegalOperationError;
@@ -1904,6 +1905,54 @@ package feathers.layout
 						feathersItem.maxWidth = maxWidth;
 					}
 				}
+				else if(item is ILayoutDisplayObject)
+				{
+					var layoutItem:ILayoutDisplayObject = ILayoutDisplayObject(item);
+					var layoutData:VerticalLayoutData = layoutItem.layoutData as VerticalLayoutData;
+					if(layoutData !== null)
+					{
+						var percentWidth:Number = layoutData.percentWidth;
+						var percentHeight:Number = layoutData.percentHeight;
+						if(percentWidth === percentWidth) //!isNaN
+						{
+							if(percentWidth < 0)
+							{
+								percentWidth = 0;
+							}
+							if(percentWidth > 100)
+							{
+								percentWidth = 100;
+							}
+							var itemWidth:Number = explicitWidth * percentWidth / 100;
+							var measureItem:IMeasureDisplayObject = IMeasureDisplayObject(item);
+							//we use the explicitMinWidth to make an accurate
+							//measurement, and we'll use the component's
+							//measured minWidth later, after we validate it.
+							var itemExplicitMinWidth:Number = measureItem.explicitMinWidth;
+							//for some reason, if we don't call a function right here,
+							//compiling with the flex 4.6 SDK will throw a VerifyError
+							//for a stack overflow.
+							//we could change the === check back to !isNaN() instead, but
+							//isNaN() can allocate an object, so we should call a different
+							//function without allocation.
+							this.doNothing();
+							if(itemExplicitMinWidth === itemExplicitMinWidth && //!isNaN
+								itemWidth < itemExplicitMinWidth)
+							{
+								itemWidth = itemExplicitMinWidth;
+							}
+							item.width = itemWidth;
+						}
+						if(percentHeight === percentHeight) //!isNaN
+						{
+							//we need to clear the explicitHeight because some
+							//components may change their minHeight based on
+							//whether it is set or not, and the minHeight is
+							//used with percentHeight calculations
+							item.height = NaN;
+						}
+					}
+				}
 				if(this._distributeHeights)
 				{
 					item.height = distributedHeight;
@@ -1935,10 +1984,22 @@ package feathers.layout
 			{
 				var layoutItem:ILayoutDisplayObject = ILayoutDisplayObject(this._typicalItem);
 				var layoutData:VerticalLayoutData = layoutItem.layoutData as VerticalLayoutData;
-				if(layoutData && layoutData.percentWidth === layoutData.percentWidth)
+				if(layoutData !== null)
 				{
-					hasSetWidth = true;
-					this._typicalItem.width = justifyWidth * layoutData.percentWidth / 100;
+					var percentWidth:Number = layoutData.percentWidth;
+					if(percentWidth === percentWidth) //!isNaN
+					{
+						if(percentWidth < 0)
+						{
+							percentWidth = 0;
+						}
+						if(percentWidth > 100)
+						{
+							percentWidth = 100;
+						}
+						hasSetWidth = true;
+						this._typicalItem.width = justifyWidth * percentWidth / 100;
+					}
 				}
 			}
 			if(!hasSetWidth && this._resetTypicalItemDimensionsOnMeasure)
@@ -2257,5 +2318,12 @@ package feathers.layout
 				headerParent.setChildIndex(header, headerParent.numChildren - 1);
 			}
 		}
+
+		/**
+		 * @private
+		 * This function is here to work around a bug in the Flex 4.6 SDK
+		 * compiler. For explanation, see the places where it gets called.
+		 */
+		protected function doNothing():void {}
 	}
 }
