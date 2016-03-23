@@ -182,7 +182,7 @@ public class FdtCoreStructure implements IStructure
 
 			project.file( "${ project.buildDir.path }/${ variant.name }/package" ).listFiles( ).each {
 
-				if( it.name != "icons" && it.name.indexOf( ".swf" ) < 0 && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 )
+				if( it.name != "icons" && it.name.indexOf( ".swf" ) < 0 && it.name != "app_descriptor.xml" && it.name.indexOf( ".apk" ) < 0 && it.name.indexOf( ".ipa" ) < 0 && it.name.indexOf( ".exe" ) < 0 && it.name.indexOf( ".dmg" ) < 0 && it.name.indexOf( ".tmp" ) < 0 && it.name != "tmp" )
 				{
 					if( it.isDirectory( ) ) packageContent += buildPathFromRoot( it.path ) + ";" else packageContent += "${ buildPathFromRoot( it.path ) } > ${ it.name };"
 				}
