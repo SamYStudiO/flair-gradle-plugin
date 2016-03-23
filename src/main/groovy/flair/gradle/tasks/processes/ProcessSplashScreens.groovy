@@ -4,7 +4,7 @@ import flair.gradle.tasks.TaskGroup
 import flair.gradle.tasks.VariantTask
 import flair.gradle.utils.Variant
 import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
@@ -16,7 +16,9 @@ class ProcessSplashScreens extends VariantTask
 	@InputFiles
 	def Set<File> inputFiles
 
-	@OutputDirectory
+	@OutputFiles
+	def Set<File> outputFiles
+
 	def File outputDir
 
 	@Override
@@ -24,8 +26,12 @@ class ProcessSplashScreens extends VariantTask
 	{
 		super.variant = variant
 
-		inputFiles = findInputFiles( )
 		outputDir = project.file( "${ outputVariantDir }/package" )
+		inputFiles = findInputFiles( )
+		outputFiles = new ArrayList<File>( )
+		inputFiles.each {
+			project.fileTree( it ).each { file -> outputFiles.add( project.file( "${ outputVariantDir }/package/${ file.name }" ) ) }
+		}
 
 		description = "Processes splash screens into ${ variant.name } ${ project.buildDir.name } directory"
 	}
