@@ -6,13 +6,13 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 
 ___
 ######WARNING
-Actually comes up with beta Starling/Feathers libraries (Starling 2.0 and Feathers 3.0 downloaded on 2016/02/23).
+Actually comes up with beta Starling/Feathers libraries (Starling 2.0 and Feathers 3.0 downloaded from Github on 2016/03/23).You may obviously update these libraries if you need to.
 
 ___
 * Almost transparent Flair actionscript library to **manage your resources**.
 * Once you're set up you'll be able to compile/test a **template project**.
 * **Variant builds** (build type and product flavor as Android).
-* **[TexturePacker](https://www.codeandweb.com/texturepacker) plugin** to autogenerate your atlases when compiling.
+* **[TexturePacker](https://www.codeandweb.com/texturepacker) plugin** to auto generate your atlases when compiling.
 * **[IntelliJ IDEA](https://www.jetbrains.com/idea/) plugin** to configure project IDEA files and allow using standard run/debug configurations from IDEA.
 * **[FDT](http://fdt.powerflasher.com/) plugin** to configure project FDT files and allow using standard run/debug configurations from FDT.
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...).
