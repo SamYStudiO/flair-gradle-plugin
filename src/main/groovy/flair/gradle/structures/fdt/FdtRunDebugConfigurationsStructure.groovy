@@ -186,12 +186,6 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 
 				String content = f.text
 				content = content.replaceAll( /<listAttribute key="COMPILER_CONSTANTS">[\s\S]*<\/listAttribute>[\s]*<stringAttribute/ , "<listAttribute key=\"COMPILER_CONSTANTS\">${ System.lineSeparator( ) }${ constants.join( System.lineSeparator( ) ) }${ System.lineSeparator( ) }</listAttribute>${ System.lineSeparator( ) }<stringAttribute" )
-
-				println( f.text )
-				println( "----" )
-				println( content )
-				println( "--------------------------" )
-
 				f.write( content )
 
 				list.remove( list.indexOf( name + ".launch" ) )
