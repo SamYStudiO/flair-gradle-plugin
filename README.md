@@ -19,7 +19,7 @@ ___
 
 ===
 ####QUICK START
-Create a gradle project and set up your build.gradle file with the following:
+Create a gradle project and set up your `build.gradle` file (located at your project root) with the following:
 ```
 buildscript {
   repositories {
