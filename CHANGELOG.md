@@ -1,5 +1,9 @@
 # Flair Change Logs
 
+### 0.7.1 | 2016-04-19
+* Updated Starling library to 2.0 final
+* Updated Feathers library to 3.0 beta
+
 ### 0.7.0 | 2016-03-23
 * Added flair.fdt plugin to support FDT IDE.
 * Added tasks descriptions.
