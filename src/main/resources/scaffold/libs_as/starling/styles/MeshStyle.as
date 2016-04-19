@@ -8,7 +8,7 @@
 //
 // =================================================================================================
 
-package starling.rendering
+package starling.styles
 {
     import flash.display3D.textures.TextureBase;
     import flash.geom.Matrix;
@@ -18,6 +18,7 @@ package starling.rendering
     import starling.display.Mesh;
     import starling.events.Event;
     import starling.events.EventDispatcher;
+    import starling.rendering.*;
     import starling.textures.Texture;
     import starling.textures.TextureSmoothing;
 
@@ -99,6 +100,7 @@ package starling.rendering
         private var _texture:Texture;
         private var _textureBase:TextureBase;
         private var _textureSmoothing:String;
+        private var _textureRepeat:Boolean;
         private var _vertexData:VertexData;   // just a reference to the target's vertex data
         private var _indexData:IndexData;     // just a reference to the target's index data
 
@@ -120,6 +122,7 @@ package starling.rendering
         {
             _texture = meshStyle._texture;
             _textureBase = meshStyle._textureBase;
+            _textureRepeat = meshStyle._textureRepeat;
             _textureSmoothing = meshStyle._textureSmoothing;
         }
 
@@ -149,6 +152,7 @@ package starling.rendering
         public function updateEffect(effect:MeshEffect, state:RenderState):void
         {
             effect.texture = _texture;
+            effect.textureRepeat = _textureRepeat;
             effect.textureSmoothing = _textureSmoothing;
             effect.mvpMatrix3D = state.mvpMatrix3D;
             effect.alpha = state.alpha;
@@ -169,7 +173,8 @@ package starling.rendering
                 if (_texture == null && newTexture == null) return true;
                 else if (_texture && newTexture)
                     return _textureBase == meshStyle._textureBase &&
-                           _textureSmoothing == meshStyle._textureSmoothing;
+                           _textureSmoothing == meshStyle._textureSmoothing &&
+                           _textureRepeat == meshStyle._textureRepeat;
                 else return false;
             }
             else return false;
@@ -263,6 +268,26 @@ package starling.rendering
         }
 
         // vertex manipulation
+
+        /** The position of the vertex at the specified index, in the mesh's local coordinate
+         *  system.
+         *
+         *  <p>Only modify the position of a vertex if you know exactly what you're doing, as
+         *  some classes might not work correctly when their vertices are moved. E.g. the
+         *  <code>Quad</code> class expects its vertices to spawn up a perfectly rectangular
+         *  area; some of its optimized methods won't work correctly if that premise is no longer
+         *  fulfilled or the original bounds change.</p>
+         */
+        public function getVertexPosition(vertexID:int, out:Point=null):Point
+        {
+            return _vertexData.getPoint(vertexID, "position", out);
+        }
+
+        public function setVertexPosition(vertexID:int, x:Number, y:Number):void
+        {
+            _vertexData.setPoint(vertexID, "position", x, y);
+            setRequiresRedraw();
+        }
 
         /** Returns the alpha value of the vertex at the specified index. */
         public function getVertexAlpha(vertexID:int):Number
@@ -383,6 +408,11 @@ package starling.rendering
                 setRequiresRedraw();
             }
         }
+
+        /** Indicates if pixels at the edges will be repeated or clamped.
+         *  Only works for power-of-two textures. @default false */
+        public function get textureRepeat():Boolean { return _textureRepeat; }
+        public function set textureRepeat(value:Boolean):void { _textureRepeat = value; }
 
         /** The target the style is currently assigned to. */
         public function get target():Mesh { return _target; }

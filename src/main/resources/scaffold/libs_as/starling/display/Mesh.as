@@ -15,10 +15,10 @@ package starling.display
 
     import starling.core.starling_internal;
     import starling.rendering.IndexData;
-    import starling.rendering.MeshStyle;
     import starling.rendering.Painter;
     import starling.rendering.VertexData;
     import starling.rendering.VertexDataFormat;
+    import starling.styles.MeshStyle;
     import starling.textures.Texture;
     import starling.utils.MatrixUtil;
     import starling.utils.MeshUtil;
@@ -38,7 +38,7 @@ package starling.display
      *  to add support for color transformations, normal mapping, etc.</p>
      *
      *  @see MeshBatch
-     *  @see starling.rendering.MeshStyle
+     *  @see starling.styles.MeshStyle
      *  @see starling.rendering.VertexData
      *  @see starling.rendering.IndexData
      */
@@ -128,6 +128,25 @@ package starling.display
 
         // vertex manipulation
 
+        /** The position of the vertex at the specified index, in the mesh's local coordinate
+         *  system.
+         *
+         *  <p>Only modify the position of a vertex if you know exactly what you're doing, as
+         *  some classes might not work correctly when their vertices are moved. E.g. the
+         *  <code>Quad</code> class expects its vertices to spawn up a perfectly rectangular
+         *  area; some of its optimized methods won't work correctly if that premise is no longer
+         *  fulfilled or the original bounds change.</p>
+         */
+        public function getVertexPosition(vertexID:int, out:Point=null):Point
+        {
+            return _style.getVertexPosition(vertexID, out);
+        }
+
+        public function setVertexPosition(vertexID:int, x:Number, y:Number):void
+        {
+            _style.setVertexPosition(vertexID, x, y);
+        }
+
         /** Returns the alpha value of the vertex at the specified index. */
         public function getVertexAlpha(vertexID:int):Number
         {
@@ -201,6 +220,12 @@ package starling.display
          *  @default bilinear */
         public function get textureSmoothing():String { return _style.textureSmoothing; }
         public function set textureSmoothing(value:String):void { _style.textureSmoothing = value; }
+
+        /** Indicates if pixels at the edges will be repeated or clamped. Only works for
+         *  power-of-two textures; for a solution that works with all kinds of textures,
+         *  see <code>Image.tileGrid</code>. @default false */
+        public function get textureRepeat():Boolean { return _style.textureRepeat; }
+        public function set textureRepeat(value:Boolean):void { _style.textureRepeat = value; }
 
         /** Controls whether or not the instance snaps to the nearest pixel. This can prevent the
          *  object from looking blurry when it's not exactly aligned with the pixels of the screen.

@@ -23,8 +23,8 @@ package starling.text
     import starling.display.Quad;
     import starling.display.Sprite;
     import starling.events.Event;
-    import starling.rendering.MeshStyle;
     import starling.rendering.Painter;
+    import starling.styles.MeshStyle;
     import starling.utils.RectangleUtil;
 
     /** A TextField displays text, either using standard true type fonts or custom bitmap fonts.
@@ -65,13 +65,17 @@ package starling.text
      *  the intended result.</p>
      *
      *  <strong>Batching of TextFields</strong>
-     *  
+     *
      *  <p>Normally, TextFields will require exactly one draw call. For TrueType fonts, you cannot
-     *  avoid that; bitmap fonts, however, may be batched as long as the <code>batchable</code>
-     *  property is enabled. Since only batchable meshes can make use of Starling's render cache,
-     *  it makes sense to keep that property enabled in most circumstances. Only TextFields that
-     *  are constantly changing (their position relative to the stage, their color, text, etc.)
-     *  and contain are large number of bitmap glyphs should disable batching.</p>
+     *  avoid that; bitmap fonts, however, may be batched if you enable the "batchable" property.
+     *  This makes sense if you have several TextFields with short texts that are rendered one
+     *  after the other (e.g. subsequent children of the same sprite), or if your bitmap font
+     *  texture is in your main texture atlas.</p>
+     *
+     *  <p>The recommendation is to activate "batchable" if it reduces your draw calls (use the
+     *  StatsDisplay to check this) AND if the TextFields contain no more than about 10-15
+     *  characters (per TextField). For longer texts, the batching would take up more CPU time
+     *  than what is saved by avoiding the draw calls.</p>
      */
     public class TextField extends DisplayObjectContainer
     {
@@ -88,6 +92,7 @@ package starling.text
         private var _requiresRecomposition:Boolean;
         private var _border:DisplayObjectContainer;
         private var _meshBatch:MeshBatch;
+        private var _style:MeshStyle;
 
         // helper objects
         private static var sMatrix:Matrix = new Matrix();
@@ -178,10 +183,12 @@ package starling.text
             if (isHorizontalAutoSize && !_options.isHtmlText) width = 100000;
             if (isVerticalAutoSize) height = 100000;
 
+            _meshBatch.x = _meshBatch.y = 0;
             _options.textureScale = Starling.contentScaleFactor;
             _options.textureFormat = sDefaultTextureFormat;
             _compositor.fillMeshBatch(_meshBatch, width, height, _text, format, _options);
 
+            if (_style) _meshBatch.style = _style;
             if (_autoSize != TextFieldAutoSize.NONE)
             {
                 _textBounds = _meshBatch.getBounds(_meshBatch, _textBounds);
@@ -379,15 +386,14 @@ package starling.text
                 setRequiresRecomposition();
             }
         }
-        
+
         /** Indicates if TextField should be batched on rendering.
          *
-         *  <p>Only batchable meshes can profit from the render cache; but batching large meshes
-         *  may take up a lot of CPU time. Thus, for large bitmap font text fields (i.e. many
-         *  glyphs) that are constantly changing (i.e. can't use the render cache anyway), it
-         *  makes sense to deactivate batching.</p>
+         *  <p>This works only with bitmap fonts, and it makes sense only for TextFields with no
+         *  more than 10-15 characters. Otherwise, the CPU costs will exceed any gains you get
+         *  from avoiding the additional draw call.</p>
          *
-         *  @default true
+         *  @default false
          */
         public function get batchable():Boolean { return _meshBatch.batchable; }
         public function set batchable(value:Boolean):void
@@ -417,7 +423,11 @@ package starling.text
 
         /** The style that is used to render the text's mesh. */
         public function get style():MeshStyle { return _meshBatch.style; }
-        public function set style(value:MeshStyle):void { _meshBatch.style = value; }
+        public function set style(value:MeshStyle):void
+        {
+            _style = value;
+            setRequiresRecomposition();
+        }
 
         /** The Context3D texture format that is used for rendering of all TrueType texts.
          *  The default (<pre>Context3DTextureFormat.BGRA_PACKED</pre>) provides a good
@@ -427,6 +437,13 @@ package starling.text
         public static function set defaultTextureFormat(value:String):void
         {
             sDefaultTextureFormat = value;
+        }
+
+        /** Updates the list of embedded fonts. Call this method when you loaded a TrueType font
+         *  at runtime so that Starling can recognize it as such. */
+        public static function updateEmbeddedFonts():void
+        {
+            TrueTypeCompositor.updateEmbeddedFonts();
         }
 
         /** Makes a bitmap font available at any TextField in the current stage3D context.

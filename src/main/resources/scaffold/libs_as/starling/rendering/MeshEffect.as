@@ -25,7 +25,7 @@ package starling.rendering
      *
      *  @see Effect
      *  @see FilterEffect
-     *  @see starling.rendering.MeshStyle
+     *  @see starling.styles.MeshStyle
      */
     public class MeshEffect extends FilterEffect
     {
@@ -76,7 +76,7 @@ package starling.rendering
                     "mul v1, va2, vc4 \n";  // multiply alpha (vc4) with color (va2), pass to fp
 
                 fragmentShader =
-                    RenderUtil.createAGALTexOperation("ft0", "v0", 0, texture) +
+                    tex("ft0", "v0", 0, texture) +
                     "mul oc, ft0, v1  \n";  // multiply color with texel color
             }
             else

@@ -510,7 +510,7 @@ package starling.display
         // internal methods
         
         /** @private */
-        internal function setParent(value:DisplayObjectContainer):void 
+        starling_internal function setParent(value:DisplayObjectContainer):void
         {
             // check for a recursion
             var ancestor:DisplayObject = value;
@@ -545,9 +545,9 @@ package starling.display
          *  custom mesh styles or any other custom rendering code, call this method if the object
          *  needs to be redrawn.</p>
          *
-         *  <p>If a class does not support the render cache (like <code>Sprite3D</code>),
-         *  it may override <code>supportsRenderCache</code>. That way, the object will be
-         *  redrawn automatically each frame.</p>
+         *  <p>If the object needs to be redrawn just because it does not support the render cache,
+         *  call <code>painter.excludeFromCache()</code> in the object's render method instead.
+         *  That way, Starling's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
          */
         public function setRequiresRedraw():void
         {
@@ -560,41 +560,38 @@ package starling.display
             while (parent && parent._lastChildChangeFrameID != frameID)
             {
                 parent._lastChildChangeFrameID = frameID;
+                if (parent._mask) parent._mask.setRequiresRedraw();
                 parent = parent._parent;
             }
+
+            if (_isMask) Starling.current.setRequiresRedraw(); // notify 'skipUnchangedFrames'
+            else if (_mask) _mask.setRequiresRedraw();         // propagate into mask
         }
 
-        /** Indicates if this class supports the render cache.
-         *  Subclasses that need to circumvent the cache have to override this method and call
-         *  <code>updateSupportsRenderCache</code> whenever that boolean changes. Don't forget
-         *  to combine the result with <code>super.supportsRenderCache</code> when overriding
-         *  the method!
-         *
-         *  <p>Note that when a container does not support the render cache, its children will
-         *  still be cached! This just means that batching is interrupted at this object when
-         *  the display tree is traversed.</p>
-         */
-        protected function get supportsRenderCache():Boolean
+        /** Indicates if the object needs to be redrawn in the upcoming frame, i.e. if it has
+         *  changed its location relative to the stage or some other aspect of its appearance
+         *  since it was last rendered. */
+        public function get requiresRedraw():Boolean
         {
-            return _mask == null;
+            var frameID:uint = Starling.frameID;
+
+            return _lastParentOrSelfChangeFrameID == frameID ||
+                   _lastChildChangeFrameID == frameID;
         }
 
-        /** Must be called when support for the render cache changes. The actual value is read
-         *  from the <code>supportsRenderCache</code> property. */
-        protected function updateSupportsRenderCache():void
+        /** @private Makes sure the object is not drawn from cache in the next frame.
+         *  This method is meant to be called only from <code>Painter.finishFrame()</code>,
+         *  since it requires rendering to be concluded. */
+        starling_internal function excludeFromCache():void
         {
-            if (supportsRenderCache)
-                removeEventListener(Event.ENTER_FRAME, onEnterFrameWithoutRenderCache);
-            else
-                addEventListener(Event.ENTER_FRAME, onEnterFrameWithoutRenderCache);
-        }
+            var object:DisplayObject = this;
+            var max:uint = 0xffffffff;
 
-        private function onEnterFrameWithoutRenderCache():void
-        {
-            // by wrapping 'setRequiresRedraw' in a private method, we can make sure that no
-            // subclasses are messing with this event handler.
-
-            setRequiresRedraw();
+            while (object && object._tokenFrameID != max)
+            {
+                object._tokenFrameID = max;
+                object = object._parent;
+            }
         }
 
         // helpers
@@ -1080,7 +1077,6 @@ package starling.display
 
                 _mask = value;
                 setRequiresRedraw();
-                updateSupportsRenderCache();
             }
         }
 

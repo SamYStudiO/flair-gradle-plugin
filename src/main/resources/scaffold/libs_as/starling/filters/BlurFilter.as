@@ -31,16 +31,15 @@ package starling.filters
          *      <li>etc.</li>
          *  </ul>
          */
-        public function BlurFilter(blurX:Number=1.0, blurY:Number=1.0)
+        public function BlurFilter(blurX:Number=1.0, blurY:Number=1.0, resolution:Number=1.0)
         {
             _blurX = blurX;
             _blurY = blurY;
-
-            updatePadding();
+            this.resolution = resolution;
         }
 
         /** @private */
-        override public function process(painter:Painter, pool:ITexturePool,
+        override public function process(painter:Painter, helper:IFilterHelper,
                                          input0:Texture = null, input1:Texture = null,
                                          input2:Texture = null, input3:Texture = null):Texture
         {
@@ -49,7 +48,7 @@ package starling.filters
             if (_blurX == 0 && _blurY == 0)
             {
                 effect.strength = 0;
-                return super.process(painter, pool, input0);
+                return super.process(painter, helper, input0);
             }
 
             var blurX:Number = Math.abs(_blurX);
@@ -65,9 +64,9 @@ package starling.filters
 
                 blurX -= effect.strength;
                 inTexture = outTexture;
-                outTexture = super.process(painter, pool, inTexture);
+                outTexture = super.process(painter, helper, inTexture);
 
-                if (inTexture != input0) pool.putTexture(inTexture);
+                if (inTexture != input0) helper.putTexture(inTexture);
             }
 
             effect.direction = BlurEffect.VERTICAL;
@@ -78,9 +77,9 @@ package starling.filters
 
                 blurY -= effect.strength;
                 inTexture = outTexture;
-                outTexture = super.process(painter, pool, inTexture);
+                outTexture = super.process(painter, helper, inTexture);
 
-                if (inTexture != input0) pool.putTexture(inTexture);
+                if (inTexture != input0) helper.putTexture(inTexture);
             }
 
             return outTexture;
@@ -92,10 +91,23 @@ package starling.filters
             return new BlurEffect();
         }
 
+        /** @private */
+        override public function set resolution(value:Number):void
+        {
+            super.resolution = value;
+            updatePadding();
+        }
+
+        /** @private */
+        override public function get numPasses():int
+        {
+            return (Math.ceil(_blurX) + Math.ceil(_blurY)) || 1;
+        }
+
         private function updatePadding():void
         {
-            var paddingX:Number = _blurX ? Math.ceil(Math.abs(_blurX)) + 3 : 1;
-            var paddingY:Number = _blurY ? Math.ceil(Math.abs(_blurY)) + 3 : 1;
+            var paddingX:Number = (_blurX ? Math.ceil(Math.abs(_blurX)) + 3 : 1) / resolution;
+            var paddingY:Number = (_blurY ? Math.ceil(Math.abs(_blurY)) + 3 : 1) / resolution;
 
             padding.setTo(paddingX, paddingX, paddingY, paddingY);
         }
@@ -125,9 +137,7 @@ import flash.display3D.Context3DProgramType;
 
 import starling.rendering.FilterEffect;
 import starling.rendering.Program;
-import starling.textures.Texture;
 import starling.utils.MathUtil;
-import starling.utils.RenderUtil;
 
 class BlurEffect extends FilterEffect
 {
@@ -282,11 +292,6 @@ class BlurEffect extends FilterEffect
             _offsets[2] = 0;
             _offsets[3] = offset2;
         }
-    }
-
-    private static function tex(resultReg:String, uvReg:String, sampler:int, texture:Texture):String
-    {
-        return RenderUtil.createAGALTexOperation(resultReg, uvReg, sampler, texture);
     }
 
     public function get direction():String { return _direction; }

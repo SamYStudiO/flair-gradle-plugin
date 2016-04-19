@@ -14,9 +14,9 @@ package starling.display
 
     import starling.rendering.IndexData;
     import starling.rendering.MeshEffect;
-    import starling.rendering.MeshStyle;
     import starling.rendering.Painter;
     import starling.rendering.VertexData;
+    import starling.styles.MeshStyle;
     import starling.utils.MatrixUtil;
     import starling.utils.MeshSubset;
 
@@ -63,8 +63,6 @@ package starling.display
             var indexData:IndexData = new IndexData();
 
             super(vertexData, indexData);
-
-            _batchable = true;
         }
 
         // display object overrides
@@ -74,12 +72,6 @@ package starling.display
         {
             if (_effect) _effect.dispose();
             super.dispose();
-        }
-
-        /** @inheritDoc */
-        override protected function get supportsRenderCache():Boolean
-        {
-            return _batchable && super.supportsRenderCache;
         }
 
         private function setVertexAndIndexDataChanged():void
@@ -221,6 +213,7 @@ package starling.display
                 painter.finishMeshBatch();
                 painter.drawCount += 1;
                 painter.prepareToDraw();
+                painter.excludeFromCache(this);
 
                 if (_vertexSyncRequired) syncVertexBuffer();
                 if (_indexSyncRequired)  syncIndexBuffer();
@@ -265,20 +258,16 @@ package starling.display
          *  or if it will draw itself right away.
          *
          *  <p>Only batchable meshes can profit from the render cache; but batching large meshes
-         *  may take up a lot of CPU time. Thus, for meshes that contain a large number of vertices
-         *  or are constantly changing (i.e. can't use the render cache anyway), it makes
-         *  sense to deactivate batching.</p>
+         *  may take up a lot of CPU time. Activate this property only if the batch contains just
+         *  a handful of vertices (say, 20 quads).</p>
          *
-         *  @default true
+         *  @default false
          */
         public function get batchable():Boolean { return _batchable; }
         public function set batchable(value:Boolean):void
         {
-            if (value != _batchable) // self-rendering must disrupt the render cache
-            {
-                _batchable = value;
-                updateSupportsRenderCache();
-            }
+            _batchable = value;
+            setRequiresRedraw();
         }
     }
 }

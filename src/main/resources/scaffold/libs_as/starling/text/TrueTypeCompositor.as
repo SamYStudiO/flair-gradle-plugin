@@ -12,6 +12,8 @@ package starling.text
 {
     import flash.geom.Matrix;
     import flash.text.AntiAliasType;
+    import flash.text.Font;
+    import flash.text.FontStyle;
     import flash.text.TextField;
 
     import starling.display.MeshBatch;
@@ -31,10 +33,11 @@ package starling.text
         private static var sHelperQuad:Quad = new Quad(100, 100);
         private static var sNativeTextField:flash.text.TextField = new flash.text.TextField();
         private static var sNativeFormat:flash.text.TextFormat = new flash.text.TextFormat();
+        private static var sEmbeddedFonts:Array = null;
 
         /** Creates a new TrueTypeCompositor instance. */
         public function TrueTypeCompositor()
-        {}
+        { }
 
         /** @inheritDoc */
         public function fillMeshBatch(meshBatch:MeshBatch, width:Number, height:Number, text:String,
@@ -91,6 +94,7 @@ package starling.text
             format.toNativeFormat(sNativeFormat);
 
             sNativeFormat.size = Number(sNativeFormat.size) * options.textureScale;
+            sNativeTextField.embedFonts = isEmbeddedFont(format);
             sNativeTextField.defaultTextFormat = sNativeFormat;
             sNativeTextField.width  = scaledWidth;
             sNativeTextField.height = scaledHeight;
@@ -101,12 +105,6 @@ package starling.text
 
             if (options.isHtmlText) sNativeTextField.htmlText = text;
             else                    sNativeTextField.text     = text;
-
-            sNativeTextField.embedFonts = true;
-
-            // we try embedded fonts first, non-embedded fonts are just a fallback
-            if (sNativeTextField.textWidth == 0.0 || sNativeTextField.textHeight == 0.0)
-                sNativeTextField.embedFonts = false;
 
             if (options.autoScale)
                 autoScaleNativeTextField(sNativeTextField, text, options.isHtmlText);
@@ -166,6 +164,30 @@ package starling.text
                 if (isHtmlText) textField.htmlText = text;
                 else            textField.text     = text;
             }
+        }
+
+        /** Updates the list of embedded fonts. To be called when a font is loaded at runtime. */
+        public static function updateEmbeddedFonts():void
+        {
+            sEmbeddedFonts = null; // will be updated in 'isEmbeddedFont()'
+        }
+
+        private static function isEmbeddedFont(format:TextFormat):Boolean
+        {
+            if (sEmbeddedFonts == null)
+                sEmbeddedFonts = Font.enumerateFonts(false);
+
+            for each (var font:Font in sEmbeddedFonts)
+            {
+                var style:String = font.fontStyle;
+                var isBold:Boolean = style == FontStyle.BOLD || style == FontStyle.BOLD_ITALIC;
+                var isItalic:Boolean = style == FontStyle.ITALIC || style == FontStyle.BOLD_ITALIC;
+
+                if (format.font == font.fontName && format.italic == isItalic && format.bold == isBold)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
