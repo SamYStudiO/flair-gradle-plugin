@@ -141,6 +141,11 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		protected var _textFormatChanged:Boolean = true;
+
+		/**
+		 * @private
+		 */
 		protected var currentTextFormat:BitmapFontTextFormat;
 
 		/**
@@ -535,13 +540,12 @@ package feathers.controls.text
 				fontSizeScale = 1;
 			}
 			var baseline:Number = font.baseline;
-			//for some reason, if we don't call a function right here,
-			//compiling with the flex 4.6 SDK will throw a VerifyError
+			//for some reason, if we do the !== check on a local variable right
+			//here, compiling with the flex 4.6 SDK will throw a VerifyError
 			//for a stack overflow.
 			//we could change the !== check back to isNaN() instead, but
-			//isNaN() can allocate an object, so we should call a different
-			//function without allocation.
-			this.doNothing();
+			//isNaN() can allocate an object that needs garbage collection.
+			this._compilerWorkaround = baseline;
 			if(baseline !== baseline) //isNaN
 			{
 				return font.lineHeight * fontSizeScale;
@@ -590,6 +594,13 @@ package feathers.controls.text
 			}
 			this.invalidate(INVALIDATION_FLAG_STATE);
 		}
+
+		/**
+		 * @private
+		 * This function is here to work around a bug in the Flex 4.6 SDK
+		 * compiler. For explanation, see the places where it gets called.
+		 */
+		private var _compilerWorkaround:Object;
 
 		/**
 		 * @private
@@ -834,7 +845,17 @@ package feathers.controls.text
 				this.addChild(this._characterBatch);
 			}
 		}
-		
+
+		/**
+		 * @private
+		 */
+		protected var _lastLayoutWidth:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _lastLayoutHeight:Number = 0;
+
 		/**
 		 * @private
 		 */
@@ -842,7 +863,6 @@ package feathers.controls.text
 		{
 			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
 			var stylesInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STYLES);
-			var sizeInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_SIZE);
 			var stateInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_STATE);
 
 			if(stylesInvalid || stateInvalid)
@@ -850,10 +870,25 @@ package feathers.controls.text
 				this.refreshTextFormat();
 			}
 
-			if(dataInvalid || stylesInvalid || sizeInvalid || stateInvalid)
+			if(stylesInvalid)
 			{
 				this._characterBatch.pixelSnapping = this._pixelSnapping;
 				this._characterBatch.batchable = !this._useSeparateBatch;
+			}
+
+			//sometimes, we can determine that the layout will be exactly
+			//the same without needing to update. this will result in much
+			//better performance.
+			var newWidth:Number = this._explicitWidth;
+			if(newWidth !== newWidth) //isNaN
+			{
+				newWidth = this._maxWidth;
+			}
+			var sizeInvalid:Boolean = (!this._wordWrap && newWidth < this._lastLayoutWidth) ||
+				(this._wordWrap && newWidth !== this._lastLayoutWidth);
+			if(dataInvalid || sizeInvalid || this._textFormatChanged)
+			{
+				this._textFormatChanged = false;
 				this._characterBatch.clear();
 				if(!this.currentTextFormat || this._text === null)
 				{
@@ -861,8 +896,11 @@ package feathers.controls.text
 					return;
 				}
 				this.layoutCharacters(HELPER_POINT);
-				this.saveMeasurements(HELPER_POINT.x, HELPER_POINT.y, HELPER_POINT.x, HELPER_POINT.y);
+				this._lastLayoutWidth = HELPER_POINT.x;
+				this._lastLayoutHeight = HELPER_POINT.y;
 			}
+			this.saveMeasurements(this._lastLayoutWidth, this._lastLayoutHeight,
+				this._lastLayoutWidth, this._lastLayoutHeight);
 		}
 
 		/**
@@ -1246,7 +1284,11 @@ package feathers.controls.text
 				}
 				textFormat = this._textFormat;
 			}
-			this.currentTextFormat = textFormat;
+			if(this.currentTextFormat !== textFormat)
+			{
+				this.currentTextFormat = textFormat;
+				this._textFormatChanged = true;
+			}
 		}
 
 		/**
@@ -1367,13 +1409,6 @@ package feathers.controls.text
 		{
 			this.invalidate(INVALIDATION_FLAG_STATE);
 		}
-
-		/**
-		 * @private
-		 * This function is here to work around a bug in the Flex 4.6 SDK
-		 * compiler. For explanation, see the places where it gets called.
-		 */
-		protected function doNothing():void {}
 	}
 }
 

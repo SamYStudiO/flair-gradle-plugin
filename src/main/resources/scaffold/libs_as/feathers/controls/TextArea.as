@@ -9,6 +9,7 @@ package feathers.controls
 {
 	import feathers.controls.text.ITextEditorViewPort;
 	import feathers.controls.text.TextFieldTextEditorViewPort;
+	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.INativeFocusOwner;
 	import feathers.core.IStateContext;
 	import feathers.core.IStateObserver;
@@ -1284,6 +1285,7 @@ package feathers.controls
 			}
 			this._currentState = state;
 			this.invalidate(INVALIDATION_FLAG_STATE);
+			this.dispatchEventWith(FeathersEventType.STATE_CHANGE);
 		}
 
 		/**
@@ -1333,20 +1335,36 @@ package feathers.controls
 			this.currentBackgroundSkin = this.getCurrentSkin();
 			if(oldSkin !== this.currentBackgroundSkin)
 			{
-				if(oldSkin)
+				if(oldSkin !== null)
 				{
+					if(oldSkin is IStateObserver)
+					{
+						IStateObserver(oldSkin).stateContext = null;
+					}
 					this.removeChild(oldSkin, false);
 				}
-				if(this.currentBackgroundSkin)
+				if(this.currentBackgroundSkin !== null)
 				{
-					this.addChildAt(this.currentBackgroundSkin, 0);
-					if(this.originalBackgroundWidth !== this.originalBackgroundWidth) //isNaN
+					if(this.currentBackgroundSkin is IStateObserver)
 					{
-						this.originalBackgroundWidth = this.currentBackgroundSkin.width;
+						IStateObserver(this.currentBackgroundSkin).stateContext = this;
 					}
-					if(this.originalBackgroundHeight !== this.originalBackgroundHeight) //isNaN
+					this.addChildAt(this.currentBackgroundSkin, 0);
+
+					if(this.currentBackgroundSkin is IMeasureDisplayObject)
 					{
-						this.originalBackgroundHeight = this.currentBackgroundSkin.height;
+						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackgroundSkin);
+						this._explicitBackgroundWidth = measureSkin.explicitWidth;
+						this._explicitBackgroundHeight = measureSkin.explicitHeight;
+						this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
+						this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+					}
+					else
+					{
+						this._explicitBackgroundWidth = this.currentBackgroundSkin.width;
+						this._explicitBackgroundHeight = this.currentBackgroundSkin.height;
+						this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
+						this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
 					}
 				}
 			}

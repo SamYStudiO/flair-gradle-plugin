@@ -40,7 +40,7 @@ package feathers.display
 		 */
 		public function RenderDelegate(target:DisplayObject)
 		{
-			this._target = target;
+			this.target = target;
 		}
 
 		/**
@@ -61,7 +61,12 @@ package feathers.display
 		 */
 		public function set target(value:DisplayObject):void
 		{
+			if(this._target === value)
+			{
+				return;
+			}
 			this._target = value;
+			this.setRequiresRedraw();
 		}
 
 		/**
@@ -104,6 +109,7 @@ package feathers.display
 		 */
 		override public function render(painter:Painter):void
 		{
+			this._target.setRequiresRedraw();
 			var oldAlpha:Number = this._target.alpha;
 			this._target.alpha = this.alpha;
 			this._target.render(painter);

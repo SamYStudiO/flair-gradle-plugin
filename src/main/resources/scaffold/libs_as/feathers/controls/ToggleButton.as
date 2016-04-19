@@ -505,6 +505,14 @@ package feathers.controls
 			{
 				return;
 			}
+			if(this._defaultSelectedSkin !== null &&
+				this.currentSkin === this._defaultSelectedSkin)
+			{
+				//if this icon needs to be reused somewhere else, we need to
+				//properly clean it up
+				this.removeCurrentSkin(this._defaultSelectedSkin);
+				this.currentSkin = null;
+			}
 			this._defaultSelectedSkin = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
@@ -895,6 +903,14 @@ package feathers.controls
 			{
 				return;
 			}
+			if(this._defaultSelectedIcon !== null &&
+				this.currentIcon === this._defaultSelectedIcon)
+			{
+				//if this icon needs to be reused somewhere else, we need to
+				//properly clean it up
+				this.removeCurrentIcon(this._defaultSelectedIcon);
+				this.currentIcon = null;
+			}
 			this._defaultSelectedIcon = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
@@ -1074,10 +1090,7 @@ package feathers.controls
 			
 			if(stylesInvalid || stateInvalid)
 			{
-				this.tapToSelect.isEnabled = this._isEnabled && this._isToggle;
-				this.tapToSelect.tapToDeselect = this._isToggle;
-				this.keyToSelect.isEnabled = this._isEnabled && this._isToggle;
-				this.keyToSelect.keyToDeselect = this._isToggle;
+				this.refreshSelectionEvents();
 			}
 			
 			super.draw();
@@ -1123,6 +1136,17 @@ package feathers.controls
 				return this._defaultIcon;
 			}
 			return super.getCurrentIcon();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function refreshSelectionEvents():void
+		{
+			this.tapToSelect.isEnabled = this._isEnabled && this._isToggle;
+			this.tapToSelect.tapToDeselect = this._isToggle;
+			this.keyToSelect.isEnabled = this._isEnabled && this._isToggle;
+			this.keyToSelect.keyToDeselect = this._isToggle;
 		}
 	}
 }

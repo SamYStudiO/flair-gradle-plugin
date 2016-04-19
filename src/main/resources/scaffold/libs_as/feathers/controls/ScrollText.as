@@ -725,7 +725,7 @@ package feathers.controls
 		/**
 		 * If set to <code>true</code>, an internal bitmap representation of the
 		 * <code>TextField</code> on the classic display list is cached by the
-		 * runtime. This caching can increase performance.
+		 * runtime. This caching may affect performance.
 		 *
 		 * <p>In the following example, bitmap caching is disabled:</p>
 		 *

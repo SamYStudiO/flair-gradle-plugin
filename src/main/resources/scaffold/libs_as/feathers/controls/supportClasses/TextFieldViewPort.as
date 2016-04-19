@@ -494,24 +494,27 @@ package feathers.controls.supportClasses
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
-		private var _minVisibleWidth:Number = 0;
+		private var _actualMinVisibleWidth:Number = 0;
+
+		private var _explicitMinVisibleWidth:Number;
 
 		public function get minVisibleWidth():Number
 		{
-			return this._minVisibleWidth;
+			if(this._explicitMinVisibleWidth !== this._explicitMinVisibleWidth) //isNaN
+			{
+				return this._actualMinVisibleWidth;
+			}
+			return this._explicitMinVisibleWidth;
 		}
 
 		public function set minVisibleWidth(value:Number):void
 		{
-			if(this._minVisibleWidth == value)
+			if(this._explicitMinVisibleWidth == value ||
+				(value !== value && this._explicitMinVisibleWidth !== this._explicitMinVisibleWidth)) //isNaN
 			{
 				return;
 			}
-			if(value !== value) //isNaN
-			{
-				throw new ArgumentError("minVisibleWidth cannot be NaN");
-			}
-			this._minVisibleWidth = value;
+			this._explicitMinVisibleWidth = value;
 			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
@@ -560,24 +563,27 @@ package feathers.controls.supportClasses
 			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
-		private var _minVisibleHeight:Number = 0;
+		private var _actualMinVisibleHeight:Number = 0;
+
+		private var _explicitMinVisibleHeight:Number;
 
 		public function get minVisibleHeight():Number
 		{
-			return this._minVisibleHeight;
+			if(this._explicitMinVisibleHeight !== this._explicitMinVisibleHeight) //isNaN
+			{
+				return this._actualMinVisibleHeight;
+			}
+			return this._explicitMinVisibleHeight;
 		}
 
 		public function set minVisibleHeight(value:Number):void
 		{
-			if(this._minVisibleHeight == value)
+			if(this._explicitMinVisibleHeight == value ||
+				(value !== value && this._explicitMinVisibleHeight !== this._explicitMinVisibleHeight)) //isNaN
 			{
 				return;
 			}
-			if(value !== value) //isNaN
-			{
-				throw new ArgumentError("minVisibleHeight cannot be NaN");
-			}
-			this._minVisibleHeight = value;
+			this._explicitMinVisibleHeight = value;
 			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
@@ -682,6 +688,11 @@ package feathers.controls.supportClasses
 			this.invalidate(INVALIDATION_FLAG_SCROLL);
 		}
 
+		public function get requiresMeasurementOnScroll():Boolean
+		{
+			return false;
+		}
+
 		private var _paddingTop:Number = 0;
 
 		public function get paddingTop():Number
@@ -750,15 +761,12 @@ package feathers.controls.supportClasses
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
-		override protected function get supportsRenderCache():Boolean
-		{
-			//since the text field is rendered above starling, some of its
-			//properties need to be updated every frame
-			return false;
-		}
-
 		override public function render(painter:Painter):void
 		{
+			//this component is an overlay above Starling, and it should be
+			//excluded from the render cache
+			painter.excludeFromCache(this);
+
 			var starlingViewPort:Rectangle = Starling.current.viewPort;
 			HELPER_POINT.x = HELPER_POINT.y = 0;
 			this.parent.getTransformationMatrix(this.stage, HELPER_MATRIX);
@@ -858,9 +866,9 @@ package feathers.controls.supportClasses
 				{
 					calculatedVisibleWidth = Starling.current.stage.stageWidth;
 				}
-				if(calculatedVisibleWidth < this._minVisibleWidth)
+				if(calculatedVisibleWidth < this._explicitMinVisibleWidth)
 				{
-					calculatedVisibleWidth = this._minVisibleWidth;
+					calculatedVisibleWidth = this._explicitMinVisibleWidth;
 				}
 				else if(calculatedVisibleWidth > this._maxVisibleWidth)
 				{
@@ -873,18 +881,22 @@ package feathers.controls.supportClasses
 			if(calculatedVisibleHeight != calculatedVisibleHeight)
 			{
 				calculatedVisibleHeight = totalContentHeight;
-				if(calculatedVisibleHeight < this._minVisibleHeight)
+				if(calculatedVisibleHeight < this._explicitMinVisibleHeight)
 				{
-					calculatedVisibleHeight = this._minVisibleHeight;
+					calculatedVisibleHeight = this._explicitMinVisibleHeight;
 				}
 				else if(calculatedVisibleHeight > this._maxVisibleHeight)
 				{
 					calculatedVisibleHeight = this._maxVisibleHeight;
 				}
 			}
-			sizeInvalid = this.setSizeInternal(calculatedVisibleWidth, totalContentHeight, false) || sizeInvalid;
+			sizeInvalid = this.saveMeasurements(
+					calculatedVisibleWidth, totalContentHeight,
+					calculatedVisibleWidth, totalContentHeight) || sizeInvalid;
 			this._actualVisibleWidth = calculatedVisibleWidth;
 			this._actualVisibleHeight = calculatedVisibleHeight;
+			this._actualMinVisibleWidth = calculatedVisibleWidth;
+			this._actualMinVisibleHeight = calculatedVisibleHeight;
 
 			if(sizeInvalid || scrollInvalid)
 			{

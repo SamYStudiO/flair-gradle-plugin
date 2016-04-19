@@ -581,6 +581,10 @@ package feathers.core
 			{
 				return;
 			}
+			if(this.scaleX !== 1)
+			{
+				value /= this.scaleX;
+			}
 			this._explicitWidth = value;
 			if(valueIsNaN)
 			{
@@ -589,7 +593,11 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal(value, this.actualHeight, true);
+				var result:Boolean = this.saveMeasurements(value, this.actualHeight, this.actualMinWidth, this.actualMinHeight);
+				if(result)
+				{
+					this.invalidate(INVALIDATION_FLAG_SIZE);
+				}
 			}
 		}
 
@@ -675,6 +683,10 @@ package feathers.core
 			{
 				return;
 			}
+			if(this.scaleY !== 1)
+			{
+				value /= this.scaleY;
+			}
 			this._explicitHeight = value;
 			if(valueIsNaN)
 			{
@@ -683,7 +695,11 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal(this.actualWidth, value, true);
+				var result:Boolean = this.saveMeasurements(this.actualWidth, value, this.actualMinWidth, this.actualMinHeight);
+				if(result)
+				{
+					this.invalidate(INVALIDATION_FLAG_SIZE);
+				}
 			}
 		}
 
@@ -831,12 +847,16 @@ package feathers.core
 			if(valueIsNaN)
 			{
 				this.actualMinWidth = this.scaledActualMinWidth = 0;
+				this.invalidate(INVALIDATION_FLAG_SIZE);
 			}
 			else
 			{
-				this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight);
+				var result:Boolean = this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight);
+				if(result)
+				{
+					this.invalidate(INVALIDATION_FLAG_SIZE);
+				}
 			}
-			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
@@ -913,12 +933,16 @@ package feathers.core
 			if(valueIsNaN)
 			{
 				this.actualMinHeight = this.scaledActualMinHeight = 0;
+				this.invalidate(INVALIDATION_FLAG_SIZE);
 			}
 			else
 			{
-				this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value);
+				var result:Boolean = this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value);
+				if(result)
+				{
+					this.invalidate(INVALIDATION_FLAG_SIZE);
+				}
 			}
-			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 
 		/**
@@ -1011,7 +1035,7 @@ package feathers.core
 		override public function set scaleX(value:Number):void
 		{
 			super.scaleX = value;
-			this.setSizeInternal(this.actualWidth, this.actualHeight, false);
+			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight);
 		}
 
 		/**
@@ -1020,7 +1044,7 @@ package feathers.core
 		override public function set scaleY(value:Number):void
 		{
 			super.scaleY = value;
-			this.setSizeInternal(this.actualWidth, this.actualHeight, false);
+			this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, this.actualMinHeight);
 		}
 
 		/**
@@ -1911,7 +1935,11 @@ package feathers.core
 			}
 			else
 			{
-				this.setSizeInternal(width, height, true);
+				var result:Boolean = this.saveMeasurements(width, height, this.actualMinWidth, this.actualMinHeight);
+				if(result)
+				{
+					this.invalidate(INVALIDATION_FLAG_SIZE);
+				}
 			}
 		}
 
