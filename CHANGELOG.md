@@ -1,5 +1,8 @@
 # Flair Change Logs
 
+### 0.7.2 | 2016-04-19
+* Updated Feathers library to early 3.0 beta
+
 ### 0.7.1 | 2016-04-19
 * Updated Starling library to 2.0 final
 * Updated Feathers library to 3.0 beta

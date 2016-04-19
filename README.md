@@ -6,7 +6,7 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 
 ___
 ######WARNING
-Actually comes up with 3.0 beta Feathers library (downloaded on 2016-04-19 from Github). You may obviously update it if you need to.
+Actually comes up with early 3.0 beta Feathers library (downloaded on 2016-04-19 from Github). You may obviously update it if you need to.
 
 ___
 * Almost transparent Flair actionscript library to **manage your resources**.
@@ -26,7 +26,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.1"
+    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.2"
   }
 }
 
