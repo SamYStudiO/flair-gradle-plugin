@@ -17,6 +17,9 @@ ___
 * **[FDT](http://fdt.powerflasher.com/) plugin** to configure project FDT files and allow using standard run/debug configurations from FDT.
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...).
 
+##### REQUIREMENTS :
+* Gradle 2.5+
+
 ===
 ####QUICK START
 Create a gradle project and set up your `build.gradle` file (located at your project root) with the following:
