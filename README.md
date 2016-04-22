@@ -44,7 +44,7 @@ flair{
   packageName "com.hello.world" // set your sources root package here (this is required to initialize flair plugin)
 }
 ```
-To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when `build.gradle` and project tree are refreshed), after you set your sdk refresh your `gradle.build` and project tree again, then your project structure should be set under `app` folder.
+To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when `build.gradle` and project tree are refreshed), after you set your sdk refresh your `build.gradle` and project tree again, then your project structure should be set under `app` folder.
 
 ===
 ####DOCUMENTATION
