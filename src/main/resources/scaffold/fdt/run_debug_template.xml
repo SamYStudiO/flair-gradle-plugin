@@ -17,7 +17,7 @@
 	<stringAttribute key="CUSTOM_ADL_CMD_LINE" value="{adl}"/>
 	<intAttribute key="DEBUG_VIA" value="0"/>
 	<booleanAttribute key="DEINSTALL_TARGET" value="true"/>
-	<booleanAttribute key="DISABLE_COMPILE_PROCESS" value="true"/>
+	<booleanAttribute key="DISABLE_COMPILE_PROCESS" value="false"/>
 	<booleanAttribute key="FORCE_FRESH_COMPILATION" value="false"/>
 	<booleanAttribute key="FORCE_INCLUDE_TEST_RESOURCES" value="false"/>
 	<booleanAttribute key="INCLUDE_TEST_RESOURCES" value="false"/>
@@ -25,7 +25,8 @@
 	<stringAttribute key="INSTALL_TARGET" value="installManually"/>
 	<booleanAttribute key="KILL_ADB_BEFORE_INSTALL" value="false"/>
 	<booleanAttribute key="KILL_ADB_ON_STOP_DEBUG" value="false"/>
-	<stringAttribute key="LAUNCHER_DEPENDENCIES" value="{gradlePrepareTask}&#10;[Self]"/>
+	<!--<stringAttribute key="LAUNCHER_DEPENDENCIES" value="{gradlePrepareTask}&#10;[Self]"/>-->
+	<stringAttribute key="LAUNCHER_DEPENDENCIES" value="[Self]"/>
 	<intAttribute key="LAUNCH_METHOD" value="0"/>
 	<stringAttribute key="MAIN_CLASS" value="{mainClass}"/>
 	<stringAttribute key="MOBILE_PRESET" value="Apple iPad1/2"/>

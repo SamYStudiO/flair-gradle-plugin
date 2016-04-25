@@ -7,9 +7,7 @@ import flair.gradle.extensions.FlairProperty
 import flair.gradle.extensions.IExtensionManager
 import flair.gradle.plugins.PluginManager
 import flair.gradle.structures.IStructure
-import flair.gradle.tasks.TaskDefinition
 import flair.gradle.utils.Platform
-import flair.gradle.utils.Variant.NamingType
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 
@@ -34,7 +32,7 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 		project.file( ".settings/launch" ).listFiles( ).each { list.add( it.name ) }
 
 		String template = project.file( "${ source.path }/fdt/run_debug_template.xml" ).text
-		String gradleTemplate = project.file( "${ source.path }/fdt/gradle_launch_template.xml" ).text
+		//String gradleTemplate = project.file( "${ source.path }/fdt/gradle_launch_template.xml" ).text
 
 		IExtensionManager flair = project.flair as IExtensionManager
 
@@ -78,19 +76,20 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 					}
 				}
 
+				//String mainClass = buildPathFromRoot( project.file( "${ project.buildDir.path }/${ variant.name }/classes/${ ( extensionManager.getFlairProperty( variant , FlairProperty.COMPILER_MAIN_CLASS ) as String ).split( "\\." ).join( "/" ) }.as" ).path )
 				String sdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK ) as String ?: ""
 				String screenSize = flair.getFlairProperty( variant , FlairProperty.ADL_SCREEN_SIZE ) ?: ""
 				String adlArguments = flair.getFlairProperty( variant , FlairProperty.ADL_PARAMETERS ) ?: ""
 				String profileName = variant.name
 				String sampler = flair.getFlairProperty( variant , FlairProperty.PACKAGE_SAMPLER )
-				String gradlePrepareTask = TaskDefinition.PREPARE_PACKAGE.name + variant.getName( NamingType.CAPITALIZE )
+				//String gradlePrepareTask = TaskDefinition.PREPARE_PACKAGE.name + variant.getName( NamingType.CAPITALIZE )
 
-				String content = gradleTemplate.replaceAll( "\\{gradlePrepareTask\\}" , gradlePrepareTask )
+				/*String content = gradleTemplate.replaceAll( "\\{gradlePrepareTask\\}" , gradlePrepareTask )
 						.replaceAll( "\\{projectName\\}" , project.name )
 
 				File f = project.file( ".settings/launch/${ gradlePrepareTask }.launch" )
 				f.createNewFile( )
-				f.write( content )
+				f.write( content )*/
 
 				List<String> constants = new ArrayList<String>( )
 
@@ -144,7 +143,7 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 					cli.addArguments( parameters )
 				}
 
-				content = template.replaceAll( "\\{app\\}" , app )
+				String content = template.replaceAll( "\\{app\\}" , app )
 						.replaceAll( "\\{screenSize\\}" , screenSize )
 						.replaceAll( "\\{adlArguments\\}" , adlArguments )
 						.replaceAll( "\\{adl\\}" , cli.arguments.join( " " ).replaceAll( "\\\\" , "/" ) )
@@ -155,9 +154,9 @@ public class FdtRunDebugConfigurationsStructure implements IStructure
 						.replaceAll( "\\{sampler\\}" , sampler )
 						.replaceAll( "\\{platform\\}" , platform )
 						.replaceAll( "\\{profileName\\}" , profileName )
-						.replaceAll( "\\{gradlePrepareTask\\}" , gradlePrepareTask )
+				//.replaceAll( "\\{gradlePrepareTask\\}" , gradlePrepareTask )
 
-				f = project.file( ".settings/launch/${ name }.launch" )
+				File f = project.file( ".settings/launch/${ name }.launch" )
 				f.createNewFile( )
 				f.write( content )
 			}
