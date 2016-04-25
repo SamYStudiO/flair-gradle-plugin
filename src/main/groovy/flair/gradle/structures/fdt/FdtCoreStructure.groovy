@@ -193,7 +193,7 @@ public class FdtCoreStructure implements IStructure
 			if( variant.platform == Platform.IOS ) content += createConfigurationLine( variant , "SIGNATURE.CERTIFICATE.RELEASE" , "" )
 			if( variant.platform == Platform.IOS ) content += createConfigurationLine( variant , "SIGNATURE.PROVISIONING.FILE" , buildPathFromRoot( extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_PROVISIONING_PROFILE ).toString( ) ) )
 			if( variant.platform == Platform.IOS ) content += createConfigurationLine( variant , "SIGNATURE.PROVISIONING.FILE.RELEASE" , "" )
-			content += createConfigurationLine( variant , "SIGNATURE.PWD" , "LOCAL" )
+			content += createConfigurationLine( variant , "SIGNATURE.PWD" , "PLAIN\\:${ extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_STORE_PASS ).toString( ) }" )
 			if( variant.platform == Platform.IOS ) content += createConfigurationLine( variant , "SIGNATURE.PWD.RELEASE" , "" )
 			if( variant.platform == Platform.IOS ) content += createConfigurationLine( variant , "SIGNATURE.USE.DIFEERENT.PROFILES" , "false" )
 			content += createConfigurationLine( variant , "SWFPATH" , "" )
