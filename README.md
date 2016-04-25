@@ -2,11 +2,11 @@
 Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR projects** (ios, android and desktop). Flair comes up with all tasks you may already use with Ant (compile, install, launch, etc...) but also with all files you need to start working on your projects. Last but not least Flair greatly **improves resource management** using an [Android like](http://developer.android.com/guide/topics/resources/providing-resources.html) approach.
 
 #####FEATURES :
-* Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)** (as actionscript libraries).
+* Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)** (as actionscript libraries), you may obviously update them if you need to or even switch to SWC files.
 
 ___
 ######WARNING
-Actually comes up with early 3.0 beta Feathers library (downloaded on 2016-04-19 from Github). You may obviously update it if you need to.
+Actually comes up with early 3.0 beta Feathers library (downloaded on 2016-04-19 from Github).
 
 ___
 * Almost transparent Flair actionscript library to **manage your resources**.
@@ -19,6 +19,10 @@ ___
 
 ##### REQUIREMENTS :
 * Gradle 2.5+
+* Starling 2.+
+* Feathers 3.+
+* Tested on IntelliJ 15+
+* Tested on FDT 1.16.91+
 
 ===
 ####QUICK START
