@@ -19,8 +19,8 @@ ___
 
 ##### REQUIREMENTS :
 * Gradle 2.5+
-* Starling 2.+
-* Feathers 3.+
+* Starling 2.0+
+* Feathers 3.0+
 * Tested on IntelliJ 15+
 * Tested on FDT 1.16.91+
 
