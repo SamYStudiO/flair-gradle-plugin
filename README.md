@@ -3,12 +3,6 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 
 #####FEATURES :
 * Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)** (as actionscript libraries), you may obviously update them if you need to or even switch to SWC files.
-
-___
-######WARNING
-Actually comes up with early 3.0 beta Feathers library (downloaded on 2016-04-19 from Github).
-
-___
 * Almost transparent Flair actionscript library to **manage your resources**.
 * Once you're set up you'll be able to compile/test a **template project**.
 * **Variant builds** (build type and product flavor as Android).
@@ -33,7 +27,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.2"
+    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.3"
   }
 }
 
