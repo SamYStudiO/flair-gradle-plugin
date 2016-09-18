@@ -258,6 +258,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
+
+		/**
+		 * @private
+		 */
 		protected var currentBackground:DisplayObject;
 
 		/**
@@ -717,8 +727,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackground,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			if(this.currentBackground is IValidating)
 			{
 				IValidating(this.currentBackground).validate();
@@ -738,7 +750,7 @@ package feathers.controls
 				}
 				else if(this.currentBackground !== null)
 				{
-					newMinWidth = this.currentBackground.width;
+					newMinWidth = this._explicitBackgroundMinWidth;
 				}
 				else
 				{
@@ -764,7 +776,7 @@ package feathers.controls
 				}
 				else if(this.currentBackground !== null)
 				{
-					newMinHeight = this.currentBackground.height
+					newMinHeight = this._explicitBackgroundMinHeight;
 				}
 				else
 				{
@@ -845,6 +857,10 @@ package feathers.controls
 			if(this.currentBackground !== null)
 			{
 				this.currentBackground.visible = true;
+				if(this.currentBackground is IFeathersControl)
+				{
+					IFeathersControl(this.currentBackground).initializeNow();
+				}
 				if(this.currentBackground is IMeasureDisplayObject)
 				{
 					var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackground);
@@ -852,6 +868,8 @@ package feathers.controls
 					this._explicitBackgroundHeight = measureSkin.explicitHeight;
 					this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 					this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+					this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+					this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 				}
 				else
 				{
@@ -859,6 +877,8 @@ package feathers.controls
 					this._explicitBackgroundHeight = this.currentBackground.height;
 					this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 					this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+					this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+					this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 				}
 			}
 		}

@@ -510,7 +510,7 @@ package feathers.controls
 		 */
 		public function popScreen(transition:Function = null):DisplayObject
 		{
-			if(this._stack.length == 0)
+			if(this._stack.length === 0)
 			{
 				return this._activeScreen;
 			}
@@ -582,7 +582,6 @@ package feathers.controls
 			{
 				transition = this.popTransition;
 			}
-			var item:StackItem = this._stack[0];
 			this._stack.length = 0;
 			this.clearScreenInternal(transition);
 		}

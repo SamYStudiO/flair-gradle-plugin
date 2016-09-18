@@ -12,6 +12,7 @@ package feathers.utils.keyboard
 
 	import flash.ui.Keyboard;
 
+	import starling.display.Stage;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 
@@ -218,8 +219,13 @@ package feathers.utils.keyboard
 			{
 				return;
 			}
+			var stage:Stage = Stage(event.currentTarget);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
+			if(this._target.stage !== stage)
+			{
+				return;
+			}
 			this._target.dispatchEventWith(Event.TRIGGERED);
-			this._target.stage.removeEventListener(KeyboardEvent.KEY_UP, stage_keyUpHandler);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package flair.utils.displayMetrics
 {
 	/**
-	 * Defined constants for all density dpi buckets.
+	 * Defines constants for all density dpi buckets.
 	 */
 	public final class Density
 	{

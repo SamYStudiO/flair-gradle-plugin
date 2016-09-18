@@ -10,7 +10,6 @@
 
 package starling.core
 {
-    import flash.display.DisplayObjectContainer;
     import flash.display.Shape;
     import flash.display.Sprite;
     import flash.display.Stage3D;
@@ -108,7 +107,7 @@ package starling.core
      *  </ul>
      *  
      *  <p>The recommendation is to deploy your app with the profile "auto" (which makes Starling
-     *  pick the best available of those), but test it in all available profiles.</p>
+     *  pick the best available of those), but to test it in all available profiles.</p>
      *  
      *  <strong>Accessing the Starling object</strong>
      * 
@@ -132,8 +131,7 @@ package starling.core
      *  
      *  <p>Beware, though, that conventional Flash content on top of 3D content can lead to
      *  performance penalties on some (mobile) platforms. For that reason, always remove all child
-     *  objects from the overlay when you don't need them any longer. Starling will remove the 
-     *  overlay from the display list when it's empty.</p>
+     *  objects from the overlay when you don't need them any longer.</p>
      *  
      *  <strong>Multitouch</strong>
      *  
@@ -141,22 +139,32 @@ package starling.core
      *  where most of us are working with a conventional mouse and keyboard, Starling can simulate 
      *  multitouch events with the help of the "Shift" and "Ctrl" (Mac: "Cmd") keys. Activate
      *  this feature by enabling the <code>simulateMultitouch</code> property.</p>
+     *
+     *  <strong>Skipping Unchanged Frames</strong>
+     *
+     *  <p>It happens surprisingly often in an app or game that a scene stays completely static for
+     *  several frames. So why redraw the stage at all in those situations? That's exactly the
+     *  point of the <code>skipUnchangedFrames</code>-property. If enabled, static scenes are
+     *  recognized as such and the back buffer is simply left as it is. On a mobile device, the
+     *  impact of this feature can't be overestimated! There's simply no better way to enhance
+     *  battery life. Make it a habit to always activate it; look at the documentation of the
+     *  corresponding property for details.</p>
      *  
      *  <strong>Handling a lost render context</strong>
      *  
      *  <p>On some operating systems and under certain conditions (e.g. returning from system
      *  sleep), Starling's stage3D render context may be lost. Starling will try to recover
-     *  from a lost context automatically. To be able to do this, Starling will cache textures
-     *  in RAM to be able to restore them after the context was lost. This will take up quite
-     *  a bit of extra memory, though, which might be problematic especially on mobile platforms.
-     *  To avoid the higher memory footprint, it's recommend to load your textures with
-     *  Starling's "AssetManager"; it is smart enough to recreate a texture directly from its
-     *  origin.</p>
+     *  from a lost context automatically; to be able to do this, it will cache textures in
+     *  RAM. This will take up quite a bit of extra memory, though, which might be problematic
+     *  especially on mobile platforms. To avoid the higher memory footprint, it's recommended
+     *  to load your textures with Starling's "AssetManager"; it is smart enough to recreate a
+     *  texture directly from its origin.</p>
      *
-     *  <p>In case you want to react to a context loss, Starling dispatches an event with
-     *  the type "Event.CONTEXT3D_CREATE" when the context is restored. You can recreate any 
-     *  invalid resources in a corresponding event listener.</p>
-     * 
+     *  <p>In case you want to react to a context loss manually, Starling dispatches an event with
+     *  the type "Event.CONTEXT3D_CREATE" when the context is restored, and textures will execute
+     *  their <code>root.onRestore</code> callback, to which you can attach your own logic.
+     *  Refer to the "Texture" class for more information.</p>
+     *
      *  <strong>Sharing a 3D Context</strong>
      * 
      *  <p>Per default, Starling handles the Stage3D context itself. If you want to combine
@@ -181,12 +189,13 @@ package starling.core
      *  information about this topic.</p>
      *
      *  @see starling.utils.AssetManager
+     *  @see starling.textures.Texture
      *
      */ 
     public class Starling extends EventDispatcher
     {
         /** The version of the Starling framework. */
-        public static const VERSION:String = "2.0";
+        public static const VERSION:String = "2.0.1";
         
         /** The key for the shader programs stored in 'contextData' */
         private static const PROGRAM_DATA_NAME:String = "Starling.programs"; 
@@ -208,6 +217,7 @@ package starling.core
         private var _rendering:Boolean;
         private var _supportHighResolutions:Boolean;
         private var _skipUnchangedFrames:Boolean;
+        private var _showStats:Boolean;
         
         private var _viewPort:Rectangle;
         private var _previousViewPort:Rectangle;
@@ -355,8 +365,8 @@ package starling.core
             makeCurrent();
             updateViewPort(true);
 
-            if (!shareContext) // ideal time: after viewPort setup, before root creation
-                dispatchEventWith(Event.CONTEXT3D_CREATE, false, context);
+            // ideal time: after viewPort setup, before root creation
+            dispatchEventWith(Event.CONTEXT3D_CREATE, false, context);
 
             initializeRoot();
             _frameTimestamp = getTimer() / 1000.0;
@@ -552,6 +562,9 @@ package starling.core
         { 
             _started = _rendering = true;
             _frameTimestamp = getTimer() / 1000.0;
+
+            // mainly for Android: force redraw when app moves into foreground
+            setTimeout(setRequiresRedraw, 1);
         }
         
         /** Stops all logic and input processing, effectively freezing the app in its current state.
@@ -761,23 +774,9 @@ package starling.core
                 return false;
             else
             {
-                var numStageChildren:int = _nativeStage.numChildren;
-                var nativeStageEmpty:Boolean = true;
-                var child:DisplayObjectContainer;
-                var mustAlwaysRender:Boolean;
-
-                for (var i:int=0; i<numStageChildren; ++i)
-                {
-                    child = _nativeStage.getChildAt(i) as DisplayObjectContainer;
-                    if (child == null || child.numChildren)
-                    {
-                        nativeStageEmpty = false;
-                        break;
-                    }
-                }
-
-                // to be able to skip rendering, the stage must be empty in the previous frame, too
-                mustAlwaysRender = !nativeStageEmpty || !_nativeStageEmpty;
+                // Rendering can be skipped when both this and previous frame are empty.
+                var nativeStageEmpty:Boolean = isNativeDisplayObjectEmpty(_nativeStage);
+                var mustAlwaysRender:Boolean = !nativeStageEmpty || !_nativeStageEmpty;
                 _nativeStageEmpty = nativeStageEmpty;
 
                 return mustAlwaysRender;
@@ -861,23 +860,28 @@ package starling.core
          *  into account. It is recommended to use Adobe Scout for reliable and comprehensive
          *  memory analysis.</p>
          */
-        public function get showStats():Boolean { return _statsDisplay && _statsDisplay.parent; }
+        public function get showStats():Boolean { return _showStats; }
         public function set showStats(value:Boolean):void
         {
-            if (value == showStats) return;
-            
+            _showStats = value;
+
             if (value)
             {
                 if (_statsDisplay) _stage.addChild(_statsDisplay);
                 else               showStatsAt();
             }
-            else _statsDisplay.removeFromParent();
+            else if (_statsDisplay)
+            {
+                _statsDisplay.removeFromParent();
+            }
         }
         
         /** Displays the statistics box at a certain position. */
         public function showStatsAt(horizontalAlign:String="left",
                                     verticalAlign:String="top", scale:Number=1):void
         {
+            _showStats = true;
+
             if (context == null)
             {
                 // Starling is not yet ready - we postpone this until it's initialized.
@@ -910,7 +914,7 @@ package starling.core
             
             function onRootCreated():void
             {
-                showStatsAt(horizontalAlign, verticalAlign, scale);
+                if (_showStats) showStatsAt(horizontalAlign, verticalAlign, scale);
                 removeEventListener(starling.events.Event.ROOT_CREATED, onRootCreated);
             }
         }
@@ -1057,4 +1061,26 @@ package starling.core
             return sCurrent ? sCurrent._frameID : 0;
         }
     }
+}
+
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
+
+// put here to avoid naming conflicts
+function isNativeDisplayObjectEmpty(object:DisplayObject):Boolean
+{
+    if (object is DisplayObjectContainer)
+    {
+        var container:DisplayObjectContainer = object as DisplayObjectContainer;
+        var numChildren:int = container.numChildren;
+
+        for (var i:int=0; i<numChildren; ++i)
+        {
+            if (!isNativeDisplayObjectEmpty(container.getChildAt(i)))
+                return false;
+        }
+
+        return true;
+    }
+    else return !object.visible;
 }

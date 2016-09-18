@@ -2145,8 +2145,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitSkinWidth, this._explicitSkinHeight,
-				this._explicitSkinMinWidth, this._explicitSkinMinHeight);
+				this._explicitSkinMinWidth, this._explicitSkinMinHeight,
+				this._explicitSkinMaxWidth, this._explicitSkinMaxHeight);
 			var measureSkin:IMeasureDisplayObject = this.currentSkin as IMeasureDisplayObject;
 			
 			if(this.currentIcon is IValidating)
@@ -2224,9 +2226,9 @@ package feathers.controls
 							newMinWidth = measureSkin.minWidth;
 						}
 					}
-					else if(this.currentSkin.width > newMinWidth)
+					else if(this._explicitSkinMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentSkin.width;
+						newMinWidth = this._explicitSkinMinWidth;
 					}
 				}
 			}
@@ -2296,9 +2298,9 @@ package feathers.controls
 							newMinHeight = measureSkin.minHeight;
 						}
 					}
-					else if(this.currentSkin.height > newMinHeight)
+					else if(this._explicitSkinMinHeight > newMinHeight)
 					{
-						newMinHeight = this.currentSkin.height;
+						newMinHeight = this._explicitSkinMinHeight;
 					}
 				}
 			}
@@ -2659,12 +2661,12 @@ package feathers.controls
 				calculatedWidth = this._explicitWidth;
 				if(calculatedWidth !== calculatedWidth) //isNaN
 				{
-					calculatedWidth = this._maxWidth;
+					calculatedWidth = this._explicitMaxWidth;
 				}
 				calculatedHeight = this._explicitHeight;
 				if(calculatedHeight !== calculatedHeight) //isNaN
 				{
-					calculatedHeight = this._maxHeight;
+					calculatedHeight = this._explicitMaxHeight;
 				}
 			}
 			if(this._label != null && this.labelTextRenderer)

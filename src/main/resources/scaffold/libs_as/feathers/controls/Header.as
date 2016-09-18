@@ -83,7 +83,12 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected static const IOS_DPI:Number = 132;
+		protected static const IPAD_1X_DPI:Number = 132;
+
+		/**
+		 * @private
+		 */
+		protected static const IPHONE_1X_DPI:Number = 163;
 
 		/**
 		 * @private
@@ -105,27 +110,35 @@ package feathers.controls
 		public static var globalStyleProvider:IStyleProvider;
 
 		/**
-		 * The title will appear in the center of the header.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.CENTER</code>.
 		 *
-		 * @see #titleAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const TITLE_ALIGN_CENTER:String = "center";
 
 		/**
-		 * The title will appear on the left of the header, if there is no other
-		 * content on that side. If there is content, the title will appear in
-		 * the center.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.LEFT</code>.
 		 *
-		 * @see #titleAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const TITLE_ALIGN_PREFER_LEFT:String = "preferLeft";
 
 		/**
-		 * The title will appear on the right of the header, if there is no
-		 * other content on that side. If there is content, the title will
-		 * appear in the center.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.layout.HorizontalAlign.RIGHT</code>.
 		 *
-		 * @see #titleAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const TITLE_ALIGN_PREFER_RIGHT:String = "preferRight";
 
@@ -263,7 +276,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _title:String = "";
+		protected var _title:String = null;
 
 		/**
 		 * The text displayed for the header's title.
@@ -287,11 +300,7 @@ package feathers.controls
 		 */
 		public function set title(value:String):void
 		{
-			if(value === null)
-			{
-				value = "";
-			}
-			if(this._title == value)
+			if(this._title === value)
 			{
 				return;
 			}
@@ -392,6 +401,10 @@ package feathers.controls
 
 		/**
 		 * The UI controls that appear in the left region of the header.
+		 * 
+		 * <p>If <code>leftItems</code> is not empty, and
+		 * <code>titleAlign</code> is <code>HorizontalAlign.LEFT</code>, the
+		 * title text renderer will appear to the right of the left items.</p>
 		 *
 		 * <p>In the following example, a back button is displayed on the left
 		 * side of the header:</p>
@@ -452,9 +465,9 @@ package feathers.controls
 
 		/**
 		 * The UI controls that appear in the center region of the header. If
-		 * <code>centerItems</code> is not <code>null</code>, and the
-		 * <code>titleAlign</code> property is <code>Header.TITLE_ALIGN_CENTER</code>,
-		 * the title text renderer will be hidden.
+		 * <code>centerItems</code> is not empty, and <code>titleAlign</code>
+		 * is <code>HorizontalAlign.CENTER</code>, the title text renderer will
+		 * be hidden.
 		 *
 		 * <p>In the following example, a settings button is displayed in the
 		 * center of the header:</p>
@@ -514,6 +527,10 @@ package feathers.controls
 
 		/**
 		 * The UI controls that appear in the right region of the header.
+		 *
+		 * <p>If <code>rightItems</code> is not empty, and
+		 * <code>titleAlign</code> is <code>HorizontalAlign.RIGHT</code>, the
+		 * title text renderer will appear to the left of the right items.</p>
 		 *
 		 * <p>In the following example, a settings button is displayed on the
 		 * right side of the header:</p>
@@ -929,6 +946,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
+
+		/**
+		 * @private
+		 */
 		protected var _backgroundSkin:DisplayObject;
 
 		/**
@@ -1136,27 +1163,39 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _titleAlign:String = TITLE_ALIGN_CENTER;
+		protected var _titleAlign:String = HorizontalAlign.CENTER;
 
-		[Inspectable(type="String",enumeration="center,preferLeft,preferRight")]
+		[Inspectable(type="String",enumeration="center,left,right")]
 		/**
-		 * The preferred position of the title. If <code>leftItems</code> and/or
-		 * <code>rightItems</code> are not <code>null</code>, the title may be
-		 * forced to the center even if the preferred position is on the left or
-		 * right. If <code>centerItems</code> is not <code>null</code>, and the
-		 * title is centered, the title will be hidden.
+		 * The preferred horizontal position of the title.
+		 * 
+		 * <p>If <code>titleAlign</code> is set to
+		 * <code>HorizontalAlign.LEFT</code>, but <code>leftItems</code> is not
+		 * empty, the title will be positioned slightly to the right of the
+		 * left items. If <code>centerItems</code> is also not empty, the title
+		 * will not be displayed.</p>
 		 *
-		 * <p>In the following example, the header's title aligment is set to
+		 * <p>If <code>titleAlign</code> is set to
+		 * <code>HorizontalAlign.RIGHT</code>, but <code>rightItems</code> is
+		 * not empty, the title will be positioned slightly to the left of the
+		 * right items. If <code>centerItems</code> is also not empty, the title
+		 * will not be displayed.</p>
+		 * 
+		 * <p>If <code>titleAlign</code> is set to
+		 * <code>HorizontalAlign.CENTER</code>, but <code>centerItems</code> is
+		 * not <code>null</code>, the title will not be displayed.</p>
+		 *
+		 * <p>In the following example, the header's title alignment is set to
 		 * prefer the left side:</p>
 		 *
 		 * <listing version="3.0">
-		 * header.titleAlign = Header.TITLE_ALIGN_PREFER_LEFT;</listing>
+		 * header.titleAlign = HorizontalAlign.LEFT;</listing>
 		 *
-		 * @default Header.TITLE_ALIGN_CENTER
+		 * @default feathers.layout.HorizontalAlign.CENTER
 		 *
-		 * @see #TITLE_ALIGN_CENTER
-		 * @see #TITLE_ALIGN_PREFER_LEFT
-		 * @see #TITLE_ALIGN_PREFER_RIGHT
+		 * @see feathers.layout.HorizontalAlign#CENTER
+		 * @see feathers.layout.HorizontalAlign#LEFT
+		 * @see feathers.layout.HorizontalAlign#RIGHT
 		 */
 		public function get titleAlign():String
 		{
@@ -1168,6 +1207,14 @@ package feathers.controls
 		 */
 		public function set titleAlign(value:String):void
 		{
+			if(value === TITLE_ALIGN_PREFER_LEFT)
+			{
+				value = HorizontalAlign.LEFT;
+			}
+			else if(value === TITLE_ALIGN_PREFER_RIGHT)
+			{
+				value = HorizontalAlign.RIGHT;
+			}
 			if(this._titleAlign == value)
 			{
 				return;
@@ -1362,25 +1409,26 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			var measureSkin:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			if(this.currentBackgroundSkin is IValidating)
 			{
 				IValidating(this.currentBackgroundSkin).validate();
 			}
-			
+
 			var extraPaddingTop:Number = this.calculateExtraOSStatusBarPadding();
 
 			var totalContentWidth:Number = 0;
 			var maxContentHeight:Number = 0;
-			var hasLeftItems:Boolean = false;
-			var hasRightItems:Boolean = false;
-			var hasCenterItems:Boolean = false;
-			if(this._leftItems !== null)
+			var hasLeftItems:Boolean = this._leftItems !== null && this._leftItems.length > 0;
+			var hasRightItems:Boolean = this._rightItems !== null && this._rightItems.length > 0;
+			var hasCenterItems:Boolean = this._centerItems !== null && this._centerItems.length > 0;
+			if(hasLeftItems)
 			{
 				var itemCount:int = this._leftItems.length;
-				hasLeftItems = itemCount > 0;
 				for(var i:int = 0; i < itemCount; i++)
 				{
 					var item:DisplayObject = this._leftItems[i];
@@ -1405,10 +1453,9 @@ package feathers.controls
 					}
 				}
 			}
-			if(this._centerItems !== null)
+			if(hasCenterItems)
 			{
 				itemCount = this._centerItems.length;
-				hasCenterItems = itemCount > 0;
 				for(i = 0; i < itemCount; i++)
 				{
 					item = this._centerItems[i];
@@ -1433,10 +1480,9 @@ package feathers.controls
 					}
 				}
 			}
-			if(this._rightItems !== null)
+			if(hasRightItems)
 			{
 				itemCount = this._rightItems.length;
-				hasRightItems = itemCount > 0;
 				for(i = 0; i < itemCount; i++)
 				{
 					item = this._rightItems[i];
@@ -1462,7 +1508,7 @@ package feathers.controls
 				}
 			}
 
-			if(this._titleAlign === TITLE_ALIGN_CENTER && hasCenterItems)
+			if(this._titleAlign === HorizontalAlign.CENTER && hasCenterItems)
 			{
 				if(hasLeftItems)
 				{
@@ -1473,7 +1519,7 @@ package feathers.controls
 					totalContentWidth += this._gap;
 				}
 			}
-			else if(this._title)
+			else if(this._title !== null)
 			{
 				var calculatedTitleGap:Number = this._titleGap;
 				if(calculatedTitleGap !== calculatedTitleGap) //isNaN
@@ -1483,7 +1529,7 @@ package feathers.controls
 				var maxTitleWidth:Number = this._explicitWidth;
 				if(needsWidth)
 				{
-					maxTitleWidth = this._maxWidth;
+					maxTitleWidth = this._explicitMaxWidth;
 				}
 				maxTitleWidth -= totalContentWidth;
 				if(hasLeftItems)
@@ -1497,6 +1543,10 @@ package feathers.controls
 				if(hasRightItems)
 				{
 					maxTitleWidth -= calculatedTitleGap;
+				}
+				if(maxTitleWidth < 0)
+				{
+					maxTitleWidth = 0;
 				}
 				this.titleTextRenderer.maxWidth = maxTitleWidth;
 				this.titleTextRenderer.measureText(HELPER_POINT);
@@ -1535,16 +1585,11 @@ package feathers.controls
 					newWidth = this.currentBackgroundSkin.width;
 				}
 			}
-			
+
 			var newHeight:Number = this._explicitHeight;
 			if(needsHeight)
 			{
 				newHeight = maxContentHeight;
-				if(this.currentBackgroundSkin !== null &&
-					this.currentBackgroundSkin.height > newHeight)
-				{
-					newHeight = this.currentBackgroundSkin.height;
-				}
 				newHeight += this._paddingTop + this._paddingBottom;
 				if(extraPaddingTop > 0)
 				{
@@ -1554,6 +1599,11 @@ package feathers.controls
 						newHeight = this._explicitMinHeight;
 					}
 					newHeight += extraPaddingTop;
+				}
+				if(this.currentBackgroundSkin !== null &&
+					this.currentBackgroundSkin.height > newHeight)
+				{
+					newHeight = this.currentBackgroundSkin.height;
 				}
 			}
 			
@@ -1570,9 +1620,9 @@ package feathers.controls
 							newMinWidth = measureSkin.minWidth;
 						}
 					}
-					else if(this.currentBackgroundSkin.width > newMinWidth)
+					else if(this._explicitBackgroundMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentBackgroundSkin.width;
+						newMinWidth = this._explicitBackgroundMinWidth;
 					}
 				}
 			}
@@ -1581,20 +1631,6 @@ package feathers.controls
 			if(needsMinHeight)
 			{
 				newMinHeight = maxContentHeight;
-				if(this.currentBackgroundSkin !== null)
-				{
-					if(measureSkin !== null)
-					{
-						if(measureSkin.minHeight > newMinHeight)
-						{
-							newMinHeight = measureSkin.minHeight;
-						}
-					}
-					else if(this.currentBackgroundSkin.height > newMinHeight)
-					{
-						newMinHeight = this.currentBackgroundSkin.height;
-					}
-				}
 				newMinHeight += this._paddingTop + this._paddingBottom;
 				if(extraPaddingTop > 0)
 				{
@@ -1604,6 +1640,20 @@ package feathers.controls
 						newMinHeight = this._explicitMinHeight;
 					}
 					newMinHeight += extraPaddingTop;
+				}
+				if(this.currentBackgroundSkin !== null)
+				{
+					if(measureSkin !== null)
+					{
+						if(measureSkin.minHeight > newMinHeight)
+						{
+							newMinHeight = measureSkin.minHeight;
+						}
+					}
+					else if(this._explicitBackgroundMinHeight > newMinHeight)
+					{
+						newMinHeight = this._explicitBackgroundMinHeight;
+					}
 				}
 			}
 
@@ -1658,7 +1708,11 @@ package feathers.controls
 			if(this.currentBackgroundSkin !== null)
 			{
 				this.currentBackgroundSkin.visible = true;
-				
+
+				if(this.currentBackgroundSkin is IFeathersControl)
+				{
+					IFeathersControl(this.currentBackgroundSkin).initializeNow();
+				}
 				if(this.currentBackgroundSkin is IMeasureDisplayObject)
 				{
 					var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackgroundSkin);
@@ -1666,6 +1720,8 @@ package feathers.controls
 					this._explicitBackgroundHeight = measureSkin.explicitHeight;
 					this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 					this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+					this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+					this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 				}
 				else
 				{
@@ -1673,6 +1729,8 @@ package feathers.controls
 					this._explicitBackgroundHeight = this.currentBackgroundSkin.height;
 					this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 					this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+					this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+					this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 				}
 			}
 		}
@@ -1720,7 +1778,16 @@ package feathers.controls
 			//first, we check if it's iOS or not. at this time, we only need to
 			//use extra padding on iOS. android and others are fine.
 			var os:String = Capabilities.os;
-			if(os.indexOf(IOS_NAME_PREFIX) != 0 || parseInt(os.substr(IOS_NAME_PREFIX.length, 1), 10) < STATUS_BAR_MIN_IOS_VERSION)
+			if(os.indexOf(IOS_NAME_PREFIX) !== 0)
+			{
+				return 0;
+			}
+			//then, we check the major version of iOS. the extra padding is not
+			//required before version 7.
+			//the version string will always contain major and minor values, so
+			//search for the first . character.
+			os = os.substring(IOS_NAME_PREFIX.length, os.indexOf("."));
+			if(parseInt(os, 10) < STATUS_BAR_MIN_IOS_VERSION)
 			{
 				return 0;
 			}
@@ -1732,7 +1799,12 @@ package feathers.controls
 			{
 				return 0;
 			}
-			return IOS_STATUS_BAR_HEIGHT * Math.floor(DeviceCapabilities.dpi / IOS_DPI) / Starling.current.contentScaleFactor;
+
+			if(DeviceCapabilities.dpi % IPAD_1X_DPI === 0)
+			{
+				return IOS_STATUS_BAR_HEIGHT * Math.floor(DeviceCapabilities.dpi / IPAD_1X_DPI) / Starling.current.contentScaleFactor;
+			}
+			return IOS_STATUS_BAR_HEIGHT * Math.floor(DeviceCapabilities.dpi / IPHONE_1X_DPI) / Starling.current.contentScaleFactor;
 		}
 
 		/**
@@ -1830,7 +1902,20 @@ package feathers.controls
 		 */
 		protected function layoutTitle():void
 		{
-			if((this._titleAlign == TITLE_ALIGN_CENTER && this._centerItems) || this._title.length == 0)
+			var hasLeftItems:Boolean = this._leftItems !== null && this._leftItems.length > 0;
+			var hasRightItems:Boolean = this._rightItems !== null && this._rightItems.length > 0;
+			var hasCenterItems:Boolean = this._centerItems !== null && this._centerItems.length > 0;
+			if(this._titleAlign === HorizontalAlign.CENTER && hasCenterItems)
+			{
+				this.titleTextRenderer.visible = false;
+				return;
+			}
+			if(this._titleAlign === HorizontalAlign.LEFT && hasLeftItems && hasCenterItems)
+			{
+				this.titleTextRenderer.visible = false;
+				return;
+			}
+			if(this._titleAlign === HorizontalAlign.RIGHT && hasRightItems && hasCenterItems)
 			{
 				this.titleTextRenderer.visible = false;
 				return;
@@ -1841,32 +1926,63 @@ package feathers.controls
 			{
 				calculatedTitleGap = this._gap;
 			}
-			//left and right offsets already include padding
-			var leftOffset:Number = (this._leftItems && this._leftItems.length > 0) ? (this.leftItemsWidth + calculatedTitleGap) : 0;
-			var rightOffset:Number = (this._rightItems && this._rightItems.length > 0) ? (this.rightItemsWidth + calculatedTitleGap) : 0;
-			if(this._titleAlign == TITLE_ALIGN_PREFER_LEFT && (!this._leftItems || this._leftItems.length == 0))
+			var leftOffset:Number = this._paddingLeft;
+			if(hasLeftItems)
 			{
-				this.titleTextRenderer.maxWidth = this.actualWidth - this._paddingLeft - rightOffset;
-				this.titleTextRenderer.validate();
-				this.titleTextRenderer.x = this._paddingLeft;
+				//leftItemsWidth already includes padding
+				leftOffset = this.leftItemsWidth + calculatedTitleGap;
 			}
-			else if(this._titleAlign == TITLE_ALIGN_PREFER_RIGHT && (!this._rightItems || this._rightItems.length == 0))
+			var rightOffset:Number = this._paddingRight;
+			if(hasRightItems)
 			{
-				this.titleTextRenderer.maxWidth = this.actualWidth - this._paddingRight - leftOffset;
-				this.titleTextRenderer.validate();
-				this.titleTextRenderer.x = this.actualWidth - this._paddingRight - this.titleTextRenderer.width;
+				//rightItemsWidth already includes padding
+				rightOffset = this.rightItemsWidth + calculatedTitleGap;
 			}
-			else
+			if(this._titleAlign === HorizontalAlign.LEFT)
+			{
+				var titleMaxWidth:Number = this.actualWidth - leftOffset - rightOffset;
+				if(titleMaxWidth < 0)
+				{
+					titleMaxWidth = 0;
+				}
+				this.titleTextRenderer.maxWidth = titleMaxWidth;
+				this.titleTextRenderer.validate();
+				this.titleTextRenderer.x = leftOffset;
+			}
+			else if(this._titleAlign === HorizontalAlign.RIGHT)
+			{
+				titleMaxWidth = this.actualWidth - leftOffset - rightOffset;
+				if(titleMaxWidth < 0)
+				{
+					titleMaxWidth = 0;
+				}
+				this.titleTextRenderer.maxWidth = titleMaxWidth;
+				this.titleTextRenderer.validate();
+				this.titleTextRenderer.x = this.actualWidth - this.titleTextRenderer.width - rightOffset;
+			}
+			else //center
 			{
 				var actualWidthMinusPadding:Number = this.actualWidth - this._paddingLeft - this._paddingRight;
+				if(actualWidthMinusPadding < 0)
+				{
+					actualWidthMinusPadding = 0;
+				}
 				var actualWidthMinusOffsets:Number = this.actualWidth - leftOffset - rightOffset;
+				if(actualWidthMinusOffsets < 0)
+				{
+					actualWidthMinusOffsets = 0;
+				}
 				this.titleTextRenderer.maxWidth = actualWidthMinusOffsets;
 				this.titleTextRenderer.validate();
-				var idealTitlePosition:Number = this._paddingLeft + (actualWidthMinusPadding - this.titleTextRenderer.width) / 2;
+				//we try to keep the title centered between the paddings, if
+				//possible. however, if the combined width of the left or right
+				//items is too large to allow that, we center between the items.
+				//this seems to match the behavior on iOS.
+				var idealTitlePosition:Number = this._paddingLeft + Math.round((actualWidthMinusPadding - this.titleTextRenderer.width) / 2);
 				if(leftOffset > idealTitlePosition ||
 					(idealTitlePosition + this.titleTextRenderer.width) > (this.actualWidth - rightOffset))
 				{
-					this.titleTextRenderer.x = leftOffset + (actualWidthMinusOffsets - this.titleTextRenderer.width) / 2;
+					this.titleTextRenderer.x = leftOffset + Math.round((actualWidthMinusOffsets - this.titleTextRenderer.width) / 2);
 				}
 				else
 				{
@@ -1874,17 +1990,23 @@ package feathers.controls
 				}
 			}
 			var paddingTop:Number = this._paddingTop + this.calculateExtraOSStatusBarPadding();
-			if(this._verticalAlign == VerticalAlign.TOP)
+			switch(this._verticalAlign)
 			{
-				this.titleTextRenderer.y = paddingTop;
-			}
-			else if(this._verticalAlign == VerticalAlign.BOTTOM)
-			{
-				this.titleTextRenderer.y = this.actualHeight - this._paddingBottom - this.titleTextRenderer.height;
-			}
-			else
-			{
-				this.titleTextRenderer.y = paddingTop + (this.actualHeight - paddingTop - this._paddingBottom - this.titleTextRenderer.height) / 2;
+				case VerticalAlign.TOP:
+				{
+					this.titleTextRenderer.y = paddingTop;
+					break;
+				}
+				case VerticalAlign.BOTTOM:
+				{
+					this.titleTextRenderer.y = this.actualHeight - this._paddingBottom - this.titleTextRenderer.height;
+					break;
+				}
+				default: //center
+				{
+					this.titleTextRenderer.y = paddingTop + Math.round((this.actualHeight - paddingTop - this._paddingBottom - this.titleTextRenderer.height) / 2);
+					break;
+				}
 			}
 		}
 

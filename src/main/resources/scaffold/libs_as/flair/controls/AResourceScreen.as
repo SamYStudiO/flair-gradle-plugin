@@ -63,7 +63,7 @@ package flair.controls
 		/**
 		 * @inheritDoc
 		 */
-		override protected function initializeInternal() : void
+		override public function initializeNow() : void
 		{
 			if( _isInitialized || _isInitializing ) return;
 

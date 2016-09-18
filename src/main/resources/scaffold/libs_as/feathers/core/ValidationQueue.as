@@ -143,12 +143,17 @@ package feathers.core
 				return;
 			}
 			var queueLength:int = this._queue.length;
-			if(queueLength == 0)
+			if(queueLength === 0)
 			{
 				return;
 			}
 			this._isValidating = true;
-			this._queue = this._queue.sort(queueSortFunction);
+			if(queueLength > 1)
+			{
+				//only sort if there's more than one item in the queue because
+				//it will avoid allocating objects
+				this._queue = this._queue.sort(queueSortFunction);
+			}
 			while(this._queue.length > 0) //rechecking length after the shift
 			{
 				var item:IValidating = this._queue.shift();

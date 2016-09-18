@@ -916,11 +916,6 @@ package feathers.layout
 		}
 
 		/**
-		 * @private
-		 */
-		private var _compilerWorkaround:Object;
-
-		/**
 		 * @inheritDoc
 		 */
 		public function layout(items:Vector.<DisplayObject>, viewPortBounds:ViewPortBounds = null, result:LayoutBoundsResult = null):LayoutBoundsResult
@@ -952,17 +947,36 @@ package feathers.layout
 				var calculatedTypicalItemHeight:Number = this._typicalItem ? this._typicalItem.height : 0;
 			}
 
+			var needsExplicitWidth:Boolean = explicitWidth !== explicitWidth;
+			var needsExplicitHeight:Boolean = explicitHeight !== explicitHeight;
+			var distributedHeight:Number;
+			if(!needsExplicitHeight && this._distributeHeights)
+			{
+				//we need to calculate this before validateItems() because it
+				//needs to be passed in there.
+				distributedHeight = this.calculateDistributedHeight(items, explicitHeight, minHeight, maxHeight, false);
+			}
+
 			if(!this._useVirtualLayout || this._hasVariableItemDimensions || this._distributeHeights ||
 				this._horizontalAlign != HorizontalAlign.JUSTIFY ||
-				explicitWidth !== explicitWidth) //isNaN
+				needsExplicitWidth) //isNaN
 			{
 				//in some cases, we may need to validate all of the items so
 				//that we can use their dimensions below.
 				this.validateItems(items, explicitWidth - this._paddingLeft - this._paddingRight,
 					minWidth - this._paddingLeft - this._paddingRight,
 					maxWidth - this._paddingLeft - this._paddingRight,
-					explicitHeight);
+					explicitHeight - this._paddingTop - this._paddingBottom,
+					minHeight - this._paddingTop - this._paddingBottom,
+					maxHeight - this._paddingTop - this._paddingBottom, distributedHeight);
 			}
+
+			if(needsExplicitHeight && this._distributeHeights)
+			{
+				//if we didn't calculate this before, we need to do it now.
+				distributedHeight = this.calculateDistributedHeight(items, explicitHeight, minHeight, maxHeight, true);
+			}
+			var hasDistributedHeight:Boolean = distributedHeight === distributedHeight; //!isNaN
 
 			if(!this._useVirtualLayout)
 			{
@@ -970,14 +984,6 @@ package feathers.layout
 				//if available.
 				this.applyPercentHeights(items, explicitHeight, minHeight, maxHeight);
 			}
-
-			var distributedHeight:Number;
-			if(this._distributeHeights)
-			{
-				//distribute the height evenly among all items
-				distributedHeight = this.calculateDistributedHeight(items, explicitHeight, minHeight, maxHeight);
-			}
-			var hasDistributedHeight:Boolean = distributedHeight === distributedHeight; //!isNaN
 
 			//this section prepares some variables needed for the following loop
 			var hasFirstGap:Boolean = this._firstGap === this._firstGap; //!isNaN
@@ -1880,9 +1886,23 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function validateItems(items:Vector.<DisplayObject>, explicitWidth:Number,
-			minWidth:Number, maxWidth:Number, distributedHeight:Number):void
+		protected function validateItems(items:Vector.<DisplayObject>,
+			explicitWidth:Number, minWidth:Number, maxWidth:Number,
+			explicitHeight:Number, minHeight:Number, maxHeight:Number,
+			distributedHeight:Number):void
 		{
+			var needsWidth:Boolean = explicitWidth !== explicitWidth; //isNaN
+			var needsHeight:Boolean = explicitHeight !== explicitHeight; //isNaN
+			var containerWidth:Number = explicitWidth;
+			if(needsWidth)
+			{
+				containerWidth = minWidth;
+			}
+			var containerHeight:Number = explicitHeight;
+			if(needsHeight)
+			{
+				containerHeight = minHeight;
+			}
 			//if the alignment is justified, then we want to set the width of
 			//each item before validating because setting one dimension may
 			//cause the other dimension to change, and that will invalidate the
@@ -1928,31 +1948,48 @@ package feathers.layout
 							{
 								percentWidth = 100;
 							}
-							var itemWidth:Number = explicitWidth * percentWidth / 100;
+							var itemWidth:Number = containerWidth * percentWidth / 100;
 							var measureItem:IMeasureDisplayObject = IMeasureDisplayObject(item);
 							//we use the explicitMinWidth to make an accurate
 							//measurement, and we'll use the component's
 							//measured minWidth later, after we validate it.
 							var itemExplicitMinWidth:Number = measureItem.explicitMinWidth;
-							//for some reason, if we do the !== check on a local variable right
-							//here, compiling with the flex 4.6 SDK will throw a VerifyError
-							//for a stack overflow.
-							//we could change the !== check back to isNaN() instead, but
-							//isNaN() can allocate an object that needs garbage collection.
-							this._compilerWorkaround = itemExplicitMinWidth;
-							if(itemExplicitMinWidth === itemExplicitMinWidth && //!isNaN
+							if(measureItem.explicitMinWidth === measureItem.explicitMinWidth && //!isNaN
 								itemWidth < itemExplicitMinWidth)
 							{
 								itemWidth = itemExplicitMinWidth;
 							}
+							//unlike below, where we use maxHeight, we can set
+							//the width directly because any other percentWidth
+							//values won't affect this item.
 							item.width = itemWidth;
 						}
 						if(percentHeight === percentHeight) //!isNaN
 						{
-							//we need to clear the explicitHeight because some
-							//components may change their minHeight based on
-							//whether it is set or not, and the minHeight is
-							//used with percentHeight calculations
+							var itemHeight:Number = containerHeight * percentHeight / 100;
+							measureItem = IMeasureDisplayObject(item);
+							//we use the explicitMinHeight to make an accurate
+							//measurement, and we'll use the component's
+							//measured minHeight later, after we validate it.
+							var itemExplicitMinHeight:Number = measureItem.explicitMinHeight;
+							if(measureItem.explicitMinHeight === measureItem.explicitMinHeight && //!isNaN
+								itemHeight < itemExplicitMinHeight)
+							{
+								itemHeight = itemExplicitMinHeight;
+							}
+							//validating this component may be expensive if we
+							//don't limit the height! we want to ensure that a
+							//component like a vertical list with many item
+							//renderers doesn't completely bypass layout
+							//virtualization, so we limit the height to the
+							//maximum possible value if it were the only item in
+							//the layout.
+							//this doesn't need to be perfectly accurate because
+							//it's just a maximum
+							measureItem.maxHeight = itemHeight;
+							//we also need to clear the explicit height because,
+							//for many components, it will affect the minHeight
+							//which is used in the final calculation
 							item.height = NaN;
 						}
 					}
@@ -1963,7 +2000,7 @@ package feathers.layout
 				}
 				if(item is IValidating)
 				{
-					IValidating(item).validate()
+					IValidating(item).validate();
 				}
 			}
 		}
@@ -2023,10 +2060,11 @@ package feathers.layout
 		/**
 		 * @private
 		 */
-		protected function calculateDistributedHeight(items:Vector.<DisplayObject>, explicitHeight:Number, minHeight:Number, maxHeight:Number):Number
+		protected function calculateDistributedHeight(items:Vector.<DisplayObject>, explicitHeight:Number, minHeight:Number, maxHeight:Number, measureItems:Boolean):Number
 		{
+			var needsHeight:Boolean = explicitHeight !== explicitHeight; //isNaN
 			var itemCount:int = items.length;
-			if(explicitHeight !== explicitHeight) //isNaN
+			if(measureItems && needsHeight)
 			{
 				var maxItemHeight:Number = 0;
 				for(var i:int = 0; i < itemCount; i++)
@@ -2055,7 +2093,12 @@ package feathers.layout
 					return maxItemHeight;
 				}
 			}
-			var availableSpace:Number = explicitHeight - this._paddingTop - this._paddingBottom - this._gap * (itemCount - 1);
+			var availableSpace:Number = explicitHeight;
+			if(needsHeight && maxHeight < Number.POSITIVE_INFINITY)
+			{
+				availableSpace = maxHeight;
+			}
+			availableSpace = availableSpace - this._paddingTop - this._paddingBottom - this._gap * (itemCount - 1);
 			if(itemCount > 1 && this._firstGap === this._firstGap) //!isNaN
 			{
 				availableSpace += this._gap - this._firstGap;

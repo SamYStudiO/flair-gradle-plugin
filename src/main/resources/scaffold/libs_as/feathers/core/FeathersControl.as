@@ -14,6 +14,7 @@ package feathers.core
 	import feathers.layout.ILayoutDisplayObject;
 	import feathers.skins.IStyleProvider;
 	import feathers.utils.display.getDisplayObjectDepthFromStage;
+	import feathers.utils.display.stageToStarling;
 
 	import flash.errors.IllegalOperationError;
 	import flash.geom.Matrix;
@@ -91,7 +92,7 @@ package feathers.core
 	 *   listening for the event.</td></tr>
 	 * </table>
 	 *
-	 * @eventType feathers.events.FeathersEventType.RESIZE
+	 * @eventType starling.events.Event.RESIZE
 	 */
 	[Event(name="resize",type="starling.events.Event")]
 
@@ -572,10 +573,6 @@ package feathers.core
 		 */
 		override public function set width(value:Number):void
 		{
-			if(this._explicitWidth == value)
-			{
-				return;
-			}
 			var valueIsNaN:Boolean = value !== value; //isNaN
 			if(valueIsNaN && this._explicitWidth !== this._explicitWidth)
 			{
@@ -584,6 +581,10 @@ package feathers.core
 			if(this.scaleX !== 1)
 			{
 				value /= this.scaleX;
+			}
+			if(this._explicitWidth == value)
+			{
+				return;
 			}
 			this._explicitWidth = value;
 			if(valueIsNaN)
@@ -674,10 +675,6 @@ package feathers.core
 		 */
 		override public function set height(value:Number):void
 		{
-			if(this._explicitHeight == value)
-			{
-				return;
-			}
 			var valueIsNaN:Boolean = value !== value; //isNaN
 			if(valueIsNaN && this._explicitHeight !== this._explicitHeight)
 			{
@@ -686,6 +683,10 @@ package feathers.core
 			if(this.scaleY !== 1)
 			{
 				value /= this.scaleY;
+			}
+			if(this._explicitHeight == value)
+			{
+				return;
 			}
 			this._explicitHeight = value;
 			if(valueIsNaN)
@@ -834,15 +835,20 @@ package feathers.core
 		 */
 		public function set minWidth(value:Number):void
 		{
-			if(this._explicitMinWidth == value)
-			{
-				return;
-			}
 			var valueIsNaN:Boolean = value !== value; //isNaN
 			if(valueIsNaN && this._explicitMinWidth !== this._explicitMinWidth)
 			{
 				return;
 			}
+			if(this.scaleX !== 1)
+			{
+				value /= this.scaleX;
+			}
+			if(this._explicitMinWidth == value)
+			{
+				return;
+			}
+			var oldValue:Number = this._explicitMinWidth;
 			this._explicitMinWidth = value;
 			if(valueIsNaN)
 			{
@@ -851,9 +857,12 @@ package feathers.core
 			}
 			else
 			{
-				var result:Boolean = this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight);
-				if(result)
+				this.saveMeasurements(this.actualWidth, this.actualHeight, value, this.actualMinHeight);
+				if(this._explicitWidth !== this._explicitWidth &&
+					(this.actualWidth < value || this.actualWidth === oldValue))
 				{
+					//only invalidate if this change might affect the width
+					//because everything else was handled in saveMeasurements()
 					this.invalidate(INVALIDATION_FLAG_SIZE);
 				}
 			}
@@ -920,15 +929,20 @@ package feathers.core
 		 */
 		public function set minHeight(value:Number):void
 		{
-			if(this._explicitMinHeight == value)
-			{
-				return;
-			}
 			var valueIsNaN:Boolean = value !== value; //isNaN
 			if(valueIsNaN && this._explicitMinHeight !== this._explicitMinHeight)
 			{
 				return;
 			}
+			if(this.scaleY !== 1)
+			{
+				value /= this.scaleY;
+			}
+			if(this._explicitMinHeight == value)
+			{
+				return;
+			}
+			var oldValue:Number = this._explicitMinHeight;
 			this._explicitMinHeight = value;
 			if(valueIsNaN)
 			{
@@ -937,9 +951,12 @@ package feathers.core
 			}
 			else
 			{
-				var result:Boolean = this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value);
-				if(result)
+				this.saveMeasurements(this.actualWidth, this.actualHeight, this.actualMinWidth, value);
+				if(this._explicitHeight !== this._explicitHeight && //isNaN
+					(this.actualHeight < value || this.actualHeight === oldValue))
 				{
+					//only invalidate if this change might affect the height
+					//because everything else was handled in saveMeasurements()
 					this.invalidate(INVALIDATION_FLAG_SIZE);
 				}
 			}
@@ -948,7 +965,19 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		protected var _maxWidth:Number = Number.POSITIVE_INFINITY;
+		protected var _explicitMaxWidth:Number = Number.POSITIVE_INFINITY;
+
+		/**
+		 * The maximum width value explicitly set by passing a value to the
+		 * <code>maxWidth</code> setter.
+		 *
+		 * <p>If no value has been passed to the <code>maxWidth</code> setter,
+		 * this property returns <code>NaN</code>.</p>
+		 */
+		public function get explicitMaxWidth():Number
+		{
+			return this._explicitMaxWidth;
+		}
 
 		/**
 		 * The maximum recommended width to be used for self-measurement and,
@@ -967,7 +996,7 @@ package feathers.core
 		 */
 		public function get maxWidth():Number
 		{
-			return this._maxWidth;
+			return this._explicitMaxWidth;
 		}
 
 		/**
@@ -975,7 +1004,11 @@ package feathers.core
 		 */
 		public function set maxWidth(value:Number):void
 		{
-			if(this._maxWidth == value)
+			if(value < 0)
+			{
+				value = 0;
+			}
+			if(this._explicitMaxWidth == value)
 			{
 				return;
 			}
@@ -983,14 +1016,32 @@ package feathers.core
 			{
 				throw new ArgumentError("maxWidth cannot be NaN");
 			}
-			this._maxWidth = value;
-			this.invalidate(INVALIDATION_FLAG_SIZE);
+			var oldValue:Number = this._explicitMaxWidth;
+			this._explicitMaxWidth = value;
+			if(this._explicitWidth !== this._explicitWidth && //isNaN
+				(this.actualWidth > value || this.actualWidth === oldValue))
+			{
+				//only invalidate if this change might affect the width
+				this.invalidate(INVALIDATION_FLAG_SIZE);
+			}
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _maxHeight:Number = Number.POSITIVE_INFINITY;
+		protected var _explicitMaxHeight:Number = Number.POSITIVE_INFINITY;
+
+		/**
+		 * The maximum height value explicitly set by passing a value to the
+		 * <code>maxHeight</code> setter.
+		 *
+		 * <p>If no value has been passed to the <code>maxHeight</code> setter,
+		 * this property returns <code>NaN</code>.</p>
+		 */
+		public function get explicitMaxHeight():Number
+		{
+			return this._explicitMaxHeight;
+		}
 
 		/**
 		 * The maximum recommended height to be used for self-measurement and,
@@ -1009,7 +1060,7 @@ package feathers.core
 		 */
 		public function get maxHeight():Number
 		{
-			return this._maxHeight;
+			return this._explicitMaxHeight;
 		}
 
 		/**
@@ -1017,7 +1068,11 @@ package feathers.core
 		 */
 		public function set maxHeight(value:Number):void
 		{
-			if(this._maxHeight == value)
+			if(value < 0)
+			{
+				value = 0;
+			}
+			if(this._explicitMaxHeight == value)
 			{
 				return;
 			}
@@ -1025,8 +1080,14 @@ package feathers.core
 			{
 				throw new ArgumentError("maxHeight cannot be NaN");
 			}
-			this._maxHeight = value;
-			this.invalidate(INVALIDATION_FLAG_SIZE);
+			var oldValue:Number = this._explicitMaxHeight;
+			this._explicitMaxHeight = value;
+			if(this._explicitHeight !== this._explicitHeight && //isNaN
+				(this.actualHeight > value || this.actualHeight === oldValue))
+			{
+				//only invalidate if this change might affect the width
+				this.invalidate(INVALIDATION_FLAG_SIZE);
+			}
 		}
 
 		/**
@@ -1653,7 +1714,12 @@ package feathers.core
 		protected var _invalidateCount:int = 0;
 
 		/**
-		 * @private
+		 * Feathers components use an optimized <code>getBounds()</code>
+		 * implementation that may sometimes behave differently than regular
+		 * Starling display objects. For instance, filters may need some special
+		 * customization. If a component's children appear outside of its
+		 * bounds (such as at negative dimensions), padding should be added to
+		 * the filter to account for these regions.
 		 */
 		override public function getBounds(targetSpace:DisplayObject, resultRect:Rectangle=null):Rectangle
 		{
@@ -1838,7 +1904,7 @@ package feathers.core
 					//finished initializing. we'll have to wait.
 					return;
 				}
-				this.initializeInternal();
+				this.initializeNow();
 			}
 			if(!this.isInvalid())
 			{
@@ -2009,6 +2075,40 @@ package feathers.core
 		}
 
 		/**
+		 * If the component has not yet initialized, initializes immediately.
+		 * The <code>initialize()</code> function will be called, and the
+		 * <code>FeathersEventType.INITIALIZE</code> event will be dispatched.
+		 * Then, if the component has a style provider, it will be applied. The
+		 * component will not validate, though. To initialize and validate
+		 * immediately, call <code>validate()</code> instead.
+		 * 
+		 * @see #isInitialized
+		 * @see #initialize()
+		 * @see #event:initialize FeathersEventType.INITIALIZE
+		 * @see #styleProvider
+		 * @see #validate()
+		 */
+		public function initializeNow():void
+		{
+			if(this._isInitialized || this._isInitializing)
+			{
+				return;
+			}
+			this._isInitializing = true;
+			this.initialize();
+			this.invalidate(); //invalidate everything
+			this._isInitializing = false;
+			this._isInitialized = true;
+			this.dispatchEventWith(FeathersEventType.INITIALIZE);
+
+			if(this._styleProvider)
+			{
+				this._styleProvider.applyStyles(this);
+			}
+			this._styleNameList.addEventListener(Event.CHANGE, styleNameList_changeHandler);
+		}
+
+		/**
 		 * Sets the width and height of the control, with the option of
 		 * invalidating or not. Intended to be used when the <code>width</code>
 		 * and <code>height</code> values have not been set explicitly, and the
@@ -2025,7 +2125,9 @@ package feathers.core
 		}
 
 		/**
-		 *
+		 * Saves the dimensions and minimum dimensions calculated for the
+		 * component. Returns true if the reported values have changed and
+		 * <code>Event.RESIZE</code> was dispatched.
 		 */
 		protected function saveMeasurements(width:Number, height:Number, minWidth:Number = 0, minHeight:Number = 0):Boolean
 		{
@@ -2051,9 +2153,9 @@ package feathers.core
 				{
 					width = minWidth;
 				}
-				else if(width > this._maxWidth)
+				else if(width > this._explicitMaxWidth)
 				{
-					width = this._maxWidth;
+					width = this._explicitMaxWidth;
 				}
 			}
 			if(this._explicitHeight === this._explicitHeight) //!isNaN
@@ -2066,9 +2168,9 @@ package feathers.core
 				{
 					height = minHeight;
 				}
-				else if(height > this._maxHeight)
+				else if(height > this._explicitMaxHeight)
 				{
-					height = this._maxHeight;
+					height = this._explicitMaxHeight;
 				}
 			}
 			if(width !== width) //isNaN
@@ -2114,20 +2216,14 @@ package feathers.core
 			}
 			width = this.scaledActualWidth;
 			height = this.scaledActualHeight;
-			minWidth = this.scaledActualMinWidth;
-			minHeight = this.scaledActualMinHeight;
 			this.scaledActualWidth = this.actualWidth * scaleX;
 			this.scaledActualHeight = this.actualHeight * scaleY;
 			this.scaledActualMinWidth = this.actualMinWidth * scaleX;
 			this.scaledActualMinHeight = this.actualMinHeight * scaleY;
-			if(width !== this.scaledActualWidth || height !== this.scaledActualHeight ||
-					minWidth !== this.scaledActualMinWidth || minHeight !== this.scaledActualMinHeight)
+			if(width !== this.scaledActualWidth || height !== this.scaledActualHeight)
 			{
 				resized = true;
-			}
-			if(resized)
-			{
-				this.dispatchEventWith(FeathersEventType.RESIZE);
+				this.dispatchEventWith(Event.RESIZE);
 			}
 			return resized;
 		}
@@ -2265,29 +2361,6 @@ package feathers.core
 		}
 
 		/**
-		 * @private
-		 */
-		protected function initializeInternal():void
-		{
-			if(this._isInitialized || this._isInitializing)
-			{
-				return;
-			}
-			this._isInitializing = true;
-			this.initialize();
-			this.invalidate(); //invalidate everything
-			this._isInitializing = false;
-			this._isInitialized = true;
-			this.dispatchEventWith(FeathersEventType.INITIALIZE);
-
-			if(this._styleProvider)
-			{
-				this._styleProvider.applyStyles(this);
-			}
-			this._styleNameList.addEventListener(Event.CHANGE, styleNameList_changeHandler);
-		}
-
-		/**
 		 * Default event handler for <code>FeathersEventType.FOCUS_IN</code>
 		 * that may be overridden in subclasses to perform additional actions
 		 * when the component receives focus.
@@ -2319,10 +2392,11 @@ package feathers.core
 		protected function feathersControl_addedToStageHandler(event:Event):void
 		{
 			this._depth = getDisplayObjectDepthFromStage(this);
-			this._validationQueue = ValidationQueue.forStarling(Starling.current);
+			var starling:Starling = stageToStarling(this.stage);
+			this._validationQueue = ValidationQueue.forStarling(starling);
 			if(!this._isInitialized)
 			{
-				this.initializeInternal();
+				this.initializeNow();
 			}
 			if(this.isInvalid())
 			{

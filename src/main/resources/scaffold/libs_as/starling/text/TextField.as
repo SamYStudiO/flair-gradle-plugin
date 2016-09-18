@@ -197,12 +197,14 @@ package starling.text
                 {
                     _meshBatch.x = _textBounds.x = -_textBounds.x;
                     _hitArea.width = _textBounds.width;
+                    _textBounds.x = 0;
                 }
 
                 if (isVerticalAutoSize)
                 {
                     _meshBatch.y = _textBounds.y = -_textBounds.y;
                     _hitArea.height = _textBounds.height;
+                    _textBounds.y = 0;
                 }
             }
             else
@@ -258,7 +260,7 @@ package starling.text
         public function get textBounds():Rectangle
         {
             if (_requiresRecomposition) recompose();
-            if (_textBounds == null) _textBounds = _meshBatch.getBounds(_meshBatch);
+            if (_textBounds == null) _textBounds = _meshBatch.getBounds(this);
             return _textBounds.clone();
         }
         
@@ -284,15 +286,15 @@ package starling.text
             // different to ordinary display objects, changing the size of the text field should 
             // not change the scaling, but make the texture bigger/smaller, while the size 
             // of the text/font stays the same (this applies to the height, as well).
-            
-            _hitArea.width = value;
+
+            _hitArea.width = value / (scaleX || 1.0);
             setRequiresRecomposition();
         }
         
         /** @inheritDoc */
         public override function set height(value:Number):void
         {
-            _hitArea.height = value;
+            _hitArea.height = value / (scaleY || 1.0);
             setRequiresRecomposition();
         }
         

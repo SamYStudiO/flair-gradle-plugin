@@ -10,9 +10,11 @@ package feathers.controls.supportClasses
 	import feathers.controls.AutoSizeMode;
 	import feathers.controls.IScreen;
 	import feathers.core.FeathersControl;
+	import feathers.core.IFeathersControl;
 	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IValidating;
 	import feathers.events.FeathersEventType;
+	import feathers.utils.skins.resetFluidChildDimensionsForMeasurement;
 
 	import flash.errors.IllegalOperationError;
 	import flash.utils.getDefinitionByName;
@@ -226,6 +228,16 @@ package feathers.controls.supportClasses
 		 * @private
 		 */
 		protected var _activeScreenExplicitMinHeight:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _activeScreenExplicitMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _activeScreenExplicitMaxHeight:Number;
 
 		/**
 		 * @private
@@ -505,13 +517,13 @@ package feathers.controls.supportClasses
 			{
 				if(this._activeScreen !== null)
 				{
-					this._activeScreen.width = this._activeScreenExplicitWidth;
-					this._activeScreen.height = this._activeScreenExplicitHeight;
-					if(measureScreen !== null)
-					{
-						measureScreen.minWidth = this._activeScreenExplicitMinWidth;
-						measureScreen.minHeight = this._activeScreenExplicitMinHeight;
-					}
+					resetFluidChildDimensionsForMeasurement(this._activeScreen,
+						this._explicitWidth, this._explicitHeight,
+						this._explicitMinWidth, this._explicitMinHeight,
+						this._explicitMaxWidth, this._explicitMaxHeight,
+						this._activeScreenExplicitWidth, this._activeScreenExplicitHeight,
+						this._activeScreenExplicitMinWidth, this._activeScreenExplicitMinHeight,
+						this._activeScreenExplicitMaxWidth, this._activeScreenExplicitMaxHeight);
 					if(this._activeScreen is IValidating)
 					{
 						IValidating(this._activeScreen).validate();
@@ -691,14 +703,9 @@ package feathers.controls.supportClasses
 				return null;
 			}
 
-			if(this._activeScreenID == id)
-			{
-				return this._activeScreen;
-			}
-
 			this._previousScreenInTransition = this._activeScreen;
 			this._previousScreenInTransitionID = this._activeScreenID;
-			if(this._activeScreen)
+			if(this._activeScreen !== null)
 			{
 				this.cleanupActiveScreen();
 			}
@@ -718,11 +725,17 @@ package feathers.controls.supportClasses
 				screen.screenID = this._activeScreenID;
 				screen.owner = this; //subclasses will implement the interface
 			}
-			if(this._autoSizeMode == AutoSizeMode.CONTENT || !this.stage)
+			if(this._autoSizeMode === AutoSizeMode.CONTENT || !this.stage)
 			{
 				this._activeScreen.addEventListener(Event.RESIZE, activeScreen_resizeHandler);
 			}
 			this.prepareActiveScreen();
+			var isSameInstance:Boolean = this._previousScreenInTransition === this._activeScreen;
+			this.addChild(this._activeScreen);
+			if(this._activeScreen is IFeathersControl)
+			{
+				IFeathersControl(this._activeScreen).initializeNow();
+			}
 			var measureScreen:IMeasureDisplayObject = this._activeScreen as IMeasureDisplayObject;
 			if(measureScreen !== null)
 			{
@@ -730,6 +743,8 @@ package feathers.controls.supportClasses
 				this._activeScreenExplicitHeight = measureScreen.explicitHeight;
 				this._activeScreenExplicitMinWidth = measureScreen.explicitMinWidth;
 				this._activeScreenExplicitMinHeight = measureScreen.explicitMinHeight;
+				this._activeScreenExplicitMaxWidth = measureScreen.explicitMaxWidth;
+				this._activeScreenExplicitMaxHeight = measureScreen.explicitMaxHeight;
 			}
 			else
 			{
@@ -737,8 +752,9 @@ package feathers.controls.supportClasses
 				this._activeScreenExplicitHeight = this._activeScreen.height;
 				this._activeScreenExplicitMinWidth = this._activeScreenExplicitWidth;
 				this._activeScreenExplicitMinHeight = this._activeScreenExplicitHeight;
+				this._activeScreenExplicitMaxWidth = this._activeScreenExplicitWidth;
+				this._activeScreenExplicitMaxHeight = this._activeScreenExplicitHeight;
 			}
-			this.addChild(this._activeScreen);
 
 			this.invalidate(INVALIDATION_FLAG_SELECTED);
 			if(this._validationQueue && !this._validationQueue.isValidating)
@@ -752,26 +768,37 @@ package feathers.controls.supportClasses
 				this.validate();
 			}
 
-			this.dispatchEventWith(FeathersEventType.TRANSITION_START);
-			this._activeScreen.dispatchEventWith(FeathersEventType.TRANSITION_IN_START);
-			if(this._previousScreenInTransition)
+			if(isSameInstance)
 			{
-				this._previousScreenInTransition.dispatchEventWith(FeathersEventType.TRANSITION_OUT_START);
-			}
-			if(transition != null)
-			{
-				//temporarily make the active screen invisible because the
-				//transition doesn't start right away.
-				this._activeScreen.visible = false;
-				this._waitingForTransitionFrameCount = 0;
-				this._waitingTransition = transition;
-				//this is a workaround for an issue with transition performance.
-				//see the comment in the listener for details.
-				this.addEventListener(Event.ENTER_FRAME, waitingForTransition_enterFrameHandler);
+				//we can't transition if both screens are the same display
+				//object, so skip the transition!
+				this._previousScreenInTransition = null;
+				this._previousScreenInTransitionID = null;
+				this._isTransitionActive = false;
 			}
 			else
 			{
-				defaultTransition(this._previousScreenInTransition, this._activeScreen, transitionComplete);
+				this.dispatchEventWith(FeathersEventType.TRANSITION_START);
+				this._activeScreen.dispatchEventWith(FeathersEventType.TRANSITION_IN_START);
+				if(this._previousScreenInTransition !== null)
+				{
+					this._previousScreenInTransition.dispatchEventWith(FeathersEventType.TRANSITION_OUT_START);
+				}
+				if(transition !== null)
+				{
+					//temporarily make the active screen invisible because the
+					//transition doesn't start right away.
+					this._activeScreen.visible = false;
+					this._waitingForTransitionFrameCount = 0;
+					this._waitingTransition = transition;
+					//this is a workaround for an issue with transition performance.
+					//see the comment in the listener for details.
+					this.addEventListener(Event.ENTER_FRAME, waitingForTransition_enterFrameHandler);
+				}
+				else
+				{
+					defaultTransition(this._previousScreenInTransition, this._activeScreen, transitionComplete);
+				}
 			}
 
 			this.dispatchEventWith(Event.CHANGE);
@@ -783,7 +810,7 @@ package feathers.controls.supportClasses
 		 */
 		protected function clearScreenInternal(transition:Function = null):void
 		{
-			if(!this._activeScreen)
+			if(this._activeScreen === null)
 			{
 				//no screen visible.
 				return;
@@ -884,11 +911,11 @@ package feathers.controls.supportClasses
 				item = IScreenNavigatorItem(this._screens[previousScreenID]);
 				this._previousScreenInTransition = null;
 				this._previousScreenInTransitionID = null;
-				if(previousScreen)
+				if(previousScreen !== null)
 				{
 					previousScreen.dispatchEventWith(FeathersEventType.TRANSITION_OUT_COMPLETE)
 				}
-				if(activeScreen)
+				if(activeScreen !== null)
 				{
 					activeScreen.dispatchEventWith(FeathersEventType.TRANSITION_IN_COMPLETE)
 				}
@@ -897,7 +924,7 @@ package feathers.controls.supportClasses
 				//written before TRANSITION_OUT_COMPLETE existed may be using
 				//this event for the same purpose.
 				this.dispatchEventWith(FeathersEventType.TRANSITION_COMPLETE);
-				if(previousScreen)
+				if(previousScreen !== null)
 				{
 					if(previousScreen is IScreen)
 					{
@@ -915,7 +942,7 @@ package feathers.controls.supportClasses
 			{
 				this.clearScreenInternal(this._nextScreenTransition);
 			}
-			else if(this._nextScreenID)
+			else if(this._nextScreenID !== null)
 			{
 				this.showScreenInternal(this._nextScreenID, this._nextScreenTransition);
 			}

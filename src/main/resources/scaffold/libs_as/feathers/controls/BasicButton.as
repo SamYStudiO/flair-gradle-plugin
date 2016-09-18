@@ -8,11 +8,13 @@ accordance with the terms of the accompanying license agreement.
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
+	import feathers.core.IFeathersControl;
 	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IStateContext;
 	import feathers.core.IStateObserver;
 	import feathers.core.IValidating;
 	import feathers.events.FeathersEventType;
+	import feathers.skins.IStyleProvider;
 	import feathers.utils.skins.resetFluidChildDimensionsForMeasurement;
 	import feathers.utils.touch.TapToTrigger;
 
@@ -86,7 +88,16 @@ package feathers.controls
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
-		
+
+		/**
+		 * The default <code>IStyleProvider</code> for all <code>BasicButton</code>
+		 * components.
+		 *
+		 * @default null
+		 * @see feathers.core.FeathersControl#styleProvider
+		 */
+		public static var globalStyleProvider:IStyleProvider;
+
 		/**
 		 * Constructor.
 		 */
@@ -96,6 +107,14 @@ package feathers.controls
 			this.isQuickHitAreaEnabled = true;
 			this.addEventListener(Event.REMOVED_FROM_STAGE, basicButton_removedFromStageHandler);
 			this.addEventListener(TouchEvent.TOUCH, basicButton_touchHandler);
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function get defaultStyleProvider():IStyleProvider
+		{
+			return BasicButton.globalStyleProvider;
 		}
 
 		/**
@@ -245,22 +264,32 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _explicitSkinWidth:Number = NaN;
+		protected var _explicitSkinWidth:Number;
 
 		/**
 		 * @private
 		 */
-		protected var _explicitSkinHeight:Number = NaN;
+		protected var _explicitSkinHeight:Number;
 
 		/**
 		 * @private
 		 */
-		protected var _explicitSkinMinWidth:Number = NaN;
+		protected var _explicitSkinMinWidth:Number;
 
 		/**
 		 * @private
 		 */
-		protected var _explicitSkinMinHeight:Number = NaN;
+		protected var _explicitSkinMinHeight:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitSkinMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitSkinMaxHeight:Number;
 
 		/**
 		 * Gets the skin to be used by the button when its
@@ -392,8 +421,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitSkinWidth, this._explicitSkinHeight,
-				this._explicitSkinMinWidth, this._explicitSkinMinHeight);
+				this._explicitSkinMinWidth, this._explicitSkinMinHeight,
+				this._explicitSkinMaxWidth, this._explicitSkinMaxHeight);
 			var measureSkin:IMeasureDisplayObject = this.currentSkin as IMeasureDisplayObject;
 
 			if(this.currentSkin is IValidating)
@@ -410,7 +441,7 @@ package feathers.controls
 				}
 				else if(this.currentSkin !== null)
 				{
-					newMinWidth = this.currentSkin.width;
+					newMinWidth = this._explicitSkinMinWidth;
 				}
 				else
 				{
@@ -427,7 +458,7 @@ package feathers.controls
 				}
 				else if(this.currentSkin !== null)
 				{
-					newMinHeight = this.currentSkin.height;
+					newMinHeight = this._explicitSkinMinHeight;
 				}
 				else
 				{
@@ -478,6 +509,10 @@ package feathers.controls
 				this.removeCurrentSkin(oldSkin);
 				if(this.currentSkin !== null)
 				{
+					if(this.currentSkin is IFeathersControl)
+					{
+						IFeathersControl(this.currentSkin).initializeNow();
+					}
 					if(this.currentSkin is IMeasureDisplayObject)
 					{
 						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentSkin);
@@ -485,6 +520,8 @@ package feathers.controls
 						this._explicitSkinHeight = measureSkin.explicitHeight;
 						this._explicitSkinMinWidth = measureSkin.explicitMinWidth;
 						this._explicitSkinMinHeight = measureSkin.explicitMinHeight;
+						this._explicitSkinMaxWidth = measureSkin.explicitMaxWidth;
+						this._explicitSkinMaxHeight = measureSkin.explicitMaxHeight;
 					}
 					else
 					{
@@ -492,6 +529,8 @@ package feathers.controls
 						this._explicitSkinHeight = this.currentSkin.height;
 						this._explicitSkinMinWidth = this._explicitSkinWidth;
 						this._explicitSkinMinHeight = this._explicitSkinHeight;
+						this._explicitSkinMaxWidth = this._explicitSkinWidth;
+						this._explicitSkinMaxHeight = this._explicitSkinHeight;
 					}
 					if(this.currentSkin is IStateObserver)
 					{

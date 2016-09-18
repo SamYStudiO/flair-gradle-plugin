@@ -266,6 +266,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
+
+		/**
+		 * @private
+		 */
 		protected var currentBackgroundSkin:DisplayObject;
 
 		/**
@@ -691,6 +701,10 @@ package feathers.controls
 				if(this.currentBackgroundSkin !== null)
 				{
 					this.currentBackgroundSkin.starling_internal::setParent(this);
+					if(this.currentBackgroundSkin is IFeathersControl)
+					{
+						IFeathersControl(this.currentBackgroundSkin).initializeNow();
+					}
 					if(this.currentBackgroundSkin is IMeasureDisplayObject)
 					{
 						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackgroundSkin);
@@ -698,6 +712,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = measureSkin.explicitHeight;
 						this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 						this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+						this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+						this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 					}
 					else
 					{
@@ -705,6 +721,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = this.currentBackgroundSkin.height;
 						this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 						this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+						this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+						this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 					}
 				}
 			}
@@ -741,8 +759,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			
 			this.viewPortBounds.x = 0;
 			this.viewPortBounds.y = 0;
@@ -791,8 +811,8 @@ package feathers.controls
 			}
 			this.viewPortBounds.minWidth = viewPortMinWidth;
 			this.viewPortBounds.minHeight = viewPortMinHeight;
-			this.viewPortBounds.maxWidth = this._maxWidth;
-			this.viewPortBounds.maxHeight = this._maxHeight;
+			this.viewPortBounds.maxWidth = this._explicitMaxWidth;
+			this.viewPortBounds.maxHeight = this._explicitMaxHeight;
 		}
 
 		/**

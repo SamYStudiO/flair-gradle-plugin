@@ -21,7 +21,6 @@ package feathers.controls.text
 	import feathers.utils.geom.matrixToScaleY;
 
 	import flash.display.BitmapData;
-	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.display3D.Context3DProfile;
 	import flash.events.FocusEvent;
@@ -272,7 +271,7 @@ package feathers.controls.text
 		/**
 		 * @copy feathers.core.INativeFocusOwner#nativeFocus
 		 */
-		public function get nativeFocus():InteractiveObject
+		public function get nativeFocus():Object
 		{
 			return this.textField;
 		}
@@ -1623,7 +1622,7 @@ package feathers.controls.text
 			//force it.
 			if(!this._isInitialized)
 			{
-				this.initializeInternal();
+				this.initializeNow();
 			}
 
 			this.commit();
@@ -1799,9 +1798,9 @@ package feathers.controls.text
 				{
 					newWidth = this._explicitMinWidth;
 				}
-				else if(newWidth > this._maxWidth)
+				else if(newWidth > this._explicitMaxWidth)
 				{
-					newWidth = this._maxWidth;
+					newWidth = this._explicitMaxWidth;
 				}
 			}
 
@@ -1819,9 +1818,9 @@ package feathers.controls.text
 				{
 					newHeight = this._explicitMinHeight;
 				}
-				else if(newHeight > this._maxHeight)
+				else if(newHeight > this._explicitMaxHeight)
 				{
-					newHeight = this._maxHeight;
+					newHeight = this._explicitMaxHeight;
 				}
 			}
 
@@ -2208,6 +2207,9 @@ package feathers.controls.text
 					//this is faster, if we haven't resized the bitmapdata
 					var existingTexture:Texture = this.textSnapshot.texture;
 					existingTexture.root.uploadBitmapData(bitmapData);
+					//however, the image won't be notified that its
+					//texture has changed, so we need to do it manually
+					this.textSnapshot.setRequiresRedraw();
 				}
 			}
 			if(this._updateSnapshotOnScaleChange)

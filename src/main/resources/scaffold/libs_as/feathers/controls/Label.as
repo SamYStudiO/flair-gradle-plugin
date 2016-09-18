@@ -8,6 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
+	import feathers.core.IFeathersControl;
 	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.ITextBaselineControl;
 	import feathers.core.ITextRenderer;
@@ -33,6 +34,14 @@ package feathers.controls
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * The default value added to the <code>styleNameList</code> of the text
+		 * renderer.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_RENDERER:String = "feathers-label-text-renderer";
 
 		/**
 		 * An alternate style name to use with <code>Label</code> to allow a
@@ -109,6 +118,17 @@ package feathers.controls
 			super();
 			this.isQuickHitAreaEnabled = true;
 		}
+
+		/**
+		 * The value added to the <code>styleNameList</code> of the text
+		 * renderer. This variable is <code>protected</code> so that sub-classes
+		 * can customize the text renderer style name in their constructors
+		 * instead of using the default style name defined by
+		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_RENDERER</code>.
+		 *
+		 * @see feathers.core.FeathersControl#styleNameList
+		 */
+		protected var textRendererStyleName:String = DEFAULT_CHILD_STYLE_NAME_TEXT_RENDERER;
 
 		/**
 		 * The text renderer.
@@ -258,6 +278,53 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _customTextRendererStyleName:String;
+
+		/**
+		 * A style name to add to the label's text renderer sub-component.
+		 * Typically used by a theme to provide different styles to different
+		 * labels.
+		 *
+		 * <p>In the following example, a custom text renderer style name is
+		 * passed to the label:</p>
+		 *
+		 * <listing version="3.0">
+		 * label.customTextRendererStyleName = "my-custom-label-text-renderer";</listing>
+		 *
+		 * <p>In your theme, you can target this sub-component style name to
+		 * provide different styles than the default:</p>
+		 *
+		 * <listing version="3.0">
+		 * getStyleProviderForClass( BitmapFontTextRenderer ).setFunctionForStyleName( "my-custom-label-text-renderer", setCustomLabelTextRendererStyles );</listing>
+		 *
+		 * @default null
+		 *
+		 * @see #DEFAULT_CHILD_STYLE_NAME_TEXT_RENDERER
+		 * @see feathers.core.FeathersControl#styleNameList
+		 * @see #textRendererFactory
+		 */
+		public function get customTextRendererStyleName():String
+		{
+			return this._customTextRendererStyleName;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set customTextRendererStyleName(value:String):void
+		{
+			if(this._customTextRendererStyleName == value)
+			{
+				return;
+			}
+			this._customTextRendererStyleName = value;
+			this.invalidate(INVALIDATION_FLAG_TEXT_RENDERER);
+		}
+
+
+		/**
+		 * @private
+		 */
 		protected var _textRendererProperties:PropertyProxy;
 
 		/**
@@ -349,6 +416,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _explicitTextRendererMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitTextRendererMaxHeight:Number;
+
+		/**
+		 * @private
+		 */
 		protected var _explicitBackgroundWidth:Number;
 
 		/**
@@ -365,6 +442,16 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _explicitBackgroundMinHeight:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
 
 		/**
 		 * @private
@@ -692,18 +779,23 @@ package feathers.controls
 				this._explicitHeight - this._paddingTop - this._paddingBottom,
 				this._explicitMinWidth - this._paddingLeft - this._paddingRight,
 				this._explicitMinHeight - this._paddingTop - this._paddingBottom,
+				this._explicitMaxWidth - this._paddingLeft - this._paddingRight,
+				this._explicitMaxHeight - this._paddingTop - this._paddingBottom,
 				this._explicitTextRendererWidth, this._explicitTextRendererHeight,
-				this._explicitTextRendererMinWidth, this._explicitTextRendererMinHeight);
-			this.textRenderer.maxWidth = this._maxWidth - this._paddingLeft - this._paddingRight;
-			this.textRenderer.maxHeight = this._maxHeight - this._paddingTop - this._paddingBottom;
+				this._explicitTextRendererMinWidth, this._explicitTextRendererMinHeight,
+				this._explicitTextRendererMaxWidth, this._explicitTextRendererMaxHeight);
+			this.textRenderer.maxWidth = this._explicitMaxWidth - this._paddingLeft - this._paddingRight;
+			this.textRenderer.maxHeight = this._explicitMaxHeight - this._paddingTop - this._paddingBottom;
 			this.textRenderer.measureText(HELPER_POINT);
 
 			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			if(this.currentBackgroundSkin is IValidating)
 			{
 				IValidating(this.currentBackgroundSkin).validate();
@@ -731,7 +823,7 @@ package feathers.controls
 				}
 				else if(this.currentBackgroundSkin !== null)
 				{
-					backgroundMinWidth = this.currentBackgroundSkin.width;
+					backgroundMinWidth = this._explicitBackgroundMinWidth;
 				}
 				if(backgroundMinWidth > newMinWidth)
 				{
@@ -757,7 +849,7 @@ package feathers.controls
 				}
 				else if(this.currentBackgroundSkin !== null)
 				{
-					backgroundMinHeight = this.currentBackgroundSkin.height;
+					backgroundMinHeight = this._explicitBackgroundMinHeight;
 				}
 				if(backgroundMinHeight > newMinHeight)
 				{
@@ -826,12 +918,17 @@ package feathers.controls
 
 			var factory:Function = this._textRendererFactory != null ? this._textRendererFactory : FeathersControl.defaultTextRendererFactory;
 			this.textRenderer = ITextRenderer(factory());
+			var textRendererStyleName:String = this._customTextRendererStyleName != null ? this._customTextRendererStyleName : this.textRendererStyleName;
+			this.textRenderer.styleNameList.add(textRendererStyleName);
 			this.addChild(DisplayObject(this.textRenderer));
 
+			this.textRenderer.initializeNow();
 			this._explicitTextRendererWidth = this.textRenderer.explicitWidth;
 			this._explicitTextRendererHeight = this.textRenderer.explicitHeight;
 			this._explicitTextRendererMinWidth = this.textRenderer.explicitMinWidth;
 			this._explicitTextRendererMinHeight = this.textRenderer.explicitMinHeight;
+			this._explicitTextRendererMaxWidth = this.textRenderer.explicitMaxWidth;
+			this._explicitTextRendererMaxHeight = this.textRenderer.explicitMaxHeight;
 		}
 
 		/**
@@ -855,6 +952,10 @@ package feathers.controls
 				if(this.currentBackgroundSkin !== null)
 				{
 					this.addChildAt(this.currentBackgroundSkin, 0);
+					if(this.currentBackgroundSkin is IFeathersControl)
+					{
+						IFeathersControl(this.currentBackgroundSkin).initializeNow();
+					}
 					if(this.currentBackgroundSkin is IMeasureDisplayObject)
 					{
 						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackgroundSkin);
@@ -862,6 +963,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = measureSkin.explicitHeight;
 						this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 						this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+						this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+						this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 					}
 					else
 					{
@@ -869,6 +972,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = this.currentBackgroundSkin.height;
 						this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 						this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+						this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+						this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 					}
 				}
 			}

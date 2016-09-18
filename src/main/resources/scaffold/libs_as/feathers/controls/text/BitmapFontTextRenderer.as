@@ -66,6 +66,11 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		private static const HELPER_RESULT:MeasureTextResult = new MeasureTextResult();
+
+		/**
+		 * @private
+		 */
 		private static const CHARACTER_ID_SPACE:int = 32;
 
 		/**
@@ -154,6 +159,21 @@ package feathers.controls.text
 		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return BitmapFontTextRenderer.globalStyleProvider;
+		}
+
+		/**
+		 * @private
+		 */
+		override public function set maxWidth(value:Number):void
+		{
+			//this is a special case because truncation may bypass normal rules
+			//for determining if changing maxWidth should invalidate
+			var needsInvalidate:Boolean = value > this._explicitMaxWidth && this._lastLayoutIsTruncated;
+			super.maxWidth = value;
+			if(needsInvalidate)
+			{
+				this.invalidate(INVALIDATION_FLAG_SIZE);
+			}
 		}
 
 		/**
@@ -663,7 +683,7 @@ package feathers.controls.text
 			var maxLineWidth:Number = this._explicitWidth;
 			if(maxLineWidth !== maxLineWidth) //isNaN
 			{
-				maxLineWidth = this._maxWidth;
+				maxLineWidth = this._explicitMaxWidth;
 			}
 
 			var maxX:Number = 0;
@@ -859,6 +879,11 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		protected var _lastLayoutIsTruncated:Boolean = false;
+
+		/**
+		 * @private
+		 */
 		override protected function draw():void
 		{
 			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
@@ -882,10 +907,30 @@ package feathers.controls.text
 			var newWidth:Number = this._explicitWidth;
 			if(newWidth !== newWidth) //isNaN
 			{
-				newWidth = this._maxWidth;
+				newWidth = this._explicitMaxWidth;
 			}
-			var sizeInvalid:Boolean = (!this._wordWrap && newWidth < this._lastLayoutWidth) ||
-				(this._wordWrap && newWidth !== this._lastLayoutWidth);
+
+			//sometimes, we can determine that the dimensions will be exactly
+			//the same without needing to refresh the text lines. this will
+			//result in much better performance.
+			if(this._wordWrap)
+			{
+				//when word wrapped, we need to measure again any time that the
+				//width changes.
+				var sizeInvalid:Boolean = newWidth !== this._lastLayoutWidth;
+			}
+			else
+			{
+				//we can skip measuring again more frequently when the text is
+				//a single line.
+
+				//if the width is smaller than the last layout width, we need to
+				//measure again. when it's larger, the result won't change...
+				sizeInvalid = newWidth < this._lastLayoutWidth;
+
+				//...unless the text was previously truncated!
+				sizeInvalid ||= (this._lastLayoutIsTruncated && newWidth !== this._lastLayoutWidth);
+			}
 			if(dataInvalid || sizeInvalid || this._textFormatChanged)
 			{
 				this._textFormatChanged = false;
@@ -895,9 +940,10 @@ package feathers.controls.text
 					this.saveMeasurements(0, 0, 0, 0);
 					return;
 				}
-				this.layoutCharacters(HELPER_POINT);
-				this._lastLayoutWidth = HELPER_POINT.x;
-				this._lastLayoutHeight = HELPER_POINT.y;
+				this.layoutCharacters(HELPER_RESULT);
+				this._lastLayoutWidth = HELPER_RESULT.width;
+				this._lastLayoutHeight = HELPER_RESULT.height;
+				this._lastLayoutIsTruncated = HELPER_RESULT.isTruncated;
 			}
 			this.saveMeasurements(this._lastLayoutWidth, this._lastLayoutHeight,
 				this._lastLayoutWidth, this._lastLayoutHeight);
@@ -906,11 +952,11 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected function layoutCharacters(result:Point = null):Point
+		protected function layoutCharacters(result:MeasureTextResult = null):MeasureTextResult
 		{
 			if(!result)
 			{
-				result = new Point();
+				result = new MeasureTextResult();
 			}
 
 			var font:BitmapFont = this.currentTextFormat.font;
@@ -928,7 +974,7 @@ package feathers.controls.text
 
 			var hasExplicitWidth:Boolean = this._explicitWidth === this._explicitWidth; //!isNaN
 			var isAligned:Boolean = this.currentTextFormat.align != TextFormatAlign.LEFT;
-			var maxLineWidth:Number = hasExplicitWidth ? this._explicitWidth : this._maxWidth;
+			var maxLineWidth:Number = hasExplicitWidth ? this._explicitWidth : this._explicitMaxWidth;
 			if(isAligned && maxLineWidth == Number.POSITIVE_INFINITY)
 			{
 				//we need to measure the text to get the maximum line width
@@ -939,7 +985,13 @@ package feathers.controls.text
 			var textToDraw:String = this._text;
 			if(this._truncateToFit)
 			{
-				textToDraw = this.getTruncatedText(maxLineWidth);
+				var truncatedText:String = this.getTruncatedText(maxLineWidth);
+				result.isTruncated = truncatedText !== textToDraw;
+				textToDraw = truncatedText;
+			}
+			else
+			{
+				result.isTruncated = false;
 			}
 			CHARACTER_BUFFER.length = 0;
 
@@ -1120,8 +1172,8 @@ package feathers.controls.text
 			}
 			this._characterBatch.x = this._batchX;
 
-			result.x = maxX;
-			result.y = currentY + lineHeight - this.currentTextFormat.leading;
+			result.width = maxX;
+			result.height = currentY + lineHeight - this.currentTextFormat.leading;
 			return result;
 		}
 

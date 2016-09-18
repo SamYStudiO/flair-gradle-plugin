@@ -16,6 +16,7 @@ package feathers.controls.text
 	import feathers.skins.IStyleProvider;
 	import feathers.utils.geom.matrixToScaleX;
 	import feathers.utils.geom.matrixToScaleY;
+	import feathers.utils.math.roundUpToNearest;
 
 	import flash.display.BitmapData;
 	import flash.display3D.Context3DProfile;
@@ -1116,6 +1117,11 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		protected var _lastContentScaleFactor:Number = 0;
+
+		/**
+		 * @private
+		 */
 		protected var _updateSnapshotOnScaleChange:Boolean = false;
 
 		/**
@@ -1244,7 +1250,9 @@ package feathers.controls.text
 				{
 					var globalScaleX:Number = matrixToScaleX(HELPER_MATRIX);
 					var globalScaleY:Number = matrixToScaleY(HELPER_MATRIX);
-					if(globalScaleX != this._lastGlobalScaleX || globalScaleY != this._lastGlobalScaleY)
+					if(globalScaleX != this._lastGlobalScaleX ||
+						globalScaleY != this._lastGlobalScaleY ||
+						Starling.contentScaleFactor != this._lastContentScaleFactor)
 					{
 						//the snapshot needs to be updated because the scale has
 						//changed since the last snapshot was taken.
@@ -1337,7 +1345,7 @@ package feathers.controls.text
 			//force it.
 			if(!this._isInitialized)
 			{
-				this.initializeInternal();
+				this.initializeNow();
 			}
 
 			this.commit();
@@ -1506,9 +1514,9 @@ package feathers.controls.text
 				{
 					newWidth = this._explicitMinWidth;
 				}
-				else if(newWidth > this._maxWidth)
+				else if(newWidth > this._explicitMaxWidth)
 				{
-					newWidth = this._maxWidth;
+					newWidth = this._explicitMaxWidth;
 				}
 			}
 			//and this is a workaround for an issue where flash.text.TextField
@@ -1525,13 +1533,19 @@ package feathers.controls.text
 			if(needsHeight)
 			{
 				newHeight = (this.textField.height / scaleFactor) - gutterDimensionsOffset;
+				//from what I can gather, TextField measures in twips, like many
+				//things in Flash. if the result of the calculation above is
+				//just below the nearest twip (due to a rounding error or
+				//whatever), some of the text may be cut off. as a workaround,
+				//round up to nearest twip.
+				newHeight = roundUpToNearest(newHeight, 0.05);
 				if(newHeight < this._explicitMinHeight)
 				{
 					newHeight = this._explicitMinHeight;
 				}
-				else if(newHeight > this._maxHeight)
+				else if(newHeight > this._explicitMaxHeight)
 				{
-					newHeight = this._maxHeight;
+					newHeight = this._explicitMaxHeight;
 				}
 			}
 
@@ -1979,6 +1993,9 @@ package feathers.controls.text
 							//this is faster, if we haven't resized the bitmapdata
 							var existingTexture:Texture = snapshot.texture;
 							existingTexture.root.uploadBitmapData(bitmapData);
+							//however, the image won't be notified that its
+							//texture has changed, so we need to do it manually
+							this.textSnapshot.setRequiresRedraw();
 						}
 					}
 					if(newTexture)
@@ -2036,6 +2053,7 @@ package feathers.controls.text
 			{
 				this._lastGlobalScaleX = globalScaleX;
 				this._lastGlobalScaleY = globalScaleY;
+				this._lastContentScaleFactor = scaleFactor;
 			}
 			this._needsNewTexture = false;
 		}

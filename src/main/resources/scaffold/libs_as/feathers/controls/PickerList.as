@@ -324,6 +324,7 @@ package feathers.controls
 				this._dataProvider.removeEventListener(CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler);
 				this._dataProvider.removeEventListener(CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler);
 				this._dataProvider.removeEventListener(CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.removeEventListener(CollectionEventType.UPDATE_ITEM, dataProvider_updateItemHandler);
 			}
 			this._dataProvider = value;
 			if(this._dataProvider)
@@ -332,6 +333,7 @@ package feathers.controls
 				this._dataProvider.addEventListener(CollectionEventType.ADD_ITEM, dataProvider_multipleEventHandler);
 				this._dataProvider.addEventListener(CollectionEventType.REMOVE_ITEM, dataProvider_multipleEventHandler);
 				this._dataProvider.addEventListener(CollectionEventType.REPLACE_ITEM, dataProvider_multipleEventHandler);
+				this._dataProvider.addEventListener(CollectionEventType.UPDATE_ITEM, dataProvider_updateItemHandler);
 			}
 			if(!this._dataProvider || this._dataProvider.length == 0)
 			{
@@ -1111,33 +1113,41 @@ package feathers.controls
 		 */
 		public function itemToLabel(item:Object):String
 		{
-			if(this._labelFunction != null)
+			if(this._labelFunction !== null)
 			{
 				var labelResult:Object = this._labelFunction(item);
 				if(labelResult is String)
 				{
 					return labelResult as String;
 				}
-				return labelResult.toString();
+				else if(labelResult !== null)
+				{
+					return labelResult.toString();
+				}
 			}
-			else if(this._labelField != null && item && item.hasOwnProperty(this._labelField))
+			else if(this._labelField !== null && item !== null && item.hasOwnProperty(this._labelField))
 			{
 				labelResult = item[this._labelField];
 				if(labelResult is String)
 				{
 					return labelResult as String;
 				}
-				return labelResult.toString();
+				else if(labelResult !== null)
+				{
+					return labelResult.toString();
+				}
 			}
 			else if(item is String)
 			{
 				return item as String;
 			}
-			else if(item)
+			else if(item !== null)
 			{
+				//we need to use strict equality here because the data can be
+				//non-strictly equal to null
 				return item.toString();
 			}
-			return "";
+			return null;
 		}
 
 		/**
@@ -1496,6 +1506,7 @@ package feathers.controls
 			this.addChild(this.button);
 			
 			//we will use these values for measurement, if possible
+			this.button.initializeNow();
 			this.buttonExplicitWidth = this.button.explicitWidth;
 			this.buttonExplicitHeight = this.button.explicitHeight;
 			this.buttonExplicitMinWidth = this.button.explicitMinWidth;
@@ -1780,12 +1791,23 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function dataProvider_multipleEventHandler():void
+		protected function dataProvider_multipleEventHandler(event:Event):void
 		{
 			//we need to ensure that the pop-up list has received the new
 			//selected index, or it might update the selected index to an
 			//incorrect value after an item is added, removed, or replaced.
 			this.validate();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function dataProvider_updateItemHandler(event:Event, index:int):void
+		{
+			if(index === this._selectedIndex)
+			{
+				this.invalidate(INVALIDATION_FLAG_SELECTED);
+			}
 		}
 
 		/**

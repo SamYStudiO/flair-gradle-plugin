@@ -764,8 +764,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			if(this.currentBackgroundSkin is IValidating)
 			{
@@ -777,55 +779,9 @@ package feathers.controls
 				IValidating(this._icon).validate();
 			}
 
-			var oldIgnoreHeaderResizing:Boolean = this._ignoreHeaderResizing;
-			this._ignoreHeaderResizing = true;
-			var oldIgnoreFooterResizing:Boolean = this._ignoreFooterResizing;
-			this._ignoreFooterResizing = true;
-
-			if(needsWidth)
-			{
-				this.header.width = this._explicitHeaderWidth;
-			}
-			else
-			{
-				this.header.width = this._explicitWidth;
-			}
-			var headerAndFooterMinWidth:Number = this._explicitMinWidth;
-			if(headerAndFooterMinWidth !== headerAndFooterMinWidth || //isNaN
-				this._explicitHeaderMinWidth > headerAndFooterMinWidth)
-			{
-				headerAndFooterMinWidth = this._explicitHeaderMinWidth;
-			}
-			if(headerAndFooterMinWidth !== headerAndFooterMinWidth || //isNaN
-				this._explicitFooterMinWidth > headerAndFooterMinWidth)
-			{
-				headerAndFooterMinWidth = this._explicitFooterMinWidth;
-			}
-			this.header.minWidth = headerAndFooterMinWidth;
-			if(this._maxWidth > this.header.maxWidth)
-			{
-				this.header.maxWidth = this._maxWidth;
-			}
-			this.header.height = this._explicitHeaderHeight;
-			this.header.minHeight = this._explicitHeaderMinHeight;
-			this.header.validate();
-			
-			if(needsWidth)
-			{
-				this.footer.width = this._explicitFooterWidth;
-			}
-			else
-			{
-				this.footer.width = this._explicitWidth;
-			}
-			this.footer.minWidth = headerAndFooterMinWidth;
-			if(this._maxWidth > this.footer.maxWidth)
-			{
-				this.footer.maxWidth = this._maxWidth;
-			}
-			this.footer.height = this._explicitFooterHeight;
-			this.footer.minHeight = this._explicitHeaderMinHeight;
-			this.footer.validate();
+			//we don't measure the header and footer here because they are
+			//handled in calculateViewPortOffsets(), which is automatically
+			//called by Scroller before autoSizeIfNeeded().
 
 			var newWidth:Number = this._explicitWidth;
 			var newHeight:Number = this._explicitHeight;
@@ -844,13 +800,18 @@ package feathers.controls
 				//we don't need to account for the icon and gap because it is
 				//already included in the left offset
 				newWidth += this._rightViewPortOffset + this._leftViewPortOffset;
-				if(this.header.width > newWidth)
+				var headerWidth:Number = this.header.width + this._outerPaddingLeft + this._outerPaddingRight;
+				if(headerWidth > newWidth)
 				{
-					newWidth = this.header.width;
+					newWidth = headerWidth;
 				}
-				if(this.footer.width > newWidth)
+				if(this.footer !== null)
 				{
-					newWidth = this.footer.width;
+					var footerWidth:Number = this.footer.width + this._outerPaddingLeft + this._outerPaddingRight;
+					if(footerWidth > newWidth)
+					{
+						newWidth = footerWidth;
+					}
 				}
 				if(this.currentBackgroundSkin !== null &&
 					this.currentBackgroundSkin.width > newWidth)
@@ -899,13 +860,18 @@ package feathers.controls
 				//we don't need to account for the icon and gap because it is
 				//already included in the left offset
 				newMinWidth += this._rightViewPortOffset + this._leftViewPortOffset;
-				if(this.header.minWidth > newMinWidth)
+				var headerMinWidth:Number = this.header.minWidth + this._outerPaddingLeft + this._outerPaddingRight;
+				if(headerMinWidth > newMinWidth)
 				{
-					newMinWidth = this.header.minWidth;
+					newMinWidth = headerMinWidth;
 				}
-				if(this.footer.minWidth > newMinWidth)
+				if(this.footer !== null)
 				{
-					newMinWidth = this.footer.minWidth;
+					var footerMinWidth:Number = this.footer.minWidth + this._outerPaddingLeft + this._outerPaddingRight;
+					if(footerMinWidth > newMinWidth)
+					{
+						newMinWidth = footerMinWidth;
+					}
 				}
 				if(this.currentBackgroundSkin !== null)
 				{
@@ -916,9 +882,9 @@ package feathers.controls
 							newMinWidth = measureBackground.minWidth;
 						}
 					}
-					else if(this.currentBackgroundSkin.width > newMinWidth)
+					else if(this._explicitBackgroundMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentBackgroundSkin.width;
+						newMinWidth = this._explicitBackgroundMinWidth;
 					}
 				}
 			}
@@ -953,15 +919,12 @@ package feathers.controls
 							newMinHeight = measureBackground.minHeight;
 						}
 					}
-					else if(this.currentBackgroundSkin.height > newMinHeight)
+					else if(this._explicitBackgroundMinHeight > newMinHeight)
 					{
-						newMinHeight = this.currentBackgroundSkin.height;
+						newMinHeight = this._explicitBackgroundMinHeight;
 					}
 				}
 			}
-
-			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
-			this._ignoreFooterResizing = oldIgnoreFooterResizing;
 
 			return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
 		}

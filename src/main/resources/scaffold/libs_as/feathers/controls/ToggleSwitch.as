@@ -85,18 +85,24 @@ package feathers.controls
 		protected static const INVALIDATION_FLAG_OFF_TRACK_FACTORY:String = "offTrackFactory";
 
 		/**
-		 * The ON and OFF labels will be aligned to the middle vertically,
-		 * based on the full character height of the font.
+		 * @private
+		 * DEPRECATED: Removed with no replacement.
 		 *
-		 * @see #labelAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const LABEL_ALIGN_MIDDLE:String = "middle";
 
 		/**
-		 * The ON and OFF labels will be aligned to the middle vertically,
-		 * based on only the baseline value of the font.
+		 * @private
+		 * DEPRECATED: Removed with no replacement.
 		 *
-		 * @see #labelAlign
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const LABEL_ALIGN_BASELINE:String = "baseline";
 
@@ -792,22 +798,16 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _labelAlign:String = LABEL_ALIGN_BASELINE;
+		protected var _labelAlign:String = LABEL_ALIGN_MIDDLE;
 
-		[Inspectable(type="String",enumeration="baseline,middle")]
 		/**
-		 * The vertical alignment of the label.
+		 * @private
+		 * DEPRECATED: Removed with no replacement.
 		 *
-		 * <p>In the following example, the toggle switch's label alignment is
-		 * updated:</p>
-		 *
-		 * <listing version="3.0">
-		 * toggle.labelAlign = ToggleSwitch.LABEL_ALIGN_MIDDLE;</listing>
-		 *
-		 * @default ToggleSwitch.LABEL_ALIGN_BASELINE
-		 *
-		 * @see #LABEL_ALIGN_BASELINE
-		 * @see #LABEL_ALIGN_MIDDLE
+		 * <p><strong>DEPRECATION WARNING:</strong> This property is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public function get labelAlign():String
 		{
@@ -2220,6 +2220,10 @@ package feathers.controls
 			this.addChildAt(onTrack, 0);
 			this.onTrack = onTrack;
 
+			if(this.onTrack is IFeathersControl)
+			{
+				IFeathersControl(this.onTrack).initializeNow();
+			}
 			if(this.onTrack is IMeasureDisplayObject)
 			{
 				var measureOnTrack:IMeasureDisplayObject = IMeasureDisplayObject(this.onTrack);
@@ -2270,6 +2274,10 @@ package feathers.controls
 			this.addChildAt(offTrack, 1);
 			this.offTrack = offTrack;
 
+			if(this.offTrack is IFeathersControl)
+			{
+				IFeathersControl(this.offTrack).initializeNow();
+			}
 			if(this.offTrack is IMeasureDisplayObject)
 			{
 				var measureOffTrack:IMeasureDisplayObject = IMeasureDisplayObject(this.offTrack);

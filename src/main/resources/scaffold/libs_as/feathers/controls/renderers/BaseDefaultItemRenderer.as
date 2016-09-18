@@ -9,6 +9,7 @@ package feathers.controls.renderers
 {
 	import feathers.controls.ButtonState;
 	import feathers.controls.ImageLoader;
+	import feathers.controls.ItemRendererLayoutOrder;
 	import feathers.controls.Scroller;
 	import feathers.controls.ToggleButton;
 	import feathers.core.FeathersControl;
@@ -402,20 +403,24 @@ package feathers.controls.renderers
 		public static const ACCESSORY_POSITION_MANUAL:String = "manual";
 
 		/**
-		 * The layout order will be the label first, then the accessory relative
-		 * to the label, then the icon relative to both. Best used when the
-		 * accessory should be between the label and the icon or when the icon
-		 * position shouldn't be affected by the accessory.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON</code>.
 		 *
-		 * @see #layoutOrder
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const LAYOUT_ORDER_LABEL_ACCESSORY_ICON:String = "labelAccessoryIcon";
 
 		/**
-		 * The layout order will be the label first, then the icon relative to
-		 * label, then the accessory relative to both.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.ItemRendererLayoutOrder.LABEL_ICON_ACCESSORY</code>.
 		 *
-		 * @see #layoutOrder
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const LAYOUT_ORDER_LABEL_ICON_ACCESSORY:String = "labelIconAccessory";
 
@@ -923,7 +928,7 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _layoutOrder:String = LAYOUT_ORDER_LABEL_ICON_ACCESSORY;
+		protected var _layoutOrder:String = ItemRendererLayoutOrder.LABEL_ICON_ACCESSORY;
 
 		[Inspectable(type="String",enumeration="labelIconAccessory,labelAccessoryIcon")]
 		/**
@@ -936,12 +941,12 @@ package feathers.controls.renderers
 		 * <p>In the following example, the layout order is changed:</p>
 		 *
 		 * <listing version="3.0">
-		 * renderer.layoutOrder = BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ACCESSORY_ICON;</listing>
+		 * renderer.layoutOrder = ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON;</listing>
 		 *
-		 * @default BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ICON_ACCESSORY
+		 * @default feathers.controls.ItemRendererLayoutOrder.LABEL_ICON_ACCESSORY
 		 *
-		 * @see #LAYOUT_ORDER_LABEL_ICON_ACCESSORY
-		 * @see #LAYOUT_ORDER_LABEL_ACCESSORY_ICON
+		 * @see feathers.controls.ItemRendererLayoutOrder#LABEL_ICON_ACCESSORY
+		 * @see feathers.controls.ItemRendererLayoutOrder#LABEL_ACCESSORY_ICON
 		 * @see #accessoryPosition
 		 * @see #iconPosition
 		 */
@@ -3255,26 +3260,26 @@ package feathers.controls.renderers
 		 */
 		public function itemToLabel(item:Object):String
 		{
-			if(this._labelFunction != null)
+			if(this._labelFunction !== null)
 			{
 				var labelResult:Object = this._labelFunction(item);
 				if(labelResult is String)
 				{
 					return labelResult as String;
 				}
-				else if(labelResult)
+				else if(labelResult !== null)
 				{
 					return labelResult.toString();
 				}
 			}
-			else if(this._labelField != null && item && item.hasOwnProperty(this._labelField))
+			else if(this._labelField !== null && item !== null && item.hasOwnProperty(this._labelField))
 			{
 				labelResult = item[this._labelField];
 				if(labelResult is String)
 				{
 					return labelResult as String;
 				}
-				else if(labelResult)
+				else if(labelResult !== null)
 				{
 					return labelResult.toString();
 				}
@@ -3592,8 +3597,10 @@ package feathers.controls.renderers
 			resetFluidChildDimensionsForMeasurement(this.currentSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitSkinWidth, this._explicitSkinHeight,
-				this._explicitSkinMinWidth, this._explicitSkinMinHeight);
+				this._explicitSkinMinWidth, this._explicitSkinMinHeight,
+				this._explicitSkinMaxWidth, this._explicitSkinMaxHeight);
 			var measureSkin:IMeasureDisplayObject = this.currentSkin as IMeasureDisplayObject;
 			
 			var newWidth:Number = this._explicitWidth;
@@ -3607,7 +3614,7 @@ package feathers.controls.renderers
 				{
 					newWidth = 0;
 				}
-				if(this._layoutOrder === LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
+				if(this._layoutOrder === ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON)
 				{
 					newWidth = this.addAccessoryWidth(newWidth);
 					newWidth = this.addIconWidth(newWidth);
@@ -3636,7 +3643,7 @@ package feathers.controls.renderers
 				{
 					newHeight = 0;
 				}
-				if(this._layoutOrder === LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
+				if(this._layoutOrder === ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON)
 				{
 					newHeight = this.addAccessoryHeight(newHeight);
 					newHeight = this.addIconHeight(newHeight);
@@ -3665,7 +3672,7 @@ package feathers.controls.renderers
 				{
 					newMinWidth = 0;
 				}
-				if(this._layoutOrder === LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
+				if(this._layoutOrder === ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON)
 				{
 					newMinWidth = this.addAccessoryWidth(newMinWidth);
 					newMinWidth = this.addIconWidth(newMinWidth);
@@ -3685,9 +3692,9 @@ package feathers.controls.renderers
 							newMinWidth = measureSkin.minWidth;
 						}
 					}
-					else if(this.currentSkin.width > newMinWidth)
+					else if(this._explicitSkinMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentSkin.width;
+						newMinWidth = this._explicitSkinMinWidth;
 					}
 				}
 			}
@@ -3703,7 +3710,7 @@ package feathers.controls.renderers
 				{
 					newMinHeight = 0;
 				}
-				if(this._layoutOrder === LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
+				if(this._layoutOrder === ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON)
 				{
 					newMinHeight = this.addAccessoryHeight(newMinHeight);
 					newMinHeight = this.addIconHeight(newMinHeight);
@@ -3723,9 +3730,9 @@ package feathers.controls.renderers
 							newMinHeight = measureSkin.minHeight;
 						}
 					}
-					else if(this.currentSkin.height > newMinHeight)
+					else if(this._explicitSkinMinHeight > newMinHeight)
 					{
-						newMinHeight = this.currentSkin.height;
+						newMinHeight = this._explicitSkinMinHeight;
 					}
 				}
 			}
@@ -4331,7 +4338,9 @@ package feathers.controls.renderers
 			{
 				return DisplayObject(this._stateToAccessoryFunction(this, this._currentState, this.currentAccessory));
 			}
-			var result:DisplayObject = this._stateToAccessory[this._currentState] as DisplayObject;
+			//we use the currentState getter here instead of the variable
+			//because the variable does not keep track of the selection
+			var result:DisplayObject = this._stateToAccessory[this.currentState] as DisplayObject;
 			if(result !== null)
 			{
 				return result;
@@ -4445,7 +4454,7 @@ package feathers.controls.renderers
 			if(labelRenderer && iconIsInLayout && accessoryIsInLayout)
 			{
 				this.positionSingleChild(labelRenderer);
-				if(this._layoutOrder == LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
+				if(this._layoutOrder == ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON)
 				{
 					this.positionRelativeToOthers(this.currentAccessory, labelRenderer, null, this._accessoryPosition, accessoryGap, null, 0);
 					var iconPosition:String = this._iconPosition;
@@ -4532,7 +4541,7 @@ package feathers.controls.renderers
 				calculatedWidth = this._explicitWidth;
 				if(calculatedWidth !== calculatedWidth) //isNaN
 				{
-					calculatedWidth = this._maxWidth;
+					calculatedWidth = this._explicitMaxWidth;
 				}
 			}
 			calculatedWidth -= (this._paddingLeft + this._paddingRight);
@@ -4542,7 +4551,7 @@ package feathers.controls.renderers
 				calculatedHeight = this._explicitHeight;
 				if(calculatedHeight !== calculatedHeight) //isNaN
 				{
-					calculatedHeight = this._maxHeight;
+					calculatedHeight = this._explicitMaxHeight;
 				}
 			}
 			calculatedHeight -= (this._paddingTop + this._paddingBottom);
@@ -4574,7 +4583,8 @@ package feathers.controls.renderers
 
 			if(this.accessoryLabel)
 			{
-				var iconAffectsAccessoryLabelMaxWidth:Boolean = hasIconToLeftOrRight && (hasAccessoryToLeftOrRight || this._layoutOrder == LAYOUT_ORDER_LABEL_ACCESSORY_ICON);
+				var iconAffectsAccessoryLabelMaxWidth:Boolean = hasIconToLeftOrRight &&
+					(hasAccessoryToLeftOrRight || this._layoutOrder === ItemRendererLayoutOrder.LABEL_ACCESSORY_ICON);
 				if(this.iconLabel)
 				{
 					this.iconLabel.maxWidth = calculatedWidth - adjustedGap;
@@ -4616,7 +4626,8 @@ package feathers.controls.renderers
 			}
 			else if(this.iconLabel)
 			{
-				var accessoryAffectsIconLabelMaxWidth:Boolean = hasAccessoryToLeftOrRight && (hasIconToLeftOrRight || this._layoutOrder == LAYOUT_ORDER_LABEL_ICON_ACCESSORY);
+				var accessoryAffectsIconLabelMaxWidth:Boolean = hasAccessoryToLeftOrRight &&
+					(hasIconToLeftOrRight || this._layoutOrder === ItemRendererLayoutOrder.LABEL_ICON_ACCESSORY);
 				if(this.currentAccessory is IValidating)
 				{
 					IValidating(this.currentAccessory).validate();

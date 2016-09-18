@@ -9,6 +9,7 @@ package feathers.controls
 {
 	import feathers.controls.supportClasses.IViewPort;
 	import feathers.core.FeathersControl;
+	import feathers.core.IFeathersControl;
 	import feathers.core.IFocusDisplayObject;
 	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IValidating;
@@ -18,6 +19,7 @@ package feathers.controls
 	import feathers.layout.Direction;
 	import feathers.layout.RelativePosition;
 	import feathers.system.DeviceCapabilities;
+	import feathers.utils.display.stageToStarling;
 	import feathers.utils.math.roundDownToNearest;
 	import feathers.utils.math.roundToNearest;
 	import feathers.utils.math.roundUpToNearest;
@@ -509,7 +511,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected static const PAGE_INDEX_EPSILON:Number = 0.001;
+		protected static const PAGE_INDEX_EPSILON:Number = 0.01;
 
 		/**
 		 * @private
@@ -788,6 +790,10 @@ package feathers.controls
 			{
 				this._viewPort.addEventListener(FeathersEventType.RESIZE, viewPort_resizeHandler);
 				this.addRawChildAtInternal(DisplayObject(this._viewPort), 0);
+				if(this._viewPort is IFeathersControl)
+				{
+					IFeathersControl(this._viewPort).initializeNow();
+				}
 				this._explicitViewPortWidth = this._viewPort.explicitWidth;
 				this._explicitViewPortHeight = this._viewPort.explicitHeight;
 				this._explicitViewPortMinWidth = this._viewPort.explicitMinWidth;
@@ -1350,10 +1356,6 @@ package feathers.controls
 		 */
 		public function set horizontalScrollPosition(value:Number):void
 		{
-			if(this._snapScrollPositionsToPixels)
-			{
-				value = Math.round(value);
-			}
 			if(this._horizontalScrollPosition == value)
 			{
 				return;
@@ -1638,10 +1640,6 @@ package feathers.controls
 		 */
 		public function set verticalScrollPosition(value:Number):void
 		{
-			if(this._snapScrollPositionsToPixels)
-			{
-				value = Math.round(value);
-			}
 			if(this._verticalScrollPosition == value)
 			{
 				return;
@@ -2166,6 +2164,16 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _explicitBackgroundMinHeight:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
 
 		/**
 		 * @private
@@ -2877,11 +2885,7 @@ package feathers.controls
 				return;
 			}
 			this._snapScrollPositionsToPixels = value;
-			if(this._snapScrollPositionsToPixels)
-			{
-				this.horizontalScrollPosition = Math.round(this._horizontalScrollPosition);
-				this.verticalScrollPosition = Math.round(this._verticalScrollPosition);
-			}
+			this.invalidate(INVALIDATION_FLAG_SCROLL);
 		}
 
 		/**
@@ -3278,7 +3282,7 @@ package feathers.controls
 				this.refreshScrollBarValues();
 			}
 
-			if(scrollInvalid || sizeInvalid || stylesInvalid || scrollBarInvalid || clippingInvalid)
+			if(needsMeasurement || scrollInvalid || clippingInvalid)
 			{
 				this.refreshMask();
 			}
@@ -3373,8 +3377,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			if(this.currentBackgroundSkin is IValidating)
 			{
@@ -3439,9 +3445,9 @@ package feathers.controls
 							newMinWidth = measureBackground.minWidth;
 						}
 					}
-					else if(this.currentBackgroundSkin.width > newMinWidth)
+					else if(this._explicitBackgroundMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentBackgroundSkin.width;
+						newMinWidth = this._explicitBackgroundMinWidth;
 					}
 				}
 			}
@@ -3465,9 +3471,9 @@ package feathers.controls
 							newMinHeight = measureBackground.minHeight;
 						}
 					}
-					else if(this.currentBackgroundSkin.height > newMinHeight)
+					else if(this._explicitBackgroundMinHeight > newMinHeight)
 					{
-						newMinHeight = this.currentBackgroundSkin.height;
+						newMinHeight = this._explicitBackgroundMinHeight;
 					}
 				}
 			}
@@ -3559,7 +3565,10 @@ package feathers.controls
 				if(this.currentBackgroundSkin !== null)
 				{
 					this.addRawChildAtInternal(this.currentBackgroundSkin, 0);
-
+					if(this.currentBackgroundSkin is IFeathersControl)
+					{
+						IFeathersControl(this.currentBackgroundSkin).initializeNow();
+					}
 					if(this.currentBackgroundSkin is IMeasureDisplayObject)
 					{
 						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackgroundSkin);
@@ -3567,6 +3576,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = measureSkin.explicitHeight;
 						this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 						this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+						this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+						this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 					}
 					else
 					{
@@ -3574,6 +3585,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = this.currentBackgroundSkin.height;
 						this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 						this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+						this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+						this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 					}
 				}
 			}
@@ -3678,8 +3691,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			if(this.currentBackgroundSkin is IValidating)
 			{
@@ -3742,26 +3757,23 @@ package feathers.controls
 			viewPortMinHeight -= verticalHeightOffset;
 
 			var oldIgnoreViewPortResizing:Boolean = this.ignoreViewPortResizing;
-			if(this._scrollBarDisplayMode === ScrollBarDisplayMode.FIXED)
-			{
-				//setting some of the properties below may result in a resize
-				//event, which forces another layout pass for the view port and
-				//hurts performance (because it needs to break out of an
-				//infinite loop)
-				this.ignoreViewPortResizing = true;
-			}
+			//setting some of the properties below may result in a resize
+			//event, which forces another layout pass for the view port and
+			//hurts performance (because it needs to break out of an
+			//infinite loop)
+			this.ignoreViewPortResizing = true;
 
 			//if scroll bars are fixed, we're going to include the offsets even
 			//if they may not be needed in the final pass. if not fixed, the
 			//view port fills the entire bounds.
 			this._viewPort.visibleWidth = this._explicitWidth - horizontalWidthOffset;
 			this._viewPort.minVisibleWidth = this._explicitMinWidth - horizontalWidthOffset;
-			this._viewPort.maxVisibleWidth = this._maxWidth - horizontalWidthOffset;
+			this._viewPort.maxVisibleWidth = this._explicitMaxWidth - horizontalWidthOffset;
 			this._viewPort.minWidth = viewPortMinWidth;
 
 			this._viewPort.visibleHeight = this._explicitHeight - verticalHeightOffset;
 			this._viewPort.minVisibleHeight = this._explicitMinHeight - verticalHeightOffset;
-			this._viewPort.maxVisibleHeight = this._maxHeight - verticalHeightOffset;
+			this._viewPort.maxVisibleHeight = this._explicitMaxHeight - verticalHeightOffset;
 			this._viewPort.minHeight = viewPortMinHeight;
 			this._viewPort.validate();
 			//we don't want to listen for a resize event from the view port
@@ -3777,70 +3789,13 @@ package feathers.controls
 		{
 			var horizontalWidthOffset:Number = this._leftViewPortOffset + this._rightViewPortOffset;
 			var verticalHeightOffset:Number = this._topViewPortOffset + this._bottomViewPortOffset;
-			
-			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
-			
-			var viewPortMinWidth:Number = this.actualMinWidth;
-			if(viewPortMinWidth !== viewPortMinWidth ||
-				this._explicitViewPortMinWidth > viewPortMinWidth)
-			{
-				viewPortMinWidth = this._explicitViewPortMinWidth;
-			}
-			if(this.currentBackgroundSkin !== null)
-			{
-				var backgroundMinWidth:Number = this.currentBackgroundSkin.width;
-				if(measureBackground !== null)
-				{
-					backgroundMinWidth = measureBackground.minWidth;
-				}
-				if(viewPortMinWidth !== viewPortMinWidth ||
-					backgroundMinWidth > viewPortMinWidth)
-				{
-					viewPortMinWidth = backgroundMinWidth;
-				}
-			}
-			if(viewPortMinWidth !== viewPortMinWidth ||
-				this.actualWidth > viewPortMinWidth)
-			{
-				viewPortMinWidth = this.actualWidth;
-			}
-			viewPortMinWidth -= horizontalWidthOffset;
-
-			var viewPortMinHeight:Number = this.actualMinHeight;
-			if(viewPortMinHeight !== viewPortMinHeight ||
-				this._explicitViewPortMinHeight > viewPortMinHeight)
-			{
-				viewPortMinHeight = this._explicitViewPortMinHeight;
-			}
-			if(this.currentBackgroundSkin !== null)
-			{
-				var backgroundMinHeight:Number = this.currentBackgroundSkin.height;
-				if(measureBackground !== null)
-				{
-					backgroundMinHeight = measureBackground.minHeight;
-				}
-				if(viewPortMinHeight !== viewPortMinHeight ||
-					backgroundMinHeight > viewPortMinHeight)
-				{
-					viewPortMinHeight = backgroundMinHeight;
-				}
-			}
-			if(viewPortMinHeight !== viewPortMinHeight ||
-				this.actualHeight > viewPortMinHeight)
-			{
-				viewPortMinHeight = this.actualHeight;
-			}
-			viewPortMinHeight -= verticalHeightOffset;
 
 			var oldIgnoreViewPortResizing:Boolean = this.ignoreViewPortResizing;
-			if(this._scrollBarDisplayMode === ScrollBarDisplayMode.FIXED)
-			{
-				//setting some of the properties below may result in a resize
-				//event, which forces another layout pass for the view port and
-				//hurts performance (because it needs to break out of an
-				//infinite loop)
-				this.ignoreViewPortResizing = true;
-			}
+			//setting some of the properties below may result in a resize
+			//event, which forces another layout pass for the view port and
+			//hurts performance (because it needs to break out of an
+			//infinite loop)
+			this.ignoreViewPortResizing = true;
 
 			var visibleWidth:Number = this.actualWidth - horizontalWidthOffset;
 			//we'll only set the view port's visibleWidth and visibleHeight if
@@ -3850,9 +3805,9 @@ package feathers.controls
 			{
 				this._viewPort.visibleWidth = visibleWidth;
 			}
-			this._viewPort.minVisibleWidth = this.actualMinWidth - horizontalWidthOffset;
-			this._viewPort.maxVisibleWidth = this._maxWidth - horizontalWidthOffset;
-			this._viewPort.minWidth = viewPortMinWidth;
+			this._viewPort.minVisibleWidth = this.actualWidth - horizontalWidthOffset;
+			this._viewPort.maxVisibleWidth = this._explicitMaxWidth - horizontalWidthOffset;
+			this._viewPort.minWidth = visibleWidth;
 
 			var visibleHeight:Number = this.actualHeight - verticalHeightOffset;
 			if(this._viewPort.visibleHeight !== visibleHeight)
@@ -3860,8 +3815,8 @@ package feathers.controls
 				this._viewPort.visibleHeight = visibleHeight;
 			}
 			this._viewPort.minVisibleHeight = this.actualMinHeight - verticalHeightOffset;
-			this._viewPort.maxVisibleHeight = this._maxHeight - verticalHeightOffset;
-			this._viewPort.minHeight = viewPortMinHeight;
+			this._viewPort.maxVisibleHeight = this._explicitMaxHeight - verticalHeightOffset;
+			this._viewPort.minHeight = visibleHeight;
 
 			//this time, we care whether a resize event is dispatched while the
 			//view port is validating because it means we'll need to try another
@@ -4016,13 +3971,6 @@ package feathers.controls
 				{
 					this._maxVerticalScrollPosition =  this._minVerticalScrollPosition;
 				}
-				if(this._snapScrollPositionsToPixels)
-				{
-					this._minHorizontalScrollPosition = Math.round(this._minHorizontalScrollPosition);
-					this._minVerticalScrollPosition = Math.round(this._minVerticalScrollPosition);
-					this._maxHorizontalScrollPosition = Math.round(this._maxHorizontalScrollPosition);
-					this._maxVerticalScrollPosition = Math.round(this._maxVerticalScrollPosition);
-				}
 			}
 			else
 			{
@@ -4122,26 +4070,30 @@ package feathers.controls
 					{
 						this._horizontalPageIndex = this._minHorizontalPageIndex;
 					}
-					else if(this._minHorizontalScrollPosition == Number.NEGATIVE_INFINITY && this._horizontalScrollPosition < 0)
-					{
-						this._horizontalPageIndex = Math.floor(this._horizontalScrollPosition / this.actualPageWidth);
-					}
-					else if(this._maxHorizontalScrollPosition == Number.POSITIVE_INFINITY && this._horizontalScrollPosition >= 0)
-					{
-						this._horizontalPageIndex = Math.floor(this._horizontalScrollPosition / this.actualPageWidth);
-					}
 					else
 					{
-						var adjustedHorizontalScrollPosition:Number = this._horizontalScrollPosition - this._minHorizontalScrollPosition;
-						var unroundedPageIndex:Number = adjustedHorizontalScrollPosition / this.actualPageWidth;
-						var nextPageIndex:int = Math.ceil(unroundedPageIndex);
-						if(unroundedPageIndex !== nextPageIndex &&
-							MathUtil.isEquivalent(unroundedPageIndex, nextPageIndex, PAGE_INDEX_EPSILON))
+						if(this._minHorizontalScrollPosition == Number.NEGATIVE_INFINITY && this._horizontalScrollPosition < 0)
+						{
+							var unroundedPageIndex:Number = this._horizontalScrollPosition / this.actualPageWidth;
+						}
+						else if(this._maxHorizontalScrollPosition == Number.POSITIVE_INFINITY && this._horizontalScrollPosition >= 0)
+						{
+							unroundedPageIndex = this._horizontalScrollPosition / this.actualPageWidth;
+						}
+						else
+						{
+							var adjustedHorizontalScrollPosition:Number = this._horizontalScrollPosition - this._minHorizontalScrollPosition;
+							unroundedPageIndex = adjustedHorizontalScrollPosition / this.actualPageWidth;
+						}
+						var nearestPageIndex:int = Math.round(unroundedPageIndex);
+						if(unroundedPageIndex !== nearestPageIndex &&
+							MathUtil.isEquivalent(unroundedPageIndex, nearestPageIndex, PAGE_INDEX_EPSILON))
 						{
 							//we almost always want to round down, but a
-							//floating point math error may result in the page
-							//index being 1 too small in rare cases.
-							this._horizontalPageIndex = nextPageIndex;
+							//floating point math error, or a page width that
+							//isn't an integer (when snapping to pixels) could
+							//cause the page index to be off by one
+							this._horizontalPageIndex = nearestPageIndex;
 						}
 						else
 						{
@@ -4174,26 +4126,30 @@ package feathers.controls
 					{
 						this._verticalPageIndex = this._minVerticalPageIndex;
 					}
-					else if(this._minVerticalScrollPosition == Number.NEGATIVE_INFINITY && this._verticalScrollPosition < 0)
-					{
-						this._verticalPageIndex = Math.floor(this._verticalScrollPosition / this.actualPageHeight);
-					}
-					else if(this._maxVerticalScrollPosition == Number.POSITIVE_INFINITY && this._verticalScrollPosition >= 0)
-					{
-						this._verticalPageIndex = Math.floor(this._verticalScrollPosition / this.actualPageHeight);
-					}
 					else
 					{
-						var adjustedVerticalScrollPosition:Number = this._verticalScrollPosition - this._minVerticalScrollPosition;
-						unroundedPageIndex = adjustedVerticalScrollPosition / this.actualPageHeight;
-						nextPageIndex = Math.ceil(unroundedPageIndex);
-						if(unroundedPageIndex !== nextPageIndex &&
-							MathUtil.isEquivalent(unroundedPageIndex, nextPageIndex, PAGE_INDEX_EPSILON))
+						if(this._minVerticalScrollPosition == Number.NEGATIVE_INFINITY && this._verticalScrollPosition < 0)
+						{
+							unroundedPageIndex = this._verticalScrollPosition / this.actualPageHeight;
+						}
+						else if(this._maxVerticalScrollPosition == Number.POSITIVE_INFINITY && this._verticalScrollPosition >= 0)
+						{
+							unroundedPageIndex = this._verticalScrollPosition / this.actualPageHeight;
+						}
+						else
+						{
+							var adjustedVerticalScrollPosition:Number = this._verticalScrollPosition - this._minVerticalScrollPosition;
+							unroundedPageIndex = adjustedVerticalScrollPosition / this.actualPageHeight;
+						}
+						nearestPageIndex = Math.round(unroundedPageIndex);
+						if(unroundedPageIndex !== nearestPageIndex &&
+							MathUtil.isEquivalent(unroundedPageIndex, nearestPageIndex, PAGE_INDEX_EPSILON))
 						{
 							//we almost always want to round down, but a
-							//floating point math error may result in the page
-							//index being 1 too small in rare cases.
-							this._verticalPageIndex = nextPageIndex;
+							//floating point math error, or a page height that
+							//isn't an integer (when snapping to pixels) could
+							//cause the page index to be off by one
+							this._verticalPageIndex = nearestPageIndex;
 						}
 						else
 						{
@@ -4246,7 +4202,7 @@ package feathers.controls
 		protected function showOrHideChildren():void
 		{
 			var childCount:int = this.numRawChildrenInternal;
-			if(this._touchBlocker)
+			if(this._touchBlocker !== null && this._touchBlocker.parent !== null)
 			{
 				//keep scroll bars below the touch blocker, if it exists
 				childCount--;
@@ -4299,7 +4255,7 @@ package feathers.controls
 				var scrollerWidth:Number = useActualBounds ? this.actualWidth : this._explicitWidth;
 				var totalWidth:Number = this._viewPort.width + this._leftViewPortOffset + this._rightViewPortOffset;
 				if(forceScrollBars || this._horizontalScrollPolicy == ScrollPolicy.ON ||
-					((totalWidth > scrollerWidth || totalWidth > this._maxWidth) &&
+					((totalWidth > scrollerWidth || totalWidth > this._explicitMaxWidth) &&
 						this._horizontalScrollPolicy != ScrollPolicy.OFF))
 				{
 					this._hasHorizontalScrollBar = true;
@@ -4329,7 +4285,7 @@ package feathers.controls
 				var scrollerHeight:Number = useActualBounds ? this.actualHeight : this._explicitHeight;
 				var totalHeight:Number = this._viewPort.height + this._topViewPortOffset + this._bottomViewPortOffset;
 				if(forceScrollBars || this._verticalScrollPolicy == ScrollPolicy.ON ||
-					((totalHeight > scrollerHeight || totalHeight > this._maxHeight) &&
+					((totalHeight > scrollerHeight || totalHeight > this._explicitMaxHeight) &&
 						this._verticalScrollPolicy != ScrollPolicy.OFF))
 				{
 					this._hasVerticalScrollBar = true;
@@ -4435,79 +4391,96 @@ package feathers.controls
 		 */
 		protected function layoutChildren():void
 		{
-			if(this.currentBackgroundSkin)
+			var visibleWidth:Number = this.actualWidth - this._leftViewPortOffset - this._rightViewPortOffset;
+			var visibleHeight:Number = this.actualHeight - this._topViewPortOffset - this._bottomViewPortOffset;
+
+			if(this.currentBackgroundSkin !== null)
 			{
 				this.currentBackgroundSkin.width = this.actualWidth;
 				this.currentBackgroundSkin.height = this.actualHeight;
 			}
 
-			if(this.horizontalScrollBar)
+			if(this.horizontalScrollBar !== null)
 			{
 				this.horizontalScrollBar.validate();
 			}
-			if(this.verticalScrollBar)
+			if(this.verticalScrollBar !== null)
 			{
 				this.verticalScrollBar.validate();
 			}
-			if(this._touchBlocker)
+			if(this._touchBlocker !== null)
 			{
 				this._touchBlocker.x = this._leftViewPortOffset;
 				this._touchBlocker.y = this._topViewPortOffset;
-				this._touchBlocker.width = this._viewPort.visibleWidth;
-				this._touchBlocker.height = this._viewPort.visibleHeight;
+				this._touchBlocker.width = visibleWidth;
+				this._touchBlocker.height = visibleHeight;
 			}
 
-			this._viewPort.x = this._leftViewPortOffset - this._horizontalScrollPosition;
-			this._viewPort.y = this._topViewPortOffset - this._verticalScrollPosition;
+			if(this._snapScrollPositionsToPixels)
+			{
+				var starling:Starling = stageToStarling(this.stage);
+				if(starling === null)
+				{
+					starling = Starling.current;
+				}
+				var pixelSize:Number = 1 / starling.contentScaleFactor;
+				this._viewPort.x = Math.round((this._leftViewPortOffset - this._horizontalScrollPosition) / pixelSize) * pixelSize;
+				this._viewPort.y = Math.round((this._topViewPortOffset - this._verticalScrollPosition) / pixelSize) * pixelSize;
+			}
+			else
+			{
+				this._viewPort.x = this._leftViewPortOffset - this._horizontalScrollPosition;
+				this._viewPort.y = this._topViewPortOffset - this._verticalScrollPosition;
+			}
 
-			if(this.horizontalScrollBar)
+			if(this.horizontalScrollBar !== null)
 			{
 				this.horizontalScrollBar.x = this._leftViewPortOffset;
-				this.horizontalScrollBar.y = this._topViewPortOffset + this._viewPort.visibleHeight;
-				if(this._scrollBarDisplayMode != ScrollBarDisplayMode.FIXED)
+				this.horizontalScrollBar.y = this._topViewPortOffset + visibleHeight;
+				if(this._scrollBarDisplayMode !== ScrollBarDisplayMode.FIXED)
 				{
 					this.horizontalScrollBar.y -= this.horizontalScrollBar.height;
 					if((this._hasVerticalScrollBar || this._verticalScrollBarHideTween) && this.verticalScrollBar)
 					{
-						this.horizontalScrollBar.width = this._viewPort.visibleWidth - this.verticalScrollBar.width;
+						this.horizontalScrollBar.width = visibleWidth - this.verticalScrollBar.width;
 					}
 					else
 					{
-						this.horizontalScrollBar.width = this._viewPort.visibleWidth;
+						this.horizontalScrollBar.width = visibleWidth;
 					}
 				}
 				else
 				{
-					this.horizontalScrollBar.width = this._viewPort.visibleWidth;
+					this.horizontalScrollBar.width = visibleWidth;
 				}
 			}
 
-			if(this.verticalScrollBar)
+			if(this.verticalScrollBar !== null)
 			{
-				if(this._verticalScrollBarPosition == RelativePosition.LEFT)
+				if(this._verticalScrollBarPosition === RelativePosition.LEFT)
 				{
 					this.verticalScrollBar.x = this._paddingLeft;
 				}
 				else
 				{
-					this.verticalScrollBar.x = this._leftViewPortOffset + this._viewPort.visibleWidth;
+					this.verticalScrollBar.x = this._leftViewPortOffset + visibleWidth;
 				}
 				this.verticalScrollBar.y = this._topViewPortOffset;
-				if(this._scrollBarDisplayMode != ScrollBarDisplayMode.FIXED)
+				if(this._scrollBarDisplayMode !== ScrollBarDisplayMode.FIXED)
 				{
 					this.verticalScrollBar.x -= this.verticalScrollBar.width;
 					if((this._hasHorizontalScrollBar || this._horizontalScrollBarHideTween) && this.horizontalScrollBar)
 					{
-						this.verticalScrollBar.height = this._viewPort.visibleHeight - this.horizontalScrollBar.height;
+						this.verticalScrollBar.height = visibleHeight - this.horizontalScrollBar.height;
 					}
 					else
 					{
-						this.verticalScrollBar.height = this._viewPort.visibleHeight;
+						this.verticalScrollBar.height = visibleHeight;
 					}
 				}
 				else
 				{
-					this.verticalScrollBar.height = this._viewPort.visibleHeight;
+					this.verticalScrollBar.height = visibleHeight;
 				}
 			}
 		}

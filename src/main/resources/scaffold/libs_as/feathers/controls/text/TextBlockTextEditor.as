@@ -19,7 +19,6 @@ package feathers.controls.text
 	import flash.desktop.Clipboard;
 	import flash.desktop.ClipboardFormats;
 	import flash.display.DisplayObjectContainer;
-	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -676,7 +675,7 @@ package feathers.controls.text
 		/**
 		 * @copy feathers.core.INativeFocusOwner#nativeFocus
 		 */
-		public function get nativeFocus():InteractiveObject
+		public function get nativeFocus():Object
 		{
 			return this._nativeFocus;
 		}
@@ -691,26 +690,20 @@ package feathers.controls.text
 		 */
 		public function setFocus(position:Point = null):void
 		{
-			if(!this._isEditable && !this._isSelectable)
-			{
-				//if the text can't be edited or selected, then all focus is
-				//disabled.
-				return;
-			}
 			if(this._hasFocus && !position)
 			{
 				//we already have focus, and there isn't a touch position, we
 				//can ignore this because nothing would change
 				return;
 			}
-			if(this._nativeFocus)
+			if(this._nativeFocus !== null)
 			{
-				if(!this._nativeFocus.parent)
+				if(this._nativeFocus.parent === null)
 				{
 					Starling.current.nativeStage.addChild(this._nativeFocus);
 				}
 				var newIndex:int = -1;
-				if(position)
+				if(position !== null)
 				{
 					newIndex = this.getSelectionIndexAtPoint(position.x, position.y);
 				}
@@ -773,7 +766,7 @@ package feathers.controls.text
 			}
 			this._selectionBeginIndex = beginIndex;
 			this._selectionEndIndex = endIndex;
-			if(beginIndex == endIndex)
+			if(beginIndex === endIndex)
 			{
 				this._selectionAnchorIndex = beginIndex;
 				if(beginIndex < 0)
@@ -782,7 +775,9 @@ package feathers.controls.text
 				}
 				else
 				{
-					this._cursorSkin.visible = this._hasFocus;
+					//cursor skin is not shown if isSelectable === true and
+					//isEditable is false
+					this._cursorSkin.visible = this._hasFocus && this._isEditable;
 				}
 				this._selectionSkin.visible = false;
 			}
@@ -903,13 +898,17 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override protected function refreshTextLines(textLines:Vector.<TextLine>, textLineParent:DisplayObjectContainer, width:Number, height:Number):void
+		override protected function refreshTextLines(textLines:Vector.<TextLine>,
+			textLineParent:DisplayObjectContainer, width:Number, height:Number,
+			result:MeasureTextResult = null):MeasureTextResult
 		{
-			super.refreshTextLines(textLines, textLineParent, width, height);
-			if(textLineParent.width > width)
+			result = super.refreshTextLines(textLines, textLineParent, width, height, result);
+			if(textLines !== this._measurementTextLines &&
+				textLineParent.width > width)
 			{
 				this.alignTextLines(textLines, width, TextFormatAlign.LEFT);
 			}
+			return result;
 		}
 
 		/**
@@ -932,9 +931,14 @@ package feathers.controls.text
 		 */
 		protected function focusIn():void
 		{
-			var showCursor:Boolean = this._selectionBeginIndex >= 0 && this._selectionBeginIndex == this._selectionEndIndex;
+			var showSelection:Boolean = (this._isEditable || this._isSelectable) &&
+				this._selectionBeginIndex >= 0 &&
+				this._selectionBeginIndex !== this._selectionEndIndex;
+			var showCursor:Boolean = this._isEditable &&
+				this._selectionBeginIndex >= 0 &&
+				this._selectionBeginIndex === this._selectionEndIndex;
 			this._cursorSkin.visible = showCursor;
-			this._selectionSkin.visible = !showCursor;
+			this._selectionSkin.visible = showSelection;
 			if(!FocusManager.isEnabledForStage(this.stage))
 			{
 				//if there isn't a focus manager, we need to set focus manually

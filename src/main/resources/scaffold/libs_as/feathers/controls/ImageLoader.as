@@ -1539,9 +1539,9 @@ package feathers.controls
 						{
 							heightScale = this._explicitHeight / (this._currentTextureHeight * this._textureScale);
 						}
-						else if(this._maxHeight < this._currentTextureHeight)
+						else if(this._explicitMaxHeight < this._currentTextureHeight)
 						{
-							heightScale = this._maxHeight / (this._currentTextureHeight * this._textureScale);
+							heightScale = this._explicitMaxHeight / (this._currentTextureHeight * this._textureScale);
 						}
 						else if(this._explicitMinHeight > this._currentTextureHeight)
 						{
@@ -1574,9 +1574,9 @@ package feathers.controls
 						{
 							widthScale = this._explicitWidth / (this._currentTextureWidth * this._textureScale);
 						}
-						else if(this._maxWidth < this._currentTextureWidth)
+						else if(this._explicitMaxWidth < this._currentTextureWidth)
 						{
-							widthScale = this._maxWidth / (this._currentTextureWidth * this._textureScale);
+							widthScale = this._explicitMaxWidth / (this._currentTextureWidth * this._textureScale);
 						}
 						else if(this._explicitMinWidth > this._currentTextureWidth)
 						{
@@ -1749,8 +1749,8 @@ package feathers.controls
 			if((!this._scaleContent || (this._maintainAspectRatio && this._scaleMode !== ScaleMode.SHOW_ALL)) &&
 				(this.actualWidth != imageWidth || this.actualHeight != imageHeight))
 			{
-				var mask:Quad = this.mask as Quad;
-				if(mask)
+				var mask:Quad = this.image.mask as Quad;
+				if(mask !== null)
 				{
 					mask.x = 0;
 					mask.y = 0;
@@ -1764,12 +1764,18 @@ package feathers.controls
 					//and these values might be 0
 					mask.width = this.actualWidth;
 					mask.height = this.actualHeight;
-					this.mask = mask;
+					this.image.mask = mask;
+					this.addChild(mask);
 				}
 			}
 			else
 			{
-				this.mask = null;
+				mask = this.image.mask as Quad;
+				if(mask !== null)
+				{
+					mask.removeFromParent(true);
+					this.image.mask = null;
+				}
 			}
 		}
 
@@ -2011,6 +2017,13 @@ package feathers.controls
 				}
 			}
 			this._texture.root.uploadBitmapData(bitmapData);
+			if(this.image !== null)
+			{
+				//this isn't technically required because other properties of
+				//the Image will be changed, but to avoid potential future
+				//refactoring headaches, it won't hurt to be extra careful.
+				this.image.setRequiresRedraw();
+			}
 			bitmapData.dispose();
 			
 			//if we have a cache for the textures, then the cache is the owner

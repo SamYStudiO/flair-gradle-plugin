@@ -8,6 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
+	import feathers.core.IAdvancedNativeFocusOwner;
 	import feathers.core.IFeathersControl;
 	import feathers.core.IMeasureDisplayObject;
 	import feathers.core.IMultilineTextEditor;
@@ -25,7 +26,6 @@ package feathers.controls
 	import feathers.skins.IStyleProvider;
 	import feathers.utils.skins.resetFluidChildDimensionsForMeasurement;
 
-	import flash.display.InteractiveObject;
 	import flash.geom.Point;
 	import flash.ui.Mouse;
 	import flash.ui.MouseCursor;
@@ -220,7 +220,7 @@ package feathers.controls
 	 * @see feathers.controls.AutoComplete
 	 * @see feathers.controls.TextArea
 	 */
-	public class TextInput extends FeathersControl implements ITextBaselineControl, INativeFocusOwner, IStateContext
+	public class TextInput extends FeathersControl implements ITextBaselineControl, IAdvancedNativeFocusOwner, IStateContext
 	{
 		/**
 		 * @private
@@ -463,7 +463,7 @@ package feathers.controls
 		 * 
 		 * @see feathers.core.INativeFocusOwner
 		 */
-		public function get nativeFocus():InteractiveObject
+		public function get nativeFocus():Object
 		{
 			if(this.textEditor is INativeFocusOwner)
 			{
@@ -497,11 +497,7 @@ package feathers.controls
 		 */
 		public function get hasFocus():Boolean
 		{
-			if(!this._focusManager)
-			{
-				return this._textEditorHasFocus;
-			}
-			return this._hasFocus;
+			return this._textEditorHasFocus;
 		}
 
 		/**
@@ -1221,6 +1217,16 @@ package feathers.controls
 		 * @private
 		 */
 		protected var _explicitBackgroundMinHeight:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxWidth:Number;
+
+		/**
+		 * @private
+		 */
+		protected var _explicitBackgroundMaxHeight:Number;
 
 		/**
 		 * @private
@@ -2304,8 +2310,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackground,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			if(this.currentBackground is IValidating)
 			{
 				IValidating(this.currentBackground).validate();
@@ -2401,7 +2409,7 @@ package feathers.controls
 				}
 				else if(this.currentBackground !== null)
 				{
-					backgroundMinWidth = this.currentBackground.width;
+					backgroundMinWidth = this._explicitBackgroundMinWidth;
 				}
 				if(backgroundMinWidth > newMinWidth)
 				{
@@ -2433,7 +2441,7 @@ package feathers.controls
 				}
 				else if(this.currentBackground !== null)
 				{
-					backgroundMinHeight = this.currentBackground.height;
+					backgroundMinHeight = this._explicitBackgroundMinHeight;
 				}
 				if(backgroundMinHeight > newMinHeight)
 				{
@@ -2644,6 +2652,10 @@ package feathers.controls
 						IStateObserver(this.currentBackground).stateContext = this;
 					}
 					this.addChildAt(this.currentBackground, 0);
+					if(this.currentBackground is IFeathersControl)
+					{
+						IFeathersControl(this.currentBackground).initializeNow();
+					}
 					if(this.currentBackground is IMeasureDisplayObject)
 					{
 						var measureSkin:IMeasureDisplayObject = IMeasureDisplayObject(this.currentBackground);
@@ -2651,6 +2663,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = measureSkin.explicitHeight;
 						this._explicitBackgroundMinWidth = measureSkin.explicitMinWidth;
 						this._explicitBackgroundMinHeight = measureSkin.explicitMinHeight;
+						this._explicitBackgroundMaxWidth = measureSkin.explicitMaxWidth;
+						this._explicitBackgroundMaxHeight = measureSkin.explicitMaxHeight;
 					}
 					else
 					{
@@ -2658,6 +2672,8 @@ package feathers.controls
 						this._explicitBackgroundHeight = this.currentBackground.height;
 						this._explicitBackgroundMinWidth = this._explicitBackgroundWidth;
 						this._explicitBackgroundMinHeight = this._explicitBackgroundHeight;
+						this._explicitBackgroundMaxWidth = this._explicitBackgroundWidth;
+						this._explicitBackgroundMaxHeight = this._explicitBackgroundHeight;
 					}
 				}
 			}
@@ -2919,7 +2935,11 @@ package feathers.controls
 		{
 			if(this._isEnabled)
 			{
-				if(this._textEditorHasFocus)
+				//this component can have focus while its text editor does not
+				//have focus. StageText, in particular, can't receive focus
+				//when its enabled property is false, but we still want to show
+				//that the input is focused.
+				if(this._textEditorHasFocus || this._hasFocus)
 				{
 					this.changeState(TextInputState.FOCUSED);
 				}
@@ -2983,6 +3003,18 @@ package feathers.controls
 				{
 					return;
 				}
+				touch.getLocation(this.stage, HELPER_POINT);
+				var isInBounds:Boolean = this.contains(this.stage.hitTest(HELPER_POINT));
+				if(!isInBounds)
+				{
+					//if not in bounds on TouchPhase.ENDED, there won't be a
+					//hover end event, so we need to clear the mouse cursor
+					if(Mouse.supportsNativeCursor && this._oldMouseCursor)
+					{
+						Mouse.cursor = this._oldMouseCursor;
+						this._oldMouseCursor = null;
+					}
+				}
 				this._touchPointID = -1;
 				if(this.textEditor.setTouchFocusOnEndedPhase)
 				{
@@ -3031,6 +3063,10 @@ package feathers.controls
 				return;
 			}
 			super.focusInHandler(event);
+			//in some cases the text editor cannot receive focus, so it won't
+			//dispatch an event. we need to detect the focused state using the
+			//_hasFocus variable
+			this.refreshState();
 			this.setFocus();
 		}
 
@@ -3044,6 +3080,9 @@ package feathers.controls
 				return;
 			}
 			super.focusOutHandler(event);
+			//similar to above, we refresh the state based on the _hasFocus
+			//because the text editor may not be able to receive focus
+			this.refreshState();
 			this.textEditor.clearFocus();
 		}
 
@@ -3083,15 +3122,18 @@ package feathers.controls
 			{
 				this.createErrorCallout();
 			}
-			if(this._focusManager && this.isFocusEnabled && this._focusManager.focus !== this)
+			if(this._focusManager !== null && this.isFocusEnabled)
 			{
-				//if setFocus() was called manually, we need to notify the focus
-				//manager (unless isFocusEnabled is false).
-				//if the focus manager already knows that we have focus, it will
-				//simply return without doing anything.
-				this._focusManager.focus = this;
+				if(this._focusManager.focus !== this)
+				{
+					//if setFocus() was called manually, we need to notify the focus
+					//manager (unless isFocusEnabled is false).
+					//if the focus manager already knows that we have focus, it will
+					//simply return without doing anything.
+					this._focusManager.focus = this;
+				}
 			}
-			else if(!this._focusManager)
+			else
 			{
 				this.dispatchEventWith(FeathersEventType.FOCUS_IN);
 			}
@@ -3109,13 +3151,16 @@ package feathers.controls
 				this.callout.removeFromParent(true);
 				this.callout = null;
 			}
-			if(this._focusManager && this._focusManager.focus === this)
+			if(this._focusManager !== null && this.isFocusEnabled)
 			{
-				//if clearFocus() was called manually, we need to notify the
-				//focus manager if it still thinks we have focus.
-				this._focusManager.focus = null;
+				if(this._focusManager.focus === this)
+				{
+					//if clearFocus() was called manually, we need to notify the
+					//focus manager if it still thinks we have focus.
+					this._focusManager.focus = null;
+				}
 			}
-			else if(!this._focusManager)
+			else
 			{
 				this.dispatchEventWith(FeathersEventType.FOCUS_OUT);
 			}

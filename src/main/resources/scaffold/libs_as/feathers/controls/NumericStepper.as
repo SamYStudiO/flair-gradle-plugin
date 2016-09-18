@@ -8,7 +8,7 @@ accordance with the terms of the accompanying license agreement.
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
-	import feathers.core.INativeFocusOwner;
+	import feathers.core.IAdvancedNativeFocusOwner;
 	import feathers.core.ITextBaselineControl;
 	import feathers.core.PropertyProxy;
 	import feathers.events.ExclusiveTouch;
@@ -18,7 +18,6 @@ package feathers.controls
 	import feathers.utils.math.roundToNearest;
 	import feathers.utils.math.roundToPrecision;
 
-	import flash.display.InteractiveObject;
 	import flash.events.TimerEvent;
 	import flash.ui.Keyboard;
 	import flash.utils.Timer;
@@ -70,7 +69,7 @@ package feathers.controls
 	 *
 	 * @see ../../../help/numeric-stepper.html How to use the Feathers NumericStepper component
 	 */
-	public class NumericStepper extends FeathersControl implements IRange, INativeFocusOwner, ITextBaselineControl
+	public class NumericStepper extends FeathersControl implements IRange, IAdvancedNativeFocusOwner, ITextBaselineControl
 	{
 		/**
 		 * @private
@@ -112,28 +111,35 @@ package feathers.controls
 		public static const DEFAULT_CHILD_STYLE_NAME_TEXT_INPUT:String = "feathers-numeric-stepper-text-input";
 
 		/**
-		 * The decrement button will be placed on the left side of the text
-		 * input and the increment button will be placed on the right side of
-		 * the text input.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.StepperButtonLayoutMode.SPLIT_HORIZONTAL</code>.
 		 *
-		 * @see #buttonLayoutMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const BUTTON_LAYOUT_MODE_SPLIT_HORIZONTAL:String = "splitHorizontal";
 
 		/**
-		 * The decrement button will be placed below the text input and the
-		 * increment button will be placed above the text input.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.StepperButtonLayoutMode.SPLIT_VERTICAL</code>.
 		 *
-		 * @see #buttonLayoutMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const BUTTON_LAYOUT_MODE_SPLIT_VERTICAL:String = "splitVertical";
 
 		/**
-		 * Both the decrement and increment button will be placed on the right
-		 * side of the text input. The increment button will be above the
-		 * decrement button.
+		 * @private
+		 * DEPRECATED: Replaced by <code>feathers.controls.StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL</code>.
 		 *
-		 * @see #buttonLayoutMode
+		 * <p><strong>DEPRECATION WARNING:</strong> This constant is deprecated
+		 * starting with Feathers 3.0. It will be removed in a future version of
+		 * Feathers according to the standard
+		 * <a target="_top" href="../../../help/deprecation-policy.html">Feathers deprecation policy</a>.</p>
 		 */
 		public static const BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL:String = "rightSideVertical";
 
@@ -217,7 +223,7 @@ package feathers.controls
 		 * <code>DEFAULT_CHILD_STYLE_NAME_TEXT_INPUT</code>.
 		 *
 		 * <p>To customize the text input name without subclassing, see
-		 * <code>customTextInputName</code>.</p>
+		 * <code>customTextInputStyleName</code>.</p>
 		 *
 		 * @see #customTextInputStyleName
 		 * @see feathers.core.FeathersControl#styleNameList
@@ -279,6 +285,11 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected var _textInputHasFocus:Boolean = false;
+
+		/**
+		 * @private
+		 */
 		override protected function get defaultStyleProvider():IStyleProvider
 		{
 			return NumericStepper.globalStyleProvider;
@@ -291,9 +302,9 @@ package feathers.controls
 		 *
 		 * @see feathers.core.INativeFocusOwner
 		 */
-		public function get nativeFocus():InteractiveObject
+		public function get nativeFocus():Object
 		{
-			if(this.textInput)
+			if(this.textInput !== null)
 			{
 				return this.textInput.nativeFocus;
 			}
@@ -599,7 +610,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _buttonLayoutMode:String = BUTTON_LAYOUT_MODE_SPLIT_HORIZONTAL;
+		protected var _buttonLayoutMode:String = StepperButtonLayoutMode.SPLIT_HORIZONTAL;
 
 		[Inspectable(type="String",enumeration="splitHorizontal,splitVertical,rightSideVertical")]
 		/**
@@ -610,13 +621,13 @@ package feathers.controls
 		 * appearance:</p>
 		 *
 		 * <listing version="3.0">
-		 * stepper.buttonLayoutMode = NumericStepper.BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL;</listing>
+		 * stepper.buttonLayoutMode = NumericStepper.StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL;</listing>
 		 *
-		 * @default NumericStepper.BUTTON_LAYOUT_MODE_SPLIT_HORIZONTAL
+		 * @default feathers.controls.StepperButtonLayoutMode.SPLIT_HORIZONTAL
 		 *
-		 * @see #BUTTON_LAYOUT_MODE_SPLIT_HORIZONTAL
-		 * @see #BUTTON_LAYOUT_MODE_SPLIT_VERTICAL
-		 * @see #BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL
+		 * @see feathers.controls.StepperButtonLayoutMode#SPLIT_HORIZONTAL
+		 * @see feathers.controls.StepperButtonLayoutMode#SPLIT_VERTICAL
+		 * @see feathers.controls.StepperButtonLayoutMode#RIGHT_SIDE_VERTICAL
 		 */
 		public function get buttonLayoutMode():String
 		{
@@ -649,7 +660,7 @@ package feathers.controls
 		 * <p>In the following example, the gap between buttons is set to 20 pixels:</p>
 		 *
 		 * <listing version="3.0">
-		 * stepper.buttonLayoutMode = NumericStepper.BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL;
+		 * stepper.buttonLayoutMode = StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL;
 		 * stepper.buttonGap = 20;</listing>
 		 *
 		 * @default 0
@@ -1317,6 +1328,26 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		public function get hasFocus():Boolean
+		{
+			return this._hasFocus;
+		}
+
+		/**
+		 * @private
+		 */
+		public function setFocus():void
+		{
+			if(this.textInput === null)
+			{
+				return;
+			}
+			this.textInput.setFocus();
+		}
+
+		/**
+		 * @private
+		 */
 		override protected function draw():void
 		{
 			var dataInvalid:Boolean = this.isInvalid(INVALIDATION_FLAG_DATA);
@@ -1440,7 +1471,7 @@ package feathers.controls
 			var textInputMaxWidth:Number = Number.POSITIVE_INFINITY;
 			var textInputMaxHeight:Number = Number.POSITIVE_INFINITY;
 			
-			if(this._buttonLayoutMode === BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL)
+			if(this._buttonLayoutMode === StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL)
 			{
 				var maxButtonWidth:Number = decrementButtonWidth;
 				if(incrementButtonWidth > maxButtonWidth)
@@ -1477,9 +1508,9 @@ package feathers.controls
 						textInputMinHeight = this.textInputExplicitMinHeight;
 					}
 				}
-				textInputMaxWidth = this._maxWidth - maxButtonWidth - this._textInputGap;
+				textInputMaxWidth = this._explicitMaxWidth - maxButtonWidth - this._textInputGap;
 			}
-			else if(this._buttonLayoutMode === BUTTON_LAYOUT_MODE_SPLIT_VERTICAL)
+			else if(this._buttonLayoutMode === StepperButtonLayoutMode.SPLIT_VERTICAL)
 			{
 				if(!needsWidth)
 				{
@@ -1505,7 +1536,7 @@ package feathers.controls
 						textInputMinHeight = this.textInputExplicitMinHeight;
 					}
 				}
-				textInputMaxHeight = this._maxHeight - decrementButtonHeight - incrementButtonHeight;
+				textInputMaxHeight = this._explicitMaxHeight - decrementButtonHeight - incrementButtonHeight;
 			}
 			else //split horizontal
 			{
@@ -1533,7 +1564,7 @@ package feathers.controls
 						textInputMinHeight = this.textInputExplicitMinHeight;
 					}
 				}
-				textInputMaxWidth = this._maxWidth - decrementButtonWidth - incrementButtonWidth;
+				textInputMaxWidth = this._explicitMaxWidth - decrementButtonWidth - incrementButtonWidth;
 			}
 			
 			if(textInputWidth < 0)
@@ -1560,7 +1591,7 @@ package feathers.controls
 			this.textInput.maxHeight = textInputMaxHeight;
 			this.textInput.validate();
 
-			if(this._buttonLayoutMode === BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL)
+			if(this._buttonLayoutMode === StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL)
 			{
 				if(needsWidth)
 				{
@@ -1587,7 +1618,7 @@ package feathers.controls
 					}
 				}
 			}
-			else if(this._buttonLayoutMode === BUTTON_LAYOUT_MODE_SPLIT_VERTICAL)
+			else if(this._buttonLayoutMode === StepperButtonLayoutMode.SPLIT_VERTICAL)
 			{
 				if(needsWidth)
 				{
@@ -1667,11 +1698,8 @@ package feathers.controls
 		protected function decrement():void
 		{
 			this.value = this._value - this._step;
-			if(this.textInput.isEditable)
-			{
-				this.validate();
-				this.textInput.selectRange(0, this.textInput.text.length);
-			}
+			this.validate();
+			this.textInput.selectRange(0, this.textInput.text.length);
 		}
 
 		/**
@@ -1680,11 +1708,8 @@ package feathers.controls
 		protected function increment():void
 		{
 			this.value = this._value + this._step;
-			if(this.textInput.isEditable)
-			{
-				this.validate();
-				this.textInput.selectRange(0, this.textInput.text.length);
-			}
+			this.validate();
+			this.textInput.selectRange(0, this.textInput.text.length);
 		}
 
 		/**
@@ -1693,11 +1718,8 @@ package feathers.controls
 		protected function toMinimum():void
 		{
 			this.value = this._minimum;
-			if(this.textInput.isEditable)
-			{
-				this.validate();
-				this.textInput.selectRange(0, this.textInput.text.length);
-			}
+			this.validate();
+			this.textInput.selectRange(0, this.textInput.text.length);
 		}
 
 		/**
@@ -1706,11 +1728,8 @@ package feathers.controls
 		protected function toMaximum():void
 		{
 			this.value = this._maximum;
-			if(this.textInput.isEditable)
-			{
-				this.validate();
-				this.textInput.selectRange(0, this.textInput.text.length);
-			}
+			this.validate();
+			this.textInput.selectRange(0, this.textInput.text.length);
 		}
 
 		/**
@@ -1791,6 +1810,7 @@ package feathers.controls
 			this.textInput = TextInput(factory());
 			this.textInput.styleNameList.add(textInputStyleName);
 			this.textInput.addEventListener(FeathersEventType.ENTER, textInput_enterHandler);
+			this.textInput.addEventListener(FeathersEventType.FOCUS_IN, textInput_focusInHandler);
 			this.textInput.addEventListener(FeathersEventType.FOCUS_OUT, textInput_focusOutHandler);
 			//while we're setting isFocusEnabled to false on the text input when
 			//we have a focus manager, we'll still be able to call setFocus() on
@@ -1799,6 +1819,7 @@ package feathers.controls
 			this.addChild(this.textInput);
 			
 			//we will use these values for measurement, if possible
+			this.textInput.initializeNow();
 			this.textInputExplicitWidth = this.textInput.explicitWidth;
 			this.textInputExplicitHeight = this.textInput.explicitHeight;
 			this.textInputExplicitMinWidth = this.textInput.explicitMinWidth;
@@ -1892,7 +1913,7 @@ package feathers.controls
 		 */
 		protected function layoutChildren():void
 		{
-			if(this._buttonLayoutMode == BUTTON_LAYOUT_MODE_RIGHT_SIDE_VERTICAL)
+			if(this._buttonLayoutMode === StepperButtonLayoutMode.RIGHT_SIDE_VERTICAL)
 			{
 				var buttonHeight:Number = (this.actualHeight - this._buttonGap) / 2;
 				this.incrementButton.y = 0;
@@ -1913,7 +1934,7 @@ package feathers.controls
 				this.textInput.width = buttonX - this._textInputGap;
 				this.textInput.height = this.actualHeight;
 			}
-			else if(this._buttonLayoutMode == BUTTON_LAYOUT_MODE_SPLIT_VERTICAL)
+			else if(this._buttonLayoutMode === StepperButtonLayoutMode.SPLIT_VERTICAL)
 			{
 				this.incrementButton.x = 0;
 				this.incrementButton.y = 0;
@@ -2034,11 +2055,8 @@ package feathers.controls
 		override protected function focusInHandler(event:Event):void
 		{
 			super.focusInHandler(event);
-			if(this.textInput.isEditable)
-			{
-				this.textInput.setFocus();
-				this.textInput.selectRange(0, this.textInput.text.length);
-			}
+			this.textInput.setFocus();
+			this.textInput.selectRange(0, this.textInput.text.length);
 			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, stage_keyDownHandler);
 		}
 
@@ -2063,8 +2081,17 @@ package feathers.controls
 		/**
 		 * @private
 		 */
+		protected function textInput_focusInHandler(event:Event):void
+		{
+			this._textInputHasFocus = true;
+		}
+
+		/**
+		 * @private
+		 */
 		protected function textInput_focusOutHandler(event:Event):void
 		{
+			this._textInputHasFocus = false;
 			this.parseTextInputValue();
 		}
 
@@ -2096,6 +2123,10 @@ package feathers.controls
 				if(!touch)
 				{
 					return;
+				}
+				if(this._textInputHasFocus)
+				{
+					this.parseTextInputValue();
 				}
 				this.touchPointID = touch.id;
 				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);
@@ -2132,6 +2163,10 @@ package feathers.controls
 				if(!touch)
 				{
 					return;
+				}
+				if(this._textInputHasFocus)
+				{
+					this.parseTextInputValue();
 				}
 				this.touchPointID = touch.id;
 				this.dispatchEventWith(FeathersEventType.BEGIN_INTERACTION);

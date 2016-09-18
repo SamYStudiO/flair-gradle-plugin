@@ -1148,8 +1148,10 @@ package feathers.controls
 			resetFluidChildDimensionsForMeasurement(this.currentBackgroundSkin,
 				this._explicitWidth, this._explicitHeight,
 				this._explicitMinWidth, this._explicitMinHeight,
+				this._explicitMaxWidth, this._explicitMaxHeight,
 				this._explicitBackgroundWidth, this._explicitBackgroundHeight,
-				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight);
+				this._explicitBackgroundMinWidth, this._explicitBackgroundMinHeight,
+				this._explicitBackgroundMaxWidth, this._explicitBackgroundMaxHeight);
 			var measureBackground:IMeasureDisplayObject = this.currentBackgroundSkin as IMeasureDisplayObject;
 			if(this.currentBackgroundSkin is IValidating)
 			{
@@ -1174,15 +1176,21 @@ package feathers.controls
 				{
 					newWidth = 0;
 				}
+				//we don't need to account for the icon and gap because it is
+				//already included in the left offset
 				newWidth += this._rightViewPortOffset + this._leftViewPortOffset;
-				if(this.header.width > newWidth)
+				var headerWidth:Number = this.header.width + this._outerPaddingLeft + this._outerPaddingRight;
+				if(headerWidth > newWidth)
 				{
-					newWidth = this.header.width;
+					newWidth = headerWidth;
 				}
-				if(this.footer !== null &&
-					this.footer.width > newWidth)
+				if(this.footer !== null)
 				{
-					newWidth = this.footer.width;
+					var footerWidth:Number = this.footer.width + this._outerPaddingLeft + this._outerPaddingRight;
+					if(footerWidth > newWidth)
+					{
+						newWidth = footerWidth;
+					}
 				}
 				if(this.currentBackgroundSkin !== null &&
 					this.currentBackgroundSkin.width > newWidth)
@@ -1219,15 +1227,21 @@ package feathers.controls
 				{
 					newMinWidth = 0;
 				}
+				//we don't need to account for the icon and gap because it is
+				//already included in the left offset
 				newMinWidth += this._rightViewPortOffset + this._leftViewPortOffset;
-				if(this.header.minWidth > newMinWidth)
+				var headerMinWidth:Number = this.header.minWidth + this._outerPaddingLeft + this._outerPaddingRight;
+				if(headerMinWidth > newMinWidth)
 				{
-					newMinWidth = this.header.minWidth;
+					newMinWidth = headerMinWidth;
 				}
-				if(this.footer !== null &&
-					this.footer.minWidth > newMinWidth)
+				if(this.footer !== null)
 				{
-					newMinWidth = this.footer.minWidth;
+					var footerMinWidth:Number = this.footer.minWidth + this._outerPaddingLeft + this._outerPaddingRight;
+					if(footerMinWidth > newMinWidth)
+					{
+						newMinWidth = footerMinWidth;
+					}
 				}
 				if(this.currentBackgroundSkin !== null)
 				{
@@ -1238,9 +1252,9 @@ package feathers.controls
 							newMinWidth = measureBackground.minWidth;
 						}
 					}
-					else if(this.currentBackgroundSkin.width > newMinWidth)
+					else if(this._explicitBackgroundMinWidth > newMinWidth)
 					{
-						newMinWidth = this.currentBackgroundSkin.width;
+						newMinWidth = this._explicitBackgroundMinWidth;
 					}
 				}
 			}
@@ -1266,16 +1280,16 @@ package feathers.controls
 							newMinHeight = measureBackground.minHeight;
 						}
 					}
-					else if(this.currentBackgroundSkin.height > newMinHeight)
+					else if(this._explicitBackgroundMinHeight > newMinHeight)
 					{
-						newMinHeight = this.currentBackgroundSkin.height;
+						newMinHeight = this._explicitBackgroundMinHeight;
 					}
 				}
 			}
 
 			return this.saveMeasurements(newWidth, newHeight, newMinWidth, newMinHeight);
 		}
-		
+
 		/**
 		 * Creates and adds the <code>header</code> sub-component and
 		 * removes the old instance, if one exists.
@@ -1306,7 +1320,8 @@ package feathers.controls
 			displayHeader = DisplayObject(this.header);
 			this.addRawChild(displayHeader);
 			this._focusExtrasBefore.push(displayHeader);
-			
+
+			this.header.initializeNow();
 			this._explicitHeaderWidth = this.header.explicitWidth;
 			this._explicitHeaderHeight = this.header.explicitHeight;
 			this._explicitHeaderMinWidth = this.header.explicitMinWidth;
@@ -1347,6 +1362,7 @@ package feathers.controls
 			this.addRawChild(displayFooter);
 			this._focusExtrasAfter.push(displayFooter);
 
+			this.footer.initializeNow();
 			this._explicitFooterWidth = this.footer.explicitWidth;
 			this._explicitFooterHeight = this.footer.explicitHeight;
 			this._explicitFooterMinWidth = this.footer.explicitMinWidth;
@@ -1403,14 +1419,14 @@ package feathers.controls
 				this.header.width = this._explicitWidth - this._outerPaddingLeft - this._outerPaddingRight;
 				this.header.minWidth = this._explicitMinWidth - this._outerPaddingLeft - this._outerPaddingRight;
 			}
-			this.header.maxWidth = this._maxWidth - this._outerPaddingLeft - this._outerPaddingRight;
+			this.header.maxWidth = this._explicitMaxWidth - this._outerPaddingLeft - this._outerPaddingRight;
 			this.header.height = this._explicitHeaderHeight;
 			this.header.minHeight = this._explicitHeaderMinHeight;
 			this.header.validate();
 			this._topViewPortOffset += this.header.height + this._outerPaddingTop;
 			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
 
-			if(this.footer)
+			if(this.footer !== null)
 			{
 				var oldIgnoreFooterResizing:Boolean = this._ignoreFooterResizing;
 				this._ignoreFooterResizing = true;
@@ -1424,7 +1440,7 @@ package feathers.controls
 					this.footer.width = this._explicitWidth - this._outerPaddingLeft - this._outerPaddingRight;
 					this.footer.minWidth = this._explicitMinWidth - this._outerPaddingLeft - this._outerPaddingRight;
 				}
-				this.footer.maxWidth = this._maxWidth - this._outerPaddingLeft - this._outerPaddingRight;
+				this.footer.maxWidth = this._explicitMaxWidth - this._outerPaddingLeft - this._outerPaddingRight;
 				this.footer.height = this._explicitFooterHeight;
 				this.footer.minHeight = this._explicitFooterMinHeight;
 				this.footer.validate();
@@ -1453,7 +1469,7 @@ package feathers.controls
 			this.header.validate();
 			this._ignoreHeaderResizing = oldIgnoreHeaderResizing;
 
-			if(this.footer)
+			if(this.footer !== null)
 			{
 				var oldIgnoreFooterResizing:Boolean = this._ignoreFooterResizing;
 				this._ignoreFooterResizing = true;
