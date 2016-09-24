@@ -13,8 +13,8 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 
 ##### REQUIREMENTS :
 * Gradle 2.5+
-* Starling 2.0+
-* Feathers 3.0+
+* Starling 2+
+* Feathers 3+
 * Tested on IntelliJ 15+
 * Tested on FDT 1.16.91+
 
