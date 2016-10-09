@@ -33,6 +33,13 @@ class PublishAtlases extends AbstractTask
 			}
 		}
 
-		tp.execute( project )
+		try
+		{
+			tp.execute( project )
+		}
+		catch( Exception e )
+		{
+			throw new Exception( "Error publishing atlases, you added TexturePacker plugin but have you install its command line tool? check https://github.com/SamYStudiO/flair-gradle-plugin/wiki/TexturePacker-plugin for more information.")
+		}
 	}
 }
