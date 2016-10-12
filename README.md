@@ -3,6 +3,7 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 
 #####FEATURES :
 * Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)** (as actionscript libraries), you may obviously update them if you need to or even switch to SWC files.
+* Also includes **[Signal events](https://github.com/robertpenner/as3-signals)** and **[Gestouch](https://github.com/fljot/Gestouch)**
 * Almost transparent Flair actionscript library to **manage your resources**.
 * Once you're set up you'll be able to compile/test a **template project**.
 * **Variant builds** (build type and product flavor as Android).
