@@ -47,7 +47,7 @@ public class IdeaImlStructure implements IStructure
 		if( !content ) content = new Node( newModuleRootManager , "content" )
 
 		createSourceFolders( content )
-		createExcludeFolders( content )
+		//createExcludeFolders( content )
 		createLibraries( newModuleRootManager )
 		createConfigurations( flexBuildConfigurationManager.configurations[ 0 ] as Node )
 
