@@ -114,6 +114,7 @@ package _packageName_
 			_starling.showStats = Capabilities.isDebugger;
 			_starling.simulateMultitouch = isDesktop();
 			_starling.supportHighResolutions = isDesktop();
+			_starling.skipUnchangedFrames = true;
 
 			_starling.addEventListener( starling.events.Event.CONTEXT3D_CREATE , _onStarlingContextCreate );
 			_starling.addEventListener( starling.events.Event.ROOT_CREATED , _onStarlingRootCreate );
