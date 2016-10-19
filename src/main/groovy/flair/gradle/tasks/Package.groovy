@@ -48,7 +48,10 @@ class Package extends VariantTask
 	def boolean debug
 
 	@Input
-	def String version
+	def String versionName
+
+	@Input
+	def String versionBuild
 
 	@Input
 	def String alias
@@ -88,7 +91,8 @@ class Package extends VariantTask
 		x86 = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_X86 )
 		target = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_TARGET ) ?: "null"
 		platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK ) ?: "null"
-		version = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
+		versionName = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_LABEL )
+		versionBuild = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_NUMBER )
 		debug = extensionManager.getFlairProperty( variant , FlairProperty.DEBUG )
 
 		alias = extensionManager.getFlairProperty( variant , FlairProperty.SIGNING_ALIAS ) ?: "null"

@@ -39,7 +39,10 @@ class ProcessAppDescriptor extends VariantTask
 	def String appSWF
 
 	@Input
-	def String appVersion
+	def String appVersionName
+
+	@Input
+	def String appVersionBuild
 
 	@Input
 	def String appFullScreen
@@ -69,7 +72,8 @@ class ProcessAppDescriptor extends VariantTask
 		appName = extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_NAME_SUFFIX )
 		appFileName = extensionManager.getFlairProperty( variant , FlairProperty.APP_FILE_NAME )
 		appSWF = variant.name + ".swf"
-		appVersion = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION )
+		appVersionName = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_LABEL )
+		appVersionBuild = extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_NUMBER )
 		appFullScreen = extensionManager.getFlairProperty( variant , FlairProperty.APP_FULL_SCREEN )
 		appAspectRatio = extensionManager.getFlairProperty( variant , FlairProperty.APP_ASPECT_RATIO )
 		appAutoOrients = extensionManager.getFlairProperty( variant , FlairProperty.APP_AUTO_ORIENTS )
@@ -131,7 +135,8 @@ class ProcessAppDescriptor extends VariantTask
 				.replaceAll( /<name>.*<\\/name>/ , "<name>${ appName }</name>" )
 				.replaceAll( /<filename>.*<\\/filename>/ , "<filename>${ appFileName }</filename>" )
 				.replaceAll( /<content>.*<\\/content>/ , "<content>${ appSWF }</content>" )
-				.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersion }</versionNumber>" )
+				.replaceAll( /<versionLabel>.*<\\/versionLabel>/ , "<versionLabel>${ appVersionName }</versionLabel>" )
+				.replaceAll( /<versionNumber>.*<\\/versionNumber>/ , "<versionNumber>${ appVersionBuild }</versionNumber>" )
 				.replaceAll( /<fullScreen>.*<\\/fullScreen>/ , "<fullScreen>${ appFullScreen }</fullScreen>" )
 				.replaceAll( /<aspectRatio>.*<\\/aspectRatio>/ , "<aspectRatio>${ appAspectRatio }</aspectRatio>" )
 				.replaceAll( /<autoOrients>.*<\\/autoOrients>/ , "<autoOrients>${ appAutoOrients }</autoOrients>" )

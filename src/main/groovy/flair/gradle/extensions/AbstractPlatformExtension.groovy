@@ -551,7 +551,8 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.APP_NAME.name: return project.name
 				case FlairProperty.APP_NAME_SUFFIX.name: return ""
 				case FlairProperty.APP_FILE_NAME.name: return formatProjectName()
-				case FlairProperty.APP_VERSION.name: return "1.0.0"
+				case FlairProperty.APP_VERSION_LABEL.name: return "1.0.0"
+				case FlairProperty.APP_VERSION_NUMBER.name: return 1
 				case FlairProperty.APP_FULL_SCREEN.name: return true
 				case FlairProperty.APP_ASPECT_RATIO.name: return "any"
 				case FlairProperty.APP_AUTO_ORIENTS.name: return true
@@ -576,7 +577,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.ADL_AT_LOGIN.name: return false
 				case FlairProperty.ADL_PARAMETERS.name: return new ArrayList<String>()
 
-				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ formatProjectName() }_${ variant.getName( Variant.NamingType.UNDERSCORE , false ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION ) }".toLowerCase(  )
+				case FlairProperty.PACKAGE_FILE_NAME.name: return "${ formatProjectName() }_${ variant.getName( Variant.NamingType.UNDERSCORE , false ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_LABEL ) }_${ extensionManager.getFlairProperty( variant , FlairProperty.APP_VERSION_NUMBER ) }".toLowerCase(  )
 				case FlairProperty.PACKAGE_TARGET.name:
 					switch( p )
 					{
