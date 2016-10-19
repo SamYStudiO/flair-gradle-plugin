@@ -564,7 +564,7 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 				case FlairProperty.APP_NAME_SUFFIX.name: return ""
 				case FlairProperty.APP_FILE_NAME.name: return formatProjectName()
 				case FlairProperty.APP_VERSION_LABEL.name: return "1.0.0"
-				case FlairProperty.APP_VERSION_NUMBER.name: return 1
+				case FlairProperty.APP_VERSION_NUMBER.name: return "1"
 				case FlairProperty.APP_FULL_SCREEN.name: return true
 				case FlairProperty.APP_ASPECT_RATIO.name: return "any"
 				case FlairProperty.APP_AUTO_ORIENTS.name: return true
