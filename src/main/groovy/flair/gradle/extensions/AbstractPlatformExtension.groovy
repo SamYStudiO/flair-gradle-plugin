@@ -26,7 +26,9 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 
 	private String appFileName
 
-	private String appVersion
+	private String appVersionLabel
+
+	private String appVersionNumber
 
 	private Boolean appFullScreen
 
@@ -171,14 +173,24 @@ public abstract class AbstractPlatformExtension extends AbstractExtension implem
 		this.appFileName = appFileName
 	}
 
-	public String getAppVersion()
+	public String getAppVersionNumber()
 	{
-		return appVersion
+		return appVersionNumber
 	}
 
-	public void appVersion( String appVersion )
+	public void appVersionNumber( String appVersionNumber )
 	{
-		this.appVersion = appVersion
+		this.appVersionNumber = appVersionNumber
+	}
+
+	public String getAppVersionLabel()
+	{
+		return appVersionLabel
+	}
+
+	public void appVersionLabel( String appVersionLabel )
+	{
+		this.appVersionLabel = appVersionLabel
 	}
 
 	public Boolean getAppFullScreen()
