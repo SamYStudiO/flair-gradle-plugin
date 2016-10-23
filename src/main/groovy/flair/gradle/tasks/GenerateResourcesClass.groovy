@@ -78,28 +78,29 @@ public class GenerateResourcesClass extends AbstractTask
 
 				String parentName = parent.name
 				String filename = file.name.split( "\\." )[ 0 ]
+				String varName = filename.replaceAll( "-" , "_" )
 				String ext = file.name.split( "\\." )[ 1 ]
 
 				if( parentName.indexOf( "xml" ) == 0 && !xmlList.contains( filename ) )
 				{
-					xmls += "\tpublic const ${ filename } : XML = getXml( \"${ filename }\" );" + System.lineSeparator( )
+					xmls += "\tpublic const ${ varName } : XML = getXml( \"${ filename }\" );" + System.lineSeparator( )
 					xmlList.add( filename )
 				}
 				else if( parentName.indexOf( "raw" ) == 0 )
 				{
 					if( ( ext == "mpeg" || ext == "mp3" ) && !soundList.contains( filename ) )
 					{
-						sounds += "\tpublic const ${ filename } : Sound = getSound( \"${ filename }\" );" + System.lineSeparator( )
+						sounds += "\tpublic const ${ varName } : Sound = getSound( \"${ filename }\" );" + System.lineSeparator( )
 						soundList.add( filename )
 					}
 					else if( ext == "json" && !objectList.contains( filename ) )
 					{
-						objects += "\tpublic const ${ filename } : Object = getObject( \"${ filename }\" );" + System.lineSeparator( )
+						objects += "\tpublic const ${ varName } : Object = getObject( \"${ filename }\" );" + System.lineSeparator( )
 						objectList.add( filename )
 					}
 					else if( !rawList.contains( filename ) )
 					{
-						raws += "\tpublic const ${ filename } : ByteArray = getByteArray( \"${ filename }\" );" + System.lineSeparator( )
+						raws += "\tpublic const ${ varName } : ByteArray = getByteArray( \"${ filename }\" );" + System.lineSeparator( )
 						rawList.add( filename )
 					}
 				}
@@ -107,37 +108,52 @@ public class GenerateResourcesClass extends AbstractTask
 				{
 					node = new XmlParser( ).parse( file )
 					node.string.each { string ->
+
+						varName = string.@name.toString( ).replaceAll( "-" , "_" )
+
 						if( !stringList.contains( string.@name.toString( ) ) )
 						{
-							strings += "\tpublic const ${ string.@name } : String = getString( \"${ string.@name }\" );" + System.lineSeparator( )
+							strings += "\tpublic const ${ varName } : String = getString( \"${ string.@name }\" );" + System.lineSeparator( )
 							stringList.add( string.@name.toString( ) )
 						}
 					}
 					node.color.each { color ->
+
+						varName = color.@name.toString( ).replaceAll( "-" , "_" )
+
 						if( !colorList.contains( color.@name.toString( ) ) )
 						{
-							colors += "\tpublic const ${ color.@name } : uint = getColor( \"${ color.@name }\" );" + System.lineSeparator( )
+							colors += "\tpublic const ${ varName } : uint = getColor( \"${ color.@name }\" );" + System.lineSeparator( )
 							colorList.add( color.@name.toString( ) )
 						}
 					}
 					node.bool.each { bool ->
+
+						varName = bool.@name.toString( ).replaceAll( "-" , "_" )
+
 						if( !boolList.contains( bool.@name.toString( ) ) )
 						{
-							bools += "\tpublic const ${ bool.@name } : Boolean = getBoolean( \"${ bool.@name }\" );" + System.lineSeparator( )
+							bools += "\tpublic const ${ varName } : Boolean = getBoolean( \"${ bool.@name }\" );" + System.lineSeparator( )
 							boolList.add( bool.@name.toString( ) )
 						}
 					}
 					node.dimen.each { dimen ->
+
+						varName = dimen.@name.toString( ).replaceAll( "-" , "_" )
+
 						if( !dimenList.contains( dimen.@name.toString( ) ) )
 						{
-							dimens += "\tpublic const ${ dimen.@name } : Number = getDimen( \"${ dimen.@name }\" );" + System.lineSeparator( )
+							dimens += "\tpublic const ${ varName } : Number = getDimen( \"${ dimen.@name }\" );" + System.lineSeparator( )
 							dimenList.add( dimen.@name.toString( ) )
 						}
 					}
 					node.integer.each { integer ->
+
+						varName = integer.@name.toString( ).replaceAll( "-" , "_" )
+
 						if( !integerList.contains( integer.@name.toString( ) ) )
 						{
-							integers += "\tpublic const ${ integer.@name } : int = getInteger( \"${ integer.@name }\" );" + System.lineSeparator( )
+							integers += "\tpublic const ${ varName } : int = getInteger( \"${ integer.@name }\" );" + System.lineSeparator( )
 							integerList.add( integer.@name.toString( ) )
 						}
 					}
@@ -151,16 +167,19 @@ public class GenerateResourcesClass extends AbstractTask
 						node = new XmlParser( ).parse( file )
 
 						node.SubTexture.each { texture ->
+
+							varName = texture.@name.toString( ).replaceAll( "-" , "_" )
+
 							if( !drawableList.contains( texture.@name.toString( ) ) )
 							{
-								drawables += "\tpublic const ${ texture.@name } : Texture = getDrawable( \"${ texture.@name }\" );" + System.lineSeparator( )
+								drawables += "\tpublic const ${ varName } : Texture = getDrawable( \"${ texture.@name }\" );" + System.lineSeparator( )
 								drawableList.add( texture.@name.toString( ) )
 							}
 						}
 					}
 					else if( !isAtlas && !drawableList.contains( filename ) )
 					{
-						drawables += "\tpublic const ${ filename } : Texture = getDrawable( \"${ filename }\" );" + System.lineSeparator( )
+						drawables += "\tpublic const ${ varName } : Texture = getDrawable( \"${ filename }\" );" + System.lineSeparator( )
 						drawableList.add( filename )
 					}
 				}
