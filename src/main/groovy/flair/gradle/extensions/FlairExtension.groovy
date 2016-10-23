@@ -84,7 +84,7 @@ public class FlairExtension extends PlatformContainerExtension implements IExten
 				case FlairProperty.MODULE_NAME.name: return "app"
 				case FlairProperty.PACKAGE_NAME.name: return ""
 				case FlairProperty.AUTO_ASSEMBLE_ON_BUILD_REFRESH.name: return true
-				case FlairProperty.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return true
+				case FlairProperty.AUTO_GENERATE_VARIANT_DIRECTORIES.name: return false
 
 				default: return null
 			}
