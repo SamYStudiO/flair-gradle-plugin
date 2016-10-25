@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
  */
 public class GenerateFontsClass extends AbstractTask
 {
-	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your fonts directories.\n" + "\t * To make it work properly you need to add \"Bold/Italic/Cff\" explicitly in your font file name\n" + "\t * (for example arialBold.ttf, arialBoldItalicCff.ttf, verdanaCff.ttf),\n" + "\t * for better readability and class property name generation use camelCase with your font file names.\n" + "\t */\n" + "\tpublic final class Fonts\n" + "\t{\n" + "\t\t/**\n" + "\t\t * @private\n" + "\t\t */\n" + "\t\tpublic function Fonts()\n" + "\t\t{\n" + "\t\t\tthrow new Error( this + \" cannot be instantiated\" );\n" + "\t\t}\n" + "\t}\n" + "}"
+	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your fonts directories.\n" + "\t * To make it work properly you need to add \"Bold/Italic/Cff\" explicitly in your font file name\n" + "\t * (for example arialBold.ttf, arialBoldItalicCff.ttf, verdanaCff.ttf),\n" + "\t * for better readability and class property name generation use camelCase with your font file names.\n" + "\t */\n" + "\tpublic final class Fonts\n" + "\t{\n" + "\t\tpublic function Fonts()\n" + "\t\t{\n" + "\t\t\tthrow new Error( this + \" cannot be instantiated\" );\n" + "\t\t}\n" + "\t}\n" + "}"
 
 	@InputFiles
 	def Set<File> inputFiles
@@ -54,7 +54,7 @@ public class GenerateFontsClass extends AbstractTask
 				if( fonts.indexOf( fontFamily ) < 0 )
 				{
 					fontsClassContent = fontsClassContent.concat( System.lineSeparator( ) )
-					fontsClassContent = fontsClassContent.concat( String.format( "\t\t/**%n\t\t *%n\t\t */%n\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
+					fontsClassContent = fontsClassContent.concat( String.format( "\t\tpublic static const ${ upper } : String = \"${ fontFamily }\";%n" ) )
 					fonts = fonts.concat( fontFamily )
 				}
 
@@ -69,7 +69,7 @@ public class GenerateFontsClass extends AbstractTask
 
 		if( fontsClassContent != "" || content.indexOf( "Embed" ) > 0 )
 		{
-			content = content.replaceAll( /class Fonts(\s|.)*function Fonts/ , String.format( "class Fonts%n\t{\t\t" + fontsClassContent + "%n\t\t/**%n\t\t * @private%n\t\t */%n\t\tpublic function Fonts" ) )
+			content = content.replaceAll( /class Fonts(\s|.)*function Fonts/ , String.format( "class Fonts%n\t{\t\t" + fontsClassContent + "%n\t\tpublic function Fonts" ) )
 			f.write( content )
 		}
 	}

@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
  */
 public class GenerateResourcesClass extends AbstractTask
 {
-	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your resources directories.\n" + "\t * This class try to mimic android R class but will return resource instances instead of resource ids.\n" + "\t * For example :\n" + "\t * var image : Image = new Image( R.drawable.drawable_id );\n" + "\t * var text : String = R.string.string_id;\n" + "\t * var soundChannel : SoundChannel = R.sound.sound_id.play();\n" + "\t */\n" + "\tpublic final class R\n" + "\t{\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var bool : RBool;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var color : RColor;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var dimen : RDimen;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var drawable : RDrawable;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var integer : RInteger;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var object : RObject;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var raw : RRaw;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var sound : RSound;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var string : RString;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic static var xml : RXml;\n" + "\n" + "\t\t/**\n" + "\t\t *\n" + "\t\t */\n" + "\t\tpublic function R( singleton : Singleton )\n" + "\t\t{\n" + "\t\t\tbool = new RBool();\n" + "\t\t\tcolor = new RColor();\n" + "\t\t\tdimen = new RDimen();\n" + "\t\t\tdrawable = new RDrawable();\n" + "\t\t\tinteger = new RInteger();\n" + "\t\t\tobject = new RObject();\n" + "\t\t\traw = new RRaw();\n" + "\t\t\tsound = new RSound();\n" + "\t\t\tstring = new RString();\n" + "\t\t\txml = new RXml();\n" + "\t\t}\n" + "\t}\n" + "}\n" + "\n" + "import flair.resources.getString;\n" + "\n" + "new R( new Singleton() );\n" + "\n" + "class Singleton\n" + "{\n" + "\n" + "}\n" + "\n" + "class RBool\n" + "{\n" + "\n" + "}\n" + "\n" + "class RColor\n" + "{\n" + "\n" + "}\n" + "\n" + "class RDimen\n" + "{\n" + "\n" + "}\n" + "\n" + "class RDrawable\n" + "{\n" + "\n" + "}\n" + "\n" + "class RInteger\n" + "{\n" + "\n" + "}\n" + "\n" + "class RObject\n" + "{\n" + "\n" + "}\n" + "\n" + "class RRaw\n" + "{\n" + "\n" + "}\n" + "\n" + "class RSound\n" + "{\n" + "\n" + "}\n" + "\n" + "class RString\n" + "{\n" + "\tpublic const first_screen : String = getString( \"first_screen\" );\n" + "\tpublic const hello : String = getString( \"hello\" );\n" + "\tpublic const world : String = getString( \"world\" );\n" + "}\n" + "\n" + "class RXml\n" + "{\n" + "\n" + "}"
+	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your resources directories.\n" + "\t * This class try to mimic android R class but will return resource instances instead of resource ids.\n" + "\t * For example :\n" + "\t * var image : Image = new Image( R.drawable.drawable_id );\n" + "\t * var text : String = R.string.string_id;\n" + "\t * var soundChannel : SoundChannel = R.sound.sound_id.play();\n" + "\t */\n" + "\tpublic final class R\n" + "\t{\n" + "\t\tpublic static var bool : RBool;\n" + "\t\tpublic static var color : RColor;\n" + "\t\tpublic static var dimen : RDimen;\n" + "\t\tpublic static var drawable : RDrawable;\n" + "\t\tpublic static var integer : RInteger;\n" + "\t\tpublic static var object : RObject;\n" + "\t\tpublic static var raw : RRaw;\n" + "\t\tpublic static var sound : RSound;\n" + "\t\tpublic static var string : RString;\n" + "\t\tpublic static var xml : RXml;\n" + "\n" + "\t\tpublic function R( singleton : Singleton )\n" + "\t\t{\n" + "\t\t\tbool = new RBool();\n" + "\t\t\tcolor = new RColor();\n" + "\t\t\tdimen = new RDimen();\n" + "\t\t\tdrawable = new RDrawable();\n" + "\t\t\tinteger = new RInteger();\n" + "\t\t\tobject = new RObject();\n" + "\t\t\traw = new RRaw();\n" + "\t\t\tsound = new RSound();\n" + "\t\t\tstring = new RString();\n" + "\t\t\txml = new RXml();\n" + "\t\t}\n" + "\t}\n" + "}\n" + "\n" + "import flair.resources.getString;\n" + "\n" + "new R( new Singleton() );\n" + "\n" + "class Singleton\n" + "{\n" + "\n" + "}\n" + "\n" + "class RBool\n" + "{\n" + "\n" + "}\n" + "\n" + "class RColor\n" + "{\n" + "\n" + "}\n" + "\n" + "class RDimen\n" + "{\n" + "\n" + "}\n" + "\n" + "class RDrawable\n" + "{\n" + "\n" + "}\n" + "\n" + "class RInteger\n" + "{\n" + "\n" + "}\n" + "\n" + "class RObject\n" + "{\n" + "\n" + "}\n" + "\n" + "class RRaw\n" + "{\n" + "\n" + "}\n" + "\n" + "class RSound\n" + "{\n" + "\n" + "}\n" + "\n" + "class RString\n" + "{\n" + "\tpublic const first_screen : String = getString( \"first_screen\" );\n" + "\tpublic const hello : String = getString( \"hello\" );\n" + "\tpublic const world : String = getString( \"world\" );\n" + "}\n" + "\n" + "class RXml\n" + "{\n" + "\n" + "}"
 
 	@InputFiles
 	def Set<File> inputFiles
@@ -78,7 +78,7 @@ public class GenerateResourcesClass extends AbstractTask
 
 				String parentName = parent.name
 				String filename = file.name.split( "\\." )[ 0 ]
-				String varName = filename.replaceAll( "-" , "_" )
+				String varName = filename.replaceAll( "[^a-zA-Z0-9]" , "_" )
 				String ext = file.name.split( "\\." )[ 1 ]
 
 				if( parentName.indexOf( "xml" ) == 0 && !xmlList.contains( filename ) )
@@ -109,7 +109,7 @@ public class GenerateResourcesClass extends AbstractTask
 					node = new XmlParser( ).parse( file )
 					node.string.each { string ->
 
-						varName = string.@name.toString( ).replaceAll( "-" , "_" )
+						varName = string.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 						if( !stringList.contains( string.@name.toString( ) ) )
 						{
@@ -119,7 +119,7 @@ public class GenerateResourcesClass extends AbstractTask
 					}
 					node.color.each { color ->
 
-						varName = color.@name.toString( ).replaceAll( "-" , "_" )
+						varName = color.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 						if( !colorList.contains( color.@name.toString( ) ) )
 						{
@@ -129,7 +129,7 @@ public class GenerateResourcesClass extends AbstractTask
 					}
 					node.bool.each { bool ->
 
-						varName = bool.@name.toString( ).replaceAll( "-" , "_" )
+						varName = bool.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 						if( !boolList.contains( bool.@name.toString( ) ) )
 						{
@@ -139,7 +139,7 @@ public class GenerateResourcesClass extends AbstractTask
 					}
 					node.dimen.each { dimen ->
 
-						varName = dimen.@name.toString( ).replaceAll( "-" , "_" )
+						varName = dimen.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 						if( !dimenList.contains( dimen.@name.toString( ) ) )
 						{
@@ -149,7 +149,7 @@ public class GenerateResourcesClass extends AbstractTask
 					}
 					node.integer.each { integer ->
 
-						varName = integer.@name.toString( ).replaceAll( "-" , "_" )
+						varName = integer.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 						if( !integerList.contains( integer.@name.toString( ) ) )
 						{
@@ -168,7 +168,7 @@ public class GenerateResourcesClass extends AbstractTask
 
 						node.SubTexture.each { texture ->
 
-							varName = texture.@name.toString( ).replaceAll( "-" , "_" )
+							varName = texture.@name.toString( ).replaceAll( "[^a-zA-Z0-9]" , "_" )
 
 							if( !drawableList.contains( texture.@name.toString( ) ) )
 							{
