@@ -152,7 +152,7 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 		if( !file.exists( ) )
 		{
 			file.createNewFile( )
-			file.write( String.format( "## This file should *NOT* be checked into Version Control Systems,%n# as it contains information specific to your local configuration.%n#%n# Location of the Adobe AIR SDK. Use sdk.dir for common SDK, if you need%n# different SDK for each platforms you may use {platform}.sdk.dir.%nsdk.dir=%n# ios.sdk.dir=%n# android.sdk.dir=%n# desktop.sdk.dir=" ) )
+			file.write( String.format( "## This file should *NOT* be checked into Version Control Systems,%n# as it contains information specific to your local configuration.%n#%n# Location of the Adobe AIR SDK. Use sdk.dir for common SDK, if you need%n# different SDK for each platforms you may use {platform}.sdk.dir.%n# Use / or \\\\ notation, for example :%n# sdk.dir=C:/sdk/air_sdk%n# or%n# sdk.dir=C:\\\\sdk\\\\air_sdk%nsdk.dir=%n# ios.sdk.dir=%n# android.sdk.dir=%n# desktop.sdk.dir=" ) )
 		}
 	}
 
