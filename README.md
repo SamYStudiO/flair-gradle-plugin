@@ -1,8 +1,8 @@
-# Flair Gradle Plugin [![Build Status](https://travis-ci.org/SamYStudiO/flair-gradle-plugin.svg?branch=master)](https://travis-ci.org/SamYStudiO/flair-gradle-plugin) [![Bintray](https://img.shields.io/bintray/v/samystudio/maven/flair-gradle-plugin.svg)](https://bintray.com/samystudio/maven/flair-gradle-plugin)
+#Flair Gradle Plugin [![Build Status](https://travis-ci.org/SamYStudiO/flair-gradle-plugin.svg?branch=master)](https://travis-ci.org/SamYStudiO/flair-gradle-plugin) [![Bintray](https://img.shields.io/bintray/v/samystudio/maven/flair-gradle-plugin.svg)](https://bintray.com/samystudio/maven/flair-gradle-plugin)
 Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR projects** (ios, android and desktop). Flair comes up with all tasks you may already use with Ant (compile, install, launch, etc...) but also with all files you need to start working on your projects. Last but not least Flair greatly **improves resource management** using an [Android like](http://developer.android.com/guide/topics/resources/providing-resources.html) approach.
 
 #####FEATURES :
-* Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)** (as actionscript libraries), you may obviously update them if you need to or even switch to SWC files.
+* Comes up with latest stable version of **[Starling](https://github.com/Gamua/Starling-Framework)** and **[Feathers](https://github.com/BowlerHatLLC/feathers)**.
 * Also includes **[Signal events](https://github.com/robertpenner/as3-signals)** and **[Gestouch](https://github.com/fljot/Gestouch)**.
 * Almost transparent Flair actionscript library to **manage your resources**.
 * Once you're set up you'll be able to compile/test a **template project**.
@@ -12,12 +12,18 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 * **[FDT](http://fdt.powerflasher.com/) plugin** to configure project FDT files and allow using standard run/debug configurations from FDT.
 * And more ([**Flair logger**](https://github.com/SamYStudiO/flair-logger), **asdoc** generation , **R class** auto generated resource class as Android, ...).
 
-##### REQUIREMENTS :
+#####REQUIREMENTS :
 * Gradle 2.5+
 * Starling 2+
 * Feathers 3+
 * Tested on IntelliJ 15+
 * Tested on FDT 1.16.91+
+
+#####FULL DOCUMENTATION
+Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
+
+#####DEMO
+Checkout [Flair Starling Demo](https://github.com/SamYStudiO/flair-starling-demo) if you want to play with a project build using Flair. 
 
 ===
 ####QUICK START
@@ -28,7 +34,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.7.3"
+    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.8.0"
   }
 }
 
@@ -44,10 +50,6 @@ flair{
 }
 ```
 To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when `build.gradle` and project tree are refreshed), after you set your sdk refresh your `build.gradle` and project tree again, then your project structure should be set under `app` folder.
-
-===
-####DOCUMENTATION
-Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
 
 ===
 [Follow me on Twitter](https://twitter.com/SamYStudiO)
