@@ -23,7 +23,7 @@ Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR 
 Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more documentation.
 
 #####DEMO
-Checkout [Flair Starling Demo](https://github.com/SamYStudiO/flair-starling-demo) if you want to play with a project build using Flair. 
+Checkout [Flair Starling Demo](https://github.com/SamYStudiO/flair-starling-demo) if you want to play with a project built using Flair. 
 
 ===
 ####QUICK START
