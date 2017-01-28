@@ -8,31 +8,31 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Sdk
+class Sdk
 {
 	private String path
 
-	public String getPath()
+	String getPath()
 	{
 		return path
 	}
 
-	public void setPath( String path )
+	void setPath( String path )
 	{
 		this.path = path
 	}
 
-	public String getName()
+	String getName()
 	{
 		return path ? path.split( "/" ).last( ) : null
 	}
 
-	public Sdk( Project project )
+	Sdk( Project project )
 	{
 		this( project , null )
 	}
 
-	public Sdk( Project project , Platform platform )
+	Sdk( Project project , Platform platform )
 	{
 		File file = project.file( "local.properties" )
 
@@ -59,12 +59,12 @@ public class Sdk
 		this.path = this.path ? this.path.replaceAll( "\\\\" , "/" ) : null
 	}
 
-	public Boolean isAirSdk()
+	Boolean isAirSdk()
 	{
 		return path && new File( "${ path }/air-sdk-description.xml" ).exists( )
 	}
 
-	public String getVersion()
+	String getVersion()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -73,7 +73,7 @@ public class Sdk
 		return new XmlParser( ).parseText( description.text ).version.text( ).substring( 0 , 4 )
 	}
 
-	public String getFullVersion()
+	String getFullVersion()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -84,14 +84,14 @@ public class Sdk
 		return node.version.text( ) + "." + node.build.text( )
 	}
 
-	public String getFrameworkPath()
+	String getFrameworkPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
 		return path + "/frameworks"
 	}
 
-	public String getMxmlcPath()
+	String getMxmlcPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -101,7 +101,7 @@ public class Sdk
 		return path + "/bin/" + executable
 	}
 
-	public String getAdtPath()
+	String getAdtPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -111,7 +111,7 @@ public class Sdk
 		return path + "/bin/" + executable
 	}
 
-	public String getAdlPath()
+	String getAdlPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -120,7 +120,7 @@ public class Sdk
 		return path + "/bin/" + executable
 	}
 
-	public String getAsdocPath()
+	String getAsdocPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
@@ -129,21 +129,21 @@ public class Sdk
 		return path + "/bin/" + executable
 	}
 
-	public String getPng2AtfPath()
+	String getPng2AtfPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
 		return path + "/atftools/png2atf"
 	}
 
-	public String getAdbPath()
+	String getAdbPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 
 		return path + "/lib/android/bin/adb"
 	}
 
-	public String getIdbPath()
+	String getIdbPath()
 	{
 		if( !isAirSdk( ) ) throw new Exception( "Cannot find AIR SDK home" )
 

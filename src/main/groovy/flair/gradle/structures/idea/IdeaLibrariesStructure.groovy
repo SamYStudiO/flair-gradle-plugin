@@ -8,10 +8,10 @@ import org.gradle.api.file.FileTree
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IdeaLibrariesStructure implements IStructure
+class IdeaLibrariesStructure implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		List<String> libraries = new ArrayList<String>( )
 		project.configurations.findAll { it.name.toLowerCase( ).contains( Config.LIBRARY.name ) }.each {

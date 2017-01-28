@@ -14,13 +14,13 @@ import org.gradle.api.tasks.TaskAction
 class ProcessLibraries extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputDirectory
-	def File outputDir
+	File outputDir
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -30,13 +30,14 @@ class ProcessLibraries extends VariantTask
 		description = "Processes swc libraries into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessLibraries()
+	ProcessLibraries()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processLibraries()
+	void processLibraries()
 	{
 		outputDir.deleteDir( )
 

@@ -7,10 +7,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Adl extends AbstractCli
+class Adl extends AbstractCli
 {
 	@Override
-	public String execute( Project project , Platform platform )
+	String execute( Project project , Platform platform )
 	{
 		return project.ant.exec( executable: new Sdk( project , platform ).adlPath ) {
 			arguments.each {

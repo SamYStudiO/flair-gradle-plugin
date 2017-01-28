@@ -3,18 +3,18 @@ package flair.gradle.extensions
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Extension {
+enum Extension {
 
 	FLAIR( "flair" )
 
 	private String name
 
-	public Extension( String name )
+	Extension( String name )
 	{
 		this.name = name
 	}
 
-	public String getName()
+	String getName()
 	{
 		return name
 	}

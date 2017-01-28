@@ -5,7 +5,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Platform {
+enum Platform {
 
 	IOS( "ios" , "ipa" ) ,
 	ANDROID( "android" , "apk" ) ,
@@ -15,18 +15,18 @@ public enum Platform {
 
 	private String extension
 
-	public Platform( String name , String extension )
+	Platform( String name , String extension )
 	{
 		this.name = name
 		this.extension = extension
 	}
 
-	public String getName()
+	String getName()
 	{
 		return name
 	}
 
-	public String getExtension()
+	String getExtension()
 	{
 		return extension
 	}

@@ -15,20 +15,21 @@ class Uninstall extends VariantTask
 	private ICli adt = new Adt( )
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
 		description = "Uninstalls ${ variant.name } from first connect device"
 	}
 
-	public Uninstall()
+	Uninstall()
 	{
 		group = TaskGroup.UNINSTALL.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void uninstall()
+	void uninstall()
 	{
 		String appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )
 		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK )

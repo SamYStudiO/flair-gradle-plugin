@@ -6,9 +6,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PluginManager
+class PluginManager
 {
-	public static boolean hasPlugin( Project project , Class type )
+	static boolean hasPlugin( Project project , Class type )
 	{
 		boolean hasPlugin = false
 
@@ -17,7 +17,7 @@ public class PluginManager
 		return hasPlugin
 	}
 
-	public static boolean hasPlatformPlugin( Project project , Platform platform )
+	static boolean hasPlatformPlugin( Project project , Platform platform )
 	{
 		boolean hasPlatform = false
 
@@ -29,7 +29,7 @@ public class PluginManager
 		return hasPlatform
 	}
 
-	public static List<Platform> getCurrentPlatforms( Project project )
+	static List<Platform> getCurrentPlatforms( Project project )
 	{
 		List<Platform> list = new ArrayList<Platform>( )
 
@@ -41,7 +41,7 @@ public class PluginManager
 		return list
 	}
 
-	public static boolean hasSinglePlatform( Project project )
+	static boolean hasSinglePlatform( Project project )
 	{
 		return getCurrentPlatforms( project ).size( ) == 1
 	}

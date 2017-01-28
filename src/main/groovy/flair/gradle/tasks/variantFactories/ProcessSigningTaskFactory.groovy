@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessSigningTaskFactory implements IVariantTaskFactory<ProcessSigning>
 {
-	public ProcessSigning create( Project project , Variant variant )
+	ProcessSigning create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_SIGNING.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessSplashScreensTaskFactory implements IVariantTaskFactory<ProcessSplashScreens>
 {
-	public ProcessSplashScreens create( Project project , Variant variant )
+	ProcessSplashScreens create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_SPLASH_SCREENS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

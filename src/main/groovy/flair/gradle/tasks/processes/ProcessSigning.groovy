@@ -16,28 +16,28 @@ import org.gradle.api.tasks.TaskAction
 class ProcessSigning extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputDirectory
-	def File outputDir
+	File outputDir
 
 	@Input
-	def String packageTarget
+	String packageTarget
 
 	@Input
-	def String signingStoreType
+	String signingStoreType
 
 	@Input
-	def String signingKeyStore
+	String signingKeyStore
 
 	@Input
-	def String signingProvisioningProfile
+	String signingProvisioningProfile
 
 	@Input
-	def String signingStorePass
+	String signingStorePass
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -52,13 +52,14 @@ class ProcessSigning extends VariantTask
 		description = "Processes signing files into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessSigning()
+	ProcessSigning()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processSigning()
+	void processSigning()
 	{
 		outputDir.deleteDir( )
 

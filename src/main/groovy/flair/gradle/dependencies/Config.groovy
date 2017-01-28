@@ -3,7 +3,7 @@ package flair.gradle.dependencies
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum Config {
+enum Config {
 	SOURCE( "source" , [ "src/main/actionscript" , "src/main/fonts" , "src/main/generated" ] ) ,
 	LIBRARY( "library" , null , [ dir: "libs_swc" , include: "**/*.swc" ] ) ,
 	AS_LIBRARY( "asLibrary" , [ "libs_as" ] ) ,
@@ -40,29 +40,29 @@ public enum Config {
 
 	private Map<String , String> fileTree
 
-	public Config( String name )
+	Config( String name )
 	{
 		this.name = name
 	}
 
-	public Config( String name , List<String> files , Map<String , String> fileTree = null )
+	Config( String name , List<String> files , Map<String , String> fileTree = null )
 	{
 		this.name = name
 		this.files = files
 		this.fileTree = fileTree
 	}
 
-	public String getName()
+	String getName()
 	{
 		return name
 	}
 
-	public List<String> getFiles()
+	List<String> getFiles()
 	{
 		return files
 	}
 
-	public Map<String , String> getFileTree()
+	Map<String , String> getFileTree()
 	{
 		return fileTree
 	}

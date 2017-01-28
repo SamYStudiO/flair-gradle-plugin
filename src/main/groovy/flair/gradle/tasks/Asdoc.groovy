@@ -9,18 +9,19 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Asdoc extends AbstractTask
+class Asdoc extends AbstractTask
 {
 	protected ICli asdoc = new flair.gradle.cli.Asdoc( )
 
-	public Asdoc()
+	Asdoc()
 	{
 		group = TaskGroup.DOCUMENTATION.name
 		description = "Generates asdoc from source classes into ${ project.buildDir.name }/asdoc"
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void asdoc()
+	void asdoc()
 	{
 		String srcRoot = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME ) + "/src"
 

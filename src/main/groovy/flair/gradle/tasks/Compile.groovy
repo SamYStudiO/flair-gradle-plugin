@@ -19,22 +19,22 @@ class Compile extends VariantTask
 	protected ICli cli = new Mxmlc( )
 
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFile
-	def File outputFile
+	File outputFile
 
 	@Input
-	def boolean debug
+	boolean debug
 
 	@Input
-	def String mainClass
+	String mainClass
 
 	@Input
-	def String compilerOptions
+	String compilerOptions
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -48,13 +48,14 @@ class Compile extends VariantTask
 		description = "Compiles ${ variant.name } swf"
 	}
 
-	public Compile()
+	Compile()
 	{
 		group = TaskGroup.BUILD.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void compile()
+	void compile()
 	{
 		cli.clearArguments( )
 

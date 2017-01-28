@@ -8,10 +8,10 @@ import org.gradle.process.ExecResult
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Adb extends AbstractCli
+class Adb extends AbstractCli
 {
 	@Override
-	public String execute( Project project , Platform platform )
+	String execute( Project project , Platform platform )
 	{
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream( )
 

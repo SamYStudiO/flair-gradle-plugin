@@ -5,9 +5,9 @@ import flair.gradle.utils.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AndroidPlugin extends AbstractMobilePlatformPlugin
+class AndroidPlugin extends AbstractMobilePlatformPlugin
 {
-	public AndroidPlugin()
+	AndroidPlugin()
 	{
 		platform = Platform.ANDROID
 	}

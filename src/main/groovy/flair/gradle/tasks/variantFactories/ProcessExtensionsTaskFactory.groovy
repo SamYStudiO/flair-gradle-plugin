@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessExtensionsTaskFactory implements IVariantTaskFactory<ProcessExtensions>
 {
-	public ProcessExtensions create( Project project , Variant variant )
+	ProcessExtensions create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_EXTENSIONS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

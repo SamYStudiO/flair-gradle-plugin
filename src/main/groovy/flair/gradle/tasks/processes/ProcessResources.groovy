@@ -19,19 +19,19 @@ import org.gradle.api.tasks.TaskAction
 class ProcessResources extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputDirectory
-	def File outputDir
+	File outputDir
 
 	@Input
-	def String excludeDrawables
+	String excludeDrawables
 
 	@Input
-	def boolean generateAtf
+	boolean generateAtf
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -48,13 +48,14 @@ class ProcessResources extends VariantTask
 		description = "Processes ressources into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessResources()
+	ProcessResources()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processResources()
+	void processResources()
 	{
 		outputDir.deleteDir( )
 

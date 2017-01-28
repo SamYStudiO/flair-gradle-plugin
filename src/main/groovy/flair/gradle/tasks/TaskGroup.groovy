@@ -3,7 +3,7 @@ package flair.gradle.tasks
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum TaskGroup {
+enum TaskGroup {
 	BUILD( "build" ) ,
 	PACKAGE( "package" ) ,
 	INSTALL( "install" ) ,
@@ -19,12 +19,12 @@ public enum TaskGroup {
 
 	private String name
 
-	public TaskGroup( String name )
+	TaskGroup( String name )
 	{
 		this.name = name
 	}
 
-	public String getName()
+	String getName()
 	{
 		return name
 	}

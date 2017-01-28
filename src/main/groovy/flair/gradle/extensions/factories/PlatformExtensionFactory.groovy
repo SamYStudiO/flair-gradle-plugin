@@ -9,17 +9,17 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PlatformExtensionFactory implements IExtensionFactory<IPlatformContainerExtension>
+class PlatformExtensionFactory implements IExtensionFactory<IPlatformContainerExtension>
 {
 	private Platform platform
 
-	public PlatformExtensionFactory( Platform platform )
+	PlatformExtensionFactory( Platform platform )
 	{
 		this.platform = platform
 	}
 
 	@Override
-	public IPlatformContainerExtension create( ExtensionAware parent , Project project )
+	IPlatformContainerExtension create( ExtensionAware parent , Project project )
 	{
 		return parent.extensions.create( platform.name.toLowerCase( ) , PlatformContainerExtension , platform.name.toLowerCase( ) , project , platform )
 	}

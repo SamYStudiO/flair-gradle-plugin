@@ -10,7 +10,7 @@ import flair.gradle.tasks.TaskDefinition
 class TexturePackerPlugin extends AbstractPlugin implements IStructurePlugin
 {
 	@Override
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
 		list.add( new AtlasesStructure( ) )

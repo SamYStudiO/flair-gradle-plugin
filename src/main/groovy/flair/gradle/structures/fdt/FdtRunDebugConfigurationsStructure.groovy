@@ -16,12 +16,12 @@ import org.gradle.api.file.FileTree
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FdtRunDebugConfigurationsStructure implements IStructure
+class FdtRunDebugConfigurationsStructure implements IStructure
 {
 	private Project project
 
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		this.project = project
 

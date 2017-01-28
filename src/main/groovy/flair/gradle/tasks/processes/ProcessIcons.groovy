@@ -13,13 +13,13 @@ import org.gradle.api.tasks.TaskAction
 class ProcessIcons extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputDirectory
-	def File outputDir
+	File outputDir
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -29,13 +29,14 @@ class ProcessIcons extends VariantTask
 		description = "Processes icons into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessIcons()
+	ProcessIcons()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processIcons()
+	void processIcons()
 	{
 		outputDir.deleteDir( )
 

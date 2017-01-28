@@ -15,20 +15,21 @@ class LaunchAdl extends VariantTask
 	private ICli cli = new Adl( )
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
 		description = "Launches ${ variant.name } using ADL emulator"
 	}
 
-	public LaunchAdl()
+	LaunchAdl()
 	{
 		group = TaskGroup.LAUNCH.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void launch()
+	void launch()
 	{
 		String pubId = extensionManager.getFlairProperty( variant , FlairProperty.ADL_PUB_ID )
 		boolean noDebug = extensionManager.getFlairProperty( variant , FlairProperty.ADL_NO_DEBUG )

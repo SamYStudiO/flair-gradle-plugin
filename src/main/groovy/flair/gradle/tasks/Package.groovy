@@ -18,67 +18,67 @@ class Package extends VariantTask
 	protected ICli cli = new Adt( )
 
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFile
-	def File outputFile
+	File outputFile
 
 	@Input
-	def String connect
+	String connect
 
 	@Input
-	def String listen
+	String listen
 
 	@Input
-	def boolean sampler
+	boolean sampler
 
 	@Input
-	def boolean hideAneLibSymbols
+	boolean hideAneLibSymbols
 
 	@Input
-	def boolean x86
+	boolean x86
 
 	@Input
-	def String target
+	String target
 
 	@Input
-	def String platformSdk
+	String platformSdk
 
 	@Input
-	def boolean debug
+	boolean debug
 
 	@Input
-	def String versionName
+	String versionName
 
 	@Input
-	def String versionBuild
+	String versionBuild
 
 	@Input
-	def String alias
+	String alias
 
 	@Input
-	def String provider
+	String provider
 
 	@Input
-	def String storeType
+	String storeType
 
 	@Input
-	def String storePass
+	String storePass
 
 	@Input
-	def String keyStore
+	String keyStore
 
 	@Input
-	def String keyPass
+	String keyPass
 
 	@Input
-	def String tsa
+	String tsa
 
 	@Input
-	def String provisioning
+	String provisioning
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -109,13 +109,14 @@ class Package extends VariantTask
 		description = "Packages ${ variant.name } into ${ project.buildDir.name } directory"
 	}
 
-	public Package()
+	Package()
 	{
 		group = TaskGroup.PACKAGE.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void packaging()
+	void packaging()
 	{
 		cli.clearArguments( )
 

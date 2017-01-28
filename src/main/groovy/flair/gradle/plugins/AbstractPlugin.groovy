@@ -5,17 +5,17 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractPlugin implements IPlugin
+abstract class AbstractPlugin implements IPlugin
 {
 	private Project project
 
-	public Project getProject()
+	Project getProject()
 	{
 		return project
 	}
 
 	@Override
-	public void apply( Project project )
+	void apply( Project project )
 	{
 		this.project = project
 

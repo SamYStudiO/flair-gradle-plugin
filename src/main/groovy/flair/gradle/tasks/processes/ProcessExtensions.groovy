@@ -14,13 +14,13 @@ import org.gradle.api.tasks.TaskAction
 class ProcessExtensions extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputDirectories
-	def Set<File> outputDirs
+	Set<File> outputDirs
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -33,13 +33,14 @@ class ProcessExtensions extends VariantTask
 		description = "Processes natives extensions and unzipped extensions into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessExtensions()
+	ProcessExtensions()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processExtensions()
+	void processExtensions()
 	{
 		outputDirs.each { it.deleteDir( ) }
 

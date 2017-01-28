@@ -5,9 +5,9 @@ import flair.gradle.utils.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class DesktopPlugin extends AbstractPlatformPlugin
+class DesktopPlugin extends AbstractPlatformPlugin
 {
-	public DesktopPlugin()
+	DesktopPlugin()
 	{
 		platform = Platform.DESKTOP
 	}

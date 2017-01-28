@@ -12,7 +12,7 @@ import flair.gradle.structures.idea.IdeaRunDebugConfigurationsStructure
 class IdeaPlugin extends AbstractPlugin implements IdePlugin
 {
 	@Override
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
 

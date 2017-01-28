@@ -9,10 +9,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IdeaModulesStructure implements IStructure
+class IdeaModulesStructure implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		String moduleName = ( project.flair as IExtensionManager ).getFlairProperty( FlairProperty.MODULE_NAME )
 

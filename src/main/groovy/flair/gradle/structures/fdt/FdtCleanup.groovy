@@ -6,10 +6,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FdtCleanup implements IStructure
+class FdtCleanup implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		if( project.file( ".classpath" ).exists( ) )
 		{

@@ -8,9 +8,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PackageTaskFactory implements IVariantTaskFactory<Package>
+class PackageTaskFactory implements IVariantTaskFactory<Package>
 {
-	public Package create( Project project , Variant variant )
+	Package create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PACKAGE.name + variantName

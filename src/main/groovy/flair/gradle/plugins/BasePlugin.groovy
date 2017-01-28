@@ -30,12 +30,12 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 {
 	private IExtensionManager flair
 
-	public BasePlugin()
+	BasePlugin()
 	{
 	}
 
 	@Override
-	public void apply( Project project )
+	void apply( Project project )
 	{
 		super.apply( project )
 
@@ -89,19 +89,19 @@ class BasePlugin extends AbstractPlugin implements IExtensionPlugin , IStructure
 	}
 
 	@Override
-	public IExtensionFactory getExtensionFactory()
+	IExtensionFactory getExtensionFactory()
 	{
 		return new FlairExtensionFactory( )
 	}
 
 	@Override
-	public List<Config> getConfigurations()
+	List<Config> getConfigurations()
 	{
 		return Config.DEFAULTS
 	}
 
 	@Override
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
 

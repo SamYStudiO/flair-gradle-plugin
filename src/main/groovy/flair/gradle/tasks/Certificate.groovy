@@ -7,7 +7,7 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Certificate extends AbstractTask
+class Certificate extends AbstractTask
 {
 	public String cname
 
@@ -25,14 +25,15 @@ public class Certificate extends AbstractTask
 
 	public File output
 
-	public Certificate()
+	Certificate()
 	{
 		group = TaskGroup.SIGNING.name
 		description = "Generates a self-signed certificate"
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void generate()
+	void generate()
 	{
 
 		ICli adt = new Adt( )

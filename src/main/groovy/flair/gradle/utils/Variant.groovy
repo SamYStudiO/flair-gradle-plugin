@@ -5,7 +5,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public final class Variant
+final class Variant
 {
 	private Project project
 
@@ -15,27 +15,27 @@ public final class Variant
 
 	private String buildType
 
-	public Variant( Project project , Platform platform )
+	Variant( Project project , Platform platform )
 	{
 		this( project , platform , ( String ) null )
 	}
 
-	public Variant( Project project , Platform platform , String flavor )
+	Variant( Project project , Platform platform , String flavor )
 	{
 		this( project , platform , flavor , null )
 	}
 
-	public Variant( Project project , Platform platform , String flavor , String type )
+	Variant( Project project , Platform platform , String flavor , String type )
 	{
 		this( project , platform , flavor ? [ flavor ] : null , type )
 	}
 
-	public Variant( Project project , Platform platform , List<String> flavors )
+	Variant( Project project , Platform platform , List<String> flavors )
 	{
 		this( project , platform , flavors , null )
 	}
 
-	public Variant( Project project , Platform platform , List<String> flavors , String type )
+	Variant( Project project , Platform platform , List<String> flavors , String type )
 	{
 		this.project = project
 		this.platform = platform
@@ -43,7 +43,7 @@ public final class Variant
 		buildType = type
 	}
 
-	public enum NamingType
+	enum NamingType
 	{
 		CAPITALIZE( "" ) ,
 		CAPITALIZE_BUT_FIRST( "" ) ,
@@ -53,28 +53,28 @@ public final class Variant
 
 		private String c
 
-		public NamingType( String c )
+		NamingType( String c )
 		{
 			this.c = c
 		}
 
-		public String getC()
+		String getC()
 		{
 			return c
 		}
 	}
 
-	public String getName()
+	String getName()
 	{
 		return getName( NamingType.UNDERSCORE , true )
 	}
 
-	public String getName( NamingType type )
+	String getName( NamingType type )
 	{
 		return getName( type , true )
 	}
 
-	public String getName( NamingType type , boolean withPlatform )
+	String getName( NamingType type , boolean withPlatform )
 	{
 		String name = ""
 
@@ -105,42 +105,42 @@ public final class Variant
 		}
 	}
 
-	public Platform getPlatform()
+	Platform getPlatform()
 	{
 		return platform
 	}
 
-	public setPlatform( Platform platform )
+	void setPlatform( Platform platform )
 	{
 		this.platform = platform
 	}
 
-	public List<String> getProductFlavors()
+	List<String> getProductFlavors()
 	{
 		return productFlavors
 	}
 
-	public setProductFlavors( List<String> productFlavors )
+	void setProductFlavors( List<String> productFlavors )
 	{
 		this.productFlavors = productFlavors
 	}
 
-	public String getBuildType()
+	String getBuildType()
 	{
 		return buildType
 	}
 
-	public setBuildType( String buildType )
+	void setBuildType( String buildType )
 	{
 		this.buildType = buildType
 	}
 
-	public List<String> getDirectories()
+	List<String> getDirectories()
 	{
 		return getDirectories( NamingType.UNDERSCORE )
 	}
 
-	public List<String> getDirectories( NamingType type )
+	List<String> getDirectories( NamingType type )
 	{
 		List<String> list = new ArrayList<String>( )
 		list.add( type == NamingType.CAPITALIZE ? "Main" : "main" )

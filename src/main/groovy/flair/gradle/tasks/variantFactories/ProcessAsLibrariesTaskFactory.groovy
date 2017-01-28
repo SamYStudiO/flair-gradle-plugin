@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessAsLibrariesTaskFactory implements IVariantTaskFactory<ProcessAsLibraries>
 {
-	public ProcessAsLibraries create( Project project , Variant variant )
+	ProcessAsLibraries create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_AS_LIBRARIES.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

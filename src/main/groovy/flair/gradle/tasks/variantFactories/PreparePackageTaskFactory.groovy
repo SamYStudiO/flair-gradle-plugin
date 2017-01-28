@@ -8,10 +8,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PreparePackageTaskFactory implements IVariantTaskFactory<PreparePackage>
+class PreparePackageTaskFactory implements IVariantTaskFactory<PreparePackage>
 {
 
-	public PreparePackage create( Project project , Variant variant )
+	PreparePackage create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PREPARE_PACKAGE.name + variantName

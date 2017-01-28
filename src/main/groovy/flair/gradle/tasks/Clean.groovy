@@ -5,16 +5,17 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class Clean extends AbstractTask
+class Clean extends AbstractTask
 {
-	public Clean()
+	Clean()
 	{
 		group = TaskGroup.BUILD.name
 		description = "Deletes ${ project.buildDir.name } directory"
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void clean()
+	void clean()
 	{
 		project.buildDir.deleteDir( )
 	}

@@ -5,9 +5,9 @@ import flair.gradle.utils.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IosPlugin extends AbstractMobilePlatformPlugin
+class IosPlugin extends AbstractMobilePlatformPlugin
 {
-	public IosPlugin()
+	IosPlugin()
 	{
 		platform = Platform.IOS
 	}

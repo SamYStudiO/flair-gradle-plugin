@@ -15,13 +15,13 @@ class PreparePackage extends VariantTask
 	protected ICli cli = new Mxmlc( )
 
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFile
-	def File outputFile
+	File outputFile
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -29,14 +29,15 @@ class PreparePackage extends VariantTask
 		outputFile = project.file( "${ outputVariantDir }/package/app_descriptor.xml" )
 	}
 
-	public PreparePackage()
+	PreparePackage()
 	{
 		group = TaskGroup.DEFAULT.name
 		description = ""
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void prepare()
+	void prepare()
 	{
 		project.copy {
 

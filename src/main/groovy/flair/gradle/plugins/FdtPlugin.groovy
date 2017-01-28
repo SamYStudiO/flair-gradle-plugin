@@ -9,7 +9,7 @@ import flair.gradle.structures.fdt.*
 class FdtPlugin extends AbstractPlugin implements IdePlugin
 {
 	@Override
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
 

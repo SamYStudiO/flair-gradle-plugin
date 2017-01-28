@@ -6,10 +6,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FdtProjectStructure implements IStructure
+class FdtProjectStructure implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		project.copy {
 			from "${ source.path }/fdt/project_template.xml"

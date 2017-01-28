@@ -5,7 +5,7 @@ import flair.gradle.extensions.factories.IExtensionFactory
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public interface IExtensionPlugin
+interface IExtensionPlugin
 {
 	IExtensionFactory getExtensionFactory()
 }

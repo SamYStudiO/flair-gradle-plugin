@@ -10,24 +10,25 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class GenerateFontsClass extends AbstractTask
+class GenerateFontsClass extends AbstractTask
 {
 	private final static String TEMPLATE = "package\n" + "{\n" + "\t/**\n" + "\t * DO NOT edit this class, this is auto generated from your fonts directories.\n" + "\t * To make it work properly you need to add \"Bold/Italic/Cff\" explicitly in your font file name\n" + "\t * (for example arialBold.ttf, arialBoldItalicCff.ttf, verdanaCff.ttf),\n" + "\t * for better readability and class property name generation use camelCase with your font file names.\n" + "\t */\n" + "\tpublic final class Fonts\n" + "\t{\n" + "\t\tpublic function Fonts()\n" + "\t\t{\n" + "\t\t\tthrow new Error( this + \" cannot be instantiated\" );\n" + "\t\t}\n" + "\t}\n" + "}"
 
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFile
-	def File outputFile
+	File outputFile
 
-	public GenerateFontsClass()
+	GenerateFontsClass()
 	{
 		group = TaskGroup.GENERATED.name
 		description = "Generates main/generated/Fonts.as from fonts directories"
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void generate()
+	void generate()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 
@@ -104,7 +105,7 @@ public class GenerateFontsClass extends AbstractTask
 		return String.format( "\t\t[Embed(source=\"/${ filename }\",fontFamily=\"${ fontFamily }\",fontWeight=\"${ fontWeight }\",fontStyle=\"${ fontStyle }\",mimeType=\"application/x-font\",embedAsCFF=\"${ cff }\")]%n\t\tprivate static var ${ upper }_CLASS : Class;%n" )
 	}
 
-	public void findInputAndOutputFiles()
+	void findInputAndOutputFiles()
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )

@@ -11,14 +11,15 @@ import org.gradle.api.tasks.TaskAction
  */
 class PublishAtlases extends AbstractTask
 {
-	public PublishAtlases()
+	PublishAtlases()
 	{
 		group = TaskGroup.TEXTURE_PACKER.name
 		description = "Publishes all TexturePacker atlases within project"
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void publishAtlases()
+	void publishAtlases()
 	{
 		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )
 		ICli tp = new TexturePacker( )

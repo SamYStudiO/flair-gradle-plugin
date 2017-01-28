@@ -6,10 +6,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class MobilePlugin implements Plugin<Project>
+class MobilePlugin implements Plugin<Project>
 {
 	@Override
-	public void apply( Project project )
+	void apply( Project project )
 	{
 		project.apply( plugin: "flair.android" )
 		project.apply( plugin: "flair.ios" )

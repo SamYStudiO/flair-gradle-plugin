@@ -5,7 +5,7 @@ import flair.gradle.tasks.processes.*
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public enum TaskDefinition {
+enum TaskDefinition {
 	CLEAN( "clean" , Clean , TaskGroup.BUILD ) ,
 	PROCESS_ASSETS( "processAssets" , ProcessAssets , TaskGroup.PROCESS ) ,
 	PROCESS_RESOURCES( "processResources" , ProcessResources , TaskGroup.PROCESS ) ,
@@ -38,24 +38,24 @@ public enum TaskDefinition {
 
 	private TaskGroup group
 
-	public TaskDefinition( String name , Class type , TaskGroup group )
+	TaskDefinition( String name , Class type , TaskGroup group )
 	{
 		this.name = name
 		this.type = type
 		this.group = group
 	}
 
-	public String getName()
+	String getName()
 	{
 		return name
 	}
 
-	public Class getType()
+	Class getType()
 	{
 		return type
 	}
 
-	public TaskGroup getGroup()
+	TaskGroup getGroup()
 	{
 		return group
 	}

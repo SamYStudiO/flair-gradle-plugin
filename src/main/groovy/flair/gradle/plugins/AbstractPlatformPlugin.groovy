@@ -11,26 +11,26 @@ import flair.gradle.utils.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractPlatformPlugin extends AbstractPlugin implements IPlatformPlugin
+abstract class AbstractPlatformPlugin extends AbstractPlugin implements IPlatformPlugin
 {
 	protected List<IVariantTaskFactory> variantFactories = new ArrayList<IVariantTaskFactory>( )
 
 	protected Platform platform
 
 	@Override
-	public Platform getPlatform()
+	Platform getPlatform()
 	{
 		return platform
 	}
 
 	@Override
-	public void setPlatform( Platform platform )
+	void setPlatform( Platform platform )
 	{
 		this.platform = platform
 	}
 
 	@Override
-	public List<IStructure> getStructures()
+	List<IStructure> getStructures()
 	{
 		List<IStructure> list = new ArrayList<IStructure>( )
 		list.add( new PlatformStructure( platform ) )
@@ -39,7 +39,7 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 	}
 
 	@Override
-	public List<Config> getConfigurations()
+	List<Config> getConfigurations()
 	{
 		return Config.values( ).findAll {
 			it.name.toLowerCase( ).indexOf( platform.name.toLowerCase( ) ) == 0
@@ -47,13 +47,13 @@ public abstract class AbstractPlatformPlugin extends AbstractPlugin implements I
 	}
 
 	@Override
-	public IExtensionFactory getExtensionFactory()
+	IExtensionFactory getExtensionFactory()
 	{
 		return new PlatformExtensionFactory( platform )
 	}
 
 	@Override
-	public List<IVariantTaskFactory> getVariantTaskFactories()
+	List<IVariantTaskFactory> getVariantTaskFactories()
 	{
 		List<IVariantTaskFactory> list = new ArrayList<IVariantTaskFactory>( )
 

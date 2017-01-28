@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessIconsTaskFactory implements IVariantTaskFactory<ProcessIcons>
 {
-	public ProcessIcons create( Project project , Variant variant )
+	ProcessIcons create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_ICONS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

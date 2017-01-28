@@ -5,16 +5,16 @@ import flair.gradle.utils.Variant
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VariantTask extends AbstractTask implements IVariantTask
+class VariantTask extends AbstractTask implements IVariantTask
 {
 	protected Variant variant
 
-	public Variant getVariant()
+	Variant getVariant()
 	{
 		return variant
 	}
 
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		this.variant = variant
 	}

@@ -9,9 +9,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AssembleTaskFactory implements IVariantTaskFactory<VariantTask>
+class AssembleTaskFactory implements IVariantTaskFactory<VariantTask>
 {
-	public VariantTask create( Project project , Variant variant )
+	VariantTask create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.ASSEMBLE.name + variantName

@@ -19,20 +19,21 @@ class Install extends VariantTask
 	private ICli adt = new Adt( )
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
 		description = "Installs ${ variant.name } from first connect device"
 	}
 
-	public Install()
+	Install()
 	{
 		group = TaskGroup.INSTALL.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void install()
+	void install()
 	{
 		String path = "${ project.buildDir.path }/${ extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_FILE_NAME ) }.${ variant.platform.extension }"
 

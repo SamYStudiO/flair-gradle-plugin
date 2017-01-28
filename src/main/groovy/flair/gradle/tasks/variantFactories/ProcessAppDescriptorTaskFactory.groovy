@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessAppDescriptorTaskFactory implements IVariantTaskFactory<ProcessAppDescriptor>
 {
-	public ProcessAppDescriptor create( Project project , Variant variant )
+	ProcessAppDescriptor create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PROCESS_APP_DESCRIPTOR.name + variantName

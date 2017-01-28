@@ -8,9 +8,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LaunchAdlTaskFactory implements IVariantTaskFactory<LaunchAdl>
+class LaunchAdlTaskFactory implements IVariantTaskFactory<LaunchAdl>
 {
-	public LaunchAdl create( Project project , Variant variant )
+	LaunchAdl create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.LAUNCH_ADL.name + variantName

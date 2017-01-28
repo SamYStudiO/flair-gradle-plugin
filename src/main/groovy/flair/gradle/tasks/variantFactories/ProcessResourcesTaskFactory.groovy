@@ -12,7 +12,7 @@ import org.gradle.api.Project
  */
 class ProcessResourcesTaskFactory implements IVariantTaskFactory<ProcessResources>
 {
-	public ProcessResources create( Project project , Variant variant )
+	ProcessResources create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.PROCESS_RESOURCES.name + variantName

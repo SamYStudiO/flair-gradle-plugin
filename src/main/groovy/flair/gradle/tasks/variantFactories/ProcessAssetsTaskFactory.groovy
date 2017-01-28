@@ -10,7 +10,7 @@ import org.gradle.api.Project
  */
 class ProcessAssetsTaskFactory implements IVariantTaskFactory<ProcessAssets>
 {
-	public ProcessAssets create( Project project , Variant variant )
+	ProcessAssets create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.PROCESS_ASSETS.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

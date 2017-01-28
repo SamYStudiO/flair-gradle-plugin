@@ -8,10 +8,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class CompileTaskFactory implements IVariantTaskFactory<Compile>
+class CompileTaskFactory implements IVariantTaskFactory<Compile>
 {
 
-	public Compile create( Project project , Variant variant )
+	Compile create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.COMPILE.name + variantName

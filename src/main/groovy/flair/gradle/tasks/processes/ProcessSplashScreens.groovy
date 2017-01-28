@@ -14,15 +14,15 @@ import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 class ProcessSplashScreens extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFiles
-	def Set<File> outputFiles
+	Set<File> outputFiles
 
-	def File outputDir
+	File outputDir
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -42,13 +42,14 @@ class ProcessSplashScreens extends VariantTask
 		description = "Processes splash screens into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessSplashScreens()
+	ProcessSplashScreens()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processSplashScreens( IncrementalTaskInputs inputs )
+	void processSplashScreens( IncrementalTaskInputs inputs )
 	{
 		inputs.outOfDate {}
 		inputs.removed { new File( outputDir , it.file.name ).delete( ) }

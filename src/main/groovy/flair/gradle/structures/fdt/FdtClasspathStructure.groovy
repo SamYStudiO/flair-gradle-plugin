@@ -12,14 +12,14 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FdtClasspathStructure implements IStructure
+class FdtClasspathStructure implements IStructure
 {
 	private Project project
 
 	private String moduleName
 
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		this.project = project
 

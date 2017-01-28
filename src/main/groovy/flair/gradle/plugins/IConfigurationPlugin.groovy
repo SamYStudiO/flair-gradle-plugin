@@ -5,7 +5,7 @@ import flair.gradle.dependencies.Config
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public interface IConfigurationPlugin
+interface IConfigurationPlugin
 {
 	List<Config> getConfigurations()
 }

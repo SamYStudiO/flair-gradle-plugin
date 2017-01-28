@@ -11,7 +11,7 @@ import org.gradle.api.artifacts.Configuration
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PlatformContainerExtension extends AbstractPlatformExtension implements IPlatformContainerExtension
+class PlatformContainerExtension extends AbstractPlatformExtension implements IPlatformContainerExtension
 {
 	private NamedDomainObjectContainer<IVariantExtension> productFlavors
 
@@ -19,7 +19,7 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 
 	private List<String> flavorDimensions
 
-	public PlatformContainerExtension( String name , Project project , Platform platform )
+	PlatformContainerExtension( String name , Project project , Platform platform )
 	{
 		super( name , project , platform )
 
@@ -40,54 +40,54 @@ public class PlatformContainerExtension extends AbstractPlatformExtension implem
 		}
 	}
 
-	public void productFlavors( Action<? super NamedDomainObjectContainer<IVariantExtension>> action )
+	void productFlavors( Action<? super NamedDomainObjectContainer<IVariantExtension>> action )
 	{
 		action.execute( productFlavors )
 	}
 
-	public void buildTypes( Action<? super NamedDomainObjectContainer<IVariantExtension>> action )
+	void buildTypes( Action<? super NamedDomainObjectContainer<IVariantExtension>> action )
 	{
 		action.execute( buildTypes )
 	}
 
 	@Override
-	public List<String> getFlavorDimensions()
+	List<String> getFlavorDimensions()
 	{
 		return flavorDimensions
 	}
 
 	@Override
-	public void flavorDimensions( List<String> flavorDimensions )
+	void flavorDimensions( List<String> flavorDimensions )
 	{
 		this.flavorDimensions = flavorDimensions
 	}
 
 	@Override
-	public void flavorDimensions( String... flavorDimensions )
+	void flavorDimensions( String... flavorDimensions )
 	{
 		this.flavorDimensions = flavorDimensions
 	}
 
 	@Override
-	public NamedDomainObjectContainer<IVariantExtension> getProductFlavors()
+	NamedDomainObjectContainer<IVariantExtension> getProductFlavors()
 	{
 		return productFlavors
 	}
 
 	@Override
-	public NamedDomainObjectContainer<IVariantExtension> getBuildTypes()
+	NamedDomainObjectContainer<IVariantExtension> getBuildTypes()
 	{
 		return buildTypes
 	}
 
 	@Override
-	public IVariantExtension getProductFlavor( String name )
+	IVariantExtension getProductFlavor( String name )
 	{
 		return productFlavors.findByName( name ) ? productFlavors.getByName( name ) : new VariantExtension( name , project , platform )
 	}
 
 	@Override
-	public IVariantExtension getBuildType( String name )
+	IVariantExtension getBuildType( String name )
 	{
 		return buildTypes.findByName( name ) ? buildTypes.getByName( name ) : new VariantExtension( name , project , platform )
 	}

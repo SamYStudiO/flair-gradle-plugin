@@ -6,10 +6,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class AllPlugin implements Plugin<Project>
+class AllPlugin implements Plugin<Project>
 {
 	@Override
-	public void apply( Project project )
+	void apply( Project project )
 	{
 		project.apply( plugin: "flair.ios" )
 		project.apply( plugin: "flair.android" )

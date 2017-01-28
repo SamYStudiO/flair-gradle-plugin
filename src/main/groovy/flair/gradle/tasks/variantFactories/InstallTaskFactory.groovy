@@ -8,9 +8,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class InstallTaskFactory implements IVariantTaskFactory<Install>
+class InstallTaskFactory implements IVariantTaskFactory<Install>
 {
-	public Install create( Project project , Variant variant )
+	Install create( Project project , Variant variant )
 	{
 		String variantName = variant.getName( Variant.NamingType.CAPITALIZE )
 		String name = TaskDefinition.INSTALL.name + variantName

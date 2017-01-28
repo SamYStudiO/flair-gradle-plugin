@@ -11,25 +11,26 @@ import org.gradle.api.tasks.TaskAction
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class LaunchDevice extends VariantTask
+class LaunchDevice extends VariantTask
 {
 	private ICli adt = new Adt( )
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
 		description = "Launches ${ variant.name } from first connect device"
 	}
 
-	public LaunchDevice()
+	LaunchDevice()
 	{
 		group = TaskGroup.LAUNCH.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void launch()
+	void launch()
 	{
 		String platformSdk = extensionManager.getFlairProperty( variant , FlairProperty.PACKAGE_PLATFORM_SDK )
 		String appId = extensionManager.getFlairProperty( variant , FlairProperty.APP_ID ) + extensionManager.getFlairProperty( variant , FlairProperty.APP_ID_SUFFIX )

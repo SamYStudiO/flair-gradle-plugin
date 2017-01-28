@@ -7,7 +7,7 @@ import org.gradle.api.DefaultTask
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractTask extends DefaultTask implements ITask
+abstract class AbstractTask extends DefaultTask implements ITask
 {
 	protected IExtensionManager getExtensionManager()
 	{

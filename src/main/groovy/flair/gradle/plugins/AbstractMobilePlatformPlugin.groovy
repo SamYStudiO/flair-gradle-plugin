@@ -12,10 +12,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public abstract class AbstractMobilePlatformPlugin extends AbstractPlatformPlugin
+abstract class AbstractMobilePlatformPlugin extends AbstractPlatformPlugin
 {
 	@Override
-	public void apply( Project project )
+	void apply( Project project )
 	{
 		super.apply( project )
 
@@ -29,14 +29,14 @@ public abstract class AbstractMobilePlatformPlugin extends AbstractPlatformPlugi
 	}
 
 	@Override
-	public void addTasks()
+	void addTasks()
 	{
 		ListDevices task = project.tasks.create( TaskDefinition.LIST_DEVICES.name + platform.name.capitalize( ) , TaskDefinition.LIST_DEVICES.type ) as ListDevices
 		task.platform = platform
 	}
 
 	@Override
-	public List<IVariantTaskFactory> getVariantTaskFactories()
+	List<IVariantTaskFactory> getVariantTaskFactories()
 	{
 		List<IVariantTaskFactory> list = super.variantTaskFactories
 

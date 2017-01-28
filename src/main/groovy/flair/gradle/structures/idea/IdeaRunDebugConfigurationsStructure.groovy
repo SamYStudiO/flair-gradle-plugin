@@ -11,10 +11,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IdeaRunDebugConfigurationsStructure implements IStructure
+class IdeaRunDebugConfigurationsStructure implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		project.file( ".idea/runConfigurations" ).mkdirs( )
 

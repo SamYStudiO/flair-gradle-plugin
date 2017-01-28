@@ -6,7 +6,7 @@ import flair.gradle.utils.Variant
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public interface IExtensionManager
+interface IExtensionManager
 {
 	IPlatformContainerExtension getPlatformContainer( Platform platform )
 

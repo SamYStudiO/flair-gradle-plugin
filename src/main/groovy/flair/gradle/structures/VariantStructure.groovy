@@ -7,10 +7,10 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class VariantStructure implements IStructure
+class VariantStructure implements IStructure
 {
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 

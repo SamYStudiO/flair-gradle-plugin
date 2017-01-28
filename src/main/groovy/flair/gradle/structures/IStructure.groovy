@@ -5,7 +5,7 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public interface IStructure
+interface IStructure
 {
 	void create( Project project , File source )
 }

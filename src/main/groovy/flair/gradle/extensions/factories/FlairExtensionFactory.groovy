@@ -9,10 +9,10 @@ import org.gradle.api.plugins.ExtensionAware
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FlairExtensionFactory implements IExtensionFactory<IPlatformContainerExtension>
+class FlairExtensionFactory implements IExtensionFactory<IPlatformContainerExtension>
 {
 	@Override
-	public IPlatformContainerExtension create( ExtensionAware parent , Project project )
+	IPlatformContainerExtension create( ExtensionAware parent , Project project )
 	{
 		return parent.extensions.create( Extension.FLAIR.name , FlairExtension , Extension.FLAIR.name , project , null )
 	}

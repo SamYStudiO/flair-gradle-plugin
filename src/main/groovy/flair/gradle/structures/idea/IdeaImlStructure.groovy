@@ -14,7 +14,7 @@ import org.gradle.api.artifacts.Configuration
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class IdeaImlStructure implements IStructure
+class IdeaImlStructure implements IStructure
 {
 	private Project project
 
@@ -27,7 +27,7 @@ public class IdeaImlStructure implements IStructure
 	private String sdkTemplate
 
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		this.project = project
 

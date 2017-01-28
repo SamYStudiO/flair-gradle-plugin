@@ -5,7 +5,7 @@ import flair.gradle.utils.Platform
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public interface IPlatformExtension extends IExtension
+interface IPlatformExtension extends IExtension
 {
 	Platform getPlatform()
 

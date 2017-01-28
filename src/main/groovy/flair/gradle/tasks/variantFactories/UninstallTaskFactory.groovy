@@ -8,9 +8,9 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class UninstallTaskFactory implements IVariantTaskFactory<Uninstall>
+class UninstallTaskFactory implements IVariantTaskFactory<Uninstall>
 {
-	public Uninstall create( Project project , Variant variant )
+	Uninstall create( Project project , Variant variant )
 	{
 		String name = TaskDefinition.UNINSTALL.name + variant.getName( Variant.NamingType.CAPITALIZE )
 

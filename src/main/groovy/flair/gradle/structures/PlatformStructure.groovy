@@ -10,22 +10,22 @@ import org.gradle.api.Project
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class PlatformStructure implements IStructure
+class PlatformStructure implements IStructure
 {
 	private Platform platform
 
-	public Platform getPlatform()
+	Platform getPlatform()
 	{
 		return platform
 	}
 
-	public PlatformStructure( Platform platform )
+	PlatformStructure( Platform platform )
 	{
 		this.platform = platform
 	}
 
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 		IExtensionManager extensionManager = project.flair as IExtensionManager
 		String moduleName = extensionManager.getFlairProperty( FlairProperty.MODULE_NAME )

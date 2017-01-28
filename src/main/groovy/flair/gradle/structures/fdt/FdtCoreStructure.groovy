@@ -14,7 +14,7 @@ import org.gradle.api.file.FileTree
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class FdtCoreStructure implements IStructure
+class FdtCoreStructure implements IStructure
 {
 	private Project project
 
@@ -25,7 +25,7 @@ public class FdtCoreStructure implements IStructure
 	private String coreTemplate
 
 	@Override
-	public void create( Project project , File source )
+	void create( Project project , File source )
 	{
 
 		this.project = project

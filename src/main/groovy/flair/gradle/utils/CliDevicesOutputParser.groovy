@@ -3,13 +3,13 @@ package flair.gradle.utils
 /**
  * @author SamYStudiO ( contact@samystudio.net )
  */
-public class CliDevicesOutputParser
+class CliDevicesOutputParser
 {
-	public CliDevicesOutputParser()
+	CliDevicesOutputParser()
 	{
 	}
 
-	public String parse( String adtOutput )
+	String parse( String adtOutput )
 	{
 		List<String> list = new ArrayList<String>( )
 

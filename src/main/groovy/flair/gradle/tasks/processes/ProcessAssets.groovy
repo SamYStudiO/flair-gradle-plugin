@@ -15,16 +15,16 @@ import org.gradle.api.tasks.TaskAction
 class ProcessAssets extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFiles
-	def Set<File> outputFiles
+	Set<File> outputFiles
 
 	@OutputDirectories
-	def Set<File> outputDirs
+	Set<File> outputDirs
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -42,13 +42,14 @@ class ProcessAssets extends VariantTask
 		description = "Processes assets directories into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessAssets()
+	ProcessAssets()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processAssets()
+	void processAssets()
 	{
 		outputFiles.each { it.delete( ) }
 		outputDirs.each { it.deleteDir( ) }

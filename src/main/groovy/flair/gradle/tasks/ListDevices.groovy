@@ -28,13 +28,13 @@ class ListDevices extends AbstractTask
 		description = "Displays ${ platform.name } connected devices"
 	}
 
-	public ListDevices()
+	ListDevices()
 	{
 		group = TaskGroup.DEVICES.name
 	}
 
 	@TaskAction
-	public void list()
+	void list()
 	{
 		if( platform == Platform.IOS )
 		{

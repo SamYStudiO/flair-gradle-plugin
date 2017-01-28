@@ -19,48 +19,48 @@ import java.nio.charset.Charset
 class ProcessAppDescriptor extends VariantTask
 {
 	@InputFiles
-	def Set<File> inputFiles
+	Set<File> inputFiles
 
 	@OutputFile
-	def File outputFile
+	File outputFile
 
 	@Input
-	def String sdkVersion
+	String sdkVersion
 
 	@Input
-	def String appId
+	String appId
 
 	@Input
-	def String appName
+	String appName
 
 	@Input
-	def String appFileName
+	String appFileName
 
-	def String appSWF
-
-	@Input
-	def String appVersionName
+	String appSWF
 
 	@Input
-	def String appVersionBuild
+	String appVersionName
 
 	@Input
-	def String appFullScreen
+	String appVersionBuild
 
 	@Input
-	def String appAspectRatio
+	String appFullScreen
 
 	@Input
-	def String appAutoOrients
+	String appAspectRatio
 
 	@Input
-	def String appDepthAndStencil
+	String appAutoOrients
 
 	@Input
-	def String supportedLocales
+	String appDepthAndStencil
+
+	@Input
+	String supportedLocales
 
 	@Override
-	public void setVariant( Variant variant )
+	void setVariant( Variant variant )
 	{
 		super.variant = variant
 
@@ -83,13 +83,14 @@ class ProcessAppDescriptor extends VariantTask
 		description = "Processes app descriptor templates into ${ variant.name } ${ project.buildDir.name } directory"
 	}
 
-	public ProcessAppDescriptor()
+	ProcessAppDescriptor()
 	{
 		group = TaskGroup.DEFAULT.name
 	}
 
+	@SuppressWarnings( "GroovyUnusedDeclaration" )
 	@TaskAction
-	public void processAppDescriptor()
+	void processAppDescriptor()
 	{
 		for( File file : inputFiles )
 		{
