@@ -1,5 +1,5 @@
 group = "com.github.samystudio.flair"
-version = "0.8.1"
+version = "0.8.2"
 description = "Flair is a gradle plugin that helps you build Adobe AIR mobile/desktop projects with Starling and Feathers libraries. Flair also comes up with its own actionscript library to manage your app resources, it actually mimics android resources managment."
 
 buildscript {

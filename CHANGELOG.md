@@ -1,6 +1,6 @@
 # Flair Change Logs
 
-### 0.8.1 | 2017-02-17
+### 0.8.2 | 2017-02-17
 * Fixed ANEs containing multiple extension.xml generate multiple extensions node from app descriptor with same id.
 
 ### 0.8.0 | 2016-10-29
