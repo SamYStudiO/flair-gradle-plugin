@@ -34,7 +34,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.8.0"
+    classpath "com.github.samystudio.flair:flair-gradle-plugin:0.8.1"
   }
 }
 

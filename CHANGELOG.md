@@ -1,5 +1,8 @@
 # Flair Change Logs
 
+### 0.8.1 | 2017-02-17
+* Fixed ANEs containing multiple extension.xml generate multiple extensions node from app descriptor with same id.
+
 ### 0.8.0 | 2016-10-29
 * Added better error information when using TexturePacker and its command line tool is missing
 * Added appVersionLabel flair property and renamed appVersion to appVersionNumber to be able to set both versionLabel and versionNumber from app descriptor xml
