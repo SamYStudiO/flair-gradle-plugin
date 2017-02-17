@@ -112,11 +112,15 @@ class ProcessAppDescriptor extends VariantTask
 
 		extractedExtensions.each {
 
-			String id = new XmlParser( ).parse( it ).id[ 0 ].text( )
-			if( it.name == "extension.xml" && extensionNodes.indexOf( id ) < 0 )
+			if( it.name == "extension.xml" )
 			{
-				extensionNodes += "\t\t<extensionID>${ id }</extensionID>" + System.lineSeparator( )
-				hasExtensions = true
+				String id = new XmlParser( ).parse( it ).id[ 0 ].text( )
+
+				if( extensionNodes.indexOf( id ) < 0 )
+				{
+					extensionNodes += "\t\t<extensionID>${ id }</extensionID>" + System.lineSeparator( )
+					hasExtensions = true
+				}
 			}
 		}
 
