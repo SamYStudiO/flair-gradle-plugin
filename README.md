@@ -25,7 +25,7 @@ Check [wiki](https://github.com/SamYStudiO/flair-gradle-plugin/wiki) for more do
 ##### DEMO
 Checkout [Flair Starling Demo](https://github.com/SamYStudiO/flair-starling-demo) if you want to play with a project built using Flair. 
 
-===
+---
 #### QUICK START
 Create a gradle project and set up your `build.gradle` file (located at your project root) with the following:
 ```
@@ -51,6 +51,6 @@ flair{
 ```
 To initialize plugin you'll need as well to set a **valid AIR SDK path** in **local.properties** file from your project root (file should be added automatically when `build.gradle` and project tree are refreshed), after you set your sdk refresh your `build.gradle` and project tree again, then your project structure should be set under `app` folder.
 
-===
+---
 [Follow me on Twitter](https://twitter.com/SamYStudiO)
 
