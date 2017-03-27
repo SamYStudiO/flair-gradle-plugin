@@ -1,4 +1,4 @@
-#Flair Gradle Plugin [![Build Status](https://travis-ci.org/SamYStudiO/flair-gradle-plugin.svg?branch=master)](https://travis-ci.org/SamYStudiO/flair-gradle-plugin) [![Bintray](https://img.shields.io/bintray/v/samystudio/maven/flair-gradle-plugin.svg)](https://bintray.com/samystudio/maven/flair-gradle-plugin)
+# Flair Gradle Plugin [![Build Status](https://travis-ci.org/SamYStudiO/flair-gradle-plugin.svg?branch=master)](https://travis-ci.org/SamYStudiO/flair-gradle-plugin) [![Bintray](https://img.shields.io/bintray/v/samystudio/maven/flair-gradle-plugin.svg)](https://bintray.com/samystudio/maven/flair-gradle-plugin)
 Flair is a [gradle](http://gradle.org/) plugin that helps you build **Adobe AIR projects** (ios, android and desktop). Flair comes up with all tasks you may already use with Ant (compile, install, launch, etc...) but also with all files you need to start working on your projects. Last but not least Flair greatly **improves resource management** using an [Android like](http://developer.android.com/guide/topics/resources/providing-resources.html) approach.
 
 ##### FEATURES :
